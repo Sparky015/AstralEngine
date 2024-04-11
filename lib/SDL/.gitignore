@@ -11,9 +11,9 @@ sdl2-config.cmake
 sdl2-config-version.cmake
 sdl2.pc
 SDL2.spec
-build
+abuild
 gen
-Build
+qBuild
 buildbot
 /VERSION.txt
 

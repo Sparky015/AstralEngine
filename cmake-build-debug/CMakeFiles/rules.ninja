@@ -90,7 +90,7 @@ rule CXX_COMPILER__gmock_unscanned_Debug
 # Rule for linking CXX static library.
 
 rule CXX_STATIC_LIBRARY_LINKER__gmock_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
@@ -109,7 +109,7 @@ rule CXX_COMPILER__gmock_main_unscanned_Debug
 # Rule for linking CXX static library.
 
 rule CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
@@ -128,7 +128,7 @@ rule CXX_COMPILER__gtest_unscanned_Debug
 # Rule for linking CXX static library.
 
 rule CXX_STATIC_LIBRARY_LINKER__gtest_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
@@ -147,7 +147,7 @@ rule CXX_COMPILER__gtest_main_unscanned_Debug
 # Rule for linking CXX static library.
 
 rule CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
@@ -166,7 +166,7 @@ rule C_COMPILER__SDL2main_unscanned_Debug
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__SDL2main_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -194,7 +194,7 @@ rule C_SHARED_LIBRARY_LINKER__SDL2_Debug
 # Rule for creating library symlink.
 
 rule CMAKE_SYMLINK_LIBRARY
-  command = "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E cmake_symlink_library $in $SONAME $out && $POST_BUILD
+  command = "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E cmake_symlink_library $in $SONAME $out && $POST_BUILD
   description = Creating library symlink $out
 
 
@@ -212,7 +212,7 @@ rule C_COMPILER__SDL2-static_unscanned_Debug
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__SDL2-static_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -231,7 +231,7 @@ rule C_COMPILER__SDL2_test_unscanned_Debug
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER__SDL2_test_Debug
-  command = $PRE_LINK && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
+  command = $PRE_LINK && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f $TARGET_FILE && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib $TARGET_FILE && "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E touch $TARGET_FILE && $POST_BUILD
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT
 
@@ -240,7 +240,7 @@ rule C_STATIC_LIBRARY_LINKER__SDL2_test_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/cmake/mac/aarch64/bin/cmake" --regenerate-during-build -S"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla" -B"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug"
+  command = "/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" --regenerate-during-build -S"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla" -B"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug"
   description = Re-running CMake...
   generator = 1
 
@@ -249,7 +249,7 @@ rule RERUN_CMAKE
 # Rule for cleaning all built files.
 
 rule CLEAN
-  command = "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/ninja/mac/aarch64/ninja" $FILE_ARG -t clean $TARGETS
+  command = "/Users/sparky/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja" $FILE_ARG -t clean $TARGETS
   description = Cleaning all built files...
 
 
@@ -257,6 +257,6 @@ rule CLEAN
 # Rule for printing all primary targets available.
 
 rule HELP
-  command = "/Users/sparky/Applications/CLion 2024.1 Release Candidate.app/Contents/bin/ninja/mac/aarch64/ninja" -t targets
+  command = "/Users/sparky/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja" -t targets
   description = All primary targets available:
 
