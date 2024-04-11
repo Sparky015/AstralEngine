@@ -351,3 +351,7 @@
 42	53	1712766530843504546	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_hints.h	655597d1343ca600
 32	45	1712766530834990769	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_gamecontroller.h	3aeb247ecba126fe
 1797	2283	1712758090491425178	all_tests[1]_tests.cmake	60564a6966c905
+44	147	1712802692993743000	lib/libgtest.a	cd2fe95b43abdc9e
+147	169	1712802693016239000	lib/libgtest_main.a	9b1cfcf715334d5b
+41	740	1712802693582795376	CMakeFiles/Ayla.dir/src/main.cpp.o	87c8d3be5ef5c9c7
+740	929	1712802693772867128	Ayla	c0e38031f2f2a72
