@@ -1,27 +1,20 @@
-"/Users/sparky/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/Users/sparky/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja" -G Ninja -S "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla" -B "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug"
--- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
-CMake Error: File /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL/sdl2.pc.in does not exist.
-CMake Error at lib/SDL/CMakeLists.txt:3198 (configure_file):
-  configure_file Problem configuring file
+"C:\Users\fagan\AppData\Local\Programs\CLion Nova\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\fagan\CLionProjects\Ayla -B C:\Users\fagan\CLionProjects\Ayla\cmake-build-debug
+CMake Deprecation Warning:
+  Support for "Extra Generators" like
 
+    CodeBlocks
 
-CMake Error: File /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL/sdl2-config.in does not exist.
-CMake Error at lib/SDL/CMakeLists.txt:3200 (configure_file):
-  configure_file Problem configuring file
-
-
-CMake Error: File /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL/SDL2.spec.in does not exist.
-CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
-  configure_file Problem configuring file
+  is deprecated and will be removed from a future version of CMake.  IDEs may
+  use the cmake-file-api(7) to view CMake-generated project build trees.
 
 
 -- 
 -- SDL2 was configured with the following options:
 -- 
--- Platform: Darwin-23.3.0
+-- Platform: Windows-10.0.22631
 -- 64-bit:   TRUE
--- Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
--- Revision: SDL-2.30.2-g0425f8b
+-- Compiler: C:/Users/fagan/AppData/Local/Programs/CLion Nova/bin/mingw/bin/gcc.exe
+-- Revision: SDL-2.30.2-g721adb6
 -- 
 -- Subsystems:
 --   Atomic:	ON
@@ -47,7 +40,7 @@ CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
 --   SDL2_DISABLE_INSTALL        (Wanted: ON): OFF
 --   SDL2_DISABLE_SDL2MAIN       (Wanted: OFF): OFF
 --   SDL2_DISABLE_UNINSTALL      (Wanted: OFF): OFF
---   SDL_3DNOW                   (Wanted: OFF): OFF
+--   SDL_3DNOW                   (Wanted: ON): ON
 --   SDL_ALSA                    (Wanted: OFF): OFF
 --   SDL_ALSA_SHARED             (Wanted: OFF): OFF
 --   SDL_ALTIVEC                 (Wanted: ON): OFF
@@ -61,11 +54,11 @@ CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
 --   SDL_BACKGROUNDING_SIGNAL    (Wanted: OFF): OFF
 --   SDL_CCACHE                  (Wanted: ON): OFF
 --   SDL_CLOCK_GETTIME           (Wanted: OFF): OFF
---   SDL_COCOA                   (Wanted: ON): ON
+--   SDL_COCOA                   (Wanted: OFF): OFF
 --   SDL_DBUS                    (Wanted: OFF): OFF
 --   SDL_DIRECTFB                (Wanted: OFF): OFF
 --   SDL_DIRECTFB_SHARED         (Wanted: OFF): OFF
---   SDL_DIRECTX                 (Wanted: OFF): OFF
+--   SDL_DIRECTX                 (Wanted: ON): ON
 --   SDL_DISKAUDIO               (Wanted: ON): ON
 --   SDL_DUMMYAUDIO              (Wanted: ON): ON
 --   SDL_DUMMYVIDEO              (Wanted: ON): ON
@@ -86,13 +79,13 @@ CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
 --   SDL_KMSDRM_SHARED           (Wanted: OFF): OFF
 --   SDL_LASX                    (Wanted: OFF): OFF
 --   SDL_LIBC                    (Wanted: ON): ON
---   SDL_LIBICONV                (Wanted: OFF): ON
+--   SDL_LIBICONV                (Wanted: OFF): OFF
 --   SDL_LIBSAMPLERATE           (Wanted: OFF): OFF
 --   SDL_LIBSAMPLERATE_SHARED    (Wanted: OFF): OFF
 --   SDL_LIBUDEV                 (Wanted: ON): OFF
 --   SDL_LSX                     (Wanted: OFF): OFF
---   SDL_METAL                   (Wanted: ON): ON
---   SDL_MMX                     (Wanted: OFF): OFF
+--   SDL_METAL                   (Wanted: OFF): OFF
+--   SDL_MMX                     (Wanted: ON): ON
 --   SDL_NAS                     (Wanted: OFF): OFF
 --   SDL_NAS_SHARED              (Wanted: OFF): OFF
 --   SDL_OFFSCREEN               (Wanted: ON): ON
@@ -101,28 +94,28 @@ CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
 --   SDL_OSS                     (Wanted: OFF): OFF
 --   SDL_PIPEWIRE                (Wanted: OFF): OFF
 --   SDL_PIPEWIRE_SHARED         (Wanted: OFF): OFF
---   SDL_PTHREADS                (Wanted: ON): ON
---   SDL_PTHREADS_SEM            (Wanted: ON): ON
+--   SDL_PTHREADS                (Wanted: OFF): OFF
+--   SDL_PTHREADS_SEM            (Wanted: OFF): OFF
 --   SDL_PULSEAUDIO              (Wanted: OFF): OFF
 --   SDL_PULSEAUDIO_SHARED       (Wanted: OFF): OFF
---   SDL_RENDER_D3D              (Wanted: OFF): OFF
---   SDL_RENDER_METAL            (Wanted: ON): ON
+--   SDL_RENDER_D3D              (Wanted: ON): ON
+--   SDL_RENDER_METAL            (Wanted: OFF): OFF
 --   SDL_RPATH                   (Wanted: OFF): OFF
 --   SDL_RPI                     (Wanted: OFF): OFF
 --   SDL_SNDIO                   (Wanted: OFF): OFF
 --   SDL_SNDIO_SHARED            (Wanted: OFF): OFF
---   SDL_SSE                     (Wanted: OFF): OFF
---   SDL_SSE2                    (Wanted: OFF): OFF
---   SDL_SSE3                    (Wanted: OFF): OFF
---   SDL_SSEMATH                 (Wanted: OFF): OFF
+--   SDL_SSE                     (Wanted: ON): ON
+--   SDL_SSE2                    (Wanted: ON): ON
+--   SDL_SSE3                    (Wanted: ON): ON
+--   SDL_SSEMATH                 (Wanted: ON): ON
 --   SDL_STATIC_PIC              (Wanted: OFF): OFF
---   SDL_SYSTEM_ICONV            (Wanted: ON): ON
+--   SDL_SYSTEM_ICONV            (Wanted: OFF): OFF
 --   SDL_TESTS                   (Wanted: OFF): OFF
 --   SDL_VENDOR_INFO             (Wanted: ): OFF
 --   SDL_VIRTUAL_JOYSTICK        (Wanted: ON): ON
 --   SDL_VIVANTE                 (Wanted: OFF): OFF
 --   SDL_VULKAN                  (Wanted: ON): ON
---   SDL_WASAPI                  (Wanted: OFF): OFF
+--   SDL_WASAPI                  (Wanted: ON): ON
 --   SDL_WAYLAND                 (Wanted: OFF): OFF
 --   SDL_WAYLAND_LIBDECOR        (Wanted: OFF): OFF
 --   SDL_WAYLAND_LIBDECOR_SHARED (Wanted: OFF): OFF
@@ -137,27 +130,20 @@ CMake Error at lib/SDL/CMakeLists.txt:3202 (configure_file):
 --   SDL_X11_XRANDR              (Wanted: OFF): OFF
 --   SDL_X11_XSCRNSAVER          (Wanted: OFF): OFF
 --   SDL_X11_XSHAPE              (Wanted: OFF): OFF
---   SDL_XINPUT                  (Wanted: OFF): OFF
+--   SDL_XINPUT                  (Wanted: ON): ON
 -- 
---  CMAKE_C_FLAGS_DEBUG:   -g
---  CMAKE_CXX_FLAGS_DEBUG: -g
+--  CMAKE_C_FLAGS_DEBUG:   -g -gdwarf-4
+--  CMAKE_CXX_FLAGS_DEBUG: -g -gdwarf-4
 -- 
---  CFLAGS:         -idirafter "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL/src/video/khronos"
---  EXTRA_CFLAGS:   -Wall -Wundef -fno-strict-aliasing -Wdocumentation -Wdocumentation-unknown-command -fcomment-block-commands=threadsafety -fcomment-block-commands=deprecated -Wdeclaration-after-statement -fvisibility=hidden -Wshadow -Wno-unused-local-typedefs -D_THREAD_SAFE
---  EXTRA_LDFLAGS: -Wl,-framework,CoreVideo;-Wl,-framework,Cocoa;-Wl,-framework,IOKit;-Wl,-framework,ForceFeedback;-Wl,-framework,Carbon;-Wl,-framework,CoreAudio;-Wl,-framework,AudioToolbox;-Wl,-framework,AVFoundation;-Wl,-framework,Foundation;-Wl,-weak_framework,GameController;-Wl,-weak_framework,Metal;-Wl,-weak_framework,QuartzCore;-Wl,-weak_framework,CoreHaptics -Wl,-compatibility_version,3001.0.0;-Wl,-current_version,3001.2.0
---  EXTRA_LIBS:    m;iconv
+--  CFLAGS:         -idirafter "C:/Users/fagan/CLionProjects/Ayla/lib/SDL/src/video/khronos"
+--  EXTRA_CFLAGS:   -Wall -Wundef -fno-strict-aliasing -Wdeclaration-after-statement -fvisibility=hidden -Wshadow -Wno-unused-local-typedefs -mmmx -m3dnow -msse -msse2 -msse3
+--  EXTRA_LDFLAGS:  -Wl,--no-undefined
+--  EXTRA_LIBS:    m;kernel32;user32;gdi32;winmm;imm32;ole32;oleaut32;version;uuid;advapi32;setupapi;shell32;dinput8
 -- 
 --  Build Shared Library: ON
 --  Build Static Library: ON
 --  Build Static Library with Position Independent Code: OFF
 -- 
--- If something was not detected, although the libraries
--- were installed, then make sure you have set the
--- CFLAGS and LDFLAGS environment variables correctly.
--- 
-CMake Error: File /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL/cmake_uninstall.cmake.in does not exist.
-CMake Error at lib/SDL/CMakeLists.txt:3711 (configure_file):
-  configure_file Problem configuring file
-
-
--- Configuring incomplete, errors occurred!
+-- Configuring done (0.9s)
+-- Generating done (0.9s)
+-- Build files have been written to: C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug

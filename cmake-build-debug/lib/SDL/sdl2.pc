@@ -1,6 +1,6 @@
 # sdl pkg-config source file
 
-prefix=/usr/local
+prefix=C:/Program Files (x86)/Ayla
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
@@ -10,6 +10,6 @@ Description: Simple DirectMedia Layer is a cross-platform multimedia library des
 Version: 2.30.2
 Requires.private: 
 Conflicts:
-Libs: -L${libdir}   -lSDL2 
-Libs.private:  -lSDL2 -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,IOKit -Wl,-framework,ForceFeedback -Wl,-framework,Carbon -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,AVFoundation -Wl,-framework,Foundation -Wl,-weak_framework,GameController -Wl,-weak_framework,Metal -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,CoreHaptics  -lm -liconv
-Cflags: -I${includedir} -I${includedir}/SDL2  -D_THREAD_SAFE
+Libs: -L${libdir}   -lmingw32 -mwindows -lSDL2main -lSDL2 
+Libs.private:  -lmingw32 -mwindows -lSDL2main -lSDL2  -lm -lkernel32 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion -luuid -ladvapi32 -lsetupapi -lshell32 -ldinput8
+Cflags: -I${includedir} -I${includedir}/SDL2  -Dmain=SDL_main

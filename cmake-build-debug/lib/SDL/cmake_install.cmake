@@ -1,8 +1,8 @@
-# Install script for directory: /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/SDL
+# Install script for directory: C:/Users/fagan/CLionProjects/Ayla/lib/SDL
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Ayla")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,6 +34,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "C:/Users/fagan/AppData/Local/Programs/CLion Nova/bin/mingw/bin/objdump.exe")
 endif()
 
