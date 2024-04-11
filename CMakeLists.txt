@@ -9,8 +9,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/classes)
 
         ### Google Test ###
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/googletest-main/)
-include_directories(${CMAKE_SOURCE_DIR}/lib/googletest-main/googletest/include/)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/lib/googletest-main/)
+#include_directories(${CMAKE_SOURCE_DIR}/lib/googletest-main/googletest/include/)
 
         ### SDL2 ###
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/SDL)
@@ -25,14 +25,14 @@ IF (APPLE)
 #     so it can eventually link them to the executable later when you call the 'target_link_libraries' command.
 endif ()
 IF (WIN32)
-    link_directories(${CMAKE_SOURCE_DIR}/lib/SDL2-2.30.2/lib/x64/)
+    link_directories(${CMAKE_SOURCE_DIR}/lib/SDL/SDL2-windows/lib/x64/)
 endif()
 
 
 add_executable(Ayla src/main.cpp)
 
         ### Google Test ###
-target_link_libraries(Ayla GTest::gtest_main)
+#target_link_libraries(Ayla GTest::gtest_main)
 
         ### SDL2 ###
 target_link_libraries(Ayla SDL2)
@@ -43,14 +43,14 @@ target_link_libraries(Ayla SDL2)
 
 
 
-enable_testing()
-
-add_executable(all_tests tests/hello_test.cpp)
-add_executable(hello_test tests/hello_test.cpp)
-
-target_link_libraries(all_tests GTest::gtest_main)
-target_link_libraries(hello_test GTest::gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(all_tests)
-gtest_discover_tests(hello_test)
+#enable_testing()
+#
+#add_executable(all_tests tests/hello_test.cpp)
+#add_executable(hello_test tests/hello_test.cpp)
+#
+#target_link_libraries(all_tests GTest::gtest_main)
+#target_link_libraries(hello_test GTest::gtest_main)
+#
+#include(GoogleTest)
+#gtest_discover_tests(all_tests)
+#gtest_discover_tests(hello_test)

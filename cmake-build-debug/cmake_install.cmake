@@ -39,11 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug/lib/googletest-main/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
   include("C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug/lib/SDL/cmake_install.cmake")
 endif()
 

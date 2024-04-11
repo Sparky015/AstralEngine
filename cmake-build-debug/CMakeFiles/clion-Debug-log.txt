@@ -14,7 +14,7 @@ CMake Deprecation Warning:
 -- Platform: Windows-10.0.22631
 -- 64-bit:   TRUE
 -- Compiler: C:/Users/fagan/AppData/Local/Programs/CLion Nova/bin/mingw/bin/gcc.exe
--- Revision: SDL-2.30.2-g721adb6
+-- Revision: SDL-2.30.2-gd5a647f
 -- 
 -- Subsystems:
 --   Atomic:	ON
@@ -145,5 +145,5 @@ CMake Deprecation Warning:
 --  Build Static Library with Position Independent Code: OFF
 -- 
 -- Configuring done (0.9s)
--- Generating done (0.9s)
+-- Generating done (0.6s)
 -- Build files have been written to: C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug
