@@ -1,0 +1,353 @@
+# ninja log v5
+909	956	1712769134731086293	lib/SDL/CMakeFiles/SDL2.dir/src/libm/k_cos.c.o	2b729863ff086bd7
+1555	1666	1712769135439378591	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_bmp.c.o	2a0a44f51b69a687
+1680	1806	1712769135579783264	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_yuv.c.o	a0e33c57a1635a17
+773	895	1712769134669184214	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/SDL_gamecontroller.c.o	5d5626cd3f2b7444
+2582	3266	1712769137036324695	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoamouse.m.o	be82c5138e00f14c
+2109	2239	1712769136013441690	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/darwin/SDL_iokitjoystick.c.o	b9e378ce91601bda
+2027	2095	1712769135870489527	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_wii.c.o	2797be63bf3be3fc
+1364	1409	1712769135184595429	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_qsort.c.o	10d470e6486e093
+1367	1419	1712769135193252977	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_stdlib.c.o	44fffae156df2adc
+1634	1753	1712769135522493666	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_stretch.c.o	438e42fb313e093a
+2243	2870	1712769136640866903	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoaevents.m.o	9648e2ec2349039
+1936	2013	1712769135787771700	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_ps5.c.o	6834e69f157bde3a
+1387	1430	1712769135205196970	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_strtokr.c.o	97297721699cfcb0
+804	860	1712769134635552311	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_atan2.c.o	3a6a62bf34113939
+958	1003	1712769134777757809	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_cos.c.o	62b057ff1c936d2a
+102	113	1712766530903413070	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_crc32.h	d468451007f654b5
+2971	3603	1712769137369958574	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoavulkan.m.o	b7883f045c8249ed
+97	108	1712766530898950889	lib/SDL/include/SDL2/SDL_test.h	b42c27548205aae
+895	960	1712769134733558533	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_rem_pio2.c.o	5d59c40c0eb9d088
+973	1020	1712769134794721490	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_sin.c.o	6266df9a5d454f71
+2025	2109	1712769135884368804	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_switch.c.o	7e3202b0985811a2
+1808	1915	1712769135689604562	lib/SDL/CMakeFiles/SDL2.dir/src/video/dummy/SDL_nullvideo.c.o	dbd02648bb7c2529
+3171	3674	1712769137444807016	lib/SDL/CMakeFiles/SDL2.dir/src/render/metal/SDL_render_metal.m.o	c0994e62662c772b
+1592	1725	1712769135495384402	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_pixels.c.o	67519b29cdc22e21
+1757	1807	1712769135581322632	lib/SDL/CMakeFiles/SDL2.dir/src/audio/disk/SDL_diskaudio.c.o	29dab9ada96eebe0
+1587	1680	1712769135453970822	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_fillrect.c.o	9193fd7478ffa366
+1970	2027	1712769135802364266	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_shield.c.o	17bb7e87a2b2c572
+966	1018	1712769134791009713	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_floor.c.o	66fa58d915f25d05
+92	102	1712766530892637036	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_stdinc.h	9ee25c607708d6a7
+106	118	1712766530907997584	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_fuzzer.h	3c4f7c357d51d190
+1398	1555	1712769135329229918	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_RLEaccel.c.o	29706555af5430cb
+1001	1050	1712769134824377451	lib/SDL/CMakeFiles/SDL2.dir/src/locale/SDL_locale.c.o	cda1073c740a0bb9
+1391	1486	1712769135258638833	lib/SDL/CMakeFiles/SDL2.dir/src/timer/SDL_timer.c.o	455c47dbcb452e4f
+1298	1425	1712769135197862875	lib/SDL/CMakeFiles/SDL2.dir/src/sensor/SDL_sensor.c.o	f237aa87a58cf0de
+1336	1387	1712769135162014939	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_iconv.c.o	2c20e2366a706f27
+490	564	1712769134336209124	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_wave.c.o	637d9812775716a9
+955	1001	1712769134776383232	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_atan.c.o	8594da7183e3ceab
+861	908	1712769134683396781	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_fmod.c.o	fe1dec2fab4ad117
+1530	1633	1712769135407013640	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_slow.c.o	38767ef327b194a3
+2646	3351	1712769137121272637	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoaopengl.m.o	4a59f56b3efd4a87
+1099	1161	1712769134932374882	lib/SDL/CMakeFiles/SDL2.dir/src/render/opengles2/SDL_shaders_gles2.c.o	bbb62fc3c3a322f5
+3334	3402	1712769137177745280	lib/SDL/CMakeFiles/SDL2.dir/src/thread/pthread/SDL_sysmutex.c.o	5516fd09312beac7
+1884	1936	1712769135710409518	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_combined.c.o	e2d9280f5f8d6bda
+1666	1869	1712769135643037504	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_video.c.o	56abd7f955dbbaf7
+92	102	1712766530892637036	lib/SDL/include/SDL2/SDL_stdinc.h	9ee25c607708d6a7
+1425	1568	1712769135342336823	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_1.c.o	14ab709f46362038
+1881	2276	1712769136048576504	lib/SDL/CMakeFiles/SDL2.dir/src/audio/coreaudio/SDL_coreaudio.m.o	9fc47cf5e0cdd73e
+124	139	1712766530929663195	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/begin_code.h	d28a5a8fdae73c75
+1906	1970	1712769135744365462	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_gamecube.c.o	282727777fd61694
+2070	2131	1712769135906669004	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_xbox360w.c.o	1a90ca59efb5502f
+1818	1881	1712769135655255912	lib/SDL/CMakeFiles/SDL2.dir/src/video/offscreen/SDL_offscreenevents.c.o	a6960b76beb5ebc8
+113	124	1712766530914880523	lib/SDL/include/SDL2/SDL_test_random.h	b7115c6993a2560a
+1374	1429	1712769135203586393	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_string.c.o	44439bc5940ce84d
+1915	1970	1712769135745151834	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_luna.c.o	a21a9850b2853c45
+1146	1353	1712769135125176590	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_blendline.c.o	875ef1d4e144697
+907	958	1712769134731451708	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_sqrt.c.o	5271f2be9393ef1c
+1562	1629	1712769135400434751	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_clipboard.c.o	e21a80f73f807e83
+1205	1319	1712769135091902685	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_render_sw.c.o	4b92df2804f05fb6
+3461	3514	1712769137289694862	lib/SDL/CMakeFiles/SDL2.dir/src/sensor/dummy/SDL_dummysensor.c.o	84f8e73c2c1f60a2
+1288	1336	1712769135111180356	lib/SDL/CMakeFiles/SDL2.dir/src/render/vitagxm/SDL_render_vita_gxm_tools.c.o	40d86ab6ad743b50
+1271	1323	1712769135098703199	lib/SDL/CMakeFiles/SDL2.dir/src/render/vitagxm/SDL_render_vita_gxm_memory.c.o	556031bcea7752af
+1094	1164	1712769134938846064	lib/SDL/CMakeFiles/SDL2.dir/src/render/opengl/SDL_shaders_gl.c.o	4269f424945e6ed3
+1161	1270	1712769135044096715	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_blendpoint.c.o	3a9bd4ff6b5571df
+2132	2243	1712769136016940925	lib/SDL/CMakeFiles/SDL2.dir/src/haptic/darwin/SDL_syshaptic.c.o	8aa9c4f696401e4
+1018	1205	1712769134972816508	lib/SDL/CMakeFiles/SDL2.dir/src/render/SDL_render.c.o	d5963276273e89f8
+123	135	1712766530925281514	lib/SDL/include/SDL2/SDL_video.h	775a1d9456192a4e
+1122	1179	1712769134946699282	lib/SDL/CMakeFiles/SDL2.dir/src/render/psp/SDL_render_psp.c.o	3731075e8decc307
+1321	1367	1712769135142291520	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_crc32.c.o	c6d4ed96046f37d3
+1101	1146	1712769134920256265	lib/SDL/CMakeFiles/SDL2.dir/src/render/ps2/SDL_render_ps2.c.o	aa72c2b2a75fa2b8
+1164	1271	1712769135044182840	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_drawline.c.o	f90e09d50f05ec64
+2007	2070	1712769135844898341	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_steam.c.o	1362cdee64cce4ad
+1051	1097	1712769134871930256	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d12/SDL_render_d3d12.c.o	3539305a46e6bbd5
+2071	2140	1712769135914528055	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_xboxone.c.o	35968196dda48359
+1052	1099	1712769134871936672	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d12/SDL_shaders_d3d12.c.o	645dcd4e2491848e
+2096	2160	1712769135934803596	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapijoystick.c.o	5d30badefb11de4f
+1777	1823	1712769135597813939	lib/SDL/CMakeFiles/SDL2.dir/src/loadso/dlopen/SDL_sysloadso.c.o	1e296c0cad38ca05
+1324	1374	1712769135147704206	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_getenv.c.o	5d9e8aaca53631e5
+3406	3466	1712769137241145061	lib/SDL/CMakeFiles/SDL2.dir/src/thread/pthread/SDL_syssem.c.o	38fd5ce5ff5b5eca
+94	105	1712766530895887963	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_surface.h	143a0417a8181b34
+1823	1883	1712769135658904230	lib/SDL/CMakeFiles/SDL2.dir/src/video/offscreen/SDL_offscreenframebuffer.c.o	bdb9f259ef2990c3
+746	800	1712769134575763556	lib/SDL/CMakeFiles/SDL2.dir/src/haptic/SDL_haptic.c.o	bacb347c5ea1f6a3
+94	106	1712766530895816588	lib/SDL/include/SDL2/SDL_system.h	6453659f73d59d22
+1050	1097	1712769134871435841	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d11/SDL_render_d3d11.c.o	fdb54c12c64bd3c0
+3267	3334	1712769137109189354	lib/SDL/CMakeFiles/SDL2.dir/src/thread/pthread/SDL_systhread.c.o	3b0c050cec2ff6f5
+868	921	1712769134694739151	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_pow.c.o	120f1781de8e2290
+2214	2286	1712769136061186285	lib/SDL/CMakeFiles/SDL2.dir/src/timer/unix/SDL_systimer.c.o	ce97cfc5eb385722
+1633	1757	1712769135530568132	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_shape.c.o	40ade3afde2134fb
+1270	1321	1712769135096231751	lib/SDL/CMakeFiles/SDL2.dir/src/render/vitagxm/SDL_render_vita_gxm.c.o	6d60ad2c76873291
+1022	1068	1712769134843194082	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d/SDL_render_d3d.c.o	f0d57b379257bc44
+88	101	1712766530891137031	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_sensor.h	4b0778b3bdfbbab0
+1002	1049	1712769134823704121	lib/SDL/CMakeFiles/SDL2.dir/src/misc/SDL_url.c.o	ae47906b30bad411
+1003	1052	1712769134824430034	lib/SDL/CMakeFiles/SDL2.dir/src/render/SDL_d3dmath.c.o	6b7e3f79efc3a3e7
+1486	1592	1712769135366735431	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_copy.c.o	11138b57444b199d
+799	866	1712769134641219412	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/SDL_steam_virtual_gamepad.c.o	251495d3b758ee96
+916	969	1712769134744346863	lib/SDL/CMakeFiles/SDL2.dir/src/libm/k_rem_pio2.c.o	e0429ed784d7f38a
+1262	1391	1712769135165404008	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_triangle.c.o	2d417f60f6e59742
+1068	1228	1712769134999119525	lib/SDL/CMakeFiles/SDL2.dir/src/render/opengl/SDL_render_gl.c.o	1046a7c37e15388e
+101	111	1712766530901453855	lib/SDL/include/SDL2/SDL_test_common.h	549eee80265de9de
+1706	1804	1712769135579243557	lib/SDL/CMakeFiles/SDL2.dir/src/video/yuv2rgb/yuv_rgb_lsx.c.o	e765df4ddccd6e79
+83	94	1712766530885050595	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_rect.h	4be8cabb04d9ce50
+111	123	1712766530913781728	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_md5.h	d5fede215f3c25ab
+1753	1803	1712769135576102279	lib/SDL/CMakeFiles/SDL2.dir/src/audio/dummy/SDL_dummyaudio.c.o	69c5fd82742f0a4b
+921	966	1712769134739855757	lib/SDL/CMakeFiles/SDL2.dir/src/libm/k_sin.c.o	a6df08676dcc4ebe
+774	944	1712769134718285512	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/SDL_joystick.c.o	c55746ba7043b85f
+862	907	1712769134681204290	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_log.c.o	8435e2f6c9c46182
+2059	2132	1712769135906378921	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_xbox360.c.o	a1ba35020d04367
+1934	2006	1712769135781782267	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_ps4.c.o	600c76cebd840133
+4058	4068	1712769137829818934	lib/SDL/libSDL2-2.0d.dylib	1e27bccbe5fdf02b
+1145	1297	1712769135069001988	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_blendfillrect.c.o	d7c0c68ce33ce581
+866	916	1712769134690825792	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_log10.c.o	89bc6e79ecefe14
+801	868	1712769134643477361	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/controller_type.c.o	36d4afe04e44e8ea
+606	676	1712769134450972944	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_dropevents.c.o	971bc7bb88ab21f8
+737	799	1712769134573041984	lib/SDL/CMakeFiles/SDL2.dir/src/file/SDL_rwops.c.o	1508cdb0de742e93
+2287	2907	1712769136678431915	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoamessagebox.m.o	e2a568b443997921
+816	862	1712769134637565927	lib/SDL/CMakeFiles/SDL2.dir/src/libm/e_exp.c.o	ca64b09c95a1027d
+1725	1818	1712769135592649461	lib/SDL/CMakeFiles/SDL2.dir/src/video/yuv2rgb/yuv_rgb_sse.c.o	8e1263b22a291262
+732	772	1712769134547038799	lib/SDL/CMakeFiles/SDL2.dir/src/events/imKStoUCS.c.o	3c8ddb1af4130de2
+29	42	1712766530832586720	lib/SDL/include/SDL2/SDL_endian.h	1c99380fe0f8a6a9
+676	746	1712769134520246368	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_quit.c.o	b2bce5352b94ae66
+2479	3170	1712769136939402093	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoametalview.m.o	f6ede52949fc9f6b
+610	685	1712769134459689533	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_gesture.c.o	f38cec3affa85ec1
+651	692	1712769134467158044	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_keysym_to_scancode.c.o	52ea6108b6c0d8d0
+105	119	1712766530908073210	lib/SDL/include/SDL2/SDL_test_font.h	a37d4b208038eece
+481	606	1712769134381252564	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_audiotypecvt.c.o	b461d9c0d3d37930
+79	490	1712769134264624710	lib/SDL/CMakeFiles/SDL2.dir/src/SDL.c.o	70c675c8c7b4b4df
+76	88	1712766530878502408	lib/SDL/include/SDL2/SDL_opengles2_khrplatform.h	5ed01895d5f95521
+79	488	1712769134261844138	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_assert.c.o	3e63036753552afa
+80	420	1712769134193764834	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_hints.c.o	12eed3d33ef31873
+1836	1906	1712769135679646103	lib/SDL/CMakeFiles/SDL2.dir/src/video/offscreen/SDL_offscreenopengles.c.o	9931b1e48c64751e
+1970	2025	1712769135799574027	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_rumble.c.o	226abbb74da119fa
+85	97	1712766530887553395	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_rwops.h	9424028035e9f78c
+79	419	1712769134193204712	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_error.c.o	370ec4cc87a3ce05
+564	651	1712769134425869381	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_clipboardevents.c.o	15e31e28ff1e29de
+1049	1100	1712769134875548574	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d/SDL_shaders_d3d.c.o	231f39171b78c0c4
+960	1003	1712769134777323811	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_fabs.c.o	3dc798cae37187ac
+1097	1262	1712769135030728145	lib/SDL/CMakeFiles/SDL2.dir/src/render/opengles2/SDL_render_gles2.c.o	38d7ef9d3a922049
+956	1002	1712769134777426686	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_copysign.c.o	25f961a863d5e015
+133	142	1712766530933176873	lib/SDL/include/SDL2/close_code.h	ba8cc0194d97c695
+1873	2582	1712769136352979211	lib/SDL/CMakeFiles/SDL2.dir/src/misc/macosx/SDL_sysurl.m.o	5e0a51066ea4c157
+123	135	1712766530925808016	lib/SDL/include/SDL2/SDL_vulkan.h	242f8894af798223
+15	31	1712766530820057805	lib/SDL/include/SDL2/SDL_blendmode.h	9f1dd3c8dbd63866
+1000	1050	1712769134825504322	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_tan.c.o	2fb0add35f18162c
+626	732	1712769134506524091	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_keyboard.c.o	934c11ce799bf391
+45	59	1712766530848680271	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_keycode.h	ddefcf05f5a4283d
+119	134	1712766530924568762	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_timer.h	3dae13bfc17ab357
+1641	1777	1712769135550101052	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_surface.c.o	7c8599eb5573549f
+3157	3790	1712769137561233288	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoawindow.m.o	2c38a59f78d86871
+108	121	1712766530911779471	lib/SDL/include/SDL2/SDL_test_harness.h	36a876eb9aabfa35
+119	134	1712766530924568762	lib/SDL/include/SDL2/SDL_timer.h	3dae13bfc17ab357
+122	134	1712766530924827763	lib/SDL/include/SDL2/SDL_types.h	79bc39b25e2cbd3
+58	71	1712766530861001144	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_metal.h	58d35c05233df00
+3791	4058	1712769137829818934	lib/SDL/libSDL2-2.0d.0.dylib	c4acff5b055235da
+106	118	1712766530907997584	lib/SDL/include/SDL2/SDL_test_fuzzer.h	3c4f7c357d51d190
+118	134	1712766530923343217	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_thread.h	f76203a0c579a37e
+2519	3157	1712769136926445563	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoamodes.m.o	a897ea0ad939fdac
+1629	1706	1712769135477569017	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_rect.c.o	1665d549176ab9b1
+14	28	1712766530818358591	lib/SDL/include/SDL2/SDL_atomic.h	727e386ecada1d12
+118	134	1712766530923343217	lib/SDL/include/SDL2/SDL_thread.h	f76203a0c579a37e
+1440	1633	1712769135405853603	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_auto.c.o	d37b046b54e2e0c1
+1869	1934	1712769135708723692	lib/SDL/CMakeFiles/SDL2.dir/src/video/offscreen/SDL_offscreenwindow.c.o	fa0d849257ce90c2
+79	464	1712769134238477359	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_dataqueue.c.o	a8a00dad58ca39e2
+122	134	1712766530924827763	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_types.h	79bc39b25e2cbd3
+685	731	1712769134505504511	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_scancode_tables.c.o	ecb4234a4a7b3bdc
+420	471	1712769134246354577	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_utils.c.o	34f927da70bbf8b6
+112	123	1712766530913074184	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_memory.h	f1135f3748144a3a
+112	123	1712766530913074184	lib/SDL/include/SDL2/SDL_test_memory.h	f1135f3748144a3a
+110	123	1712766530911783805	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_log.h	356e228cb8ece753
+1797	2283	1712758090491425178	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/all_tests[1]_tests.cmake	60564a6966c905
+1803	1865	1712769135636645238	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/virtual/SDL_virtualjoystick.c.o	aab4340f5656d298
+110	123	1712766530911783805	lib/SDL/include/SDL2/SDL_test_log.h	356e228cb8ece753
+1228	1340	1712769135114663758	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_rotate.c.o	c5d511ce2aa9d8ce
+945	1000	1712769134769044262	lib/SDL/CMakeFiles/SDL2.dir/src/libm/k_tan.c.o	917ff38c39cf9dc1
+1419	1562	1712769135336715846	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_0.c.o	cda083d603f10b91
+471	626	1712769134400087153	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_audiocvt.c.o	819fd691731774a4
+108	121	1712766530911779471	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_harness.h	36a876eb9aabfa35
+105	119	1712766530908073210	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_font.h	a37d4b208038eece
+1050	1094	1712769134868815685	lib/SDL/CMakeFiles/SDL2.dir/src/render/direct3d11/SDL_shaders_d3d11.c.o	ff0daaddaf87d51c
+2160	2479	1712769136252171042	lib/SDL/CMakeFiles/SDL2.dir/src/locale/macosx/SDL_syslocale.m.o	2e7b5fbb18257e7e
+81	94	1712766530884833553	lib/SDL/include/SDL2/SDL_quit.h	61c5a55455a7a1ce
+503	610	1712769134384992298	lib/SDL/CMakeFiles/SDL2.dir/src/cpuinfo/SDL_cpuinfo.c.o	992e8b4ff17dda0f
+123	135	1712766530925806224	lib/SDL/include/SDL2/SDL_version.h	cbe05cae0c5f827a
+123	135	1712766530925281514	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_video.h	775a1d9456192a4e
+102	113	1712766530903413070	lib/SDL/include/SDL2/SDL_test_crc32.h	d468451007f654b5
+102	112	1712766530902374400	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_compare.h	f959aaf51985ab46
+99	110	1712766530900359060	lib/SDL/include/SDL2/SDL_test_assert.h	d8929172f48e999a
+80	460	1712769134234355501	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_list.c.o	6dc2c97b4694b250
+488	575	1712769134350910272	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_mixer.c.o	63ea975d17d29ab
+77	88	1712766530878822575	lib/SDL/include/SDL2/SDL_pixels.h	de1820fc6746f0b8
+101	111	1712766530901453855	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_common.h	549eee80265de9de
+464	608	1712769134381732312	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_audio.c.o	1080e5436c37c4f7
+94	106	1712766530895816588	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_system.h	6453659f73d59d22
+85	97	1712766530887553395	lib/SDL/include/SDL2/SDL_rwops.h	9424028035e9f78c
+16	1766	1712768875011972638	lib/googletest-main/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	9ed4d864033a0613
+51	64	1712766530853884496	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_locale.h	70116cd814cc04df
+88	101	1712766530891137031	lib/SDL/include/SDL2/SDL_sensor.h	4b0778b3bdfbbab0
+731	804	1712769134578246879	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_windowevents.c.o	1ca603c88e475e9f
+2276	2971	1712769136740205370	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoakeyboard.m.o	e6df3dd4cc593722
+80	92	1712766530882403753	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_power.h	acae63c3c3f670e4
+1742	1836	1712769135608168105	lib/SDL/CMakeFiles/SDL2.dir/src/video/yuv2rgb/yuv_rgb_std.c.o	b87c0a20e0a166b3
+78	91	1712766530881150916	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_platform.h	7d955bbd452304f
+59	73	1712766530862713774	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_mutex.h	4a29edc9923c5498
+66	77	1712766530867376247	lib/SDL/include/SDL2/SDL_opengles.h	debbb7577df476e8
+2851	3474	1712769137243886342	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoaopengles.m.o	15f36e1f8b3d42f1
+1429	1587	1712769135360294541	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_A.c.o	c9d0ded8e03c57d6
+1430	1641	1712769135413429114	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit_N.c.o	3af84fd453d3c7a7
+44	58	1712766530848853772	lib/SDL/include/SDL2/SDL_joystick.h	3973703f5adc0fe0
+76	88	1712766530878502408	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles2_khrplatform.h	5ed01895d5f95521
+1097	1145	1712769134918675355	lib/SDL/CMakeFiles/SDL2.dir/src/render/opengles/SDL_render_gles.c.o	90563a76574f34b9
+91	102	1712766530892705036	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_shape.h	8af0d9cca13b3dd5
+2004	2059	1712769135834113135	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_stadia.c.o	ba65054a94c6e10d
+88	98	1712766530889101858	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_scancode.h	c91be5f536e8cfee
+72	84	1712766530873731726	lib/SDL/include/SDL2/SDL_opengles2_gl2ext.h	7f2c43ddc9306771
+2140	2214	1712769135988544834	lib/SDL/CMakeFiles/SDL2.dir/src/power/macosx/SDL_syspower.c.o	55a112e66ae2714e
+73	85	1712766530876037150	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles2_gl2platform.h	8bc5a24177312775
+72	84	1712766530873731726	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles2_gl2ext.h	7f2c43ddc9306771
+79	420	1712769134193207753	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_guid.c.o	7dbf2e045986ac10
+97	110	1712766530900468602	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_syswm.h	308409cb470fd22e
+14	31	1712766530819686471	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_assert.h	614c8ad42881c37c
+71	83	1712766530872705681	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles2_gl2.h	b20b541787af5fd0
+73	85	1712766530876037150	lib/SDL/include/SDL2/SDL_opengles2_gl2platform.h	8bc5a24177312775
+692	774	1712769134548045712	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_touch.c.o	2b181c3bf90bdda8
+2132	2645	1712769136415362330	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/iphoneos/SDL_mfijoystick.m.o	84f2646f05cc7c10
+747	955	1712769134728450970	lib/SDL/CMakeFiles/SDL2.dir/src/hidapi/SDL_hidapi.c.o	df8f25f32df930c2
+65	78	1712766530868314958	lib/SDL/include/SDL2/SDL_opengl.h	304e2ee9dfcb2194
+59	72	1712766530862709691	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_mouse.h	e8460020f4fc5f8f
+59	71	1712766530860998602	lib/SDL/include/SDL2/SDL_misc.h	52bd383bd86184c9
+28	41	1712766530832038468	lib/SDL/include/SDL2/SDL_egl.h	2c15e74394b05138
+58	71	1712766530861001144	lib/SDL/include/SDL2/SDL_metal.h	58d35c05233df00
+1388	1439	1712769135214651181	lib/SDL/CMakeFiles/SDL2.dir/src/thread/SDL_thread.c.o	49e38d06977c2b7d
+39	51	1712766530841782166	lib/SDL/include/SDL2/SDL_guid.h	e6004e7a33e4cfb6
+51	64	1712766530853884496	lib/SDL/include/SDL2/SDL_locale.h	70116cd814cc04df
+53	66	1712766530855431501	lib/SDL/include/SDL2/SDL_messagebox.h	1acb40a5724bc864
+576	653	1712769134426883710	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_displayevents.c.o	86efb6da9bcbaebe
+32	45	1712766530835306562	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_gesture.h	965be2bac0c21776
+59	73	1712766530862713774	lib/SDL/include/SDL2/SDL_mutex.h	4a29edc9923c5498
+110	122	1712766530912808850	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_images.h	dcdbc2715dc1e01e
+460	503	1712769134278130779	lib/SDL/CMakeFiles/SDL2.dir/src/atomic/SDL_spinlock.c.o	b9f50b63d4c93811
+2239	2850	1712769136620490279	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoaclipboard.m.o	d5fee1f12a625637
+52	64	1712766530854301456	lib/SDL/include/SDL2/SDL_log.h	3b381d18d8c36d9e
+110	122	1712766530912808850	lib/SDL/include/SDL2/SDL_test_images.h	dcdbc2715dc1e01e
+124	139	1712766530929663195	lib/SDL/include/SDL2/begin_code.h	d28a5a8fdae73c75
+45	59	1712766530849758233	lib/SDL/include/SDL2/SDL_loadso.h	867003d02610d9eb
+1806	1870	1712769135644229999	lib/SDL/CMakeFiles/SDL2.dir/src/video/dummy/SDL_nullframebuffer.c.o	ae4ce0f9799a0486
+44	58	1712766530848672021	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_keyboard.h	ddbb2fac319515bb
+97	108	1712766530898950889	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test.h	b42c27548205aae
+1766	1882	1712768875137903000	lib/libgtest.a	c765fe3824014a35
+1179	1288	1712769135053812508	lib/SDL/CMakeFiles/SDL2.dir/src/render/software/SDL_drawpoint.c.o	de817c71ab02bf97
+52	66	1712766530855778335	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_main.h	45859d1b6a35015
+2013	2071	1712769135844678925	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_steamdeck.c.o	856d509aef1e74f4
+14	31	1712766530819686471	lib/SDL/include/SDL2/SDL_assert.h	614c8ad42881c37c
+84	97	1712766530886969851	lib/SDL/include/SDL2/SDL_render.h	6d0ac2af902ed806
+1870	2226	1712769135997713754	lib/SDL/CMakeFiles/SDL2.dir/src/file/cocoa/SDL_rwopsbundlesupport.m.o	3b93d7b04394d8d2
+44	58	1712766530848672021	lib/SDL/include/SDL2/SDL_keyboard.h	ddbb2fac319515bb
+42	53	1712766530843504546	lib/SDL/include/SDL2/SDL_hints.h	655597d1343ca600
+15	31	1712766530820057805	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_blendmode.h	9f1dd3c8dbd63866
+31	44	1712766530834446684	lib/SDL/include/SDL2/SDL_filesystem.h	f0886d6406973a18
+113	124	1712766530914880523	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_random.h	b7115c6993a2560a
+31	44	1712766530834446684	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_filesystem.h	f0886d6406973a18
+2870	3478	1712769137247589910	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoashape.m.o	4bcc11c997635cbd
+1353	1398	1712769135171937273	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_mslibc.c.o	5bbe500262b1c1ca
+102	112	1712766530902374400	lib/SDL/include/SDL2/SDL_test_compare.h	f959aaf51985ab46
+15	29	1712766530818316425	lib/SDL/include/SDL2/SDL_bits.h	7dac379a905cee48
+16	32	1712766530820670974	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_copying.h	f7554976dd890765
+42	52	1712766530842596418	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_hidapi.h	7f0e8648c6dc3057
+1020	1122	1712769134895503242	lib/SDL/CMakeFiles/SDL2.dir/src/render/SDL_yuv_sw.c.o	40d397a0846b42d7
+419	480	1712769134255858162	lib/SDL/CMakeFiles/SDL2.dir/src/SDL_log.c.o	29109e143133ca0
+45	59	1712766530848680271	lib/SDL/include/SDL2/SDL_keycode.h	ddefcf05f5a4283d
+1804	1873	1712769135647552402	lib/SDL/CMakeFiles/SDL2.dir/src/video/dummy/SDL_nullevents.c.o	ed3829f80c10b5d5
+15	29	1712766530818316425	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_bits.h	7dac379a905cee48
+39	51	1712766530841782166	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_guid.h	e6004e7a33e4cfb6
+1340	1388	1712769135161934522	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_malloc.c.o	324eb1af924738d4
+77	88	1712766530878822575	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_pixels.h	de1820fc6746f0b8
+123	135	1712766530925808016	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_vulkan.h	242f8894af798223
+71	83	1712766530872705681	lib/SDL/include/SDL2/SDL_opengles2_gl2.h	b20b541787af5fd0
+31	44	1712766530834788310	lib/SDL/include/SDL2/SDL_events.h	464f341bcbe191a7
+111	123	1712766530913781728	lib/SDL/include/SDL2/SDL_test_md5.h	d5fede215f3c25ab
+1928	2004	1712769135778558238	lib/SDL/CMakeFiles/SDL2.dir/src/joystick/hidapi/SDL_hidapi_ps3.c.o	fc1ec45065d4b1c3
+44	58	1712766530848853772	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_joystick.h	3973703f5adc0fe0
+65	78	1712766530868314958	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengl.h	304e2ee9dfcb2194
+28	39	1712766530829995587	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_cpuinfo.h	d7e96894871a8b95
+14	31	1712766530819572470	lib/SDL/include/SDL2/SDL_audio.h	69016844a00f2dc7
+99	110	1712766530900359060	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_test_assert.h	d8929172f48e999a
+81	94	1712766530884833553	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_quit.h	61c5a55455a7a1ce
+52	66	1712766530855778335	lib/SDL/include/SDL2/SDL_main.h	45859d1b6a35015
+1865	1928	1712769135702928591	lib/SDL/CMakeFiles/SDL2.dir/src/video/offscreen/SDL_offscreenvideo.c.o	e7cefe74cb146ed5
+29	42	1712766530832586720	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_endian.h	1c99380fe0f8a6a9
+969	1022	1712769134796792856	lib/SDL/CMakeFiles/SDL2.dir/src/libm/s_scalbn.c.o	f0dc052c0c41171e
+53	66	1712766530855431501	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_messagebox.h	1acb40a5724bc864
+14	31	1712766530819572470	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_audio.h	69016844a00f2dc7
+32	45	1712766530834990769	lib/SDL/include/SDL2/SDL_gamecontroller.h	3aeb247ecba126fe
+1319	1364	1712769135138894284	lib/SDL/CMakeFiles/SDL2.dir/src/stdlib/SDL_crc16.c.o	b29cce459d70aac7
+41	52	1712766530842552043	lib/SDL/include/SDL2/SDL_haptic.h	82e26588cf159863
+41	52	1712766530842552043	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_haptic.h	82e26588cf159863
+32	45	1712766530835306562	lib/SDL/include/SDL2/SDL_gesture.h	965be2bac0c21776
+84	97	1712766530886969851	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_render.h	6d0ac2af902ed806
+71	81	1712766530871632177	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles2.h	eb56fd0b1bb7938
+14	28	1712766530818358591	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_atomic.h	727e386ecada1d12
+3402	3461	1712769137236630746	lib/SDL/CMakeFiles/SDL2.dir/src/thread/pthread/SDL_systls.c.o	e2c94931ea2289ae
+97	110	1712766530900468602	lib/SDL/include/SDL2/SDL_syswm.h	308409cb470fd22e
+1568	1671	1712769135445821522	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_egl.c.o	db68928dbad83098
+59	72	1712766530862709691	lib/SDL/include/SDL2/SDL_mouse.h	e8460020f4fc5f8f
+71	81	1712766530871632177	lib/SDL/include/SDL2/SDL_opengles2.h	eb56fd0b1bb7938
+3351	3406	1712769137181781764	lib/SDL/CMakeFiles/SDL2.dir/src/thread/pthread/SDL_syscond.c.o	2c7bcdb422b21879
+66	77	1712766530867376247	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengles.h	debbb7577df476e8
+52	64	1712766530854301456	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_log.h	3b381d18d8c36d9e
+1003	1051	1712769134825179990	lib/SDL/CMakeFiles/SDL2.dir/src/power/SDL_power.c.o	790071ff605cf357
+59	71	1712766530860998602	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_misc.h	52bd383bd86184c9
+123	135	1712766530925806224	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_version.h	cbe05cae0c5f827a
+16	32	1712766530820670974	lib/SDL/include/SDL2/SDL_copying.h	f7554976dd890765
+78	91	1712766530881150916	lib/SDL/include/SDL2/SDL_platform.h	7d955bbd452304f
+121	133	1712766530922882215	lib/SDL/include/SDL2/SDL_touch.h	ba6be3a22e5c27ae
+66	80	1712766530870050714	lib/SDL/include/SDL2/SDL_opengl_glext.h	579198d3d9b1db34
+2226	2519	1712769136291711838	lib/SDL/CMakeFiles/SDL2.dir/src/filesystem/cocoa/SDL_sysfilesystem.m.o	2de25005bedf786
+1797	2283	1712758090491425178	all_tests	60564a6966c905
+1671	1742	1712769135515438403	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_vulkan_utils.c.o	e837b98aceab4b69
+28	39	1712766530829995587	lib/SDL/include/SDL2/SDL_cpuinfo.h	d7e96894871a8b95
+91	102	1712766530892705036	lib/SDL/include/SDL2/SDL_shape.h	8af0d9cca13b3dd5
+28	41	1712766530832038468	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_egl.h	2c15e74394b05138
+480	520	1712769134294948627	lib/SDL/CMakeFiles/SDL2.dir/src/audio/SDL_audiodev.c.o	2f815bd925e99474
+64	76	1712766530866536994	lib/SDL/include/SDL2/SDL_name.h	4c39ebfde2dfb16c
+15	32	1712766530819494470	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_clipboard.h	5870bd989be3a350
+133	142	1712766530933176873	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/close_code.h	ba8cc0194d97c695
+94	105	1712766530895887963	lib/SDL/include/SDL2/SDL_surface.h	143a0417a8181b34
+608	745	1712769134519379371	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_events.c.o	bbc6fc7bf99b72ad
+121	133	1712766530922882215	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_touch.h	ba6be3a22e5c27ae
+1409	1530	1712769135304112063	lib/SDL/CMakeFiles/SDL2.dir/src/video/SDL_blit.c.o	6ed8b08a15ace959
+64	76	1712766530866536994	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_name.h	4c39ebfde2dfb16c
+31	42	1712766530832544011	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_error.h	b4d26b86bd572a49
+66	80	1712766530870050714	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_opengl_glext.h	579198d3d9b1db34
+80	92	1712766530882403753	lib/SDL/include/SDL2/SDL_power.h	acae63c3c3f670e4
+13	891	1712776504476611272	CMakeFiles/Ayla.dir/src/main.cpp.o	87c8d3be5ef5c9c7
+6	202	1712776505857660772	build.ninja	aa1f45d40caecede
+16	595	1712768873846467636	lib/googletest-main/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	712cfedd22ae3b28
+45	59	1712766530849758233	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_loadso.h	867003d02610d9eb
+83	94	1712766530885050595	lib/SDL/include/SDL2/SDL_rect.h	4be8cabb04d9ce50
+2908	3601	1712769137370124990	lib/SDL/CMakeFiles/SDL2.dir/src/video/cocoa/SDL_cocoavideo.m.o	9f7d28ae5127351c
+88	98	1712766530889101858	lib/SDL/include/SDL2/SDL_scancode.h	c91be5f536e8cfee
+31	42	1712766530832544011	lib/SDL/include/SDL2/SDL_error.h	b4d26b86bd572a49
+14	28	1712766530818225133	lib/SDL/include/SDL2/SDL.h	a75fee6022be2884
+42	52	1712766530842596418	lib/SDL/include/SDL2/SDL_hidapi.h	7f0e8648c6dc3057
+892	1073	1712776504660105451	Ayla	c0e38031f2f2a72
+15	32	1712766530819494470	lib/SDL/include/SDL2/SDL_clipboard.h	5870bd989be3a350
+420	480	1712769134255244748	lib/SDL/CMakeFiles/SDL2.dir/src/atomic/SDL_atomic.c.o	ce86212f3ec513cb
+520	816	1712769134589042627	lib/SDL/CMakeFiles/SDL2.dir/src/dynapi/SDL_dynapi.c.o	ada8a1fe502170c7
+31	44	1712766530834788310	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_events.h	464f341bcbe191a7
+14	28	1712766530818225133	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL.h	a75fee6022be2884
+1882	1905	1712768875160661000	lib/libgtest_main.a	6a5bc6955eb3425a
+7	665	1712758088870368806	CMakeFiles/all_tests.dir/tests/hello_test.cpp.o	ab451f616dc7bcf2
+653	737	1712769134510962947	lib/SDL/CMakeFiles/SDL2.dir/src/events/SDL_mouse.c.o	e498b1da8e04288f
+42	53	1712766530843504546	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_hints.h	655597d1343ca600
+32	45	1712766530834990769	/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/include/SDL2/SDL_gamecontroller.h	3aeb247ecba126fe
+1797	2283	1712758090491425178	all_tests[1]_tests.cmake	60564a6966c905

@@ -1,0 +1,2 @@
+/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/CMakeFiles/CheckOBJC/CMakeFiles/edit_cache.dir
+/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/lib/SDL/CMakeFiles/CheckOBJC/CMakeFiles/rebuild_cache.dir
