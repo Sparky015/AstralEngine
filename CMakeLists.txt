@@ -34,6 +34,7 @@ add_executable(Ayla main.cpp)
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
 
 
+
         ## Google Test ###
 target_link_libraries(Ayla GTest::gtest_main)
 
