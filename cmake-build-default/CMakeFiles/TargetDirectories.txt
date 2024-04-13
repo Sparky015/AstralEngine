@@ -1,3 +1,0 @@
-C:/Users/fagan/CLionProjects/Ayla/cmake-build-default/CMakeFiles/Ayla.dir
-C:/Users/fagan/CLionProjects/Ayla/cmake-build-default/CMakeFiles/edit_cache.dir
-C:/Users/fagan/CLionProjects/Ayla/cmake-build-default/CMakeFiles/rebuild_cache.dir

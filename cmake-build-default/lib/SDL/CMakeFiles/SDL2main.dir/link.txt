@@ -1,2 +1,0 @@
-C:\Users\fagan\AppData\Local\Programs\CLIONN~1\bin\mingw\bin\ar.exe qc libSDL2main.a CMakeFiles/SDL2main.dir/src/main/windows/SDL_windows_main.c.obj
-C:\Users\fagan\AppData\Local\Programs\CLIONN~1\bin\mingw\bin\ranlib.exe libSDL2main.a
