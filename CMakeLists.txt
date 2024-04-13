@@ -73,19 +73,32 @@ gtest_discover_tests(hello_test)
 
 
 
-#         ------ The Old Ways Used Along the Way ------
+#[[         ------ The Old Ways Used Along the Way ------
 
-
-#include_directories(${CMAKE_SOURCE_DIR}/lib/SDL/include)
+```cmake
+include_directories(${CMAKE_SOURCE_DIR}/lib/SDL/include)
 # ^^^ Fun fact I learned not while making this (for future reference), 'include_directories' tells cmake to also check a given directory
 #     for header files
-#link_directories(${CMAKE_SOURCE_DIR}/lib/SDL/build/build/.libs)
+link_directories(${CMAKE_SOURCE_DIR}/lib/SDL/build/build/.libs)
 # ^^^ Fun fact I learned while making this (for future reference), 'link_directories' tells cmake where to look for library files
 #     so it can eventually link them to the executable later when you call the 'target_link_libraries' command.
+```
+
+        ---------------  ---------------  ---------------  ---------------  ---------------
+
+Just to be clear, I already knew this and it was obvious but 'add_executable' makes the executable for the project/other targets.
 
 
-# Just to be clear, I already knew this and it was obvious but 'add_executable' makes the executable for the project/other targets.
+Apple was so easy to set SDL2 up even though I didn't use the normal .framework files.
+Windows sucked to set up. So many errors and changes made.
 
+        ---------------  ---------------  ---------------  ---------------  ---------------
 
-# Apple was so easy to set SDL2 up even though I didn't use the normal .framework files.
-# Windows sucked to set up. So many errors and changes made.
+I FINALLY GOT THEM BOTH (MAC AND WINDOWS) TO BUILD AND MAKE A WINDOW!!!!!!!!
+YESSSSSSS!!!
+I CAN FINALLY START!!!
+        - Saturday, April 13 (5:37 PM)
+
+        ---------------  ---------------  ---------------  ---------------  ---------------
+
+#]]
