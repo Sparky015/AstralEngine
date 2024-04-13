@@ -41,10 +41,7 @@ target_link_libraries(Ayla ${SDL2_LIBRARIES})
 target_link_libraries(Ayla GTest::gtest_main)
 
 
-## SDL2 ###
-#target_link_libraries(Ayla SDL2)
-# ^^^ Fun fact I learned while making this (for future reference), the 'SDL2-2.0.0' comes from the file it finds that is always prefixed
-#     with lib (libSDL2-2.0.0.dylib). That is how you know what the exact name of the library you are targeting is.
+
 
 
 
@@ -82,6 +79,9 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/SDL/include)
 link_directories(${CMAKE_SOURCE_DIR}/lib/SDL/build/build/.libs)
 # ^^^ Fun fact I learned while making this (for future reference), 'link_directories' tells cmake where to look for library files
 #     so it can eventually link them to the executable later when you call the 'target_link_libraries' command.
+#target_link_libraries(Ayla SDL2)
+# ^^^ Fun fact I learned while making this (for future reference), the 'SDL2' comes from the file it finds that is always prefixed
+#     with lib (libSDL2.dylib). That is how you know what the exact name of the library you are targeting is.
 ```
 
         ---------------  ---------------  ---------------  ---------------  ---------------
