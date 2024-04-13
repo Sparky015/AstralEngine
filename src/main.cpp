@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 #include "SDL.h"
 
 // SDL REQUIRES that it has the 'int argc, char* args[]' main signature, or it will cry.
