@@ -1,5 +1,0 @@
-if(EXISTS "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/UI_tests[1]_tests.cmake")
-  include("/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/cmake-build-debug/UI_tests[1]_tests.cmake")
-else()
-  add_test(UI_tests_NOT_BUILT UI_tests_NOT_BUILT)
-endif()
