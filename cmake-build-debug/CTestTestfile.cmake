@@ -7,4 +7,3 @@
 include("C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug/all_tests[1]_include.cmake")
 include("C:/Users/fagan/CLionProjects/Ayla/cmake-build-debug/hello_test[1]_include.cmake")
 subdirs("lib/googletest-main")
-subdirs("lib/SDL")
