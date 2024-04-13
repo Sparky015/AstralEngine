@@ -16,7 +16,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/googletest-main/)
 include_directories(${CMAKE_SOURCE_DIR}/lib/googletest-main/googletest/include/)
 
 
-#       ### SDL2 ###                  # The config file in SDL2-windows is for all OS platforms (i know cause i ran it on macos and it worked somehow?)
+#       ### SDL2 ###
 set(SDL2_DIR ${CMAKE_SOURCE_DIR}/lib/SDL/SDL2-windows/cmake)
 # (1/2) ^^^ Fun fact I learned while making this (for future reference), you can use 'set' to set a path to point to the SDL2Config.cmake (or sdl2-config.cmake).
 # The SDL2 files comes with a cmake configuration file SDL2Config.cmake which sets up SDL2_INCLUDE_DIRS and SDL2_LIBRARIES.
@@ -26,6 +26,8 @@ find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
 # Also, the naming of the package is based on how the cmake config file is named. It is SDL2 in this case because the config file is SDL2Config.cmake.
 # So its basically the package name is * where the config file is named *Config.cmake (or *-config.cmake).
 
+
+
 include_directories(${SDL2_INCLUDE_DIRS})
 add_executable(Ayla src/main.cpp
         src/main.cpp
@@ -33,11 +35,13 @@ add_executable(Ayla src/main.cpp
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
 
 
-#       ### Google Test ###
+
+
+#       ## Google Test ###
 target_link_libraries(Ayla GTest::gtest_main)
 
 
-#       ### SDL2 ###
+## SDL2 ###
 #target_link_libraries(Ayla SDL2)
 # ^^^ Fun fact I learned while making this (for future reference), the 'SDL2-2.0.0' comes from the file it finds that is always prefixed
 #     with lib (libSDL2-2.0.0.dylib). That is how you know what the exact name of the library you are targeting is.
