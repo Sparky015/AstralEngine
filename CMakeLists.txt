@@ -43,9 +43,6 @@ target_link_libraries(Ayla GTest::gtest_main)
 #     with lib (libSDL2-2.0.0.dylib). That is how you know what the exact name of the library you are targeting is.
 
 
-
-
-
 enable_testing()
 
 add_executable(all_tests tests/hello_test.cpp)
@@ -57,7 +54,6 @@ target_link_libraries(hello_test GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(all_tests)
 gtest_discover_tests(hello_test)
-
 
 
 
