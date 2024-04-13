@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "SDL.h"
 
 // SDL REQUIRES that it has the 'int argc, char* args[]' main signature, or it will cry.
@@ -13,11 +12,11 @@ int main( int argc, char* args[] ) {
     }
 
     SDL_CreateWindow("test", 100, 100, 500, 500, SDL_WINDOW_SHOWN);
-    SDL_Event e;
-    bool quit = false;
-    while(!quit){
-        while(SDL_PollEvent( &e )){
-            if(e.type == SDL_QUIT) quit = true;
+    SDL_Event event;
+    bool hasQuit = false;
+    while(!hasQuit){
+        while(SDL_PollEvent( &event )){
+            if(event.type == SDL_QUIT) { hasQuit = true; }
         }
     }
 
