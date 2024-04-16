@@ -26,12 +26,20 @@ find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
 # Also, the naming of the package is based on how the cmake config file is named. It is SDL2 in this case because the config file is SDL2Config.cmake.
 # So its basically the package name is * where the config file is named *Config.cmake (or *-config.cmake).
 
+if (WIN32)
+    add_definitions(-DAYLA_PLATFORM_WINDOWS)
+elseif (APPLE)
+    add_definitions(-DAYLA_PLATFORM_APPLE)
+endif()
 
+if(BUILD_SHARED_LIBS)
+    add_definitions(-DAYLA_BUILD_SHARED)
+endif()
 
 include_directories(${SDL2_INCLUDE_DIRS})
-add_executable(Ayla src/main.cpp
-        src/main.cpp
-        src/main.cpp)
+add_executable(Ayla src/Ayla/EntryPoint/EngineLoop.cpp
+        src/Ayla/EntryPoint/EntryPoint.cpp)
+add_library(AylaEngine SHARED src/Ayla/EntryPoint/EngineLoop.cpp)
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
 
 
