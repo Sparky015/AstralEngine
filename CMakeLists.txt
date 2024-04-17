@@ -12,12 +12,12 @@ include_directories(${CMAKE_SOURCE_DIR}/include/classes)
 
 
 #       ### Google Test ###
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/googletest-main/)
-include_directories(${CMAKE_SOURCE_DIR}/lib/googletest-main/googletest/include/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/googletest-main/)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest-main/googletest/include/)
 
 
 #       ### SDL2 ###
-set(SDL2_DIR ${CMAKE_SOURCE_DIR}/lib/SDL/SDL2-windows/cmake)
+set(SDL2_DIR ${CMAKE_SOURCE_DIR}/vendor/SDL/SDL2-windows/cmake)
 # (1/2) ^^^ Fun fact I learned while making this (for future reference), you can use 'set' to set a path to point to the SDL2Config.cmake (or sdl2-config.cmake).
 # The SDL2 files comes with a cmake configuration file SDL2Config.cmake which sets up SDL2_INCLUDE_DIRS and SDL2_LIBRARIES.
 find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
@@ -28,34 +28,38 @@ find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
 
 
 
-
+# Set platform macros
 if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
     add_definitions(-DAYLA_PLATFORM_APPLE)
 endif()
 
-if(BUILD_SHARED_LIBS)
-    add_definitions(-DAYLA_BUILD_SHARED)
-endif()
 
+# Include lib headers
 include_directories(${SDL2_INCLUDE_DIRS})
-include_directories(${CMAKE_SOURCE_DIR}/lib/GLFW/include)
+include_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
 
-
+# Point to where the lib files are for GLFW
 if (APPLE)
-    link_directories(${CMAKE_SOURCE_DIR}/lib/GLFW/mac-lib)
+    link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
-    link_directories(${CMAKE_SOURCE_DIR}/lib/GLFW/windows-lib)
+    link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
 
-add_executable(Ayla src/Ayla/EntryPoint/EngineLoop.cpp
-        src/Ayla/EntryPoint/EntryPoint.cpp)
-add_library(AylaEngine SHARED src/Ayla/EntryPoint/EngineLoop.cpp)
+add_executable(Ayla src/Ayla/EntryPoint/WindowLoop.cpp
+        src/Ayla/EntryPoint/EntryPoint.cpp
+        src/Ayla/Application.cpp)
+
+# Create the Shared/DLL library
+add_library(AylaEngine SHARED src/Ayla/EntryPoint/WindowLoop.cpp)
 
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
-target_link_libraries(Ayla glfw.3)
 
+# Defining Macros
+target_compile_definitions(AylaEngine PRIVATE -DAYLA_BUILD_SHARED_LIB)
+
+# Link the GLFW to the executable
 if (APPLE)
     target_link_libraries(Ayla glfw.3)
 elseif (WIN32)
@@ -65,19 +69,18 @@ endif ()
 
 
 
+
 #       ## Google Test ###
 target_link_libraries(Ayla GTest::gtest_main)
-
-
-
-
-
 
 
 enable_testing()
 
 
-add_executable(all_tests tests/hello_test.cpp)
+add_executable(all_tests tests/hello_test.cpp
+        src/Ayla/Application.cpp
+        include/Ayla/Application.h
+        client/src/main.cpp)
 add_executable(hello_test tests/hello_test.cpp)
 
 
