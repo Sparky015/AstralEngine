@@ -6,5 +6,5 @@
 
 // Header for the users of the engine to include for easy access.
 
-#include "Ayla/EntryPoint/WindowLoop.h"
-
+#include <Ayla/EntryPoint/EntryPoint.h>
+#include <Ayla/Application.h>

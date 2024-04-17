@@ -1,0 +1,14 @@
+//
+// Created by sparky on 4/16/2024.
+//
+
+#pragma once
+#include <Ayla/Application.h>
+
+//extern Ayla::Application* Ayla::CreateApplication();
+
+int main (int argc, char* argv[]){
+    auto client_app = Ayla::CreateApplication();
+    client_app->Run();
+    delete client_app;
+}

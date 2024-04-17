@@ -17,10 +17,10 @@ include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest-main/googletest/includ
 
 
 #       ### SDL2 ###
-set(SDL2_DIR ${CMAKE_SOURCE_DIR}/vendor/SDL/SDL2-windows/cmake)
+##set(SDL2_DIR ${CMAKE_SOURCE_DIR}/vendor/SDL/SDL2-windows/cmake)
 # (1/2) ^^^ Fun fact I learned while making this (for future reference), you can use 'set' to set a path to point to the SDL2Config.cmake (or sdl2-config.cmake).
 # The SDL2 files comes with a cmake configuration file SDL2Config.cmake which sets up SDL2_INCLUDE_DIRS and SDL2_LIBRARIES.
-find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
+##find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
 # (2/2) so when you call find_package(SDL2), it searches for SDL2Config.cmake (or sdl2-config.cmake), and that file is responsible for
 # setting up all the necessary variables (like SDL2_LIBRARIES and SDL2_INCLUDE_DIRS) and targets.
 # Also, the naming of the package is based on how the cmake config file is named. It is SDL2 in this case because the config file is SDL2Config.cmake.
@@ -47,17 +47,29 @@ elseif (WIN32)
     link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
 
-add_executable(Ayla src/Ayla/EntryPoint/WindowLoop.cpp
-        src/Ayla/EntryPoint/EntryPoint.cpp
-        src/Ayla/Application.cpp)
+link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
+
+
+
 
 # Create the Shared/DLL library
-add_library(AylaEngine SHARED src/Ayla/EntryPoint/WindowLoop.cpp)
-
-target_link_libraries(Ayla ${SDL2_LIBRARIES})
+add_library(Ayla SHARED
+        src/Ayla/Application.cpp
+        src/Ayla/EntryPoint/WindowLoop.cpp)
 
 # Defining Macros
-target_compile_definitions(AylaEngine PRIVATE -DAYLA_BUILD_SHARED_LIB)
+target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
+
+
+add_executable(ClientGame
+        client/src/main.cpp)
+
+
+target_link_libraries(ClientGame Ayla)
+
+##target_link_libraries(Ayla ${SDL2_LIBRARIES})
+
+
 
 # Link the GLFW to the executable
 if (APPLE)
@@ -69,7 +81,6 @@ endif ()
 
 
 
-
 #       ## Google Test ###
 target_link_libraries(Ayla GTest::gtest_main)
 
@@ -77,10 +88,7 @@ target_link_libraries(Ayla GTest::gtest_main)
 enable_testing()
 
 
-add_executable(all_tests tests/hello_test.cpp
-        src/Ayla/Application.cpp
-        include/Ayla/Application.h
-        client/src/main.cpp)
+add_executable(all_tests tests/hello_test.cpp)
 add_executable(hello_test tests/hello_test.cpp)
 
 

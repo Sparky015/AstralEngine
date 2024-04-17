@@ -7,11 +7,16 @@
 namespace Ayla {
 
      class AYLA_API Application {
-
+     public:
         Application();
 
         ~Application();
+
+        void Run();
+
     };
+
+    AYLA_API extern Application* CreateApplication();
 
 } // Ayla
 

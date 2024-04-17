@@ -5,7 +5,7 @@
 
 
 #include <iostream>
-#include <SDL.h>
+//#include <SDL.h>
 #include <cstdlib>
 
 #include <GLFW/glfw3.h>
