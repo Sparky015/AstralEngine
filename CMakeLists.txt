@@ -54,7 +54,13 @@ add_executable(Ayla src/Ayla/EntryPoint/EngineLoop.cpp
 add_library(AylaEngine SHARED src/Ayla/EntryPoint/EngineLoop.cpp)
 
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
-target_link_libraries(Ayla glfw3)
+target_link_libraries(Ayla glfw.3)
+
+if (APPLE)
+    target_link_libraries(Ayla glfw.3)
+elseif (WIN32)
+    target_link_libraries(Ayla glfw3)
+endif ()
 
 
 
