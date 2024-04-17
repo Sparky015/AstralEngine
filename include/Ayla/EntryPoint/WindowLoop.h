@@ -5,7 +5,7 @@
 
     namespace Ayla::EntryPoint {
 
-        void EngineLoop();
+        void WindowLoop();
 
     } // namespace Ayla::EntryPoint
 

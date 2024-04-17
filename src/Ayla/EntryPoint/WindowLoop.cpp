@@ -1,7 +1,7 @@
 //
 // Created by Andrew Fagan on 4/16/24.
 //
-#include "Ayla/EntryPoint/EngineLoop.h"
+#include "Ayla/EntryPoint/WindowLoop.h"
 
 
 #include <iostream>
@@ -12,16 +12,17 @@
 
 namespace Ayla::EntryPoint {
 
-    void EngineLoop(){
+    void WindowLoop(){
         std::cout << "Hello, World!" << std::endl;
 
+        //SDL Implementation:
 //        // Remember to initialize SDL
 //        if (SDL_Init(SDL_INIT_VIDEO) < 0){
 //            std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
 //            exit(EXIT_FAILURE);
 //        }
 //
-//        SDL_CreateWindow("test", 100, 100, 500, 500, SDL_WINDOW_SHOWN);
+//        SDL_CreateWindow("test", 100, 100, 1280, 720, SDL_WINDOW_SHOWN);
 //        SDL_Event event;
 //        bool hasQuit = false;
 //        while(!hasQuit){
@@ -32,12 +33,13 @@ namespace Ayla::EntryPoint {
 //
 //        SDL_Quit();   // Cleanup after we're done
 
+        // GLFW Implementation
         if (!glfwInit()) {
             std::cout << "GLFW could not initialize!" << std::endl;
             exit(EXIT_FAILURE);
         }
 
-        GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Window", nullptr, nullptr);
+        GLFWwindow* window = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
         if (!window) {
             std::cout << "Failed to create GLFW window" << std::endl;
             glfwTerminate();

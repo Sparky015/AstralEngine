@@ -31,9 +31,9 @@ The Ayla Game Engine (temp name)
 1. Set up entry point into application and engine and the loop
 2. Logging System
 3. Event System
-4. A little bit of the renderer (setup and such for Vulkan)
+4. A little bit of the renderer (setup and such for OpenGL (just for learning, later implement Vulkan!!!))
 5. Entity Component System
 6. Scene Editor
 7. Scripting System
-8. Physics Engine
+8. Physics Engine 
 9. 
