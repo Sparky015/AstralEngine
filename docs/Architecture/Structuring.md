@@ -24,3 +24,8 @@ and be kept in its own little unit/subsystem/class.
 
 Expose certain functions that allow functionality for the system or subsystem. Alya_API will be the umbrella API from which the engine will be ran from.
 Then maybe if you need a certain system, you can include the header for that system's API.
+
+#### The Ayla API
+
+Use the macro AYLA_API in order to include a function or class in the overall API.
+That way it is visible to the user.

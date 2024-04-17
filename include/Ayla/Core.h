@@ -5,13 +5,13 @@
 #pragma once
 
 #ifdef AYLA_PLATFORM_WINDOWS
-    #ifdef AYLA_BUILD_SHARED
+    #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __declspec(dllexport)        // Export
     #else
         #define AYLA_API __declspec(dllimport)        // Import
     #endif
 #elif AYLA_PLATFORM_APPLE
-    #ifdef AYLA_BUILD_SHARED
+    #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __attribute__((visibility("default")))       // Export
     #else
         #define AYLA_API        // Import

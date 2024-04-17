@@ -28,21 +28,19 @@ find_package(SDL2 HINTS ${SDL2_DIR} REQUIRED)
 
 
 
-
+# Set platform macros
 if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
     add_definitions(-DAYLA_PLATFORM_APPLE)
 endif()
 
-if(BUILD_SHARED_LIBS)
-    add_definitions(-DAYLA_BUILD_SHARED)
-endif()
 
+# Include lib headers
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
 
-
+# Point to where the lib files are for GLFW
 if (APPLE)
     link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
@@ -51,13 +49,17 @@ endif ()
 
 add_executable(Ayla src/Ayla/EntryPoint/WindowLoop.cpp
         src/Ayla/EntryPoint/EntryPoint.cpp
-        src/Ayla/Application.cpp
-        include/Ayla/Application.h
-        include/Ayla.h)
+        src/Ayla/Application.cpp)
+
+# Create the Shared/DLL library
 add_library(AylaEngine SHARED src/Ayla/EntryPoint/WindowLoop.cpp)
 
 target_link_libraries(Ayla ${SDL2_LIBRARIES})
 
+# Defining Macros
+target_compile_definitions(AylaEngine PRIVATE -DAYLA_BUILD_SHARED_LIB)
+
+# Link the GLFW to the executable
 if (APPLE)
     target_link_libraries(Ayla glfw.3)
 elseif (WIN32)
@@ -67,13 +69,9 @@ endif ()
 
 
 
+
 #       ## Google Test ###
 target_link_libraries(Ayla GTest::gtest_main)
-
-
-
-
-
 
 
 enable_testing()
@@ -81,7 +79,8 @@ enable_testing()
 
 add_executable(all_tests tests/hello_test.cpp
         src/Ayla/Application.cpp
-        include/Ayla/Application.h)
+        include/Ayla/Application.h
+        client/src/main.cpp)
 add_executable(hello_test tests/hello_test.cpp)
 
 
