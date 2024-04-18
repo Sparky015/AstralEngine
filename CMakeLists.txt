@@ -55,7 +55,9 @@ link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 # Create the Shared/DLL library
 add_library(Ayla SHARED
         src/Ayla/Application.cpp
-        src/Ayla/EntryPoint/WindowLoop.cpp)
+        src/Ayla/EntryPoint/WindowLoop.cpp
+        include/Ayla/EventSystem/EventDispatcher.h
+        include/Ayla/EventSystem/InputEvent.h)
 
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)

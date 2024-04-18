@@ -7,28 +7,42 @@
 #include <vector>
 #include <cstdio>
 
-namespace Events{
+namespace Ayla{
 
-    struct EmptyArgs{};
+
+    enum EventTypes {NONE, INPUT_EVENT};
 
     //
     // Summary:
-    //  EventHandler is a class that is used to manage events
-    template<typename... EventArgs>
-    class EventHandler {
+    //  Event is a base class that is used to manage events
+
+    class Event {
     public:
+
+        //TODO: Add an Event dispatcher
+        //TODO: Add filtering in the event dispatcher for certain Event types
+
         // The function pointer signature that needs to be adhered when subscribing to events
-        typedef void (*SubscriberFunctionPointer)(EventArgs...);
+        typedef void (*SubscriberFunctionPointer)(Event&);
         struct EmptyArgs{};
+
         //
         // Summary:
-        //     Raises the event
+        //     Raises the event which pushes the event to the event dispatcher.
+        void raiseEventToDispatcher() const {
+            // eventDispatcher.addEvent(this);  From dispatcher then take in a reference to an Event type.
+        }
+
+        // TODO: maybe make this some sort of private function but availible to event dispatcher
+        // Summary:
+        //     Executes all the listener functions of the event
         // Parameter:
         //  eventArgs:
         //      The event data that will be passed along to the subscriber functions
-        void raiseEvent(EventArgs... eventArgs) const {
-            executeAllSubscriberFunctions(eventArgs...);
+        void raiseEvent(Event& eventArgs) const {
+            executeAllSubscriberFunctions(eventArgs);
         }
+
 
         //
         // Summary:
@@ -62,6 +76,10 @@ namespace Events{
             subscriberVector.erase(std::remove(subscriberVector.begin(), subscriberVector.end(), subscriberFunction), subscriberVector.end());
         };
 
+        virtual int getEventType() { return NONE;}
+
+
+
     private:
 
         std::vector<SubscriberFunctionPointer> subscriberVector;
@@ -72,11 +90,14 @@ namespace Events{
         // Parameter:
         //  eventArgs:
         //      The event data that will be passed along to the subscriber functions
-        void executeAllSubscriberFunctions(EventArgs... eventArgs) const {
+        void executeAllSubscriberFunctions(Event& eventArgs) const {
             for (const SubscriberFunctionPointer function_pointer : subscriberVector) {
-                function_pointer(eventArgs...);
+                function_pointer(eventArgs);
             }
         }
     };
 }
+
+
+
 
