@@ -49,7 +49,8 @@ add_library(Ayla SHARED
         src/Ayla/EventSystem/Event.cpp
         src/Ayla/EventSystem/EventDispatcher.cpp
         src/Ayla/EventSystem/InputEvent.cpp
-        src/Ayla/aypch.cpp)
+        src/Ayla/aypch.cpp
+        include/Ayla/WindowSystem/GenericWindow.cpp)
 
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)

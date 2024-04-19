@@ -3,7 +3,8 @@
 //
 
 #include <Ayla/Application.h>
-#include <Ayla/EntryPoint/WindowLoop.h>
+#include <Ayla/WindowSystem/GenericWindow.h>
+#include <Ayla/aypch.h>
 
 namespace Ayla {
 
@@ -12,7 +13,17 @@ namespace Ayla {
     Application::~Application() = default;
 
     void Application::Run() {
-        EntryPoint::WindowLoop();
+        std::cout << "Hello, World!" << std::endl;
+
+
+        while (!glfwWindowShouldClose(m_window->getGLFWwindow())) {
+            glfwPollEvents();
+        }
+
+        exit(EXIT_SUCCESS);
+
     }
+
+
 
 } // Ayla
