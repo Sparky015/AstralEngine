@@ -15,9 +15,11 @@ namespace Ayla {
 
         void Run();
 
+        void onEvent(Event&);
+
      private:
          bool m_appIsRunning = true;
-         std::unique_ptr<GenericWindow> m_window = std::make_unique<GenericWindow>();
+         std::unique_ptr<Window> m_window;
     };
 
      // Defined Client Side
