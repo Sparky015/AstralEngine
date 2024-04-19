@@ -33,7 +33,6 @@ link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 # Create the Shared/DLL library
 add_library(Ayla SHARED
         src/Ayla/Core/Application.cpp
-        src/Ayla/EntryPoint/WindowLoop.cpp
         src/Ayla/EventSystem/Event.cpp
         src/Ayla/EventSystem/EventDispatcher.cpp
         src/Ayla/EventSystem/InputEvent.cpp
