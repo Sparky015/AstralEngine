@@ -8,7 +8,10 @@
 
 namespace Ayla {
 
-    Application::Application() = default;
+    Application::Application() {
+        m_window = std::unique_ptr<Window>(Window::createWindow());
+        m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+    }
 
     Application::~Application() = default;
 
@@ -24,6 +27,9 @@ namespace Ayla {
 
     }
 
+    void Application::onEvent(Ayla::Event &) {
+        std::cout << "Event occurred!" << std::endl;
+    }
 
 
 } // Ayla

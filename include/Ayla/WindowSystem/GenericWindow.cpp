@@ -20,6 +20,9 @@ namespace Ayla{
     }
 
     void GenericWindow::init(const WindowProperties& windowProperties) {
+        m_windowData.title = windowProperties.title;
+        m_windowData.height = windowProperties.height;
+        m_windowData.width = windowProperties.width;
 
         // GLFW Implementation
         if (!s_isGLFWInitialized){
@@ -36,6 +39,7 @@ namespace Ayla{
             glfwTerminate();
             exit(EXIT_FAILURE);
         }
+        glfwSetWindowUserPointer(m_window, &m_windowData);
     }
 
     int GenericWindow::getWidth() const {
@@ -47,7 +51,7 @@ namespace Ayla{
     }
 
     void GenericWindow::setEventCallback(const Ayla::Window::EventCallback& callback) {
-        m_callback = callback;
+        m_windowData.callback = callback;
     }
 
     void GenericWindow::onUpdate() {

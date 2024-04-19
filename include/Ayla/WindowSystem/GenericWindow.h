@@ -20,10 +20,20 @@ namespace Ayla{
         int getHeight() const override;
         void setEventCallback(const EventCallback& callback) override;
         void onUpdate() override;
-        GLFWwindow* getGLFWwindow();
+        GLFWwindow* getGLFWwindow() override;
     private:
         GLFWwindow* m_window;
         WindowProperties m_windowProperties;
-        EventCallback m_callback;
+
+        struct WindowData{
+            int width;
+            int height;
+            std::string title;
+            bool vSync; // TODO: Figure out what this is and why I should add it
+
+            EventCallback callback;
+        };
+
+        WindowData m_windowData;
     };
 }

@@ -5,6 +5,7 @@
 
 #include <Ayla/aypch.h>
 #include <Ayla/EventSystem/Event.h>
+#include <GLFW/glfw3.h>
 
 namespace Ayla{
 
@@ -23,7 +24,7 @@ namespace Ayla{
     public:
         using EventCallback = std::function<void(Event&)>;
 
-        virtual ~Window() {};
+        virtual ~Window() = default;
 
         virtual void onUpdate() = 0;
 
@@ -31,6 +32,8 @@ namespace Ayla{
         [[nodiscard]] virtual int getHeight() const = 0;
 
         virtual void setEventCallback(const EventCallback& callback) = 0;
+
+        virtual GLFWwindow* getGLFWwindow() = 0;
 
         static Window* createWindow(const WindowProperties& properties = WindowProperties());
     };
