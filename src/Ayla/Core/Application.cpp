@@ -2,8 +2,7 @@
 // Created by sparky on 4/16/2024.
 //
 
-#include <Ayla/Application.h>
-#include <Ayla/WindowSystem/GenericWindow.h>
+#include "Ayla/Core/Application.h"
 #include <Ayla/aypch.h>
 
 namespace Ayla {

@@ -3,9 +3,9 @@
 //
 
 #pragma once
-#include <Ayla/Application.h>
+#include "Ayla/Core/Application.h"
 
-//extern Ayla::Application* Ayla::CreateApplication();
+
 
 int main (int argc, char* argv[]){
     auto client_app = Ayla::CreateApplication();

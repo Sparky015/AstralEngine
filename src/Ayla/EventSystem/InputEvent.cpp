@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 4/18/24.
 //
 
-#include <Ayla/EventSystem/InputEvent.h>
+#include "Ayla/EventSystem/InputEvent.h"
 
 
 namespace Ayla{
