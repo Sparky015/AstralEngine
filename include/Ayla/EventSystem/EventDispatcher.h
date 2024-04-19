@@ -4,24 +4,16 @@
 #pragma once
 
 #include <Ayla/EventSystem/Event.h>
-#include <queue>
+
 
 namespace Ayla{
 
     class EventDispatcher {
     public:
+        static std::shared_ptr<Event> takeEventFromQueue();
+        static void addEventToQueue(std::shared_ptr<Event> event);
 
     private:
-        Event& takeEventFromQueue(){
-            Event& event = eventQueue.front();
-            eventQueue.pop();
-            return event;
-        }
-
-        void addEventToQueue(Event& event){
-            eventQueue.push(event);
-        }
-
-        std::queue<Event> eventQueue;
+        static std::queue<std::shared_ptr<Event>> eventQueue;
     };
 }

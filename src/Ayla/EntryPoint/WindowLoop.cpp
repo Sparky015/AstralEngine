@@ -15,24 +15,6 @@ namespace Ayla::EntryPoint {
     void WindowLoop(){
         std::cout << "Hello, World!" << std::endl;
 
-        //SDL Implementation:
-//        // Remember to initialize SDL
-//        if (SDL_Init(SDL_INIT_VIDEO) < 0){
-//            std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-//            exit(EXIT_FAILURE);
-//        }
-//
-//        SDL_CreateWindow("test", 100, 100, 1280, 720, SDL_WINDOW_SHOWN);
-//        SDL_Event event;
-//        bool hasQuit = false;
-//        while(!hasQuit){
-//            while(SDL_PollEvent( &event )){
-//                if(event.type == SDL_QUIT) { hasQuit = true; }
-//            }
-//        }
-//
-//        SDL_Quit();   // Cleanup after we're done
-
         // GLFW Implementation
         if (!glfwInit()) {
             std::cout << "GLFW could not initialize!" << std::endl;

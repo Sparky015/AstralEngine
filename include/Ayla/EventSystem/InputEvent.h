@@ -4,11 +4,11 @@
 #pragma once
 
 #include <Ayla/EventSystem/Event.h>
+
 namespace Ayla{
 
     class InputEvent : public Event {
-        int getEventType() override {
-            return INPUT_EVENT;
-        }
+        int getEventType() override;
     };
+
 }

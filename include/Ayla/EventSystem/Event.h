@@ -3,12 +3,9 @@
 //
 
 #pragma once
-
-#include <vector>
-#include <cstdio>
+#include <Ayla/aypch.h>
 
 namespace Ayla{
-
 
     enum EventTypes {NONE, INPUT_EVENT};
 
@@ -29,19 +26,15 @@ namespace Ayla{
         //
         // Summary:
         //     Raises the event which pushes the event to the event dispatcher.
-        void raiseEventToDispatcher() const {
-            // eventDispatcher.addEvent(this);  From dispatcher then take in a reference to an Event type.
-        }
+        void raiseEventToDispatcher();
 
-        // TODO: maybe make this some sort of private function but availible to event dispatcher
+
         // Summary:
         //     Executes all the listener functions of the event
         // Parameter:
         //  eventArgs:
         //      The event data that will be passed along to the subscriber functions
-        void raiseEvent(Event& eventArgs) const {
-            executeAllSubscriberFunctions(eventArgs);
-        }
+        void raiseEvent(Event& eventArgs);
 
 
         //
@@ -51,14 +44,10 @@ namespace Ayla{
         //  subscriberFunction:
         //      The pointer to the function being subscribed (which also adheres to the
         //      SubscriberFunctionPointer signature).
-        void subscribe(const SubscriberFunctionPointer subscriberFunction) {
-            subscriberVector.push_back(subscriberFunction);
-        }
+        void subscribe(SubscriberFunctionPointer subscriberFunction);
 
         // Like 'subscribe' but as an operator (like c#)
-        void operator+=(SubscriberFunctionPointer subscriberFunction){
-            subscriberVector.push_back(subscriberFunction);
-        };
+        void operator+=(SubscriberFunctionPointer subscriberFunction);
 
         //
         // Summary:
@@ -67,16 +56,12 @@ namespace Ayla{
         //  subscriberFunction:
         //      The pointer to the function being unsubscribed (which also adheres to the
         //      SubscriberFunctionPointer signature).
-        void unsubscribe(const SubscriberFunctionPointer subscriberFunction) {
-            subscriberVector.erase(std::remove(subscriberVector.begin(), subscriberVector.end(), subscriberFunction), subscriberVector.end());
-        }
+        void unsubscribe(SubscriberFunctionPointer subscriberFunction);
 
         // Like 'unsubscribe' but as an operator (like c#)
-        void operator-=(SubscriberFunctionPointer subscriberFunction){
-            subscriberVector.erase(std::remove(subscriberVector.begin(), subscriberVector.end(), subscriberFunction), subscriberVector.end());
-        };
+        void operator-=(SubscriberFunctionPointer subscriberFunction);
 
-        virtual int getEventType() { return NONE;}
+        virtual int getEventType();
 
 
 
@@ -90,12 +75,13 @@ namespace Ayla{
         // Parameter:
         //  eventArgs:
         //      The event data that will be passed along to the subscriber functions
-        void executeAllSubscriberFunctions(Event& eventArgs) const {
-            for (const SubscriberFunctionPointer function_pointer : subscriberVector) {
-                function_pointer(eventArgs);
-            }
-        }
+        void executeAllSubscriberFunctions(Event& eventArgs);
+
     };
+
+
+    int PollEvent(Event&);
+
 }
 
 
