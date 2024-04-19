@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <Ayla/WindowSystem/Window.h>
-#include <GLFW/glfw3.h>
+#include "Ayla/WindowSystem/Window.h"
+#include "GLFW/glfw3.h"
 
 namespace Ayla{
 

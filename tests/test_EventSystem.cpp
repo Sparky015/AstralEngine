@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 4/18/24.
 //
 #include <gtest/gtest.h>
-#include <Ayla/EventSystem/Event.h>
+#include "../src/Ayla/EventSystem/Event.h"
 
 
 void onRequestPrint(Ayla::Event&){

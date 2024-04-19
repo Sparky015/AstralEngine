@@ -1,7 +1,7 @@
 //
 // Created by Andrew Fagan on 4/18/24.
 //
-#include <Ayla/WindowSystem/GenericWindow.h>
+#include "Ayla/WindowSystem/GenericWindow.h"
 
 namespace Ayla{
 

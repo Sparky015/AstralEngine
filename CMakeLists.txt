@@ -8,9 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 
-#       ### Ayla ###
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/include/classes)
+
 
 
 #       ### Google Test ###
@@ -26,16 +24,6 @@ elseif (APPLE)
 endif()
 
 
-# Include lib headers
-include_directories(${SDL2_INCLUDE_DIRS})
-include_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
-
-# Point to where the lib files are for GLFW
-if (APPLE)
-    link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
-elseif (WIN32)
-    link_directories(${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
-endif ()
 
 link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 
@@ -44,19 +32,35 @@ link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 
 # Create the Shared/DLL library
 add_library(Ayla SHARED
-        src/Ayla/Application.cpp
+        src/Ayla/Core/Application.cpp
         src/Ayla/EntryPoint/WindowLoop.cpp
         src/Ayla/EventSystem/Event.cpp
         src/Ayla/EventSystem/EventDispatcher.cpp
         src/Ayla/EventSystem/InputEvent.cpp
         src/Ayla/aypch.cpp
-        include/Ayla/WindowSystem/GenericWindow.cpp)
+        src/Ayla/WindowSystem/GenericWindow.cpp)
+
+#       ### Ayla Includes ###
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/src)
+
+# Include lib headers
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
+
+# Point to where the lib files are for GLFW
+if (APPLE)
+    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
+elseif (WIN32)
+    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
+endif ()
+
+
 
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
 
 # Defining Precompiled Headers
-target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/include/Ayla/aypch.h)
+target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/src/Ayla/aypch.h)
 
 add_executable(ClientGame
         client/src/main.cpp)
