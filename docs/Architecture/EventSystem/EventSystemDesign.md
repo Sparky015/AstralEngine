@@ -47,3 +47,5 @@ that differs from other event types.
 For retrieving an event, I can have a function from the dispatcher that will take the next event off the queue and std::move into a
 user- event via a reference.
 
+I might now change the Event class to be a class just for holding data instead of having dispatching functionality too. Currently, each Event class
+has stores all the callback functions itself and adds callbacks itself on top storing info.
