@@ -10,6 +10,7 @@
 #include <memory>
 #include <thread>
 #include <utility>
+#include <cstdio>
 
 // Data Structures
 #include <string>
@@ -23,9 +24,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-// Other C Stuff
-#include <cstdio>
-
+// Other Stuff
+#include <Ayla/Core.h>
 
 #ifdef AYLA_PLATFORM_WINDOWS
     #include <Windows.h>

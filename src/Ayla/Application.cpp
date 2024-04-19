@@ -7,13 +7,9 @@
 
 namespace Ayla {
 
-    Application::Application() {
+    Application::Application() = default;
 
-    }
-
-    Application::~Application() {
-
-    }
+    Application::~Application() = default;
 
     void Application::Run() {
         EntryPoint::WindowLoop();
