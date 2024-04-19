@@ -27,10 +27,8 @@ namespace Ayla {
 
     }
 
-    void Application::onEvent(Event& e) {
+    void Application::onEvent(Ayla::Event &) {
         std::cout << "Event occurred!" << std::endl;
-
-        // From here, filter events into different callback functions (onMouseMove or onSomething etc.)
     }
 
 

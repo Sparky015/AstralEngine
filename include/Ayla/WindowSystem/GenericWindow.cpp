@@ -50,7 +50,7 @@ namespace Ayla{
         return m_windowProperties.height;;
     }
 
-    void GenericWindow::setEventCallback(const Window::EventCallback& callback) {
+    void GenericWindow::setEventCallback(const Ayla::Window::EventCallback& callback) {
         m_windowData.callback = callback;
     }
 
