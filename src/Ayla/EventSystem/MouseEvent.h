@@ -3,11 +3,12 @@
 //
 
 #pragma once
-
+#include <Ayla/EventSystem/Event.h>
 namespace Ayla {
 
-    class MouseEvent {
-
+    class MouseEvent : Event {
+        float xPos;
+        float yPos;
     };
 
 } // Ayla

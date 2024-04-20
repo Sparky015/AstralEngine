@@ -8,7 +8,7 @@
 
 namespace Ayla {
 
-    class KeyEvent {
+    class WindowEvent {
 
     };
 

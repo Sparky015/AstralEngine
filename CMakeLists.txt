@@ -35,7 +35,6 @@ add_library(Ayla SHARED
         src/Ayla/Core/Application.cpp
         src/Ayla/EventSystem/Event.cpp
         src/Ayla/EventSystem/EventDispatcher.cpp
-        src/Ayla/EventSystem/InputEvent.cpp
         src/Ayla/aypch.cpp
         src/Ayla/WindowSystem/GenericWindow.cpp)
 

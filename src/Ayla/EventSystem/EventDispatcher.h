@@ -10,10 +10,14 @@ namespace Ayla{
 
     class EventDispatcher {
     public:
-        static std::shared_ptr<Event> takeEventFromQueue();
-        static void addEventToQueue(std::shared_ptr<Event> event);
+
+        static void addEventToQueue(Event& event);
+        void dispatchAllEvents();
 
     private:
+        static std::shared_ptr<Event> takeEventFromQueue();
+        void dispatchEvent(const std::shared_ptr<Event>&);
+        int PollEvent(Event& event);
         static std::queue<std::shared_ptr<Event>> eventQueue;
     };
 }

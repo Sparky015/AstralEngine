@@ -81,12 +81,6 @@ namespace Ayla{
     }
 
 
-    int PollEvent(Event& event){
-        auto eventPtr = EventDispatcher::takeEventFromQueue();
-        if (eventPtr == nullptr) {return 0;}
 
-        event = std::move(*(eventPtr));
-        return 1;
-    }
 
 }
