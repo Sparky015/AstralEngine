@@ -12,4 +12,15 @@ namespace Ayla {
 
     };
 
+    class KeyPressedEvent : KeyEvent {
+
+
+    };
+
+
+    class KeyReleased : KeyEvent {
+
+    };
+
+
 } // Ayla

@@ -16,8 +16,8 @@ namespace Ayla{
     // Summary:
     //     Raises the event which pushes the event to the event dispatcher.
     void Event::raiseEventToDispatcher() {
-        std::shared_ptr<Event> eventPtr = std::make_shared<Event>();
-        EventDispatcher::addEventToQueue(eventPtr);
+        //std::shared_ptr<Event> eventPtr = std::make_shared<Event>();
+        //EventDispatcher::addEventToQueue(eventPtr);
     }
 
 
