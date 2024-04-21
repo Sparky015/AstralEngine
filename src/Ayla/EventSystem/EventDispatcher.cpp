@@ -17,7 +17,11 @@ namespace Ayla {
             for (int element = 0; element < eventQueue.size(); element++){
                 dispatchEvent( takeEventFromQueue());
             }
+        }
 
+        void EventDispatcher::dispatchBlockingEvent(Event& dispatchingEvent) {
+            Event event = std::move(dispatchingEvent);
+            // Filter out event through layers
         }
 
 // PRIVATE
@@ -29,9 +33,9 @@ namespace Ayla {
             return event;
         }
 
-        void EventDispatcher::dispatchEvent(const std::shared_ptr<Event>& event) {
+        void EventDispatcher::dispatchEvent(const std::shared_ptr<Event>& dispatchingEventPtr) {
+            Event event = std::move(*dispatchingEventPtr);
             // Filter out event through layers
-
 
 
         }

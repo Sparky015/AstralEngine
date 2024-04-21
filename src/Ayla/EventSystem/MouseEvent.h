@@ -6,50 +6,79 @@
 #include <Ayla/EventSystem/Event.h>
 namespace Ayla {
 
-    class MouseButtonEvent : Event {
-
+    class MouseButtonEvent : public Event {
     public:
-        float getPosX() const { return m_mouseX; }
-        float getPosY() const { return m_mouseY; }
-
-        virtual int getEventCategory() override {
+        int getEventCategoryFlags() override {
             return (MouseButtonCategory | MouseCategory | InputCategory);
         }
-
-    private:
-        float m_mouseX;
-        float m_mouseY;
     };
 
 
-    class MouseButtonReleaseEvent : MouseButtonEvent{
+    class MouseButtonReleaseEvent : public MouseButtonEvent{
     public:
-        virtual int getEventCategory() override {
+        MouseButtonReleaseEvent(int button) : m_button(button){}
+
+        int getEventCategoryFlags() override {
             return (MouseButtonCategory | MouseCategory | InputCategory);
         }
-        virtual int getEventType() override {
+        int getEventType() override {
             return MOUSE_BUTTON_RELEASED;
         }
+        int getButton() const { return m_button;}
+    private:
+        int m_button;
     };
 
-    class MouseButtonPressEvent : MouseButtonEvent {
+    class MouseButtonPressEvent : public MouseButtonEvent {
     public:
-        virtual int getEventCategory() override {
+        MouseButtonPressEvent(int button) : m_button(button){}
+
+        int getEventCategoryFlags() override {
             return (MouseButtonCategory | MouseCategory | InputCategory);
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return MOUSE_BUTTON_PRESSED;
         }
+        int getButton() const { return m_button;}
+    private:
+        int m_button;
     };
 
-    class MouseScrollEvent : Event {
+    class MouseScrollEvent : public Event {
     public:
-        virtual int getEventCategory() override {
+        MouseScrollEvent(double xoffset, double yoffset) : m_xoffset(xoffset), m_yoffset(yoffset){}
+        int getEventCategoryFlags() override {
             return (MouseCategory | InputCategory);
         }
-        virtual int getEventType() override {
+        int getEventType() override {
             return MOUSE_SCROLLED;
         }
+
+        double getXOffset() const { return m_xoffset; }
+        double getYOffset() const { return m_yoffset; }
+
+
+    private:
+        double m_xoffset;
+        double m_yoffset;
+    };
+
+    class MouseMovedEvent : public Event {
+    public:
+        MouseMovedEvent(double xpos, double ypos) : m_xpos(xpos), m_ypos(ypos){}
+        int getEventCategoryFlags() override {
+            return (MouseCategory | InputCategory);
+        }
+
+        int getEventType() override {
+            return MOUSE_MOVED;
+        }
+
+        double getXPos() const { return m_xpos; }
+        double getYPos() const { return m_ypos; }
+    private:
+        double m_xpos;
+        double m_ypos;
     };
 
 

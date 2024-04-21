@@ -26,7 +26,10 @@ namespace Ayla {
 
     }
 
-    void Application::onEvent(Ayla::Event &) {
+    void Application::onEvent(Ayla::Event& event) {
+        if (event.getEventType() == MOUSE_MOVED) return;
+
+
         std::cout << "Event occurred!" << std::endl;
     }
 

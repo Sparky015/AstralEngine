@@ -8,10 +8,10 @@
 namespace Ayla{
 
     enum EventTypes {NONE,
-            WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
+            WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_GAINED_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
             APP_TICK, APP_UPDATE, APP_RENDER,
-            KEY_PRESSED, KEY_RELEASED,
-            MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_SCROLLED
+            KEY_PRESSED, KEY_RELEASED, KEY_PRESSED_REPEATING,
+            MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_SCROLLED, MOUSE_MOVED
     };
 
 
@@ -24,25 +24,19 @@ namespace Ayla{
         MouseButtonCategory = 1 < 4,
     };
 
+
     class Event {
     public:
 
-        //TODO: Add an Event dispatcher
-
-
-
-
-
-
-        virtual int getEventCategory();
+        virtual int getEventCategoryFlags();
         virtual int getEventType();
 
+        bool isInCategory(EventCategory category) {
+            return getEventCategoryFlags() & category;
+        }
+
     protected:
-        bool _handled = false;
-
-    private:
-
-
+        bool m_isHandled = false;
 
 
     };

@@ -49,3 +49,11 @@ user- event via a reference.
 
 I might now change the Event class to be a class just for holding data instead of having dispatching functionality too. Currently, each Event class
 has stores all the callback functions itself and adds callbacks itself on top storing info.
+
+Ok, now... the Event class is just a class that will be derived from to. The derived classes will just be containers of info for the event, at which
+they will be passed to the dispatcher to be handled. Also, having a base class makes it easier to pass around the instances because
+I can just use the Event type as the type but still pass in all the different types of events. (tldr, all Event classes are containers of info
+now that are now separated from the dispatcher. Dispatcher will now have its own class that will handle all callbacks and filtering) 
+
+Some derived events don't even have data correlated with it. It just has a type which is used as just a signal to listeners to 
+say "Hey, this happened. Act accordingly"
