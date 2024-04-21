@@ -71,7 +71,7 @@ namespace Ayla {
         }
 
         int getEventType() override {
-            return MOUSE_MOVED;
+            return MOUSE_CURSOR_MOVED;
         }
 
         double getXPos() const { return m_xpos; }
