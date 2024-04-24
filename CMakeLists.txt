@@ -43,7 +43,9 @@ add_library(Ayla SHARED
         src/Ayla/Core/Layer.cpp
         src/Ayla/Core/Layer.h
         src/Ayla/Core/LayerTower.cpp
-        src/Ayla/Core/LayerTower.h)
+        src/Ayla/Core/LayerTower.h
+        src/Ayla/ImGui/ImGuiLayer.cpp
+        src/Ayla/ImGui/ImGuiLayer.h)
 
 #       ### Ayla Includes ###
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
