@@ -57,7 +57,7 @@ namespace Ayla {
         m_callback = std::move(callback);
     }
 
-    void Layer::callbackFn(Ayla::Event& event) {
+    void Layer::onEvent(Ayla::Event& event) {
         m_callback(event);
     }
 

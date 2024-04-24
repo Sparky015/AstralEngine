@@ -17,6 +17,10 @@ namespace Ayla{
        return m_isHandled;
    }
 
+    void Event::setIsHandled(bool state) {
+       m_isHandled = state;
+   }
+
 
 
 }

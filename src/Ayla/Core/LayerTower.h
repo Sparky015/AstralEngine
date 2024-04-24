@@ -20,7 +20,8 @@ namespace Ayla {
         void insertOverlayLayer(Layer*, int);
         void removeOverlayLayer(Layer*);
 
-        void dispatchEvent(Event&);
+        void sendEventUpTower(Event&);
+        void sendEventDownTower(Event&);
 
 
         LayerTower(const LayerTower&) = delete;

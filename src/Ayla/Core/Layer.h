@@ -16,7 +16,7 @@ namespace Ayla {
         void detachLayer();
         void removeLayer();
         void setCallback(std::function<void(Event&)>);
-        void callbackFn(Event&);
+        void onEvent(Event&);
 
         bool isEnabled();
         void enable();

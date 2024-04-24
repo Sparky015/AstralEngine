@@ -37,7 +37,7 @@ namespace Ayla{
         bool isInCategory(EventCategory category) {
             return getEventCategoryFlags() & category;
         }
-
+        void setIsHandled(bool);
         bool isHandled();
     protected:
         bool m_isHandled = false;

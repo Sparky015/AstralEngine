@@ -46,16 +46,29 @@ namespace Ayla {
 
     }
 
-    void LayerTower::dispatchEvent(Ayla::Event& event) {
+    void LayerTower::sendEventDownTower(Ayla::Event& event) {
         for (Layer* layer : m_layers){
             if (event.isHandled()) {return;}
-            layer->callbackFn(event);
+            layer->onEvent(event);
         }
         for (Layer* layer : m_overlayLayers){
             if (event.isHandled()) {return;}
-
+            layer->onEvent(event);
         }
     }
+
+    void LayerTower::sendEventUpTower(Ayla::Event& event) {
+        for (Layer* layer : m_overlayLayers){
+            if (event.isHandled()) {return;}
+            layer->onEvent(event);
+        }
+        for (Layer* layer : m_layers){
+            if (event.isHandled()) {return;}
+            layer->onEvent(event);
+        }
+
+    }
+
 
 
 } // Ayla
