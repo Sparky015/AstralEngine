@@ -16,6 +16,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/googletest-main/)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest-main/googletest/include/)
 
 
+
+
 # Set platform macros
 if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
@@ -27,8 +29,9 @@ endif()
 
 link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 
-
-
+#       ### GLAD ###
+add_library(GLAD STATIC vendor/GLAD/glad.c)
+target_include_directories(GLAD PUBLIC vendor/GLAD)
 
 # Create the Shared/DLL library
 add_library(Ayla SHARED
@@ -49,6 +52,8 @@ target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/src)
 # Include lib headers
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
 
+target_link_libraries(Ayla GLAD)
+
 # Point to where the lib files are for GLFW
 if (APPLE)
     target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
@@ -60,6 +65,7 @@ endif ()
 
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
+target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
 
 # Defining Precompiled Headers
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/src/Ayla/aypch.h)

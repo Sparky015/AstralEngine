@@ -5,6 +5,7 @@
 #include <Ayla/EventSystem/ApplicationEvent.h>
 #include <Ayla/EventSystem/MouseEvent.h>
 #include <Ayla/EventSystem/KeyEvent.h>
+#include <glad/glad.h>
 namespace Ayla{
 
     // PUBLIC
@@ -41,6 +42,9 @@ namespace Ayla{
             glfwTerminate();
             exit(EXIT_FAILURE);
         }
+        glfwMakeContextCurrent(m_window);
+        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        if (status != 1) { std::cout << "GLAD failed to load!"; }
         glfwSetWindowUserPointer(m_window, &m_windowData);
 
 
