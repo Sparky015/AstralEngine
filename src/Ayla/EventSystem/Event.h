@@ -7,6 +7,8 @@
 
 namespace Ayla{
 
+
+
     enum EventTypes {NONE,
             WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_GAINED_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
             APP_TICK, APP_UPDATE, APP_RENDER,
@@ -27,6 +29,7 @@ namespace Ayla{
 
     class Event {
     public:
+        virtual ~Event() = default;
 
         virtual int getEventCategoryFlags();
         virtual int getEventType();
@@ -35,6 +38,7 @@ namespace Ayla{
             return getEventCategoryFlags() & category;
         }
 
+        bool isHandled();
     protected:
         bool m_isHandled = false;
 

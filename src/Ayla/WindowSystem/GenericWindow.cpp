@@ -154,7 +154,7 @@ namespace Ayla{
     }
 
     void GenericWindow::onUpdate() {
-
+        glfwPollEvents();
     }
 
     GLFWwindow* GenericWindow::getGLFWwindow() {

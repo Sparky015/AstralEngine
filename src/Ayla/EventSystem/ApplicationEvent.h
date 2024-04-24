@@ -8,17 +8,17 @@
 namespace Ayla {
     class ApplicationEvent : public Event {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return (MouseButtonCategory | MouseCategory | InputCategory);
         }
     };
 
     class WindowCloseEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return WINDOW_CLOSE;
         }
     };
@@ -49,20 +49,20 @@ namespace Ayla {
 
     class WindowGainedFocusEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return WINDOW_GAINED_FOCUS;
         }
     };
 
     class WindowLostFocusEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return WINDOW_LOST_FOCUS;
         }
     };
@@ -71,11 +71,11 @@ namespace Ayla {
     public:
         WindowMovedEvent(int xpos, int ypos) : m_xpos(xpos), m_ypos(ypos) {}
 
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
 
-        virtual int getEventType() override{
+        int getEventType() override{
             return WINDOW_MOVED;
         }
         int getXPos() const{
@@ -93,17 +93,17 @@ namespace Ayla {
 
     class AppTickEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return APP_TICK;
         }
     };
 
     class AppUpdateEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
         virtual int getEventType() override{
@@ -113,10 +113,10 @@ namespace Ayla {
 
     class AppRenderEvent : public ApplicationEvent {
     public:
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return ApplicationCategory;
         }
-        virtual int getEventType() override{
+        int getEventType() override{
             return APP_RENDER;
         }
     };

@@ -36,7 +36,11 @@ add_library(Ayla SHARED
         src/Ayla/EventSystem/Event.cpp
         src/Ayla/EventSystem/EventDispatcher.cpp
         src/Ayla/aypch.cpp
-        src/Ayla/WindowSystem/GenericWindow.cpp)
+        src/Ayla/WindowSystem/GenericWindow.cpp
+        src/Ayla/Core/Layer.cpp
+        src/Ayla/Core/Layer.h
+        src/Ayla/Core/LayerTower.cpp
+        src/Ayla/Core/LayerTower.h)
 
 #       ### Ayla Includes ###
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
