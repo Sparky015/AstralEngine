@@ -1,11 +1,11 @@
 //
 // Created by Andrew Fagan on 4/18/24.
 //
-#include "Ayla/WindowSystem/GenericWindow.h"
-#include <Ayla/EventSystem/ApplicationEvent.h>
-#include <Ayla/EventSystem/MouseEvent.h>
-#include <Ayla/EventSystem/KeyEvent.h>
-#include <glad/glad.h>
+#include "GenericWindow.h"
+#include "Ayla/EventSystem/ApplicationEvent.h"
+#include "Ayla/EventSystem/MouseEvent.h"
+#include "Ayla/EventSystem/KeyEvent.h"
+#include "glad/glad.h"
 namespace Ayla{
 
     // PUBLIC
