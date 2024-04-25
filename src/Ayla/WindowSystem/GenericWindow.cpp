@@ -161,9 +161,6 @@ namespace Ayla{
         glfwPollEvents();
     }
 
-    GLFWwindow* GenericWindow::getGLFWwindow() {
-        return m_window;
-    }
     // PRIVATE
 
 
