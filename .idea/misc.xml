@@ -4,7 +4,7 @@
   <component name="CidrRootsConfiguration">
     <excludeRoots>
       <file path="$PROJECT_DIR$/client/docs" />
-      <file path="$PROJECT_DIR$/docs" />
+      <file path="$PROJECT_DIR$/docs/OldCodeStorage" />
       <file path="$PROJECT_DIR$/tests" />
     </excludeRoots>
   </component>
