@@ -3,13 +3,16 @@
 //
 
 #include "ImGuiLayer.h"
+#include "imgui.h"
 
 namespace Ayla{
 
-
+    ImGuiLayer::ImGuiLayer() {
+        this->attachOverlay();
+    }
 
     ImGuiLayer::~ImGuiLayer() {
-
+        this->detachOverlay();
     }
 
     void ImGuiLayer::onAttach() {
@@ -21,6 +24,10 @@ namespace Ayla{
     }
 
     void ImGuiLayer::onUpdate() {
+
+    }
+
+    void ImGuiLayer::onEvent(Event& event) {
 
     }
 

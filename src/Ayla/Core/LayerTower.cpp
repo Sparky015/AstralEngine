@@ -22,31 +22,31 @@ namespace Ayla {
         return *m_instance;
     }
 
-    void LayerTower::appendLayer(Ayla::Layer* layer) {
+    void LayerTower::appendLayer(Layer* layer) {
         m_layers.push_back(layer);
     }
 
-    void LayerTower::insertLayer(Ayla::Layer* layer, int index) {
+    void LayerTower::insertLayer(Layer* layer, int index) {
 
     }
 
-    void LayerTower::removeLayer(Ayla::Layer* layer) {
+    void LayerTower::removeLayer(Layer* layer) {
 
     }
 
-    void LayerTower::appendOverlayLayer(Ayla::Layer* layer) {
+    void LayerTower::appendOverlay(Layer* layer) {
         m_overlayLayers.push_back(layer);
     }
 
-    void LayerTower::insertOverlayLayer(Ayla::Layer* layer, int index) {
+    void LayerTower::insertOverlay(Layer* layer, int index) {
 
     }
 
-    void LayerTower::removeOverlayLayer(Ayla::Layer* layer) {
-
+    void LayerTower::removeOverlay(Layer* layer) {
+        // TODO: Iterate through vector, find matching layer pointer and remove from vector
     }
 
-    void LayerTower::sendEventDownTower(Ayla::Event& event) {
+    void LayerTower::sendEventDownTower(Event& event) {
         for (Layer* layer : m_layers){
             if (event.isHandled()) {return;}
             layer->onEvent(event);
@@ -57,7 +57,7 @@ namespace Ayla {
         }
     }
 
-    void LayerTower::sendEventUpTower(Ayla::Event& event) {
+    void LayerTower::sendEventUpTower(Event& event) {
         for (Layer* layer : m_overlayLayers){
             if (event.isHandled()) {return;}
             layer->onEvent(event);

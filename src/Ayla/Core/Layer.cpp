@@ -5,7 +5,6 @@
 #include "Layer.h"
 #include <Ayla/Core/LayerTower.h>
 
-#include <utility>
 
 namespace Ayla {
 
@@ -22,8 +21,14 @@ namespace Ayla {
         if (!m_isInitializedInTower){
             LayerTower::get().appendLayer(this);
             m_isInitializedInTower = true;
-        } else {
-            m_isEnabled = true;
+        }
+    }
+
+    void Layer::attachOverlay() {
+        if (!m_isInitializedInTower){
+            LayerTower::get().appendOverlay(this);
+            m_isInitializedInTower = true;
+            onAttach();
         }
     }
 
@@ -31,8 +36,15 @@ namespace Ayla {
         if (m_isInitializedInTower) {
             LayerTower::get().removeLayer(this);
             m_isInitializedInTower = false;
-        } else {
-            m_isEnabled = false;
+            onDetach();
+        }
+    }
+
+
+    void Layer::detachOverlay() {
+        if (m_isInitializedInTower) {
+            LayerTower::get().removeOverlay(this);
+            m_isInitializedInTower = false;
         }
     }
 
@@ -52,8 +64,10 @@ namespace Ayla {
         m_callback = std::move(callback);
     }
 
-    void Layer::onEvent(Ayla::Event& event) {
-        m_callback(event);
-    }
+//    void Layer::onEvent(Ayla::Event& event) {
+//        m_callback(event);
+//    }
+
+
 
 } // Ayla

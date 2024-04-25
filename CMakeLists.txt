@@ -29,9 +29,21 @@ endif()
 
 link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 
-#       ### GLAD ###
+#       ### Third Part Libraries ###
 add_library(GLAD STATIC vendor/GLAD/glad.c)
 target_include_directories(GLAD PUBLIC vendor/GLAD)
+add_library(ImGui STATIC vendor/ImGui/imconfig.h
+        vendor/ImGui/imgui.cpp
+        vendor/ImGui/imgui.h
+        vendor/ImGui/imgui_demo.cpp
+        vendor/ImGui/imgui_draw.cpp
+        vendor/ImGui/imgui_internal.h
+        vendor/ImGui/imgui_tables.cpp
+        vendor/ImGui/imgui_widgets.cpp
+        vendor/ImGui/imstb_rectpack.h
+        vendor/ImGui/imstb_textedit.h
+        vendor/ImGui/imstb_truetype.h)
+target_include_directories(ImGui PUBLIC vendor/ImGui)
 
 # Create the Shared/DLL library
 add_library(Ayla SHARED
@@ -51,12 +63,20 @@ add_library(Ayla SHARED
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
-# Include lib headers
+#           Include library headers
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
+#           Link Libraries to Ayla
 target_link_libraries(Ayla GLAD)
+target_link_libraries(Ayla ImGui)
+if (APPLE)
+    target_link_libraries(Ayla glfw.3)
+elseif (WIN32)
+    target_link_libraries(Ayla glfw3)
+endif ()
 
-# Point to where the lib files are for GLFW
+# Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
     target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
@@ -81,12 +101,7 @@ target_link_libraries(ClientGame Ayla)
 
 
 
-# Link the GLFW to the executable
-if (APPLE)
-    target_link_libraries(Ayla glfw.3)
-elseif (WIN32)
-    target_link_libraries(Ayla glfw3)
-endif ()
+
 
 
 

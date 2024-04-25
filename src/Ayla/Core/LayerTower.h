@@ -44,20 +44,20 @@ namespace Ayla {
          * @brief Append an overlay layer to the overlay layer list
          * @param[in] Layer* - Pointer to an overlay Layer
          */
-        void appendOverlayLayer(Layer *);
+        void appendOverlay(Layer *);
 
         /**
          * @brief Insert an overlay layer at a particular index in the overlay layer list
          * @param[in] Layer* - Pointer to an overlay Layer
          * @param[in] int - The index where the overlay layer should be inserted
          */
-        void insertOverlayLayer(Layer *, int);
+        void insertOverlay(Layer *, int);
 
         /**
          * @brief Remove an overlay layer from the overlay layer list
          * @param[in] Layer* - Pointer to an overlay Layer to be removed
          */
-        void removeOverlayLayer(Layer *);
+        void removeOverlay(Layer *);
 
         /**
          * @brief Propagate an event up the Layer Tower

@@ -28,6 +28,11 @@ namespace Ayla {
         void attachLayer();
 
         /**
+         * @brief Attaches a overlay to the layer tower.
+         */
+        void attachOverlay();
+
+        /**
          * @brief Allows for functionality when a layer is attached
          */
         virtual void onAttach() = 0;
@@ -36,6 +41,11 @@ namespace Ayla {
          * @brief Detaches a layer from the layer tower.
          */
         void detachLayer();
+
+        /**
+        * @brief Detaches an overlay from the layer tower.
+        */
+        void detachOverlay();
 
         /**
          * @brief Allows for functionality when a layer is detached.
@@ -57,7 +67,7 @@ namespace Ayla {
          * @brief Dispatches an event to the callback function.
          * @param event The event to dispatch.
          */
-        void onEvent(Event &event);
+        virtual void onEvent(Event &event) = 0;
 
         /**
          * @brief Checks if the layer is enabled.
