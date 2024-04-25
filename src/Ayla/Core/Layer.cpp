@@ -16,7 +16,6 @@ namespace Ayla {
 
     Layer::~Layer(){
         detachLayer();
-        removeLayer();
     }
 
     void Layer::attachLayer() {
@@ -29,10 +28,6 @@ namespace Ayla {
     }
 
     void Layer::detachLayer() {
-        m_isEnabled = false;
-    }
-
-    void Layer::removeLayer() {
         if (m_isInitializedInTower) {
             LayerTower::get().removeLayer(this);
             m_isInitializedInTower = false;
@@ -59,15 +54,6 @@ namespace Ayla {
 
     void Layer::onEvent(Ayla::Event& event) {
         m_callback(event);
-    }
-
-
-    int ExampleLayer::getLayerType() {
-        return APP_TICK; // idk just example
-    }
-
-    int ExampleLayer::getEventCategoryFlags() {
-        return m_eventCategory;
     }
 
 } // Ayla

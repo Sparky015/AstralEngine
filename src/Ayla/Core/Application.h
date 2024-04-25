@@ -15,59 +15,49 @@ namespace Ayla {
 * This class manages the execution and the runtime responses of the Ayla project.
 */
     class AYLA_API Application{
-            public:
+    public:
             /**
              * @brief Default Constructor for Application.
-             *
              * Constructs a new Application instance.
              */
             Application();
 
             /**
              * @brief Destructor for Application.
-             *
              * Cleans up the Application instance.
              */
-            ~Application();
+             ~Application();
 
             /**
              * @brief Starts and runs the Application.
-             *
              * Initiates and maintains the Application runtime loop.
              */
-            void Run();
+             void Run();
 
             /**
              * @brief Event Handler for the Application.
-             *
              * Specifies what actions to take whenever an event is triggered.
-             *
              * @param [in] e The event that was triggered.
              */
-            void onEvent(Event&);
+             void onEvent(Event&);
 
-            private:
-            /**
-             * @brief Specifies whether the application is currently running.
-             */
-            bool m_appIsRunning = true;
-            /**
-             * @brief Pointer for managing a Window instance.
-             *
-             * This instance handles the application window management & display.
-             */
-            std::unique_ptr<Window> m_window;
+    private:
+
+        bool m_appIsRunning = true;
+
+        /**
+         * @brief Pointer for managing a Window instance.
+         * This instance handles the application window management & display.
+         */
+        std::unique_ptr<Window> m_window;
     };
 
 /**
  * @brief Creates a new Application instance.
- *
  * This function is defined client side and contains the details for setting up a new Application.
- *
  * @return An Application pointer pointing to the new Application instance.
  */
-    AYLA_API extern Application
-    *
+    AYLA_API extern Application*
 
     CreateApplication();
 
