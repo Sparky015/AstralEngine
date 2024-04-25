@@ -4,4 +4,24 @@
 
 #include "ImGuiLayer.h"
 
+namespace Ayla{
 
+
+
+    ImGuiLayer::~ImGuiLayer() {
+
+    }
+
+    void ImGuiLayer::onAttach() {
+
+    }
+
+    void ImGuiLayer::onDetach() {
+
+    }
+
+    void ImGuiLayer::onUpdate() {
+
+    }
+
+}
