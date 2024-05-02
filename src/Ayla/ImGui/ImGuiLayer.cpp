@@ -47,7 +47,7 @@ namespace Ayla{
         io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
         io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 
-        ImGui_ImplOpenGL3_Init("#version 410 core");
+        ImGui_ImplOpenGL3_Init("#version 410");
     }
 
     void ImGuiLayer::onDetach() {
