@@ -23,13 +23,20 @@ namespace Ayla {
 
     void Application::Run() {
         std::cout << "Hello, World!" << std::endl;
-
+        bool test = false;
         ImGuiLayer testLayer = ImGuiLayer();
         while (m_appIsRunning){
-            glClearColor(1, 0, 1, 1);
+            if (!test) {
+                glClearColor(1, 0, 1, 1);
+                test = true;
+            }
+            else {
+                test = false;
+                glClearColor(0, 1, 1, 1);
+            }
             glClear(GL_COLOR_BUFFER_BIT);
             m_window->onUpdate();
-            //LayerTower::get().onUpdate();
+            LayerTower::get().onUpdate();
 
         }
         testLayer.detachLayer();
