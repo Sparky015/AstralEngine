@@ -167,6 +167,7 @@ namespace Ayla{
 
     void GenericWindow::onUpdate() {
         glfwPollEvents();
+        glfwSwapBuffers(m_window);
     }
 
     // PRIVATE
