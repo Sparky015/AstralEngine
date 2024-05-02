@@ -4,3 +4,6 @@ cmake-build-default
 **/.DS_Store
 
 docs/Doxygen
+
+Ayla.xcodeproj
+CMakeFiles
