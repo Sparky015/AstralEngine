@@ -5,7 +5,7 @@
 #include "Ayla/Core/Application.h"
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
-
+#include "glad/glad.h"
 
 namespace Ayla{
 
@@ -48,7 +48,7 @@ namespace Ayla{
         io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
         io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 
-        ImGui_ImplOpenGL3_Init("#version 410");
+        ImGui_ImplOpenGL3_Init("#version 410 core");
     }
 
     void ImGuiLayer::onDetach() {
