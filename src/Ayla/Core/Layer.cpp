@@ -3,7 +3,7 @@
 //
 
 #include "Layer.h"
-#include <Ayla/Core/LayerTower.h>
+#include "Ayla/Core/LayerTower.h"
 
 
 namespace Ayla {
@@ -21,6 +21,7 @@ namespace Ayla {
         if (!m_isInitializedInTower){
             LayerTower::get().appendLayer(this);
             m_isInitializedInTower = true;
+            onAttach();
         }
     }
 
@@ -45,6 +46,7 @@ namespace Ayla {
         if (m_isInitializedInTower) {
             LayerTower::get().removeOverlay(this);
             m_isInitializedInTower = false;
+            onDetach();
         }
     }
 

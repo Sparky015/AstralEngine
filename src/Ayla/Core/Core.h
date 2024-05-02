@@ -20,3 +20,5 @@
     #error Something went wrong with defining Ayla API symbols (Platform not found)
 #endif
 
+#define AY_ASSERT void(bool expression, std::string errorMessage) {if \
+(!expression){throw std::runtime_error(errorMessage);}}

@@ -3,12 +3,18 @@
 //
 
 #include "Ayla/Core/Application.h"
-#include <Ayla/EventSystem/ApplicationEvent.h>
-#include <Ayla/aypch.h>
+#include "Ayla/EventSystem/ApplicationEvent.h"
+#include "Ayla/Core/LayerTower.h"
+#include "Ayla/aypch.h"
+#include "Ayla/ImGui/ImGuiLayer.h"
 
 namespace Ayla {
 
+    Application* Application:: m_application = nullptr;
+
     Application::Application() {
+        if (m_application != nullptr) {}
+        m_application = this;
         m_window = std::unique_ptr<Window>(Window::createWindow());
         m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
     }
@@ -18,11 +24,12 @@ namespace Ayla {
     void Application::Run() {
         std::cout << "Hello, World!" << std::endl;
 
-
+        ImGuiLayer testLayer = ImGuiLayer();
         while (m_appIsRunning){
             m_window->onUpdate();
+            LayerTower::get().onUpdate();
         }
-
+        testLayer.detachLayer();
         exit(EXIT_SUCCESS);
 
     }
@@ -38,5 +45,10 @@ namespace Ayla {
         std::cout << "Event occurred!" << std::endl;
     }
 
+    Window& Application::getWindow(){ return *m_window;}
+
+    Application& Application::getApplication() {
+        return *m_application;
+    }
 
 } // Ayla

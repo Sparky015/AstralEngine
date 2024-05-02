@@ -16,8 +16,8 @@ namespace Ayla{
 */
     struct WindowProperties {
         std::string title; /**< The title of the window */
-        int width; /**< The width of the window in pixels */
-        int height; /**< The height of the window in pixels */
+        float width; /**< The width of the window in pixels */
+        float height; /**< The height of the window in pixels */
 
         /**
          * @brief Constructor for WindowProperties

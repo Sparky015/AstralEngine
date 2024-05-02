@@ -16,7 +16,8 @@ namespace Ayla {
         void onDetach() override;
         void onUpdate() override;
         void onEvent(Event&) override;
-    private:
 
+    private:
+        float m_time = 0.0f;
     };
 }

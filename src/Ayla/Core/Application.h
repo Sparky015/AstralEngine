@@ -41,14 +41,17 @@ namespace Ayla {
              */
              void onEvent(Event&);
 
+             /**
+              * @brief Gives a reference to the Window instance
+              * @note Pointer of pointer will be the lifetime of the Application instance
+              * @return A reference to the Window instance
+              */
+             Window& getWindow();
+             static Application& getApplication();
     private:
 
         bool m_appIsRunning = true;
-
-        /**
-         * @brief Pointer for managing a Window instance.
-         * This instance handles the application window management & display.
-         */
+        static Application* m_application;
         std::unique_ptr<Window> m_window;
     };
 
@@ -57,9 +60,7 @@ namespace Ayla {
  * This function is defined client side and contains the details for setting up a new Application.
  * @return An Application pointer pointing to the new Application instance.
  */
-    AYLA_API extern Application*
-
-    CreateApplication();
+    AYLA_API extern Application* CreateApplication();
 
 } // Ayla
 

@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include <Ayla/Core/Layer.h>
-#include <Ayla/EventSystem/Event.h>
+#include "Ayla/Core/Layer.h"
+#include "Ayla/EventSystem/Event.h"
 
 namespace Ayla {
 
@@ -19,7 +19,7 @@ namespace Ayla {
          * @brief Singleton instance accessor
          * @return LayerTower& - reference to the singleton instance
          */
-        static LayerTower &get();
+        static LayerTower& get();
 
         /**
          * @brief Append a layer to the layer list
@@ -70,6 +70,8 @@ namespace Ayla {
          * @param[in] Event& - Reference to an Event
          */
         void sendEventDownTower(Event &);
+
+        void onUpdate();
 
         // Disallow copy and move constructors and operator=()
         LayerTower(const LayerTower &) = delete;

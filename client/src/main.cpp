@@ -14,6 +14,5 @@ public:
 
 
 Ayla::Application* Ayla::CreateApplication() {
-
     return new Game();
 }

@@ -6,16 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-
-
-
-
-
 #       ### Google Test ###
 add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/googletest-main/)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest-main/googletest/include/)
-
-
 
 
 # Set platform macros
@@ -32,18 +25,12 @@ link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 #       ### Third Part Libraries ###
 add_library(GLAD STATIC vendor/GLAD/glad.c)
 target_include_directories(GLAD PUBLIC vendor/GLAD)
-add_library(ImGui STATIC vendor/ImGui/imconfig.h
-        vendor/ImGui/imgui.cpp
-        vendor/ImGui/imgui.h
+add_library(ImGui STATIC vendor/ImGui/imgui.cpp
         vendor/ImGui/imgui_demo.cpp
         vendor/ImGui/imgui_draw.cpp
-        vendor/ImGui/imgui_internal.h
-        vendor/ImGui/imgui_tables.cpp
-        vendor/ImGui/imgui_widgets.cpp
-        vendor/ImGui/imstb_rectpack.h
-        vendor/ImGui/imstb_textedit.h
-        vendor/ImGui/imstb_truetype.h)
-target_include_directories(ImGui PUBLIC vendor/ImGui)
+        vendor/ImGui/imgui_widgets.cpp)
+
+target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
 # Create the Shared/DLL library
 add_library(Ayla SHARED
@@ -53,11 +40,9 @@ add_library(Ayla SHARED
         src/Ayla/aypch.cpp
         src/Platform/Generic/GenericWindow.cpp
         src/Ayla/Core/Layer.cpp
-        src/Ayla/Core/Layer.h
         src/Ayla/Core/LayerTower.cpp
-        src/Ayla/Core/LayerTower.h
         src/Ayla/ImGui/ImGuiLayer.cpp
-        src/Ayla/ImGui/ImGuiLayer.h)
+        src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp)
 
 #       ### Ayla Includes ###
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
@@ -86,15 +71,17 @@ endif ()
 
 
 # Defining Macros
-target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
-target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
+target_compile_definitions(Ayla PRIVATE -D AYLA_BUILD_SHARED_LIB)
+target_compile_definitions(Ayla PRIVATE -D GLFW_INCLUDE_NONE)
+#target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
+
 
 # Defining Precompiled Headers
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/src/Ayla/aypch.h)
 
 add_executable(ClientGame
         client/src/main.cpp)
-
+target_compile_definitions(ClientGame PRIVATE -DGLFW_INCLUDE_NONE)
 
 target_link_libraries(ClientGame Ayla)
 

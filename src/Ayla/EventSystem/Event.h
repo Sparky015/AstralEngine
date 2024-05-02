@@ -48,14 +48,12 @@ namespace Ayla {
 
         /**
          * @brief Gets the flags associated to the event category.
-         *
          * @return Returns the flags of the event category as an int.
          */
         virtual int getEventCategoryFlags();
 
         /**
          * @brief Gets the type of the event.
-         *
          * @return Returns the type of the event as an int.
          */
         virtual int getEventType();
@@ -72,14 +70,12 @@ namespace Ayla {
 
         /**
          * @brief Sets the handled status of the event.
-         *
          * @param isHandled The boolean value to set the handled status of the event.
          */
         void setIsHandled(bool isHandled);
 
         /**
          * @brief Checks if the event is handled
-         *
          * @return Returns true if the event has been handled, false otherwise.
          */
         bool isHandled();

@@ -69,6 +69,14 @@ namespace Ayla {
 
     }
 
+    void LayerTower::onUpdate() {
+        for (Layer* layer : m_overlayLayers){
+            layer->onUpdate();
+        }
+        for (Layer* layer : m_layers){
+            layer->onUpdate();
+        }
+    }
 
 
 } // Ayla

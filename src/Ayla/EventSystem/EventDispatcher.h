@@ -20,7 +20,6 @@ namespace Ayla{
 
         /**
          * @brief Add an event to the event queue.
-         *
          * @param event The event to add to the queue.
          */
         static void addEventToQueue(Event &);
@@ -32,7 +31,6 @@ namespace Ayla{
 
         /**
          * @brief Dispatch a blocking event.
-         *
          * @param event The event to be dispatched.
          */
         void dispatchBlockingEvent(Event &);
@@ -41,14 +39,12 @@ namespace Ayla{
 
         /**
          * @brief Take an event from the event queue.
-         *
          * @return A shared_ptr to the event taken from the queue.
          */
         static std::shared_ptr <Event> takeEventFromQueue();
 
         /**
          * @brief Dispatch a single event.
-         *
          * @param event A shared_ptr to the event to be dispatched.
          */
         void dispatchEvent(const std::shared_ptr <Event> &);
@@ -57,7 +53,6 @@ namespace Ayla{
          * @brief Poll an event.
          *
          * @param event The event to poll.
-         *
          * @return The result of the poll operation.
          */
         int PollEvent(Event &);
