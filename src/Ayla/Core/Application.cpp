@@ -7,7 +7,7 @@
 #include "Ayla/Core/LayerTower.h"
 #include "Ayla/aypch.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
-
+#include "glad/glad.h"
 namespace Ayla {
 
     Application* Application:: m_application = nullptr;
@@ -26,6 +26,8 @@ namespace Ayla {
 
         ImGuiLayer testLayer = ImGuiLayer();
         while (m_appIsRunning){
+            glClearColor(1, 0, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
             m_window->onUpdate();
             LayerTower::get().onUpdate();
         }

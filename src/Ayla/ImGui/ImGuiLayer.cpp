@@ -5,7 +5,6 @@
 #include "Ayla/Core/Application.h"
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
-#include "glad/glad.h"
 
 namespace Ayla{
 
@@ -52,8 +51,8 @@ namespace Ayla{
     }
 
     void ImGuiLayer::onDetach() {
-        ImGui::DestroyContext();
         ImGui_ImplOpenGL3_Shutdown();
+        ImGui::DestroyContext();
     }
 
     void ImGuiLayer::onUpdate() {
@@ -63,7 +62,6 @@ namespace Ayla{
         Window& appWindow = Application::getApplication().getWindow();
         io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
 
-        // TODO: add window dimensions  <----
         float time = (float)glfwGetTime();
         io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
         m_time = time;
@@ -73,6 +71,7 @@ namespace Ayla{
         ImGui::NewFrame();
 
         static bool show = true;
+        ImGui::ShowDemoWindow(&show);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

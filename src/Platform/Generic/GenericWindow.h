@@ -9,7 +9,7 @@
 namespace Ayla{
 
     static bool s_isGLFWInitialized = false;
-
+    static void GLFWErrorCallback(int error, const char* description);
     /**
  * @class GenericWindow
  * @brief This class represents a generic window in the Ayla system.

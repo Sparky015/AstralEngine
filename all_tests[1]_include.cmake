@@ -1,5 +1,0 @@
-if(EXISTS "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/all_tests[1]_tests.cmake")
-  include("/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/all_tests[1]_tests.cmake")
-else()
-  add_test(all_tests_NOT_BUILT all_tests_NOT_BUILT)
-endif()

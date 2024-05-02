@@ -9,6 +9,9 @@
 namespace Ayla{
 
     // PUBLIC
+    void GLFWErrorCallback(int error, const char* description){
+        std::cout << description << error;
+    }
 
     GenericWindow::GenericWindow(const WindowProperties& properties){
         init(properties);
@@ -146,7 +149,7 @@ namespace Ayla{
             windowData.callback(event);
         });
 
-
+        glfwSetErrorCallback(GLFWErrorCallback);
     }
 
     int GenericWindow::getWidth() const {
