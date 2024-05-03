@@ -8,6 +8,10 @@
 #include "Ayla/aypch.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "glad/glad.h"
+
+
+#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
+
 namespace Ayla {
 
     Application* Application:: m_application = nullptr;
@@ -23,21 +27,16 @@ namespace Ayla {
 
     void Application::Run() {
         std::cout << "Hello, World!" << std::endl;
-        bool test = false;
+
         ImGuiLayer testLayer = ImGuiLayer();
         while (m_appIsRunning){
-            if (!test) {
-                glClearColor(1, 0, 1, 1);
-                test = true;
-            }
-            else {
-                test = false;
-                //glClearColor(0, 1, 1, 1);
-            }
+
+            glClearColor(0, 1, 0, 1);
             glClear(GL_COLOR_BUFFER_BIT);
-            m_window->onUpdate();
+
             LayerTower::get().onUpdate();
 
+            m_window->onUpdate(); // Must be called last
         }
         testLayer.detachLayer();
         exit(EXIT_SUCCESS);

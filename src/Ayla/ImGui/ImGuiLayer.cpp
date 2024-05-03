@@ -70,6 +70,7 @@ namespace Ayla{
         ImGui::NewFrame();
 
         static bool show = true;
+        ImGui::ShowIDStackToolWindow();
         ImGui::ShowDemoWindow(&show);
 
         ImGui::Render();

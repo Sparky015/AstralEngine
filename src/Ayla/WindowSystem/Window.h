@@ -22,10 +22,13 @@ namespace Ayla{
     class AYLA_API Window{
     public:
             using EventCallback = std::function<void(Event&)>;
+
             virtual ~Window() = default;
             virtual void onUpdate() = 0;
+
             [[nodiscard]] virtual int getWidth() const = 0;
             [[nodiscard]] virtual int getHeight() const = 0;
+
             virtual void setEventCallback(const EventCallback& callback) = 0;
             static Window* createWindow(const WindowProperties& properties = WindowProperties());
     };
