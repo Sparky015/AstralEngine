@@ -57,7 +57,6 @@ namespace Ayla{
 
     void ImGuiLayer::onUpdate() {
 
-
         ImGuiIO& io = ImGui::GetIO();
         Window& appWindow = Application::getApplication().getWindow();
         io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
@@ -72,7 +71,7 @@ namespace Ayla{
 
         static bool show = true;
         ImGui::ShowDemoWindow(&show);
-
+        ImGui::ShowAboutWindow(&show);
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
