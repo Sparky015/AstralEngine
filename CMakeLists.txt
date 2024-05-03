@@ -28,7 +28,8 @@ target_include_directories(GLAD PUBLIC vendor/GLAD)
 add_library(ImGui STATIC vendor/ImGui/imgui.cpp
         vendor/ImGui/imgui_demo.cpp
         vendor/ImGui/imgui_draw.cpp
-        vendor/ImGui/imgui_widgets.cpp)
+        vendor/ImGui/imgui_widgets.cpp
+        vendor/ImGui/imgui_tables.cpp)
 
 target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
@@ -42,7 +43,8 @@ add_library(Ayla SHARED
         src/Ayla/Core/Layer.cpp
         src/Ayla/Core/LayerTower.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
-        src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp)
+        src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
+)
 
 #       ### Ayla Includes ###
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
