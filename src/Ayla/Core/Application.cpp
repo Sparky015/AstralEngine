@@ -17,7 +17,8 @@ namespace Ayla {
     Application* Application:: m_application = nullptr;
 
     Application::Application() {
-        if (m_application != nullptr) {}
+        AY_ASSERT(m_application == nullptr, "Only one application should be created!");
+
         m_application = this;
         m_window = std::unique_ptr<Window>(Window::createWindow());
         m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));

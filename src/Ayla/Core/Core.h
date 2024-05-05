@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Ayla/aypch.h"
 #ifdef AYLA_PLATFORM_WINDOWS
     #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __declspec(dllexport)        // Export
@@ -20,5 +21,52 @@
     #error Something went wrong with defining Ayla API symbols (Platform not found)
 #endif
 
-#define AY_ASSERT void(bool expression, std::string errorMessage) {if \
-(!expression){throw std::runtime_error(errorMessage);}}
+
+
+namespace {
+    void macro_AY_TRACE(std::string&& title);
+    void macro_AY_ASSERT(bool expression, std::string&& errorMessage);
+
+    class AY_PROFILER {
+    public:
+        explicit AY_PROFILER(std::string&& title = "Profiler");
+        ~AY_PROFILER();
+    private:
+        std::chrono::time_point<std::chrono::steady_clock> m_startTime;
+        std::chrono::time_point<std::chrono::steady_clock> m_endTime;
+        std::string m_title;
+    };
+
+}
+
+#define AY_TRACE(title) macro_AY_TRACE(title)
+#define AY_ASSERT(expression, errorMessage) macro_AY_ASSERT(expression, errorMessage)
+#define AY_PROFILE_SCOPE(title) AY_PROFILER(title)
+
+namespace {
+
+    void macro_AY_TRACE(std::string&& title){
+        std::time_t time;
+        std::time(&time);
+
+        std::cout << "\n" << title << " : " << std::ctime(&time);
+    }
+
+    void macro_AY_ASSERT(bool expression, std::string&& errorMessage){
+        if (!expression){
+            throw std::runtime_error(errorMessage);
+        }
+    }
+
+    AY_PROFILER::AY_PROFILER(std::string&& title) {
+        m_title = title;
+        m_startTime = std::chrono::high_resolution_clock::now();
+    }
+
+    AY_PROFILER::~AY_PROFILER() {
+        m_endTime = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
+        std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
+    }
+
+}
