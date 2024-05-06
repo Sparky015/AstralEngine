@@ -1825,7 +1825,7 @@ struct ImGuiLocEntry
 
 enum ImGuiDebugLogFlags_
 {
-    // Event types
+    // Events types
     ImGuiDebugLogFlags_None                 = 0,
     ImGuiDebugLogFlags_EventActiveId        = 1 << 0,
     ImGuiDebugLogFlags_EventFocus           = 1 << 1,

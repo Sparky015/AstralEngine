@@ -3,8 +3,8 @@
 //
 
 #include "Ayla/Core/Application.h"
-#include "Ayla/EventSystem/ApplicationEvent.h"
-#include "Ayla/Core/LayerTower.h"
+#include "Ayla/Events/ApplicationEvent.h"
+#include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/aypch.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "glad/glad.h"
@@ -35,9 +35,9 @@ namespace Ayla {
             glClearColor(0, 1, 0, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            LayerTower::get().onUpdate();
+            LayerStack::get().update();
 
-            m_window->onUpdate(); // Must be called last
+            m_window->update(); // Must be called last
         }
         testLayer.detachLayer();
         exit(EXIT_SUCCESS);
@@ -52,7 +52,7 @@ namespace Ayla {
             std::cout << "\n Window resized to: " << resizeEvent.getHeight() << " by " << resizeEvent.getWidth() << "\n";
         }
 
-        std::cout << "Event occurred!" << std::endl;
+        std::cout << "Events occurred!" << std::endl;
     }
 
     Window& Application::getWindow(){ return *m_window;}

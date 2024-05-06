@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "Ayla/WindowSystem/Window.h"
+#include "Ayla/Core/Window/Window.h"
 #include "GLFW/glfw3.h"
 
 namespace Ayla{
@@ -22,7 +22,7 @@ namespace Ayla{
         int getHeight() const override;
 
         void setEventCallback(const EventCallback &callback) override;
-        void onUpdate() override;
+        void update() override;
 
     private:
         GLFWwindow *m_window;

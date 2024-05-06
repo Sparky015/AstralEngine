@@ -36,12 +36,12 @@ target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 # Create the Shared/DLL library
 add_library(Ayla SHARED
         src/Ayla/Core/Application.cpp
-        src/Ayla/EventSystem/Event.cpp
-        src/Ayla/EventSystem/EventDispatcher.cpp
+        src/Ayla/Events/Event.cpp
+        src/Ayla/Events/EventDispatcher.cpp
         src/Ayla/aypch.cpp
         src/Platform/Generic/GenericWindow.cpp
-        src/Ayla/Core/Layer.cpp
-        src/Ayla/Core/LayerTower.cpp
+        src/Ayla/Core/Layers/Layer.cpp
+        src/Ayla/Core/Layers/LayerStack.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
         src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
 )

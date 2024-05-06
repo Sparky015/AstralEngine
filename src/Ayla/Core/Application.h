@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "Ayla/Core/Core.h"
-#include "Ayla/WindowSystem/Window.h"
+#include "Ayla/Core/Window/Window.h"
 
 
 namespace Ayla {

@@ -2,10 +2,11 @@
 // Created by Andrew Fagan on 4/18/24.
 //
 #include "GenericWindow.h"
-#include "Ayla/EventSystem/ApplicationEvent.h"
-#include "Ayla/EventSystem/MouseEvent.h"
-#include "Ayla/EventSystem/KeyEvent.h"
+#include "Ayla/Events/ApplicationEvent.h"
+#include "Ayla/Events/MouseEvent.h"
+#include "Ayla/Events/KeyEvent.h"
 #include "glad/glad.h"
+
 namespace Ayla{
 
     // PUBLIC
@@ -166,7 +167,7 @@ namespace Ayla{
         m_windowData.callback = callback;
     }
 
-    void GenericWindow::onUpdate() {
+    void GenericWindow::update() {
         glfwPollEvents();
         glfwSwapBuffers(m_window);
     }
