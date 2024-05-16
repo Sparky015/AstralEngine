@@ -11,7 +11,8 @@ namespace Ayla {
 
     class LayerStack {
     public:
-        static LayerStack& get();
+        LayerStack();
+        ~LayerStack();
 
         void appendLayer(Layer *);
         void insertLayer(Layer *, int);
@@ -33,13 +34,6 @@ namespace Ayla {
         LayerStack &operator=(LayerStack &&) = delete;
 
     private:
-
-        LayerStack();
-
-
-        ~LayerStack();
-
-        static LayerStack *m_instance;
 
         /// Vector holding pointers to the layers
         std::vector<Layer *> m_layers;

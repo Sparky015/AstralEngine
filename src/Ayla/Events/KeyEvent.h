@@ -18,7 +18,7 @@ namespace Ayla {
          *
          * @return the InputCategory.
          */
-        virtual int getEventCategoryFlags() override {
+        int getEventCategoryFlags() override {
             return (InputCategory);
         }
 
@@ -27,7 +27,7 @@ namespace Ayla {
          *
          * @return the MOUSE_BUTTON_RELEASED.
          */
-        virtual int getEventType() override {
+        int getEventType() override {
             return MOUSE_BUTTON_RELEASED;
         }
     };
@@ -42,7 +42,7 @@ namespace Ayla {
          *
          * @param keycode // Code of the key
          */
-        KeyPressedEvent(int keycode) : m_keycode(keycode) {}
+        explicit KeyPressedEvent(int keycode) : m_keycode(keycode) {}
 
         /**
          * Get Events Category Flags.

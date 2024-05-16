@@ -4,7 +4,8 @@
 #pragma once
 #include "Ayla/Core/Core.h"
 #include "Ayla/Window/Window.h"
-
+#include "Ayla/Core/Layers/LayerStack.h"
+#include "Ayla/ImGui/ImGuiLayer.h"
 
 namespace Ayla {
 
@@ -14,9 +15,11 @@ namespace Ayla {
             ~Application();
 
              void Run();
+             void initializeLayers();
              void onEvent(Event&);
 
              Window& getWindow();
+             LayerStack& getLayerStack();
              static Application& getApplication();
 
     private:
@@ -24,6 +27,10 @@ namespace Ayla {
         bool m_appIsRunning = true;
         static Application* m_application;
         std::unique_ptr<Window> m_window;
+        std::unique_ptr<LayerStack> m_layerStack;
+
+        std::unique_ptr<ImGuiLayer> m_imGuiLayer;
+        std::unique_ptr<Layer> m_inputLayer;
     };
 
     AYLA_API extern Application* CreateApplication();

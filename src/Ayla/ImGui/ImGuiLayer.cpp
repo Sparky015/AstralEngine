@@ -81,4 +81,8 @@ namespace Ayla{
 
     }
 
+    EventCategory ImGuiLayer::getAcceptingEventFlags() {
+        return ApplicationCategory;
+    }
+
 }

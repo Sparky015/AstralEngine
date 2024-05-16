@@ -4,7 +4,7 @@
 
 #include "Layer.h"
 #include "LayerStack.h"
-
+#include "Ayla/Core/Application.h"
 
 namespace Ayla {
 
@@ -19,7 +19,7 @@ namespace Ayla {
 
     void Layer::attachLayer() {
         if (!m_isInitializedInTower){
-            LayerStack::get().appendLayer(this);
+            Application::getApplication().getLayerStack().appendLayer(this);
             m_isInitializedInTower = true;
             onAttach();
         }
@@ -27,7 +27,8 @@ namespace Ayla {
 
     void Layer::attachOverlay() {
         if (!m_isInitializedInTower){
-            LayerStack::get().appendOverlay(this);
+
+            Application::getApplication().getLayerStack().appendOverlay(this);
             m_isInitializedInTower = true;
             onAttach();
         }
@@ -35,7 +36,7 @@ namespace Ayla {
 
     void Layer::detachLayer() {
         if (m_isInitializedInTower) {
-            LayerStack::get().removeLayer(this);
+            Application::getApplication().getLayerStack().removeLayer(this);
             m_isInitializedInTower = false;
             onDetach();
         }
@@ -44,7 +45,7 @@ namespace Ayla {
 
     void Layer::detachOverlay() {
         if (m_isInitializedInTower) {
-            LayerStack::get().removeOverlay(this);
+            Application::getApplication().getLayerStack().removeOverlay(this);
             m_isInitializedInTower = false;
             onDetach();
         }

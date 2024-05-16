@@ -14,14 +14,6 @@ namespace Ayla {
 
     }
 
-    LayerStack* LayerStack::m_instance = nullptr;
-    LayerStack& LayerStack::get() {
-        if (m_instance == nullptr){
-            m_instance = new LayerStack();
-        }
-        return *m_instance;
-    }
-
     void LayerStack::appendLayer(Layer* layer) {
         m_layers.push_back(layer);
     }
@@ -31,7 +23,7 @@ namespace Ayla {
     }
 
     void LayerStack::removeLayer(Layer* layer) {
-
+        // TODO: Iterate through vector, find matching layer pointer and remove from vector
     }
 
     void LayerStack::appendOverlay(Layer* layer) {

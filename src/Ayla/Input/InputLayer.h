@@ -1,16 +1,17 @@
 //
-// Created by sparky on 4/24/2024.
+// Created by Andrew Fagan on 5/16/24.
 //
 #pragma once
+
 
 #include "Ayla/Core/Layers/Layer.h"
 
 namespace Ayla {
 
-    class ImGuiLayer : public Layer {
+    class InputLayer : public Layer {
     public:
-        ImGuiLayer();
-        ~ImGuiLayer() override;
+        InputLayer();
+        ~InputLayer() override;
 
         void onAttach() override;
         void onDetach() override;
@@ -19,6 +20,6 @@ namespace Ayla {
         EventCategory getAcceptingEventFlags() override;
 
     private:
-        float m_time = 0.0f;
+
     };
 }
