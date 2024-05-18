@@ -22,8 +22,8 @@ namespace Ayla {
         void insertOverlay(Layer *, int);
         void removeOverlay(Layer *);
 
-        void sendEventUpTower(Event &);
-        void sendEventDownTower(Event &);
+        void dispatchEventFromFrontToBack(Event& event);
+        void dispatchEventBackToFront(Event& event);
 
         void update();
 

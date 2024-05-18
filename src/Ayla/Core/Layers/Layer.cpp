@@ -9,6 +9,7 @@
 namespace Ayla {
 
     Layer::Layer() {
+        AY_TRACE("Layer: Initializing Layer\t\t");
         m_isEnabled = false;
         m_isInitializedInTower = false;
     }

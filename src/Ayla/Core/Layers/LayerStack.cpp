@@ -7,7 +7,7 @@
 namespace Ayla {
 
     LayerStack::LayerStack() {
-
+        AY_TRACE("LayerStack: Initializing Layer Stack");
     }
 
     LayerStack::~LayerStack() {
@@ -38,24 +38,28 @@ namespace Ayla {
         // TODO: Iterate through vector, find matching layer pointer and remove from vector
     }
 
-    void LayerStack::sendEventDownTower(Event& event) {
+    void LayerStack::dispatchEventBackToFront(Event& event) {
         for (Layer* layer : m_layers){
             if (event.isHandled()) {return;}
+            if (!event.isInCategory(layer->getAcceptingEventFlags())) {continue;}
             layer->onEvent(event);
         }
         for (Layer* layer : m_overlayLayers){
             if (event.isHandled()) {return;}
+            if (!event.isInCategory(layer->getAcceptingEventFlags())) {continue;}
             layer->onEvent(event);
         }
     }
 
-    void LayerStack::sendEventUpTower(Event& event) {
+    void LayerStack::dispatchEventFromFrontToBack(Event& event) {
         for (Layer* layer : m_overlayLayers){
             if (event.isHandled()) {return;}
+            if (!event.isInCategory(layer->getAcceptingEventFlags())) {return;}
             layer->onEvent(event);
         }
         for (Layer* layer : m_layers){
             if (event.isHandled()) {return;}
+            if (!event.isInCategory(layer->getAcceptingEventFlags())) {return;}
             layer->onEvent(event);
         }
 

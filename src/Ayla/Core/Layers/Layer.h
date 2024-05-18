@@ -22,7 +22,7 @@ namespace Ayla {
         void detachOverlay();
         virtual void onDetach() = 0;
 
-         virtual void onUpdate() = 0;
+        virtual void onUpdate() = 0;
 
         void setCallback(std::function<void(Event&)> callback);
         virtual void onEvent(Event &event) = 0;
@@ -32,11 +32,17 @@ namespace Ayla {
         void enable();
         void disable();
 
+
+
     protected:
 
         bool m_isEnabled;
         bool m_isInitializedInTower;
-        std::function<void(Event & )> m_callback;
+        std::function<void(Event & )> m_callback = [](Event&){};
+
+        // For debug
+        std::string m_debugName;
+
     };
 
 

@@ -42,14 +42,14 @@ namespace {
 #define AY_TRACE(title) macro_AY_TRACE(title)
 #define AY_ASSERT(expression, errorMessage) macro_AY_ASSERT(expression, errorMessage)
 #define AY_PROFILE_SCOPE(title) AY_PROFILER(title)
-
+#include <iomanip>
 namespace {
 
     void macro_AY_TRACE(std::string&& title){
         std::time_t time;
         std::time(&time);
 
-        std::cout << "\n" << title << " : " << std::ctime(&time);
+        std::cout << "\n" << title; //<< std::setw(40) << "\t : " << std::ctime(&time);
     }
 
     void macro_AY_ASSERT(bool expression, std::string&& errorMessage){

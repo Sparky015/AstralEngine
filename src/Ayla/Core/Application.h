@@ -6,6 +6,7 @@
 #include "Ayla/Window/Window.h"
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
+#include "Ayla/Input/InputState.h"
 
 namespace Ayla {
 
@@ -15,8 +16,7 @@ namespace Ayla {
             ~Application();
 
              void Run();
-             void initializeLayers();
-             void onEvent(Event&);
+             void onEvent(Ayla::Event&);
 
              Window& getWindow();
              LayerStack& getLayerStack();
@@ -30,7 +30,7 @@ namespace Ayla {
         std::unique_ptr<LayerStack> m_layerStack;
 
         std::unique_ptr<ImGuiLayer> m_imGuiLayer;
-        std::unique_ptr<Layer> m_inputLayer;
+
     };
 
     AYLA_API extern Application* CreateApplication();

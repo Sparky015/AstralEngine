@@ -9,6 +9,7 @@
 
 namespace Ayla {
     InputState::InputState() {
+        AY_TRACE("InputState: Initializing Input State");
         m_inputLayer = InputLayer();
         m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
     }
@@ -21,7 +22,9 @@ namespace Ayla {
     InputState* InputState::m_instance = nullptr;
 
     InputState& InputState::get() {
+        AY_TRACE("InputState: Getting Input State...");
         if (m_instance == nullptr){
+            AY_TRACE("InputState: Making 'new InputState()'");
             m_instance = new InputState();
         }
         return *m_instance;
@@ -30,23 +33,49 @@ namespace Ayla {
 
     void InputState::onEvent(Ayla::Event& event) {
         AY_ASSERT(!event.isInCategory(InputCategory), "InputState received an unrelated event!");
+        std::cout << "Input Received!\n";
         if (event.isInCategory(KeyboardCategory)){
             if (event.getEventType() == KEY_PRESSED){
                 auto keyPressedEvent = dynamic_cast<Ayla::KeyPressedEvent&>(event);
-                keyPressedEvent.getKeycode();
+                std::cout << keyPressedEvent.getKeycode();
             }
 
             if (event.getEventType() == KEY_RELEASED){
                 auto keyReleasedEvent = dynamic_cast<Ayla::KeyReleasedEvent&>(event);
-                keyReleasedEvent.getKeycode();
+                std::cout << keyReleasedEvent.getKeycode();
             }
 
             if (event.getEventType() == KEY_PRESSED_REPEATING){
                 auto keyPressedRepeatingEvent = dynamic_cast<Ayla::KeyPressedRepeatingEvent&>(event);
-                keyPressedRepeatingEvent.getKeycode();
+                std::cout << keyPressedRepeatingEvent.getKeycode();
             }
 
         }
+
+        if (event.isInCategory(MouseCategory)) {
+            if (event.getEventType() == MOUSE_BUTTON_PRESSED) {
+                auto mouseButtonPressedEvent = dynamic_cast<Ayla::MouseButtonPressEvent&>(event);
+                std::cout << mouseButtonPressedEvent.getButton();
+            }
+
+            if (event.getEventType() == MOUSE_BUTTON_RELEASED) {
+                auto mouseButtonReleasedEvent = dynamic_cast<Ayla::MouseButtonReleaseEvent&>(event);
+                std::cout << mouseButtonReleasedEvent.getButton();
+            }
+
+            if (event.getEventType() == MOUSE_CURSOR_MOVED) {
+                auto mouseMovedEvent = dynamic_cast<Ayla::MouseMovedEvent&>(event);
+                std::cout << mouseMovedEvent.getXPos() << ", " << mouseMovedEvent.getYPos();
+            }
+
+            if (event.getEventType() == MOUSE_SCROLLED) {
+                auto mouseScrolledEvent = dynamic_cast<Ayla::MouseScrollEvent&>(event);
+                std::cout << mouseScrolledEvent.getXOffset() << ", " << mouseScrolledEvent.getYOffset();
+            }
+        }
+
+
+        event.setIsHandled(true);
     }
 
 

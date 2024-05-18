@@ -9,7 +9,9 @@
 namespace Ayla{
 
     ImGuiLayer::ImGuiLayer() {
+        AY_TRACE("ImGuiLayer: Initializing ImGui Layer");
         this->attachOverlay();
+        m_debugName = "ImGui Layer";
     }
 
     ImGuiLayer::~ImGuiLayer() {
@@ -78,7 +80,10 @@ namespace Ayla{
     }
 
     void ImGuiLayer::onEvent(Event& event) {
+        std::cout << "ImGui received an event!\n";
 
+
+        event.setIsHandled(true);
     }
 
     EventCategory ImGuiLayer::getAcceptingEventFlags() {

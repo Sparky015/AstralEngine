@@ -6,7 +6,9 @@
 
 namespace Ayla {
     InputLayer::InputLayer(){
+        AY_TRACE("InputLayer: Initializing Input Layer");
         this->attachLayer();
+        m_debugName = "Input Layer";
     }
 
     InputLayer::~InputLayer(){
@@ -27,6 +29,7 @@ namespace Ayla {
 
     void InputLayer::onEvent(Event& event) {
         m_callback(event);
+        event.setIsHandled(false);
     }
 
     EventCategory InputLayer::getAcceptingEventFlags() {

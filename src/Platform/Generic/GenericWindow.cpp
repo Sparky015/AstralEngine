@@ -15,7 +15,9 @@ namespace Ayla{
     }
 
     GenericWindow::GenericWindow(const WindowProperties& properties){
+        AY_TRACE("GenericWindow: Initializing Generic Window");
         init(properties);
+
     }
 
     GenericWindow::~GenericWindow(){

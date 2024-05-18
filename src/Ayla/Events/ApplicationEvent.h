@@ -11,7 +11,7 @@ namespace Ayla {
     public:
 
         int getEventCategoryFlags() override {
-            return (MouseButtonCategory | MouseCategory | InputCategory);
+            return (ApplicationCategory | MouseButtonCategory | MouseCategory | InputCategory);
         }
     };
 
