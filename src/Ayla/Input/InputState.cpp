@@ -8,9 +8,9 @@
 #include "Ayla/Events/MouseEvent.h"
 
 namespace Ayla {
-    InputState::InputState() {
+    InputState::InputState() : m_inputLayer(InputLayer()){
         AY_TRACE("InputState: Initializing Input State");
-        m_inputLayer = InputLayer();
+        //m_inputLayer = InputLayer();
         m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
     }
 
@@ -32,8 +32,8 @@ namespace Ayla {
 
 
     void InputState::onEvent(Ayla::Event& event) {
-        AY_ASSERT(!event.isInCategory(InputCategory), "InputState received an unrelated event!");
-        std::cout << "Input Received!\n";
+        AY_ASSERT(event.isInCategory(InputCategory), "InputState received an event that is not in the Input Category!");
+        AY_TRACE("Input Received\t");
         if (event.isInCategory(KeyboardCategory)){
             if (event.getEventType() == KEY_PRESSED){
                 auto keyPressedEvent = dynamic_cast<Ayla::KeyPressedEvent&>(event);

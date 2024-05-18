@@ -60,13 +60,13 @@ namespace {
 
     AY_PROFILER::AY_PROFILER(std::string&& title) {
         m_title = title;
-        m_startTime = std::chrono::high_resolution_clock::now();
+        //m_startTime = std::chrono::high_resolution_clock::now();
     }
 
     AY_PROFILER::~AY_PROFILER() {
-        m_endTime = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
-        std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
+        //m_endTime = std::chrono::high_resolution_clock::now();
+        //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
+        //std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
     }
 
 }
