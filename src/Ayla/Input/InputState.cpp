@@ -8,9 +8,8 @@
 #include "Ayla/Events/MouseEvent.h"
 
 namespace Ayla {
-    InputState::InputState() : m_inputLayer(InputLayer()){
+    InputState::InputState() : m_inputLayer(InputLayer()) {
         AY_TRACE("InputState: Initializing Input State");
-        //m_inputLayer = InputLayer();
         m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
     }
 
