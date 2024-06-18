@@ -1,8 +1,8 @@
 # Software Requirements Specification
 ## For Ayla Engine
 Version 1.0.0  
-Naming of Sprint?
-\<date created\>, \<date last edited\>  
+Ayla Engine
+Jun 18, 2024, N/A 
 Prepared by Andrew Fagan
 
 Table of Contents
@@ -56,11 +56,15 @@ Table of Contents
 > number. Describe the scope of the product that is covered by this SRS, particularly if this SRS describes only part
 > of the system or a single subsystem.
 
+This document covers the game engine as a whole which will be serving as an overview of the engine.
+
 
 ### 1.2 Document Conventions
 > Describe any standards or typographical conventions that were followed when writing this SRS, such as fonts or
 > highlighting that have special significance. For example, state whether priorities  for higher-level requirements are
 > assumed to be inherited by detailed requirements, or whether every requirement statement is to have its own priority.
+
+N/A?
 
 
 ### 1.3 Intended Audience and Reading Suggestions
@@ -69,11 +73,18 @@ Table of Contents
 > is organized. Suggest a sequence for reading the document, beginning with the overview sections and proceeding through
 > the sections that are most pertinent to each reader type.
 
+This is just for my organization, so developer, user, tester... all of the above really. Its just me.
+
 
 ### 1.4 Product Scope
 > Provide a short description of the software being specified and its purpose, including relevant benefits, objectives,
 > and goals. Relate the software to corporate goals or business strategies. If a separate vision and scope document is
 > available, refer to it rather than duplicating its contents here.
+
+The scope of this SRS will include the game engine as a whole and the sub systems that will make the engine up from a
+technically abstracted. The goal of this project is to not only provide me an experience in which I can learn and 
+research about all sorts of different technologies involved with making a game engine, but allow me to foster and 
+develop my passions in the space to help find what path I want to take for my future.
 
 
 ### 1.5 References
@@ -82,6 +93,7 @@ Table of Contents
 > enough information so that the reader could access a copy of each reference, including title, author, version number,
 > date, and source or location.
 
+N/A
 
 
 ## Overall Description
@@ -93,11 +105,30 @@ Table of Contents
 > functionality of this software and identify interfaces between the two. A simple diagram that shows the major
 > components of the overall system, subsystem interconnections, and external interfaces can be helpful.
 
+The project will be a new game engine that is not from any existing system. This is the start of a game engine that is 
+coded by me with influence from the material I use to learn about game engines and components of game engines.
+
 ### 2.2 Product Functions
 > Summarize the major functions the product must perform or must let the user perform. Details will be provided in
 > Section 3, so only a high level summary (such as a bullet list) is needed here. Organize the functions to make them
 > understandable to any reader of the SRS. A picture of the major groups of related requirements and how they relate,
 > such as a top level data flow diagram or object class diagram, is often effective.
+
+Must be able to:
+* Run a 2D & 3D game
+* Create Games in a Level Editor
+* Run without performance issues
+
+
+Needs to have:
+* An audio system
+* A renderer
+* A level editor
+* A component system
+* A memory management system
+* Profilers
+* Graphs and Data of Performance
+* more to write later
 
 ### 2.3 User Classes and Characteristics
 > Identify the various user classes that you anticipate will use this product. User classes may be differentiated based
@@ -106,9 +137,14 @@ Table of Contents
 > to certain user classes. Distinguish the most important user classes for this product from those who are less important
 > to satisfy.
 
+To be used by me.
+
+
 ### 2.4 Operating Environment
 > Describe the environment in which the software will operate, including the hardware platform, operating system and
 > versions, and any other software components or applications with which it must peacefully coexist.
+
+The engine will be available to use on MacOS and Windows for only the latest versions available respectively.
 
 ### 2.5 Design and Implementation Constraints
 > Describe any items or issues that will limit the options available to the developers. These might include: corporate
@@ -117,9 +153,14 @@ Table of Contents
 > communications protocols; security considerations; design conventions or programming standards (for example, if the
 > customer’s organization will be responsible for maintaining the delivered software).
 
+The main limitation is the amount of knowledge I have on game engines, which this project serves to help me in.
+
+
 ### 2.6 User Documentation
 > List the user documentation components (such as user manuals, on-line help, and tutorials) that will be delivered
 > along with the software. Identify any known user documentation delivery formats or standards.
+
+At this time, there will only be documentation for each of the systems as well as their classes and functions.
 
 ### 2.7 Assumptions and Dependencies
 > List any assumed factors (as opposed to known facts) that could affect the requirements stated in the SRS. These
@@ -128,6 +169,12 @@ Table of Contents
 > change. Also identify any dependencies the project has on external factors, such as software components that you
 > intend to reuse from another project, unless they are already documented elsewhere (for example, in the vision and
 > scope document or the project plan).
+
+I plan to depend on a number of things to allow for cross development and cross compatibility. Firstly, I use
+CMake for building for the engine through CLion's build tools. I use GLFW to support cross-platform windows. Additionally,
+I use OpenGL for cross-platform rendering. In the future, I plan to support platform dependent components like Metal,
+DX11, and DX12 for rendering and Win32 and Cocoa for the window system.
+
 
 ## External Interface Requirements
 
@@ -138,10 +185,39 @@ Table of Contents
 > message display standards, and so on. Define the software components for which a user interface is needed. Details of
 > the user interface design should be documented in a separate user interface specification.
 
+N/A
+
+TBD for level editor
+
 ### 3.2 Hardware Interfaces
 > Describe the logical and physical characteristics of each interface between the software product and the hardware
 > components of the system. This may include the supported device types, the nature of the data and control interactions
 > between the software and the hardware, and communication protocols to be used.
+
+Logical Characteristics:
+
+The game engine sends draw calls to the GPU to render models, textures, and effects based on the game state.
+Game logic such as physics simulations, AI, or game rules are computed in the CPU.
+Inputs from peripherals like keyboard or controller are routed through the OS into the game engine to affect the game state.
+
+Physical Characteristics:
+
+The engine interacts directly with the GPU to run shaders and render graphics.
+It uses the CPU for running game logic and other tasks.
+It communicates with memory to store and retrieve game state and assets.
+
+Supported Device Types:
+
+The engine should support a variety of GPUs and CPUs for different performance levels and manufacturers.
+It must also accept input from common peripherals such as keyboards, mice, game controllers, and potentially VR headsets, depending on the type of games it's designed to create.
+
+Nature of the data and control interactions:
+
+Continuous streams of positional data, textures, and commands are sent to the GPU.
+User inputs and commands are interpreted as discrete events.
+Game state data is continuously read and written to/from memory.
+
+[ Summarized with AI ] <--
 
 ### 3.3 Software Interfaces
 > Describe the connections between this product and other specific software components (name and version), including
@@ -152,6 +228,13 @@ Table of Contents
 > specific way (for example, use of a global data area in a multitasking operating system), specify this as an
 > implementation constraint.
 
+* CMake
+* Clion Nova
+* MacOS
+* Windows
+* GLFW
+* OpenGL
+* Google Test? (Maybe)
 
 ### 3.4 Communications Interfaces
 > Describe the requirements associated with any communications functions required by this product, including e-mail,
@@ -159,10 +242,13 @@ Table of Contents
 > formatting. Identify any communication standards that will be used, such as FTP or HTTP. Specify any communication
 > security or encryption issues, data transfer rates, and synchronization mechanisms.
 
+N/A
+
 ## System Features
 > This template illustrates organizing the functional requirements for the product by system features, the major
 > services provided by the product. You may prefer to organize this section by use case, mode of operation, user class,
 > object class, functional hierarchy, or combinations of these, whatever makes the most logical sense for your product.
+
 
 ### 4.1 System Feature 1
 > Don’t really say “System Feature 1.” State the feature name in just a few words.
@@ -196,17 +282,30 @@ Table of Contents
 > relationships for real time systems. Make such requirements as specific as possible. You may need to state performance
 > requirements for individual functional requirements or features.
 
+I'll need to find numbers somehow for metrics or standard tests to perform on the engine.
+
+Obviously it needs to be very performant time wise and memory wise.
+
+
 ### 5.2 Safety Requirements
 > Specify those requirements that are concerned with possible loss, damage, or harm that could result from the use of
 > the product. Define any safeguards or actions that must be taken, as well as actions that must be prevented. Refer to
 > any external policies or regulations that state safety issues that affect the product’s design or use. Define any
 > safety certifications that must be satisfied.
 
+Don't know how the game engine would do this?
+
+N/A
+
 ### 5.3 Security Requirements
 > Specify any requirements regarding security or privacy issues surrounding use of the product or protection of the
 > data used or created by the product. Define any user identity authentication requirements. Refer to any external
 > policies or regulations containing security issues that affect the product. Define any security or privacy
 > certifications that must be satisfied.
+
+At this time, the only security effort will be to not make any bugs and potential exploits via the code that I write purely
+to build good habits in writing safe code. However, creating a DRM or securing the engine's state of integrity is out of
+the scope of this project. May circle back to this at a later date cause its interesting but its too advanced for now.
 
 ### 5.4 Software Quality Attributes
 > Specify any additional quality characteristics for the product that will be important to either the customers or the
@@ -216,10 +315,14 @@ Table of Contents
 > attributes, such as ease of use over ease of learning.
 
 
+
 ## Other Requirements
 > Define any other requirements not covered elsewhere in the SRS. This might include database requirements,
 > internationalization requirements, legal requirements, reuse objectives for the project, and so on. Add any new
 > sections that are pertinent to the project.
+
+N/A
+
 ---
 
 ### Appendix A: Glossary
@@ -227,9 +330,13 @@ Table of Contents
 > build a separate glossary that spans multiple projects or the entire organization, and just include terms specific to
 > a single project in each SRS.
 
+N/A (so far?)
+
 ### Appendix B: Analysis Models
 > Optionally, include any pertinent analysis models, such as data flow diagrams, class diagrams, state-transition
 > diagrams, or entity-relationship diagrams.
+
+Will Update as I go.
 
 ### Appendix C: To Be Determined List
 > Collect a numbered list of the TBD (to be determined) references that remain in the SRS so they can be tracked to closure.
