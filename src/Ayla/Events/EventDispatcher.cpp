@@ -3,7 +3,7 @@
 //
 #include "Ayla/Events/EventDispatcher.h"
 
-namespace Ayla {
+namespace Ayla::Events {
 
         // TODO: Set callbacks for the dispatcher (Tie to Application??)
 

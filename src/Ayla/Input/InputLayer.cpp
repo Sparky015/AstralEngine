@@ -4,7 +4,9 @@
 
 #include "InputLayer.h"
 
-namespace Ayla {
+
+
+namespace Ayla::Input {
     InputLayer::InputLayer(){
         AY_TRACE("InputLayer: Initializing Input Layer");
         this->attachLayer();

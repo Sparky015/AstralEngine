@@ -5,7 +5,10 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
-namespace Ayla {
+using namespace Ayla::Events;
+using namespace Ayla::Core::Layers;
+
+namespace Ayla::GUI {
 
     class ImGuiLayer : public Layer {
     public:

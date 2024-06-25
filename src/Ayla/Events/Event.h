@@ -5,7 +5,7 @@
 #pragma once
 #include "Ayla/aypch.h"
 
-namespace Ayla {
+namespace Ayla::Events {
 
 
     enum EventTypes {

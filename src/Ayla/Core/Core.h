@@ -41,6 +41,7 @@ namespace {
 
 #define AY_TRACE(title) macro_AY_TRACE(title)
 #define AY_ASSERT(expression, errorMessage) macro_AY_ASSERT(expression, errorMessage)
+#define AY_LOG(message) macro_AY_LOG(message)
 #define AY_PROFILE_SCOPE(title) AY_PROFILER(title)
 #include <iomanip>
 namespace {
@@ -56,6 +57,10 @@ namespace {
         if (!expression){
             throw std::runtime_error(errorMessage);
         }
+    }
+
+    void macro_AY_LOG(std::string&& message){
+        std::cout << "\n" << message;
     }
 
     AY_PROFILER::AY_PROFILER(std::string&& title) {

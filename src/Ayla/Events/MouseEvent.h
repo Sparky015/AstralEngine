@@ -4,7 +4,7 @@
 
 #pragma once
 #include "Ayla/Events/Event.h"
-namespace Ayla {
+namespace Ayla::Events {
 
     /**
  * @class MouseButtonEvent

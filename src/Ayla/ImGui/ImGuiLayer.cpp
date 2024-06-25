@@ -6,7 +6,10 @@
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
-namespace Ayla{
+
+
+
+namespace Ayla::GUI {
 
     ImGuiLayer::ImGuiLayer() {
         AY_TRACE("ImGuiLayer: Initializing ImGui Layer");
@@ -60,7 +63,7 @@ namespace Ayla{
     void ImGuiLayer::onUpdate() {
 
         ImGuiIO& io = ImGui::GetIO();
-        Window& appWindow = Application::getApplication().getWindow();
+        Windows::Window& appWindow = Core::Application::getApplication().getWindow();
         io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
 
         float time = (float)glfwGetTime();
@@ -80,14 +83,12 @@ namespace Ayla{
     }
 
     void ImGuiLayer::onEvent(Event& event) {
-        std::cout << "ImGui received an event!\n";
+        //AY_LOG("ImGui received an event!");
 
-
-        event.setIsHandled(true);
     }
 
     EventCategory ImGuiLayer::getAcceptingEventFlags() {
-        return ApplicationCategory;
-    }
+        return static_cast<EventCategory>(ApplicationCategory | InputCategory);
+    }//TODO: Recieve all the flags for the window and input for ImGui and then not handle input and send it to input layer.
 
 }

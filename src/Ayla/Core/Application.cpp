@@ -4,32 +4,49 @@
 
 #include "Ayla/Core/Application.h"
 
-#include <memory>
-#include "Ayla/Events/ApplicationEvent.h"
-#include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/aypch.h"
+
+
+
+#include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
-#include "Ayla/Input/InputLayer.h"
+
+
+
+
 #include "glad/glad.h"
-
-
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
-namespace Ayla {
+
+
+namespace Ayla::Core {
 
     Application* Application:: m_application = nullptr;
 
     Application::Application() {
         AY_ASSERT(m_application == nullptr, "Can not create more than one application!");
+
+        // Application //
         AY_TRACE("Application: Initializing Application");
         m_application = this;
+
+        // Window //
+        AY_LOG("--- Application: Initializing Window ---");
         m_window = std::unique_ptr<Window>(Window::createWindow());
         m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
+        // Layer Stack //
+        AY_LOG("--- Application: Initializing Layer Stack ---");
         m_layerStack = std::make_unique<LayerStack>();
-        m_imGuiLayer = std::make_unique<ImGuiLayer>();
-        AY_TRACE("Application: Between the ImGui init and InputState init");
-        InputState::get();
+
+        // Layers //
+        AY_LOG("--- Application: Initializing Layers ---");
+        m_debugLayer = std::make_unique<Debug::DebugLayer>();
+        m_imGuiLayer = std::make_unique<GUI::ImGuiLayer>();
+
+        // Systems //
+        AY_LOG("--- Application: Initializing Systems ---");
+        Input::InputState::get(); // initializes InputState on first call
     }
 
     Application::~Application() = default;
@@ -52,11 +69,10 @@ namespace Ayla {
 
 
 
-    void Application::onEvent(Ayla::Event& event) {
-        if (event.getEventType() == WINDOW_CLOSE) { m_appIsRunning = false; }
-
+    void Application::onEvent(Event& event) {
+        if (event.getEventType() == WINDOW_CLOSE) { m_appIsRunning = false; return;}
+        if (event.getEventType() == MOUSE_CURSOR_MOVED) {return;}
         m_layerStack->dispatchEventBackToFront(event);
-
     }
 
     Window& Application::getWindow(){ return *m_window;}

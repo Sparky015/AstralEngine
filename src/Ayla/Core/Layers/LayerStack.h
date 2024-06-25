@@ -6,7 +6,7 @@
 #include "Layer.h"
 #include "Ayla/Events/Event.h"
 
-namespace Ayla {
+namespace Ayla::Core::Layers {
 
 
     class LayerStack {

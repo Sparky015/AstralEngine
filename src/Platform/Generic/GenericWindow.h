@@ -6,7 +6,7 @@
 #include "Ayla/Window/Window.h"
 #include "GLFW/glfw3.h"
 
-namespace Ayla{
+namespace Ayla::Windows{
 
     static bool s_isGLFWInitialized = false;
     static void GLFWErrorCallback(int error, const char* description);

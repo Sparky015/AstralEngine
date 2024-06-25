@@ -7,7 +7,7 @@
 #include "Ayla/Events/KeyEvent.h"
 #include "glad/glad.h"
 
-namespace Ayla{
+namespace Ayla::Windows {
 
     // PUBLIC
     void GLFWErrorCallback(int error, const char* description){
@@ -165,7 +165,7 @@ namespace Ayla{
         return m_windowProperties.height;;
     }
 
-    void GenericWindow::setEventCallback(const Ayla::Window::EventCallback& callback) {
+    void GenericWindow::setEventCallback(const Window::EventCallback& callback) {
         m_windowData.callback = callback;
     }
 

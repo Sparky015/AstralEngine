@@ -7,7 +7,10 @@
 #include "Ayla/Events/Event.h"
 #include "GLFW/glfw3.h"
 
-namespace Ayla{
+using namespace Ayla::Events;
+
+namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instead of Windows?
+
     struct WindowProperties {
         std::string title;
         float width;

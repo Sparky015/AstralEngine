@@ -4,7 +4,7 @@
 
 #include "LayerStack.h"
 
-namespace Ayla {
+namespace Ayla::Core::Layers {
 
     LayerStack::LayerStack() {
         AY_TRACE("LayerStack: Initializing Layer Stack");

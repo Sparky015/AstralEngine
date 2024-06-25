@@ -6,10 +6,10 @@
 #include "LayerStack.h"
 #include "Ayla/Core/Application.h"
 
-namespace Ayla {
+namespace Ayla::Core::Layers {
 
     Layer::Layer() {
-        AY_TRACE("Layer: Initializing Layer\t\t");
+        AY_TRACE("Layer: Initializing Base Class Layer\t\t");
         m_isEnabled = false;
         m_isInitializedInTower = false;
     }

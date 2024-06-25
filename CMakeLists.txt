@@ -50,6 +50,8 @@ add_library(Ayla SHARED
         src/Ayla/Input/InputLayer.h
         src/Ayla/Input/InputState.cpp
         src/Ayla/Input/InputState.h
+        src/Ayla/Core/Layers/DebugLayer.cpp
+        src/Ayla/Core/Layers/DebugLayer.h
 )
 
 #       ### Ayla Includes ###

@@ -5,8 +5,9 @@
 #pragma once
 #include "Ayla/Events/Event.h"
 
-namespace Ayla {
+using namespace Ayla::Events;
 
+namespace Ayla::Core::Layers {
 
     class Layer {
     public:
@@ -47,6 +48,9 @@ namespace Ayla {
 
 
 
-} // Ayla
+}
+
+
+
 
 

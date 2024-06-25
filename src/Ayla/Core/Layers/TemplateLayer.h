@@ -1,20 +1,16 @@
 //
-// Created by Andrew Fagan on 5/16/24.
+// Created by Andrew Fagan on 6/25/24.
 //
 #pragma once
 
-
 #include "Ayla/Core/Layers/Layer.h"
 
-using namespace Ayla::Events;
-using namespace Ayla::Core::Layers;
+namespace Ayla {
 
-namespace Ayla::Input {
-
-    class InputLayer : public Layer {
+    class TemplateLayer : public Layer {
     public:
-        InputLayer();
-        ~InputLayer() override;
+        TemplateLayer();
+        ~TemplateLayer() override;
 
         void onAttach() override;
         void onDetach() override;
