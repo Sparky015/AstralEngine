@@ -5,7 +5,7 @@
 
 #include "Ayla/aypch.h"
 #include "Ayla/Events/Event.h"
-#include "GLFW/glfw3.h"
+
 
 using namespace Ayla::Events;
 
@@ -16,7 +16,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
         float width;
         float height;
 
-        WindowProperties(std::string title = "Ayla Engine Window", int width = 1280, int height = 720) :
+        WindowProperties(std::string title = "Ayla Engine Window", float width = 1280.0f, float height = 720.0f) :
                 title(std::move(title)),
                 width(width),
                 height(height) {}

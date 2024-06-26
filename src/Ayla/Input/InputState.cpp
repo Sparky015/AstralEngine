@@ -39,7 +39,7 @@ namespace Ayla::Input {
 
     void InputState::onEvent(Event& event) {
         AY_ASSERT(event.isInCategory(InputCategory), "InputState received an event that is not in the Input Category!");
-        AY_TRACE("Input Received\t");
+        //AY_TRACE("Input Received\t");
         if (event.isInCategory(KeyboardCategory)){
             if (event.getEventType() == KEY_PRESSED){
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
@@ -80,7 +80,7 @@ namespace Ayla::Input {
                 auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
                 m_mouseXPosition = mouseMovedEvent.getXPos();
                 m_mouseYPosition = mouseMovedEvent.getYPos();
-                std::cout << mouseMovedEvent.getXPos() << ", " << mouseMovedEvent.getYPos();
+                //std::cout << mouseMovedEvent.getXPos() << ", " << mouseMovedEvent.getYPos();
             }
 
             if (event.getEventType() == MOUSE_SCROLLED) {
@@ -97,6 +97,13 @@ namespace Ayla::Input {
         return m_keyState[keycode];
     }
 
+    double InputState::accessMouseX() {
+        return m_mouseXPosition;
+    }
+
+    double InputState::accessMouseY() {
+        return m_mouseYPosition;
+    }
 
     namespace Translation {
 

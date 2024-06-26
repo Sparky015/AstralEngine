@@ -31,8 +31,19 @@ namespace Ayla::Core::Debug {
     }
 
     void DebugLayer::onUpdate() {
+        static long long accumulatedTime;
+        accumulatedTime += Time::Clock::get().getDeltaTime();
         if (InputState::get().access(AY_KEY_T).isDown && !InputState::get().access(AY_KEY_T).isRepeating){
+            if (accumulatedTime <= 75){return;}
+            accumulatedTime = 0;
             AY_TRACE("T is pressed down.");
+            std::cout << "\n" << InputState::get().accessMouseX() << " by " << InputState::get().accessMouseY();
+        }
+        if (InputState::get().access(AY_KEY_R).isDown && !InputState::get().access(AY_KEY_R).isRepeating){
+            if (accumulatedTime <= 300){return;}
+            accumulatedTime = 0;
+            AY_TRACE("Resetting stopwatch.");
+            Ayla::Core::Time::Clock::get().resetStopwatch();
         }
     }
 

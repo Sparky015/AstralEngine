@@ -118,19 +118,18 @@ public:
     };
 
     KeyState access(int keycode);
-
+    double accessMouseX();
+    double accessMouseY();
 private:
     static InputState* m_instance;
     InputState();
     ~InputState();
 
 
-
     KeyState m_keyState[78];
 
     double m_mouseXPosition;
     double m_mouseYPosition;
-
 
 
     InputLayer m_inputLayer;

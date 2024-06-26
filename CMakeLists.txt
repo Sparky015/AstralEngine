@@ -45,13 +45,10 @@ add_library(Ayla SHARED
         src/Ayla/ImGui/ImGuiLayer.cpp
         src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
         src/Ayla/ImGui/ImGuiEvents.cpp
-        src/Ayla/ImGui/ImGuiEvents.h
         src/Ayla/Input/InputLayer.cpp
-        src/Ayla/Input/InputLayer.h
         src/Ayla/Input/InputState.cpp
-        src/Ayla/Input/InputState.h
         src/Ayla/Core/Layers/DebugLayer.cpp
-        src/Ayla/Core/Layers/DebugLayer.h
+        src/Ayla/Core/Time/Time.cpp
 )
 
 #       ### Ayla Includes ###

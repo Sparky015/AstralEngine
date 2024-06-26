@@ -3,16 +3,11 @@
 //
 
 #include "Ayla/Core/Application.h"
-
 #include "Ayla/aypch.h"
-
 
 
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
-
-
-
 
 #include "glad/glad.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
@@ -30,6 +25,9 @@ namespace Ayla::Core {
         AY_TRACE("Application: Initializing Application");
         m_application = this;
 
+        // Clock //
+        Time::Clock::get();
+
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
         m_window = std::unique_ptr<Window>(Window::createWindow());
@@ -41,17 +39,17 @@ namespace Ayla::Core {
 
         // Layers //
         AY_LOG("--- Application: Initializing Layers ---");
-        m_debugLayer = std::make_unique<Debug::DebugLayer>();
         m_imGuiLayer = std::make_unique<GUI::ImGuiLayer>();
+        Input::InputState::get(); // initializes Input layer and InputState on first call
+        m_debugLayer = std::make_unique<Debug::DebugLayer>();
 
-        // Systems //
-        AY_LOG("--- Application: Initializing Systems ---");
-        Input::InputState::get(); // initializes InputState on first call
+
     }
 
     Application::~Application() = default;
 
     void Application::Run() {
+        long long timeAccumulation = 0.0;
         std::cout << "\n\nRunning Application!" << std::endl;
 
         while (m_appIsRunning){
@@ -59,11 +57,14 @@ namespace Ayla::Core {
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            Time::Clock::get().updateDeltaTime();
+            timeAccumulation += Time::Clock::get().getDeltaTime();
             m_layerStack->update();
 
             m_window->update(); // Must be called last
         }
-
+        std::cout << timeAccumulation << "\n\n";
+        std::cout << Time::Clock::get().getStopwatchTime();
         exit(EXIT_SUCCESS);
     }
 
@@ -71,7 +72,7 @@ namespace Ayla::Core {
 
     void Application::onEvent(Event& event) {
         if (event.getEventType() == WINDOW_CLOSE) { m_appIsRunning = false; return;}
-        if (event.getEventType() == MOUSE_CURSOR_MOVED) {return;}
+
         m_layerStack->dispatchEventBackToFront(event);
     }
 

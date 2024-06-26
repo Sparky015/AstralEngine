@@ -6,8 +6,11 @@
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
+#include <GLFW/glfw3.h>
 
-
+#include "Ayla/Events/ApplicationEvent.h"
+#include "Ayla/Events/MouseEvent.h"
+#include "Ayla/Events/KeyEvent.h"
 
 namespace Ayla::GUI {
 
@@ -85,10 +88,40 @@ namespace Ayla::GUI {
     void ImGuiLayer::onEvent(Event& event) {
         //AY_LOG("ImGui received an event!");
 
+        ImGuiIO& io = ImGui::GetIO();
+        switch(event.getEventType()){
+            case MOUSE_CURSOR_MOVED: {
+                auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
+                io.MousePos = ImVec2(mouseMovedEvent.getXPos(), mouseMovedEvent.getYPos());
+                break;
+            }
+            case MOUSE_BUTTON_PRESSED: {
+                auto mouseButtonPressEvent = dynamic_cast<MouseButtonPressEvent&>(event);
+                io.MouseDown[mouseButtonPressEvent.getButton()] = true;
+                break;
+            }
+            case MOUSE_BUTTON_RELEASED: {
+                auto mouseButtonReleaseEvent = dynamic_cast<MouseButtonReleaseEvent&>(event);
+                io.MouseReleased[mouseButtonReleaseEvent.getButton()] = true;
+                break;
+            }
+            case MOUSE_SCROLLED: {
+                auto mouseScrollEvent = dynamic_cast<MouseScrollEvent&>(event);
+                io.MouseWheel += mouseScrollEvent.getYOffset();
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+
+        if (event.isInCategory(ApplicationCategory)) {event.setIsHandled(true);}
+        //else {event.setIsHandled(false);}
     }
 
     EventCategory ImGuiLayer::getAcceptingEventFlags() {
         return static_cast<EventCategory>(ApplicationCategory | InputCategory);
-    }//TODO: Recieve all the flags for the window and input for ImGui and then not handle input and send it to input layer.
+    }
 
 }
