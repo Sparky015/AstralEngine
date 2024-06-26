@@ -102,7 +102,7 @@ namespace Ayla::GUI {
             }
             case MOUSE_BUTTON_RELEASED: {
                 auto mouseButtonReleaseEvent = dynamic_cast<MouseButtonReleaseEvent&>(event);
-                io.MouseReleased[mouseButtonReleaseEvent.getButton()] = true;
+                io.MouseDown[mouseButtonReleaseEvent.getButton()] = false;
                 break;
             }
             case MOUSE_SCROLLED: {
