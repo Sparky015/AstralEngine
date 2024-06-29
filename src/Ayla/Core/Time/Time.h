@@ -29,7 +29,7 @@ namespace Ayla::Core::Time {
         TimeDuration m_deltaTime;
         TimeStamp m_previousTimeStamp;
 
-        TimeDuration m_stopWatchTime;
+        TimeDuration m_stopWatchTime{};
         TimeStamp m_clockStartingTimeStamp;
 
         Clock();

@@ -74,6 +74,9 @@ namespace Ayla::GUI {
         m_time = time;
 
 
+        io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
+
+        std::cout << "Display Scale: x = " << io.DisplayFramebufferScale.x << ", y = " << io.DisplayFramebufferScale.y << std::endl;
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
@@ -117,7 +120,6 @@ namespace Ayla::GUI {
 
 
         if (event.isInCategory(ApplicationCategory)) {event.setIsHandled(true);}
-        //else {event.setIsHandled(false);}
     }
 
     EventCategory ImGuiLayer::getAcceptingEventFlags() {

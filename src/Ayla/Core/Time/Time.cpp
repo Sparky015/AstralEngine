@@ -16,10 +16,11 @@ namespace Ayla::Core::Time{
         return *m_instance;
     }
 
-    Clock::Clock() :
+    Clock::Clock():
     m_deltaTime(0),
     m_previousTimeStamp(std::chrono::high_resolution_clock::now()),
-    m_clockStartingTimeStamp(std::chrono::high_resolution_clock::now())
+    m_clockStartingTimeStamp(std::chrono::high_resolution_clock::now()),
+    m_stopWatchTime(0)
     {
 
     }

@@ -7,6 +7,9 @@
 #include "Ayla/Events/KeyEvent.h"
 #include "glad/glad.h"
 
+#include "imgui.h"
+
+
 namespace Ayla::Windows {
 
     // PUBLIC
@@ -33,6 +36,7 @@ namespace Ayla::Windows {
         m_windowData.height = windowProperties.height;
         m_windowData.width = windowProperties.width;
 
+
         // GLFW Implementation
         if (!s_isGLFWInitialized){
             if (!glfwInit()) {
@@ -45,6 +49,7 @@ namespace Ayla::Windows {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
         m_window = glfwCreateWindow(windowProperties.width, windowProperties.height, windowProperties.title.c_str(), nullptr, nullptr);
         if (!m_window) {
@@ -59,6 +64,14 @@ namespace Ayla::Windows {
         if (status != 1) { std::cout << "GLAD failed to load!"; }
         glfwSetWindowUserPointer(m_window, &m_windowData);
 
+        int framebufferWidth;
+        int framebufferHeight;
+        glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
+        m_windowData.displayFramebufferScaleX = framebufferWidth > 0 ? ((float)framebufferWidth / (float)m_windowData.width) : 0;
+        m_windowData.displayFramebufferScaleY = framebufferHeight > 0 ? ((float)framebufferHeight / (float)m_windowData.height) : 0;
+
+
+                    // Setting Callbacks //
 
         // Called when window is resized
         glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
@@ -154,6 +167,13 @@ namespace Ayla::Windows {
             windowData.callback(event);
         });
 
+        glfwSetFramebufferSizeCallback(m_window,[](GLFWwindow* window, int width, int height){
+            std::cout << "Width: " << width << "  Height: " << height;
+            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            windowData.displayFramebufferScaleX = width > 0 ? ((float)width / (float)windowData.width) : 0;
+            windowData.displayFramebufferScaleY = height > 0 ? ((float)height / (float)windowData.height) : 0;
+        });
+
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
@@ -165,13 +185,27 @@ namespace Ayla::Windows {
         return m_windowProperties.height;;
     }
 
+    float GenericWindow::getDisplayFramebufferScaleX() const {
+        return m_windowData.displayFramebufferScaleX;
+    }
+
+    float GenericWindow::getDisplayFramebufferScaleY() const {
+        return m_windowData.displayFramebufferScaleY;
+    }
+
     void GenericWindow::setEventCallback(const Window::EventCallback& callback) {
         m_windowData.callback = callback;
     }
 
     void GenericWindow::update() {
+
         glfwPollEvents();
         glfwSwapBuffers(m_window);
+
+        int display_w, display_h;
+        glfwGetFramebufferSize(m_window, &display_w, &display_h);
+        std::cout << "Framebuffer Size: width = " << display_w << ", height = " << display_h << std::endl;
+        std::cout << "GenericWindow: Window Size: width = " << m_windowData.width << ", height = " <<  m_windowData.height << std::endl;
     }
 
     // PRIVATE

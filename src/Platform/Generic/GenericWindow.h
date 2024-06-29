@@ -20,17 +20,21 @@ namespace Ayla::Windows{
         void init(const WindowProperties &properties);
         int getWidth() const override;
         int getHeight() const override;
+        float getDisplayFramebufferScaleX() const override;
+        float getDisplayFramebufferScaleY() const override;
 
         void setEventCallback(const EventCallback &callback) override;
         void update() override;
 
     private:
-        GLFWwindow *m_window;
+        GLFWwindow* m_window;
         WindowProperties m_windowProperties;
 
         struct WindowData {
             int width;
             int height;
+            float displayFramebufferScaleX;
+            float displayFramebufferScaleY;
             std::string title;
             bool vSync;
 
@@ -38,5 +42,7 @@ namespace Ayla::Windows{
         };
 
         WindowData m_windowData;
+
+
     };
 }

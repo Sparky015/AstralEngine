@@ -11,6 +11,7 @@ using namespace Ayla::Events;
 
 namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instead of Windows?
 
+
     struct WindowProperties {
         std::string title;
         float width;
@@ -22,6 +23,8 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
                 height(height) {}
     };
 
+
+
     class AYLA_API Window{
     public:
             using EventCallback = std::function<void(Event&)>;
@@ -31,8 +34,11 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
 
             [[nodiscard]] virtual int getWidth() const = 0;
             [[nodiscard]] virtual int getHeight() const = 0;
+            virtual float getDisplayFramebufferScaleX() const = 0;
+            virtual float getDisplayFramebufferScaleY() const = 0;
 
             virtual void setEventCallback(const EventCallback& callback) = 0;
             static Window* createWindow(const WindowProperties& properties = WindowProperties());
     };
+
 }
