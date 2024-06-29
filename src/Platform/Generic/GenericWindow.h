@@ -14,14 +14,14 @@ namespace Ayla::Windows{
     class GenericWindow : public Window {
     public:
 
-        GenericWindow(const WindowProperties &properties = WindowProperties());
+        explicit GenericWindow(const WindowProperties &properties = WindowProperties());
         ~GenericWindow() override;
 
         void init(const WindowProperties &properties);
-        int getWidth() const override;
-        int getHeight() const override;
-        float getDisplayFramebufferScaleX() const override;
-        float getDisplayFramebufferScaleY() const override;
+        [[nodiscard]] int getWidth() const override;
+        [[nodiscard]] int getHeight() const override;
+        [[nodiscard]] float getDisplayFramebufferScaleX() const override;
+        [[nodiscard]] float getDisplayFramebufferScaleY() const override;
 
         void setEventCallback(const EventCallback &callback) override;
         void update() override;

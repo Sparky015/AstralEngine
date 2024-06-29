@@ -17,7 +17,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
         float width;
         float height;
 
-        WindowProperties(std::string title = "Ayla Engine Window", float width = 1280.0f, float height = 720.0f) :
+        WindowProperties(std::string title = "Ayla Engine Window", float width = 1024.0f, float height = 768.0f) :
                 title(std::move(title)),
                 width(width),
                 height(height) {}
@@ -34,8 +34,8 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
 
             [[nodiscard]] virtual int getWidth() const = 0;
             [[nodiscard]] virtual int getHeight() const = 0;
-            virtual float getDisplayFramebufferScaleX() const = 0;
-            virtual float getDisplayFramebufferScaleY() const = 0;
+            [[nodiscard]] virtual float getDisplayFramebufferScaleX() const = 0;
+            [[nodiscard]] virtual float getDisplayFramebufferScaleY() const = 0;
 
             virtual void setEventCallback(const EventCallback& callback) = 0;
             static Window* createWindow(const WindowProperties& properties = WindowProperties());

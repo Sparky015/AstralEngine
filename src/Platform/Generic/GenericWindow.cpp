@@ -75,7 +75,7 @@ namespace Ayla::Windows {
 
         // Called when window is resized
         glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
-            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
             windowData.width = width;
             windowData.height = height;
 
@@ -168,7 +168,7 @@ namespace Ayla::Windows {
         });
 
         glfwSetFramebufferSizeCallback(m_window,[](GLFWwindow* window, int width, int height){
-            std::cout << "Width: " << width << "  Height: " << height;
+            std::cout << "GenericWindow::glfwSetFramebufferSizeCallback(): NEW FB Width: " << width << "  NEW FB Height: " << height << "   djawidaiuhdiuhawiudhaiwuhdiuawdhiauwdhiu" << std::endl;
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             windowData.displayFramebufferScaleX = width > 0 ? ((float)width / (float)windowData.width) : 0;
             windowData.displayFramebufferScaleY = height > 0 ? ((float)height / (float)windowData.height) : 0;
@@ -203,9 +203,18 @@ namespace Ayla::Windows {
         glfwSwapBuffers(m_window);
 
         int display_w, display_h;
+        double mouse_w, mouse_h;
         glfwGetFramebufferSize(m_window, &display_w, &display_h);
-        std::cout << "Framebuffer Size: width = " << display_w << ", height = " << display_h << std::endl;
-        std::cout << "GenericWindow: Window Size: width = " << m_windowData.width << ", height = " <<  m_windowData.height << std::endl;
+        glfwGetCursorPos(m_window, &mouse_w, &mouse_h);
+
+        m_windowProperties.width = m_windowData.width;
+        m_windowProperties.height = m_windowData.height;
+
+        m_windowData.displayFramebufferScaleX = display_w > 0 ? ((float)display_w / (float)m_windowData.width) : 0;
+        m_windowData.displayFramebufferScaleY = display_h > 0 ? ((float)display_h / (float)m_windowData.height) : 0;
+        std::cout << "GenericWindow::update(): Framebuffer Size: width = " << display_w << ", height = " << display_h << std::endl;
+        std::cout << "GenericWindow::update(): Window Size: width = " << m_windowData.width << ", height = " <<  m_windowData.height << std::endl;
+        std::cout << "GenericWindow::update(): Mouse position from GLFW: width = " << mouse_w << " height = " << mouse_h << std::endl;
     }
 
     // PRIVATE

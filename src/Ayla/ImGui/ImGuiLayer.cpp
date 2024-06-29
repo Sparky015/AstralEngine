@@ -68,6 +68,7 @@ namespace Ayla::GUI {
         ImGuiIO& io = ImGui::GetIO();
         Windows::Window& appWindow = Core::Application::getApplication().getWindow();
         io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
+        std::cout << "ImGui: Display Size: x = " << appWindow.getWidth() << ", y = " << appWindow.getHeight() << std::endl;
 
         float time = (float)glfwGetTime();
         io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
@@ -76,7 +77,7 @@ namespace Ayla::GUI {
 
         io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
 
-        std::cout << "Display Scale: x = " << io.DisplayFramebufferScale.x << ", y = " << io.DisplayFramebufferScale.y << std::endl;
+        std::cout << "ImGui: Display Scale: width = " << io.DisplayFramebufferScale.x << ", height = " << io.DisplayFramebufferScale.y << std::endl;
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
@@ -111,6 +112,10 @@ namespace Ayla::GUI {
             case MOUSE_SCROLLED: {
                 auto mouseScrollEvent = dynamic_cast<MouseScrollEvent&>(event);
                 io.MouseWheel += mouseScrollEvent.getYOffset();
+                break;
+            }
+            case WINDOW_RESIZE: {
+
                 break;
             }
             default: {

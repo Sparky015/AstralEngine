@@ -63,8 +63,8 @@ namespace Ayla::Core {
 
             m_window->update(); // Must be called last
         }
-        std::cout << "\nDelta Time Accumulation: " << timeAccumulation << " milliseconds\n";
-        std::cout << "Stopwatch: " << Time::Clock::get().getStopwatchTime() << " milliseconds\n";
+        std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";
+        std::cout << "Stopwatch: " << Time::Clock::get().getStopwatchTime() * .001 << " seconds\n";
         exit(EXIT_SUCCESS);
     }
 
