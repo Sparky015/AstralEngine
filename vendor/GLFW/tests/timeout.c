@@ -1,5 +1,5 @@
 //========================================================================
-// Event wait timeout test
+// Events wait timeout test
 // Copyright (c) Camilla Löwy <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
@@ -64,7 +64,7 @@ int main(void)
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    window = glfwCreateWindow(640, 480, "Event Wait Timeout Test", NULL, NULL);
+    window = glfwCreateWindow(640, 480, "Events Wait Timeout Test", NULL, NULL);
     if (!window)
     {
         glfwTerminate();

@@ -4,16 +4,14 @@
 
 #include <Ayla.h>
 
-class Game : public Ayla::Application{
+class Game : public Ayla::Core::Application {
 public:
     Game() = default;
     ~Game() = default;
-
     
 };
 
 
-Ayla::Application* Ayla::CreateApplication() {
-
+Ayla::Core::Application* Ayla::Core::CreateApplication() {
     return new Game();
 }

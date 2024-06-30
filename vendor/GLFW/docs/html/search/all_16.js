@@ -18,7 +18,7 @@ var searchData=
   ['position_20changes_15',['Cursor position changes',['../moving_guide.html#moving_cursorpos',1,'']]],
   ['position_20replaced_20by_20scroll_20offsets_16',['Wheel position replaced by scroll offsets',['../moving_guide.html#moving_wheel',1,'']]],
   ['presentation_20support_17',['Querying for Vulkan presentation support',['../vulkan_guide.html#vulkan_present',1,'']]],
-  ['processing_18',['processing',['../input_guide.html#events',1,'Event processing'],['../window_guide.html#window_events',1,'Window event processing']]],
+  ['processing_18',['processing',['../input_guide.html#events',1,'Events processing'],['../window_guide.html#window_events',1,'Window event processing']]],
   ['processing_20events_19',['Processing events',['../quick_guide.html#quick_process_events',1,'']]],
   ['properties_20',['Monitor properties',['../monitor_guide.html#monitor_properties',1,'']]],
   ['properties_20and_20events_21',['Window properties and events',['../window_guide.html#window_properties',1,'']]],

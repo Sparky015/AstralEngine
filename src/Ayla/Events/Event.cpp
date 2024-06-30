@@ -1,0 +1,26 @@
+//
+// Created by Andrew Fagan on 4/18/24.
+//
+
+
+#include "Ayla/Events/Event.h"
+
+
+namespace Ayla::Events {
+
+
+
+   int Event::getEventType() { return NONE;}
+    int Event::getEventCategoryFlags() {return None;}
+
+    bool Event::isHandled() {
+       return m_isHandled;
+   }
+
+    void Event::setIsHandled(bool state) {
+       m_isHandled = state;
+   }
+
+
+
+}

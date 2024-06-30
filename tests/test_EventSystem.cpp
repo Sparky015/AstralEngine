@@ -6,7 +6,7 @@
 
 
 void onRequestPrint(Ayla::Event&){
-    std::cout << "Test Event";
+    std::cout << "Test Events";
 }
 
 TEST(EventCreation, simpleEvent){

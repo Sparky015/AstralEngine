@@ -28,7 +28,7 @@ var searchData=
   ['options_25',['options',['../compile_guide.html#compile_options',1,'CMake options'],['../compile_guide.html#compile_options_macos',1,'macOS specific CMake options'],['../compile_guide.html#compile_options_shared',1,'Shared CMake options'],['../compile_guide.html#compile_options_unix',1,'Unix-like system specific CMake options'],['../compile_guide.html#compile_options_win32',1,'Win32 specific CMake options']]],
   ['or_20later_26',['Documentation generation requires Doxygen 1.9.8 or later',['../news.html#docs_target_caveat',1,'']]],
   ['or_20makefile_20on_20macos_27',['With command-line or makefile on macOS',['../build_guide.html#build_link_osx',1,'']]],
-  ['order_28',['Event order',['../intro_guide.html#event_order',1,'']]],
+  ['order_28',['Events order',['../intro_guide.html#event_order',1,'']]],
   ['original_20mingw_20support_20is_20deprecated_29',['Original MinGW support is deprecated',['../news.html#mingw_deprecated',1,'']]],
   ['os_20x_20yosemite_20support_20is_20deprecated_30',['OS X Yosemite support is deprecated',['../news.html#yosemite_deprecated',1,'']]],
   ['output_31',['Clipboard input and output',['../input_guide.html#clipboard',1,'']]]

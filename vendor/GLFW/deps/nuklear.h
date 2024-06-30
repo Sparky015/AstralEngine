@@ -705,7 +705,7 @@ NK_API void nk_set_user_data(struct nk_context*, nk_handle handle);
 /// struct nk_context ctx;
 /// nk_init_xxx(&ctx, ...);
 /// while (1) {
-///     Event evt;
+///     Events evt;
 ///     nk_input_begin(&ctx);
 ///     while (GetEvent(&evt)) {
 ///         if (evt.type == MOUSE_MOVE)
@@ -959,7 +959,7 @@ NK_API void nk_input_end(struct nk_context*);
 /// struct nk_context ctx;
 /// nk_init_xxx(&ctx, ...);
 /// while (1) {
-///     Event evt;
+///     Events evt;
 ///     nk_input_begin(&ctx);
 ///     while (GetEvent(&evt)) {
 ///         if (evt.type == MOUSE_MOVE)
@@ -1352,7 +1352,7 @@ NK_API const struct nk_draw_command* nk__draw_next(const struct nk_draw_command*
 /// struct nk_context ctx;
 /// nk_init_xxx(&ctx, ...);
 /// while (1) {
-///     Event evt;
+///     Events evt;
 ///     nk_input_begin(&ctx);
 ///     while (GetEvent(&evt)) {
 ///         if (evt.type == MOUSE_MOVE)
@@ -2596,7 +2596,7 @@ NK_API struct nk_rect nk_layout_space_rect_to_local(struct nk_context*, struct n
 /// nk_init_xxx(&ctx, ...);
 /// while (1) {
 ///     // Input
-///     Event evt;
+///     Events evt;
 ///     nk_input_begin(&ctx);
 ///     while (GetEvent(&evt)) {
 ///         if (evt.type == MOUSE_MOVE)
@@ -3228,7 +3228,7 @@ NK_API int nk_color_pick(struct nk_context*, struct nk_colorf*, enum nk_color_fo
 /// nk_init_xxx(&ctx, ...);
 /// while (1) {
 ///     // Input
-///     Event evt;
+///     Events evt;
 ///     nk_input_begin(&ctx);
 ///     while (GetEvent(&evt)) {
 ///         if (evt.type == MOUSE_MOVE)

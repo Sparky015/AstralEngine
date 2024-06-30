@@ -25,7 +25,7 @@ var searchData=
   ['input_2emd_22',['input.md',['../input_8md.html',1,'']]],
   ['installed_20glfw_20binaries_23',['With CMake and installed GLFW binaries',['../build_guide.html#build_link_cmake_package',1,'']]],
   ['installing_20dependencies_24',['Installing dependencies',['../compile_guide.html#compile_deps',1,'']]],
-  ['interface_25',['interface',['../internals_guide.html#internals_event',1,'Event interface'],['../internals_guide.html#internals_internal',1,'Internal interface'],['../internals_guide.html#internals_native',1,'Native interface'],['../internals_guide.html#internals_platform',1,'Platform interface'],['../internals_guide.html#internals_public',1,'Public interface']]],
+  ['interface_25',['interface',['../internals_guide.html#internals_event',1,'Events interface'],['../internals_guide.html#internals_internal',1,'Internal interface'],['../internals_guide.html#internals_native',1,'Native interface'],['../internals_guide.html#internals_platform',1,'Platform interface'],['../internals_guide.html#internals_public',1,'Public interface']]],
   ['internal_20interface_26',['Internal interface',['../internals_guide.html#internals_internal',1,'']]],
   ['internal_20structure_27',['Internal structure',['../internals_guide.html',1,'']]],
   ['internal_2emd_28',['internal.md',['../internal_8md.html',1,'']]],

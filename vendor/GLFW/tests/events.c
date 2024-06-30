@@ -1,5 +1,5 @@
 //========================================================================
-// Event linter (event spewer)
+// Events linter (event spewer)
 // Copyright (c) Camilla Löwy <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
@@ -44,7 +44,7 @@
 
 #include "getopt.h"
 
-// Event index
+// Events index
 static unsigned int counter = 0;
 
 typedef struct
@@ -607,7 +607,7 @@ int main(int argc, char** argv)
         slots[i].closeable = GLFW_TRUE;
         slots[i].number = i + 1;
 
-        snprintf(title, sizeof(title), "Event Linter (Window %i)", slots[i].number);
+        snprintf(title, sizeof(title), "Events Linter (Window %i)", slots[i].number);
 
         if (monitor)
         {

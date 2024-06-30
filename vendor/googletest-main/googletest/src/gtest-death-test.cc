@@ -691,7 +691,7 @@ class WindowsDeathTest : public DeathTestImpl {
   AutoHandle write_handle_;
   // Child process handle.
   AutoHandle child_handle_;
-  // Event the child process uses to signal the parent that it has
+  // Events the child process uses to signal the parent that it has
   // acquired the handle to the write end of the pipe. After seeing this
   // event the parent can release its own handles to make sure its
   // ReadFile() calls return when the child terminates.
@@ -1128,7 +1128,7 @@ DeathTest::TestRole NoExecDeathTest::AssumeRole() {
     // concurrent writes to the log files.  We capture stderr in the parent
     // process and append the child process' output to a log.
     LogToStderr();
-    // Event forwarding to the listeners of event listener API mush be shut
+    // Events forwarding to the listeners of event listener API mush be shut
     // down in death test subprocesses.
     GetUnitTestImpl()->listeners()->SuppressEventForwarding(true);
     g_in_fast_death_test_child = true;

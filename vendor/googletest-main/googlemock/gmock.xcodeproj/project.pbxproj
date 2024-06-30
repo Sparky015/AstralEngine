@@ -1,0 +1,1729 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		2DEAEE6A1DC94F19AB8CEC2F /* RUN_TESTS */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 8AC8796CD0D0400696474C71 /* Build configuration list for PBXAggregateTarget "RUN_TESTS" */;
+			buildPhases = (
+				003C8D08B0008F35F218E126 /* CMake PostBuild Rules */,
+			);
+			dependencies = (
+			);
+			name = RUN_TESTS;
+			productName = RUN_TESTS;
+		};
+		772640D8E48941BA91036C96 /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 217C2E13CDE3461B9B08F033 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				74D7792137BB7B1BD035667A /* Generate CMakeFiles/ALL_BUILD */,
+			);
+			dependencies = (
+				1F93A1FDB1EC492F8E4A00D3 /* PBXTargetDependency */,
+				146434B3D0B5480FB7C2DDE4 /* PBXTargetDependency */,
+				15B2FB3910BF45F9938E1232 /* PBXTargetDependency */,
+				30DA95273FC94151B9B37E9F /* PBXTargetDependency */,
+				A5C08BD60DDC432CBFD22F17 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		816A7B88EDEF472E8B80D8EC /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 3E94B8FCDF20491EA901D82A /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				1F67D87C9EED8A957FA180AB /* Generate CMakeFiles/ZERO_CHECK */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+		81A8373DBF784DE0A4099C1C /* install */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1EC483E19E6341E5950705CD /* Build configuration list for PBXAggregateTarget "install" */;
+			buildPhases = (
+				93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */,
+			);
+			dependencies = (
+				65BA933FF6D54D83839AEF3C /* PBXTargetDependency */,
+			);
+			name = install;
+			productName = install;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		4D8E7EFC19BC41EC9135F6B5 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 1C297C14E2CC45D0ACDBAFD2 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */; };
+		5A7C5A9EAAB64D28B476206E /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock-all.cc */ = {isa = PBXBuildFile; fileRef = 6070F4A49FDA4259AD5D38CB /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock-all.cc */; };
+		6AC3307A640A4CD58E82B3E7 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc */ = {isa = PBXBuildFile; fileRef = E51917DACD1B4D01B18F6265 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc */; };
+		81F7480B445A40268E9F4B53 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 72DC2F885425407186AFDAED /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */; };
+		8BCB1296E8A84787A5364068 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = C1512EC63ECA4CE9AF357C6B /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */; };
+		9C39B4397EE24E82A4D19BEC /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc */ = {isa = PBXBuildFile; fileRef = 16132CD37B5F4CC7BE508FA1 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc */; };
+		E6BD7C8B520F4EA0ADBAC7C9 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock_main.cc */ = {isa = PBXBuildFile; fileRef = A7FEE74D663F477F9E1327C5 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock_main.cc */; };
+		ED03135B53B84BB2AE28F35A /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 0F7F670BF75B4B289BB63432 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		6A015C1014074D50B07D6BD4 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		A44E45632EB84F8C94A9AEE0 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		DC0F04A2142F442FBE79A611 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		E70DA43C0DA24FF18700736A /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		0AB03EFE329541B28846256C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00F03254AF13492584517CA2;
+			remoteInfo = gtest;
+		};
+		0F62FD3891C7476C8B974699 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 816A7B88EDEF472E8B80D8EC;
+			remoteInfo = ZERO_CHECK;
+		};
+		1D71C1DC2BF14150AD34EEB8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 772640D8E48941BA91036C96;
+			remoteInfo = ALL_BUILD;
+		};
+		1DBA061F865646F5A3248B54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00F03254AF13492584517CA2;
+			remoteInfo = gtest;
+		};
+		234644DEA0384FECA7D0000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 816A7B88EDEF472E8B80D8EC;
+			remoteInfo = ZERO_CHECK;
+		};
+		36D29451E9BE4ECB8453A28A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A03AEF261DD46178E33FB3F;
+			remoteInfo = gmock;
+		};
+		7E7176BC5347483BB4E4647F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 816A7B88EDEF472E8B80D8EC;
+			remoteInfo = ZERO_CHECK;
+		};
+		861FDCAEB38B4FE19546D1ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00F03254AF13492584517CA2;
+			remoteInfo = gtest;
+		};
+		AE07651F812746E29E05704E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A03AEF261DD46178E33FB3F;
+			remoteInfo = gmock;
+		};
+		D5555FB023494D688AF175AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00F03254AF13492584517CA2;
+			remoteInfo = gtest;
+		};
+		F2C44DD6CD354AF1B84B1FE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6CE62EA27235481EBDE50E4F;
+			remoteInfo = gtest_main;
+		};
+		FD72C78A181049F7B59586A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D30ED210A4AF432BB9C4B211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4A2D5798C2D41CAA824A46A;
+			remoteInfo = gmock_main;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0F7F670BF75B4B289BB63432 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		16132CD37B5F4CC7BE508FA1 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = "gtest-all.cc"; path = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc"; sourceTree = "<absolute>"; };
+		1C297C14E2CC45D0ACDBAFD2 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt"; sourceTree = "<absolute>"; };
+		1E890D5B34E24C77B2EF402A /* gmock */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgmock.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		51666324C50E49FEA8D0B029 /* gtest */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgtest.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6070F4A49FDA4259AD5D38CB /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock-all.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = "gmock-all.cc"; path = "src/gmock-all.cc"; sourceTree = SOURCE_ROOT; };
+		69AAA22D2D514BEDAEEB007E /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		72DC2F885425407186AFDAED /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		751EBB0BB66C4CC6B6EEAC9E /* gmock_main */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgmock_main.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7FEE74D663F477F9E1327C5 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock_main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gmock_main.cc; path = src/gmock_main.cc; sourceTree = SOURCE_ROOT; };
+		C1512EC63ECA4CE9AF357C6B /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt"; sourceTree = "<absolute>"; };
+		E51917DACD1B4D01B18F6265 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gtest_main.cc; path = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc"; sourceTree = "<absolute>"; };
+		EAE8F43F9E584A52B1931619 /* gtest_main */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgtest_main.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		539756859DA248F2BE2403EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B68A0857DB6E4FAD9F16A5B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D988983A71E2497FB38D6F3E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD28C964887640BE9DF1181B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11AE179F21874DBDB5E21A91 /* gtest_main */ = {
+			isa = PBXGroup;
+			children = (
+				56BC4830C8D14FE0B5DB9468 /* Source Files */,
+				C1512EC63ECA4CE9AF357C6B /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */,
+			);
+			name = gtest_main;
+			sourceTree = "<group>";
+		};
+		14EB22F5F3C54F8AA2D6B291 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				5DCABE04B0CD424ABA6A473E /* CMake Rules */,
+				69AAA22D2D514BEDAEEB007E /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		52297D3B37A344F39B442656 /* gtest */ = {
+			isa = PBXGroup;
+			children = (
+				AE6E7E33485B41BF8D869E71 /* Source Files */,
+				1C297C14E2CC45D0ACDBAFD2 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/CMakeLists.txt */,
+			);
+			name = gtest;
+			sourceTree = "<group>";
+		};
+		56BC4830C8D14FE0B5DB9468 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				E51917DACD1B4D01B18F6265 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DCABE04B0CD424ABA6A473E /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		7E022C0DD11D450C95AEBC1D /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				6070F4A49FDA4259AD5D38CB /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock-all.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		915CD3E5485F4FD58DD4829F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9626E6CA06634417AD382A79 /* gmock */ = {
+			isa = PBXGroup;
+			children = (
+				7E022C0DD11D450C95AEBC1D /* Source Files */,
+				72DC2F885425407186AFDAED /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */,
+			);
+			name = gmock;
+			sourceTree = "<group>";
+		};
+		9F6AFBEAEA4D4C4393FE7A7C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		AE6E7E33485B41BF8D869E71 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				16132CD37B5F4CC7BE508FA1 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		BB69F0A03CCB462AB224A2D7 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A7FEE74D663F477F9E1327C5 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock_main.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		D79F26FA2E3E48F8AFD101A6 = {
+			isa = PBXGroup;
+			children = (
+				9626E6CA06634417AD382A79 /* gmock */,
+				E36D0946B7024EC08B68D1F4 /* gmock_main */,
+				14EB22F5F3C54F8AA2D6B291 /* ALL_BUILD */,
+				52297D3B37A344F39B442656 /* gtest */,
+				11AE179F21874DBDB5E21A91 /* gtest_main */,
+				DC40F688B75E4CB08B27E946 /* Products */,
+				915CD3E5485F4FD58DD4829F /* Frameworks */,
+				9F6AFBEAEA4D4C4393FE7A7C /* Resources */,
+			);
+			sourceTree = "<group>";
+		};
+		DC40F688B75E4CB08B27E946 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E890D5B34E24C77B2EF402A /* gmock */,
+				751EBB0BB66C4CC6B6EEAC9E /* gmock_main */,
+				51666324C50E49FEA8D0B029 /* gtest */,
+				EAE8F43F9E584A52B1931619 /* gtest_main */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E36D0946B7024EC08B68D1F4 /* gmock_main */ = {
+			isa = PBXGroup;
+			children = (
+				BB69F0A03CCB462AB224A2D7 /* Source Files */,
+				0F7F670BF75B4B289BB63432 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeLists.txt */,
+			);
+			name = gmock_main;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00F03254AF13492584517CA2 /* gtest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54B240DB9A584E7CAD6B3014 /* Build configuration list for PBXNativeTarget "gtest" */;
+			buildPhases = (
+				82CFD348EADC4476AF66E988 /* Sources */,
+				539756859DA248F2BE2403EB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = gtest;
+			productName = gtest;
+			productReference = 51666324C50E49FEA8D0B029 /* gtest */;
+			productType = "com.apple.product-type.library.static";
+		};
+		3A03AEF261DD46178E33FB3F /* gmock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 90CAEF9D92B84BBF8A4F1929 /* Build configuration list for PBXNativeTarget "gmock" */;
+			buildPhases = (
+				47F5A5B10BA947F492800294 /* Sources */,
+				DD28C964887640BE9DF1181B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6910AA4533A244D397518926 /* PBXTargetDependency */,
+				D84FE8D3C3D04031BF66AA59 /* PBXTargetDependency */,
+			);
+			name = gmock;
+			productName = gmock;
+			productReference = 1E890D5B34E24C77B2EF402A /* gmock */;
+			productType = "com.apple.product-type.library.static";
+		};
+		6CE62EA27235481EBDE50E4F /* gtest_main */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9070D115F75477EA56443C7 /* Build configuration list for PBXNativeTarget "gtest_main" */;
+			buildPhases = (
+				0EF6B739F5734775974CCE7B /* Sources */,
+				D988983A71E2497FB38D6F3E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC91BE1321A6400991768F0B /* PBXTargetDependency */,
+			);
+			name = gtest_main;
+			productName = gtest_main;
+			productReference = EAE8F43F9E584A52B1931619 /* gtest_main */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F4A2D5798C2D41CAA824A46A /* gmock_main */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 24D02FA73A6E4011B8EB0B67 /* Build configuration list for PBXNativeTarget "gmock_main" */;
+			buildPhases = (
+				1C6483ABED4949A2B669BB44 /* Sources */,
+				B68A0857DB6E4FAD9F16A5B3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E655F5D50807493A8E5C10C4 /* PBXTargetDependency */,
+				0067438EECEF4C7D849F99DB /* PBXTargetDependency */,
+				4AF85B8F1E5D4577876C311C /* PBXTargetDependency */,
+			);
+			name = gmock_main;
+			productName = gmock_main;
+			productReference = 751EBB0BB66C4CC6B6EEAC9E /* gmock_main */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D30ED210A4AF432BB9C4B211 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1530;
+			};
+			buildConfigurationList = DC7ED90D39A44CE68D376CC4 /* Build configuration list for PBXProject "gmock" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				A44E45632EB84F8C94A9AEE0 /* Debug */,
+				6A015C1014074D50B07D6BD4 /* Release */,
+				DC0F04A2142F442FBE79A611 /* MinSizeRel */,
+				E70DA43C0DA24FF18700736A /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = D79F26FA2E3E48F8AFD101A6;
+			projectDirPath = .;
+			projectRoot = "";
+			targets = (
+				772640D8E48941BA91036C96 /* ALL_BUILD */,
+				2DEAEE6A1DC94F19AB8CEC2F /* RUN_TESTS */,
+				816A7B88EDEF472E8B80D8EC /* ZERO_CHECK */,
+				3A03AEF261DD46178E33FB3F /* gmock */,
+				F4A2D5798C2D41CAA824A46A /* gmock_main */,
+				00F03254AF13492584517CA2 /* gtest */,
+				6CE62EA27235481EBDE50E4F /* gtest_main */,
+				81A8373DBF784DE0A4099C1C /* install */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		003C8D08B0008F35F218E126 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/ctest --force-new-ctest-process -C $CONFIGURATION$EFFECTIVE_PLATFORM_NAME
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/ctest --force-new-ctest-process -C $CONFIGURATION$EFFECTIVE_PLATFORM_NAME
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/ctest --force-new-ctest-process -C $CONFIGURATION$EFFECTIVE_PLATFORM_NAME
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/ctest --force-new-ctest-process -C $CONFIGURATION$EFFECTIVE_PLATFORM_NAME
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		1F67D87C9EED8A957FA180AB /* Generate CMakeFiles/ZERO_CHECK */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ZERO_CHECK";
+			outputPaths = (
+"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeFiles/ZERO_CHECK"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  make -f /Users/sparky/Documents/Home/Programming/Code\\ Projects/Ayla/vendor/googletest-main/googlemock/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  make -f /Users/sparky/Documents/Home/Programming/Code\\ Projects/Ayla/vendor/googletest-main/googlemock/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  make -f /Users/sparky/Documents/Home/Programming/Code\\ Projects/Ayla/vendor/googletest-main/googlemock/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  make -f /Users/sparky/Documents/Home/Programming/Code\\ Projects/Ayla/vendor/googletest-main/googlemock/CMakeScripts/ReRunCMake.make
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		3C0110FC8322DE7E50886E21 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		74D7792137BB7B1BD035667A /* Generate CMakeFiles/ALL_BUILD */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ALL_BUILD";
+			outputPaths = (
+"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/CMakeFiles/ALL_BUILD"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  echo Build\\ all\\ projects
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		87AF4882E018677E2624B544 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		910A41151295C5F9742C25BD = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/cmake -DBUILD_TYPE=$CONFIGURATION$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/cmake -DBUILD_TYPE=$CONFIGURATION$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/cmake -DBUILD_TYPE=$CONFIGURATION$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd \"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"
+  /opt/homebrew/Cellar/cmake/3.29.0/bin/cmake -DBUILD_TYPE=$CONFIGURATION$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		9B50530E35CC49C82C2FACCF = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0EF6B739F5734775974CCE7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AC3307A640A4CD58E82B3E7 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest_main.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C6483ABED4949A2B669BB44 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6BD7C8B520F4EA0ADBAC7C9 /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock_main.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47F5A5B10BA947F492800294 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A7C5A9EAAB64D28B476206E /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/src/gmock-all.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CFD348EADC4476AF66E988 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C39B4397EE24E82A4D19BEC /* /Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/src/gtest-all.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0067438EECEF4C7D849F99DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00F03254AF13492584517CA2 /* gtest */;
+			targetProxy = 0AB03EFE329541B28846256C /* PBXContainerItemProxy */;
+		};
+		146434B3D0B5480FB7C2DDE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F4A2D5798C2D41CAA824A46A /* gmock_main */;
+			targetProxy = FD72C78A181049F7B59586A6 /* PBXContainerItemProxy */;
+		};
+		15B2FB3910BF45F9938E1232 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00F03254AF13492584517CA2 /* gtest */;
+			targetProxy = 861FDCAEB38B4FE19546D1ED /* PBXContainerItemProxy */;
+		};
+		1F93A1FDB1EC492F8E4A00D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A03AEF261DD46178E33FB3F /* gmock */;
+			targetProxy = AE07651F812746E29E05704E /* PBXContainerItemProxy */;
+		};
+		30DA95273FC94151B9B37E9F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6CE62EA27235481EBDE50E4F /* gtest_main */;
+			targetProxy = F2C44DD6CD354AF1B84B1FE6 /* PBXContainerItemProxy */;
+		};
+		4AF85B8F1E5D4577876C311C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 816A7B88EDEF472E8B80D8EC /* ZERO_CHECK */;
+			targetProxy = 0F62FD3891C7476C8B974699 /* PBXContainerItemProxy */;
+		};
+		65BA933FF6D54D83839AEF3C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 772640D8E48941BA91036C96 /* ALL_BUILD */;
+			targetProxy = 1D71C1DC2BF14150AD34EEB8 /* PBXContainerItemProxy */;
+		};
+		6910AA4533A244D397518926 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00F03254AF13492584517CA2 /* gtest */;
+			targetProxy = 1DBA061F865646F5A3248B54 /* PBXContainerItemProxy */;
+		};
+		A5C08BD60DDC432CBFD22F17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 816A7B88EDEF472E8B80D8EC /* ZERO_CHECK */;
+			targetProxy = 234644DEA0384FECA7D0000B /* PBXContainerItemProxy */;
+		};
+		D84FE8D3C3D04031BF66AA59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 816A7B88EDEF472E8B80D8EC /* ZERO_CHECK */;
+			targetProxy = 7E7176BC5347483BB4E4647F /* PBXContainerItemProxy */;
+		};
+		DC91BE1321A6400991768F0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00F03254AF13492584517CA2 /* gtest */;
+			targetProxy = D5555FB023494D688AF175AA /* PBXContainerItemProxy */;
+		};
+		E655F5D50807493A8E5C10C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A03AEF261DD46178E33FB3F /* gmock */;
+			targetProxy = 36D29451E9BE4ECB8453A28A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00289CE11BA04F2185CA0D6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build";
+			};
+			name = Release;
+		};
+		024459BB690F411B885C6104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Debug";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		0C66DA650AEE45D3A31D5F8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		0D89E5DD90224171A912A079 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Debug";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		114117581F7A4C39AADAD306 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build";
+			};
+			name = MinSizeRel;
+		};
+		11DF9F7850EF46098BB3878E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Release";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		175785562C544B55AB6A8447 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		203EB986B5A8457E9D66D990 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/RelWithDebInfo";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		246055B134BD4701A64FA4DF /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/MinSizeRel";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		28115641A9754B0380B38941 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		284CB6D97D254BA09D4D3585 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		2BF0C04483834AC488E3673B /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RUN_TESTS;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		319CC73617FB42119DBCC296 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		33602F1D82D2411EA59860F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk;
+				SYMROOT = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build";
+			};
+			name = Debug;
+		};
+		3F66118A5E2F485F93D00D25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		47C64B05A6024760B061100E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Debug";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		4BF990DE8DA44265B01C7AEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		6596C9C5572E4C6ABB6EF3EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Release";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		68708EC3B3B84136B47FED30 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/MinSizeRel";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		73DB526E7E4D46C39B628A78 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		76FBF4984F71459289F62D9F /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		807C81BD63A84B768AE3F2B0 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/MinSizeRel";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		8580EE80BEB9410F88F96F0A /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		8C4F7F985F264D3A934C92EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Debug";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		8E912FF4D5204E0798132B99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RUN_TESTS;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		921CF0FFC934448F9E819C42 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RUN_TESTS;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		A393C84B4EA0417783577113 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RUN_TESTS;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		A628995AE9764040954ECB7B /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		AB355E4F4CFA417BB6282883 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Release";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		AC72BFA21B00460885C4E43A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/RelWithDebInfo";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		B3A44A13E8554BAD8F0CE0B2 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/RelWithDebInfo";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gmock_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googlemock\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gmock_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		C2E980C33F874B5FA6CD6F4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/Release";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		D51E3C1FAE8442629E1859E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		EBD66067E2C94F9E90D58E64 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/RelWithDebInfo";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest_main;
+				SECTORDER_FLAGS = "";
+				SYSTEM_HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest_main.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		F0F8D14A88024F4EA0D9F3D3 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/lib/MinSizeRel";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest/include\"","\"/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/vendor/googletest-main/googletest\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++17'  -DGTEST_HAS_PTHREAD=1   ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = gtest;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build/gtest.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		F5DD37F85E6945C5B07D6B41 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/sparky/Documents/Home/Programming/Code Projects/Ayla/build";
+			};
+			name = RelWithDebInfo;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1EC483E19E6341E5950705CD /* Build configuration list for PBXAggregateTarget "install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C66DA650AEE45D3A31D5F8B /* Debug */,
+				175785562C544B55AB6A8447 /* Release */,
+				8580EE80BEB9410F88F96F0A /* MinSizeRel */,
+				A628995AE9764040954ECB7B /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		217C2E13CDE3461B9B08F033 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28115641A9754B0380B38941 /* Debug */,
+				3F66118A5E2F485F93D00D25 /* Release */,
+				76FBF4984F71459289F62D9F /* MinSizeRel */,
+				319CC73617FB42119DBCC296 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		24D02FA73A6E4011B8EB0B67 /* Build configuration list for PBXNativeTarget "gmock_main" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D89E5DD90224171A912A079 /* Debug */,
+				AB355E4F4CFA417BB6282883 /* Release */,
+				246055B134BD4701A64FA4DF /* MinSizeRel */,
+				B3A44A13E8554BAD8F0CE0B2 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3E94B8FCDF20491EA901D82A /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BF990DE8DA44265B01C7AEB /* Debug */,
+				D51E3C1FAE8442629E1859E6 /* Release */,
+				73DB526E7E4D46C39B628A78 /* MinSizeRel */,
+				284CB6D97D254BA09D4D3585 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		54B240DB9A584E7CAD6B3014 /* Build configuration list for PBXNativeTarget "gtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47C64B05A6024760B061100E /* Debug */,
+				6596C9C5572E4C6ABB6EF3EA /* Release */,
+				F0F8D14A88024F4EA0D9F3D3 /* MinSizeRel */,
+				203EB986B5A8457E9D66D990 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8AC8796CD0D0400696474C71 /* Build configuration list for PBXAggregateTarget "RUN_TESTS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E912FF4D5204E0798132B99 /* Debug */,
+				A393C84B4EA0417783577113 /* Release */,
+				921CF0FFC934448F9E819C42 /* MinSizeRel */,
+				2BF0C04483834AC488E3673B /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		90CAEF9D92B84BBF8A4F1929 /* Build configuration list for PBXNativeTarget "gmock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				024459BB690F411B885C6104 /* Debug */,
+				11DF9F7850EF46098BB3878E /* Release */,
+				807C81BD63A84B768AE3F2B0 /* MinSizeRel */,
+				AC72BFA21B00460885C4E43A /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D9070D115F75477EA56443C7 /* Build configuration list for PBXNativeTarget "gtest_main" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C4F7F985F264D3A934C92EA /* Debug */,
+				C2E980C33F874B5FA6CD6F4E /* Release */,
+				68708EC3B3B84136B47FED30 /* MinSizeRel */,
+				EBD66067E2C94F9E90D58E64 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DC7ED90D39A44CE68D376CC4 /* Build configuration list for PBXProject "gmock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33602F1D82D2411EA59860F7 /* Debug */,
+				00289CE11BA04F2185CA0D6F /* Release */,
+				114117581F7A4C39AADAD306 /* MinSizeRel */,
+				F5DD37F85E6945C5B07D6B41 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D30ED210A4AF432BB9C4B211 /* Project object */;
+}
