@@ -5,6 +5,8 @@
 #include "DebugLayer.h"
 #include "Ayla/Core/Application.h"
 #include "Ayla/Input/InputState.h"
+#include "Ayla/Input/Keycodes.h"
+#include "Ayla/Core/Time/Time.h"
 
 using namespace Ayla::Input;
 

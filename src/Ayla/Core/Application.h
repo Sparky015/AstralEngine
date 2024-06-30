@@ -5,13 +5,12 @@
 
 #include "Ayla/Core/Core.h"
 
+
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Core/Layers/DebugLayer.h"
-#include "Ayla/Core/Time/Time.h"
-
 #include "Ayla/Window/Window.h"
-#include "Ayla/Input/InputState.h"
+
 
 
 using namespace Ayla::Windows;

@@ -30,8 +30,6 @@
 #include <glad/glad.h>
 
 
-
-
 #ifndef IMGUI_DISABLE
 
 // Backend API

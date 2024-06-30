@@ -12,6 +12,7 @@ using namespace Ayla::Events;
 namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instead of Windows?
 
 
+    // Values used to create the desire window
     struct WindowProperties {
         std::string title;
         float width;

@@ -2,12 +2,16 @@
 // Created by Andrew Fagan on 4/18/24.
 //
 #include "GenericWindow.h"
+
+
 #include "Ayla/Events/ApplicationEvent.h"
 #include "Ayla/Events/MouseEvent.h"
 #include "Ayla/Events/KeyEvent.h"
-#include "glad/glad.h"
+#include "Ayla/Input/Keycodes.h"
 
-#include "imgui.h"
+#include <glad/glad.h>
+#include <imgui.h>
+
 
 
 namespace Ayla::Windows {
@@ -64,6 +68,7 @@ namespace Ayla::Windows {
         if (status != 1) { std::cout << "GLAD failed to load!"; }
         glfwSetWindowUserPointer(m_window, &m_windowData);
 
+        // Initializes the DisplayFramebufferScale
         int framebufferWidth;
         int framebufferHeight;
         glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
@@ -108,17 +113,19 @@ namespace Ayla::Windows {
         });
 
         glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods){
+            using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
+
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             switch (action){
                 case GLFW_PRESS:
                 {
-                    MouseButtonPressEvent event(button);
+                    MouseButtonPressEvent event(translateGLFWKeycodesToAyla(button));
                     windowData.callback(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
-                    MouseButtonReleaseEvent event(button);
+                    MouseButtonReleaseEvent event(translateGLFWKeycodesToAyla(button));
                     windowData.callback(event);
                     break;
                 }
@@ -129,29 +136,34 @@ namespace Ayla::Windows {
         });
 
         glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
+            using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
+
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             switch (action){
-                case GLFW_PRESS:
-                {
-                    KeyPressedEvent event(key);
+                case GLFW_PRESS:{
+                    KeyPressedEvent event(translateGLFWKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }
-                case GLFW_RELEASE:
-                {
-                    KeyReleasedEvent event(key);
+                case GLFW_RELEASE:{
+                    KeyReleasedEvent event(translateGLFWKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }
-                case GLFW_REPEAT:
-                {
-                    KeyPressedRepeatingEvent event(key);
+                case GLFW_REPEAT:{
+                    KeyPressedRepeatingEvent event(translateGLFWKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }
                 default:
                     break;
             }
+        });
+
+        glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode){
+            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            KeyTypedEvent event(keycode);
+            windowData.callback(event);
         });
 
         // Called when the cursor is moved
@@ -168,21 +180,21 @@ namespace Ayla::Windows {
         });
 
         glfwSetFramebufferSizeCallback(m_window,[](GLFWwindow* window, int width, int height){
-            std::cout << "GenericWindow::glfwSetFramebufferSizeCallback(): NEW FB Width: " << width << "  NEW FB Height: " << height << "   djawidaiuhdiuhawiudhaiwuhdiuawdhiauwdhiu" << std::endl;
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             windowData.displayFramebufferScaleX = width > 0 ? ((float)width / (float)windowData.width) : 0;
             windowData.displayFramebufferScaleY = height > 0 ? ((float)height / (float)windowData.height) : 0;
         });
 
+
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
     int GenericWindow::getWidth() const {
-        return m_windowProperties.width;
+        return m_windowData.width;
     }
 
     int GenericWindow::getHeight() const {
-        return m_windowProperties.height;;
+        return m_windowData.height;;
     }
 
     float GenericWindow::getDisplayFramebufferScaleX() const {
@@ -207,14 +219,8 @@ namespace Ayla::Windows {
         glfwGetFramebufferSize(m_window, &display_w, &display_h);
         glfwGetCursorPos(m_window, &mouse_w, &mouse_h);
 
-        m_windowProperties.width = m_windowData.width;
-        m_windowProperties.height = m_windowData.height;
-
         m_windowData.displayFramebufferScaleX = display_w > 0 ? ((float)display_w / (float)m_windowData.width) : 0;
         m_windowData.displayFramebufferScaleY = display_h > 0 ? ((float)display_h / (float)m_windowData.height) : 0;
-        std::cout << "GenericWindow::update(): Framebuffer Size: width = " << display_w << ", height = " << display_h << std::endl;
-        std::cout << "GenericWindow::update(): Window Size: width = " << m_windowData.width << ", height = " <<  m_windowData.height << std::endl;
-        std::cout << "GenericWindow::update(): Mouse position from GLFW: width = " << mouse_w << " height = " << mouse_h << std::endl;
     }
 
     // PRIVATE

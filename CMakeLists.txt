@@ -49,6 +49,8 @@ add_library(Ayla SHARED
         src/Ayla/Input/InputState.cpp
         src/Ayla/Core/Layers/DebugLayer.cpp
         src/Ayla/Core/Time/Time.cpp
+        src/Ayla/Input/Keycodes.h
+        src/Ayla/Input/Keycodes.cpp
 )
 
 #       ### Ayla Includes ###
