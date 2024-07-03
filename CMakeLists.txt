@@ -35,7 +35,7 @@ add_library(ImGui STATIC vendor/ImGui/imgui.cpp
         vendor/ImGui/imgui_tables.cpp)
 
 target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
-include_directories(${CMAKE_SOURCE_DIR}/)
+
 
 
 # Create the Shared/DLL library
@@ -44,16 +44,17 @@ add_library(Ayla SHARED
         src/Ayla/Events/Event.cpp
         src/Ayla/Events/EventDispatcher.cpp
         src/Ayla/aypch.cpp
-        src/Platform/Generic/GenericWindow.cpp
+        src/Ayla/Window/Platform/Generic/GenericWindow.cpp
         src/Ayla/Core/Layers/Layer.cpp
         src/Ayla/Core/Layers/LayerStack.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
-        src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
         src/Ayla/Input/InputLayer.cpp
         src/Ayla/Input/InputState.cpp
         src/Ayla/Core/Layers/DebugLayer.cpp
         src/Ayla/Core/Time/Time.cpp
         src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
+        src/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
+        src/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
 )
 
 #       ### Ayla Includes ###
@@ -63,6 +64,7 @@ target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/src)
 #           Include library headers
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/glm)
 
 #           Link Libraries to Ayla
 target_link_libraries(Ayla GLAD)
@@ -85,7 +87,7 @@ endif ()
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -D AYLA_BUILD_SHARED_LIB)
 target_compile_definitions(Ayla PRIVATE -D GLFW_INCLUDE_NONE)
-#target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
+target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
 
 
 # Defining Precompiled Headers

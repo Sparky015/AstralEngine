@@ -10,15 +10,17 @@
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Core/Layers/DebugLayer.h"
 
-#include "glad/glad.h"
-#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
-
 #include "Ayla/Core/Time/Time.h"
+
+#include "glad/glad.h"
+
 
 
 namespace Ayla::Core {
 
-    Application* Application:: m_application = nullptr;
+    Application* Application::m_application = nullptr;
+    std::unique_ptr<LayerStack> Application::m_layerStack = nullptr;
+    std::unique_ptr<Window> Application::m_window = nullptr;
 
     Application::Application() {
         AY_ASSERT(m_application == nullptr, "Core/Application.cpp: Can not create more than one application!");
@@ -80,7 +82,7 @@ namespace Ayla::Core {
 
     Window& Application::getWindow(){ return *m_window;}
     LayerStack& Application::getLayerStack(){return *m_layerStack;}
-    Application& Application::getApplication() {
+    Application& Application::get() {
         AY_ASSERT(m_application != nullptr, "Core/Application.cpp: Application must be initialized before using it!");
         return *m_application;
     }

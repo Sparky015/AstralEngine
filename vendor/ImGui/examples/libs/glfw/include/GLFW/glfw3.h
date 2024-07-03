@@ -2723,7 +2723,7 @@ GLFWAPI GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window
  *  without going through the event queue, causing callbacks to be called
  *  outside of a call to one of the event processing functions.
  *
- *  Events processing is not required for joystick input to work.
+ *  Event processing is not required for joystick input to work.
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
  *  GLFW_PLATFORM_ERROR.
@@ -2768,7 +2768,7 @@ GLFWAPI void glfwPollEvents(void);
  *  of threads in applications that do not create windows, use your threading
  *  library of choice.
  *
- *  Events processing is not required for joystick input to work.
+ *  Event processing is not required for joystick input to work.
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
  *  GLFW_PLATFORM_ERROR.
@@ -2815,7 +2815,7 @@ GLFWAPI void glfwWaitEvents(void);
  *  of threads in applications that do not create windows, use your threading
  *  library of choice.
  *
- *  Events processing is not required for joystick input to work.
+ *  Event processing is not required for joystick input to work.
  *
  *  @param[in] timeout The maximum amount of time, in seconds, to wait.
  *

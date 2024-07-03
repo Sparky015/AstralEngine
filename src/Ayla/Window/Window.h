@@ -37,6 +37,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
             [[nodiscard]] virtual int getHeight() const = 0;
             [[nodiscard]] virtual float getDisplayFramebufferScaleX() const = 0;
             [[nodiscard]] virtual float getDisplayFramebufferScaleY() const = 0;
+            [[nodiscard]] virtual void* getNativeWindow() const = 0;
 
             virtual void setEventCallback(const EventCallback& callback) = 0;
             static Window* createWindow(const WindowProperties& properties = WindowProperties());
