@@ -78,7 +78,7 @@ namespace Ayla::GUI {
 
         static bool show = true;
         ImGui::ShowIDStackToolWindow();
-        ImGui::ShowDemoWindow(&show);
+        if (show) ImGui::ShowDemoWindow(&show);
 
         static bool show_another_window = true;
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
