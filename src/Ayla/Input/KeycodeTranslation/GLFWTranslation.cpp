@@ -103,48 +103,49 @@ namespace Ayla::Input::Translation {
     };
 
     int translateGLFWKeycodesToAyla(int GLFWKeycode){
-        switch(GLFWKeycode){
-            case GLFW_KEY_TAB: return AY_KEY_TAB;
-            case GLFW_KEY_LEFT: return AY_KEY_LEFT;
-            case GLFW_KEY_RIGHT: return AY_KEY_RIGHT;
-            case GLFW_KEY_UP: return AY_KEY_UP;
-            case GLFW_KEY_DOWN: return AY_KEY_DOWN;
-            case GLFW_KEY_PAGE_UP: return AY_KEY_PAGE_UP;
-            case GLFW_KEY_PAGE_DOWN: return AY_KEY_PAGE_DOWN;
-            case GLFW_KEY_HOME: return AY_KEY_HOME;
-            case GLFW_KEY_END: return AY_KEY_END;
-            case GLFW_KEY_INSERT: return AY_KEY_INSERT;
-            case GLFW_KEY_DELETE: return AY_KEY_DELETE;
-            case GLFW_KEY_BACKSPACE: return AY_KEY_BACKSPACE;
-            case GLFW_KEY_SPACE: return AY_KEY_SPACE;
-            case GLFW_KEY_ENTER: return AY_KEY_ENTER;
-            case GLFW_KEY_ESCAPE: return AY_KEY_ESCAPE;
-            case GLFW_KEY_APOSTROPHE: return AY_KEY_APOSTROPHE;
-            case GLFW_KEY_COMMA: return AY_KEY_COMMA;
-            case GLFW_KEY_MINUS: return AY_KEY_MINUS;
-            case GLFW_KEY_PERIOD: return AY_KEY_PERIOD;
-            case GLFW_KEY_SLASH: return AY_KEY_SLASH;
-            case GLFW_KEY_SEMICOLON: return AY_KEY_SEMICOLON;
-            case GLFW_KEY_EQUAL: return AY_KEY_EQUAL;
-            case GLFW_KEY_LEFT_BRACKET: return AY_KEY_LEFT_BRACKET;
-            case GLFW_KEY_BACKSLASH: return AY_KEY_BACKSLASH;
-            case GLFW_KEY_RIGHT_BRACKET: return AY_KEY_RIGHT_BRACKET;
-            case GLFW_KEY_GRAVE_ACCENT :return AY_KEY_GRAVE_ACCENT;
-            case GLFW_KEY_CAPS_LOCK: return AY_KEY_CAPS_LOCK;
-            case GLFW_KEY_SCROLL_LOCK: return AY_KEY_SCROLL_LOCK;
-            case GLFW_KEY_NUM_LOCK: return AY_KEY_NUM_LOCK;
-            case GLFW_KEY_PRINT_SCREEN: return AY_KEY_PRINT_SCREEN;
-            case GLFW_KEY_PAUSE: return AY_KEY_PAUSE;
-            case GLFW_KEY_KP_0: return AY_KEY_KP_0;
-            case GLFW_KEY_KP_1: return AY_KEY_KP_1;
-            case GLFW_KEY_KP_2: return AY_KEY_KP_2;
-            case GLFW_KEY_KP_3: return AY_KEY_KP_3;
-            case GLFW_KEY_KP_4: return AY_KEY_KP_4;
+        return 0;
+//        switch(GLFWKeycode){
+//            case GLFW_KEY_TAB: return AY_KEY_TAB;
+//            case GLFW_KEY_LEFT: return AY_KEY_LEFT;
+//            case GLFW_KEY_RIGHT: return AY_KEY_RIGHT;
+//            case GLFW_KEY_UP: return AY_KEY_UP;
+//            case GLFW_KEY_DOWN: return AY_KEY_DOWN;
+//            case GLFW_KEY_PAGE_UP: return AY_KEY_PAGE_UP;
+//            case GLFW_KEY_PAGE_DOWN: return AY_KEY_PAGE_DOWN;
+//            case GLFW_KEY_HOME: return AY_KEY_HOME;
+//            case GLFW_KEY_END: return AY_KEY_END;
+//            case GLFW_KEY_INSERT: return AY_KEY_INSERT;
+//            case GLFW_KEY_DELETE: return AY_KEY_DELETE;
+//            case GLFW_KEY_BACKSPACE: return AY_KEY_BACKSPACE;
+//            case GLFW_KEY_SPACE: return AY_KEY_SPACE;
+//            case GLFW_KEY_ENTER: return AY_KEY_ENTER;
+//            case GLFW_KEY_ESCAPE: return AY_KEY_ESCAPE;
+//            case GLFW_KEY_APOSTROPHE: return AY_KEY_APOSTROPHE;
+//            case GLFW_KEY_COMMA: return AY_KEY_COMMA;
+//            case GLFW_KEY_MINUS: return AY_KEY_MINUS;
+//            case GLFW_KEY_PERIOD: return AY_KEY_PERIOD;
+//            case GLFW_KEY_SLASH: return AY_KEY_SLASH;
+//            case GLFW_KEY_SEMICOLON: return AY_KEY_SEMICOLON;
+//            case GLFW_KEY_EQUAL: return AY_KEY_EQUAL;
+//            case GLFW_KEY_LEFT_BRACKET: return AY_KEY_LEFT_BRACKET;
+//            case GLFW_KEY_BACKSLASH: return AY_KEY_BACKSLASH;
+//            case GLFW_KEY_RIGHT_BRACKET: return AY_KEY_RIGHT_BRACKET;
+//            case GLFW_KEY_GRAVE_ACCENT :return AY_KEY_GRAVE_ACCENT;
+//            case GLFW_KEY_CAPS_LOCK: return AY_KEY_CAPS_LOCK;
+//            case GLFW_KEY_SCROLL_LOCK: return AY_KEY_SCROLL_LOCK;
+//            case GLFW_KEY_NUM_LOCK: return AY_KEY_NUM_LOCK;
+//            case GLFW_KEY_PRINT_SCREEN: return AY_KEY_PRINT_SCREEN;
+//            case GLFW_KEY_PAUSE: return AY_KEY_PAUSE;
+//            case GLFW_KEY_KP_0: return AY_KEY_KP_0;
+//            case GLFW_KEY_KP_1: return AY_KEY_KP_1;
+//            case GLFW_KEY_KP_2: return AY_KEY_KP_2;
+//            case GLFW_KEY_KP_3: return AY_KEY_KP_3;
+//            case GLFW_KEY_KP_4: return AY_KEY_KP_4;
 
-            default:
-                AY_ASSERT_SS(keys.find(GLFWKeycode) != keys.end(),  "Input/KeycodeTranslation/GLFWTranslation.cpp: Keycode '" << GLFWKeycode << "' is not in the GLFW keycode translation hashmap!"); // Sanity Check to see if the keycode is not in the translation hashmap;
-                return ImGuiKey_None;
-        }
+//            default:
+//                AY_ASSERT_SS(keys.find(GLFWKeycode) != keys.end(),  "Input/KeycodeTranslation/GLFWTranslation.cpp: Keycode '" << GLFWKeycode << "' is not in the GLFW keycode translation hashmap!"); // Sanity Check to see if the keycode is not in the translation hashmap;
+//                return ImGuiKey_None;
+//        }
     }
 
     int translateGLFWKeycodesToImGui(int GLFWKeycode){
