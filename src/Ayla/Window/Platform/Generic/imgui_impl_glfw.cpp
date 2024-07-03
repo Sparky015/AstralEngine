@@ -524,19 +524,13 @@ void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window)
     IM_ASSERT(bd->InstalledCallbacks == false && "Callbacks already installed!");
     IM_ASSERT(bd->Window == window);
 
-
-
-
-
     bd->PrevUserCallbackWindowFocus = glfwSetWindowFocusCallback(window, ImGui_ImplGlfw_WindowFocusCallback);
-
+    bd->PrevUserCallbackCursorEnter = glfwSetCursorEnterCallback(window, ImGui_ImplGlfw_CursorEnterCallback);
+    bd->PrevUserCallbackCursorPos = glfwSetCursorPosCallback(window, ImGui_ImplGlfw_CursorPosCallback);
     bd->PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window, ImGui_ImplGlfw_MouseButtonCallback);
     bd->PrevUserCallbackScroll = glfwSetScrollCallback(window, ImGui_ImplGlfw_ScrollCallback);
     bd->PrevUserCallbackKey = glfwSetKeyCallback(window, ImGui_ImplGlfw_KeyCallback);
     bd->PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplGlfw_CharCallback);
-
-    bd->PrevUserCallbackCursorPos = glfwSetCursorPosCallback(window, ImGui_ImplGlfw_CursorPosCallback); // Need mouse cursor callback so bd knows where the mouse is outside viewport
-    bd->PrevUserCallbackCursorEnter = glfwSetCursorEnterCallback(window, ImGui_ImplGlfw_CursorEnterCallback);
     bd->PrevUserCallbackMonitor = glfwSetMonitorCallback(ImGui_ImplGlfw_MonitorCallback);
     bd->InstalledCallbacks = true;
 }
@@ -547,18 +541,13 @@ void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window)
     IM_ASSERT(bd->InstalledCallbacks == true && "Callbacks not installed!");
     IM_ASSERT(bd->Window == window);
 
-
-
-
-
     glfwSetWindowFocusCallback(window, bd->PrevUserCallbackWindowFocus);
+    glfwSetCursorEnterCallback(window, bd->PrevUserCallbackCursorEnter);
     glfwSetCursorPosCallback(window, bd->PrevUserCallbackCursorPos);
     glfwSetMouseButtonCallback(window, bd->PrevUserCallbackMousebutton);
     glfwSetScrollCallback(window, bd->PrevUserCallbackScroll);
     glfwSetKeyCallback(window, bd->PrevUserCallbackKey);
     glfwSetCharCallback(window, bd->PrevUserCallbackChar);
-
-    glfwSetCursorEnterCallback(window, bd->PrevUserCallbackCursorEnter);
     glfwSetMonitorCallback(bd->PrevUserCallbackMonitor);
     bd->InstalledCallbacks = false;
     bd->PrevUserCallbackWindowFocus = nullptr;
