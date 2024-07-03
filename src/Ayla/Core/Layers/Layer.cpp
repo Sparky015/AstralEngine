@@ -23,6 +23,7 @@ namespace Ayla::Core::Layers {
             Application::getApplication().getLayerStack().appendLayer(this);
             m_isInitializedInTower = true;
             onAttach();
+            m_isEnabled = true;
         }
     }
 
@@ -32,6 +33,7 @@ namespace Ayla::Core::Layers {
             Application::getApplication().getLayerStack().appendOverlay(this);
             m_isInitializedInTower = true;
             onAttach();
+            m_isEnabled = true;
         }
     }
 
@@ -40,6 +42,7 @@ namespace Ayla::Core::Layers {
             Application::getApplication().getLayerStack().removeLayer(this);
             m_isInitializedInTower = false;
             onDetach();
+            m_isEnabled = false;
         }
     }
 
@@ -49,6 +52,7 @@ namespace Ayla::Core::Layers {
             Application::getApplication().getLayerStack().removeOverlay(this);
             m_isInitializedInTower = false;
             onDetach();
+            m_isEnabled = false;
         }
     }
 

@@ -58,7 +58,7 @@ namespace {
 
     void macro_AY_ASSERT(bool expression, std::string&& errorMessage){
         if (!expression){
-            throw std::runtime_error(errorMessage);
+            throw std::runtime_error("\n\n" + errorMessage);
         }
     }
 

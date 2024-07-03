@@ -7,7 +7,7 @@
 #include "Ayla/Events/ApplicationEvent.h"
 #include "Ayla/Events/MouseEvent.h"
 #include "Ayla/Events/KeyEvent.h"
-#include "Ayla/Input/Keycodes.h"
+#include "Ayla/Input/KeycodeTranslation/GLFWTranslation.h"
 
 #include <glad/glad.h>
 #include <imgui.h>

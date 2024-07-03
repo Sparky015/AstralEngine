@@ -35,13 +35,13 @@ namespace Ayla::Core::Debug {
     void DebugLayer::onUpdate() {
         static long long accumulatedTime;
         accumulatedTime += Time::Clock::get().getDeltaTime();
-        if (InputState::get().access(AY_KEY_T).isDown && !InputState::get().access(AY_KEY_T).isRepeating){
+        if (InputState::get().isKeyDown(AY_KEY_T) && !InputState::get().isKeyRepeating(AY_KEY_T)){
             if (accumulatedTime <= 75){return;}
             accumulatedTime = 0;
             AY_TRACE("T is pressed down.");
-            std::cout << "\n" << InputState::get().accessMouseX() << " by " << InputState::get().accessMouseY();
+            std::cout << "\n" << InputState::get().mousePositionX() << " by " << InputState::get().mousePositionY();
         }
-        if (InputState::get().access(AY_KEY_R).isDown && !InputState::get().access(AY_KEY_R).isRepeating){
+        if (InputState::get().isKeyDown(AY_KEY_R) && !InputState::get().isKeyRepeating(AY_KEY_R)){
             if (accumulatedTime <= 300){return;}
             accumulatedTime = 0;
             AY_TRACE("Resetting stopwatch.");

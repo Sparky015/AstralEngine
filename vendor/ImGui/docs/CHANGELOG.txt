@@ -4953,7 +4953,7 @@ Other Changes:
 - Popups & Tooltip: Fit within display. Handling various positioning/sizing/scrolling edge cases. Better hysteresis when moving
   in corners. Tooltip always tries to stay away from mouse-cursor.
 - Added ImGuiStorage::GetVoidPtrRef() for manipulating stored void*.
-- Added IsKeyDown() IsMouseDown() as convenience and for consistency with existing functions (instead of reading them from IO structures).
+- Added isKeyDown() IsMouseDown() as convenience and for consistency with existing functions (instead of reading them from IO structures).
 - Added Dummy() helper to advance layout by a given size. Unlike InvisibleButton() this doesn't catch any click.
 - Added configurable io.KeyRepeatDelay, io.KeyRepeatRate keyboard and mouse repeat rate.
 - Added PushButtonRepeat() / PopButtonRepeat() to enable hold-button-to-repeat press on any button.

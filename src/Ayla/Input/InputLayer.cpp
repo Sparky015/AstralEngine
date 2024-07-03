@@ -30,8 +30,9 @@ namespace Ayla::Input {
     }
 
     void InputLayer::onEvent(Event& event) {
+        //AY_LOG("Input State received an event!");
         m_callback(event);
-        event.setIsHandled(false);
+        //event.setIsHandled(false);
     }
 
     EventCategory InputLayer::getAcceptingEventFlags() {

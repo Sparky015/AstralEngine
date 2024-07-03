@@ -1,11 +1,15 @@
 //
-// Created by Andrew Fagan on 6/29/24.
+// Created by Andrew Fagan on 7/2/24.
 //
 
-#include "Keycodes.h"
+#include "GLFWTranslation.h"
+
+
 #include <GLFW/glfw3.h>
+#include "Ayla/Input/Keycodes.h"
 
 namespace Ayla::Input::Translation {
+
 
     std::unordered_map<int, int> keys = {
             {GLFW_MOUSE_BUTTON_LEFT, AY_KEY_LEFT_CLICK},
@@ -97,8 +101,7 @@ namespace Ayla::Input::Translation {
     };
 
     int translateGLFWKeycodesToAyla(int GLFWKeycode){
-        AY_ASSERT_SS(keys.find(GLFWKeycode) != keys.end(),  "Input/Keycodes.cpp: Keycode '" << GLFWKeycode << "' is not in the GLFW keycode translation hashmap!"); // Sanity Check to see if the keycode is not in the translation hashmap
+        AY_ASSERT_SS(keys.find(GLFWKeycode) != keys.end(),  "Input/KeycodeTranslation/GLFWTranslation.cpp: Keycode '" << GLFWKeycode << "' is not in the GLFW keycode translation hashmap!"); // Sanity Check to see if the keycode is not in the translation hashmap
         return keys[GLFWKeycode];
     }
-
 }

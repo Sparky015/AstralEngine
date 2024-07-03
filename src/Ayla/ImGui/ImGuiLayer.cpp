@@ -23,12 +23,12 @@ namespace Ayla::GUI {
 
     ImGuiLayer::ImGuiLayer() {
         AY_TRACE("ImGuiLayer: Initializing ImGui Layer");
-        this->attachOverlay();
+        this->attachLayer();
         m_debugName = "ImGui Layer";
     }
 
     ImGuiLayer::~ImGuiLayer() {
-        this->detachOverlay();
+        this->detachLayer();
     }
 
     void ImGuiLayer::onAttach() {
@@ -108,6 +108,8 @@ namespace Ayla::GUI {
         io.KeyMap[ImGuiKey_RightCtrl] = AY_KEY_RIGHT_CONTROL;
         io.KeyMap[ImGuiKey_LeftAlt] = AY_KEY_LEFT_ALT;
         io.KeyMap[ImGuiKey_RightAlt] = AY_KEY_RIGHT_ALT;
+        io.KeyMap[ImGuiKey_LeftShift] = AY_KEY_LEFT_SHIFT;
+        io.KeyMap[ImGuiKey_RightShift] = AY_KEY_RIGHT_SHIFT;
 
 
         ImGui_ImplOpenGL3_Init("#version 410");
@@ -141,6 +143,7 @@ namespace Ayla::GUI {
         //AY_LOG("ImGui received an event!");
 
         ImGuiIO& io = ImGui::GetIO();
+
         switch(event.getEventType()){
             case MOUSE_CURSOR_MOVED: {
                 auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
@@ -190,6 +193,17 @@ namespace Ayla::GUI {
             case KEY_RELEASED: {
                 auto keyReleasedEvent = dynamic_cast<KeyReleasedEvent&>(event);
                 io.KeysDown[keyReleasedEvent.getKeycode()] = false;
+
+                io.KeyCtrl = io.KeysDown[AY_KEY_LEFT_CONTROL] || io.KeysDown[AY_KEY_RIGHT_CONTROL];
+                io.KeyAlt = io.KeysDown[AY_KEY_LEFT_ALT] || io.KeysDown[AY_KEY_RIGHT_ALT];
+                io.KeyShift = io.KeysDown[AY_KEY_LEFT_SHIFT] || io.KeysDown[AY_KEY_RIGHT_SHIFT];
+                io.KeySuper = io.KeysDown[AY_KEY_LEFT_SUPER] || io.KeysDown[AY_KEY_RIGHT_SUPER];
+
+                if (io.KeysDown[AY_KEY_LEFT_CONTROL] && io.KeysDown[AY_KEY_C]){
+                    ImGui::LogToClipboard();
+                } else {
+                    ImGui::LogFinish();
+                }
                 break;
             }
             case KEY_TYPED: {

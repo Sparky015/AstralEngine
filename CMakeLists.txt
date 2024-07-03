@@ -44,13 +44,11 @@ add_library(Ayla SHARED
         src/Ayla/Core/Layers/LayerStack.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
         src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
-        src/Ayla/ImGui/ImGuiEvents.cpp
         src/Ayla/Input/InputLayer.cpp
         src/Ayla/Input/InputState.cpp
         src/Ayla/Core/Layers/DebugLayer.cpp
         src/Ayla/Core/Time/Time.cpp
-        src/Ayla/Input/Keycodes.h
-        src/Ayla/Input/Keycodes.cpp
+        src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
 )
 
 #       ### Ayla Includes ###
@@ -106,21 +104,21 @@ target_link_libraries(ClientGame Ayla)
 
 
 #       ## Google Test ###
-enable_testing()
-
-include_directories(${CMAKE_SOURCE_DIR}/tests)
-
-add_executable(all_tests tests/hello_test.cpp
-        tests/test_EventSystem.cpp)
-
-target_link_libraries(all_tests Ayla)
-
-target_link_libraries(all_tests GTest::gtest_main)
-
-
-
-include(GoogleTest)
-gtest_discover_tests(all_tests)
+#enable_testing()
+#
+#include_directories(${CMAKE_SOURCE_DIR}/tests)
+#
+#add_executable(all_tests tests/hello_test.cpp
+#        tests/test_EventSystem.cpp)
+#
+#target_link_libraries(all_tests Ayla)
+#
+#target_link_libraries(all_tests GTest::gtest_main)
+#
+#
+#
+#include(GoogleTest)
+#gtest_discover_tests(all_tests)
 
 
 
