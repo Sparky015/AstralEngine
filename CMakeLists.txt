@@ -16,7 +16,10 @@ if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
     add_definitions(-DAYLA_PLATFORM_APPLE)
+else ()
+    add_definitions(-DUNKNOWN_PLATFORM)
 endif()
+
 
 
 
@@ -32,6 +35,8 @@ add_library(ImGui STATIC vendor/ImGui/imgui.cpp
         vendor/ImGui/imgui_tables.cpp)
 
 target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
+include_directories(${CMAKE_SOURCE_DIR}/)
+
 
 # Create the Shared/DLL library
 add_library(Ayla SHARED

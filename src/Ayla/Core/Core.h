@@ -28,6 +28,7 @@ namespace {
     void macro_AY_ASSERT(bool expression, std::string&& errorMessage);
     void macro_AY_ASSERT_SS(bool expression, std::ostream& errorMessage);
     void macro_AY_LOG(std::string&& message);
+    void macro_AY_ERROR(std::string&& message);
 
     class AY_PROFILER {
     public:
@@ -46,6 +47,8 @@ namespace {
 #define AY_ASSERT_SS(expression, errorMessage) { std::stringstream ss; macro_AY_ASSERT_SS(expression, ss << errorMessage); } // Stringstream alternative assert, so you can use an ostream for the debug message
 #define AY_LOG(message) macro_AY_LOG(message)
 #define AY_PROFILE_SCOPE(title) AY_PROFILER(title)
+#define AY_ERROR(errorMessage) macro_AY_ERROR(errorMessage)
+
 #include <iomanip>
 namespace {
 
@@ -83,6 +86,10 @@ namespace {
         //m_endTime = std::chrono::high_resolution_clock::now();
         //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
         //std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
+    }
+
+    void macro_AY_ERROR(std::string&& errorMessage){
+        throw std::runtime_error("\n\n" + errorMessage);
     }
 
 }
