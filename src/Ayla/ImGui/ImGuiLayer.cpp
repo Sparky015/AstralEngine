@@ -77,7 +77,8 @@ namespace Ayla::GUI {
         ImGui::NewFrame();
 
         static bool show = true;
-        ImGui::ShowIDStackToolWindow();
+        static bool showStackTool = true;
+        if (showStackTool) ImGui::ShowIDStackToolWindow(&showStackTool);
         if (show) ImGui::ShowDemoWindow(&show);
 
         static bool show_another_window = true;
