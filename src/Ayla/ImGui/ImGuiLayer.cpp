@@ -32,6 +32,7 @@ namespace Ayla::GUI {
     }
 
     void ImGuiLayer::onAttach() {
+        IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
 
@@ -43,9 +44,16 @@ namespace Ayla::GUI {
 
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            style.WindowRounding = 0.0f;
+            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
 
 //        io.KeyMap[ImGuiKey_MouseLeft] = AY_KEY_LEFT_CLICK;
 //        io.KeyMap[ImGuiKey_MouseMiddle] = AY_KEY_MIDDLE_CLICK;
@@ -114,7 +122,7 @@ namespace Ayla::GUI {
 //        io.KeyMap[ImGuiKey_RightShift] = AY_KEY_RIGHT_SHIFT;
 
 
-        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*) Core::Application::getWindow().getNativeWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::getWindow().getNativeWindow()), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 
@@ -125,7 +133,7 @@ namespace Ayla::GUI {
     }
 
     void ImGuiLayer::onUpdate() {
-
+        glfwPollEvents();
         ImGuiIO& io = ImGui::GetIO();
 
         float time = (float)glfwGetTime();
@@ -185,18 +193,20 @@ namespace Ayla::GUI {
             glfwMakeContextCurrent(backup_current_context);
 
         }
+        glfwSwapBuffers((GLFWwindow*)Core::Application::getWindow().getNativeWindow());
 
     }
 
     void ImGuiLayer::onEvent(Event& event) {
-        //AY_LOG("ImGui received an event!");
-
+        ///AY_LOG("ImGui received an event!");
+//
 //        ImGuiIO& io = ImGui::GetIO();
 //
 //        switch(event.getEventType()){
 //            case MOUSE_CURSOR_MOVED: {
 //                auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
 //                io.MousePos = ImVec2(mouseMovedEvent.getXPos(), mouseMovedEvent.getYPos());
+//                AY_LOG("ImGui received an event!");
 //                break;
 //            }
 //            case MOUSE_BUTTON_PRESSED: {
@@ -266,8 +276,8 @@ namespace Ayla::GUI {
 //                break;
 //            }
 //        }
-
-
+//
+//
 //        if (event.isInCategory(ApplicationCategory)) {event.setIsHandled(true);}
     }
 

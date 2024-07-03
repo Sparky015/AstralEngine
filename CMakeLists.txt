@@ -28,12 +28,12 @@ link_directories(${CMAKE_SOURCE_DIR}/cmake-build-debug)
 #       ### Third Part Libraries ###
 add_library(GLAD STATIC vendor/GLAD/glad.c)
 target_include_directories(GLAD PUBLIC vendor/GLAD)
+
 add_library(ImGui STATIC vendor/ImGui/imgui.cpp
         vendor/ImGui/imgui_demo.cpp
         vendor/ImGui/imgui_draw.cpp
         vendor/ImGui/imgui_widgets.cpp
         vendor/ImGui/imgui_tables.cpp)
-
 target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
 

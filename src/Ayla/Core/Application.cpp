@@ -65,7 +65,7 @@ namespace Ayla::Core {
             timeAccumulation += Time::Clock::get().getDeltaTime();
             m_layerStack->update();
 
-            m_window->update(); // Must be called last
+            //m_window->update(); // Must be called last
         }
         std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";
         std::cout << "Stopwatch: " << Time::Clock::get().getStopwatchTime() * .001 << " seconds\n";
