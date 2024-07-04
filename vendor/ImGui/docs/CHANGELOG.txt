@@ -1061,7 +1061,7 @@ Other changes:
 - Demo: Showcase a few more InputText() flags.
 - Backends: Made all backends sources files support global IMGUI_DISABLE. (#6601)
 - Backends: GLFW: Revert ignoring mouse data on GLFW_CURSOR_DISABLED as it can be used
-  differently. User may set ImGuiConfigFlags_NoMouse if desired. (#5625, #6609) [@scorpion-26]
+  differently. Application may set ImGuiConfigFlags_NoMouse if desired. (#5625, #6609) [@scorpion-26]
 - Backends: WebGPU: Update for changes in Dawn. (#6602, #6188) [@williamhCode]
 - Examples: Vulkan: Creating minimal descriptor pools to fit only what is needed by
   example. (#6642) [@SaschaWillem]
@@ -1163,7 +1163,7 @@ Other changes:
 - Backends: OpenGL3: Fixed erroneous use glGetIntegerv(GL_CONTEXT_PROFILE_MASK) on contexts
   lower than 3.2. (#6539, #6333) [@krumelmonster]
 - Backends: Vulkan: Added optional support for VK_KHR_dynamic_rendering (Vulkan 1.3+) in the
-  backend for applications using it. User needs to set 'init_info->UseDynamicRendering = true'
+  backend for applications using it. Application needs to set 'init_info->UseDynamicRendering = true'
   and 'init_info->ColorAttachmentFormat'. RenderPass becomes unused. (#5446, #5037) [@spnda, @cmarcelo]
 - Backends: GLFW: Accept glfwGetTime() not returning a monotonically increasing value.
   This seems to happens on some Windows setup when peripherals disconnect, and is likely
@@ -1515,7 +1515,7 @@ Other changes:
 - Backends: GLFW: Registering custom low-level mouse wheel handler to get more accurate
   scrolling impulses on Emscripten. (#4019, #6096) [@ocornut, @wolfpld, @tolopolarity]
 - Backends: GLFW: Added ImGui_ImplGlfw_SetCallbacksChainForAllWindows() to instruct backend
-  to chain callbacks even for secondary viewports/windows. User callbacks may need to test
+  to chain callbacks even for secondary viewports/windows. Application callbacks may need to test
   the 'window' parameter. (#6142)
 - Backends: OpenGL3: Fixed GL loader compatibility with 2.x profiles. (#6154, #4445, #3530) [@grauw]
 - Backends: WebGPU: Fixed building for latest WebGPU specs (remove implicit layout generation).
@@ -1681,7 +1681,7 @@ Breaking changes:
    - TL;DR: Backends should call io.AddKeyEvent()/io.AddKeyAnalogEvent() with ImGuiKey_GamepadXXX values instead of filling io.NavInput[].
   The ImGuiNavInput enum was essentially 1.60's attempt to combine keyboard and gamepad inputs with named
   semantic, but the additional indirection and copy added complexity and got in the way of other
-  incoming work. User's code (other than backends) should not be affected, unless you have custom
+  incoming work. Application's code (other than backends) should not be affected, unless you have custom
   widgets intercepting navigation events via the named enums (in which case you can upgrade your code).
 - DragInt()/SliderInt(): Removed runtime patching of invalid "%f"/"%.0f" types of format strings.
   This was obsoleted in 1.61 (May 2018). See 1.61 changelog for details.
@@ -2819,7 +2819,7 @@ Other Changes:
 - Backends: Win32: Dynamically loading XInput DLL instead of linking with it, facilitate compiling with
   old WindowSDK versions or running on Windows 7. (#3646, #3645, #3248, #2716) [@Demonese]
 - Backends: Vulkan: Add support for custom Vulkan function loader and VK_NO_PROTOTYPES. (#3759, #3227) [@Hossein-Noroozpour]
-  User needs to call ImGui_ImplVulkan_LoadFunctions() with their custom loader prior to other functions.
+  Application needs to call ImGui_ImplVulkan_LoadFunctions() with their custom loader prior to other functions.
 - Backends: Metal: Fixed texture storage mode when building on Mac Catalyst. (#3748) [@Belinsky-L-V]
 - Backends: OSX: Fixed mouse position not being reported when mouse buttons other than left one are down. (#3762) [@rokups]
 - Backends: WebGPU: Added enderer backend for WebGPU support (imgui_impl_wgpu.cpp) (#3632) [@bfierz]
@@ -4248,7 +4248,7 @@ Other Changes:
   in particular, points_count==0 could lead to a memory stomp if the draw list was previously empty.
 - Examples: DirectX10, DirectX11: Removed seemingly unnecessary calls to invalidate and recreate device objects
   in the WM_SIZE handler. (#2088) [@ice1000]
-- Examples: GLFW: User previously installed GLFW callbacks are now saved and chain-called by the default callbacks. (#1759)
+- Examples: GLFW: Application previously installed GLFW callbacks are now saved and chain-called by the default callbacks. (#1759)
 - Examples: OpenGL3: Added support for GL 4.5's glClipControl(GL_UPPER_LEFT). (#2186)
 - Examples: OpenGL3+GLFW: Fixed error condition when using the GLAD loader. (#2157) [@blackball]
 - Examples: OpenGL3+GLFW/SDL: Made main.cpp compile with IMGUI_IMPL_OPENGL_LOADER_CUSTOM (may be missing init). (#2178) [@doug-moen]
@@ -6257,7 +6257,7 @@ Decorated log and release notes: https://github.com/ocornut/imgui/releases/tag/v
 
 Decorated log and release notes: https://github.com/ocornut/imgui/releases/tag/v1.10
 
-- User can override memory allocators by #define-ing IM_MALLOC, IM_FREE, IM_REALLOC,
+- Application can override memory allocators by #define-ing IM_MALLOC, IM_FREE, IM_REALLOC,
 - Added SetCursorPosX(), SetCursorPosY() shortcuts.
 - Checkbox() returns true when pressed.
 - Added optional external fonts data in extra_fonts/ for reference.

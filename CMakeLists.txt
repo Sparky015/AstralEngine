@@ -55,6 +55,7 @@ add_library(Ayla SHARED
         src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
         src/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
         src/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
+        src/Ayla/Client/UserSetup.cpp
 )
 
 #       ### Ayla Includes ###
@@ -85,8 +86,8 @@ endif ()
 
 
 # Defining Macros
-target_compile_definitions(Ayla PRIVATE -D AYLA_BUILD_SHARED_LIB)
-target_compile_definitions(Ayla PRIVATE -D GLFW_INCLUDE_NONE)
+target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
+target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
 
 
@@ -94,7 +95,8 @@ target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/src/Ayla/aypch.h)
 
 add_executable(ClientGame
-        client/src/main.cpp)
+        client/src/main.cpp
+        client/src/ExampleLayer.cpp)
 target_compile_definitions(ClientGame PRIVATE -DGLFW_INCLUDE_NONE)
 
 target_link_libraries(ClientGame Ayla)

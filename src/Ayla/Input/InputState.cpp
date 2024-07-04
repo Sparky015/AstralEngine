@@ -16,12 +16,13 @@ namespace Ayla::Input {
 
 
     InputState::InputState() : m_inputLayer(InputLayer()) {
-        AY_TRACE("InputState: Initializing Input State");
+        AY_TRACE("[Sholas] InputState: Initializing Input State");
 
         m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
     }
 
     InputState::~InputState() {
+        AY_TRACE("[Sholas] InputState: Destroying Input State");
         delete m_instance;
         m_instance = nullptr;
     }
@@ -31,7 +32,7 @@ namespace Ayla::Input {
     void InputState::init() {
         AY_ASSERT(m_instance == nullptr, "Input/InputState.cpp: Input State has already been initialized!");
 
-        AY_TRACE("InputState: Making 'new InputState()'");
+        AY_TRACE("[Sholas] InputState: Initializing Input State'");
         m_instance = new InputState();
 
     }

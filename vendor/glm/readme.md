@@ -937,7 +937,7 @@ target_link_libraries(main PRIVATE glm::glm)
 
 ---
 ### GLM 0.9.3.B - 2011-12-12
-- Added support for Chrone Native Client
+- Added support for Chrone Native ClientLoop
 - Added epsilon constant
 - Removed value_size function from vector types
 - Fixed roundEven on GCC

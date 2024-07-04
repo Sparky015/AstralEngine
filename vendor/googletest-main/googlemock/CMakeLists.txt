@@ -76,7 +76,7 @@ include_directories(${gmock_build_include_dirs})
 
 ########################################################################
 #
-# Defines the gmock & gmock_main libraries. User tests should link
+# Defines the gmock & gmock_main libraries. Application tests should link
 # with one of them.
 
 # Google Mock libraries. We build them using more strict warnings than what

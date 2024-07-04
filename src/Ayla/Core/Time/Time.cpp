@@ -10,7 +10,7 @@ namespace Ayla::Core::Time{
 
     Clock& Clock::get() {
         if (m_instance == nullptr){
-            AY_TRACE("Clock: Making 'new Clock()'");
+            AY_TRACE("[Sholas] Clock: Initializing Clock");
             m_instance = new Clock();
         }
         return *m_instance;

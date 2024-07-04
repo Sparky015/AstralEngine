@@ -68,7 +68,7 @@
  *    khronos_stime_nanoseconds_t signed time interval in nanoseconds
  *    khronos_boolean_enum_t      enumerated boolean type. This should
  *      only be used as a base type when a client API's boolean type is
- *      an enum. Client APIs which use an integer or other type for
+ *      an enum. ClientLoop APIs which use an integer or other type for
  *      booleans cannot use this as the base type for their boolean.
  *
  * Tokens defined in khrplatform.h:

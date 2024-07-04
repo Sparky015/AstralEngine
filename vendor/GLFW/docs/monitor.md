@@ -193,7 +193,7 @@ and make may have the same name.  Only the monitor handle is guaranteed to be
 unique, and only until that monitor is disconnected.
 
 
-### User pointer {#monitor_userptr}
+### Application pointer {#monitor_userptr}
 
 Each monitor has a user pointer that can be set with @ref
 glfwSetMonitorUserPointer and queried with @ref glfwGetMonitorUserPointer.  This

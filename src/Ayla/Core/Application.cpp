@@ -21,13 +21,13 @@ namespace Ayla::Core {
     Application* Application::m_application = nullptr;
     std::unique_ptr<LayerStack> Application::m_layerStack = nullptr;
     std::unique_ptr<Window> Application::m_window = nullptr;
-    std::function<void()> clientCallbackFun = nullptr;
 
-    Application::Application() {
-        AY_ASSERT(m_application == nullptr, "Core/Application.cpp: Can not create more than one application!");
+
+    Application::Application() : m_clientLoop(nullptr) {
+        AY_ASSERT(m_application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
 
         // Application //
-        AY_TRACE("Application: Initializing Application");
+        AY_TRACE("[Sholas] Application: Initializing Application");
         m_application = this;
 
         // Clock //
@@ -47,18 +47,22 @@ namespace Ayla::Core {
         m_imGuiLayer = std::make_unique<GUI::ImGuiLayer>();
         Input::InputState::init(); // initializes Input layer and InputState on first call
         m_debugLayer = std::make_unique<Debug::DebugLayer>();
-
-
     }
 
-    Application::~Application() = default;
+
+    Application::~Application() {
+        AY_TRACE("[Sholas] Application: Destroying Application");
+
+        delete m_clientLoop;
+    };
 
     void Application::Run() {
         long long timeAccumulation = 0.0;
         std::cout << "\n\nRunning Application!" << std::endl;
 
+        AY_ASSERT(m_clientLoop != nullptr, "[Sholas] Core/Application.cpp: ClientLoop is not set up!");
         while (m_appIsRunning){
-            clientCallbackFun();
+            m_clientLoop->Update();
 
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -74,6 +78,7 @@ namespace Ayla::Core {
 
             m_window->update(); // Must be called last
         }
+
         std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";
         std::cout << "Stopwatch: " << Time::Clock::get().getStopwatchTime() * .001 << " seconds\n";
         exit(EXIT_SUCCESS);
@@ -89,13 +94,18 @@ namespace Ayla::Core {
 
     Window& Application::getWindow(){ return *m_window;}
     LayerStack& Application::getLayerStack(){return *m_layerStack;}
+
     Application& Application::get() {
-        AY_ASSERT(m_application != nullptr, "Core/Application.cpp: Application must be initialized before using it!");
+        AY_ASSERT(m_application != nullptr, "[Sholas] Core/Application.cpp: Application must be initialized before using it!");
         return *m_application;
     }
 
-    void Application::setClientUpdateFun(std::function<void()> callbackFun) {
-        clientCallbackFun = callbackFun;
+
+    void Application::setClientLoop(Client::ClientLoop* clientLoop) {
+        if (m_clientLoop == nullptr){
+            m_clientLoop = clientLoop;
+        }
     }
+
 
 } // Ayla

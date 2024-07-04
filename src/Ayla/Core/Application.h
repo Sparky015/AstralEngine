@@ -4,13 +4,11 @@
 #pragma once
 
 #include "Ayla/Core/Core.h"
-
-
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Core/Layers/DebugLayer.h"
 #include "Ayla/Window/Window.h"
-
+#include "Ayla/Client/UserSetup.h"
 
 
 using namespace Ayla::Windows;
@@ -25,15 +23,18 @@ namespace Ayla::Core {
 
          void Run();
          void onEvent(Event&);
-         void setClientUpdateFun(std::function<void()> callbackFun);
+
 
          static Window& getWindow();
          static LayerStack& getLayerStack();
          static Application& get();
-    private:
 
-        bool m_appIsRunning = true;
+         void setClientLoop(Client::ClientLoop* clientLoop);
+    private:
+        Client::ClientLoop* m_clientLoop;
+
         static Application* m_application;
+        bool m_appIsRunning = true;
         static std::unique_ptr<Window> m_window;
         static std::unique_ptr<LayerStack> m_layerStack;
 
@@ -42,8 +43,8 @@ namespace Ayla::Core {
 
     };
 
-    AYLA_API extern Application* CreateApplication();
-    AYLA_API extern std::function<void()> clientCallbackFun;
+
+
 } // Ayla
 
 

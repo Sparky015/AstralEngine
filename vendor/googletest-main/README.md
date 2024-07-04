@@ -45,7 +45,7 @@ release them together.
 
 ### Getting Started
 
-See the [GoogleTest User's Guide](https://google.github.io/googletest/) for
+See the [GoogleTest Application's Guide](https://google.github.io/googletest/) for
 documentation. We recommend starting with the
 [GoogleTest Primer](https://google.github.io/googletest/primer.html).
 
@@ -63,7 +63,7 @@ More information about building GoogleTest can be found at
 *   Rich set of assertions: \
     Googletest provides a variety of assertions, such as equality, inequality,
     exceptions, and more, making it easy to test your code
-*   User-defined assertions: \
+*   Application-defined assertions: \
     You can define your own assertions with Googletest, making it simple to
     write tests that are specific to your code
 *   Death tests: \
@@ -110,7 +110,7 @@ following notable projects:
 ## Related Open Source Projects
 
 [GTest Runner](https://github.com/nholthaus/gtest-runner) is a Qt5 based
-automated test-runner and Graphical User Interface with powerful features for
+automated test-runner and Graphical Application Interface with powerful features for
 Windows and Linux platforms.
 
 [GoogleTest UI](https://github.com/ospector/gtest-gbar) is a test runner that

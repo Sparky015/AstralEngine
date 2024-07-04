@@ -5,6 +5,7 @@
 
 
 // Header for the users of the engine to include for easy access.
-
 #include "Ayla/Core/EntryPoint.h"
-#include "Ayla/Core/Application.h"
+#include "Ayla/Client/UserSetup.h"
+using Ayla::Client::ClientLoop;
+

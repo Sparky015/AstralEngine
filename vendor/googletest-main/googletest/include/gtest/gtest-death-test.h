@@ -59,7 +59,7 @@ namespace internal {
 // executing in the context of the death test child process.  Tools such as
 // Valgrind heap checkers may need this to modify their behavior in death
 // tests.  IMPORTANT: This is an internal utility.  Using it may break the
-// implementation of death tests.  User code MUST NOT use it.
+// implementation of death tests.  Application code MUST NOT use it.
 GTEST_API_ bool InDeathTestChild();
 
 }  // namespace internal

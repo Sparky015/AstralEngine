@@ -22,12 +22,13 @@ namespace Ayla::Windows {
     }
 
     GenericWindow::GenericWindow(const WindowProperties& properties){
-        AY_TRACE("GenericWindow: Initializing Generic Window");
+        AY_TRACE("[Sholas] GenericWindow: Initializing Generic Window");
         init(properties);
 
     }
 
     GenericWindow::~GenericWindow(){
+        AY_TRACE("[Sholas] GenericWindow: Destroying Generic Window");
         glfwTerminate();
     }
 

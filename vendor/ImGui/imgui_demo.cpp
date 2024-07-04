@@ -78,7 +78,7 @@ Index of this file:
 // - sub section: ShowDemoWindowInputs()
 // [SECTION] About Window / ShowAboutWindow()
 // [SECTION] Style Editor / ShowStyleEditor()
-// [SECTION] User Guide / ShowUserGuide()
+// [SECTION] Application Guide / ShowUserGuide()
 // [SECTION] Example App: Main Menu Bar / ShowExampleAppMainMenuBar()
 // [SECTION] Example App: Debug Console / ShowExampleAppConsole()
 // [SECTION] Example App: Debug Log / ShowExampleAppLog()
@@ -3725,7 +3725,7 @@ static void ShowDemoWindowPopups()
     // - They block normal mouse hovering detection outside them. (*)
     // - Unless modal, they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
     // - Their visibility state (~bool) is held internally by Dear ImGui instead of being held by the programmer as
-    //   we are used to with regular Begin() calls. User can manipulate the visibility state by calling OpenPopup().
+    //   we are used to with regular Begin() calls. Application can manipulate the visibility state by calling OpenPopup().
     // (*) One can use IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) to bypass it and detect hovering even
     //     when normally blocked by a popup.
     // Those three properties are connected. The library needs to hold their visibility state BECAUSE it can close
@@ -6299,7 +6299,7 @@ static void ShowDemoWindowInputs()
 
             // We iterate both legacy native range and named ImGuiKey ranges. This is a little unusual/odd but this allows
             // displaying the data for old/new backends.
-            // User code should never have to go through such hoops!
+            // Application code should never have to go through such hoops!
             // You can generally iterate between ImGuiKey_NamedKey_BEGIN and ImGuiKey_NamedKey_END.
 #ifdef IMGUI_DISABLE_OBSOLETE_KEYIO
             struct funcs { static bool IsLegacyNativeDupe(ImGuiKey) { return false; } };
@@ -6368,7 +6368,7 @@ static void ShowDemoWindowInputs()
         // - Multiple locations may be interested in same chord! Routing helps find a winner.
         // - Every frame, we resolve all claims and assign one owner if the modifiers are matching.
         // - The lower-level function is 'bool SetShortcutRouting()', returns true when caller got the route.
-        // - Most of the times, SetShortcutRouting() is not called directly. User mostly calls Shortcut() with routing flags.
+        // - Most of the times, SetShortcutRouting() is not called directly. Application mostly calls Shortcut() with routing flags.
         // - If you call Shortcut() WITHOUT any routing option, it uses ImGuiInputFlags_RouteFocused.
         // TL;DR: Most uses will simply be:
         // - Shortcut(ImGuiMod_Ctrl | ImGuiKey_A); // Use ImGuiInputFlags_RouteFocused policy.
@@ -7099,7 +7099,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
 }
 
 //-----------------------------------------------------------------------------
-// [SECTION] User Guide / ShowUserGuide()
+// [SECTION] Application Guide / ShowUserGuide()
 //-----------------------------------------------------------------------------
 
 void ImGui::ShowUserGuide()

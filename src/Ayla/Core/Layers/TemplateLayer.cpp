@@ -7,7 +7,7 @@
 namespace Ayla {
 
     TemplateLayer::TemplateLayer(){
-        AY_TRACE("TemplateLayer: Initializing Template Layer");
+        AY_TRACE("[Sholas] TemplateLayer: Initializing Template Layer");
         this->attachLayer();
         m_debugName = "Template Layer";
     }

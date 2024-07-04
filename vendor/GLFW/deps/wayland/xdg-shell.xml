@@ -511,7 +511,7 @@
     <request name="set_window_geometry">
       <description summary="set the new window geometry">
 	The window geometry of a surface is its "visible bounds" from the
-	user's perspective. Client-side decorations often have invisible
+	user's perspective. ClientLoop-side decorations often have invisible
 	portions like drop-shadows which should be ignored for the
 	purposes of aligning, placing and constraining windows.
 
@@ -860,7 +860,7 @@
       </entry>
       <entry name="activated" value="4" summary="the surface is now activated">
 	<description summary="the surface is now activated">
-	  Client window decorations should be painted as if the window is
+	  ClientLoop window decorations should be painted as if the window is
 	  active. Do not assume this means that the window actually has
 	  keyboard or pointer focus.
 	</description>

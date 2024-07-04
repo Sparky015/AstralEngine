@@ -2066,7 +2066,7 @@ bool ImGui::TableSetColumnIndex(int column_n)
         TableBeginCell(table, column_n);
     }
 
-    // Return whether the column is visible. User may choose to skip submitting items based on this return value,
+    // Return whether the column is visible. Application may choose to skip submitting items based on this return value,
     // however they shouldn't skip submitting for columns that may have the tallest contribution to row height.
     return table->Columns[column_n].IsRequestOutput;
 }
@@ -2091,7 +2091,7 @@ bool ImGui::TableNextColumn()
         TableBeginCell(table, 0);
     }
 
-    // Return whether the column is visible. User may choose to skip submitting items based on this return value,
+    // Return whether the column is visible. Application may choose to skip submitting items based on this return value,
     // however they shouldn't skip submitting for columns that may have the tallest contribution to row height.
     return table->Columns[table->CurrentColumn].IsRequestOutput;
 }

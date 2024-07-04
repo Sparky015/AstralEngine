@@ -7,11 +7,11 @@
 namespace Ayla::Core::Layers {
 
     LayerStack::LayerStack() {
-        AY_TRACE("LayerStack: Initializing Layer Stack");
+        AY_TRACE("[Sholas] LayerStack: Initializing Layer Stack");
     }
 
     LayerStack::~LayerStack() {
-
+        AY_TRACE("[Sholas] LayerStack: Destroying Layer Stack");
     }
 
     void LayerStack::appendLayer(Layer* layer) {

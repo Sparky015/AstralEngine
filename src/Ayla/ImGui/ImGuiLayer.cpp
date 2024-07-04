@@ -23,12 +23,13 @@ namespace Ayla::GUI {
     float ImGuiLayer::m_time = 0.0f;
 
     ImGuiLayer::ImGuiLayer() {
-        AY_TRACE("ImGuiLayer: Initializing ImGui Layer");
+        AY_TRACE("[Sholas] ImGuiLayer: Initializing ImGui Layer");
         this->attachLayer();
         m_debugName = "ImGui Layer";
     }
 
     ImGuiLayer::~ImGuiLayer() {
+        AY_TRACE("[Sholas] ImGuiLayer: Destroying ImGui Layer");
         this->detachLayer();
     }
 

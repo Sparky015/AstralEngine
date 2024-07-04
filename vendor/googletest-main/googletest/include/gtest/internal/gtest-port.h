@@ -128,7 +128,7 @@
 //     GTEST_OS_LINUX_ANDROID - Google Android
 //   GTEST_OS_MAC      - Mac OS X
 //     GTEST_OS_IOS    - iOS
-//   GTEST_OS_NACL     - Google Native Client (NaCl)
+//   GTEST_OS_NACL     - Google Native ClientLoop (NaCl)
 //   GTEST_OS_NETBSD   - NetBSD
 //   GTEST_OS_OPENBSD  - OpenBSD
 //   GTEST_OS_OS2      - OS/2
@@ -1357,8 +1357,8 @@ class ThreadWithParam : public ThreadWithParamBase {
   }
 
  private:
-  UserThreadFunc* const func_;  // User-supplied thread function.
-  const T param_;  // User-supplied parameter to the thread function.
+  UserThreadFunc* const func_;  // Application-supplied thread function.
+  const T param_;  // Application-supplied parameter to the thread function.
   // When non-NULL, used to block execution until the controller thread
   // notifies.
   Notification* const thread_can_start_;

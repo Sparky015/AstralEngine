@@ -418,7 +418,7 @@ Whereas in the DirectX11 example backend we store a pointer to ID3D11ShaderResou
 If you are starting with OpenGL or DirectX or Vulkan and haven't built much of a rendering engine over them, keeping the default ImTextureID representation suggested by the example backends is probably the best choice.
 (Advanced users may also decide to keep a low-level type in ImTextureID, use ImDrawList callback and pass information to their renderer)
 
-User code may do:
+Application code may do:
 ```cpp
 // Cast our texture type to ImTextureID / void*
 MyTexture* texture = g_CoffeeTableTexture;

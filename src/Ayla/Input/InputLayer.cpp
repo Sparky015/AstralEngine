@@ -8,12 +8,13 @@
 
 namespace Ayla::Input {
     InputLayer::InputLayer(){
-        AY_TRACE("InputLayer: Initializing Input Layer");
+        AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
         this->attachLayer();
         m_debugName = "Input Layer";
     }
 
     InputLayer::~InputLayer(){
+        AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
         this->detachLayer();
     }
 

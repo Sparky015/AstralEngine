@@ -9,7 +9,7 @@ using namespace Ayla::Events;
 
 namespace Ayla::Core::Layers {
 
-    class AYLA_API Layer {
+    class Layer {
     public:
 
         Layer();

@@ -18,7 +18,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
         float width;
         float height;
 
-        WindowProperties(std::string title = "Ayla Engine Window", float width = 1024.0f, float height = 768.0f) :
+        WindowProperties(std::string title = "Ayla ClientSetup Window", float width = 1024.0f, float height = 768.0f) :
                 title(std::move(title)),
                 width(width),
                 height(height) {}

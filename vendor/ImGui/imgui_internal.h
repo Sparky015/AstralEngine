@@ -35,7 +35,7 @@ Index of this file:
 // [SECTION] Table support
 // [SECTION] ImGui internal API
 // [SECTION] ImFontAtlas internal API
-// [SECTION] Test Engine specific hooks (imgui_test_engine)
+// [SECTION] Test ClientSetup specific hooks (imgui_test_engine)
 
 */
 
@@ -268,7 +268,7 @@ namespace ImStb
 // Error handling
 // Down the line in some frameworks/languages we would like to have a way to redirect those to the programmer and recover from more faults.
 #ifndef IM_ASSERT_USER_ERROR
-#define IM_ASSERT_USER_ERROR(_EXP,_MSG) IM_ASSERT((_EXP) && _MSG)   // Recoverable User Error
+#define IM_ASSERT_USER_ERROR(_EXP,_MSG) IM_ASSERT((_EXP) && _MSG)   // Recoverable Application Error
 #endif
 
 // Misc Macros
@@ -1662,7 +1662,7 @@ struct IMGUI_API ImGuiTypingSelectRequest
 // Storage for GetTypingSelectRequest()
 struct IMGUI_API ImGuiTypingSelectState
 {
-    ImGuiTypingSelectRequest Request;           // User-facing data
+    ImGuiTypingSelectRequest Request;           // Application-facing data
     char            SearchBuffer[64];           // Search buffer: no need to make dynamic as this search is very transient.
     ImGuiID         FocusScope;
     int             LastRequestFrame = 0;
@@ -2028,7 +2028,7 @@ enum ImGuiDebugLogFlags_
 
     ImGuiDebugLogFlags_EventMask_           = ImGuiDebugLogFlags_EventActiveId  | ImGuiDebugLogFlags_EventFocus | ImGuiDebugLogFlags_EventPopup | ImGuiDebugLogFlags_EventNav | ImGuiDebugLogFlags_EventClipper | ImGuiDebugLogFlags_EventSelection | ImGuiDebugLogFlags_EventIO | ImGuiDebugLogFlags_EventInputRouting | ImGuiDebugLogFlags_EventDocking | ImGuiDebugLogFlags_EventViewport,
     ImGuiDebugLogFlags_OutputToTTY          = 1 << 20,  // Also send output to TTY
-    ImGuiDebugLogFlags_OutputToTestEngine   = 1 << 21,  // Also send output to Test Engine
+    ImGuiDebugLogFlags_OutputToTestEngine   = 1 << 21,  // Also send output to Test ClientSetup
 };
 
 struct ImGuiDebugAllocEntry
@@ -2836,7 +2836,7 @@ struct IMGUI_API ImGuiWindow
     float                   ItemWidthDefault;
     ImGuiStorage            StateStorage;
     ImVector<ImGuiOldColumns> ColumnsStorage;
-    float                   FontWindowScale;                    // User scale multiplier per-window, via SetWindowFontScale()
+    float                   FontWindowScale;                    // Application scale multiplier per-window, via SetWindowFontScale()
     float                   FontDpiScale;
     int                     SettingsOffset;                     // Offset into SettingsWindows[] (offsets are always valid as we only grow the array from the back)
 
@@ -3117,7 +3117,7 @@ struct IMGUI_API ImGuiTable
     float                       CellPaddingX;               // Padding from each borders. Locked in BeginTable()/Layout.
     float                       CellSpacingX1;              // Spacing between non-bordered cells. Locked in BeginTable()/Layout.
     float                       CellSpacingX2;
-    float                       InnerWidth;                 // User value passed to BeginTable(), see comments at the top of BeginTable() for details.
+    float                       InnerWidth;                 // Application value passed to BeginTable(), see comments at the top of BeginTable() for details.
     float                       ColumnsGivenWidth;          // Sum of current column width
     float                       ColumnsAutoFitWidth;        // Sum of ideal column width in order nothing to be clipped, used for auto-fitting and content width submission in outer window
     float                       ColumnsStretchSumWeights;   // Sum of weight of all enabled stretching columns
@@ -3908,7 +3908,7 @@ IMGUI_API void      ImFontAtlasBuildMultiplyCalcLookupTable(unsigned char out_ta
 IMGUI_API void      ImFontAtlasBuildMultiplyRectAlpha8(const unsigned char table[256], unsigned char* pixels, int x, int y, int w, int h, int stride);
 
 //-----------------------------------------------------------------------------
-// [SECTION] Test Engine specific hooks (imgui_test_engine)
+// [SECTION] Test ClientSetup specific hooks (imgui_test_engine)
 //-----------------------------------------------------------------------------
 
 #ifdef IMGUI_ENABLE_TEST_ENGINE

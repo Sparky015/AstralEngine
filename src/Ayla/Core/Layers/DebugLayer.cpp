@@ -15,12 +15,13 @@ namespace Ayla::Core::Debug {
 
 
     DebugLayer::DebugLayer(){
-        AY_TRACE("DebugLayer: Initializing Debug Layer");
+        AY_TRACE("[Sholas] DebugLayer: Initializing Debug Layer");
         this->attachLayer();
         m_debugName = "Debug Layer";
     }
 
     DebugLayer::~DebugLayer(){
+        AY_TRACE("[Sholas] DebugLayer: Destroying Debug Layer");
         this->detachLayer();
     }
 

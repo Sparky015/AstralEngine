@@ -14,7 +14,7 @@ compiler and the standard library:
 2.  any identifier that contains two consecutive underscores (i.e. `__`)
     *anywhere* in its name.
 
-User code is *prohibited* from using such identifiers.
+Application code is *prohibited* from using such identifiers.
 
 Now let's look at what this means for `TEST` and `TEST_F`.
 

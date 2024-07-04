@@ -127,7 +127,7 @@ $(function() {
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// C++ Version</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// User defines: GLM_FORCE_CXX98, GLM_FORCE_CXX03, GLM_FORCE_CXX11, GLM_FORCE_CXX14, GLM_FORCE_CXX17, GLM_FORCE_CXX2A</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// Application defines: GLM_FORCE_CXX98, GLM_FORCE_CXX03, GLM_FORCE_CXX11, GLM_FORCE_CXX14, GLM_FORCE_CXX17, GLM_FORCE_CXX2A</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define GLM_LANG_CXX98_FLAG                     (1 &lt;&lt; 1)</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define GLM_LANG_CXX03_FLAG                     (1 &lt;&lt; 2)</span></div>
@@ -507,7 +507,7 @@ $(function() {
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="comment">// Qualifiers</span></div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160; </div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="comment">// User defines: GLM_CUDA_FORCE_DEVICE_FUNC, GLM_CUDA_FORCE_HOST_FUNC</span></div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="comment">// Application defines: GLM_CUDA_FORCE_DEVICE_FUNC, GLM_CUDA_FORCE_HOST_FUNC</span></div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;<span class="preprocessor">#if (GLM_COMPILER &amp; GLM_COMPILER_CUDA) || (GLM_COMPILER &amp; GLM_COMPILER_HIP)</span></div>
 <div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="preprocessor">#       if defined(GLM_CUDA_FORCE_DEVICE_FUNC) &amp;&amp; defined(GLM_CUDA_FORCE_HOST_FUNC)</span></div>
@@ -569,7 +569,7 @@ $(function() {
 <div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160; </div>
 <div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;<span class="comment">// Swizzle operators</span></div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160; </div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;<span class="comment">// User defines: GLM_FORCE_SWIZZLE</span></div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;<span class="comment">// Application defines: GLM_FORCE_SWIZZLE</span></div>
 <div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160; </div>
 <div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;<span class="preprocessor">#define GLM_SWIZZLE_DISABLED            0</span></div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;<span class="preprocessor">#define GLM_SWIZZLE_OPERATOR            1</span></div>
@@ -1135,7 +1135,7 @@ $(function() {
 <div class="line"><a name="l01094"></a><span class="lineno"> 1094</span>&#160;<span class="preprocessor">#       elif(GLM_PLATFORM &amp; GLM_PLATFORM_WINDOWS)</span></div>
 <div class="line"><a name="l01095"></a><span class="lineno"> 1095</span>&#160;<span class="preprocessor">#               pragma message(&quot;GLM: Windows platform detected&quot;)</span></div>
 <div class="line"><a name="l01096"></a><span class="lineno"> 1096</span>&#160;<span class="preprocessor">#       elif(GLM_PLATFORM &amp; GLM_PLATFORM_CHROME_NACL)</span></div>
-<div class="line"><a name="l01097"></a><span class="lineno"> 1097</span>&#160;<span class="preprocessor">#               pragma message(&quot;GLM: Native Client detected&quot;)</span></div>
+<div class="line"><a name="l01097"></a><span class="lineno"> 1097</span>&#160;<span class="preprocessor">#               pragma message(&quot;GLM: Native ClientLoop detected&quot;)</span></div>
 <div class="line"><a name="l01098"></a><span class="lineno"> 1098</span>&#160;<span class="preprocessor">#       elif(GLM_PLATFORM &amp; GLM_PLATFORM_ANDROID)</span></div>
 <div class="line"><a name="l01099"></a><span class="lineno"> 1099</span>&#160;<span class="preprocessor">#               pragma message(&quot;GLM: Android platform detected&quot;)</span></div>
 <div class="line"><a name="l01100"></a><span class="lineno"> 1100</span>&#160;<span class="preprocessor">#       elif(GLM_PLATFORM &amp; GLM_PLATFORM_LINUX)</span></div>

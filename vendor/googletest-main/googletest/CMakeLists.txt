@@ -114,7 +114,7 @@ include_directories(${gtest_build_include_dirs})
 
 ########################################################################
 #
-# Defines the gtest & gtest_main libraries. User tests should link
+# Defines the gtest & gtest_main libraries. Application tests should link
 # with one of them.
 
 # Google Test libraries. We build them using more strict warnings than what

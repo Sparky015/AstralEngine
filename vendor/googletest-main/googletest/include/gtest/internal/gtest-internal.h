@@ -1313,7 +1313,7 @@ struct tuple_size<testing::internal::FlatTuple<Ts...>>
   if (::testing::internal::AlwaysTrue()) {                        \
     statement;                                                    \
   } else                     /* NOLINT */                         \
-    static_assert(true, "")  // User must have a semicolon after expansion.
+    static_assert(true, "")  // Application must have a semicolon after expansion.
 
 #if GTEST_HAS_EXCEPTIONS
 

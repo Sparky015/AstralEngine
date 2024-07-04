@@ -82,7 +82,7 @@ $(function() {
 <li class="level2"><a href="#monitor_pos">Virtual position</a></li>
 <li class="level2"><a href="#monitor_workarea">Work area</a></li>
 <li class="level2"><a href="#monitor_name">Human-readable name</a></li>
-<li class="level2"><a href="#monitor_userptr">User pointer</a></li>
+<li class="level2"><a href="#monitor_userptr">Application pointer</a></li>
 <li class="level2"><a href="#monitor_gamma">Gamma ramp</a></li>
 </ul>
 </li>
@@ -181,7 +181,7 @@ Human-readable name</h2>
 <div class="ttc" id="agroup__monitor_html_ga7af83e13489d90379588fb331b9e4b68"><div class="ttname"><a href="group__monitor.html#ga7af83e13489d90379588fb331b9e4b68">glfwGetMonitorName</a></div><div class="ttdeci">const char * glfwGetMonitorName(GLFWmonitor *monitor)</div><div class="ttdoc">Returns the name of the specified monitor.</div></div>
 </div><!-- fragment --><p>Monitor names are not guaranteed to be unique. Two monitors of the same model and make may have the same name. Only the monitor handle is guaranteed to be unique, and only until that monitor is disconnected.</p>
 <h2><a class="anchor" id="monitor_userptr"></a>
-User pointer</h2>
+Application pointer</h2>
 <p>Each monitor has a user pointer that can be set with <a class="el" href="group__monitor.html#ga702750e24313a686d3637297b6e85fda">glfwSetMonitorUserPointer</a> and queried with <a class="el" href="group__monitor.html#ga1adbfbfb8cd58b23cfee82e574fbbdc5">glfwGetMonitorUserPointer</a>. This can be used for any purpose you need and will not be modified by GLFW. The value will be kept until the monitor is disconnected or until the library is terminated.</p>
 <p>The initial value of the pointer is <code>NULL</code>.</p>
 <h2><a class="anchor" id="monitor_gamma"></a>

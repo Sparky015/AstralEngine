@@ -3,18 +3,18 @@
 //
 
 #include "Layer.h"
-#include "LayerStack.h"
 #include "Ayla/Core/Application.h"
 
 namespace Ayla::Core::Layers {
 
     Layer::Layer() {
-        AY_TRACE("Layer: Initializing Base Class Layer\t\t");
+        //AY_TRACE("[Sholas] Layer: Initializing Base Class Layer\t\t");
         m_isEnabled = false;
         m_isInitializedInTower = false;
     }
 
     Layer::~Layer(){
+        //AY_TRACE("[Sholas] Layer: Destroying Base Class Layer\t\t");
         detachLayer();
     }
 

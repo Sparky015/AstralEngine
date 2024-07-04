@@ -2,9 +2,8 @@
 // Created by sparky on 4/16/2024.
 //
 
-#pragma once
 #include "Ayla/Core/Application.h"
-
+#include "Ayla/Client/UserSetup.h"
 
 
 int main(int argc, char *argv[]) {
@@ -12,8 +11,11 @@ int main(int argc, char *argv[]) {
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
 #endif
 
-    auto client_app = Ayla::Core::CreateApplication();
-    client_app->Run();
-    delete client_app;
+    auto Engine = new Ayla::Core::Application();
+    Engine->setClientLoop(Ayla::Client::LinkClientToEngine());
+    Engine->Run();
+    delete Engine;
     return 0;
+
 }
+

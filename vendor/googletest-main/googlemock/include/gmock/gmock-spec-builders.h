@@ -845,7 +845,7 @@ class GTEST_API_ ExpectationBase {
   const char* file_;               // The file that contains the expectation.
   int line_;                       // The line number of the expectation.
   const std::string source_text_;  // The EXPECT_CALL(...) source text.
-  std::string description_;        // User-readable name for the expectation.
+  std::string description_;        // Application-readable name for the expectation.
   // True if and only if the cardinality is specified explicitly.
   bool cardinality_specified_;
   Cardinality cardinality_;  // The cardinality of the expectation.

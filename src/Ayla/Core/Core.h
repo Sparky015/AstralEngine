@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Ayla/aypch.h"
+
 #ifdef AYLA_PLATFORM_WINDOWS
     #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __declspec(dllexport)        // Export
