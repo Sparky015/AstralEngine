@@ -21,6 +21,7 @@ namespace Ayla::Core {
     Application* Application::m_application = nullptr;
     std::unique_ptr<LayerStack> Application::m_layerStack = nullptr;
     std::unique_ptr<Window> Application::m_window = nullptr;
+    std::function<void()> clientCallbackFun = nullptr;
 
     Application::Application() {
         AY_ASSERT(m_application == nullptr, "Core/Application.cpp: Can not create more than one application!");
@@ -57,13 +58,19 @@ namespace Ayla::Core {
         std::cout << "\n\nRunning Application!" << std::endl;
 
         while (m_appIsRunning){
+            clientCallbackFun();
 
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             Time::Clock::get().updateDeltaTime();
             timeAccumulation += Time::Clock::get().getDeltaTime();
+
             m_layerStack->update();
+
+            m_imGuiLayer->begin();
+            m_layerStack->renderImGui();
+            m_imGuiLayer->end();
 
             m_window->update(); // Must be called last
         }
@@ -85,6 +92,10 @@ namespace Ayla::Core {
     Application& Application::get() {
         AY_ASSERT(m_application != nullptr, "Core/Application.cpp: Application must be initialized before using it!");
         return *m_application;
+    }
+
+    void Application::setClientUpdateFun(std::function<void()> callbackFun) {
+        clientCallbackFun = callbackFun;
     }
 
 } // Ayla

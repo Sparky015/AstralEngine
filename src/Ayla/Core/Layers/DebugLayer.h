@@ -17,6 +17,7 @@ namespace Ayla::Core::Debug {
         void onAttach() override;
         void onDetach() override;
         void onUpdate() override;
+        void onImGuiRender() override;
         void onEvent(Event&) override;
         EventCategory getAcceptingEventFlags() override;
 

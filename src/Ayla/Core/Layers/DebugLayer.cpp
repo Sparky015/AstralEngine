@@ -57,6 +57,10 @@ namespace Ayla::Core::Debug {
         return None;
     }
 
+    void DebugLayer::onImGuiRender() {
+
+    }
+
 }
 
 

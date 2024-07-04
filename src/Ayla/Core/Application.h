@@ -25,11 +25,11 @@ namespace Ayla::Core {
 
          void Run();
          void onEvent(Event&);
+         void setClientUpdateFun(std::function<void()> callbackFun);
 
          static Window& getWindow();
          static LayerStack& getLayerStack();
          static Application& get();
-
     private:
 
         bool m_appIsRunning = true;
@@ -39,10 +39,11 @@ namespace Ayla::Core {
 
         std::unique_ptr<GUI::ImGuiLayer> m_imGuiLayer;
         std::unique_ptr<Debug::DebugLayer> m_debugLayer;
+
     };
 
     AYLA_API extern Application* CreateApplication();
-
+    AYLA_API extern std::function<void()> clientCallbackFun;
 } // Ayla
 
 

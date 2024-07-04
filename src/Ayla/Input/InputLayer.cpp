@@ -39,4 +39,8 @@ namespace Ayla::Input {
         return InputCategory;
     }
 
+    void InputLayer::onImGuiRender() {
+
+    }
+
 }

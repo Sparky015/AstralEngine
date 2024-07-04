@@ -20,6 +20,7 @@
 using namespace Ayla::Input;
 
 namespace Ayla::GUI {
+    float ImGuiLayer::m_time = 0.0f;
 
     ImGuiLayer::ImGuiLayer() {
         AY_TRACE("ImGuiLayer: Initializing ImGui Layer");
@@ -66,16 +67,10 @@ namespace Ayla::GUI {
 
     void ImGuiLayer::onUpdate() {
 
+    }
+
+    void ImGuiLayer::onImGuiRender() {
         ImGuiIO& io = ImGui::GetIO();
-
-        float time = (float)glfwGetTime();
-        io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
-        m_time = time;
-
-        ImGui_ImplGlfw_NewFrame();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui::NewFrame();
-
         static bool show = true;
         static bool showStackTool = true;
         if (showStackTool) ImGui::ShowIDStackToolWindow(&showStackTool);
@@ -113,9 +108,21 @@ namespace Ayla::GUI {
                 show_another_window = false;
             ImGui::End();
         }
+    }
 
+    void ImGuiLayer::begin() {
+        ImGuiIO& io = ImGui::GetIO();
+        float time = (float)glfwGetTime();
+        io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
+        m_time = time;
 
+        ImGui_ImplGlfw_NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui::NewFrame();
+    }
 
+    void ImGuiLayer::end() {
+        ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -127,8 +134,13 @@ namespace Ayla::GUI {
             glfwMakeContextCurrent(backup_current_context);
 
         }
-
     }
+
+
+    EventCategory ImGuiLayer::getAcceptingEventFlags() {
+        return static_cast<EventCategory>(ApplicationCategory | InputCategory);
+    }
+
 
     void ImGuiLayer::onEvent(Event& event) {
         ///AY_LOG("ImGui received an event!");
@@ -223,8 +235,5 @@ namespace Ayla::GUI {
         if (event.isInCategory(ApplicationCategory)) {event.setIsHandled(true);}
     }
 
-    EventCategory ImGuiLayer::getAcceptingEventFlags() {
-        return static_cast<EventCategory>(ApplicationCategory | InputCategory);
-    }
 
 }
