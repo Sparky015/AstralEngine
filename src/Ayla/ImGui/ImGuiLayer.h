@@ -18,10 +18,13 @@ namespace Ayla::GUI {
         void onAttach() override;
         void onDetach() override;
         void onUpdate() override;
+        void onImGuiRender() override;
+        static void begin();
+        static void end();
         void onEvent(Event&) override;
         EventCategory getAcceptingEventFlags() override;
 
     private:
-        float m_time = 0.0f;
+        static float m_time;
     };
 }

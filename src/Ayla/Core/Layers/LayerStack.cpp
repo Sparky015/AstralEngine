@@ -74,5 +74,14 @@ namespace Ayla::Core::Layers {
         }
     }
 
+    void LayerStack::renderImGui(){
+        for (Layer* layer : m_layers){
+            layer->onImGuiRender();
+        }
+        for (Layer* layer : m_overlayLayers){
+            layer->onImGuiRender();
+        }
+    }
+
 
 } // Ayla

@@ -26,6 +26,7 @@ namespace Ayla::Core::Layers {
         void dispatchEventBackToFront(Event& event);
 
         void update();
+        void renderImGui();
 
         // Disallow copy and move constructors and operator=()
         LayerStack(const LayerStack &) = delete;

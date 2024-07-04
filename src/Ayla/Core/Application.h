@@ -25,24 +25,25 @@ namespace Ayla::Core {
 
          void Run();
          void onEvent(Event&);
+         void setClientUpdateFun(std::function<void()> callbackFun);
 
-         Window& getWindow();
-         LayerStack& getLayerStack();
-         static Application& getApplication();
-
+         static Window& getWindow();
+         static LayerStack& getLayerStack();
+         static Application& get();
     private:
 
         bool m_appIsRunning = true;
         static Application* m_application;
-        std::unique_ptr<Window> m_window;
-        std::unique_ptr<LayerStack> m_layerStack;
+        static std::unique_ptr<Window> m_window;
+        static std::unique_ptr<LayerStack> m_layerStack;
 
         std::unique_ptr<GUI::ImGuiLayer> m_imGuiLayer;
         std::unique_ptr<Debug::DebugLayer> m_debugLayer;
+
     };
 
     AYLA_API extern Application* CreateApplication();
-
+    AYLA_API extern std::function<void()> clientCallbackFun;
 } // Ayla
 
 

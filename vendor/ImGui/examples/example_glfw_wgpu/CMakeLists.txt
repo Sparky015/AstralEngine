@@ -23,7 +23,7 @@ endif()
 set(CMAKE_CXX_STANDARD 17) # Dawn requires C++17
 
 # Dear ImGui
-set(IMGUI_DIR ../../../../../../Downloads/imgui-master/imgui-master)
+set(IMGUI_DIR ../../)
 
 # Libraries
 if(EMSCRIPTEN)
@@ -62,7 +62,7 @@ else()
 endif()
 
 add_executable(example_glfw_wgpu
-        main.cpp
+  main.cpp
   # backend files
   ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
   ${IMGUI_DIR}/backends/imgui_impl_wgpu.cpp

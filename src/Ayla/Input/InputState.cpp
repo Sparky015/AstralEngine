@@ -15,7 +15,7 @@ namespace Ayla::Input {
 
 
 
-    InputState::InputState() : m_inputLayer(InputLayer()), m_mouseYPosition(0.0f), m_mouseXPosition(0.0f) {
+    InputState::InputState() : m_inputLayer(InputLayer()) {
         AY_TRACE("InputState: Initializing Input State");
 
         m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
@@ -28,17 +28,23 @@ namespace Ayla::Input {
 
     InputState* InputState::m_instance = nullptr;
 
+    void InputState::init() {
+        AY_ASSERT(m_instance == nullptr, "Input/InputState.cpp: Input State has already been initialized!");
+
+        AY_TRACE("InputState: Making 'new InputState()'");
+        m_instance = new InputState();
+
+    }
+
     InputState& InputState::get() {
-        if (m_instance == nullptr){
-            AY_TRACE("InputState: Making 'new InputState()'");
-            m_instance = new InputState();
-        }
+        AY_ASSERT(m_instance != nullptr, "Input/InputState.cpp: Input State has not been initialized yet!");
+
         return *m_instance;
     }
 
 
     void InputState::onEvent(Event& event) {
-        AY_ASSERT(event.isInCategory(InputCategory), "InputState received an event that is not in the Input Category!");
+        AY_ASSERT(event.isInCategory(InputCategory), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
         //AY_TRACE("Input Received\t");
         if (event.isInCategory(KeyboardCategory)){
             if (event.getEventType() == KEY_PRESSED){
@@ -78,8 +84,8 @@ namespace Ayla::Input {
 
             if (event.getEventType() == MOUSE_CURSOR_MOVED) {
                 auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
-                m_mouseXPosition = mouseMovedEvent.getXPos();
-                m_mouseYPosition = mouseMovedEvent.getYPos();
+                m_mouseCursorState.mouseXPosition = mouseMovedEvent.getXPos();
+                m_mouseCursorState.mouseYPosition = mouseMovedEvent.getYPos();
                 //std::cout << mouseMovedEvent.getXPos() << ", " << mouseMovedEvent.getYPos();
             }
 
@@ -92,17 +98,29 @@ namespace Ayla::Input {
         event.setIsHandled(true);
     }
 
-    InputState::KeyState InputState::access(int keycode) {
-        return m_keyState[keycode];
+
+    double InputState::mousePositionX() const {
+        return m_mouseCursorState.mouseXPosition;
     }
 
-    double InputState::accessMouseX() {
-        return m_mouseXPosition;
+    double InputState::mousePositionY() const {
+        return m_mouseCursorState.mouseYPosition;
     }
 
-    double InputState::accessMouseY() {
-        return m_mouseYPosition;
+
+
+    bool InputState::isKeyDown(int keycode) const {
+        return m_keyState[keycode].isDown;
     }
+
+    bool InputState::isKeyRepeating(int keycode) const {
+        return m_keyState[keycode].isRepeating;
+    }
+
+    std::string InputState::getKeyName(int keycode) const {
+        return m_keyState[keycode].name;
+    }
+
 
 }
 

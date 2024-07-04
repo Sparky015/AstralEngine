@@ -10,18 +10,21 @@
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Core/Layers/DebugLayer.h"
 
-#include "glad/glad.h"
-#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
-
 #include "Ayla/Core/Time/Time.h"
+
+#include "glad/glad.h"
+
 
 
 namespace Ayla::Core {
 
-    Application* Application:: m_application = nullptr;
+    Application* Application::m_application = nullptr;
+    std::unique_ptr<LayerStack> Application::m_layerStack = nullptr;
+    std::unique_ptr<Window> Application::m_window = nullptr;
+    std::function<void()> clientCallbackFun = nullptr;
 
     Application::Application() {
-        AY_ASSERT(m_application == nullptr, "Can not create more than one application!");
+        AY_ASSERT(m_application == nullptr, "Core/Application.cpp: Can not create more than one application!");
 
         // Application //
         AY_TRACE("Application: Initializing Application");
@@ -42,7 +45,7 @@ namespace Ayla::Core {
         // Layers //
         AY_LOG("--- Application: Initializing Layers ---");
         m_imGuiLayer = std::make_unique<GUI::ImGuiLayer>();
-        Input::InputState::get(); // initializes Input layer and InputState on first call
+        Input::InputState::init(); // initializes Input layer and InputState on first call
         m_debugLayer = std::make_unique<Debug::DebugLayer>();
 
 
@@ -55,13 +58,19 @@ namespace Ayla::Core {
         std::cout << "\n\nRunning Application!" << std::endl;
 
         while (m_appIsRunning){
+            clientCallbackFun();
 
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             Time::Clock::get().updateDeltaTime();
             timeAccumulation += Time::Clock::get().getDeltaTime();
+
             m_layerStack->update();
+
+            m_imGuiLayer->begin();
+            m_layerStack->renderImGui();
+            m_imGuiLayer->end();
 
             m_window->update(); // Must be called last
         }
@@ -80,9 +89,13 @@ namespace Ayla::Core {
 
     Window& Application::getWindow(){ return *m_window;}
     LayerStack& Application::getLayerStack(){return *m_layerStack;}
-    Application& Application::getApplication() {
-        AY_ASSERT(m_application != nullptr, "Application must be initialized before using it!");
+    Application& Application::get() {
+        AY_ASSERT(m_application != nullptr, "Core/Application.cpp: Application must be initialized before using it!");
         return *m_application;
+    }
+
+    void Application::setClientUpdateFun(std::function<void()> callbackFun) {
+        clientCallbackFun = callbackFun;
     }
 
 } // Ayla
