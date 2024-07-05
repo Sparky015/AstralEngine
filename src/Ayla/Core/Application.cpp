@@ -31,7 +31,7 @@ namespace Ayla::Core {
         m_application = this;
 
         // Clock //
-        Time::Clock::get();
+        Time::Clock::Get();
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
@@ -67,8 +67,8 @@ namespace Ayla::Core {
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            Time::Clock::get().updateDeltaTime();
-            timeAccumulation += Time::Clock::get().getDeltaTime();
+            Time::Clock::Get().UpdateDeltaTime();
+            timeAccumulation += Time::Clock::Get().GetDeltaTime();
 
             m_layerStack->update();
 
@@ -80,7 +80,7 @@ namespace Ayla::Core {
         }
 
         std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";
-        std::cout << "Stopwatch: " << Time::Clock::get().getStopwatchTime() * .001 << " seconds\n";
+        std::cout << "Stopwatch: " << Time::Clock::Get().GetStopwatchTime() * .001 << " seconds\n";
         exit(EXIT_SUCCESS);
     }
 

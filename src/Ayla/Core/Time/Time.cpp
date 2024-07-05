@@ -6,47 +6,58 @@
 
 namespace Ayla::Core::Time{
 
-    Clock* Clock::m_instance = nullptr;
+    Clock* Clock::m_Instance = nullptr;
 
-    Clock& Clock::get() {
-        if (m_instance == nullptr){
+    Clock& Clock::Get() {
+        if (m_Instance == nullptr){
             AY_TRACE("[Sholas] Clock: Initializing Clock");
-            m_instance = new Clock();
+            m_Instance = new Clock();
         }
-        return *m_instance;
+        return *m_Instance;
     }
 
-    Clock::Clock():
-    m_deltaTime(0),
-    m_previousTimeStamp(std::chrono::high_resolution_clock::now()),
-    m_clockStartingTimeStamp(std::chrono::high_resolution_clock::now()),
-    m_stopWatchTime(0)
+    Clock::Clock() :
+            m_DeltaTime(0),
+            m_PreviousTimeStamp(std::chrono::high_resolution_clock::now()),
+            m_ClockStartingTimeStamp(std::chrono::high_resolution_clock::now()),
+            m_StopWatchTime(0)
+    {}
+
+
+    Clock::~Clock()
     {
-
+        delete m_Instance;
+        m_Instance = nullptr;
     }
 
-    Clock::~Clock(){
-        delete m_instance;
-        m_instance = nullptr;
-    }
 
-    void Clock::updateDeltaTime() {
+    void Clock::UpdateDeltaTime()
+    {
         TimeStamp currentTimeStamp = std::chrono::high_resolution_clock::now();
-        m_deltaTime = currentTimeStamp - m_previousTimeStamp;
-        m_previousTimeStamp = currentTimeStamp;
+        m_DeltaTime = currentTimeStamp - m_PreviousTimeStamp;
+        m_PreviousTimeStamp = currentTimeStamp;
     }
 
-    long long Clock::getDeltaTime() {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(m_deltaTime).count();
+
+    /** Returns the time in milliseconds. */
+    long long Clock::GetDeltaTime()
+    {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(m_DeltaTime).count();
     }
 
-    long long Clock::getStopwatchTime() {
+
+    /** Returns the time in milliseconds. */
+    long long Clock::GetStopwatchTime()
+    {
         TimeStamp currentTimeStamp = std::chrono::high_resolution_clock::now();
-        m_stopWatchTime = currentTimeStamp - m_clockStartingTimeStamp;
-        return std::chrono::duration_cast<std::chrono::milliseconds>(m_stopWatchTime).count();
+        m_StopWatchTime = currentTimeStamp - m_ClockStartingTimeStamp;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(m_StopWatchTime).count();
     }
 
-    void Clock::resetStopwatch() {
-        m_clockStartingTimeStamp = std::chrono::high_resolution_clock::now();
+
+    void Clock::ResetStopwatch()
+    {
+        m_ClockStartingTimeStamp = std::chrono::high_resolution_clock::now();
     }
+
 }

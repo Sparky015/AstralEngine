@@ -2,51 +2,90 @@
 
 
 
-## Variables
+### Variables
 (Pascal Case)
 The first letter of each word in a name (such as type name or variable name) is capitalized, and there is usually no 
 underscore between words. For example, Health and UPrimitiveComponent are correct, but not lastMouseCoordinates or 
 delta_coordinates.
+###
 
-## Constants
+### Constants
 Convention: upper case with underscores
 Example: const int MAX_SCORE;
+###
 
-## Functions
+### Functions
 Convention: Pamel Case
 Example: void CalculateScore();
+###
 
-## Classes / Structures / Enums
+### Classes / Structures / Enums
 Convention: Pascal case (camel case starting with an uppercase letter)
 Example: class PlayerScore;
          struct PlayerData;
          enum class GameStatus;
+###
 
-## Private Member Variables
+### Private Member Variables
 Convention: prefix with m_ and use pascal case
 Example: int m_PlayerScore;
+###
 
-## Public Member Variables
+### Public Member Variables
 Convention: Pascal case
 Example: int PlayerScore;
+###
 
-## Global Variables
+### Global Variables
 Convention: prefix with g_ and use pascal case
 Example: int g_GlobalScore;
+###
 
-## Namespaces
+### Namespaces
 Convention: Pascal Case
 Example: namespace InputDriver;
+###
 
-## Macro Definitions
+### Macro Definitions
 Convention: upper case with underscores
 Example: #define MAX_HEALTH 100
+###
 
-## Type Names
+### Type Names
 Convention: Pascal case
 Example: using PlayerList = std::vector<Player>;
+###
 
+### Const Correctness
 
+Const is documentation as much as it is a compiler directive, so all code should strive to be const-correct.
+
+This includes:
+
+    Passing function arguments by const pointer or reference if those arguments are not intended to be modified by the function,
+
+    Flagging methods as const if they do not modify the object,
+
+    and using const iteration over containers if the loop isn't intended to modify the container.
+###
+
+### Comments
+The following example demonstrates the format of class, method, and variable comments. Remember that comments should 
+augment the code. The code documents the implementation, and the comments document the intent. Make sure to update 
+comments when you change the intent of a piece of code.
+
+Note that two different parameter comment styles are supported, shown by the Steep and Sweeten methods. The @param 
+style used by Steep is the traditional multi-line style, but for simple functions it can be clearer to integrate the 
+parameter and return value documentation into the descriptive comment for the function, as in the Sweeten example. 
+Special comment tags like @see or @return should only be used to start new lines following the primary description.
+
+Method comments should only be included once, where the method is publicly declared. The method comments should only 
+contain information relevant to callers of the method, including any information about overrides of the method that may
+be relevant to the caller. Details about the implementation of the method and its overrides, that are not relevant to
+callers, should be commented within the method implementation.
+###
+
+## Other Rules and Stuff
 
 Template classes are prefixed by T.
 
@@ -63,6 +102,8 @@ Typedefs should be prefixed by whatever is appropriate for that type: F if it's 
 
 
 Inspiration (and some word for word) from https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/CodingStandard/
+
+## More Details
 
 Variable, method, and class names should be clear, unambiguous, and descriptive. The greater the scope of the name, the 
 greater the importance of a good, descriptive name. Avoid over-abbreviation.
@@ -83,5 +124,5 @@ be replaced by the function.
 
 If an In or Out parameter is also a boolean, put the "b" before the In/Out prefix, such as bOutResult.
 
-For more good practices to use, check this link out!
-https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/CodingStandard/
+## For more good practices to use, check this link out!
+### https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/CodingStandard/

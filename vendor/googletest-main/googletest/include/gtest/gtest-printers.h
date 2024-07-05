@@ -756,7 +756,7 @@ void PrintSmartPointer(const Ptr& ptr, std::ostream* os, char) {
     *os << "(nullptr)";
   } else {
     // We can't print the value. Just print the pointer..
-    *os << "(" << (VoidifyPointer)(ptr.get()) << ")";
+    *os << "(" << (VoidifyPointer)(ptr.Get()) << ")";
   }
 }
 template <typename T, typename Ptr,
@@ -766,7 +766,7 @@ void PrintSmartPointer(const Ptr& ptr, std::ostream* os, int) {
   if (ptr == nullptr) {
     *os << "(nullptr)";
   } else {
-    *os << "(ptr = " << (VoidifyPointer)(ptr.get()) << ", value = ";
+    *os << "(ptr = " << (VoidifyPointer)(ptr.Get()) << ", value = ";
     UniversalPrinter<T>::Print(*ptr, os);
     *os << ")";
   }

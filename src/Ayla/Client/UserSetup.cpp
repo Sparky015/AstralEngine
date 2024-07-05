@@ -4,21 +4,31 @@
 
 #include "UserSetup.h"
 
-namespace Ayla::Client{
+namespace Ayla::Client {
 
-    ClientLoop::ClientLoop() {
+
+    ClientLoop::ClientLoop()
+    {
         AY_TRACE("\n[Sholas] Client: Initializing ClientLoop");
     }
 
-    ClientLoop::~ClientLoop() {
+
+    ClientLoop::~ClientLoop()
+    {
         AY_TRACE("[Sholas] Client: Destroying ClientLoop");
     }
 
-    void ClientLoop::Init() {
+
+    /** Init is not a pure virtual function so an error can occur if the client does not override the Init function */
+    void ClientLoop::Init()
+    {
         AY_ERROR("[Ayla] Client.cpp: No Init function was set!");
     }
 
-    void ClientLoop::Update() {
+
+    /** Update is not a pure virtual function so an error can occur if the client does not override the Update function */
+    void ClientLoop::Update()
+    {
         AY_ERROR("[Ayla] Client.cpp: No Update function was set!");
     }
 

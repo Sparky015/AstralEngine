@@ -77,7 +77,7 @@ GTEST_API_ std::string ConvertIdentifierNameToWords(const char* id_name);
 // The following default implementation is for the smart pointer case.
 template <typename Pointer>
 inline const typename Pointer::element_type* GetRawPointer(const Pointer& p) {
-  return p.get();
+  return p.Get();
 }
 // This overload version is for std::reference_wrapper, which does not work with
 // the overload above, as it does not have an `element_type`.

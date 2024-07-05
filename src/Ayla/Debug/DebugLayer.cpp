@@ -35,7 +35,7 @@ namespace Ayla::Core::Debug {
 
     void DebugLayer::onUpdate() {
         static long long accumulatedTime;
-        accumulatedTime += Time::Clock::get().getDeltaTime();
+        accumulatedTime += Time::Clock::Get().GetDeltaTime();
         if (InputState::get().isKeyDown(AY_KEY_T) && !InputState::get().isKeyRepeating(AY_KEY_T)){
             if (accumulatedTime <= 75){return;}
             accumulatedTime = 0;
@@ -46,7 +46,7 @@ namespace Ayla::Core::Debug {
             if (accumulatedTime <= 300){return;}
             accumulatedTime = 0;
             AY_TRACE("Resetting stopwatch.");
-            Ayla::Core::Time::Clock::get().resetStopwatch();
+            Ayla::Core::Time::Clock::Get().ResetStopwatch();
         }
     }
 
