@@ -38,19 +38,19 @@ target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
 
 
-# Create the Shared/DLL library
-add_library(Ayla SHARED
+# Create the static library
+add_library(Ayla STATIC
         src/Ayla/Core/Application.cpp
         src/Ayla/Events/Event.cpp
         src/Ayla/Events/EventDispatcher.cpp
         src/Ayla/aypch.cpp
         src/Ayla/Window/Platform/Generic/GenericWindow.cpp
-        src/Ayla/Core/Layers/Layer.cpp
-        src/Ayla/Core/Layers/LayerStack.cpp
+        src/Ayla/Layers/Layer.cpp
+        src/Ayla/Layers/LayerStack.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
         src/Ayla/Input/InputLayer.cpp
         src/Ayla/Input/InputState.cpp
-        src/Ayla/Core/Layers/DebugLayer.cpp
+        src/Ayla/Debug/DebugLayer.cpp
         src/Ayla/Core/Time/Time.cpp
         src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
         src/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
@@ -86,7 +86,6 @@ endif ()
 
 
 # Defining Macros
-target_compile_definitions(Ayla PRIVATE -DAYLA_BUILD_SHARED_LIB)
 target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
 

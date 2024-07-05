@@ -5,10 +5,10 @@
 #include "Ayla/Core/Application.h"
 #include "Ayla/aypch.h"
 
-#include "Ayla/Core/Layers/LayerStack.h"
+#include "Ayla/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
-#include "Ayla/Core/Layers/DebugLayer.h"
+#include "Ayla/Debug/DebugLayer.h"
 
 #include "Ayla/Core/Time/Time.h"
 

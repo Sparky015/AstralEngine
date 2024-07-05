@@ -41,8 +41,8 @@ EventCategory ExampleLayer::getAcceptingEventFlags() {
 }
 
 void ExampleLayer::onImGuiRender() {
-    ImGui::Begin("Test Example");
-    ImGui::Text("Hi hihih !");
+    ImGui::Begin("Test Example!");
+    ImGui::Text("Hi hihih!");
     ImGui::End();
 }
 

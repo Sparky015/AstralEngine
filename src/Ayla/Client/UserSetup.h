@@ -9,7 +9,7 @@
 
 namespace Ayla::Client{
 
-    class AYLA_API ClientLoop {
+    class ClientLoop {
     public:
         ClientLoop();
         virtual ~ClientLoop();
@@ -19,5 +19,5 @@ namespace Ayla::Client{
 
     };
 
-    AYLA_API extern ClientLoop* LinkClientToEngine();
+    extern ClientLoop* LinkClientToEngine();
 }

@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include "Ayla/Core/Layers/Layer.h"
+#include "Ayla/Layers/Layer.h"
 
 using Ayla::Core::Layers::Layer;
 
-class ExampleLayer : public Layer {
+class ExampleLayer : public Layer
+{
 public:
     ExampleLayer();
     ~ExampleLayer() override;

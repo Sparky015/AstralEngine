@@ -77,10 +77,12 @@ namespace Ayla::Windows {
         m_windowData.displayFramebufferScaleY = framebufferHeight > 0 ? ((float)framebufferHeight / (float)m_windowData.height) : 0;
 
 
+
                     // Setting Callbacks //
 
         // Called when window is resized
-        glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
+        glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+        {
             WindowData& windowData = *(WindowData*)glfwGetWindowUserPointer(window);
             windowData.width = width;
             windowData.height = height;
@@ -89,13 +91,17 @@ namespace Ayla::Windows {
             windowData.callback(event);
         });
 
-        glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window){
+
+        glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             WindowCloseEvent event;
             windowData.callback(event);
         });
 
-        glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focus){
+
+        glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focus)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             if (focus){
                 WindowGainedFocusEvent event;
@@ -106,14 +112,18 @@ namespace Ayla::Windows {
             }
         });
 
+
         // Called when window is moved
-        glfwSetWindowPosCallback(m_window, [](GLFWwindow* window, int xpos, int ypos){
+        glfwSetWindowPosCallback(m_window, [](GLFWwindow* window, int xpos, int ypos)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             WindowMovedEvent event(xpos, ypos);
             windowData.callback(event);
         });
 
-        glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods){
+
+        glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+        {
             using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
 
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
@@ -136,7 +146,9 @@ namespace Ayla::Windows {
             //windowData.callback(event);
         });
 
-        glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods){
+
+        glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
             using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
 
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
@@ -161,26 +173,34 @@ namespace Ayla::Windows {
             }
         });
 
-        glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode){
+
+        glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             KeyTypedEvent event(keycode);
             windowData.callback(event);
         });
 
+
         // Called when the cursor is moved
-        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos){
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             MouseMovedEvent event(xpos, ypos);
             windowData.callback(event);
         });
 
-        glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xoffset, double yoffset){
+
+        glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xoffset, double yoffset)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             MouseScrollEvent event(xoffset, yoffset);
             windowData.callback(event);
         });
 
-        glfwSetFramebufferSizeCallback(m_window,[](GLFWwindow* window, int width, int height){
+
+        glfwSetFramebufferSizeCallback(m_window,[](GLFWwindow* window, int width, int height)
+        {
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             windowData.displayFramebufferScaleX = width > 0 ? ((float)width / (float)windowData.width) : 0;
             windowData.displayFramebufferScaleY = height > 0 ? ((float)height / (float)windowData.height) : 0;

@@ -26,7 +26,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
 
 
 
-    class AYLA_API Window{
+    class Window{
     public:
             using EventCallback = std::function<void(Event&)>;
 
