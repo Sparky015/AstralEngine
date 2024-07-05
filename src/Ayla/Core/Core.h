@@ -6,7 +6,7 @@
 
 #include "Ayla/aypch.h"
 
-
+/** Preprocessor Central */
 #ifdef AYLA_PLATFORM_WINDOWS
     #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __declspec(dllexport)        // Export
@@ -24,14 +24,25 @@
 #endif
 
 
-
-namespace {
+/** Macro Land */
+namespace
+{
+    /** Outputs the message to the console with a time stamp. */
     void macro_AY_TRACE(std::string&& title);
+
+    /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message to console. */
     void macro_AY_ASSERT(bool expression, std::string&& errorMessage);
+
+    /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that is an ostream) to console. */
     void macro_AY_ASSERT_SS(bool expression, std::ostream& errorMessage);
+
+    /** A simple log to console that standardizes which side of the string the new line character is on. */
     void macro_AY_LOG(std::string&& message);
+
+    /** Throws an error with a message outputted to the console. */
     void macro_AY_ERROR(std::string&& message);
 
+    /** Profiles a scope and outputs the time to the console. */
     class AY_PROFILER {
     public:
         explicit AY_PROFILER(std::string&& title = "Profiler");
@@ -58,6 +69,7 @@ namespace {
         std::time_t time;
         std::time(&time);
 
+        // TODO: Figure out a way to make the time appear nice and pretty
         std::cout << "\n" << title; //<< std::setw(40) << "\t : " << std::ctime(&time);
     }
 

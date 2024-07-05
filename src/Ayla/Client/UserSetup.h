@@ -7,9 +7,10 @@
 #include "Ayla/Core/Core.h"
 
 
-namespace Ayla::Client {
-
-    class ClientLoop {
+namespace Ayla::Client
+{
+    class ClientLoop
+    {
     public:
 
         ClientLoop();
@@ -20,7 +21,6 @@ namespace Ayla::Client {
 
         /** Provides a method to the client to initialize anything before the application loop starts. */
         virtual void Init();
-
     };
 
     /** Allows the client to give the functions that were derived from ClientLoop to the engine, so it is callable by the engine. */

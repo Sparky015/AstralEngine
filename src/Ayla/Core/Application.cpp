@@ -16,95 +16,113 @@
 
 
 
-namespace Ayla::Core {
+namespace Ayla::Core
+{
+    Application* Application::m_Application = nullptr;
+    std::unique_ptr<LayerStack> Application::m_LayerStack = nullptr;
+    std::unique_ptr<Window> Application::m_Window = nullptr;
 
-    Application* Application::m_application = nullptr;
-    std::unique_ptr<LayerStack> Application::m_layerStack = nullptr;
-    std::unique_ptr<Window> Application::m_window = nullptr;
 
-
-    Application::Application() : m_clientLoop(nullptr) {
-        AY_ASSERT(m_application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
+    Application::Application() : m_ClientLoop(nullptr)
+    {
+        AY_ASSERT(m_Application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
 
         // Application //
         AY_TRACE("[Sholas] Application: Initializing Application");
-        m_application = this;
-
-        // Clock //
-        Time::Clock::Get();
+        m_Application = this;
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
-        m_window = std::unique_ptr<Window>(Window::createWindow());
-        m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1));
+        m_Window = std::unique_ptr<Window>(Window::createWindow());
+        m_Window->setEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
         // Layer Stack //
         AY_LOG("--- Application: Initializing Layer Stack ---");
-        m_layerStack = std::make_unique<LayerStack>();
+        m_LayerStack = std::make_unique<LayerStack>();
 
         // Layers //
-        AY_LOG("--- Application: Initializing Layers ---");
-        m_imGuiLayer = std::make_unique<GUI::ImGuiLayer>();
-        Input::InputState::init(); // initializes Input layer and InputState on first call
-        m_debugLayer = std::make_unique<Debug::DebugLayer>();
+        AY_LOG("--- Application: Initializing Layers ---"); // Order matters here. This will reflect the order of the layers in LayerStack.
+        m_ImGuiLayer = std::make_unique<GUI::ImGuiLayer>();
+        Input::InputState::init(); // Initializes Input layer on the first call.
+        m_DebugLayer = std::make_unique<Debug::DebugLayer>();
+
+        // Clock //
+        Time::Clock::Init();
     }
 
 
-    Application::~Application() {
+    Application::~Application()
+    {
         AY_TRACE("[Sholas] Application: Destroying Application");
-
-        delete m_clientLoop;
+        delete m_ClientLoop;
     };
 
-    void Application::Run() {
-        long long timeAccumulation = 0.0;
-        std::cout << "\n\nRunning Application!" << std::endl;
 
-        AY_ASSERT(m_clientLoop != nullptr, "[Sholas] Core/Application.cpp: ClientLoop is not set up!");
-        while (m_appIsRunning){
-            m_clientLoop->Update();
+    void Application::Run() const
+    {
+        long long timeAccumulation = 0.0;       // TEMP
+        AY_LOG("\n\nRunning Application!");
 
+        while (m_AppIsRunning){
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            Time::Clock::Get().UpdateDeltaTime();
-            timeAccumulation += Time::Clock::Get().GetDeltaTime();
+            Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the delta time.
+            timeAccumulation += Time::Clock::Get().GetDeltaTime();      // TEMP
 
-            m_layerStack->update();
+            // TODO: Provide the delta time to the update function
+            m_ClientLoop->Update(); // Phase 2  -> Calls the client's application update function.
 
-            m_imGuiLayer->begin();
-            m_layerStack->renderImGui();
-            m_imGuiLayer->end();
+            m_LayerStack->update(); // Phase 3  -> Calls the update function on all the layers in the engine.
 
-            m_window->update(); // Must be called last
+            m_ImGuiLayer->begin(); // Phase 4  -> Updates the ImGui UI for all the layers in the engine.
+            m_LayerStack->renderImGui();
+            m_ImGuiLayer->end();
+
+            m_Window->update(); // Phase 5  ->  Polls the events and swaps the buffer. Must be called last.
         }
 
-        std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";
-        std::cout << "Stopwatch: " << Time::Clock::Get().GetStopwatchTime() * .001 << " seconds\n";
+        std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";      // TEMP
+        std::cout << "Stopwatch: " << Time::Clock::Get().GetStopwatchTime() * .001 << " seconds\n";      // TEMP
         exit(EXIT_SUCCESS);
     }
 
 
-
-    void Application::onEvent(Event& event) {
-        if (event.getEventType() == WINDOW_CLOSE) { m_appIsRunning = false; return;}
-
-        m_layerStack->dispatchEventBackToFront(event);
-    }
-
-    Window& Application::getWindow(){ return *m_window;}
-    LayerStack& Application::getLayerStack(){return *m_layerStack;}
-
-    Application& Application::get() {
-        AY_ASSERT(m_application != nullptr, "[Sholas] Core/Application.cpp: Application must be initialized before using it!");
-        return *m_application;
-    }
-
-
-    void Application::setClientLoop(Client::ClientLoop* clientLoop) {
-        if (m_clientLoop == nullptr){
-            m_clientLoop = clientLoop;
+    void Application::OnEvent(Event& event) // TODO: Make the parameter const and the depending functions const.
+    {
+        if (event.getEventType() == WINDOW_CLOSE)
+        {
+            m_AppIsRunning = false;
+            return;
         }
+        // TODO: Change the naming of this method. Its confusing.
+        m_LayerStack->dispatchEventBackToFront(event);
+    }
+
+
+    Window& Application::GetWindow()
+    {
+        return *m_Window;
+    }
+
+
+    LayerStack& Application::GetLayerStack()
+    {
+        return *m_LayerStack;
+    }
+
+
+    Application& Application::Get()
+    {
+        AY_ASSERT(m_Application != nullptr, "[Sholas] Core/Application.cpp: Application must be initialized before using it!");
+        return *m_Application;
+    }
+
+
+    void Application::SetClientLoop(Client::ClientLoop* ClientLoop)
+    {
+        AY_ASSERT(m_ClientLoop == nullptr, "[Sholas] Core/Application.cpp: ClientLoop has already been initialized!");
+        m_ClientLoop = ClientLoop;
     }
 
 

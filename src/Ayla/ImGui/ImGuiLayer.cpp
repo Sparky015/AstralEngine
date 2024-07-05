@@ -39,7 +39,7 @@ namespace Ayla::GUI {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Windows::Window& appWindow = Core::Application::getWindow();
+        Windows::Window& appWindow = Core::Application::GetWindow();
         io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
         io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
 
@@ -56,7 +56,7 @@ namespace Ayla::GUI {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::getWindow().getNativeWindow()), true);
+        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::GetWindow().getNativeWindow()), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 

@@ -230,16 +230,13 @@ namespace Ayla::Windows {
         m_windowData.callback = callback;
     }
 
-    void GenericWindow::update() {
-
+    void GenericWindow::update()
+    {
         glfwPollEvents();
         glfwSwapBuffers(m_window);
 
         int display_w, display_h;
-        double mouse_w, mouse_h;
         glfwGetFramebufferSize(m_window, &display_w, &display_h);
-        glfwGetCursorPos(m_window, &mouse_w, &mouse_h);
-
         m_windowData.displayFramebufferScaleX = display_w > 0 ? ((float)display_w / (float)m_windowData.width) : 0;
         m_windowData.displayFramebufferScaleY = display_h > 0 ? ((float)display_h / (float)m_windowData.height) : 0;
     }

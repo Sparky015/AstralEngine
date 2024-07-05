@@ -4,8 +4,8 @@
 
 #include "UserSetup.h"
 
-namespace Ayla::Client {
-
+namespace Ayla::Client
+{
 
     ClientLoop::ClientLoop()
     {

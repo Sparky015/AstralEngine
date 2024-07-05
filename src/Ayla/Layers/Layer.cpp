@@ -20,7 +20,7 @@ namespace Ayla::Core::Layers {
 
     void Layer::attachLayer() {
         if (!m_isInitializedInTower){
-            Application::get().getLayerStack().appendLayer(this);
+            Application::Get().GetLayerStack().appendLayer(this);
             m_isInitializedInTower = true;
             onAttach();
             m_isEnabled = true;
@@ -30,7 +30,7 @@ namespace Ayla::Core::Layers {
     void Layer::attachOverlay() {
         if (!m_isInitializedInTower){
 
-            Application::get().getLayerStack().appendOverlay(this);
+            Application::Get().GetLayerStack().appendOverlay(this);
             m_isInitializedInTower = true;
             onAttach();
             m_isEnabled = true;
@@ -39,7 +39,7 @@ namespace Ayla::Core::Layers {
 
     void Layer::detachLayer() {
         if (m_isInitializedInTower) {
-            Application::get().getLayerStack().removeLayer(this);
+            Application::Get().GetLayerStack().removeLayer(this);
             m_isInitializedInTower = false;
             onDetach();
             m_isEnabled = false;
@@ -49,7 +49,7 @@ namespace Ayla::Core::Layers {
 
     void Layer::detachOverlay() {
         if (m_isInitializedInTower) {
-            Application::get().getLayerStack().removeOverlay(this);
+            Application::Get().GetLayerStack().removeOverlay(this);
             m_isInitializedInTower = false;
             onDetach();
             m_isEnabled = false;
