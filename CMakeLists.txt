@@ -45,17 +45,18 @@ add_library(Ayla STATIC
         src/Ayla/Events/EventDispatcher.cpp
         src/Ayla/aypch.cpp
         src/Ayla/Window/Platform/Generic/GenericWindow.cpp
-        src/Ayla/Layers/Layer.cpp
-        src/Ayla/Layers/LayerStack.cpp
+        src/Ayla/Core/Layers/Layer.cpp
+        src/Ayla/Core/Layers/LayerStack.cpp
         src/Ayla/ImGui/ImGuiLayer.cpp
         src/Ayla/Input/InputLayer.cpp
         src/Ayla/Input/InputState.cpp
         src/Ayla/Debug/DebugLayer.cpp
-        src/Ayla/Core/Time/Time.cpp
+        src/Ayla/Core/Time/Clock.cpp
         src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
         src/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
         src/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
         src/Ayla/Client/UserSetup.cpp
+        src/Ayla/Core/Time/FTimer.cpp
 )
 
 #       ### Ayla Includes ###

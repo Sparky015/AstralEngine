@@ -24,16 +24,16 @@ namespace Ayla::GUI {
 
     ImGuiLayer::ImGuiLayer() {
         AY_TRACE("[Sholas] ImGuiLayer: Initializing ImGui Layer");
-        this->attachLayer();
-        m_debugName = "ImGui Layer";
+        this->AttachLayer();
+        m_DebugName = "ImGui Layer";
     }
 
     ImGuiLayer::~ImGuiLayer() {
         AY_TRACE("[Sholas] ImGuiLayer: Destroying ImGui Layer");
-        this->detachLayer();
+        this->DetachLayer();
     }
 
-    void ImGuiLayer::onAttach() {
+    void ImGuiLayer::OnAttach() {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
@@ -60,17 +60,17 @@ namespace Ayla::GUI {
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 
-    void ImGuiLayer::onDetach() {
+    void ImGuiLayer::OnDetach() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
-    void ImGuiLayer::onUpdate() {
+    void ImGuiLayer::OnUpdate() {
 
     }
 
-    void ImGuiLayer::onImGuiRender() {
+    void ImGuiLayer::OnImGuiRender() {
         ImGuiIO& io = ImGui::GetIO();
         static bool show = true;
         static bool showStackTool = true;
@@ -138,12 +138,12 @@ namespace Ayla::GUI {
     }
 
 
-    EventCategory ImGuiLayer::getAcceptingEventFlags() {
+    EventCategory ImGuiLayer::GetAcceptingEventFlags() {
         return static_cast<EventCategory>(ApplicationCategory | InputCategory);
     }
 
 
-    void ImGuiLayer::onEvent(Event& event) {
+    void ImGuiLayer::OnEvent(Event& event) {
         ///AY_LOG("ImGui received an event!");
 
 //        ImGuiIO& io = ImGui::GetIO();

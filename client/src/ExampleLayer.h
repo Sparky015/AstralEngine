@@ -4,22 +4,22 @@
 
 #pragma once
 
-#include "Ayla/Layers/Layer.h"
+#include "Ayla/Core/Layers/Layer.h"
 
-using Ayla::Core::Layers::Layer;
+using Ayla::Core::Layers::ILayer;
 
-class ExampleLayer : public Layer
+class ExampleLayer : public ILayer
 {
 public:
     ExampleLayer();
     ~ExampleLayer() override;
 
-    void onAttach() override;
-    void onDetach() override;
-    void onUpdate() override;
-    void onImGuiRender() override;
-    void onEvent(Event&) override;
-    EventCategory getAcceptingEventFlags() override;
+    void OnAttach() override;
+    void OnDetach() override;
+    void OnUpdate() override;
+    void OnImGuiRender() override;
+    void OnEvent(Event&) override;
+    EventCategory GetAcceptingEventFlags() override;
 
 private:
 

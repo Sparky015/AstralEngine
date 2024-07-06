@@ -15,36 +15,36 @@ namespace Ayla::Input {
 
 
 
-    InputState::InputState() : m_inputLayer(InputLayer()) {
+    SInputState::SInputState() : m_inputLayer(InputLayer()) {
         AY_TRACE("[Sholas] InputState: Initializing Input State");
 
-        m_inputLayer.setCallback(std::bind(&InputState::onEvent, this, std::placeholders::_1));
+        m_inputLayer.SetCallback(std::bind(&SInputState::onEvent, this, std::placeholders::_1));
     }
 
-    InputState::~InputState() {
+    SInputState::~SInputState() {
         AY_TRACE("[Sholas] InputState: Destroying Input State");
         delete m_instance;
         m_instance = nullptr;
     }
 
-    InputState* InputState::m_instance = nullptr;
+    SInputState* SInputState::m_instance = nullptr;
 
-    void InputState::init() {
+    void SInputState::init() {
         AY_ASSERT(m_instance == nullptr, "Input/InputState.cpp: Input State has already been initialized!");
 
         AY_TRACE("[Sholas] InputState: Initializing Input State'");
-        m_instance = new InputState();
+        m_instance = new SInputState();
 
     }
 
-    InputState& InputState::get() {
+    SInputState& SInputState::get() {
         AY_ASSERT(m_instance != nullptr, "Input/InputState.cpp: Input State has not been initialized yet!");
 
         return *m_instance;
     }
 
 
-    void InputState::onEvent(Event& event) {
+    void SInputState::onEvent(Event& event) {
         AY_ASSERT(event.isInCategory(InputCategory), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
         //AY_TRACE("Input Received\t");
         if (event.isInCategory(KeyboardCategory)){
@@ -100,25 +100,25 @@ namespace Ayla::Input {
     }
 
 
-    double InputState::mousePositionX() const {
+    double SInputState::mousePositionX() const {
         return m_mouseCursorState.mouseXPosition;
     }
 
-    double InputState::mousePositionY() const {
+    double SInputState::mousePositionY() const {
         return m_mouseCursorState.mouseYPosition;
     }
 
 
 
-    bool InputState::isKeyDown(int keycode) const {
+    bool SInputState::isKeyDown(int keycode) const {
         return m_keyState[keycode].isDown;
     }
 
-    bool InputState::isKeyRepeating(int keycode) const {
+    bool SInputState::isKeyRepeating(int keycode) const {
         return m_keyState[keycode].isRepeating;
     }
 
-    std::string InputState::getKeyName(int keycode) const {
+    std::string SInputState::getKeyName(int keycode) const {
         return m_keyState[keycode].name;
     }
 

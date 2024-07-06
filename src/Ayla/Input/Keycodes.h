@@ -4,9 +4,11 @@
 
 #pragma once
 
-namespace Ayla::Input {
+namespace Ayla::Input::Keycodes
+{
 
-    enum KeyCodes {
+    enum Keycodes
+    {
         AY_KEY_LEFT_CLICK = 0,
         AY_KEY_MIDDLE_CLICK,
         AY_KEY_RIGHT_CLICK,
@@ -92,7 +94,5 @@ namespace Ayla::Input {
         AY_KEY_LEFT_SUPER,
         AY_KEY_RIGHT_SUPER,
     };
-
-
 
 }

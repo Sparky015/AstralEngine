@@ -124,7 +124,7 @@ namespace Ayla::Windows {
 
         glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
         {
-            using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
+            using Ayla::Input::Keycodes::Translation::translateGLFWKeycodesToAyla;
 
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             switch (action){
@@ -143,13 +143,12 @@ namespace Ayla::Windows {
                 default:
                     break;
             }
-            //windowData.callback(event);
         });
 
 
         glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {
-            using Ayla::Input::Translation::translateGLFWKeycodesToAyla;
+            using Ayla::Input::Keycodes::Translation::translateGLFWKeycodesToAyla;
 
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
             switch (action){

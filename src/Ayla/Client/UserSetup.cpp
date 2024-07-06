@@ -19,17 +19,17 @@ namespace Ayla::Client
     }
 
 
-    /** Init is not a pure virtual function so an error can occur if the client does not override the Init function */
+    /** Init is not a pure virtual function so we can throw an error if the client does not override the Init function */
     void ClientLoop::Init()
     {
-        AY_ERROR("[Ayla] Client.cpp: No Init function was set!");
+        AY_ERROR("[Ayla] Client.cpp: Init function was not defined or overridden!");
     }
 
 
-    /** Update is not a pure virtual function so an error can occur if the client does not override the Update function */
+    /** Update is not a pure virtual function so we can throw an error if the client does not override the Update function */
     void ClientLoop::Update()
     {
-        AY_ERROR("[Ayla] Client.cpp: No Update function was set!");
+        AY_ERROR("[Ayla] Client.cpp: Update function was not defined or overridden!");
     }
 
 }

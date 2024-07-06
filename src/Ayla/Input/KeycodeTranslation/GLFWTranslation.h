@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ayla::Input::Translation {
+namespace Ayla::Input::Keycodes::Translation {
 
     int translateGLFWKeycodesToAyla(int GLFWKeycode);
 

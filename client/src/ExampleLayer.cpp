@@ -10,37 +10,37 @@
 
 ExampleLayer::ExampleLayer(){
     AY_TRACE("ExampleLayer: Initializing Template Layer");
-    this->attachLayer();
-    m_debugName = "Template Layer";
+    this->AttachLayer();
+    m_DebugName = "Template Layer";
 }
 
 ExampleLayer::~ExampleLayer(){
-    this->detachLayer();
+    this->DetachLayer();
 }
 
-void ExampleLayer::onAttach() {
-    m_isEnabled = true;
+void ExampleLayer::OnAttach() {
+    m_IsEnabled = true;
 }
 
-void ExampleLayer::onDetach() {
-    m_isEnabled = false;
+void ExampleLayer::OnDetach() {
+    m_IsEnabled = false;
 }
 
-void ExampleLayer::onUpdate() {
+void ExampleLayer::OnUpdate() {
 
 }
 
-void ExampleLayer::onEvent(Event& event) {
+void ExampleLayer::OnEvent(Event& event) {
     // Do Stuff
     //event.setIsHandled(x);
 }
 
-EventCategory ExampleLayer::getAcceptingEventFlags() {
+EventCategory ExampleLayer::GetAcceptingEventFlags() {
     //return flag category
     return None;
 }
 
-void ExampleLayer::onImGuiRender() {
+void ExampleLayer::OnImGuiRender() {
     ImGui::Begin("Test Example!");
     ImGui::Text("Hi hihih!");
     ImGui::End();

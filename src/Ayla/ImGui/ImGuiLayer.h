@@ -3,26 +3,26 @@
 //
 #pragma once
 
-#include "Ayla/Layers/Layer.h"
+#include "Ayla/Core/Layers/Layer.h"
 
 using namespace Ayla::Events;
 using namespace Ayla::Core::Layers;
 
 namespace Ayla::GUI {
 
-    class ImGuiLayer : public Layer {
+    class ImGuiLayer : public ILayer {
     public:
         ImGuiLayer();
         ~ImGuiLayer() override;
 
-        void onAttach() override;
-        void onDetach() override;
-        void onUpdate() override;
-        void onImGuiRender() override;
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnUpdate() override;
+        void OnImGuiRender() override;
         static void begin();
         static void end();
-        void onEvent(Event&) override;
-        EventCategory getAcceptingEventFlags() override;
+        void OnEvent(Event&) override;
+        EventCategory GetAcceptingEventFlags() override;
 
     private:
         static float m_time;

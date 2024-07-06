@@ -9,38 +9,38 @@
 namespace Ayla::Input {
     InputLayer::InputLayer(){
         AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
-        this->attachLayer();
-        m_debugName = "Input Layer";
+        this->AttachLayer();
+        m_DebugName = "Input Layer";
     }
 
     InputLayer::~InputLayer(){
         AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
-        this->detachLayer();
+        this->DetachLayer();
     }
 
-    void InputLayer::onAttach() {
-        m_isEnabled = true;
+    void InputLayer::OnAttach() {
+        m_IsEnabled = true;
     }
 
-    void InputLayer::onDetach() {
-        m_isEnabled = false;
+    void InputLayer::OnDetach() {
+        m_IsEnabled = false;
     }
 
-    void InputLayer::onUpdate() {
+    void InputLayer::OnUpdate() {
 
     }
 
-    void InputLayer::onEvent(Event& event) {
+    void InputLayer::OnEvent(Event& event) {
         //AY_LOG("Input State received an event!");
-        m_callback(event);
+        m_Callback(event);
         //event.setIsHandled(false);
     }
 
-    EventCategory InputLayer::getAcceptingEventFlags() {
+    EventCategory InputLayer::GetAcceptingEventFlags() {
         return InputCategory;
     }
 
-    void InputLayer::onImGuiRender() {
+    void InputLayer::OnImGuiRender() {
 
     }
 

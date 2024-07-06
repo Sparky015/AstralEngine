@@ -3,46 +3,59 @@
 //
 
 #include "DebugLayer.h"
-#include "Ayla/Core/Application.h"
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Input/Keycodes.h"
-#include "Ayla/Core/Time/Time.h"
-
-using namespace Ayla::Input;
-
-namespace Ayla::Core::Debug {
+#include "Ayla/Core/Time/Clock.h"
 
 
 
-    DebugLayer::DebugLayer(){
+namespace Ayla::Core::Debug
+{
+
+    DebugLayer::DebugLayer()
+    {
         AY_TRACE("[Sholas] DebugLayer: Initializing Debug Layer");
-        this->attachLayer();
-        m_debugName = "Debug Layer";
+        this->AttachLayer();
+        m_DebugName = "Debug Layer";
     }
 
-    DebugLayer::~DebugLayer(){
+
+    DebugLayer::~DebugLayer()
+    {
         AY_TRACE("[Sholas] DebugLayer: Destroying Debug Layer");
-        this->detachLayer();
+        this->DetachLayer();
     }
 
-    void DebugLayer::onAttach() {
-        m_isEnabled = true;
+
+    void DebugLayer::OnAttach()
+    {
+        m_IsEnabled = true;
     }
 
-    void DebugLayer::onDetach() {
-        m_isEnabled = false;
+
+    void DebugLayer::OnDetach()
+    {
+        m_IsEnabled = false;
     }
 
-    void DebugLayer::onUpdate() {
+
+    void DebugLayer::OnUpdate()
+    {
+        using namespace Ayla::Input::Keycodes;
+
         static long long accumulatedTime;
         accumulatedTime += Time::Clock::Get().GetDeltaTime();
-        if (InputState::get().isKeyDown(AY_KEY_T) && !InputState::get().isKeyRepeating(AY_KEY_T)){
+
+        Input::SInputState& inputState = Input::SInputState::get();
+        if (inputState.isKeyDown(AY_KEY_T) && !inputState.isKeyRepeating(AY_KEY_T))
+        {
             if (accumulatedTime <= 75){return;}
             accumulatedTime = 0;
             AY_TRACE("T is pressed down.");
-            std::cout << "\n" << InputState::get().mousePositionX() << " by " << InputState::get().mousePositionY();
+            std::cout << "\n" << inputState.mousePositionX() << " by " << inputState.mousePositionY();
         }
-        if (InputState::get().isKeyDown(AY_KEY_R) && !InputState::get().isKeyRepeating(AY_KEY_R)){
+        if (inputState.isKeyDown(AY_KEY_R) && !inputState.isKeyRepeating(AY_KEY_R))
+        {
             if (accumulatedTime <= 300){return;}
             accumulatedTime = 0;
             AY_TRACE("Resetting stopwatch.");
@@ -50,16 +63,22 @@ namespace Ayla::Core::Debug {
         }
     }
 
-    void DebugLayer::onEvent(Event& event) {
+
+    void DebugLayer::OnEvent(Event& event)
+    {
         // Not accepting events
     }
 
-    EventCategory DebugLayer::getAcceptingEventFlags() {
+
+    EventCategory DebugLayer::GetAcceptingEventFlags()
+    {
         return None;
     }
 
-    void DebugLayer::onImGuiRender() {
 
+    void DebugLayer::OnImGuiRender()
+    {
+        // TODO: Make a debug window based on the keys pressed
     }
 
 }

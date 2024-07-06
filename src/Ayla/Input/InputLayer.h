@@ -4,24 +4,24 @@
 #pragma once
 
 
-#include "Ayla/Layers/Layer.h"
+#include "Ayla/Core/Layers/Layer.h"
 
 using namespace Ayla::Events;
 using namespace Ayla::Core::Layers;
 
 namespace Ayla::Input {
 
-    class InputLayer : public Layer {
+    class InputLayer : public ILayer {
     public:
         InputLayer();
         ~InputLayer() override;
 
-        void onAttach() override;
-        void onDetach() override;
-        void onUpdate() override;
-        void onImGuiRender() override;
-        void onEvent(Event&) override;
-        EventCategory getAcceptingEventFlags() override;
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnUpdate() override;
+        void OnImGuiRender() override;
+        void OnEvent(Event&) override;
+        EventCategory GetAcceptingEventFlags() override;
 
     private:
 

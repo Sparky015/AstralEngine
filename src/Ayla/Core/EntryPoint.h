@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     Engine->Run();
 
     delete Engine;
-    return 0;
 
+    exit(EXIT_SUCCESS);
 }
 

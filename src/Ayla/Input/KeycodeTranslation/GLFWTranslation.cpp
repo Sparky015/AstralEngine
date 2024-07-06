@@ -10,7 +10,7 @@
 
 #include "Ayla/Input/Keycodes.h"
 
-namespace Ayla::Input::Translation {
+namespace Ayla::Input::Keycodes::Translation {
 
 
     std::unordered_map<int, int> keys = {

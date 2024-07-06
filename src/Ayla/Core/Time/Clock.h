@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include "TimeLiterals.h"
+#include "FTimer.h"
+
 namespace Ayla::Core::Time
 {
-
     /**
      * Provides delta time as well as a stopwatch for a way to measure how much time has passed between things or events.
      * @note Clock is a singleton, so there is only one clock that is engine-wide.
@@ -15,21 +17,26 @@ namespace Ayla::Core::Time
     {
     public:
 
-        /** Shorthands to use because chrono is so verbose */
-        using TimeStamp = std::chrono::time_point<std::chrono::high_resolution_clock>;
-        using TimeDuration = std::chrono::duration<float>;
-
         /** Gives access to the Clock singleton. */
         static void Init();
 
         /** Gives access to the Clock singleton. */
         static Clock& Get();
 
+        /** Retrieves the current time stamp */
+        TimeStamp GetCurrentTimeStamp() const;
+
         /**
          * Calculates the delta time value.
          * @note Needs to be called every frame.
          */
         void UpdateDeltaTime();
+
+        /**
+         * Checks the timers to see if any have elapsed.
+         * @note May need to be called more than once a frame to keep the timers precise
+         */
+        void CheckTimers();
 
         /** Returns the delta time. */
         [[nodiscard]] long long GetDeltaTime() const;
@@ -40,6 +47,8 @@ namespace Ayla::Core::Time
         /** Resets the stopwatch. */
         void ResetStopwatch();
 
+        /** Adds a timer that has a callback for tracking time across function calls */
+        void AddTimer(float amountOfTime, const std::function<void()>& callback);
 
         Clock(const Clock&) = delete;
         Clock& operator=(const Clock&) = delete;
@@ -53,6 +62,7 @@ namespace Ayla::Core::Time
         TimeDuration m_DeltaTime;
         TimeStamp m_PreviousTimeStamp;
         TimeStamp m_ClockStartingTimeStamp;
+        std::vector<FTimer> m_Timers;
     };
 
 }

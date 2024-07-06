@@ -3,18 +3,13 @@
 //
 
 #include "Ayla/Core/Application.h"
-#include "Ayla/aypch.h"
-
-#include "Ayla/Layers/LayerStack.h"
+#include "Ayla/Core/Time/Clock.h"
+#include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Debug/DebugLayer.h"
 
-#include "Ayla/Core/Time/Time.h"
-
-#include "glad/glad.h"
-
-
+#include "glad/glad.h" // TEMP
 
 namespace Ayla::Core
 {
@@ -43,7 +38,7 @@ namespace Ayla::Core
         // Layers //
         AY_LOG("--- Application: Initializing Layers ---"); // Order matters here. This will reflect the order of the layers in LayerStack.
         m_ImGuiLayer = std::make_unique<GUI::ImGuiLayer>();
-        Input::InputState::init(); // Initializes Input layer on the first call.
+        Input::SInputState::init(); // Initializes Input layer on the first call.
         m_DebugLayer = std::make_unique<Debug::DebugLayer>();
 
         // Clock //
@@ -67,7 +62,8 @@ namespace Ayla::Core
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the delta time.
+            Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
+            Time::Clock::Get().CheckTimers();
             timeAccumulation += Time::Clock::Get().GetDeltaTime();      // TEMP
 
             // TODO: Provide the delta time to the update function
@@ -79,12 +75,11 @@ namespace Ayla::Core
             m_LayerStack->renderImGui();
             m_ImGuiLayer->end();
 
-            m_Window->update(); // Phase 5  ->  Polls the events and swaps the buffer. Must be called last.
+            m_Window->update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
         }
 
         std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";      // TEMP
         std::cout << "Stopwatch: " << Time::Clock::Get().GetStopwatchTime() * .001 << " seconds\n";      // TEMP
-        exit(EXIT_SUCCESS);
     }
 
 

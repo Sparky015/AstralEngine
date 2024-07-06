@@ -9,19 +9,19 @@
 
 namespace Ayla::Input {
 
-
-    class InputState {
+// TODO: Make some delegates for when keys are pressed. Also make an event delegate class to easily to this.
+    class SInputState {
     public:
         static void init();
-        static InputState& get();
+        static SInputState& get();
 
         void onEvent(Event&);
 
 
-        InputState(const InputState&) = delete;
-        InputState& operator=(const InputState&) = delete;
-        InputState(InputState&&) = delete;
-        InputState& operator=(InputState&&) = delete;
+        SInputState(const SInputState&) = delete;
+        SInputState& operator=(const SInputState&) = delete;
+        SInputState(SInputState&&) = delete;
+        SInputState& operator=(SInputState&&) = delete;
 
         struct KeyState {
             bool isDown;
@@ -45,9 +45,9 @@ namespace Ayla::Input {
         [[nodiscard]] double mousePositionY() const;
 
     private:
-        static InputState* m_instance;
-        InputState();
-        ~InputState();
+        static SInputState* m_instance;
+        SInputState();
+        ~SInputState();
 
 
         static const int m_NUMBER_OF_KEYS = 79;

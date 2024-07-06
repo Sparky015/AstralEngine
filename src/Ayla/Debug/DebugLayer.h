@@ -3,23 +3,37 @@
 //
 #pragma once
 
-#include "Ayla/Layers/Layer.h"
+#include "Ayla/Core/Layers/Layer.h"
 
 using namespace Ayla::Core::Layers;
 
-namespace Ayla::Core::Debug {
+namespace Ayla::Core::Debug
+{
 
-    class DebugLayer : public Layer {
+    /** Provides a way to debug the engine by pulling information into a window or the console for viewing. */
+    class DebugLayer : public ILayer
+    {
     public:
         DebugLayer();
         ~DebugLayer() override;
 
-        void onAttach() override;
-        void onDetach() override;
-        void onUpdate() override;
-        void onImGuiRender() override;
-        void onEvent(Event&) override;
-        EventCategory getAcceptingEventFlags() override;
+        /** Enables the layer */
+        void OnAttach() override;
+
+        /** Disables the layer */
+        void OnDetach() override;
+
+        /** Checks if keys are pressed, so we know when to show debugging info */
+        void OnUpdate() override;
+
+        /** A space to create the ImGui windows to show debugging info. */
+        void OnImGuiRender() override;
+
+        /** The Debug Layer does not accept or handle any events. */
+        void OnEvent(Event& event) override;
+
+        /** The Debug Layer does not accept events. */
+        EventCategory GetAcceptingEventFlags() override;
 
     private:
 

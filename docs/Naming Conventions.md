@@ -3,10 +3,11 @@
 
 
 ### Variables
-(Pascal Case)
-The first letter of each word in a name (such as type name or variable name) is capitalized, and there is usually no 
-underscore between words. For example, Health and UPrimitiveComponent are correct, but not lastMouseCoordinates or 
-delta_coordinates.
+For local varibles, use camelCase.
+For parameters, use camelCase. 
+For global variables in the global namespace (shouldn't be doing this though), use g_ and PascalCase.
+Public member variables of classes and structs use CamelCase.
+Private member variables of classes and structs prefix with m_ and use CamelCase.
 ###
 
 ### Constants
@@ -88,12 +89,9 @@ callers, should be commented within the method implementation.
 ## Other Rules and Stuff
 
 Template classes are prefixed by T.
-
 Classes that are abstract interfaces are prefixed by I.
-
 Enums are prefixed by E.
-
-Boolean variables must be prefixed by b (for example, bPendingDestruction , or bHasFadedIn ).
+Singletons are prefixed by S.
 
 Most other classes are prefixed by F, though some subsystems use other letters.
 

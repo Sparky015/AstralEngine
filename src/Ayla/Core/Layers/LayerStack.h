@@ -6,21 +6,23 @@
 #include "Layer.h"
 #include "Ayla/Events/Event.h"
 
-namespace Ayla::Core::Layers {
+namespace Ayla::Core::Layers
+{
 
 
-    class LayerStack {
+    class LayerStack
+    {
     public:
         LayerStack();
         ~LayerStack();
 
-        void appendLayer(Layer *);
-        void insertLayer(Layer *, int);
-        void removeLayer(Layer *);
+        void appendLayer(ILayer* layer);
+        void insertLayer(ILayer*, int position);
+        void removeLayer(ILayer* layer);
 
-        void appendOverlay(Layer *);
-        void insertOverlay(Layer *, int);
-        void removeOverlay(Layer *);
+        void appendOverlay(ILayer* layer);
+        void insertOverlay(ILayer* layer, int position);
+        void removeOverlay(ILayer* layer);
 
         void dispatchEventFromFrontToBack(Event& event);
         void dispatchEventBackToFront(Event& event);
@@ -37,10 +39,10 @@ namespace Ayla::Core::Layers {
     private:
 
         /// Vector holding pointers to the layers
-        std::vector<Layer *> m_layers;
+        std::vector<ILayer *> m_layers;
 
         /// Vector holding pointers to the overlay layers
-        std::vector<Layer *> m_overlayLayers;
+        std::vector<ILayer *> m_overlayLayers;
     };
 
 } // Ayla
