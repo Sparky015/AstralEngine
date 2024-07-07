@@ -71,9 +71,9 @@ namespace Ayla::Core
 
             m_LayerStack->Update(); // Phase 3  -> Calls the update function on all the layers in the engine.
 
-            m_ImGuiLayer->begin(); // Phase 4  -> Updates the ImGui UI for all the layers in the engine.
+            m_ImGuiLayer->Begin(); // Phase 4  -> Updates the ImGui UI for all the layers in the engine.
             m_LayerStack->RenderImGui();
-            m_ImGuiLayer->end();
+            m_ImGuiLayer->End();
 
             m_Window->update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
         }

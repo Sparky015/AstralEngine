@@ -20,20 +20,26 @@
 using namespace Ayla::Input;
 
 namespace Ayla::GUI {
+
     float ImGuiLayer::m_time = 0.0f;
 
-    ImGuiLayer::ImGuiLayer() {
+    ImGuiLayer::ImGuiLayer()
+    {
         AY_TRACE("[Sholas] ImGuiLayer: Initializing ImGui Layer");
         this->AttachLayer();
         m_DebugName = "ImGui Layer";
     }
 
-    ImGuiLayer::~ImGuiLayer() {
+
+    ImGuiLayer::~ImGuiLayer()
+    {
         AY_TRACE("[Sholas] ImGuiLayer: Destroying ImGui Layer");
         this->DetachLayer();
     }
 
-    void ImGuiLayer::OnAttach() {
+
+    void ImGuiLayer::OnAttach()
+    {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
@@ -60,17 +66,23 @@ namespace Ayla::GUI {
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 
-    void ImGuiLayer::OnDetach() {
+
+    void ImGuiLayer::OnDetach()
+    {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
-    void ImGuiLayer::OnUpdate() {
+
+    void ImGuiLayer::OnUpdate()
+    {
 
     }
 
-    void ImGuiLayer::OnImGuiRender() {
+
+    void ImGuiLayer::OnImGuiRender()
+    {
         ImGuiIO& io = ImGui::GetIO();
         static bool show = true;
         static bool showStackTool = true;
@@ -111,7 +123,9 @@ namespace Ayla::GUI {
         }
     }
 
-    void ImGuiLayer::begin() {
+
+    void ImGuiLayer::Begin()
+    {
         ImGuiIO& io = ImGui::GetIO();
         float time = (float)glfwGetTime();
         io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
@@ -122,28 +136,32 @@ namespace Ayla::GUI {
         ImGui::NewFrame();
     }
 
-    void ImGuiLayer::end() {
+
+    void ImGuiLayer::End()
+    {
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
+            glfwMakeContextCurrent(backupCurrentContext);
 
         }
     }
 
 
-    EEventCategory ImGuiLayer::GetAcceptingEventFlags() {
+    EEventCategory ImGuiLayer::GetAcceptingEventFlags()
+    {
         return static_cast<EEventCategory>(APPLICATION_CATEGORY | INPUT_CATEGORY);
     }
 
 
-    void ImGuiLayer::OnEvent(IEvent& event) {
+    void ImGuiLayer::OnEvent(IEvent& event)
+    {
         ///AY_LOG("ImGui received an event!");
 
 //        ImGuiIO& io = ImGui::GetIO();
@@ -233,7 +251,10 @@ namespace Ayla::GUI {
 //        }
 //
 //
-        if (event.IsInCategory(APPLICATION_CATEGORY)) { event.SetIsHandled(true);}
+        if (event.IsInCategory(APPLICATION_CATEGORY))
+        {
+            event.SetIsHandled(true);
+        }
     }
 
 

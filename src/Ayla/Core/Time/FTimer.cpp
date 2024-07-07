@@ -6,8 +6,7 @@
 #include <utility>
 #include "Clock.h"
 
-namespace Ayla::Core::Time
-{
+namespace Ayla::Core::Time {
     int FTimer::TimerIDTracker = 0;
 
     FTimer::FTimer(float amountOfTime, std::function<void()> callback) :
@@ -17,13 +16,16 @@ namespace Ayla::Core::Time
         m_TimerID(++TimerIDTracker)
     {}
 
-    bool FTimer::operator==(const FTimer& other) const noexcept{
+    bool FTimer::operator==(const FTimer& other) const noexcept
+    {
         return m_TimerID == other.GetTimerId();
     }
 
-    int FTimer::GetTimerId() const {
+    int FTimer::GetTimerId() const
+    {
         return m_TimerID;
     }
+
 }
 
 

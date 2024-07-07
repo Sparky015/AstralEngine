@@ -19,8 +19,8 @@ namespace Ayla::GUI {
         void OnDetach() override;
         void OnUpdate() override;
         void OnImGuiRender() override;
-        static void begin();
-        static void end();
+        static void Begin();
+        static void End();
         void OnEvent(IEvent&) override;
         EEventCategory GetAcceptingEventFlags() override;
 

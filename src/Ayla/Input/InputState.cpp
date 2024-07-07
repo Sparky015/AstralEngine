@@ -9,88 +9,96 @@
 #include "Ayla/Input/Keycodes.h"
 
 
-using namespace Ayla::Events;
+
 
 namespace Ayla::Input {
-
-
-
-    SInputState::SInputState() : m_InputLayer(InputLayer()) {
-        AY_TRACE("[Sholas] InputState: Initializing Input State");
-
-        m_InputLayer.SetCallback(std::bind(&SInputState::OnEvent, this, std::placeholders::_1));
-    }
-
-    SInputState::~SInputState() {
-        AY_TRACE("[Sholas] InputState: Destroying Input State");
-        delete m_Instance;
-        m_Instance = nullptr;
-    }
+    using namespace Ayla::Events;
 
     SInputState* SInputState::m_Instance = nullptr;
 
-    void SInputState::Init() {
+    SInputState::SInputState()
+    {
+        AY_TRACE("[Sholas] InputState: Initializing Input State");
+        m_InputLayer.SetCallback(std::bind(&SInputState::OnEvent, this, std::placeholders::_1));
+    }
+
+
+    SInputState::~SInputState()
+    {
+        AY_TRACE("[Sholas] InputState: Destroying Input State");
+        //delete m_Instance;
+        m_Instance = nullptr;
+    }
+
+
+    void SInputState::Init()
+    {
         AY_ASSERT(m_Instance == nullptr, "Input/InputState.cpp: Input State has already been initialized!");
 
         AY_TRACE("[Sholas] InputState: Initializing Input State'");
         m_Instance = new SInputState();
-
     }
 
-    SInputState& SInputState::Get() {
-        AY_ASSERT(m_Instance != nullptr, "Input/InputState.cpp: Input State has not been initialized yet!");
 
+    SInputState& SInputState::Get()
+    {
+        AY_ASSERT(m_Instance != nullptr, "Input/InputState.cpp: Input State has not been initialized yet!");
         return *m_Instance;
     }
 
 
-    void SInputState::OnEvent(IEvent&) {
+    void SInputState::OnEvent(IEvent& event)
+    {
         AY_ASSERT(event.IsInCategory(INPUT_CATEGORY), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
         //AY_TRACE("Input Received\t");
-        if (event.IsInCategory(KEYBOARD_CATEGORY)){
-            if (event.GetEventType() == KEY_PRESSED){
+        if (event.IsInCategory(KEYBOARD_CATEGORY))
+        {
+            if (event.GetEventType() == KEY_PRESSED)
+            {
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
                 m_KeyState[keyPressedEvent.GetKeycode()].IsDown = true;
+
                 //std::cout << keyPressedEvent.GetKeycode();.
             }
-
-            if (event.GetEventType() == KEY_RELEASED){
+            if (event.GetEventType() == KEY_RELEASED)
+            {
                 auto keyReleasedEvent = dynamic_cast<KeyReleasedEvent&>(event);
                 m_KeyState[keyReleasedEvent.GetKeycode()].IsDown = false;
                 m_KeyState[keyReleasedEvent.GetKeycode()].IsRepeating = false;
                 //std::cout << keyReleasedEvent.GetKeycode();
             }
-
-            if (event.GetEventType() == KEY_PRESSED_REPEATING){
+            if (event.GetEventType() == KEY_PRESSED_REPEATING)
+            {
                 auto keyPressedRepeatingEvent = dynamic_cast<KeyPressedRepeatingEvent&>(event);
                 m_KeyState[keyPressedRepeatingEvent.GetKeycode()].IsRepeating = true;
                 //std::cout << keyPressedRepeatingEvent.GetKeycode();
             }
-
         }
 
-        if (event.IsInCategory(MOUSE_CATEGORY)) {
-            if (event.GetEventType() == MOUSE_BUTTON_PRESSED) {
+        if (event.IsInCategory(MOUSE_CATEGORY))
+        {
+            if (event.GetEventType() == MOUSE_BUTTON_PRESSED)
+            {
                 auto mouseButtonPressedEvent = dynamic_cast<MouseButtonPressEvent&>(event);
                 m_KeyState[mouseButtonPressedEvent.GetButton()].IsDown = true;
                 //std::cout << mouseButtonPressedEvent.GetButton();
             }
-
-            if (event.GetEventType() == MOUSE_BUTTON_RELEASED) {
+            if (event.GetEventType() == MOUSE_BUTTON_RELEASED)
+            {
                 auto mouseButtonReleasedEvent = dynamic_cast<MouseButtonReleaseEvent&>(event);
                 m_KeyState[mouseButtonReleasedEvent.GetButton()].IsDown = false;
                 m_KeyState[mouseButtonReleasedEvent.GetButton()].IsRepeating = false;
                 //std::cout << mouseButtonReleasedEvent.GetButton();
             }
-
-            if (event.GetEventType() == MOUSE_CURSOR_MOVED) {
+            if (event.GetEventType() == MOUSE_CURSOR_MOVED)
+            {
                 auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
                 m_MouseCursorState.MouseXPosition = mouseMovedEvent.GetXPos();
                 m_MouseCursorState.MouseYPosition = mouseMovedEvent.GetYPos();
                 //std::cout << mouseMovedEvent.GetXPos() << ", " << mouseMovedEvent.GetYPos();
             }
-
-            if (event.GetEventType() == MOUSE_SCROLLED) {
+            if (event.GetEventType() == MOUSE_SCROLLED)
+            {
                 auto mouseScrolledEvent = dynamic_cast<MouseScrollEvent&>(event);
                 //std::cout << mouseScrolledEvent.getXOffset() << ", " << mouseScrolledEvent.getYOffset();
             }
@@ -100,29 +108,35 @@ namespace Ayla::Input {
     }
 
 
-    double SInputState::MousePositionX() const {
+    double SInputState::MousePositionX() const
+    {
         return m_MouseCursorState.MouseXPosition;
     }
 
-    double SInputState::MousePositionY() const {
+
+    double SInputState::MousePositionY() const
+    {
         return m_MouseCursorState.MouseYPosition;
     }
 
 
-
-    bool SInputState::IsKeyDown(int keycode) const {
+    bool SInputState::IsKeyDown(int keycode) const
+    {
         return m_KeyState[keycode].IsDown;
     }
 
-    bool SInputState::IsKeyRepeating(int keycode) const {
+
+    bool SInputState::IsKeyRepeating(int keycode) const
+    {
         return m_KeyState[keycode].IsRepeating;
     }
 
-    std::string SInputState::GetKeyName(int keycode) const {
+
+    std::string SInputState::GetKeyName(int keycode) const
+    {
         return m_KeyState[keycode].Name;
     }
 
-
-}
+} // namespace Ayla::Input
 
 

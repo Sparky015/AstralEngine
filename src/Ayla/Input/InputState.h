@@ -12,40 +12,53 @@ namespace Ayla::Input {
 // TODO: Make some delegates for when keys are pressed. Also make an event delegate class to easily to this.
     class SInputState {
     public:
+
+        /**  */
         static void Init();
+
+        /**  */
         static SInputState& Get();
 
+        /**  */
         void OnEvent(IEvent&);
-
 
         SInputState(const SInputState&) = delete;
         SInputState& operator=(const SInputState&) = delete;
         SInputState(SInputState&&) = delete;
         SInputState& operator=(SInputState&&) = delete;
 
-        struct KeyState {
+        /**  */
+        struct KeyState
+        {
         public:
             KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
             explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
-        private:
+
             bool IsDown;
             bool IsRepeating;
             std::string Name;
         };
 
-        struct MouseCursorState {
+        /**  */
+        struct MouseCursorState
+        {
             double MouseXPosition;
             double MouseYPosition;
         };
 
+        /**  */
         [[nodiscard]] bool IsKeyDown(int keycode) const;
 
+        /**  */
         [[nodiscard]] bool IsKeyRepeating(int keycode) const;
 
+        /**  */
         [[nodiscard]] std::string GetKeyName(int keycode) const;
 
+        /**  */
         [[nodiscard]] double MousePositionX() const;
 
+        /**  */
         [[nodiscard]] double MousePositionY() const;
 
     private:
@@ -57,7 +70,7 @@ namespace Ayla::Input {
         static const int m_NUMBER_OF_KEYS = 79;
 
         // The indices all match the key codes (so if you change the key codes, change this)
-        std::array<KeyState, m_NUMBER_OF_KEYS> m_KeyStates = { // Could potentially make this multiple arrays (one array for each field)
+        std::array<KeyState, m_NUMBER_OF_KEYS> m_KeyState = { // Could potentially make this multiple arrays (one array for each field)
                 KeyState("LEFT CLICK"),
                 KeyState("MIDDLE CLICK"),
                 KeyState("RIGHT CLICK"),
