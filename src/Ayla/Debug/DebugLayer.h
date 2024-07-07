@@ -30,7 +30,7 @@ namespace Ayla::Core::Debug
         void OnImGuiRender() override;
 
         /** The Debug Layer does not accept or handle any events. */
-        void OnEvent(Event& event) override;
+        void OnEvent(IEvent& event) override;
 
         /** The Debug Layer does not accept events. */
         EventCategory GetAcceptingEventFlags() override;

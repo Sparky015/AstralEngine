@@ -20,7 +20,7 @@ namespace Ayla::Input {
         void OnDetach() override;
         void OnUpdate() override;
         void OnImGuiRender() override;
-        void OnEvent(Event&) override;
+        void OnEvent(IEvent&) override;
         EventCategory GetAcceptingEventFlags() override;
 
     private:

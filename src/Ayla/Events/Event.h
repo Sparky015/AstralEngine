@@ -10,52 +10,52 @@ namespace Ayla::Events {
 
     enum EventTypes {
         NONE,
-        WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_GAINED_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED,
+        WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_GAINED_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED, // Wanted by:  ImGui (Final handle)
         APP_TICK, APP_UPDATE, APP_RENDER,
-        KEY_PRESSED, KEY_RELEASED, KEY_PRESSED_REPEATING, KEY_TYPED,
-        MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_SCROLLED, MOUSE_CURSOR_MOVED
+        KEY_PRESSED, KEY_RELEASED, KEY_PRESSED_REPEATING, KEY_TYPED, // Wanted by:  ImGui, Input State (Final handle)
+        MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_SCROLLED, MOUSE_CURSOR_MOVED // Wanted by:  ImGui, Input State (Final handle)
     };
 
 
     enum EventCategory {
         None,
-        ApplicationCategory = 1 << 0,
-        InputCategory = 1 << 1,
-        KeyboardCategory = 1 << 2,
-        MouseCategory = 1 << 3, // <3
-        MouseButtonCategory = 1 << 4,
+        ApplicationCategory = 1 << 0, // Wanted by: ImGui (Final handle)
+        InputCategory = 1 << 1,  // Wanted by:  ImGui, Input State (Final handle)
+        KeyboardCategory = 1 << 2,  // Wanted by:  ImGui, Input State (Final handle)
+        MouseCategory = 1 << 3,     // Wanted by:  ImGui, Input State (Final handle)
+        MouseButtonCategory = 1 << 4,   // Wanted by:  ImGui, Input State (Final handle)
     };
 
 
-    class Event {
+    class IEvent {
     public:
+        IEvent() = default;
+        virtual ~IEvent() = default;
 
-        virtual ~Event() = default;
-        virtual int getEventCategoryFlags();
-        virtual int getEventType();
+        /** Retrieves the category of the event for event filtering during the dispatch of events. */
+        [[nodiscard]] virtual int getEventCategoryFlags() const = 0;
 
-        // Evaluates true if one of the flags match
-        bool isInCategory(EventCategory category) {
-            return getEventCategoryFlags() & category;
-        }
+        /** Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. */
+        [[nodiscard]] virtual int getEventType() const = 0;
 
-        bool isInBothCategories(EventCategory category1, EventCategory category2){
-            return (getEventCategoryFlags() & category1) && (getEventCategoryFlags() & category2);
-        }
+        /** Checks to see if a given category matches ANY of an event's category flags in order to filter out events. */
+        [[nodiscard]] bool isInCategory(const EventCategory category) const;
 
-        // Evaluates true if all flags match
-        bool hasExactCategoryMatch(EventCategory category){
-            return (getEventCategoryFlags() & category) == category;
-        }
+        /** Checks to see if an event matches both given categories to filter out events. */
+        [[nodiscard]] bool isInBothCategories(const EventCategory category1, const EventCategory category2) const;
 
-        void setIsHandled(bool isHandled);
-        bool isHandled();
+        /** Checks to see if a given category matches the exact composition of an event's category flags in order to filter out events. */
+        [[nodiscard]] bool hasExactCategoryMatch(const EventCategory category) const;
+
+        /** Sets an event as handled in order to mark that it does not need to be propagated any more in the Layer Stack. */
+        void setIsHandled(const bool isHandled);
+
+        /** Checks to see if an event is handled, so the Layer Stack knows when to stop propagating the event. */
+        [[nodiscard]] bool isHandled() const;
 
     protected:
         bool m_isHandled = false;
     };
-
-    int PollEvent(Event &event);
 
 }
 

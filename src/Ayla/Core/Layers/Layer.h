@@ -4,69 +4,76 @@
 
 #pragma once
 #include "Ayla/Events/Event.h"
+#include "Ayla/Events/EventDispatcher.h"
 
-using namespace Ayla::Events;
+
 
 namespace Ayla::Core::Layers
 {
-
+    using namespace Ayla::Events;
+    /**
+     * Allows systems a way to receive and send data to each other through events without explicitly linking to each other.
+     * @note Systems own the layer that they operate.
+     */
     class ILayer
     {
     public:
         ILayer();
         virtual ~ILayer();
 
-        /**  */
+        /** Executes the function code when a layer is added (attached) to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
         virtual void OnAttach() = 0;
 
-        /**  */
+        /** Executes the function code when a layer is removed (detached) from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
         virtual void OnDetach() = 0;
 
-        /**  */
+        /** Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. */
         virtual void OnUpdate() = 0;
 
-        /**  */
+        /** Allows a system to interact with and create ImGui windows. */
         virtual void OnImGuiRender() = 0;
 
-        /**  */
-        virtual void OnEvent(Event& event) = 0;
+        /** Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. */
+        virtual void OnEvent(IEvent& event) = 0;
 
-        /**  */
+        /** Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. */
         virtual EventCategory GetAcceptingEventFlags() = 0;
 
-        /**  */
-        void AttachLayer();
+        /** Allows a system to send events to the Layer Stack to be sent to other systems. */
+        //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const;
 
-        /**  */
+        /** Adds the layer as a layer to the Layer Stack. */
+        void AttachLayer();
+        // TODO: Fix this layer/overlay mumbo jumbo
+        /** Adds the layer as an overlay to the Layer Stack */
         void AttachOverlay();
 
-        /**  */
+        /** Removes the layer as a layer from the Layer Stack. */
         void DetachLayer();
 
-        /**  */
+        /** Removes the layer as a overlay from the Layer Stack. */
         void DetachOverlay();
 
-        /**  */
-        void SetCallback(std::function<void(Event&)> callback);
+        /** Allows a system to set a callback from the layer in order for systems to be able to react to events. */
+        void SetCallback(std::function<void(IEvent &)> callback);
 
-        /**  */
-        bool IsEnabled();
+        /** Allows for a check to see if the layer is enabled */
+        [[nodiscard]] bool IsEnabled() const;
 
-        /**  */
+        /** Enables the layer in the Layer Stack (it will start receiving events and calls to the Update function) */
         void Enable();
 
-        /**  */
+        /** Disables the layer in the Layer Stack (it will stop receiving events and calls to the Update function) */
         void Disable();
 
     protected:
 
         bool m_IsEnabled;
         bool m_IsInitializedInTower;
-        std::function<void(Event & )> m_Callback = [](Event&){};
+        std::function<void(IEvent & )> m_Callback = [](IEvent&){};
 
         // For debugging purposes
         std::string m_DebugName;
-
     };
 
-}
+} // namespace Ayla::Core::Layers

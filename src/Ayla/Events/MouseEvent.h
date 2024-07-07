@@ -11,7 +11,7 @@ namespace Ayla::Events {
  * @brief Abstract class that represents a mouse button event.
  * @details This class is derived from the Events class.
  */
-    class MouseButtonEvent : public Event {
+    class MouseButtonEvent : public IEvent {
     public:
         /**
          * @brief Gets the event category flags for a mouse button event.
@@ -106,7 +106,7 @@ namespace Ayla::Events {
  * @brief Class that represents a mouse scroll event.
  * @details This class is derived from the Events class.
  */
-    class MouseScrollEvent : public Event {
+    class MouseScrollEvent : public IEvent {
     public:
         /**
          * @brief Constructs a new MouseScrollEvent.
@@ -153,7 +153,7 @@ namespace Ayla::Events {
  * @brief Class that represents a mouse move event.
  * @details This class is derived from the Events class.
  */
-    class MouseMovedEvent : public Event {
+    class MouseMovedEvent : public IEvent {
     public:
         /**
          * @brief Constructs a new MouseMovedEvent.

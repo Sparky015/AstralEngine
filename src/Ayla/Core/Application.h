@@ -27,7 +27,7 @@ namespace Ayla::Core
         void Run() const;
 
         /** Passes events to the LayerStack. */
-        void OnEvent(Event&);
+        void OnEvent(IEvent&);
 
         /** Gives access to the Window instance. */
         static Window& GetWindow();

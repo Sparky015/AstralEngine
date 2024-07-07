@@ -143,7 +143,7 @@ namespace Ayla::GUI {
     }
 
 
-    void ImGuiLayer::OnEvent(Event& event) {
+    void ImGuiLayer::OnEvent(IEvent& event) {
         ///AY_LOG("ImGui received an event!");
 
 //        ImGuiIO& io = ImGui::GetIO();

@@ -7,11 +7,12 @@
 
 namespace Ayla::Events {
 
-    class ApplicationEvent : public Event {
+    class ApplicationEvent : public IEvent
+    {
     public:
 
-        int getEventCategoryFlags() override {
-            return (ApplicationCategory | MouseButtonCategory | MouseCategory | InputCategory);
+        [[nodiscard]] int getEventCategoryFlags() const override {
+            return (ApplicationCategory);
         }
     };
 
@@ -19,12 +20,12 @@ namespace Ayla::Events {
     class WindowCloseEvent : public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return WINDOW_CLOSE;
         }
     };
@@ -36,20 +37,20 @@ namespace Ayla::Events {
         WindowResizeEvent(int width, int height) : m_width(width), m_height(height) {}
 
 
-        virtual int getEventCategoryFlags() override {
+        [[nodiscard]] virtual int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
-        virtual int getEventType() override {
+        [[nodiscard]] virtual int getEventType() const override {
             return WINDOW_RESIZE;
         }
 
 
-        int getWidth() const {
+        [[nodiscard]] int getWidth() const {
             return m_width;
         }
 
-        int getHeight() const {
+        [[nodiscard]] int getHeight() const {
             return m_height;
         }
 
@@ -59,57 +60,57 @@ namespace Ayla::Events {
     };
 
 
-    class WindowGainedFocusEvent : public ApplicationEvent {
+    class WindowGainedFocusEvent final : public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return WINDOW_GAINED_FOCUS;
         }
     };
 
 
-    class WindowLostFocusEvent : public ApplicationEvent {
+    class WindowLostFocusEvent final : public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return WINDOW_LOST_FOCUS;
         }
     };
 
 
-    class WindowMovedEvent : public ApplicationEvent {
+    class WindowMovedEvent final : public ApplicationEvent {
     public:
 
 
         WindowMovedEvent(int xpos, int ypos) : m_xpos(xpos), m_ypos(ypos) {}
 
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return WINDOW_MOVED;
         }
 
 
-        int getXPos() const {
+        [[nodiscard]] int getXPos() const {
             return m_xpos;
         }
 
 
-        int getYPos() const {
+        [[nodiscard]] int getYPos() const {
             return m_ypos;
         }
 
@@ -119,44 +120,45 @@ namespace Ayla::Events {
     };
 
 
-    class AppTickEvent : public ApplicationEvent {
+    class AppTickEvent final: public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return APP_TICK;
         }
     };
 
 
-    class AppUpdateEvent : public ApplicationEvent {
+    class AppUpdateEvent final : public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        virtual int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return APP_UPDATE;
         }
     };
 
 
-    class AppRenderEvent : public ApplicationEvent {
+    class AppRenderEvent final : public ApplicationEvent {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int getEventCategoryFlags() const override {
             return ApplicationCategory;
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int getEventType() const override {
             return APP_RENDER;
         }
     };
-}
+
+ }  // namespace Ayla::Events

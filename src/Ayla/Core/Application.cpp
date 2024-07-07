@@ -69,10 +69,10 @@ namespace Ayla::Core
             // TODO: Provide the delta time to the update function
             m_ClientLoop->Update(); // Phase 2  -> Calls the client's application update function.
 
-            m_LayerStack->update(); // Phase 3  -> Calls the update function on all the layers in the engine.
+            m_LayerStack->Update(); // Phase 3  -> Calls the update function on all the layers in the engine.
 
             m_ImGuiLayer->begin(); // Phase 4  -> Updates the ImGui UI for all the layers in the engine.
-            m_LayerStack->renderImGui();
+            m_LayerStack->RenderImGui();
             m_ImGuiLayer->end();
 
             m_Window->update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
@@ -83,7 +83,7 @@ namespace Ayla::Core
     }
 
 
-    void Application::OnEvent(Event& event) // TODO: Make the parameter const and the depending functions const.
+    void Application::OnEvent(IEvent& event) // TODO: Make the parameter const and the depending functions const.
     {
         if (event.getEventType() == WINDOW_CLOSE)
         {
@@ -91,7 +91,7 @@ namespace Ayla::Core
             return;
         }
         // TODO: Change the naming of this method. Its confusing.
-        m_LayerStack->dispatchEventBackToFront(event);
+        m_LayerStack->DispatchEventBackToFront(event);
     }
 
 

@@ -30,7 +30,7 @@ void ExampleLayer::OnUpdate() {
 
 }
 
-void ExampleLayer::OnEvent(Event& event) {
+void ExampleLayer::OnEvent(IEvent& event) {
     // Do Stuff
     //event.setIsHandled(x);
 }

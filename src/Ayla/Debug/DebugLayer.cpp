@@ -64,7 +64,7 @@ namespace Ayla::Core::Debug
     }
 
 
-    void DebugLayer::OnEvent(Event& event)
+    void DebugLayer::OnEvent(IEvent& event)
     {
         // Not accepting events
     }

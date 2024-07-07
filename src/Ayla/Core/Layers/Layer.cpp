@@ -8,11 +8,9 @@
 namespace Ayla::Core::Layers
 {
 
-    ILayer::ILayer()
+    ILayer::ILayer() : m_IsEnabled(false), m_IsInitializedInTower(false)
     {
-        //AY_TRACE("[Sholas] Layer: Initializing Base Class Layer\t\t");
-        m_IsEnabled = false;
-        m_IsInitializedInTower = false;
+        AY_TRACE("[Sholas] Layer: Initializing Base Class Layer\t\t");
     }
 
 
@@ -25,8 +23,9 @@ namespace Ayla::Core::Layers
 
     void ILayer::AttachLayer()
     {
-        if (!m_IsInitializedInTower){
-            Application::GetLayerStack().appendLayer(this);
+        if (!m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().AppendLayer(this);
             m_IsInitializedInTower = true;
             OnAttach();
             m_IsEnabled = true;
@@ -36,9 +35,10 @@ namespace Ayla::Core::Layers
 
     void ILayer::AttachOverlay()
     {
-        if (!m_IsInitializedInTower){
+        if (!m_IsInitializedInTower)
+        {
 
-            Application::GetLayerStack().appendOverlay(this);
+            Application::GetLayerStack().AppendOverlay(this);
             m_IsInitializedInTower = true;
             OnAttach();
             m_IsEnabled = true;
@@ -48,8 +48,9 @@ namespace Ayla::Core::Layers
 
     void ILayer::DetachLayer()
     {
-        if (m_IsInitializedInTower) {
-            Application::GetLayerStack().removeLayer(this);
+        if (m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().RemoveLayer(this);
             m_IsInitializedInTower = false;
             OnDetach();
             m_IsEnabled = false;
@@ -57,9 +58,11 @@ namespace Ayla::Core::Layers
     }
 
 
-    void ILayer::DetachOverlay() {
-        if (m_IsInitializedInTower) {
-            Application::GetLayerStack().removeOverlay(this);
+    void ILayer::DetachOverlay()
+    {
+        if (m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().RemoveOverlay(this);
             m_IsInitializedInTower = false;
             OnDetach();
             m_IsEnabled = false;
@@ -67,23 +70,27 @@ namespace Ayla::Core::Layers
     }
 
 
-    bool ILayer::IsEnabled() {
+    bool ILayer::IsEnabled() const
+    {
         return m_IsEnabled;
     }
 
 
-    void ILayer::Enable() {
+    void ILayer::Enable()
+    {
         m_IsEnabled = true;
     }
 
 
-    void ILayer::Disable() {
+    void ILayer::Disable()
+    {
         m_IsEnabled = false;
     }
 
 
-    void ILayer::SetCallback(std::function<void(Event&)> callback) {
+    void ILayer::SetCallback(std::function<void(IEvent&)> callback)
+    {
         m_Callback = std::move(callback);
     }
 
-}
+} // namespace Ayla::Core::Layers

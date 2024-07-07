@@ -21,7 +21,7 @@ namespace Ayla::GUI {
         void OnImGuiRender() override;
         static void begin();
         static void end();
-        void OnEvent(Event&) override;
+        void OnEvent(IEvent&) override;
         EventCategory GetAcceptingEventFlags() override;
 
     private:

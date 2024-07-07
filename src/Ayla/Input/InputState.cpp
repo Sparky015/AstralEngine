@@ -44,7 +44,7 @@ namespace Ayla::Input {
     }
 
 
-    void SInputState::onEvent(Event& event) {
+    void SInputState::onEvent(IEvent& event) {
         AY_ASSERT(event.isInCategory(InputCategory), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
         //AY_TRACE("Input Received\t");
         if (event.isInCategory(KeyboardCategory)){

@@ -15,7 +15,7 @@ namespace Ayla::Input {
         static void init();
         static SInputState& get();
 
-        void onEvent(Event&);
+        void onEvent(IEvent&);
 
 
         SInputState(const SInputState&) = delete;

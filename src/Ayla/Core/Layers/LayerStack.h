@@ -9,28 +9,48 @@
 namespace Ayla::Core::Layers
 {
 
-
+    /** Stores the all layers in a centralized location for easy access to call Layer's Update and RenderImGui functions */
     class LayerStack
     {
     public:
         LayerStack();
         ~LayerStack();
 
-        void appendLayer(ILayer* layer);
-        void insertLayer(ILayer*, int position);
-        void removeLayer(ILayer* layer);
+        /**  */
+        void AppendLayer(ILayer* layer);
 
-        void appendOverlay(ILayer* layer);
-        void insertOverlay(ILayer* layer, int position);
-        void removeOverlay(ILayer* layer);
+        // Problem: Systems might have to fight to be able to receive an event of a type that is contested by another system.
+        // TODO: Create channels that layers can be in instead of a layer and an "overlay" layer
+        void InsertLayer(ILayer*, int position);
 
-        void dispatchEventFromFrontToBack(Event& event);
-        void dispatchEventBackToFront(Event& event);
+        // Problem: Systems might be updated out of order (i.e. Debug layers update before the input state is updated)
+        // Problem: Order of layers updating should be protected to minimize issues.
+        /**  */
+        void RemoveLayer(ILayer* layer);
 
-        void update();
-        void renderImGui();
+        /**  */
+        void AppendOverlay(ILayer* layer);
 
-        // Disallow copy and move constructors and operator=()
+        /**  */
+        void InsertOverlay(ILayer* layer, int position);
+
+        /**  */
+        void RemoveOverlay(ILayer* layer);
+
+        /**  */
+        void DispatchEventFromFrontToBack(IEvent& event);
+
+        /**  */
+        void DispatchEventBackToFront(IEvent& event);
+
+        /**  */
+        void Update();
+
+        /**  */
+        void RenderImGui();
+
+
+        // Disallow copy and move constructors and operators.
         LayerStack(const LayerStack &) = delete;
         LayerStack(LayerStack &&) = delete;
         LayerStack &operator=(const LayerStack &) = delete;
@@ -38,10 +58,10 @@ namespace Ayla::Core::Layers
 
     private:
 
-        /// Vector holding pointers to the layers
+        /** Stores all the layers */
         std::vector<ILayer *> m_layers;
 
-        /// Vector holding pointers to the overlay layers
+        /** Stores all the overlays */
         std::vector<ILayer *> m_overlayLayers;
     };
 

@@ -10,7 +10,7 @@ namespace Ayla::Events {
 
 
 
-    class KeyEvent : public Event {
+    class KeyEvent : public IEvent {
     public:
 
         int getEventCategoryFlags() override {

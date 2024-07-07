@@ -28,7 +28,7 @@ namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instea
 
     class Window{
     public:
-            using EventCallback = std::function<void(Event&)>;
+            using EventCallback = std::function<void(IEvent&)>;
 
             virtual ~Window() = default;
             virtual void update() = 0;

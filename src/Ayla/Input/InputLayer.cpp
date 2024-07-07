@@ -30,7 +30,7 @@ namespace Ayla::Input {
 
     }
 
-    void InputLayer::OnEvent(Event& event) {
+    void InputLayer::OnEvent(IEvent& event) {
         //AY_LOG("Input State received an event!");
         m_Callback(event);
         //event.setIsHandled(false);
