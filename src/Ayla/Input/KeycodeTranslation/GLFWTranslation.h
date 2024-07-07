@@ -6,6 +6,7 @@
 
 namespace Ayla::Input::Keycodes::Translation {
 
+    /**  */
     int TranslateGlfwKeycodesToAyla(int glfwKeycode);
 
 }
