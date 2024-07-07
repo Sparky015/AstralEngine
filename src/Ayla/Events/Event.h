@@ -56,7 +56,7 @@ namespace Ayla::Events {
         [[nodiscard]] bool IsHandled() const;
 
     protected:
-        bool m_isHandled = false;
+        bool m_IsHandled = false;
     };
 
  } // namespace Ayla::Events

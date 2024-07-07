@@ -18,10 +18,10 @@ namespace Ayla::Core::Time
     {}
 
     bool FTimer::operator==(const FTimer& other) const noexcept{
-        return m_TimerID == other.GetTimerID();
+        return m_TimerID == other.GetTimerId();
     }
 
-    int FTimer::GetTimerID() const {
+    int FTimer::GetTimerId() const {
         return m_TimerID;
     }
 }

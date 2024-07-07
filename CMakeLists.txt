@@ -6,10 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-#       ### Google Test ###
-add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/googletest-main/)
-include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest-main/googletest/include/)
-
 
 # Set platform macros
 if (WIN32)
@@ -109,25 +105,6 @@ target_link_libraries(ClientGame Ayla)
 
 
 
-
-
-
-#       ## Google Test ###
-#enable_testing()
-#
-#include_directories(${CMAKE_SOURCE_DIR}/tests)
-#
-#add_executable(all_tests tests/hello_test.cpp
-#        tests/test_EventSystem.cpp)
-#
-#target_link_libraries(all_tests Ayla)
-#
-#target_link_libraries(all_tests GTest::gtest_main)
-#
-#
-#
-#include(GoogleTest)
-#gtest_discover_tests(all_tests)
 
 
 

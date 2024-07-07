@@ -30,7 +30,7 @@ namespace Ayla::Core::Time
         /** Needs a comparison operator to be able to remove FTimers from a vector */
         bool operator==(const FTimer &other) const noexcept;
 
-        [[nodiscard]] int GetTimerID() const;
+        [[nodiscard]] int GetTimerId() const;
 
     private:
         int m_TimerID;

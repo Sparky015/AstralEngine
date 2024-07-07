@@ -24,12 +24,13 @@ namespace Ayla::Input {
         SInputState& operator=(SInputState&&) = delete;
 
         struct KeyState {
-            bool IsDown;
-            bool IsRepeating;
-            std::string Name = "No Name Given";
-
+        public:
             KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
             explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
+        private:
+            bool IsDown;
+            bool IsRepeating;
+            std::string Name;
         };
 
         struct MouseCursorState {

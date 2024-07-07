@@ -29,13 +29,13 @@ namespace Ayla::Events
 
     bool IEvent::IsHandled() const
     {
-       return m_isHandled;
+       return m_IsHandled;
     }
 
 
     void IEvent::SetIsHandled(const bool isHandled)
     {
-       m_isHandled = isHandled;
+        m_IsHandled = isHandled;
     }
 
 } // namespace Ayla::Events

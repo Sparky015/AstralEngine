@@ -122,21 +122,18 @@ namespace Ayla::Windows {
         });
 
 
-        glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
-        {
-            using Ayla::Input::Keycodes::Translation::translateGLFWKeycodesToAyla;
+        glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
+            using Ayla::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
 
             WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
-            switch (action){
-                case GLFW_PRESS:
-                {
-                    MouseButtonPressEvent event(translateGLFWKeycodesToAyla(button));
+            switch (action) {
+                case GLFW_PRESS: {
+                    MouseButtonPressEvent event(TranslateGlfwKeycodesToAyla(button));
                     windowData.callback(event);
                     break;
                 }
-                case GLFW_RELEASE:
-                {
-                    MouseButtonReleaseEvent event(translateGLFWKeycodesToAyla(button));
+                case GLFW_RELEASE: {
+                    MouseButtonReleaseEvent event(TranslateGlfwKeycodesToAyla(button));
                     windowData.callback(event);
                     break;
                 }
@@ -146,24 +143,23 @@ namespace Ayla::Windows {
         });
 
 
-        glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-        {
-            using Ayla::Input::Keycodes::Translation::translateGLFWKeycodesToAyla;
+        glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+            using Ayla::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
 
             WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-            switch (action){
-                case GLFW_PRESS:{
-                    KeyPressedEvent event(translateGLFWKeycodesToAyla(key));
+            switch (action) {
+                case GLFW_PRESS: {
+                    KeyPressedEvent event(TranslateGlfwKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }
-                case GLFW_RELEASE:{
-                    KeyReleasedEvent event(translateGLFWKeycodesToAyla(key));
+                case GLFW_RELEASE: {
+                    KeyReleasedEvent event(TranslateGlfwKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }
-                case GLFW_REPEAT:{
-                    KeyPressedRepeatingEvent event(translateGLFWKeycodesToAyla(key));
+                case GLFW_REPEAT: {
+                    KeyPressedRepeatingEvent event(TranslateGlfwKeycodesToAyla(key));
                     windowData.callback(event);
                     break;
                 }

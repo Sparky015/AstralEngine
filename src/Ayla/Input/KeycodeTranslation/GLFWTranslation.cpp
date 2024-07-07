@@ -102,7 +102,7 @@ namespace Ayla::Input::Keycodes::Translation {
             { GLFW_KEY_RIGHT_SUPER, AY_KEY_RIGHT_SUPER}
     };
 
-    int translateGLFWKeycodesToAyla(int GLFWKeycode){
+    int TranslateGlfwKeycodesToAyla(int glfwKeycode){
         return 0;
 //        switch(GLFWKeycode){
 //            case GLFW_KEY_TAB: return AY_KEY_TAB;
