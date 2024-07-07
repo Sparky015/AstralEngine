@@ -9,6 +9,7 @@
 
 namespace Ayla::Client
 {
+
     class ClientLoop
     {
     public:
@@ -25,4 +26,5 @@ namespace Ayla::Client
 
     /** Allows the client to give the functions that were derived from ClientLoop to the engine, so it is callable by the engine. */
     extern ClientLoop* LinkClientToEngine();
-}
+
+} // namespace Ayla::Client

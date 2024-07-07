@@ -24,10 +24,10 @@ namespace Ayla::Core::Layers
         /** Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. */
         virtual EEventCategory GetAcceptingEventFlags() = 0;
 
-        /** Executes the function code when a layer is added (attached) to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
+        /** Executes the function code when a layer is added to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
         virtual void OnAttach();
 
-        /** Executes the function code when a layer is removed (detached) from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
+        /** Executes the function code when a layer is removed from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
         virtual void OnDetach();
 
         /** Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. */

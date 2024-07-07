@@ -32,6 +32,6 @@ namespace Ayla::Client
         AY_ERROR("[Ayla] Client.cpp: Update function was not defined or overridden!");
     }
 
-}
+} // namespace Ayla::Client
 
 
