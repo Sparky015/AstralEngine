@@ -33,13 +33,9 @@ namespace Ayla::Events {
     public:
         IEvent() = default;
         virtual ~IEvent() = default;
-        IEvent(const IEvent&) = default;
-        IEvent& operator=(const IEvent&) = default;
-        IEvent(IEvent&&) = default;
-        IEvent& operator=(IEvent&&) = default;
 
         /** Retrieves the category of the event for event filtering during the dispatch of events. */
-        [[nodiscard]] virtual int GetEventCategoryFlags() const = 0;
+        [[nodiscard]] virtual int8_t GetEventCategoryFlags() const = 0;
 
         /** Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. */
         [[nodiscard]] virtual int GetEventType() const = 0;

@@ -6,21 +6,17 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
-using Ayla::Core::Layers::ILayer;
-
-class ExampleLayer : public ILayer
+class ExampleLayer : public Ayla::Core::Layers::ILayer
 {
 public:
     ExampleLayer();
     ~ExampleLayer() override;
 
-    void OnAttach() override;
-    void OnDetach() override;
-    void OnUpdate() override;
-    void OnImGuiRender() override;
-    void OnEvent(IEvent&) override;
-    EventCategory GetAcceptingEventFlags() override;
-
-private:
+    virtual void OnAttach() override;
+    virtual void OnDetach() override;
+    virtual void OnUpdate() override;
+    virtual void OnImGuiRender() override;
+    virtual void OnEvent(Ayla::Events::IEvent& event) override;
+    virtual Ayla::Events::EEventCategory GetAcceptingEventFlags() override;
 
 };

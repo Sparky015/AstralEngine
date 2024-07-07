@@ -4,196 +4,149 @@
 
 #pragma once
 #include "Ayla/Events/Event.h"
+
 namespace Ayla::Events {
 
-    /**
- * @class MouseButtonEvent
- * @brief Abstract class that represents a mouse button event.
- * @details This class is derived from the Events class.
- */
-    class MouseButtonEvent : public IEvent {
+    class MouseButtonEvent : public IEvent
+    {
     public:
-        /**
-         * @brief Gets the event category flags for a mouse button event.
-         * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
-         */
-        int getEventCategoryFlags() override {
-            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
+
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
+            return MOUSE_CATEGORY | INPUT_CATEGORY;
         }
+
+
+        [[nodiscard]] int GetEventType() const override
+        {
+            return NONE;
+        }
+
+    protected:
+
+        /** MouseButtonEvent is not meant to be created as a standalone event. */
+        MouseButtonEvent() = default;
     };
 
 
-/**
- * @class MouseButtonReleaseEvent
- * @brief Class that represents a mouse button release event.
- * @details This class is derived from the MouseButtonEvent class.
- */
-    class MouseButtonReleaseEvent : public MouseButtonEvent {
+    class MouseButtonReleaseEvent : public MouseButtonEvent
+    {
     public:
-        /**
-         * @brief Constructs a new MouseButtonReleaseEvent.
-         * @param button The button that was released.
-         */
-        MouseButtonReleaseEvent(int button) : m_button(button) {}
+        explicit MouseButtonReleaseEvent(int button) : m_Button(button) {}
 
-        /**
-         * @brief Gets the event category flags for a mouse button release event.
-         * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
-         */
-        int getEventCategoryFlags() override {
-            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
+            return MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY;
         }
 
-        /**
-         * @brief Gets the event type for a mouse button release event.
-         * @return Returns MOUSE_BUTTON_RELEASED.
-         */
-        int getEventType() override {
+
+        [[nodiscard]] int GetEventType() const override {
             return MOUSE_BUTTON_RELEASED;
         }
 
-        /**
-         * @brief Gets the button that was released for this event.
-         * @return Returns the button that was released.
-         */
-        int getButton() const { return m_button; }
 
-    private:
-        int m_button;
-    };
-
-/**
- * @class MouseButtonPressEvent
- * @brief Class that represents a mouse button press event.
- * @details This class is derived from the MouseButtonEvent class.
- */
-    class MouseButtonPressEvent : public MouseButtonEvent {
-    public:
-        /**
-         * @brief Constructs a new MouseButtonPressEvent.
-         * @param button The button that was pressed.
-         */
-        MouseButtonPressEvent(int button) : m_button(button) {}
-
-        /**
-         * @brief Gets the event category flags for a mouse button press event.
-         * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
-         */
-        int getEventCategoryFlags() override {
-            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
+        [[nodiscard]] int GetButton() const
+        {
+            return m_Button;
         }
 
-        /**
-         * @brief Gets the event type for a mouse button press event.
-         * @return Returns MOUSE_BUTTON_PRESSED.
-         */
-        int getEventType() override {
+    private:
+        int m_Button;
+    };
+
+
+    class MouseButtonPressEvent : public MouseButtonEvent
+    {
+    public:
+        explicit MouseButtonPressEvent(int button) : m_Button(button) {}
+
+         [[nodiscard]] int8_t GetEventCategoryFlags() const override
+         {
+            return MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY;
+        }
+
+
+        [[nodiscard]] int GetEventType() const override
+        {
             return MOUSE_BUTTON_PRESSED;
         }
 
-        /**
-         * @brief Gets the button that was pressed for this event.
-         * @return Returns the button that was pressed.
-         */
-        int getButton() const { return m_button; }
 
-    private:
-        int m_button;
-    };
-
-/**
- * @class MouseScrollEvent
- * @brief Class that represents a mouse scroll event.
- * @details This class is derived from the Events class.
- */
-    class MouseScrollEvent : public IEvent {
-    public:
-        /**
-         * @brief Constructs a new MouseScrollEvent.
-         * @param xoffset The x-offset of the scroll event.
-         * @param yoffset The y-offset of the scroll event.
-         */
-        MouseScrollEvent(double xoffset, double yoffset) : m_xoffset(xoffset), m_yoffset(yoffset) {}
-
-        /**
-         * @brief Gets the event category flags for a mouse scroll event.
-         * @return Returns the bitwise OR of MouseCategory and InputCategory.
-         */
-        int getEventCategoryFlags() override {
-            return (MOUSE_CATEGORY | INPUT_CATEGORY);
+        [[nodiscard]] int GetButton() const
+        {
+            return m_Button;
         }
 
-        /**
-         * @brief Gets the event type for a mouse scroll event.
-         * @return Returns MOUSE_SCROLLED.
-         */
-        int getEventType() override {
+    private:
+        int m_Button;
+    };
+
+
+    class MouseScrollEvent : public IEvent
+    {
+    public:
+        MouseScrollEvent(double xoffset, double yoffset) : m_Xoffset(xoffset), m_Yoffset(yoffset) {}
+
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
+            return MOUSE_CATEGORY | INPUT_CATEGORY;
+        }
+
+
+        [[nodiscard]] int GetEventType() const override
+        {
             return MOUSE_SCROLLED;
         }
 
-        /**
-         * @brief Gets the x-offset for this scroll event.
-         * @return Returns the x-offset.
-         */
-        double getXOffset() const { return m_xoffset; }
 
-        /**
-         * @brief Gets the y-offset for this scroll event.
-         * @return Returns the y-offset.
-         */
-        double getYOffset() const { return m_yoffset; }
-
-    private:
-        double m_xoffset;
-        double m_yoffset;
-    };
-
-/**
- * @class MouseMovedEvent
- * @brief Class that represents a mouse move event.
- * @details This class is derived from the Events class.
- */
-    class MouseMovedEvent : public IEvent {
-    public:
-        /**
-         * @brief Constructs a new MouseMovedEvent.
-         * @param xpos The x-position of the mouse cursor.
-         * @param ypos The y-position of the mouse cursor.
-         */
-        MouseMovedEvent(double xpos, double ypos) : m_xpos(xpos), m_ypos(ypos) {}
-
-        /**
-         * @brief Gets the event category flags for a mouse move event.
-         * @return Returns the bitwise OR of MouseCategory and InputCategory.
-         */
-        int getEventCategoryFlags() override {
-            return (MOUSE_CATEGORY | INPUT_CATEGORY);
+        [[nodiscard]] double GetXOffset() const
+        {
+            return m_Xoffset;
         }
 
-        /**
-         * @brief Gets the event type for a mouse move event.
-         * @return Returns MOUSE_CURSOR_MOVED.
-         */
-        int getEventType() override {
+
+        [[nodiscard]] double GetYOffset() const
+        {
+            return m_Yoffset;
+        }
+
+    private:
+        double m_Xoffset;
+        double m_Yoffset;
+    };
+
+
+    class MouseMovedEvent : public IEvent
+    {
+    public:
+        explicit MouseMovedEvent(double xpos, double ypos) : m_Xpos(xpos), m_Ypos(ypos) {}
+
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
+            return MOUSE_CATEGORY | INPUT_CATEGORY;
+        }
+
+
+        [[nodiscard]] int GetEventType() const override
+        {
             return MOUSE_CURSOR_MOVED;
         }
 
-        /**
-         * @brief Gets the x-position of the mouse cursor for this event.
-         * @return Returns the x-position.
-         */
-        double getXPos() const { return m_xpos; }
 
-        /**
-         * @brief Gets the y-position of the mouse cursor for this event.
-         * @return Returns the y-position.
-         */
-        double getYPos() const { return m_ypos; }
+        [[nodiscard]] double GetXPos() const
+        {
+            return m_Xpos;
+        }
+
+
+        [[nodiscard]] double GetYPos() const
+        {
+            return m_Ypos;
+        }
 
     private:
-        double m_xpos;
-        double m_ypos;
+        double m_Xpos;
+        double m_Ypos;
     };
 
-
-} // Ayla
+} // namespace Ayla::Events

@@ -8,106 +8,128 @@
 
 namespace Ayla::Events {
 
-
-
-    class KeyEvent : public IEvent {
+    class KeyEvent : public IEvent
+    {
     public:
 
-        int getEventCategoryFlags() override {
+        [[nodiscard]] virtual int8_t GetEventCategoryFlags() const override
+        {
             return (INPUT_CATEGORY);
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] virtual int GetEventType() const override
+        {
             return MOUSE_BUTTON_RELEASED;
         }
+
+    protected:
+
+        /** KeyEvent is not meant to be created as a standalone event. */
+        KeyEvent() = default;
     };
 
 
-    class KeyPressedEvent : public KeyEvent {
+    class KeyPressedEvent : public KeyEvent
+    {
     public:
+        explicit KeyPressedEvent(int keycode) : m_Keycode(keycode) {}
 
-        explicit KeyPressedEvent(int keycode) : m_keycode(keycode) {}
-
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
             return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
-        int getEventType() override {
+
+        [[nodiscard]] int GetEventType() const override
+        {
             return KEY_PRESSED;
         }
 
-        int getKeycode() const { return m_keycode; }
+
+        [[nodiscard]] int GetKeycode() const
+        {
+            return m_Keycode;
+        }
 
     private:
-        int m_keycode;
+        int m_Keycode;
     };
 
-    class KeyTypedEvent : public KeyEvent {
+
+    class KeyTypedEvent : public KeyEvent
+    {
     public:
+        explicit KeyTypedEvent(unsigned int keycode) : m_Keycode(keycode) {}
 
-        explicit KeyTypedEvent(unsigned int keycode) : m_keycode(keycode) {}
-
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
             return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
-        int getEventType() override {
+        [[nodiscard]] int GetEventType() const override
+        {
             return KEY_TYPED;
         }
 
-        int getKeycode() const { return m_keycode; }
+        [[nodiscard]] unsigned int GetKeycode() const { return m_Keycode; }
 
     private:
-        unsigned int m_keycode;
+        unsigned int m_Keycode;
     };
 
 
-    class KeyPressedRepeatingEvent : public KeyEvent {
+    class KeyPressedRepeatingEvent : public KeyEvent
+    {
     public:
+        explicit KeyPressedRepeatingEvent(int keycode) : m_Keycode(keycode) {}
 
-        KeyPressedRepeatingEvent(int keycode) : m_keycode(keycode) {}
-
-
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
             return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int GetEventType() const override
+        {
             return KEY_PRESSED_REPEATING;
         }
 
 
-        int getKeycode() const { return m_keycode; }
+        [[nodiscard]] int GetKeycode() const
+        {
+            return m_Keycode;
+        }
 
     private:
-        int m_keycode;
+        int m_Keycode;
     };
 
 
-    class KeyReleasedEvent : public KeyEvent {
+    class KeyReleasedEvent : public KeyEvent
+    {
     public:
+        explicit KeyReleasedEvent(int keycode) : m_Keycode(keycode) {}
 
-        KeyReleasedEvent(int keycode) : m_keycode(keycode) {}
-
-
-        int getEventCategoryFlags() override {
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
+        {
             return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
 
-        int getEventType() override {
+        [[nodiscard]] int GetEventType() const override
+        {
             return KEY_RELEASED;
         }
 
 
-        int getKeycode() const { return m_keycode; }
+        [[nodiscard]] int GetKeycode() const
+        {
+            return m_Keycode;
+        }
 
     private:
-        int m_keycode;
+        int m_Keycode;
     };
 
-
-
-}; // Ayla
+} // namespace Ayla::Events

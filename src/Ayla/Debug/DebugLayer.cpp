@@ -46,15 +46,15 @@ namespace Ayla::Core::Debug
         static long long accumulatedTime;
         accumulatedTime += Time::Clock::Get().GetDeltaTime();
 
-        Input::SInputState& inputState = Input::SInputState::get();
-        if (inputState.isKeyDown(AY_KEY_T) && !inputState.isKeyRepeating(AY_KEY_T))
+        Input::SInputState& inputState = Input::SInputState::Get();
+        if (inputState.IsKeyDown(AY_KEY_T) && !inputState.IsKeyRepeating(AY_KEY_T))
         {
             if (accumulatedTime <= 75){return;}
             accumulatedTime = 0;
             AY_TRACE("T is pressed down.");
-            std::cout << "\n" << inputState.mousePositionX() << " by " << inputState.mousePositionY();
+            std::cout << "\n" << inputState.MousePositionX() << " by " << inputState.MousePositionY();
         }
-        if (inputState.isKeyDown(AY_KEY_R) && !inputState.isKeyRepeating(AY_KEY_R))
+        if (inputState.IsKeyDown(AY_KEY_R) && !inputState.IsKeyRepeating(AY_KEY_R))
         {
             if (accumulatedTime <= 300){return;}
             accumulatedTime = 0;

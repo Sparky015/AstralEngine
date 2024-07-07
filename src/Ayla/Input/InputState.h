@@ -12,10 +12,10 @@ namespace Ayla::Input {
 // TODO: Make some delegates for when keys are pressed. Also make an event delegate class to easily to this.
     class SInputState {
     public:
-        static void init();
-        static SInputState& get();
+        static void Init();
+        static SInputState& Get();
 
-        void onEvent(IEvent&);
+        void OnEvent(IEvent&);
 
 
         SInputState(const SInputState&) = delete;
@@ -24,28 +24,31 @@ namespace Ayla::Input {
         SInputState& operator=(SInputState&&) = delete;
 
         struct KeyState {
-            bool isDown;
-            bool isRepeating;
-            std::string name;
+            bool IsDown;
+            bool IsRepeating;
+            std::string Name = "No Name Given";
 
-            KeyState() : isDown(false), isRepeating(false), name("No Name Given"){}
-            explicit KeyState(std::string&& name)  : isDown(false), isRepeating(false), name(name){}
-
+            KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
+            explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
         };
 
         struct MouseCursorState {
-            double mouseXPosition;
-            double mouseYPosition;
+            double MouseXPosition;
+            double MouseYPosition;
         };
 
-        [[nodiscard]] bool isKeyDown(int keycode) const;
-        [[nodiscard]] bool isKeyRepeating(int keycode) const;
-        [[nodiscard]] std::string getKeyName(int keycode) const;
-        [[nodiscard]] double mousePositionX() const;
-        [[nodiscard]] double mousePositionY() const;
+        [[nodiscard]] bool IsKeyDown(int keycode) const;
+
+        [[nodiscard]] bool IsKeyRepeating(int keycode) const;
+
+        [[nodiscard]] std::string GetKeyName(int keycode) const;
+
+        [[nodiscard]] double MousePositionX() const;
+
+        [[nodiscard]] double MousePositionY() const;
 
     private:
-        static SInputState* m_instance;
+        static SInputState* m_Instance;
         SInputState();
         ~SInputState();
 
@@ -53,7 +56,7 @@ namespace Ayla::Input {
         static const int m_NUMBER_OF_KEYS = 79;
 
         // The indices all match the key codes (so if you change the key codes, change this)
-        KeyState m_keyState[m_NUMBER_OF_KEYS] = { // Could potentially make this multiple arrays (one array for each field)
+        std::array<KeyState, m_NUMBER_OF_KEYS> m_KeyStates = { // Could potentially make this multiple arrays (one array for each field)
                 KeyState("LEFT CLICK"),
                 KeyState("MIDDLE CLICK"),
                 KeyState("RIGHT CLICK"),
@@ -140,11 +143,11 @@ namespace Ayla::Input {
                 KeyState("RIGHT SUPER"),
         };
 
-        MouseCursorState m_mouseCursorState = {0.0f, 0.0f};
+        MouseCursorState m_MouseCursorState = {0.0f, 0.0f};
 
-        InputLayer m_inputLayer;
+        InputLayer m_InputLayer;
     };
 
 
-}
+} // namespace Ayla::Input
 

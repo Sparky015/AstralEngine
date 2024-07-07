@@ -11,13 +11,13 @@ namespace Ayla::Events
 
     bool IEvent::IsInCategory(const EEventCategory category) const
     {
-        return GetEventCategoryFlags() & category;
+        return (GetEventCategoryFlags() & category) != 0;
     }
 
 
     bool IEvent::IsInBothCategories(const EEventCategory category1, const EEventCategory category2) const
     {
-        return (GetEventCategoryFlags() & category1) && (GetEventCategoryFlags() & category2);
+        return ((GetEventCategoryFlags() & category1) != 0) && ((GetEventCategoryFlags() & category2) != 0);
     }
 
 
@@ -38,4 +38,4 @@ namespace Ayla::Events
        m_isHandled = isHandled;
     }
 
-}
+} // namespace Ayla::Events

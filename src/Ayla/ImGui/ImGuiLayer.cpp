@@ -157,12 +157,12 @@ namespace Ayla::GUI {
 //            }
 //            case MOUSE_BUTTON_PRESSED: {
 //                auto mouseButtonPressEvent = dynamic_cast<MouseButtonPressEvent&>(event);
-//                io.MouseDown[mouseButtonPressEvent.getButton()] = true;
+//                io.MouseDown[mouseButtonPressEvent.GetButton()] = true;
 //                break;
 //            }
 //            case MOUSE_BUTTON_RELEASED: {
 //                auto mouseButtonReleaseEvent = dynamic_cast<MouseButtonReleaseEvent&>(event);
-//                io.MouseDown[mouseButtonReleaseEvent.getButton()] = false;
+//                io.MouseDown[mouseButtonReleaseEvent.GetButton()] = false;
 //                break;
 //            }
 //            case MOUSE_SCROLLED: {
@@ -180,7 +180,7 @@ namespace Ayla::GUI {
 //            }
 //            case KEY_PRESSED: {
 //                auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
-//                io.KeysDown[keyPressedEvent.getKeycode()] = true;
+//                io.KeysDown[keyPressedEvent.GetKeycode()] = true;
 //
 //                io.KeyCtrl = io.KeysDown[AY_KEY_LEFT_CONTROL] || io.KeysDown[AY_KEY_RIGHT_CONTROL];
 //                io.KeyAlt = io.KeysDown[AY_KEY_LEFT_ALT] || io.KeysDown[AY_KEY_RIGHT_ALT];
@@ -197,7 +197,7 @@ namespace Ayla::GUI {
 //            }
 //            case KEY_RELEASED: {
 //                auto keyReleasedEvent = dynamic_cast<KeyReleasedEvent&>(event);
-//                io.KeysDown[keyReleasedEvent.getKeycode()] = false;
+//                io.KeysDown[keyReleasedEvent.GetKeycode()] = false;
 //
 //                io.KeyCtrl = io.KeysDown[AY_KEY_LEFT_CONTROL] || io.KeysDown[AY_KEY_RIGHT_CONTROL];
 //                io.KeyAlt = io.KeysDown[AY_KEY_LEFT_ALT] || io.KeysDown[AY_KEY_RIGHT_ALT];
@@ -213,9 +213,9 @@ namespace Ayla::GUI {
 //            }
 //            case KEY_TYPED: {
 //                auto keyTypedEvent = dynamic_cast<KeyTypedEvent&>(event);
-//                unsigned int keycode = keyTypedEvent.getKeycode();
+//                unsigned int keycode = keyTypedEvent.GetKeycode();
 //                if (keycode > 0 && keycode < 0x10000){
-//                    io.AddInputCharacter(keyTypedEvent.getKeycode());
+//                    io.AddInputCharacter(keyTypedEvent.GetKeycode());
 //                }
 //                break;
 //            }

@@ -30,14 +30,14 @@ void ExampleLayer::OnUpdate() {
 
 }
 
-void ExampleLayer::OnEvent(IEvent& event) {
+void ExampleLayer::OnEvent(Ayla::Events::IEvent& event) {
     // Do Stuff
     //event.SetIsHandled(x);
 }
 
-EventCategory ExampleLayer::GetAcceptingEventFlags() {
+Ayla::Events::EEventCategory ExampleLayer::GetAcceptingEventFlags() {
     //return flag category
-    return None;
+    return Ayla::Events::None;
 }
 
 void ExampleLayer::OnImGuiRender() {

@@ -150,7 +150,7 @@ namespace Ayla::Windows {
         {
             using Ayla::Input::Keycodes::Translation::translateGLFWKeycodesToAyla;
 
-            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action){
                 case GLFW_PRESS:{
                     KeyPressedEvent event(translateGLFWKeycodesToAyla(key));
@@ -175,7 +175,7 @@ namespace Ayla::Windows {
 
         glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
         {
-            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             KeyTypedEvent event(keycode);
             windowData.callback(event);
         });
@@ -184,7 +184,7 @@ namespace Ayla::Windows {
         // Called when the cursor is moved
         glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos)
         {
-            WindowData& windowData = *(WindowData*) glfwGetWindowUserPointer(window);
+            WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             MouseMovedEvent event(xpos, ypos);
             windowData.callback(event);
         });

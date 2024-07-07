@@ -38,7 +38,7 @@ namespace Ayla::Core
         // Layers //
         AY_LOG("--- Application: Initializing Layers ---"); // Order matters here. This will reflect the order of the layers in LayerStack.
         m_ImGuiLayer = std::make_unique<GUI::ImGuiLayer>();
-        Input::SInputState::init(); // Initializes Input layer on the first call.
+        Input::SInputState::Init(); // Initializes Input layer on the first call.
         m_DebugLayer = std::make_unique<Debug::DebugLayer>();
 
         // Clock //

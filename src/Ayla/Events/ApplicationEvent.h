@@ -12,7 +12,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return (APPLICATION_CATEGORY);
         }
@@ -28,7 +28,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -38,6 +38,7 @@ namespace Ayla::Events {
         {
             return WINDOW_CLOSE;
         }
+
     };
 
     class WindowResizeEvent : public ApplicationEvent
@@ -46,7 +47,7 @@ namespace Ayla::Events {
 
         WindowResizeEvent(int width, int height) : m_Width(width), m_Height(height) {}
 
-        [[nodiscard]] virtual int GetEventCategoryFlags() const override
+        [[nodiscard]] virtual int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -79,7 +80,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -89,6 +90,7 @@ namespace Ayla::Events {
         {
             return WINDOW_GAINED_FOCUS;
         }
+
     };
 
 
@@ -96,7 +98,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -106,6 +108,7 @@ namespace Ayla::Events {
         {
             return WINDOW_LOST_FOCUS;
         }
+
     };
 
 
@@ -114,7 +117,7 @@ namespace Ayla::Events {
     public:
         WindowMovedEvent(int xpos, int ypos) : m_Xpos(xpos), m_Ypos(ypos) {}
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -147,7 +150,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -165,7 +168,7 @@ namespace Ayla::Events {
     {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override
         {
             return APPLICATION_CATEGORY;
         }
@@ -182,7 +185,7 @@ namespace Ayla::Events {
     class AppRenderEvent final : public ApplicationEvent {
     public:
 
-        [[nodiscard]] int GetEventCategoryFlags() const override {
+        [[nodiscard]] int8_t GetEventCategoryFlags() const override {
             return APPLICATION_CATEGORY;
         }
 

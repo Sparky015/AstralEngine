@@ -10,7 +10,7 @@ namespace Ayla::Events {
 // PUBLIC
 
         void EventDispatcher::addEventToQueue(IEvent& event){
-            eventQueue.push(std::make_shared<IEvent>(std::move(event)));
+            //eventQueue.push(std::make_shared<IEvent>(std::move(event)));
         }
 
         void EventDispatcher::dispatchAllEvents() {
@@ -20,7 +20,7 @@ namespace Ayla::Events {
         }
 
         void EventDispatcher::dispatchBlockingEvent(IEvent& dispatchingEvent) {
-            IEvent event = std::move(dispatchingEvent);
+
             // Filter out event through layers
         }
 
@@ -34,7 +34,7 @@ namespace Ayla::Events {
         }
 
         void EventDispatcher::dispatchEvent(const std::shared_ptr<IEvent>& dispatchingEventPtr) {
-            IEvent event = std::move(*dispatchingEventPtr);
+            //IEvent event = std::move(*dispatchingEventPtr);
             // Filter out event through layers
 
 
