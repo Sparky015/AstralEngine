@@ -33,11 +33,11 @@ namespace Ayla::Input {
     void InputLayer::OnEvent(IEvent& event) {
         //AY_LOG("Input State received an event!");
         m_Callback(event);
-        //event.setIsHandled(false);
+        //event.SetIsHandled(false);
     }
 
-    EventCategory InputLayer::GetAcceptingEventFlags() {
-        return InputCategory;
+    EEventCategory InputLayer::GetAcceptingEventFlags() {
+        return INPUT_CATEGORY;
     }
 
     void InputLayer::OnImGuiRender() {

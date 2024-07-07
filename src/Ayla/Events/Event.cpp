@@ -9,31 +9,31 @@
 namespace Ayla::Events
 {
 
-    bool IEvent::isInCategory(const Ayla::Events::EventCategory category) const
+    bool IEvent::IsInCategory(const EEventCategory category) const
     {
-        return getEventCategoryFlags() & category;
+        return GetEventCategoryFlags() & category;
     }
 
 
-    bool IEvent::isInBothCategories(const Ayla::Events::EventCategory category1, const Ayla::Events::EventCategory category2) const
+    bool IEvent::IsInBothCategories(const EEventCategory category1, const EEventCategory category2) const
     {
-        return (getEventCategoryFlags() & category1) && (getEventCategoryFlags() & category2);
+        return (GetEventCategoryFlags() & category1) && (GetEventCategoryFlags() & category2);
     }
 
 
-    bool IEvent::hasExactCategoryMatch(const Ayla::Events::EventCategory category) const
+    bool IEvent::HasExactCategoryMatch(const EEventCategory category) const
     {
-        return (getEventCategoryFlags() & category) == category;
+        return (GetEventCategoryFlags() & category) == category;
     }
 
 
-    bool IEvent::isHandled() const
+    bool IEvent::IsHandled() const
     {
        return m_isHandled;
     }
 
 
-    void IEvent::setIsHandled(const bool isHandled)
+    void IEvent::SetIsHandled(const bool isHandled)
     {
        m_isHandled = isHandled;
     }

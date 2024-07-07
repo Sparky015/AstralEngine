@@ -1,0 +1,10 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="ClangTidy" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="clangTidyChecks" value="-*,mpi-buffer-deref,mpi-type-mismatch,cert-*,clang-analyzer-*,performance-*,misc-*,modernize-*,concurrency-*,-modernize-use-trailing-return-type,-modernize-use-override,llvm-*,fuchsia-*,hicpp-*,-hicpp-use-override,cppcoreguidelines-*,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-explicit-virtual-functions,portability-*,-cppcoreguidelines-non-private-member-variables-in-classes,-misc-non-private-member-variables-in-classes,google-*,-google-objc-avoid-throwing-exception,-google-upgrade-googletest-case,-google-objc-global-variable-declaration,-google-objc-avoid-nsobject-new,-google-readability-avoid-underscore-in-googletest-name,-google-objc-function-naming,altera-struct-pack-align,bugprone-*,-bugprone-easily-swappable-parameters,readability-*,-readability-avoid-const-params-in-decls,-readability-use-std-min-max" />
+    </inspection_tool>
+    <inspection_tool class="Clazy" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="OCInconsistentNaming" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  </profile>
+</component>

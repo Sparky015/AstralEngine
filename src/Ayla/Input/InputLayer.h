@@ -21,7 +21,7 @@ namespace Ayla::Input {
         void OnUpdate() override;
         void OnImGuiRender() override;
         void OnEvent(IEvent&) override;
-        EventCategory GetAcceptingEventFlags() override;
+        EEventCategory GetAcceptingEventFlags() override;
 
     private:
 

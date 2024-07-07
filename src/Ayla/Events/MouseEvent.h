@@ -18,7 +18,7 @@ namespace Ayla::Events {
          * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
          */
         int getEventCategoryFlags() override {
-            return (MouseButtonCategory | MouseCategory | InputCategory);
+            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
         }
     };
 
@@ -41,7 +41,7 @@ namespace Ayla::Events {
          * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
          */
         int getEventCategoryFlags() override {
-            return (MouseButtonCategory | MouseCategory | InputCategory);
+            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
         }
 
         /**
@@ -80,7 +80,7 @@ namespace Ayla::Events {
          * @return Returns the bitwise OR of MouseButtonCategory, MouseCategory, and InputCategory.
          */
         int getEventCategoryFlags() override {
-            return (MouseButtonCategory | MouseCategory | InputCategory);
+            return (MOUSE_BUTTON_CATEGORY | MOUSE_CATEGORY | INPUT_CATEGORY);
         }
 
         /**
@@ -120,7 +120,7 @@ namespace Ayla::Events {
          * @return Returns the bitwise OR of MouseCategory and InputCategory.
          */
         int getEventCategoryFlags() override {
-            return (MouseCategory | InputCategory);
+            return (MOUSE_CATEGORY | INPUT_CATEGORY);
         }
 
         /**
@@ -167,7 +167,7 @@ namespace Ayla::Events {
          * @return Returns the bitwise OR of MouseCategory and InputCategory.
          */
         int getEventCategoryFlags() override {
-            return (MouseCategory | InputCategory);
+            return (MOUSE_CATEGORY | INPUT_CATEGORY);
         }
 
         /**

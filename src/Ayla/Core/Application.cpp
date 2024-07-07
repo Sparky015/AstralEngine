@@ -85,7 +85,7 @@ namespace Ayla::Core
 
     void Application::OnEvent(IEvent& event) // TODO: Make the parameter const and the depending functions const.
     {
-        if (event.getEventType() == WINDOW_CLOSE)
+        if (event.GetEventType() == WINDOW_CLOSE)
         {
             m_AppIsRunning = false;
             return;

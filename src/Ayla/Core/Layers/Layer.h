@@ -37,7 +37,7 @@ namespace Ayla::Core::Layers
         virtual void OnEvent(IEvent& event) = 0;
 
         /** Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. */
-        virtual EventCategory GetAcceptingEventFlags() = 0;
+        virtual EEventCategory GetAcceptingEventFlags() = 0;
 
         /** Allows a system to send events to the Layer Stack to be sent to other systems. */
         //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const;

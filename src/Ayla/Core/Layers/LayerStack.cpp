@@ -21,11 +21,11 @@ namespace Ayla::Core::Layers
 
     void LayerStack::AppendLayer(ILayer* layer)
     {
-        m_layers.push_back(layer);
+        m_Layers.push_back(layer);
     }
 
 
-    void LayerStack::InsertLayer(ILayer*, int position)
+    void LayerStack::InsertLayer(ILayer* layer, int position)
     {
 
     }
@@ -39,7 +39,7 @@ namespace Ayla::Core::Layers
 
     void LayerStack::AppendOverlay(ILayer* layer)
     {
-        m_overlayLayers.push_back(layer);
+        m_OverlayLayers.push_back(layer);
     }
 
 
@@ -55,48 +55,48 @@ namespace Ayla::Core::Layers
     }
 
 
-    void LayerStack::DispatchEventBackToFront(Event& event)
+    void LayerStack::DispatchEventBackToFront(Ayla::Events::IEvent& event)
     {
-        for (ILayer* layer : m_layers)
+            for (ILayer* layer : m_Layers)
+            {
+                if (event.IsHandled()) {return;}
+                if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {continue;}
+                layer->OnEvent(event);
+            }
+            for (ILayer* layer : m_OverlayLayers)
+            {
+                if (event.IsHandled()) {return;}
+                if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {continue;}
+                layer->OnEvent(event);
+            }
+    }
+
+
+    void LayerStack::DispatchEventFromFrontToBack(Ayla::Events::IEvent& event)
+    {
+        for (ILayer* layer : m_OverlayLayers)
         {
-            if (event.isHandled()) {return;}
-            if (!event.isInCategory(layer->GetAcceptingEventFlags())) {continue;}
+            if (event.IsHandled()) {return;}
+            if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {return;}
             layer->OnEvent(event);
         }
-        for (ILayer* layer : m_overlayLayers)
+        for (ILayer* layer : m_Layers)
         {
-            if (event.isHandled()) {return;}
-            if (!event.isInCategory(layer->GetAcceptingEventFlags())) {continue;}
+            if (event.IsHandled()) {return;}
+            if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {return;}
             layer->OnEvent(event);
         }
     }
 
-
-    void LayerStack::DispatchEventFromFrontToBack(Event& event)
-    {
-        for (ILayer* layer : m_overlayLayers)
-        {
-            if (event.isHandled()) {return;}
-            if (!event.isInCategory(layer->GetAcceptingEventFlags())) {return;}
-            layer->OnEvent(event);
-        }
-        for (ILayer* layer : m_layers)
-        {
-            if (event.isHandled()) {return;}
-            if (!event.isInCategory(layer->GetAcceptingEventFlags())) {return;}
-            layer->OnEvent(event);
-        }
-
-    }
 
 
     void LayerStack::Update()
     {
-        for (ILayer* layer : m_overlayLayers)
+        for (ILayer* layer : m_OverlayLayers)
         {
             layer->OnUpdate();
         }
-        for (ILayer* layer : m_layers)
+        for (ILayer* layer : m_Layers)
         {
             layer->OnUpdate();
         }
@@ -105,15 +105,15 @@ namespace Ayla::Core::Layers
 
     void LayerStack::RenderImGui()
     {
-        for (ILayer* layer : m_layers)
+        for (ILayer* layer : m_Layers)
         {
             layer->OnImGuiRender();
         }
-        for (ILayer* layer : m_overlayLayers)
+        for (ILayer* layer : m_OverlayLayers)
         {
             layer->OnImGuiRender();
         }
     }
 
 
-} // Ayla
+} // namespace Ayla::Core::Layers

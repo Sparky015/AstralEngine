@@ -32,7 +32,7 @@ void ExampleLayer::OnUpdate() {
 
 void ExampleLayer::OnEvent(IEvent& event) {
     // Do Stuff
-    //event.setIsHandled(x);
+    //event.SetIsHandled(x);
 }
 
 EventCategory ExampleLayer::GetAcceptingEventFlags() {

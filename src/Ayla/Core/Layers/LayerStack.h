@@ -59,10 +59,10 @@ namespace Ayla::Core::Layers
     private:
 
         /** Stores all the layers */
-        std::vector<ILayer *> m_layers;
+        std::vector<ILayer *> m_Layers;
 
         /** Stores all the overlays */
-        std::vector<ILayer *> m_overlayLayers;
+        std::vector<ILayer *> m_OverlayLayers;
     };
 
-} // Ayla
+} // namespace Ayla::Core::Layers

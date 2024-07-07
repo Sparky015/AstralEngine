@@ -14,7 +14,7 @@ namespace Ayla::Events {
     public:
 
         int getEventCategoryFlags() override {
-            return (InputCategory);
+            return (INPUT_CATEGORY);
         }
 
 
@@ -30,7 +30,7 @@ namespace Ayla::Events {
         explicit KeyPressedEvent(int keycode) : m_keycode(keycode) {}
 
         int getEventCategoryFlags() override {
-            return (KeyboardCategory | InputCategory);
+            return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
         int getEventType() override {
@@ -49,7 +49,7 @@ namespace Ayla::Events {
         explicit KeyTypedEvent(unsigned int keycode) : m_keycode(keycode) {}
 
         int getEventCategoryFlags() override {
-            return (KeyboardCategory | InputCategory);
+            return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
         int getEventType() override {
@@ -70,7 +70,7 @@ namespace Ayla::Events {
 
 
         int getEventCategoryFlags() override {
-            return (KeyboardCategory | InputCategory);
+            return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
 
@@ -93,7 +93,7 @@ namespace Ayla::Events {
 
 
         int getEventCategoryFlags() override {
-            return (KeyboardCategory | InputCategory);
+            return (KEYBOARD_CATEGORY | INPUT_CATEGORY);
         }
 
 

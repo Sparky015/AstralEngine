@@ -22,7 +22,7 @@ namespace Ayla::GUI {
         static void begin();
         static void end();
         void OnEvent(IEvent&) override;
-        EventCategory GetAcceptingEventFlags() override;
+        EEventCategory GetAcceptingEventFlags() override;
 
     private:
         static float m_time;

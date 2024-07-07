@@ -33,7 +33,7 @@ namespace Ayla::Core::Debug
         void OnEvent(IEvent& event) override;
 
         /** The Debug Layer does not accept events. */
-        EventCategory GetAcceptingEventFlags() override;
+        EEventCategory GetAcceptingEventFlags() override;
 
     private:
 

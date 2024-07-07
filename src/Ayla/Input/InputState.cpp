@@ -45,23 +45,23 @@ namespace Ayla::Input {
 
 
     void SInputState::onEvent(IEvent& event) {
-        AY_ASSERT(event.isInCategory(InputCategory), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
+        AY_ASSERT(event.IsInCategory(INPUT_CATEGORY), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
         //AY_TRACE("Input Received\t");
-        if (event.isInCategory(KeyboardCategory)){
-            if (event.getEventType() == KEY_PRESSED){
+        if (event.IsInCategory(KEYBOARD_CATEGORY)){
+            if (event.GetEventType() == KEY_PRESSED){
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
                 m_keyState[keyPressedEvent.getKeycode()].isDown = true;
                 //std::cout << keyPressedEvent.getKeycode();.
             }
 
-            if (event.getEventType() == KEY_RELEASED){
+            if (event.GetEventType() == KEY_RELEASED){
                 auto keyReleasedEvent = dynamic_cast<KeyReleasedEvent&>(event);
                 m_keyState[keyReleasedEvent.getKeycode()].isDown = false;
                 m_keyState[keyReleasedEvent.getKeycode()].isRepeating = false;
                 //std::cout << keyReleasedEvent.getKeycode();
             }
 
-            if (event.getEventType() == KEY_PRESSED_REPEATING){
+            if (event.GetEventType() == KEY_PRESSED_REPEATING){
                 auto keyPressedRepeatingEvent = dynamic_cast<KeyPressedRepeatingEvent&>(event);
                 m_keyState[keyPressedRepeatingEvent.getKeycode()].isRepeating = true;
                 //std::cout << keyPressedRepeatingEvent.getKeycode();
@@ -69,34 +69,34 @@ namespace Ayla::Input {
 
         }
 
-        if (event.isInCategory(MouseCategory)) {
-            if (event.getEventType() == MOUSE_BUTTON_PRESSED) {
+        if (event.IsInCategory(MOUSE_CATEGORY)) {
+            if (event.GetEventType() == MOUSE_BUTTON_PRESSED) {
                 auto mouseButtonPressedEvent = dynamic_cast<MouseButtonPressEvent&>(event);
                 m_keyState[mouseButtonPressedEvent.getButton()].isDown = true;
                 //std::cout << mouseButtonPressedEvent.getButton();
             }
 
-            if (event.getEventType() == MOUSE_BUTTON_RELEASED) {
+            if (event.GetEventType() == MOUSE_BUTTON_RELEASED) {
                 auto mouseButtonReleasedEvent = dynamic_cast<MouseButtonReleaseEvent&>(event);
                 m_keyState[mouseButtonReleasedEvent.getButton()].isDown = false;
                 m_keyState[mouseButtonReleasedEvent.getButton()].isRepeating = false;
                 //std::cout << mouseButtonReleasedEvent.getButton();
             }
 
-            if (event.getEventType() == MOUSE_CURSOR_MOVED) {
+            if (event.GetEventType() == MOUSE_CURSOR_MOVED) {
                 auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
                 m_mouseCursorState.mouseXPosition = mouseMovedEvent.getXPos();
                 m_mouseCursorState.mouseYPosition = mouseMovedEvent.getYPos();
-                //std::cout << mouseMovedEvent.getXPos() << ", " << mouseMovedEvent.getYPos();
+                //std::cout << mouseMovedEvent.GetXPos() << ", " << mouseMovedEvent.GetYPos();
             }
 
-            if (event.getEventType() == MOUSE_SCROLLED) {
+            if (event.GetEventType() == MOUSE_SCROLLED) {
                 auto mouseScrolledEvent = dynamic_cast<MouseScrollEvent&>(event);
                 //std::cout << mouseScrolledEvent.getXOffset() << ", " << mouseScrolledEvent.getYOffset();
             }
         }
 
-        event.setIsHandled(true);
+        event.SetIsHandled(true);
     }
 
 

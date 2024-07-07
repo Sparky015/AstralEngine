@@ -138,8 +138,8 @@ namespace Ayla::GUI {
     }
 
 
-    EventCategory ImGuiLayer::GetAcceptingEventFlags() {
-        return static_cast<EventCategory>(ApplicationCategory | InputCategory);
+    EEventCategory ImGuiLayer::GetAcceptingEventFlags() {
+        return static_cast<EEventCategory>(APPLICATION_CATEGORY | INPUT_CATEGORY);
     }
 
 
@@ -149,10 +149,10 @@ namespace Ayla::GUI {
 //        ImGuiIO& io = ImGui::GetIO();
 //
 ////        TODO: Put each case into a separate function
-//        switch(event.getEventType()){
+//        switch(event.GetEventType()){
 //            case MOUSE_CURSOR_MOVED: {
 //                auto mouseMovedEvent = dynamic_cast<MouseMovedEvent&>(event);
-//                io.MousePos = ImVec2((float)mouseMovedEvent.getXPos(), (float)mouseMovedEvent.getYPos());
+//                io.MousePos = ImVec2((float)mouseMovedEvent.GetXPos(), (float)mouseMovedEvent.GetYPos());
 //                break;
 //            }
 //            case MOUSE_BUTTON_PRESSED: {
@@ -173,9 +173,9 @@ namespace Ayla::GUI {
 //            case WINDOW_RESIZE: {
 //                auto windowResizeEvent = dynamic_cast<WindowResizeEvent&>(event);
 //                Windows::Window& appWindow = Core::Application::getWindow();
-//                io.DisplaySize = ImVec2((float)windowResizeEvent.getWidth(), (float)windowResizeEvent.getHeight());
+//                io.DisplaySize = ImVec2((float)windowResizeEvent.GetWidth(), (float)windowResizeEvent.GetHeight());
 //                io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
-//                glViewport(0, 0, windowResizeEvent.getWidth(), windowResizeEvent.getHeight());
+//                glViewport(0, 0, windowResizeEvent.GetWidth(), windowResizeEvent.GetHeight());
 //                break;
 //            }
 //            case KEY_PRESSED: {
@@ -233,7 +233,7 @@ namespace Ayla::GUI {
 //        }
 //
 //
-        if (event.isInCategory(ApplicationCategory)) {event.setIsHandled(true);}
+        if (event.IsInCategory(APPLICATION_CATEGORY)) { event.SetIsHandled(true);}
     }
 
 

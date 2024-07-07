@@ -70,7 +70,7 @@ namespace Ayla::Core::Debug
     }
 
 
-    EventCategory DebugLayer::GetAcceptingEventFlags()
+    EEventCategory DebugLayer::GetAcceptingEventFlags()
     {
         return None;
     }

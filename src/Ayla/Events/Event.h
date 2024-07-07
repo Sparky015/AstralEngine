@@ -8,7 +8,8 @@
 namespace Ayla::Events {
 
 
-    enum EventTypes {
+    enum EEventTypes : uint8_t
+    {
         NONE,
         WINDOW_CLOSE, WINDOW_RESIZE, WINDOW_GAINED_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED, // Wanted by:  ImGui (Final handle)
         APP_TICK, APP_UPDATE, APP_RENDER,
@@ -17,13 +18,14 @@ namespace Ayla::Events {
     };
 
 
-    enum EventCategory {
+    enum EEventCategory : uint8_t
+    { // TODO(sparky): Look into implementing enum classes
         None,
-        ApplicationCategory = 1 << 0, // Wanted by: ImGui (Final handle)
-        InputCategory = 1 << 1,  // Wanted by:  ImGui, Input State (Final handle)
-        KeyboardCategory = 1 << 2,  // Wanted by:  ImGui, Input State (Final handle)
-        MouseCategory = 1 << 3,     // Wanted by:  ImGui, Input State (Final handle)
-        MouseButtonCategory = 1 << 4,   // Wanted by:  ImGui, Input State (Final handle)
+        APPLICATION_CATEGORY = 1 << 0, // Wanted by: ImGui (Final handle)
+        INPUT_CATEGORY = 1 << 1,  // Wanted by:  ImGui, Input State (Final handle)
+        KEYBOARD_CATEGORY = 1 << 2,  // Wanted by:  ImGui, Input State (Final handle)
+        MOUSE_CATEGORY = 1 << 3,     // Wanted by:  ImGui, Input State (Final handle)
+        MOUSE_BUTTON_CATEGORY = 1 << 4,   // Wanted by:  ImGui, Input State (Final handle)
     };
 
 
@@ -31,33 +33,34 @@ namespace Ayla::Events {
     public:
         IEvent() = default;
         virtual ~IEvent() = default;
+        IEvent(const IEvent&) = default;
+        IEvent& operator=(const IEvent&) = default;
+        IEvent(IEvent&&) = default;
+        IEvent& operator=(IEvent&&) = default;
 
         /** Retrieves the category of the event for event filtering during the dispatch of events. */
-        [[nodiscard]] virtual int getEventCategoryFlags() const = 0;
+        [[nodiscard]] virtual int GetEventCategoryFlags() const = 0;
 
         /** Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. */
-        [[nodiscard]] virtual int getEventType() const = 0;
+        [[nodiscard]] virtual int GetEventType() const = 0;
 
         /** Checks to see if a given category matches ANY of an event's category flags in order to filter out events. */
-        [[nodiscard]] bool isInCategory(const EventCategory category) const;
+        [[nodiscard]] bool IsInCategory(const EEventCategory category) const;
 
         /** Checks to see if an event matches both given categories to filter out events. */
-        [[nodiscard]] bool isInBothCategories(const EventCategory category1, const EventCategory category2) const;
+        [[nodiscard]] bool IsInBothCategories(const EEventCategory category1, const EEventCategory category2) const;
 
         /** Checks to see if a given category matches the exact composition of an event's category flags in order to filter out events. */
-        [[nodiscard]] bool hasExactCategoryMatch(const EventCategory category) const;
+        [[nodiscard]] bool HasExactCategoryMatch(const EEventCategory category) const;
 
         /** Sets an event as handled in order to mark that it does not need to be propagated any more in the Layer Stack. */
-        void setIsHandled(const bool isHandled);
+        void SetIsHandled(const bool isHandled);
 
         /** Checks to see if an event is handled, so the Layer Stack knows when to stop propagating the event. */
-        [[nodiscard]] bool isHandled() const;
+        [[nodiscard]] bool IsHandled() const;
 
     protected:
         bool m_isHandled = false;
     };
 
-}
-
-
-
+ } // namespace Ayla::Events
