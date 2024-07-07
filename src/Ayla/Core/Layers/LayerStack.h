@@ -8,6 +8,7 @@
 
 namespace Ayla::Core::Layers
 {
+    // TODO: Refactor how the layer stack organizes layers.
 
     /** Stores the all layers in a centralized location for easy access to call Layer's Update and RenderImGui functions */
     class LayerStack

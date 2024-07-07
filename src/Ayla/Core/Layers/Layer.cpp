@@ -21,6 +21,36 @@ namespace Ayla::Core::Layers
     }
 
 
+    void ILayer::OnAttach()
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
+    void ILayer::OnDetach()
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
+    void ILayer::OnUpdate()
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
+    void ILayer::OnImGuiRender()
+    {
+        /** Empty definition for when layers don't need use this function.  */
+    }
+
+
+    void ILayer::OnEvent(IEvent& event)
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
     void ILayer::AttachLayer()
     {
         if (!m_IsInitializedInTower)

@@ -7,7 +7,7 @@
 namespace Ayla::Input::Keycodes
 {
 
-    enum Keycodes
+    enum EKeycodes : uint8_t
     {
         AY_KEY_LEFT_CLICK = 0,
         AY_KEY_MIDDLE_CLICK,

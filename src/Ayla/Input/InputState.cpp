@@ -9,9 +9,8 @@
 #include "Ayla/Input/Keycodes.h"
 
 
-
-
 namespace Ayla::Input {
+
     using namespace Ayla::Events;
 
     SInputState* SInputState::m_Instance = nullptr;
@@ -57,7 +56,6 @@ namespace Ayla::Input {
             {
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
                 m_KeyState[keyPressedEvent.GetKeycode()].IsDown = true;
-
                 //std::cout << keyPressedEvent.GetKeycode();.
             }
             if (event.GetEventType() == KEY_RELEASED)

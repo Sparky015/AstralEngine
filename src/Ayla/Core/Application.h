@@ -4,18 +4,19 @@
 #pragma once
 
 #include "Ayla/Core/Core.h"
-#include "Ayla/Core/Layers/LayerStack.h"
-#include "Ayla/ImGui/ImGuiLayer.h"
-#include "Ayla/Debug/DebugLayer.h"
-#include "Ayla/Window/Window.h"
 #include "Ayla/Client/UserSetup.h"
+#include "Ayla/Core/Layers/LayerStack.h"
+#include "Ayla/Debug/DebugLayer.h"
+#include "Ayla/ImGui/ImGuiLayer.h"
+#include "Ayla/Window/Window.h"
 
 
-using namespace Ayla::Windows;
-using namespace Ayla::Events;
 
 namespace Ayla::Core
 {
+    using namespace Ayla::Windows;
+    //using Ayla::Events::IEvent;
+
     /** The brain and backbone of the engine. */
     class Application
     {
@@ -39,9 +40,10 @@ namespace Ayla::Core
         static Application& Get();
 
         /** Lets the client link their loop to the Application. */
-        void SetClientLoop(Client::ClientLoop* ClientLoop);
+        void SetClientLoop(Client::ClientLoop* clientLoop);
 
     private:
+
         bool m_AppIsRunning = true;
         static Application* m_Application;
         static std::unique_ptr<Window> m_Window;
@@ -51,6 +53,6 @@ namespace Ayla::Core
         Client::ClientLoop* m_ClientLoop;
     };
 
-}
+} // namespace Ayla::Core
 
 

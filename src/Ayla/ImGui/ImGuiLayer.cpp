@@ -21,7 +21,7 @@ using namespace Ayla::Input;
 
 namespace Ayla::GUI {
 
-    float ImGuiLayer::m_time = 0.0f;
+    float ImGuiLayer::m_Time = 0.0f;
 
     ImGuiLayer::ImGuiLayer()
     {
@@ -46,8 +46,8 @@ namespace Ayla::GUI {
         ImGuiIO& io = ImGui::GetIO();
 
         Windows::Window& appWindow = Core::Application::GetWindow();
-        io.DisplaySize = ImVec2(appWindow.getWidth(), appWindow.getHeight());
-        io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
+        io.DisplaySize = ImVec2(appWindow.GetWidth(), appWindow.GetHeight());
+        io.DisplayFramebufferScale = ImVec2(appWindow.GetDisplayFramebufferScaleX(),appWindow.GetDisplayFramebufferScaleY());
 
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
@@ -62,7 +62,7 @@ namespace Ayla::GUI {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::GetWindow().getNativeWindow()), true);
+        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::GetWindow().GetNativeWindow()), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 
@@ -75,36 +75,39 @@ namespace Ayla::GUI {
     }
 
 
-    void ImGuiLayer::OnUpdate()
-    {
-
-    }
-
-
     void ImGuiLayer::OnImGuiRender()
     {
         ImGuiIO& io = ImGui::GetIO();
-        static bool show = true;
+        static bool showDemoWindow = true;
         static bool showStackTool = true;
-        if (showStackTool) ImGui::ShowIDStackToolWindow(&showStackTool);
-        if (show) ImGui::ShowDemoWindow(&show);
+        if (showStackTool)
+        {
+            ImGui::ShowIDStackToolWindow(&showStackTool);
+        }
+        if (showDemoWindow)
+        {
+            ImGui::ShowDemoWindow(&showDemoWindow);
+        }
 
         static bool showAnotherWindow = true;
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static float f = 0.0f;
+            static float sliderFloat = 0.0f;
             static int counter = 0;
 
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show);      // Edit bools storing our window open/close state
+            ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &showAnotherWindow);
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat("float", &sliderFloat, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+            {
                 counter++;
+            }
+
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
@@ -118,7 +121,9 @@ namespace Ayla::GUI {
             ImGui::Begin("Another Window", &showAnotherWindow);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
+            {
                 showAnotherWindow = false;
+            }
             ImGui::End();
         }
     }
@@ -127,9 +132,9 @@ namespace Ayla::GUI {
     void ImGuiLayer::Begin()
     {
         ImGuiIO& io = ImGui::GetIO();
-        float time = (float)glfwGetTime();
-        io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
-        m_time = time;
+        float time = static_cast<float>(glfwGetTime());
+        io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
+        m_Time = time;
 
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
@@ -149,7 +154,6 @@ namespace Ayla::GUI {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backupCurrentContext);
-
         }
     }
 
@@ -192,7 +196,7 @@ namespace Ayla::GUI {
 //                auto windowResizeEvent = dynamic_cast<WindowResizeEvent&>(event);
 //                Windows::Window& appWindow = Core::Application::getWindow();
 //                io.DisplaySize = ImVec2((float)windowResizeEvent.GetWidth(), (float)windowResizeEvent.GetHeight());
-//                io.DisplayFramebufferScale = ImVec2(appWindow.getDisplayFramebufferScaleX(),appWindow.getDisplayFramebufferScaleY());
+//                io.DisplayFramebufferScale = ImVec2(appWindow.GetDisplayFramebufferScaleX(),appWindow.GetDisplayFramebufferScaleY());
 //                glViewport(0, 0, windowResizeEvent.GetWidth(), windowResizeEvent.GetHeight());
 //                break;
 //            }

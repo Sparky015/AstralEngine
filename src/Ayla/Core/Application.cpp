@@ -3,11 +3,11 @@
 //
 
 #include "Ayla/Core/Application.h"
-#include "Ayla/Core/Time/Clock.h"
 #include "Ayla/Core/Layers/LayerStack.h"
+#include "Ayla/Core/Time/Clock.h"
+#include "Ayla/Debug/DebugLayer.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
-#include "Ayla/Debug/DebugLayer.h"
 
 #include "glad/glad.h" // TEMP
 
@@ -28,8 +28,8 @@ namespace Ayla::Core
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
-        m_Window = std::unique_ptr<Window>(Window::createWindow());
-        m_Window->setEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+        m_Window = std::unique_ptr<Window>(Window::CreateWindow(WindowProperties("Ayla Engine Window", 1024, 768)));
+        m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
         // Layer Stack //
         AY_LOG("--- Application: Initializing Layer Stack ---");
@@ -55,7 +55,7 @@ namespace Ayla::Core
 
     void Application::Run() const
     {
-        long long timeAccumulation = 0.0;       // TEMP
+        int64_t timeAccumulation = 0.0;       // TEMP
         AY_LOG("\n\nRunning Application!");
 
         while (m_AppIsRunning){
@@ -75,11 +75,11 @@ namespace Ayla::Core
             m_LayerStack->RenderImGui();
             m_ImGuiLayer->End();
 
-            m_Window->update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
+            m_Window->Update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
         }
 
-        std::cout << "\nDelta Time Accumulation: " << timeAccumulation * .001 << " seconds\n";      // TEMP
-        std::cout << "Stopwatch: " << Time::Clock::Get().GetStopwatchTime() * .001 << " seconds\n";      // TEMP
+        std::cout << "\nDelta Time Accumulation: " << static_cast<double>(timeAccumulation) * .001 << " seconds\n";      // TEMP
+        std::cout << "Stopwatch: " << static_cast<double>(Time::Clock::Get().GetStopwatchTime()) * .001 << " seconds\n";      // TEMP
     }
 
 
@@ -114,11 +114,11 @@ namespace Ayla::Core
     }
 
 
-    void Application::SetClientLoop(Client::ClientLoop* ClientLoop)
+    void Application::SetClientLoop(Client::ClientLoop* clientLoop)
     {
         AY_ASSERT(m_ClientLoop == nullptr, "[Sholas] Core/Application.cpp: ClientLoop has already been initialized!");
-        m_ClientLoop = ClientLoop;
+        m_ClientLoop = clientLoop;
     }
 
 
-} // Ayla
+} // namespace Ayla::Core

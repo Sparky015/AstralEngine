@@ -4,13 +4,14 @@
 #pragma once
 
 #include "Ayla/Input/InputLayer.h"
-
+#include "Ayla/Events/Event.h"
 
 
 namespace Ayla::Input {
 
 // TODO: Make some delegates for when keys are pressed. Also make an event delegate class to easily to this.
-    class SInputState {
+    class SInputState
+    {
     public:
 
         /**  */
@@ -20,7 +21,7 @@ namespace Ayla::Input {
         static SInputState& Get();
 
         /**  */
-        void OnEvent(IEvent&);
+        void OnEvent(Events::IEvent&);
 
         SInputState(const SInputState&) = delete;
         SInputState& operator=(const SInputState&) = delete;
@@ -65,7 +66,6 @@ namespace Ayla::Input {
         static SInputState* m_Instance;
         SInputState();
         ~SInputState();
-
 
         static const int m_NUMBER_OF_KEYS = 79;
 
@@ -161,7 +161,6 @@ namespace Ayla::Input {
 
         InputLayer m_InputLayer;
     };
-
 
 } // namespace Ayla::Input
 

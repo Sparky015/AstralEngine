@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "Ayla/aypch.h"
-
 /** Preprocessor Central */
 #ifdef AYLA_PLATFORM_WINDOWS
     #ifdef AYLA_BUILD_SHARED_LIB
@@ -23,6 +21,7 @@
     #error Something went wrong with defining Ayla API symbols (Platform not found)
 #endif
 
+#include "Ayla/aypch.h"
 
 /** Macro Land */
 namespace

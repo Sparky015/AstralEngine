@@ -5,26 +5,27 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
-using namespace Ayla::Events;
-using namespace Ayla::Core::Layers;
+
 
 namespace Ayla::GUI {
+    using namespace Ayla::Events;
+    using namespace Ayla::Core::Layers;
 
-    class ImGuiLayer : public ILayer {
+    class ImGuiLayer : public ILayer
+    {
     public:
         ImGuiLayer();
         ~ImGuiLayer() override;
 
         void OnAttach() override;
         void OnDetach() override;
-        void OnUpdate() override;
         void OnImGuiRender() override;
         static void Begin();
         static void End();
-        void OnEvent(IEvent&) override;
+        void OnEvent(IEvent& event) override;
         EEventCategory GetAcceptingEventFlags() override;
 
     private:
-        static float m_time;
+        static float m_Time;
     };
 }

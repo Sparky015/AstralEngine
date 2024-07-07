@@ -10,13 +10,9 @@ class ExampleLayer : public Ayla::Core::Layers::ILayer
 {
 public:
     ExampleLayer();
-    ~ExampleLayer() override;
+    virtual ~ExampleLayer() override;
 
-    virtual void OnAttach() override;
-    virtual void OnDetach() override;
-    virtual void OnUpdate() override;
     virtual void OnImGuiRender() override;
-    virtual void OnEvent(Ayla::Events::IEvent& event) override;
     virtual Ayla::Events::EEventCategory GetAcceptingEventFlags() override;
 
 };

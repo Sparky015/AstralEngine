@@ -21,23 +21,23 @@ namespace Ayla::Core::Layers
         ILayer();
         virtual ~ILayer();
 
-        /** Executes the function code when a layer is added (attached) to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
-        virtual void OnAttach() = 0;
-
-        /** Executes the function code when a layer is removed (detached) from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
-        virtual void OnDetach() = 0;
-
-        /** Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. */
-        virtual void OnUpdate() = 0;
-
-        /** Allows a system to interact with and create ImGui windows. */
-        virtual void OnImGuiRender() = 0;
-
-        /** Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. */
-        virtual void OnEvent(IEvent& event) = 0;
-
         /** Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. */
         virtual EEventCategory GetAcceptingEventFlags() = 0;
+
+        /** Executes the function code when a layer is added (attached) to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
+        virtual void OnAttach();
+
+        /** Executes the function code when a layer is removed (detached) from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
+        virtual void OnDetach();
+
+        /** Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. */
+        virtual void OnUpdate();
+
+        /** Allows a system to interact with and create ImGui windows. */
+        virtual void OnImGuiRender();
+
+        /** Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. */
+        virtual void OnEvent(IEvent& event);
 
         /** Allows a system to send events to the Layer Stack to be sent to other systems. */
         //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const;

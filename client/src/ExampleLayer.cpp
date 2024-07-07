@@ -3,46 +3,36 @@
 //
 
 #include "ExampleLayer.h"
-
 #include "Ayla/Core/Core.h"
 #include "imgui.h"
 
 
-ExampleLayer::ExampleLayer(){
+ExampleLayer::ExampleLayer()
+{
     AY_TRACE("ExampleLayer: Initializing Template Layer");
     this->AttachLayer();
     m_DebugName = "Template Layer";
 }
 
-ExampleLayer::~ExampleLayer(){
+
+ExampleLayer::~ExampleLayer()
+{
     this->DetachLayer();
 }
 
-void ExampleLayer::OnAttach() {
-    m_IsEnabled = true;
-}
 
-void ExampleLayer::OnDetach() {
-    m_IsEnabled = false;
-}
-
-void ExampleLayer::OnUpdate() {
-
-}
-
-void ExampleLayer::OnEvent(Ayla::Events::IEvent& event) {
-    // Do Stuff
-    //event.SetIsHandled(x);
-}
-
-Ayla::Events::EEventCategory ExampleLayer::GetAcceptingEventFlags() {
-    //return flag category
-    return Ayla::Events::None;
-}
-
-void ExampleLayer::OnImGuiRender() {
+void ExampleLayer::OnImGuiRender()
+{
     ImGui::Begin("Test Example!");
     ImGui::Text("Hi hihih!");
     ImGui::End();
 }
+
+
+Ayla::Events::EEventCategory ExampleLayer::GetAcceptingEventFlags()
+{
+    return Ayla::Events::None;
+}
+
+
 

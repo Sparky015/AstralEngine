@@ -40,13 +40,13 @@ namespace Ayla::Events {
         /** Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. */
         [[nodiscard]] virtual int GetEventType() const = 0;
 
-        /** Checks to see if a given category matches ANY of an event's category flags in order to filter out events. */
+        /** Checks to see if ANY of the event's category flags matches a given category flag for filtering out events. */
         [[nodiscard]] bool IsInCategory(const EEventCategory category) const;
 
         /** Checks to see if an event matches both given categories to filter out events. */
         [[nodiscard]] bool IsInBothCategories(const EEventCategory category1, const EEventCategory category2) const;
 
-        /** Checks to see if a given category matches the exact composition of an event's category flags in order to filter out events. */
+        /** Checks to see if ALL of the event's category flags matches a given category flag(s) for filtering out events. */
         [[nodiscard]] bool HasExactCategoryMatch(const EEventCategory category) const;
 
         /** Sets an event as handled in order to mark that it does not need to be propagated any more in the Layer Stack. */
