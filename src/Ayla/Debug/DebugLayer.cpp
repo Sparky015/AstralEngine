@@ -27,18 +27,6 @@ namespace Ayla::Core::Debug
     }
 
 
-    void DebugLayer::OnAttach()
-    {
-        m_IsEnabled = true;
-    }
-
-
-    void DebugLayer::OnDetach()
-    {
-        m_IsEnabled = false;
-    }
-
-
     void DebugLayer::OnUpdate()
     {
         using namespace Ayla::Input::Keycodes;
@@ -61,12 +49,6 @@ namespace Ayla::Core::Debug
             AY_TRACE("Resetting stopwatch.");
             Ayla::Core::Time::Clock::Get().ResetStopwatch();
         }
-    }
-
-
-    void DebugLayer::OnEvent(IEvent& event)
-    {
-        // Not accepting events
     }
 
 

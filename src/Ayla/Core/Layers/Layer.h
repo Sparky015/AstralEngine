@@ -40,13 +40,13 @@ namespace Ayla::Core::Layers
         virtual void OnEvent(IEvent& event);
 
         /** Allows a system to send events to the Layer Stack to be sent to other systems. */
-        //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const;
+        //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const; // TODO: Implement this
 
         /** Adds the layer as a layer to the Layer Stack. */
         void AttachLayer();
-        // TODO: Fix this layer/overlay mumbo jumbo
+
         /** Adds the layer as an overlay to the Layer Stack */
-        void AttachOverlay();
+        void AttachOverlay(); // TODO: Fix this layer/overlay mumbo jumbo
 
         /** Removes the layer as a layer from the Layer Stack. */
         void DetachLayer();

@@ -23,13 +23,15 @@ namespace Ayla::Core::Layers
 
     void ILayer::OnAttach()
     {
-        /** Empty definition for when layers don't need to use this function.  */
+        /** Default definition for when layers don't need to use this function.  */
+        m_IsEnabled = true;
     }
 
 
     void ILayer::OnDetach()
     {
-        /** Empty definition for when layers don't need to use this function.  */
+        /** Default definition for when layers don't need to use this function.  */
+        m_IsEnabled = false;
     }
 
 

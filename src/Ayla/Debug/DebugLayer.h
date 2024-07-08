@@ -17,20 +17,11 @@ namespace Ayla::Core::Debug
         DebugLayer();
         ~DebugLayer() override;
 
-        /** Enables the layer */
-        void OnAttach() override;
-
-        /** Disables the layer */
-        void OnDetach() override;
-
         /** Checks if keys are pressed, so we know when to show debugging info */
         void OnUpdate() override;
 
         /** A space to create the ImGui windows to show debugging info. */
         void OnImGuiRender() override;
-
-        /** The Debug Layer does not accept or handle any events. */
-        void OnEvent(IEvent& event) override;
 
         /** The Debug Layer does not accept events. */
         EEventCategory GetAcceptingEventFlags() override;

@@ -7,6 +7,7 @@
 namespace Ayla::Input::Keycodes
 {
 
+    /** Keycodes that are Sholas specific. */
     enum EKeycodes : uint8_t
     {
         AY_KEY_LEFT_CLICK = 0,

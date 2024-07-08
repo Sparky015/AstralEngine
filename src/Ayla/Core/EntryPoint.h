@@ -6,7 +6,8 @@
 #include "Ayla/Client/UserSetup.h"
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 #ifdef UNKNOWN_PLATFORM
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
 #endif

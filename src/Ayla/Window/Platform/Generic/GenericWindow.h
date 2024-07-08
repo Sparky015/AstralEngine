@@ -19,13 +19,28 @@ namespace Ayla::Windows{
         explicit GenericWindow(const WindowProperties& properties);
         ~GenericWindow() override;
 
+        /** */
         void Init(const WindowProperties &windowProperties);
+
+        /** */
         [[nodiscard]] int GetWidth() const override;
+
+        /** */
         [[nodiscard]] int GetHeight() const override;
+
+        /** */
         [[nodiscard]] float GetDisplayFramebufferScaleX() const override;
+
+        /** */
         [[nodiscard]] float GetDisplayFramebufferScaleY() const override;
+
+        /** */
         [[nodiscard]] void* GetNativeWindow() const override;
+
+        /** */
         virtual void SetEventCallback(const EventCallback& callback) override;
+
+        /** */
         void Update() override;
 
     private:
