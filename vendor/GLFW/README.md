@@ -367,7 +367,7 @@ information on what to include when reporting a bug.
  - [Wayland] Bugfix: Retrieving partial framebuffer size would segfault
  - [Wayland] Bugfix: Scrolling offsets were inverted compared to other platforms
    (#1463)
- - [Wayland] Bugfix: Client-Side Decorations were destroyed in the wrong order
+ - [Wayland] Bugfix: ClientLoop-Side Decorations were destroyed in the wrong order
    (#1798)
  - [Wayland] Bugfix: Monitors physical size could report zero (#1784,#1792)
  - [Wayland] Bugfix: Some keys were not repeating in Wayland (#1908)

@@ -1,0 +1,26 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="ClangTidy" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="clangTidyCheckOptions">
+        <list>
+          <ClangTidyCheckOption>
+            <option name="optionName" value="cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor" />
+            <option name="optionValue" value="true" />
+          </ClangTidyCheckOption>
+          <ClangTidyCheckOption>
+            <option name="optionName" value="hicpp-signed-bitwise.IgnorePositiveIntegerLiterals" />
+            <option name="optionValue" value="true" />
+          </ClangTidyCheckOption>
+          <ClangTidyCheckOption>
+            <option name="optionName" value="misc-include-cleaner.IgnoreHeaders" />
+            <option name="optionValue" value="src/Ayla/aypch.h" />
+          </ClangTidyCheckOption>
+        </list>
+      </option>
+      <option name="clangTidyChecks" value="-*,mpi-buffer-deref,mpi-type-mismatch,performance-*,modernize-*,concurrency-*,-modernize-use-trailing-return-type,-modernize-use-override,portability-*,google-*,-google-objc-avoid-throwing-exception,-google-upgrade-googletest-case,-google-objc-global-variable-declaration,-google-objc-avoid-nsobject-new,-google-readability-avoid-underscore-in-googletest-name,-google-objc-function-naming,bugprone-*,-bugprone-easily-swappable-parameters,misc-*,-misc-unused-parameters,-misc-non-private-member-variables-in-classes,readability-*,-readability-avoid-const-params-in-decls,-readability-magic-numbers,-readability-uppercase-literal-suffix,-readability-use-std-min-max,clang-analyzer-*,-clang-analyzer-core.uninitialized.UndefReturn,cppcoreguidelines-*,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-explicit-virtual-functions,-cppcoreguidelines-owning-memory,-cppcoreguidelines-avoid-magic-numbers,hicpp-*,-hicpp-uppercase-literal-suffix,-hicpp-vararg,-hicpp-special-member-functions,-hicpp-use-override,-hicpp-signed-bitwise,-hicpp-use-auto,-modernize-use-auto,fuchsia-*,-fuchsia-default-arguments-calls,-fuchsia-statically-constructed-objects,-google-readability-casting,-misc-include-cleaner,llvm-*,-llvm-header-guard,cert-*,-cert-dcl59-cpp" />
+    </inspection_tool>
+    <inspection_tool class="Clazy" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="OCInconsistentNaming" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  </profile>
+</component>

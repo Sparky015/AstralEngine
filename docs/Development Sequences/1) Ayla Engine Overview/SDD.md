@@ -36,7 +36,7 @@ TBD
 
 N/A
 
-### 4.3 User Interface Design
+### 4.3 Application Interface Design
 > This section contains user interface mockups and wireframes. It describes the UI component hierarchy and navigation
 > flow. It explains the UI design patterns and guidelines.
 

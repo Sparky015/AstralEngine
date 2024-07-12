@@ -9,8 +9,8 @@ namespace Ayla::Events {
 
 // PUBLIC
 
-        void EventDispatcher::addEventToQueue(Event& event){
-            eventQueue.push(std::make_shared<Event>(std::move(event)));
+        void EventDispatcher::addEventToQueue(IEvent& event){
+            //eventQueue.push(std::make_shared<IEvent>(std::move(event)));
         }
 
         void EventDispatcher::dispatchAllEvents() {
@@ -19,28 +19,28 @@ namespace Ayla::Events {
             }
         }
 
-        void EventDispatcher::dispatchBlockingEvent(Event& dispatchingEvent) {
-            Event event = std::move(dispatchingEvent);
+        void EventDispatcher::dispatchBlockingEvent(IEvent& dispatchingEvent) {
+
             // Filter out event through layers
         }
 
 // PRIVATE
 
-        std::shared_ptr<Event> EventDispatcher::takeEventFromQueue(){
+        std::shared_ptr<IEvent> EventDispatcher::takeEventFromQueue(){
             if (eventQueue.empty()) { return nullptr; }
-            std::shared_ptr<Event> event = std::move(eventQueue.front());
+            std::shared_ptr<IEvent> event = std::move(eventQueue.front());
             eventQueue.pop();
             return event;
         }
 
-        void EventDispatcher::dispatchEvent(const std::shared_ptr<Event>& dispatchingEventPtr) {
-            Event event = std::move(*dispatchingEventPtr);
+        void EventDispatcher::dispatchEvent(const std::shared_ptr<IEvent>& dispatchingEventPtr) {
+            //IEvent event = std::move(*dispatchingEventPtr);
             // Filter out event through layers
 
 
         }
 
-        int EventDispatcher::PollEvent(Event& event){
+        int EventDispatcher::PollEvent(IEvent& event){
             auto eventPtr = EventDispatcher::takeEventFromQueue();
             if (eventPtr == nullptr) {return 0;}
 
@@ -48,6 +48,6 @@ namespace Ayla::Events {
             return 1;
         }
 
-        std::queue<std::shared_ptr<Event>> EventDispatcher::eventQueue;
+        std::queue<std::shared_ptr<IEvent>> EventDispatcher::eventQueue;
 
 };

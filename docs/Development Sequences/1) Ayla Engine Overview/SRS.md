@@ -17,13 +17,13 @@ Table of Contents
 * [Overall Description](#overall-description)
   * 2.1 [Product Perspective](#21-product-perspective)
   * 2.2 [Product Functions](#22-product-functions)
-  * 2.3 [User Classes and Characteristics](#23-user-classes-and-characteristics)
+  * 2.3 [Application Classes and Characteristics](#23-user-classes-and-characteristics)
   * 2.4 [Operating Environment](#24-operating-environment)
   * 2.5 [Design and Implementation Constraints](#25-design-and-implementation-constraints)
-  * 2.6 [User Documentation](#26-user-documentation)
+  * 2.6 [Application Documentation](#26-user-documentation)
   * 2.7 [Assumptions and Dependencies](#27-assumptions-and-dependencies)
 * [External Interface Requirements](#external-interface-requirements)
-  * 3.1 [User Interfaces](#31-user-interfaces)
+  * 3.1 [Application Interfaces](#31-user-interfaces)
   * 3.2 [Hardware Interfaces](#32-hardware-interfaces)
   * 3.3 [Software Interfaces](#33-software-interfaces)
   * 3.4 [Communications Interfaces](#34-communications-interfaces)
@@ -130,8 +130,8 @@ Needs to have:
 * Graphs and Data of Performance
 * more to write later
 
-### 2.3 User Classes and Characteristics
-> Identify the various user classes that you anticipate will use this product. User classes may be differentiated based
+### 2.3 Application Classes and Characteristics
+> Identify the various user classes that you anticipate will use this product. Application classes may be differentiated based
 > on frequency of use, subset of product functions used, technical expertise, security or privilege levels, educational
 > level, or experience. Describe the pertinent characteristics of each user class. Certain requirements may pertain only
 > to certain user classes. Distinguish the most important user classes for this product from those who are less important
@@ -156,7 +156,7 @@ The engine will be available to use on MacOS and Windows for only the latest ver
 The main limitation is the amount of knowledge I have on game engines, which this project serves to help me in.
 
 
-### 2.6 User Documentation
+### 2.6 Application Documentation
 > List the user documentation components (such as user manuals, on-line help, and tutorials) that will be delivered
 > along with the software. Identify any known user documentation delivery formats or standards.
 
@@ -178,7 +178,7 @@ DX11, and DX12 for rendering and Win32 and Cocoa for the window system.
 
 ## External Interface Requirements
 
-### 3.1 User Interfaces
+### 3.1 Application Interfaces
 > Describe the logical characteristics of each interface between the software product and the users. This may include
 > sample screen images, any GUI standards or product family style guides that are to be followed, screen layout
 > constraints, standard buttons and functions (e.g., help) that will appear on every screen, keyboard shortcuts, error
@@ -214,7 +214,7 @@ It must also accept input from common peripherals such as keyboards, mice, game 
 Nature of the data and control interactions:
 
 Continuous streams of positional data, textures, and commands are sent to the GPU.
-User inputs and commands are interpreted as discrete events.
+Application inputs and commands are interpreted as discrete events.
 Game state data is continuously read and written to/from memory.
 
 [ Summarized with AI ] <--

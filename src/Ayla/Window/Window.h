@@ -3,43 +3,59 @@
 //
 #pragma once
 
-#include "Ayla/aypch.h"
 #include "Ayla/Events/Event.h"
+#include "Ayla/aypch.h"
 
 
-using namespace Ayla::Events;
+namespace Ayla::Windows { // maybe change namespace to Display or Viewport instead of Windows?
+    using EventCallback = std::function<void(Events::IEvent& event)>;
 
-namespace Ayla::Windows{ // maybe change namespace to Display or Viewport instead of Windows?
+    /** Values used to create the desire window */
+    struct WindowProperties
+    {
+        std::string Title;
+        int Width;
+        int Height;
 
-
-    // Values used to create the desire window
-    struct WindowProperties {
-        std::string title;
-        float width;
-        float height;
-
-        WindowProperties(std::string title = "Ayla Engine Window", float width = 1024.0f, float height = 768.0f) :
-                title(std::move(title)),
-                width(width),
-                height(height) {}
+        WindowProperties(std::string title, int width, int height) :
+                Title(std::move(title)),
+                Width(width),
+                Height(height)
+        {}
     };
 
 
-
-    class AYLA_API Window{
+    class Window
+    {
     public:
-            using EventCallback = std::function<void(Event&)>;
+        Window() = default;
 
-            virtual ~Window() = default;
-            virtual void update() = 0;
+        virtual ~Window() = default;
 
-            [[nodiscard]] virtual int getWidth() const = 0;
-            [[nodiscard]] virtual int getHeight() const = 0;
-            [[nodiscard]] virtual float getDisplayFramebufferScaleX() const = 0;
-            [[nodiscard]] virtual float getDisplayFramebufferScaleY() const = 0;
 
-            virtual void setEventCallback(const EventCallback& callback) = 0;
-            static Window* createWindow(const WindowProperties& properties = WindowProperties());
+        /** Updates the window by swapping the buffers. */
+        virtual void Update() = 0;
+
+        /** Retrieves the width of the window. */
+        [[nodiscard]] virtual int GetWidth() const = 0;
+
+        /** Retrieves the height of the window. */
+        [[nodiscard]] virtual int GetHeight() const = 0;
+
+        /**  */
+        [[nodiscard]] virtual float GetDisplayFramebufferScaleX() const = 0;
+
+        /**  */
+        [[nodiscard]] virtual float GetDisplayFramebufferScaleY() const = 0;
+
+        /**  */
+        [[nodiscard]] virtual void* GetNativeWindow() const = 0;
+
+        /**  */
+        virtual void SetEventCallback(const EventCallback& callback) = 0;
+
+        /**  */
+        static Window* CreateWindow(const WindowProperties& properties);
     };
 
-}
+} // namespace Ayla::Windows

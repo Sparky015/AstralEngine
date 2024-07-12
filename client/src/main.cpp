@@ -2,16 +2,25 @@
 // Created by sparky on 4/16/2024.
 //
 
-#include <Ayla.h>
+#include "Ayla.h"
+#include "ExampleLayer.h"
 
-class Game : public Ayla::Core::Application {
+class ClientApplication : public ClientLoop {
 public:
-    Game() = default;
-    ~Game() = default;
-    
+
+    void Update() override {
+        //AY_LOG("[ClientLoop] Application: Update function called!");
+    };
+
+    void Init() override {
+        AY_LOG("[ClientLoop] Application: Init function called!");
+        el = ExampleLayer();
+    }
+
+    ExampleLayer el;
 };
 
 
-Ayla::Core::Application* Ayla::Core::CreateApplication() {
-    return new Game();
+ClientLoop* Ayla::Client::LinkClientToEngine() {
+    return new ClientApplication();
 }

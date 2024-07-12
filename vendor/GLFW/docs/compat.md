@@ -20,7 +20,7 @@ responsibility for interacting well with the many and varied window managers in
 use on Unix-like systems.  In order for applications and window managers to work
 well together, a number of standards and conventions have been developed that
 regulate behavior outside the scope of the X11 API; most importantly the
-[Inter-Client Communication Conventions Manual][ICCCM] (ICCCM) and [Extended
+[Inter-ClientLoop Communication Conventions Manual][ICCCM] (ICCCM) and [Extended
 Window Manager Hints][EWMH] (EWMH) standards.
 
 [ICCCM]: https://www.tronche.com/gui/x/icccm/

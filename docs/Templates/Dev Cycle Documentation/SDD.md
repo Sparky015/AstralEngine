@@ -23,7 +23,7 @@
 > This section presents the data models (e.g., entity-relationship diagrams). It documents the database schemas. It
 > outlines the data storage and persistence strategy.
 
-### 4.3 User Interface Design
+### 4.3 Application Interface Design
 > This section contains user interface mockups and wireframes. It describes the UI component hierarchy and navigation
 > flow. It explains the UI design patterns and guidelines.
 

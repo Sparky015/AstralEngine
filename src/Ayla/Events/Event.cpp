@@ -6,21 +6,36 @@
 #include "Ayla/Events/Event.h"
 
 
-namespace Ayla::Events {
+namespace Ayla::Events
+{
+
+    bool IEvent::IsInCategory(const EEventCategory category) const
+    {
+        return (GetEventCategoryFlags() & category) != 0;
+    }
 
 
-
-   int Event::getEventType() { return NONE;}
-    int Event::getEventCategoryFlags() {return None;}
-
-    bool Event::isHandled() {
-       return m_isHandled;
-   }
-
-    void Event::setIsHandled(bool state) {
-       m_isHandled = state;
-   }
+    bool IEvent::IsInBothCategories(const EEventCategory category1, const EEventCategory category2) const
+    {
+        return ((GetEventCategoryFlags() & category1) != 0) && ((GetEventCategoryFlags() & category2) != 0);
+    }
 
 
+    bool IEvent::HasExactCategoryMatch(const EEventCategory category) const
+    {
+        return (GetEventCategoryFlags() & category) == category;
+    }
 
-}
+
+    bool IEvent::IsHandled() const
+    {
+       return m_IsHandled;
+    }
+
+
+    void IEvent::SetIsHandled(const bool isHandled)
+    {
+        m_IsHandled = isHandled;
+    }
+
+} // namespace Ayla::Events

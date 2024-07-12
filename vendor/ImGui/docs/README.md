@@ -16,7 +16,7 @@ Businesses: support continued development and maintenance via invoiced sponsorin
 | [The Pitch](#the-pitch) - [Usage](#usage) - [How it works](#how-it-works) - [Releases & Changelogs](#releases--changelogs) - [Demo](#demo) - [Integration](#integration) |
 :----------------------------------------------------------: |
 | [Gallery](#gallery) - [Support, FAQ](#support-frequently-asked-questions-faq) -  [How to help](#how-to-help) - **[Funding & Sponsors](https://github.com/ocornut/imgui/wiki/Funding)** - [Credits](#credits) - [License](#license) |
-| [Wiki](https://github.com/ocornut/imgui/wiki) - [Extensions](https://github.com/ocornut/imgui/wiki/Useful-Extensions) - [Languages bindings & frameworks backends](https://github.com/ocornut/imgui/wiki/Bindings) - [Software using Dear ImGui](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui) - [User quotes](https://github.com/ocornut/imgui/wiki/Quotes) |
+| [Wiki](https://github.com/ocornut/imgui/wiki) - [Extensions](https://github.com/ocornut/imgui/wiki/Useful-Extensions) - [Languages bindings & frameworks backends](https://github.com/ocornut/imgui/wiki/Bindings) - [Software using Dear ImGui](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui) - [Application quotes](https://github.com/ocornut/imgui/wiki/Quotes) |
 
 ### The Pitch
 
@@ -162,7 +162,7 @@ See: [Upcoming Changes](https://github.com/ocornut/imgui/wiki/Upcoming-Changes).
 
 See: [Dear ImGui Test Engine + Test Suite](https://github.com/ocornut/imgui_test_engine) for Automation & Testing.
 
-For the purposes of getting search engines to crawl the wiki, here's a link to the [Crawable Wiki](https://github-wiki-see.page/m/ocornut/imgui/wiki) (not for humans, [here's why](https://github-wiki-see.page/)).
+For the purposes of getting search engines to crawl the wiki, here's a link to the [Crawlable Wiki](https://github-wiki-see.page/m/ocornut/imgui/wiki) (not for humans, [here's why](https://github-wiki-see.page/)).
 
 Getting started? For first-time users having issues compiling/linking/running or issues loading fonts, please use [GitHub Discussions](https://github.com/ocornut/imgui/discussions). For ANY other questions, bug reports, requests, feedback, please post on [GitHub Issues](https://github.com/ocornut/imgui/issues). Please read and fill the New Issue template carefully.
 

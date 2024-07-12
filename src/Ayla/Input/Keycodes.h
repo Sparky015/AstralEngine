@@ -4,9 +4,12 @@
 
 #pragma once
 
-namespace Ayla::Input {
+namespace Ayla::Input::Keycodes
+{
 
-    enum KeyCodes {
+    /** Keycodes that are Sholas specific. */
+    enum EKeycodes : uint8_t
+    {
         AY_KEY_LEFT_CLICK = 0,
         AY_KEY_MIDDLE_CLICK,
         AY_KEY_RIGHT_CLICK,
@@ -61,6 +64,7 @@ namespace Ayla::Input {
         AY_KEY_F10,
         AY_KEY_F11,
         AY_KEY_F12,
+
         AY_KEY_SPACE,
         AY_KEY_ESCAPE,
         AY_KEY_ENTER,
@@ -81,20 +85,15 @@ namespace Ayla::Input {
         AY_KEY_NUM_LOCK,
         AY_KEY_PRINT_SCREEN,
         AY_KEY_PAUSE,
+
         AY_KEY_LEFT_SHIFT,
-        AY_KEY_LEFT_CONTROL,
-        AY_KEY_LEFT_ALT,
-        AY_KEY_LEFT_SUPER,
         AY_KEY_RIGHT_SHIFT,
+        AY_KEY_LEFT_CONTROL,
         AY_KEY_RIGHT_CONTROL,
+        AY_KEY_LEFT_ALT,
         AY_KEY_RIGHT_ALT,
+        AY_KEY_LEFT_SUPER,
         AY_KEY_RIGHT_SUPER,
     };
 
-
-    namespace Translation {
-
-        int translateGLFWKeycodesToAyla(int GLFWKeycode);
-
-    }
 }

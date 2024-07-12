@@ -3,39 +3,38 @@
 //
 
 #include "InputLayer.h"
-
+#include "Ayla/Events/Event.h"
 
 
 namespace Ayla::Input {
-    InputLayer::InputLayer(){
-        AY_TRACE("InputLayer: Initializing Input Layer");
-        this->attachLayer();
-        m_debugName = "Input Layer";
+
+    using namespace Events;
+
+    InputLayer::InputLayer()
+    {
+        AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
+        this->AttachLayer();
+        m_DebugName = "Input Layer";
     }
 
-    InputLayer::~InputLayer(){
-        this->detachLayer();
+
+    InputLayer::~InputLayer()
+    {
+        AY_TRACE("[Sholas] InputLayer: Destroying Input Layer");
+        this->DetachLayer();
     }
 
-    void InputLayer::onAttach() {
-        m_isEnabled = true;
+
+    void InputLayer::OnEvent(IEvent& event)
+    {
+        //AY_LOG("Input State received an event!");
+        m_Callback(event);
     }
 
-    void InputLayer::onDetach() {
-        m_isEnabled = false;
-    }
 
-    void InputLayer::onUpdate() {
-
-    }
-
-    void InputLayer::onEvent(Event& event) {
-        m_callback(event);
-        event.setIsHandled(false);
-    }
-
-    EventCategory InputLayer::getAcceptingEventFlags() {
-        return InputCategory;
+    EEventCategory InputLayer::GetAcceptingEventFlags()
+    {
+        return INPUT_CATEGORY;
     }
 
 }

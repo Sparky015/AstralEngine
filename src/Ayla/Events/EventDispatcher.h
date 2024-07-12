@@ -8,22 +8,36 @@
 
 namespace Ayla::Events{
 
+    enum class EEventDispatchTypes : uint8_t
+    {
+        /** The event starts from the lowest system layer and moves through the Layer Stack to highest system layer (like UIs). */
+        BACK_TO_FRONT,
+
+        /** The event starts from the highest system layer and moves through the Layer Stack to lowest system layer. */
+        FRONT_TO_BACK,
+
+        /** The event gets pushed to only overlay layers. */
+        PUSH_TO_OVERLAY,
+
+        /** The event gets pushed to only basic layers. */
+        PUSH_TO_LAYER
+    };
 
     class EventDispatcher {
     public:
-
-        static void addEventToQueue(Event &);
+            // TODO: Refactor all of this.
+        static void addEventToQueue(IEvent &);
 
 
         void dispatchAllEvents();
-        void dispatchBlockingEvent(Event &);
+        void dispatchBlockingEvent(IEvent &);
 
     private:
 
-        static std::shared_ptr <Event> takeEventFromQueue();
-        void dispatchEvent(const std::shared_ptr <Event> &);
-        int PollEvent(Event &);
+        static std::shared_ptr <IEvent> takeEventFromQueue();
+        void dispatchEvent(const std::shared_ptr <IEvent> &);
+        int PollEvent(IEvent &);
 
-        static std::queue <std::shared_ptr<Event>> eventQueue;
+        static std::queue <std::shared_ptr<IEvent>> eventQueue;
     };
 }

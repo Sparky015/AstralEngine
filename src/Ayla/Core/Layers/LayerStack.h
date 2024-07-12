@@ -6,28 +6,52 @@
 #include "Layer.h"
 #include "Ayla/Events/Event.h"
 
-namespace Ayla::Core::Layers {
+namespace Ayla::Core::Layers
+{
+    // TODO: Refactor how the layer stack organizes layers.
 
-
-    class LayerStack {
+    /** Stores the all layers in a centralized location for easy access to call Layer's Update and RenderImGui functions */
+    class LayerStack
+    {
     public:
         LayerStack();
         ~LayerStack();
 
-        void appendLayer(Layer *);
-        void insertLayer(Layer *, int);
-        void removeLayer(Layer *);
+        /**  */
+        void AppendLayer(ILayer* layer);
 
-        void appendOverlay(Layer *);
-        void insertOverlay(Layer *, int);
-        void removeOverlay(Layer *);
+        // Problem: Systems might have to fight to be able to receive an event of a type that is contested by another system.
+        // TODO: Create channels that layers can be in instead of a layer and an "overlay" layer
+        void InsertLayer(ILayer*, int position);
 
-        void dispatchEventFromFrontToBack(Event& event);
-        void dispatchEventBackToFront(Event& event);
+        // Problem: Systems might be updated out of order (i.e. Debug layers update before the input state is updated)
+        // Problem: Order of layers updating should be protected to minimize issues.
+        /**  */
+        void RemoveLayer(ILayer* layer);
 
-        void update();
+        /**  */
+        void AppendOverlay(ILayer* layer);
 
-        // Disallow copy and move constructors and operator=()
+        /**  */
+        void InsertOverlay(ILayer* layer, int position);
+
+        /**  */
+        void RemoveOverlay(ILayer* layer);
+
+        /**  */
+        void DispatchEventFromFrontToBack(IEvent& event);
+
+        /**  */
+        void DispatchEventBackToFront(IEvent& event);
+
+        /**  */
+        void Update();
+
+        /**  */
+        void RenderImGui();
+
+
+        // Disallow copy and move constructors and operators.
         LayerStack(const LayerStack &) = delete;
         LayerStack(LayerStack &&) = delete;
         LayerStack &operator=(const LayerStack &) = delete;
@@ -35,11 +59,11 @@ namespace Ayla::Core::Layers {
 
     private:
 
-        /// Vector holding pointers to the layers
-        std::vector<Layer *> m_layers;
+        /** Stores all the layers */
+        std::vector<ILayer*> m_Layers;
 
-        /// Vector holding pointers to the overlay layers
-        std::vector<Layer *> m_overlayLayers;
+        /** Stores all the overlays */
+        std::vector<ILayer*> m_OverlayLayers;
     };
 
-} // Ayla
+} // namespace Ayla::Core::Layers

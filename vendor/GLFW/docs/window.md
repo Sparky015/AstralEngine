@@ -589,7 +589,7 @@ See @ref events.
 
 ## Window properties and events {#window_properties}
 
-### User pointer {#window_userptr}
+### Application pointer {#window_userptr}
 
 Each window has a user pointer that can be set with @ref
 glfwSetWindowUserPointer and queried with @ref glfwGetWindowUserPointer.  This

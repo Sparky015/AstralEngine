@@ -4,53 +4,76 @@
 
 #pragma once
 #include "Ayla/Events/Event.h"
+#include "Ayla/Events/EventDispatcher.h"
 
-using namespace Ayla::Events;
 
-namespace Ayla::Core::Layers {
 
-    class Layer {
+namespace Ayla::Core::Layers
+{
+    using namespace Ayla::Events;
+    /**
+     * Allows systems a way to receive and send data to each other through events without explicitly linking to each other.
+     * @note Systems own the layer that they operate.
+     */
+    class ILayer
+    {
     public:
+        ILayer();
+        virtual ~ILayer();
 
-        Layer();
-        virtual ~Layer();
+        /** Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. */
+        virtual EEventCategory GetAcceptingEventFlags() = 0;
 
-        void attachLayer();
-        void attachOverlay();
-        virtual void onAttach() = 0;
+        /** Executes the function code when a layer is added to the Layer Stack for a system to initialize anything before the layer's update function gets called. */
+        virtual void OnAttach();
 
-        void detachLayer();
-        void detachOverlay();
-        virtual void onDetach() = 0;
+        /** Executes the function code when a layer is removed from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. */
+        virtual void OnDetach();
 
-        virtual void onUpdate() = 0;
+        /** Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. */
+        virtual void OnUpdate();
 
-        void setCallback(std::function<void(Event&)> callback);
-        virtual void onEvent(Event &event) = 0;
-        virtual EventCategory getAcceptingEventFlags() = 0;
+        /** Allows a system to interact with and create ImGui windows. */
+        virtual void OnImGuiRender();
 
-        bool isEnabled();
-        void enable();
-        void disable();
+        /** Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. */
+        virtual void OnEvent(IEvent& event);
 
+        /** Allows a system to send events to the Layer Stack to be sent to other systems. */
+        //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const; // TODO: Implement this
 
+        /** Adds the layer as a layer to the Layer Stack. */
+        void AttachLayer();
+
+        /** Adds the layer as an overlay to the Layer Stack */
+        void AttachOverlay(); // TODO: Fix this layer/overlay mumbo jumbo
+
+        /** Removes the layer as a layer from the Layer Stack. */
+        void DetachLayer();
+
+        /** Removes the layer as a overlay from the Layer Stack. */
+        void DetachOverlay();
+
+        /** Allows a system to set a callback from the layer in order for systems to be able to react to events. */
+        void SetCallback(std::function<void(IEvent &)> callback);
+
+        /** Allows for a check to see if the layer is enabled */
+        [[nodiscard]] bool IsEnabled() const;
+
+        /** Enables the layer in the Layer Stack (it will start receiving events and calls to the Update function) */
+        void Enable();
+
+        /** Disables the layer in the Layer Stack (it will stop receiving events and calls to the Update function) */
+        void Disable();
 
     protected:
 
-        bool m_isEnabled;
-        bool m_isInitializedInTower;
-        std::function<void(Event & )> m_callback = [](Event&){};
+        bool m_IsEnabled;
+        bool m_IsInitializedInTower;
+        std::function<void(IEvent & )> m_Callback = [](IEvent&){};
 
-        // For debug
-        std::string m_debugName;
-
+        // For debugging purposes
+        std::string m_DebugName;
     };
 
-
-
-}
-
-
-
-
-
+} // namespace Ayla::Core::Layers

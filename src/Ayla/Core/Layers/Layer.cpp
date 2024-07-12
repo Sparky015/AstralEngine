@@ -2,76 +2,127 @@
 // Created by Andrew Fagan on 4/24/24.
 //
 
-#include "Layer.h"
-#include "LayerStack.h"
 #include "Ayla/Core/Application.h"
+#include "Layer.h"
 
-namespace Ayla::Core::Layers {
+namespace Ayla::Core::Layers
+{
 
-    Layer::Layer() {
-        AY_TRACE("Layer: Initializing Base Class Layer\t\t");
-        m_isEnabled = false;
-        m_isInitializedInTower = false;
+    ILayer::ILayer() : m_IsEnabled(false), m_IsInitializedInTower(false)
+    {
+        AY_TRACE("[Sholas] Layer: Initializing Base Class Layer\t\t");
     }
 
-    Layer::~Layer(){
-        detachLayer();
+
+    ILayer::~ILayer()
+    {
+        AY_TRACE("[Sholas] Layer: Destroying Base Class Layer\t\t");
+        DetachLayer();
     }
 
-    void Layer::attachLayer() {
-        if (!m_isInitializedInTower){
-            Application::getApplication().getLayerStack().appendLayer(this);
-            m_isInitializedInTower = true;
-            onAttach();
+
+    void ILayer::OnAttach()
+    {
+        /** Default definition for when layers don't need to use this function.  */
+        m_IsEnabled = true;
+    }
+
+
+    void ILayer::OnDetach()
+    {
+        /** Default definition for when layers don't need to use this function.  */
+        m_IsEnabled = false;
+    }
+
+
+    void ILayer::OnUpdate()
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
+    void ILayer::OnImGuiRender()
+    {
+        /** Empty definition for when layers don't need use this function.  */
+    }
+
+
+    void ILayer::OnEvent(IEvent& event)
+    {
+        /** Empty definition for when layers don't need to use this function.  */
+    }
+
+
+    void ILayer::AttachLayer()
+    {
+        if (!m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().AppendLayer(this);
+            m_IsInitializedInTower = true;
+            OnAttach();
+            m_IsEnabled = true;
         }
     }
 
-    void Layer::attachOverlay() {
-        if (!m_isInitializedInTower){
 
-            Application::getApplication().getLayerStack().appendOverlay(this);
-            m_isInitializedInTower = true;
-            onAttach();
-        }
-    }
+    void ILayer::AttachOverlay()
+    {
+        if (!m_IsInitializedInTower)
+        {
 
-    void Layer::detachLayer() {
-        if (m_isInitializedInTower) {
-            Application::getApplication().getLayerStack().removeLayer(this);
-            m_isInitializedInTower = false;
-            onDetach();
+            Application::GetLayerStack().AppendOverlay(this);
+            m_IsInitializedInTower = true;
+            OnAttach();
+            m_IsEnabled = true;
         }
     }
 
 
-    void Layer::detachOverlay() {
-        if (m_isInitializedInTower) {
-            Application::getApplication().getLayerStack().removeOverlay(this);
-            m_isInitializedInTower = false;
-            onDetach();
+    void ILayer::DetachLayer()
+    {
+        if (m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().RemoveLayer(this);
+            m_IsInitializedInTower = false;
+            OnDetach();
+            m_IsEnabled = false;
         }
     }
 
-    bool Layer::isEnabled() {
-        return m_isEnabled;
+
+    void ILayer::DetachOverlay()
+    {
+        if (m_IsInitializedInTower)
+        {
+            Application::GetLayerStack().RemoveOverlay(this);
+            m_IsInitializedInTower = false;
+            OnDetach();
+            m_IsEnabled = false;
+        }
     }
 
-    void Layer::enable() {
-        m_isEnabled = true;
+
+    bool ILayer::IsEnabled() const
+    {
+        return m_IsEnabled;
     }
 
-    void Layer::disable() {
-        m_isEnabled = false;
+
+    void ILayer::Enable()
+    {
+        m_IsEnabled = true;
     }
 
-    void Layer::setCallback(std::function<void(Event&)> callback) {
-        m_callback = std::move(callback);
+
+    void ILayer::Disable()
+    {
+        m_IsEnabled = false;
     }
 
-//    void Layer::onEvent(Ayla::Events& event) {
-//        m_callback(event);
-//    }
 
+    void ILayer::SetCallback(std::function<void(IEvent&)> callback)
+    {
+        m_Callback = std::move(callback);
+    }
 
-
-} // Ayla
+} // namespace Ayla::Core::Layers
