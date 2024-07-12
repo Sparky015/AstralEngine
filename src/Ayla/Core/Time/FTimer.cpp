@@ -7,13 +7,13 @@
 #include "Clock.h"
 
 namespace Ayla::Core::Time {
-    int FTimer::TimerIDTracker = 0;
+    int FTimer::m_TimerIDTracker = 0;
 
     FTimer::FTimer(float amountOfTime, std::function<void()> callback) :
         StartingTimeStamp(Clock::Get().GetCurrentTimeStamp()),
         LengthOfTimer(amountOfTime),
         Callback(std::move(callback)),
-        m_TimerID(++TimerIDTracker)
+        m_TimerID(++m_TimerIDTracker)
     {}
 
     bool FTimer::operator==(const FTimer& other) const noexcept

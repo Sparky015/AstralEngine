@@ -24,7 +24,7 @@ namespace Ayla::Core::Time
         static Clock& Get();
 
         /** Retrieves the current time stamp */
-        TimeStamp GetCurrentTimeStamp() const;
+        [[nodiscard]] TimeStamp GetCurrentTimeStamp() const;
 
         /**
          * Calculates the delta time value.

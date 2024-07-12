@@ -45,15 +45,15 @@ namespace Ayla::Core::Time
 
     void Clock::UpdateDeltaTime()
     {
-        TimeStamp currentTimeStamp = GetCurrentTimeStamp();
+        const TimeStamp currentTimeStamp = GetCurrentTimeStamp();
         m_DeltaTime = currentTimeStamp - m_PreviousTimeStamp;
         m_PreviousTimeStamp = currentTimeStamp;
     }
 
     void Clock::CheckTimers() {
-        TimeStamp currentTimeStamp = GetCurrentTimeStamp();
-        float elapsedTime;
-        for (FTimer& timer : m_Timers)
+        const TimeStamp currentTimeStamp = GetCurrentTimeStamp();
+        float elapsedTime = 0;
+        for (const FTimer& timer : m_Timers)
         {
             elapsedTime = (float)std::chrono::duration_cast<std::chrono::seconds>(currentTimeStamp - timer.StartingTimeStamp).count();
             if (elapsedTime >= timer.LengthOfTimer)
@@ -97,7 +97,4 @@ namespace Ayla::Core::Time
         m_Timers.emplace_back(amountOfTime, callback);
     }
 
-
-
-
-}
+} // namespace Ayla::Core::Time

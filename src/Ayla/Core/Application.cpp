@@ -58,7 +58,7 @@ namespace Ayla::Core
         int64_t timeAccumulation = 0.0;       // TEMP
         AY_LOG("\n\nRunning Application!");
 
-        while (m_AppIsRunning){
+        while (m_IsAppRunning){
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -87,7 +87,7 @@ namespace Ayla::Core
     {
         if (event.GetEventType() == WINDOW_CLOSE)
         {
-            m_AppIsRunning = false;
+            m_IsAppRunning = false;
             return;
         }
         // TODO: Change the naming of this method. Its confusing.

@@ -12,6 +12,7 @@ namespace Ayla::Core::Time
     /** Contains the details needed to maintain a timer. */
     struct FTimer
     {
+    public:
         /** Constructor */
         explicit FTimer(float amountOfTime, std::function<void()> callback);
 
@@ -34,7 +35,7 @@ namespace Ayla::Core::Time
 
     private:
         int m_TimerID;
-        static int TimerIDTracker;
+        static int m_TimerIDTracker;
     };
 
 

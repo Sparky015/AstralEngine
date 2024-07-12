@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include "Ayla/Core/Core.h"
 #include "Ayla/Client/UserSetup.h"
+#include "Ayla/Core/Core.h"
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/Debug/DebugLayer.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
@@ -44,7 +44,7 @@ namespace Ayla::Core
 
     private:
 
-        bool m_AppIsRunning = true;
+        bool m_IsAppRunning = true;
         static Application* m_Application;
         static std::unique_ptr<Window> m_Window;
         static std::unique_ptr<LayerStack> m_LayerStack;
