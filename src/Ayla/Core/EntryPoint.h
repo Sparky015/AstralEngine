@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[])
 {
-#ifdef UNKNOWN_PLATFORM
+#ifdef AYLA_PLATFORM_UNKNOWN
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
 #endif
 

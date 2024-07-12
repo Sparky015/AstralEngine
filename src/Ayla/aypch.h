@@ -25,10 +25,10 @@
 #include <vector>
 
 // Other Stuff
-#include "Ayla/Core/Core.h"
+#include "Ayla/Core/CoreDefinitions.h"
 #include "Ayla/Core/DebugMacros.h"
 
 
 #ifdef AYLA_PLATFORM_WINDOWS
-//#include <Windows.h> ///< Windows specific includes
+    //#include <Windows.h> ///< Windows specific includes
 #endif

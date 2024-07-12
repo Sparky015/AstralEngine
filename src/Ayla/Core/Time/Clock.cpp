@@ -65,7 +65,7 @@ namespace Ayla::Core::Time
                 }
                 catch(std::exception& exception)
                 {
-                    AY_ERROR_SS("Timer callback function caused an error of : " << exception.what());
+                    AY_ERROR("Timer callback function caused an error of : " << exception.what());
                 }
             }
         }

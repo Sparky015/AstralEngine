@@ -4,7 +4,7 @@
 #pragma once
 
 #include "Ayla/Client/UserSetup.h"
-#include "Ayla/Core/Core.h"
+#include "Ayla/Core/CoreDefinitions.h"
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/Debug/DebugLayer.h"
 #include "Ayla/ImGui/ImGuiLayer.h"

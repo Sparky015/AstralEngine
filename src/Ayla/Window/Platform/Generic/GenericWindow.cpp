@@ -17,7 +17,7 @@ namespace Ayla::Windows {
 
     void GlfwErrorCallback(int error, const char* description)
     {
-        AY_ERROR_SS(description << error);
+        AY_ERROR(description << error);
     }
 
 

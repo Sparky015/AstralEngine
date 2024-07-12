@@ -4,29 +4,26 @@
 
 #include "Ayla/Core/DebugMacros.h"
 
-#include <iomanip>
 
-namespace {
+namespace Ayla::Core::Macros
+{
 
     void macro_AY_TRACE(const std::string&& title)
     {
-        std::time_t time;
-        std::time(&time);
+        /** Gets the current time */
+        const std::time_t t = std::time(nullptr);
+        const std::tm* currentTime = std::localtime(&t); // Puts the information of the time into a struct that is separated into min, sec, hr, day, etc.
 
-        // TODO: Figure out a way to make the time appear nice and pretty
-        std::cout << "\n" << title; //<< std::setw(40) << "\t : " << std::ctime(&time);
+        /** Calculates the elapsed milliseconds as they were not included in the std::tm struct */
+        long long millisecondsSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        long long elapsedMilliseconds = millisecondsSinceEpoch % 1000;
+
+        /** Outputs the message with the time info prefixing it */
+        std::cout << "\n[" << currentTime->tm_hour << ":" << currentTime->tm_min << ":" << currentTime->tm_sec << ":" << elapsedMilliseconds << "] " << title;
     }
 
 
-    void macro_AY_ASSERT(const bool expression, const std::string&& errorMessage)
-    {
-        if (!expression){
-            throw std::runtime_error("\n\n" + errorMessage);
-        }
-    }
-
-
-    void macro_AY_ASSERT_SS(const bool expression, const std::ostream& errorMessage)
+    void macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
     {
         if (!expression){
             std::ostringstream oss;
@@ -39,6 +36,14 @@ namespace {
     void macro_AY_LOG(const std::string&& message)
     {
         std::cout << "\n" << message;
+    }
+
+
+    void macro_AY_ERROR(const std::ostream& errorMessage)
+    {
+        std::ostringstream oss;
+        oss << "\n\n" << errorMessage.rdbuf();
+        throw std::runtime_error(oss.str());
     }
 
 
@@ -56,18 +61,4 @@ namespace {
         //std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
     }
 
-
-    void macro_AY_ERROR(const std::string&& errorMessage)
-    {
-        throw std::runtime_error("\n\n" + errorMessage);
-    }
-
-
-    void macro_AY_ERROR_SS(const std::ostream& errorMessage)
-    {
-        std::ostringstream oss;
-        oss << "\n\n" << errorMessage.rdbuf();
-        throw std::runtime_error(oss.str());
-    }
-
-}
+} // namespace Ayla::Core::Macros

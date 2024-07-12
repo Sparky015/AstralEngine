@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
-    add_definitions(-DAYLA_PLATFORM_APPLE)
+    add_definitions(-DAYLA_PLATFORM_MACOS)
 else ()
-    add_definitions(-DUNKNOWN_PLATFORM)
+    add_definitions(-DAYLA_PLATFORM_UNKNOWN)
 endif()
 
 
