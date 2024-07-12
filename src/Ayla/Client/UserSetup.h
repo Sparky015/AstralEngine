@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Ayla/Core/Core.h"
+#include "Ayla/Core/CoreDefinitions.h"
 
 
 namespace Ayla::Client

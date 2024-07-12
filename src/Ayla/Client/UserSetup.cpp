@@ -9,7 +9,7 @@ namespace Ayla::Client
 
     ClientLoop::ClientLoop()
     {
-        AY_TRACE("\n[Sholas] Client: Initializing ClientLoop");
+        AY_TRACE("[Sholas] Client: Initializing ClientLoop");
     }
 
 
