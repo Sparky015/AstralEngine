@@ -9,7 +9,6 @@
       <file path="$PROJECT_DIR$/vendor" />
     </libraryRoots>
     <excludeRoots>
-      <file path="$PROJECT_DIR$/client/docs" />
       <file path="$PROJECT_DIR$/docs/OldCodeStorage" />
       <file path="$PROJECT_DIR$/tests" />
     </excludeRoots>
