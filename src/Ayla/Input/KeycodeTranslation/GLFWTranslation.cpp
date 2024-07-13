@@ -4,11 +4,12 @@
 
 #include "GLFWTranslation.h"
 
+#include "Ayla/Input/Keycodes.h"
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-#include "Ayla/Input/Keycodes.h"
+
 
 namespace Ayla::Input::Keycodes::Translation {
 
