@@ -11,37 +11,44 @@
 namespace Ayla::Windows{
 
 
-    static void GlfwErrorCallback(int error, const char* description);
 
+
+    /** Window class that is designed for cross-platform compatibility. A generic window version that any major OS can use (using GLFW). */
     class GenericWindow : public Window {
     public:
 
         explicit GenericWindow(const WindowProperties& properties);
         ~GenericWindow() override;
 
-        /** */
+        /** Initializes the GLFW and the window context and sets the window callbacks. */
         void Init(const WindowProperties &windowProperties);
 
-        /** */
+        /** Returns the pixel width of the window */
         [[nodiscard]] int GetWidth() const override;
 
-        /** */
+        /** Returns the pixel height of the window */
         [[nodiscard]] int GetHeight() const override;
 
-        /** */
+        /** Returns the framebuffer to pixel ratio in the X dimension. */
         [[nodiscard]] float GetDisplayFramebufferScaleX() const override;
 
-        /** */
+        /** Returns the framebuffer to pixel ratio in the Y dimension. */
         [[nodiscard]] float GetDisplayFramebufferScaleY() const override;
 
-        /** */
+        /** Returns a pointer to the native window class or struct being used. (In this case GLFWwindow) */
         [[nodiscard]] void* GetNativeWindow() const override;
 
-        /** */
+        /** Defines a callback that is called when events are raised by the GLFW window. */
         virtual void SetEventCallback(const EventCallback& callback) override;
 
-        /** */
+        /** Polls the window events and swaps the buffer. */
         void Update() override;
+
+        /** Enables VSync for the window. */
+        void EnableVSync();
+
+        /** Disables VSync for the window. */
+        void DisableVSync();
 
     private:
         GLFWwindow* m_Window;
@@ -61,4 +68,7 @@ namespace Ayla::Windows{
         WindowData m_WindowData;
         static bool m_IsGlfwInitialized;
     };
+
+    static void GlfwErrorCallback(int error, const char* description);
+
 } // namespace Ayla::Windows

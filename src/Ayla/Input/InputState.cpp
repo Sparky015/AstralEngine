@@ -130,7 +130,7 @@ namespace Ayla::Input {
     }
 
 
-    std::string SInputState::GetKeyName(int keycode) const
+    const std::string& SInputState::GetKeyName(int keycode) const
     {
         return m_KeyState[keycode].Name;
     }

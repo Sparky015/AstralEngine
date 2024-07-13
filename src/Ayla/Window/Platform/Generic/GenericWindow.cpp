@@ -47,7 +47,7 @@ namespace Ayla::Windows {
         m_WindowData.Title = windowProperties.Title;
         m_WindowData.Height = windowProperties.Height;
         m_WindowData.Width = windowProperties.Width;
-
+        m_WindowData.IsVSyncEnabled = true;
 
         // GLFW Implementation
         if (!m_IsGlfwInitialized)
@@ -76,7 +76,7 @@ namespace Ayla::Windows {
         int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         if (status != 1)
         {
-            AY_LOG("GLAD failed to load!");
+            AY_ERROR("GLAD failed to load!");
         }
         glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
@@ -87,12 +87,31 @@ namespace Ayla::Windows {
         m_WindowData.DisplayFramebufferScaleX = framebufferWidth > 0 ? (static_cast<float>(framebufferWidth) / static_cast<float>(m_WindowData.Width)) : 0;
         m_WindowData.DisplayFramebufferScaleY = framebufferHeight > 0 ? (static_cast<float>(framebufferHeight) / static_cast<float>(m_WindowData.Height)) : 0;
 
+        /** Enable/Disable Vsync */
+        if (m_WindowData.IsVSyncEnabled)
+        {
+            glfwSwapInterval(1);
+        }
+        else
+        {
+            glfwSwapInterval(0);
+        }
+
         using namespace Events;
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
         {
             WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             windowData.Width = width;
             windowData.Height = height;
+
+
+            /** Recalculates the framebuffer to pixel ratio for high dpi displays. */
+            int displayFramebufferWidth = 0;
+            int displayFramebufferHeight = 0;
+            glfwGetFramebufferSize(window, &displayFramebufferWidth, &displayFramebufferHeight);
+            windowData.DisplayFramebufferScaleX = displayFramebufferWidth > 0 ? ((float)displayFramebufferWidth / (float)windowData.Width) : 0;
+            windowData.DisplayFramebufferScaleY = displayFramebufferHeight > 0 ? ((float)displayFramebufferHeight / (float)windowData.Height) : 0;
+
 
             WindowResizeEvent event(width, height);
             windowData.Callback(event);
@@ -257,19 +276,26 @@ namespace Ayla::Windows {
     {
         glfwPollEvents();
         glfwSwapBuffers(m_Window);
-
-        // TEMP
-        int displayW = 0;
-        int displayH = 0;
-        glfwGetFramebufferSize(m_Window, &displayW, &displayH);
-        m_WindowData.DisplayFramebufferScaleX = displayW > 0 ? (static_cast<float>(displayW) / static_cast<float>(m_WindowData.Width)) : 0;
-        m_WindowData.DisplayFramebufferScaleY = displayH > 0 ? (static_cast<float>(displayH) / static_cast<float>(m_WindowData.Height)) : 0;
     }
 
 
     void* GenericWindow::GetNativeWindow() const
     {
         return m_Window;
+    }
+
+
+    void GenericWindow::EnableVSync()
+    {
+        glfwSwapInterval(1);
+        m_WindowData.IsVSyncEnabled = true;
+    }
+
+
+    void GenericWindow::DisableVSync()
+    {
+        glfwSwapInterval(0);
+        m_WindowData.IsVSyncEnabled = false;
     }
 
 } // namespace Ayla::Windows

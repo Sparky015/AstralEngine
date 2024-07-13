@@ -14,15 +14,27 @@ namespace Ayla::GUI {
     class ImGuiLayer : public ILayer
     {
     public:
+
+        /** Constructor/Destructor */
         ImGuiLayer();
         ~ImGuiLayer() override;
 
+        /** Initializes ImGui and creates the ImGui context. */
         void OnAttach() override;
+
+        /** Shuts down ImGui and destroys the context. */
         void OnDetach() override;
+
+        /** ImGui render code that contains ImGui demo code and demo windows. */
         void OnImGuiRender() override;
+
+        /** Sets up a new frame for ImGui to render. */
         static void Begin();
+
+        /** Makes a render call with data from ImGui functions that were called after ImGuiLayer::Begin() was called. */
         static void End();
-        void OnEvent(IEvent& event) override;
+
+        /** The ImGuiLayer does not accept any events. */
         EEventCategory GetAcceptingEventFlags() override;
 
     private:

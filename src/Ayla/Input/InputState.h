@@ -9,18 +9,18 @@
 
 namespace Ayla::Input {
 
-// TODO: Make some delegates for when keys are pressed. Also make an event delegate class to easily to this.
+    /** Stores the state of keys and mouse in the form of a singleton. */
     class SInputState
     {
     public:
 
-        /**  */
+        /** Initializes the Input State singleton. */
         static void Init();
 
-        /**  */
+        /** Returns the Input State singleton. */
         static SInputState& Get();
 
-        /**  */
+        /** Receives input events and changes the key's state to reflect the input event data. */
         void OnEvent(Events::IEvent&);
 
         SInputState(const SInputState&) = delete;
@@ -28,7 +28,7 @@ namespace Ayla::Input {
         SInputState(SInputState&&) = delete;
         SInputState& operator=(SInputState&&) = delete;
 
-        /**  */
+        /** Data being tracked for each key. */
         struct KeyState
         {
         public:
@@ -40,26 +40,26 @@ namespace Ayla::Input {
             std::string Name;
         };
 
-        /**  */
+        /** Data being tracked for the mouse. */
         struct MouseCursorState
         {
             double MouseXPosition;
             double MouseYPosition;
         };
 
-        /**  */
+        /** Checks if a key is down. */
         [[nodiscard]] bool IsKeyDown(int keycode) const;
 
-        /**  */
+        /** Checks if a key is sending a repeat signal (if its being continuously held down). */
         [[nodiscard]] bool IsKeyRepeating(int keycode) const;
 
-        /**  */
-        [[nodiscard]] std::string GetKeyName(int keycode) const;
+        /** Returns the name of a key in the form of a std::string. */
+        [[nodiscard]] const std::string& GetKeyName(int keycode) const;
 
-        /**  */
+        /** Returns the X position of the mouse cursor. */
         [[nodiscard]] double MousePositionX() const;
 
-        /**  */
+        /** Returns the Y position of the mouse cursor. */
         [[nodiscard]] double MousePositionY() const;
 
     private:
@@ -69,7 +69,7 @@ namespace Ayla::Input {
 
         static const int m_NUMBER_OF_KEYS = 119;
 
-        // The indices all match the key codes (so if you change the key codes, change this)
+        // The naming for each indice all match the definition order of the keycodes (so if you change the order of the key codes, change this)
         std::array<KeyState, m_NUMBER_OF_KEYS> m_KeyState = { // Could potentially make this multiple arrays (one array for each field)
                 KeyState("LEFT CLICK"),
                 KeyState("MIDDLE CLICK"),

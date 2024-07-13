@@ -29,9 +29,7 @@ namespace Ayla::Windows { // maybe change namespace to Display or Viewport inste
     {
     public:
         Window() = default;
-
         virtual ~Window() = default;
-
 
         /** Updates the window by swapping the buffers. */
         virtual void Update() = 0;
@@ -42,19 +40,19 @@ namespace Ayla::Windows { // maybe change namespace to Display or Viewport inste
         /** Retrieves the height of the window. */
         [[nodiscard]] virtual int GetHeight() const = 0;
 
-        /**  */
+        /** Returns the framebuffer to pixel ratio in the X dimension. */
         [[nodiscard]] virtual float GetDisplayFramebufferScaleX() const = 0;
 
-        /**  */
+        /** Returns the framebuffer to pixel ratio in the Y dimension. */
         [[nodiscard]] virtual float GetDisplayFramebufferScaleY() const = 0;
 
-        /**  */
+        /** Returns a pointer to the native window class or struct being used. */
         [[nodiscard]] virtual void* GetNativeWindow() const = 0;
 
-        /**  */
+        /** Defines a callback that is called when events are raised by the window. */
         virtual void SetEventCallback(const EventCallback& callback) = 0;
 
-        /**  */
+        /** Creates the window instance. */
         static Window* CreateWindow(const WindowProperties& properties);
     };
 
