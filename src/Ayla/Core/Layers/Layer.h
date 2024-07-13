@@ -55,7 +55,7 @@ namespace Ayla::Core::Layers
         void DetachOverlay();
 
         /** Allows a system to set a callback from the layer in order for systems to be able to react to events. */
-        void SetCallback(std::function<void(IEvent &)> callback);
+        void SetCallback(std::function<void(IEvent&)> callback);
 
         /** Allows for a check to see if the layer is enabled */
         [[nodiscard]] bool IsEnabled() const;

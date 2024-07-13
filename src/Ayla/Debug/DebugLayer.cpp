@@ -31,10 +31,10 @@ namespace Ayla::Core::Debug
     {
         using namespace Ayla::Input::Keycodes;
 
-        static long long accumulatedTime;
+        static int64 accumulatedTime;
         accumulatedTime += Time::Clock::Get().GetDeltaTime();
 
-        Input::SInputState& inputState = Input::SInputState::Get();
+        const Input::SInputState& inputState = Input::SInputState::Get();
         if (inputState.IsKeyDown(AY_KEY_T) && !inputState.IsKeyRepeating(AY_KEY_T))
         {
             if (accumulatedTime <= 75){return;}
