@@ -7,6 +7,7 @@
 
 namespace Ayla::Events {
 
+    /** General mouse event to derive from. */
     class MouseButtonEvent : public IEvent
     {
     public:
@@ -29,6 +30,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for with a mouse button is released. */
     class MouseButtonReleaseEvent : public MouseButtonEvent
     {
     public:
@@ -55,6 +57,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when a mouse button is pressed. */
     class MouseButtonPressEvent : public MouseButtonEvent
     {
     public:
@@ -82,6 +85,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the mouse scroll wheel is scrolled. */
     class MouseScrollEvent : public IEvent
     {
     public:
@@ -116,6 +120,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the mouse is moved. */
     class MouseMovedEvent : public IEvent
     {
     public:

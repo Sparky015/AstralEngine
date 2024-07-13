@@ -8,6 +8,7 @@
 namespace Ayla::Events {
 
 
+    /** General application event to derive from. */
     class ApplicationEvent : public IEvent
     {
     public:
@@ -24,6 +25,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the window is closed. */
     class WindowCloseEvent : public ApplicationEvent
     {
     public:
@@ -41,6 +43,8 @@ namespace Ayla::Events {
 
     };
 
+
+    /** Event for when the window is resized. */
     class WindowResizeEvent : public ApplicationEvent
     {
     public:
@@ -76,6 +80,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the window gains focus. */
     class WindowGainedFocusEvent final : public ApplicationEvent
     {
     public:
@@ -94,6 +99,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the window loses focus. */
     class WindowLostFocusEvent final : public ApplicationEvent
     {
     public:
@@ -112,6 +118,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when the window is moved. */
     class WindowMovedEvent final : public ApplicationEvent
     {
     public:
@@ -146,6 +153,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for every application tick. */
     class AppTickEvent final: public ApplicationEvent
     {
     public:
@@ -164,6 +172,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for every application update. */
     class AppUpdateEvent final : public ApplicationEvent
     {
     public:
@@ -182,6 +191,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when a render call is made. */
     class AppRenderEvent final : public ApplicationEvent {
     public:
 

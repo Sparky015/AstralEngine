@@ -8,6 +8,7 @@
 
 namespace Ayla::Events {
 
+    /** General key event to derive from. */
     class KeyEvent : public IEvent
     {
     public:
@@ -30,6 +31,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when a key is pressed down. */
     class KeyPressedEvent : public KeyEvent
     {
     public:
@@ -57,6 +59,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when typing is occurring. (includes more specific characters for typing like capital letters, etc.) */
     class KeyTypedEvent : public KeyEvent
     {
     public:
@@ -79,6 +82,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when a key sends a repeating signal (when the key is being pressed down continuously). */
     class KeyPressedRepeatingEvent : public KeyEvent
     {
     public:
@@ -106,6 +110,7 @@ namespace Ayla::Events {
     };
 
 
+    /** Event for when a key is released. */
     class KeyReleasedEvent : public KeyEvent
     {
     public:
