@@ -3,9 +3,10 @@
 //
 
 #include "DebugLayer.h"
+
+#include "Ayla/Core/Time/Clock.h"
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Input/Keycodes.h"
-#include "Ayla/Core/Time/Clock.h"
 
 
 
@@ -23,6 +24,7 @@ namespace Ayla::Core::Debug
     DebugLayer::~DebugLayer()
     {
         AY_TRACE("[Sholas] DebugLayer: Destroying Debug Layer");
+        OnDetach();
         this->DetachLayer();
     }
 

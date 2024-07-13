@@ -21,6 +21,7 @@ namespace Ayla::Input {
     InputLayer::~InputLayer()
     {
         AY_TRACE("[Sholas] InputLayer: Destroying Input Layer");
+        OnDetach();
         this->DetachLayer();
     }
 
