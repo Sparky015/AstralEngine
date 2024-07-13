@@ -2,6 +2,8 @@
 // Created by sparky on 4/16/2024.
 //
 
+#pragma once
+
 #include "Ayla/Client/UserSetup.h"
 #include "Ayla/Core/Application.h"
 
@@ -11,6 +13,7 @@ int main(int argc, char *argv[])
 #ifdef AYLA_PLATFORM_UNKNOWN
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
 #endif
+    Ayla::Core::Macros::initLogForMacros();
 
     auto *Engine = new Ayla::Core::Application();
 
@@ -24,6 +27,8 @@ int main(int argc, char *argv[])
 
     delete Engine;
 
-    exit(EXIT_SUCCESS);
+    Ayla::Core::Macros::closeLogForMacros();
+
+    return 0;
 }
 

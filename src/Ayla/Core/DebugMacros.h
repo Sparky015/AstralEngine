@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "Ayla/aypch.h"
+#include <chrono>
+#include <string>
 
 
 /** Outputs the message to the console with a time stamp. */
@@ -25,6 +26,12 @@
 
 /** Macro Land */
 namespace Ayla::Core::Macros {
+
+    /** Initializes the file stream for logging the macro outputs. This includes the creation of the folder structure that contains the logs. */
+    void initLogForMacros();
+
+    /** Closes the file stream for logging macro outputs. */
+    void closeLogForMacros();
 
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
     void macro_AY_TRACE(const std::string&& title);
@@ -48,6 +55,9 @@ namespace Ayla::Core::Macros {
         std::chrono::time_point<std::chrono::steady_clock> m_endTime;
         std::string m_title;
     };
+
+    /** Checks if std::cout is in fail state and corrects it. */
+    void CheckIfCoutFailed();
 
 } // namespace Ayla::Core::Macros
 
