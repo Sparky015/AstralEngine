@@ -84,7 +84,6 @@ namespace Ayla::Core::Layers
         {
             Application::GetLayerStack().RemoveLayer(this);
             m_IsInitializedInTower = false;
-            OnDetach();
             m_IsEnabled = false;
         }
     }
@@ -96,7 +95,6 @@ namespace Ayla::Core::Layers
         {
             Application::GetLayerStack().RemoveOverlay(this);
             m_IsInitializedInTower = false;
-            OnDetach();
             m_IsEnabled = false;
         }
     }

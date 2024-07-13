@@ -34,6 +34,7 @@ namespace Ayla::GUI {
     ImGuiLayer::~ImGuiLayer()
     {
         AY_TRACE("[Sholas] ImGuiLayer: Destroying ImGui Layer");
+        OnDetach();
         this->DetachLayer();
     }
 
@@ -77,7 +78,7 @@ namespace Ayla::GUI {
 
     void ImGuiLayer::OnImGuiRender()
     {
-        ImGuiIO& io = ImGui::GetIO();
+        const ImGuiIO& io = ImGui::GetIO();
         static bool showDemoWindow = true;
         static bool showStackTool = true;
         if (showStackTool)
