@@ -56,5 +56,8 @@ namespace Ayla::Core::Macros {
         std::string m_title;
     };
 
+    /** Checks if std::cout is in fail state and corrects it. */
+    void CheckIfCoutFailed();
+
 } // namespace Ayla::Core::Macros
 
