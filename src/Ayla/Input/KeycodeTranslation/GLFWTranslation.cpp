@@ -111,6 +111,16 @@ namespace Ayla::Input::Keycodes::Translation {
             case GLFW_KEY_KP_ENTER: return AY_KEY_KP_ENTER;
             case GLFW_KEY_KP_EQUAL: return AY_KEY_KP_EQUAL;
 
+
+            case GLFW_KEY_LEFT_SHIFT: return AY_KEY_LEFT_SHIFT;
+            case GLFW_KEY_RIGHT_SHIFT: return AY_KEY_RIGHT_SHIFT;
+            case GLFW_KEY_LEFT_CONTROL: return AY_KEY_LEFT_CONTROL;
+            case GLFW_KEY_RIGHT_CONTROL: return AY_KEY_RIGHT_CONTROL;
+            case GLFW_KEY_LEFT_ALT: return AY_KEY_LEFT_ALT;
+            case GLFW_KEY_RIGHT_ALT: return AY_KEY_RIGHT_ALT;
+            case GLFW_KEY_LEFT_SUPER: return AY_KEY_LEFT_SUPER;
+            case GLFW_KEY_RIGHT_SUPER: return AY_KEY_RIGHT_SUPER;
+
             case GLFW_KEY_F1: return AY_KEY_F1;
             case GLFW_KEY_F2: return AY_KEY_F2;
             case GLFW_KEY_F3: return AY_KEY_F3;
