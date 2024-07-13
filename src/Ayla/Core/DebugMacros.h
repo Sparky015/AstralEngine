@@ -24,8 +24,7 @@
 
 
 /** Macro Land */
-namespace Ayla::Core::Macros
-{
+namespace Ayla::Core::Macros {
 
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
     void macro_AY_TRACE(const std::string&& title);

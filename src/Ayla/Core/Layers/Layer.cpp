@@ -5,8 +5,7 @@
 #include "Ayla/Core/Application.h"
 #include "Layer.h"
 
-namespace Ayla::Core::Layers
-{
+namespace Ayla::Core::Layers {
 
     ILayer::ILayer() : m_IsEnabled(false), m_IsInitializedInTower(false)
     {
