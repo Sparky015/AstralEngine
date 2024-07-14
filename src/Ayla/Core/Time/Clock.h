@@ -39,10 +39,10 @@ namespace Ayla::Core::Time
         void CheckTimers();
 
         /** Returns the delta time. */
-        [[nodiscard]] long long GetDeltaTime() const;
+        [[nodiscard]] int64 GetDeltaTime() const;
 
         /** Returns the current stopwatch time in milliseconds. */
-        [[nodiscard]] long long GetStopwatchTime() const;
+        [[nodiscard]] int64 GetStopwatchTime() const;
 
         /** Resets the stopwatch. */
         void ResetStopwatch();

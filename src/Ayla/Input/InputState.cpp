@@ -25,16 +25,12 @@ namespace Ayla::Input {
     SInputState::~SInputState()
     {
         AY_TRACE("[Sholas] InputState: Destroying Input State");
-        //delete m_Instance;
-        m_Instance = nullptr;
     }
 
 
     void SInputState::Init()
     {
         AY_ASSERT(m_Instance == nullptr, "Input/InputState.cpp: Input State has already been initialized!");
-
-        AY_TRACE("[Sholas] InputState: Initializing Input State'");
         m_Instance = new SInputState();
     }
 

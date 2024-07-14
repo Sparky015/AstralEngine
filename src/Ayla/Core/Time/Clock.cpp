@@ -32,8 +32,7 @@ namespace Ayla::Core::Time
 
     Clock::~Clock()
     {
-        delete m_Instance;
-        m_Instance = nullptr;
+        AY_TRACE("[Sholas] Clock: Destroying Clock\n\n");
     }
 
 
@@ -73,16 +72,16 @@ namespace Ayla::Core::Time
 
 
     /** Returns the time in milliseconds. */
-    long long Clock::GetDeltaTime() const
+    int64 Clock::GetDeltaTime() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(m_DeltaTime).count();
     }
 
 
     /** Returns the time in milliseconds. */
-    long long Clock::GetStopwatchTime() const
+    int64 Clock::GetStopwatchTime() const
     {
-        TimeStamp currentTimeStamp = GetCurrentTimeStamp();
+        const TimeStamp currentTimeStamp = GetCurrentTimeStamp();
         return std::chrono::duration_cast<std::chrono::milliseconds>(currentTimeStamp - m_ClockStartingTimeStamp).count();
     }
 
