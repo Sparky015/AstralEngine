@@ -55,16 +55,17 @@ namespace Ayla::Core
 
     void Application::Run() const
     {
-        int64_t timeAccumulation = 0.0;       // TEMP
+        AY_PROFILE_SCOPE("Application Run Loop");
+
         AY_LOG("\n\nRunning Application!");
 
         while (m_IsAppRunning){
+
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
             Time::Clock::Get().CheckTimers();
-            timeAccumulation += Time::Clock::Get().GetDeltaTime();      // TEMP
 
             // TODO: Provide the delta time to the update function
             m_ClientLoop->Update(); // Phase 2  -> Calls the client's application update function.
@@ -78,8 +79,7 @@ namespace Ayla::Core
             m_Window->Update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
         }
 
-        std::cout << "\nDelta Time Accumulation: " << static_cast<double>(timeAccumulation) * .001 << " seconds\n";      // TEMP
-        std::cout << "Stopwatch: " << static_cast<double>(Time::Clock::Get().GetStopwatchTime()) * .001 << " seconds\n";      // TEMP
+        AY_LOG_SS("\nStopwatch: " << static_cast<double>(Time::Clock::Get().GetStopwatchTime()) * .001 << " seconds\n");
     }
 
 

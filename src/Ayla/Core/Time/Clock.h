@@ -41,7 +41,7 @@ namespace Ayla::Core::Time
         /** Returns the delta time. */
         [[nodiscard]] long long GetDeltaTime() const;
 
-        /** Returns the current stopwatch time. */
+        /** Returns the current stopwatch time in milliseconds. */
         [[nodiscard]] long long GetStopwatchTime() const;
 
         /** Resets the stopwatch. */
