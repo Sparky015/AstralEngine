@@ -31,7 +31,7 @@ namespace Ayla::Core::Macros {
         std::stringstream filePathStream;
 
         /** Root folder name for all the console logs. */
-        const std::string rootFolder = "../ConsoleLogs";
+        const std::string rootFolder = "ConsoleLogs";
         filePathStream << rootFolder << '/';
 
         /** create_directories will fail most of the time because the folders have already been made most of the time. */
@@ -39,21 +39,21 @@ namespace Ayla::Core::Macros {
 
         /** Creates a folder to subdivide the logs by the month and year */
         std::stringstream monthAndYearFolderNameStream;
-        monthAndYearFolderNameStream << currentTime->tm_mon + 1 << "-" << currentTime->tm_year + 1900;
+        monthAndYearFolderNameStream << currentTime->tm_year + 1900 << "-" << currentTime->tm_mon + 1;
         filePathStream << monthAndYearFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Month]-[Year]/"
+        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
 
         /** Creates another folder to subdivide the logs by the day in a month */
         std::stringstream dayFolderNameStream;
         dayFolderNameStream << currentTime->tm_mday;
         filePathStream << dayFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Month]-[Year]/[Day]/"
+        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
 
         /** Name of the text file based on the time it was created. */
         std::stringstream hrMinSecTextFileNameStream;
         hrMinSecTextFileNameStream << currentTime->tm_hour << "_" << currentTime->tm_min << "_" << currentTime->tm_sec;
 
-        /** filePathStream = "ConsoleLog/[Month]-[Year]/[Day]/[Hour]_[Minute]_[Second].txt" */
+        /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
         filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
 
         LogFile.open(filePathStream.str(), std::ios::out);
