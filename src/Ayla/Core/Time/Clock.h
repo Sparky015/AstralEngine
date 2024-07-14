@@ -23,6 +23,9 @@ namespace Ayla::Core::Time
         /** Gives access to the Clock singleton. */
         static Clock& Get();
 
+        /** Deletes the singleton instance. */
+        static void Destroy();
+
         /** Retrieves the current time stamp */
         [[nodiscard]] TimeStamp GetCurrentTimeStamp() const;
 

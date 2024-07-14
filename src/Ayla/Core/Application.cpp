@@ -50,6 +50,8 @@ namespace Ayla::Core
     {
         AY_TRACE("[Sholas] Application: Destroying Application");
         delete m_ClientLoop;
+        Input::SInputState::Destroy();
+        Time::Clock::Destroy();
     };
 
 

@@ -23,6 +23,13 @@ namespace Ayla::Core::Time
     }
 
 
+    void Clock::Destroy()
+    {
+        delete m_Instance;
+        m_Instance = nullptr;
+    }
+
+
     Clock::Clock() :
         m_DeltaTime(0),
         m_PreviousTimeStamp(GetCurrentTimeStamp()),
@@ -32,7 +39,7 @@ namespace Ayla::Core::Time
 
     Clock::~Clock()
     {
-        AY_TRACE("[Sholas] Clock: Destroying Clock\n\n");
+        AY_TRACE("[Sholas] Clock: Destroying Clock");
     }
 
 

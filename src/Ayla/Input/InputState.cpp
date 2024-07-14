@@ -42,6 +42,13 @@ namespace Ayla::Input {
     }
 
 
+    void SInputState::Destroy()
+    {
+        delete m_Instance;
+        m_Instance = nullptr;
+    }
+
+
     void SInputState::OnEvent(IEvent& event)
     {
         AY_ASSERT(event.IsInCategory(INPUT_CATEGORY), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");

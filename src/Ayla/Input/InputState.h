@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include "Ayla/Input/InputLayer.h"
 #include "Ayla/Events/Event.h"
+#include "Ayla/Input/InputLayer.h"
 
 
 namespace Ayla::Input {
@@ -19,6 +19,9 @@ namespace Ayla::Input {
 
         /** Returns the Input State singleton. */
         static SInputState& Get();
+
+        /** Deletes the singleton instance. */
+        static void Destroy();
 
         /** Receives input events and changes the key's state to reflect the input event data. */
         void OnEvent(Events::IEvent&);
