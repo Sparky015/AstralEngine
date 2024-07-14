@@ -31,7 +31,7 @@ namespace Ayla::Core::Macros {
         filePathStream << rootFolder << '/';
         if (std::filesystem::create_directories(rootFolder) == false) // filePathStream = "ConsoleLog/"
         {
-            std::cout << "\nDebugMacros.cpp: Failed to create console logs root folder";
+            AY_WARN("DebugMacros.cpp: Failed to create console logs root folder!");
         }
 
         /** Creates a folder to subdivide the logs by the month and year */
@@ -40,7 +40,7 @@ namespace Ayla::Core::Macros {
         filePathStream << monthAndYearFolderNameStream.str() << '/';
         if (std::filesystem::create_directories(filePathStream.str()) == false)  // filePathStream = "ConsoleLog/[Month]-[Year]/"
         {
-            std::cout << "\nDebugMacros.cpp: Failed to create console logs month/year folder";
+            AY_WARN("DebugMacros.cpp: Failed to create console logs month/year folder!");
         }
 
         /** Creates another folder to subdivide the logs by the day in a month */
@@ -49,7 +49,7 @@ namespace Ayla::Core::Macros {
         filePathStream << dayFolderNameStream.str() << '/';
         if (std::filesystem::create_directories(filePathStream.str()) == false)  // filePathStream = "ConsoleLog/[Month]-[Year]/[Day]/"
         {
-            std::cout << "\nDebugMacros.cpp: Failed to create console logs day folder";
+            AY_WARN("DebugMacros.cpp: Failed to create console logs day folder!");
         }
 
         /** Name of the text file based on the time it was created. */
@@ -57,23 +57,26 @@ namespace Ayla::Core::Macros {
         hrMinSecTextFileNameStream << currentTime->tm_hour << "_" << currentTime->tm_min << "_" << currentTime->tm_sec;
 
         /** filePathStream = "ConsoleLog/[Month]-[Year]/[Day]/[Hour]_[Minute]_[Second].txt" */
-        filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
+        filePathStream << hrMinSecTextFileNameStream.str() << ".rtf";
 
         LogFile.open(filePathStream.str(), std::ios::out);
         if (LogFile.fail())
         {
-            AY_ERROR("Log file failed to open!") //TODO: Change this to a warning (AY_WARN)
+            AY_WARN("DebugMacros.cpp: Log file failed to open!");
         }
+        LogFile << "{\\rtf1\\ansi\\ansicpg1252\\cocoartf2759 \\cocoatextscaling0\\cocoaplatform0{\\fonttbl\\f0\\fswiss\\fcharset0 Helvetica;} \\"
+                   "\\colortbl;\\red255\\green0\\blue0;\\red0\\green128\\blue0;\\red0\\green0\\blue255;";
     }
 
 
     void closeLogForMacros()
     {
     #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+        //LogFile << "}";
         LogFile.close();
         if (LogFile.fail())
         {
-            AY_ERROR("Log file failed to close!") //TODO: Change this to a warning (AY_WARN)
+            AY_WARN("DebugMacros.cpp: Log file failed to close!");
         }
     #endif
     }
@@ -91,11 +94,38 @@ namespace Ayla::Core::Macros {
         int64 elapsedMilliseconds = millisecondsSinceEpoch % 1000;
 
         /** Outputs the message with the time info prefixing it */
-        std::cout << "\n\033[0;32m[" << currentTime->tm_hour << ":" << currentTime->tm_min << ":" << currentTime->tm_sec << ":" << elapsedMilliseconds << "] " << title << "\033[0m";
-    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-        LogFile << "\n[" << currentTime->tm_hour << ":" << currentTime->tm_min << ":" << currentTime->tm_sec << ":" << elapsedMilliseconds << "] " << title;
-    #endif
+        std::cout << "\n\033[0;36m[" << currentTime->tm_hour
+                  << ":" << currentTime->tm_min << ":"
+                  << currentTime->tm_sec << ":" << elapsedMilliseconds
+                  << "]\033[0;96m " << title << "\033[0m";
 
+        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+            LogFile << "\n \\cf1[" << currentTime->tm_hour
+                    << ":" << currentTime->tm_min
+                    << ":" << currentTime->tm_sec
+                    << ":" << elapsedMilliseconds
+                    << "] \\cf2" << title << "\\cf0 \\";
+        #endif
+    }
+
+
+    void macro_AY_LOG(const std::string&& message)
+    {
+        CheckIfCoutFailed();
+        std::cout << "\n" << "\033[0;92m" << message << "\033[0m"; // Color is bright green
+        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+            LogFile << "\n\\cf1" << message << "\\cf0 \\";
+        #endif
+    }
+
+
+    void macro_AY_WARN(const std::string&& message)
+    {
+        CheckIfCoutFailed();
+        std::cout << "\n" << "\033[0;93m" << message << "\033[0m"; // Color is bright yellow
+        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+            LogFile << "\n\\cf2" << message << "\\cf0 \\";
+        #endif
     }
 
 
@@ -105,22 +135,11 @@ namespace Ayla::Core::Macros {
             std::ostringstream oss;
             oss << "\n\n" << errorMessage.rdbuf();
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "AY_ASSERT failed. Error: " << oss.str();
+                LogFile << "\\cf1 AY_ASSERT failed. Error: " << oss.str() << " \\";
                 LogFile.close();
             #endif
-            throw std::runtime_error(oss.str());
+            throw std::runtime_error(oss.str());  // color defaulted to red
         }
-    }
-
-
-    void macro_AY_LOG(const std::string&& message)
-    {
-        CheckIfCoutFailed();
-        std::cout << "\n" << "\033[0;34m" << message << "\033[0m";
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n" << message;
-        #endif
-
     }
 
 
@@ -129,10 +148,10 @@ namespace Ayla::Core::Macros {
         std::ostringstream oss;
         oss << "\n\n" << errorMessage.rdbuf();
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "AY_ERROR called. Error: " << oss.str();
+            LogFile << "\\cf1 AY_ERROR called. Error: " << oss.str() << " \\";
             LogFile.close();
         #endif
-        throw std::runtime_error(oss.str());
+        throw std::runtime_error(oss.str()); // color defaulted to red
     }
 
 
@@ -145,7 +164,7 @@ namespace Ayla::Core::Macros {
 
     AY_PROFILER::~AY_PROFILER()
     {
-        //m_endTime = std::chrono::high_resolution_clock::now();
+        //m_endTime = std::chrono::high_resolution_clock::now(); //TODO: add color to profiler output
         //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
         //std::cout << "\n" << m_title << " time: " << duration.count() << " microseconds\n" << std::endl;
         //#ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
@@ -158,7 +177,7 @@ namespace Ayla::Core::Macros {
     {
         if (std::cout.fail())
         {
-            AY_ERROR("std::cout failed"); //TODO: Change this to a warning (AY_WARN)
+            std::cout << "\n" << "\033[0;93m" << "std::cout failed!" << "\033[0m"; // Color is bright yellow
             std::cout.clear();
         }
     }

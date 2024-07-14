@@ -1,0 +1,29 @@
+
+[20:13:28:685] [Sholas] Application: Initializing Application
+--- Application: Initializing Window ---
+[20:13:28:685] [Sholas] GenericWindow: Initializing Generic Window
+--- Application: Initializing Layer Stack ---
+[20:13:28:808] [Sholas] LayerStack: Initializing Layer Stack
+--- Application: Initializing Layers ---
+[20:13:28:808] [Sholas] Layer: Initializing Base Class Layer		
+[20:13:28:808] [Sholas] ImGuiLayer: Initializing ImGui Layer
+[20:13:28:809] [Sholas] InputState: Initializing Input State'
+[20:13:28:809] [Sholas] Layer: Initializing Base Class Layer		
+[20:13:28:809] [Sholas] InputLayer: Initializing Input Layer
+[20:13:28:809] [Sholas] InputState: Initializing Input State
+[20:13:28:809] [Sholas] Layer: Initializing Base Class Layer		
+[20:13:28:809] [Sholas] DebugLayer: Initializing Debug Layer
+[20:13:28:809] [Sholas] Clock: Initializing Clock
+[20:13:28:809] [Sholas] Client: Initializing ClientLoop
+[20:13:28:809] [Sholas] Layer: Initializing Base Class Layer		
+[20:13:28:809] ExampleLayer: Initializing Template Layer
+
+
+Running Application!
+[20:13:43:102] [Sholas] Application: Destroying Application
+[20:13:43:103] [Sholas] Layer: Destroying Base Class Layer		
+[20:13:43:103] [Sholas] Client: Destroying ClientLoop
+[20:13:43:103] [Sholas] DebugLayer: Destroying Debug Layer
+[20:13:43:103] [Sholas] Layer: Destroying Base Class Layer		
+[20:13:43:103] [Sholas] ImGuiLayer: Destroying ImGui Layer
+[20:13:43:103] [Sholas] Layer: Destroying Base Class Layer		
