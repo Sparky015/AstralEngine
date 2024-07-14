@@ -51,7 +51,7 @@ namespace Ayla::Core::Macros {
 
         /** Name of the text file based on the time it was created. */
         std::stringstream hrMinSecTextFileNameStream;
-        hrMinSecTextFileNameStream << currentTime->tm_hour << "_" << currentTime->tm_min << "_" << currentTime->tm_sec;
+        hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec;
 
         /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
         filePathStream << hrMinSecTextFileNameStream.str() << ".txt";

@@ -56,6 +56,7 @@ namespace Ayla::Core::Time
         m_PreviousTimeStamp = currentTimeStamp;
     }
 
+
     void Clock::CheckTimers() {
         const TimeStamp currentTimeStamp = GetCurrentTimeStamp();
         float elapsedTime = 0;
