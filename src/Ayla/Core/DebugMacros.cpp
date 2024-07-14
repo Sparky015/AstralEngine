@@ -64,15 +64,17 @@ namespace Ayla::Core::Macros {
         {
             AY_WARN("DebugMacros.cpp: Log file failed to open!");
         }
-        LogFile << "{\\rtf1\\ansi\\ansicpg1252\\cocoartf2759 \\cocoatextscaling0\\cocoaplatform0{\\fonttbl\\f0\\fswiss\\fcharset0 Helvetica;} \\"
-                   "\\colortbl;\\red255\\green0\\blue0;\\red0\\green128\\blue0;\\red0\\green0\\blue255;";
+        LogFile << "{\\rtf1\\ansi\\ansicpg1252\\deff0\n"
+                << "{\\fonttbl{\\f0\\fswiss\\fcharset0 Helvetica;}}\n"
+                << "{\\colortbl;\\red34\\green105\\blue105;\\red0\\green255\\blue255;\\red0\\green255\\blue0;\\red255\\green255\\blue0;\\red170\\green0\\blue0;}"
+                << "\n\\viewkind4\\uc1\\pard\\f0\\fs24";
     }
 
 
     void closeLogForMacros()
     {
     #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-        //LogFile << "}";
+        LogFile << "\n}";
         LogFile.close();
         if (LogFile.fail())
         {
@@ -100,11 +102,11 @@ namespace Ayla::Core::Macros {
                   << "]\033[0;96m " << title << "\033[0m";
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n \\cf1[" << currentTime->tm_hour
+            LogFile << "\n \\cf1 [" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << ":" << elapsedMilliseconds
-                    << "] \\cf2" << title << "\\cf0 \\";
+                    << "] \\cf2" << title << "\\cf0 \\par";
         #endif
     }
 
@@ -114,7 +116,7 @@ namespace Ayla::Core::Macros {
         CheckIfCoutFailed();
         std::cout << "\n" << "\033[0;92m" << message << "\033[0m"; // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n\\cf1" << message << "\\cf0 \\";
+            LogFile << "\n \\cf3" << message << "\\cf0 \\par";
         #endif
     }
 
@@ -124,7 +126,7 @@ namespace Ayla::Core::Macros {
         CheckIfCoutFailed();
         std::cout << "\n" << "\033[0;93m" << message << "\033[0m"; // Color is bright yellow
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n\\cf2" << message << "\\cf0 \\";
+            LogFile << "\n \\cf4" << message << "\\cf0 \\par";
         #endif
     }
 
@@ -135,7 +137,7 @@ namespace Ayla::Core::Macros {
             std::ostringstream oss;
             oss << "\n\n" << errorMessage.rdbuf();
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\\cf1 AY_ASSERT failed. Error: " << oss.str() << " \\";
+                LogFile << "\\cf5 AY_ASSERT failed. Error: " << oss.str() << " \\par";
                 LogFile.close();
             #endif
             throw std::runtime_error(oss.str());  // color defaulted to red
@@ -148,7 +150,7 @@ namespace Ayla::Core::Macros {
         std::ostringstream oss;
         oss << "\n\n" << errorMessage.rdbuf();
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\\cf1 AY_ERROR called. Error: " << oss.str() << " \\";
+            LogFile << "\\cf5 AY_ERROR called. Error: " << oss.str() << " \\par";
             LogFile.close();
         #endif
         throw std::runtime_error(oss.str()); // color defaulted to red
