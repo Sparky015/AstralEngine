@@ -39,9 +39,6 @@ namespace Ayla::Core::Layers
         /** Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. */
         virtual void OnEvent(IEvent& event);
 
-        /** Allows a system to send events to the Layer Stack to be sent to other systems. */
-        //virtual void SendEvent(IEvent& event, EEventDispatchTypes dispatchType) const; // TODO: Implement this
-
         /** Adds the layer as a layer to the Layer Stack. */
         void AttachLayer();
 
@@ -65,6 +62,15 @@ namespace Ayla::Core::Layers
 
         /** Disables the layer in the Layer Stack (it will stop receiving events and calls to the Update function) */
         void Disable();
+
+        enum EventDestination
+        {
+            FRONT_TO_BACK,
+            BACK_TO_FRONT,
+        };
+
+        /** Allows a system to send events to the Layer Stack to be sent to other systems. */
+        void SendEvent(IEvent& event, EventDestination eventDestination) const;
 
     protected:
 
