@@ -2,12 +2,12 @@
 // Created by Andrew Fagan on 7/12/24.
 //
 
-#include "Ayla/Core/DebugMacros.h"
+#include "DebugMacros.h"
 
 #include <fstream>
 #include <iostream>
 
-namespace Ayla::Core::Macros {
+namespace Ayla::Debug::Macros {
 
 
     namespace {
@@ -216,4 +216,4 @@ namespace Ayla::Core::Macros {
         }
     }
 
-} // namespace Ayla::Core::Macros
+} // namespace Ayla::Debug::Macros
