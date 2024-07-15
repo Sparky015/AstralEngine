@@ -63,7 +63,7 @@ namespace Ayla::Core::Layers
         /** Disables the layer in the Layer Stack (it will stop receiving events and calls to the Update function) */
         void Disable();
 
-        enum EventDestination
+        enum EventDestination : uint8
         {
             FRONT_TO_BACK,
             BACK_TO_FRONT,
