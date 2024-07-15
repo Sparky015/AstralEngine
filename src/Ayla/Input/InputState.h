@@ -65,15 +65,15 @@ namespace Ayla::Input {
         /** Returns the Y position of the mouse cursor. */
         [[nodiscard]] double MousePositionY() const;
 
+        static const int NUMBER_OF_KEYS = 119;
+
     private:
         static SInputState* m_Instance;
         SInputState();
         ~SInputState();
 
-        static const int m_NUMBER_OF_KEYS = 119;
-
         // The naming for each indice all match the definition order of the keycodes (so if you change the order of the key codes, change this)
-        std::array<KeyState, m_NUMBER_OF_KEYS> m_KeyState = { // Could potentially make this multiple arrays (one array for each field)
+        std::array<KeyState, NUMBER_OF_KEYS> m_KeyState = { // Could potentially make this multiple arrays (one array for each field)
                 KeyState("LEFT CLICK"),
                 KeyState("MIDDLE CLICK"),
                 KeyState("RIGHT CLICK"),

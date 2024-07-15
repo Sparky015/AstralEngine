@@ -79,27 +79,19 @@ namespace Ayla::GUI {
     void ImGuiLayer::OnImGuiRender()
     {
         const ImGuiIO& io = ImGui::GetIO();
-        static bool showDemoWindow = true;
-        static bool showStackTool = true;
-        if (showStackTool)
-        {
-            ImGui::ShowIDStackToolWindow(&showStackTool);
-        }
-        if (showDemoWindow)
-        {
-            ImGui::ShowDemoWindow(&showDemoWindow);
-        }
 
-        static bool showAnotherWindow = true;
+        static bool showAnotherWindow = false;
+        static bool showDemoNumbersWindow = false;
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        if (showDemoNumbersWindow)
         {
             static float sliderFloat = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!", &showDemoNumbersWindow);                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
+            //ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &showAnotherWindow);
 
             ImGui::SliderFloat("float", &sliderFloat, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f

@@ -27,7 +27,8 @@ namespace Ayla::Core::Debug
         EEventCategory GetAcceptingEventFlags() override;
 
     private:
-
+        static bool m_ShowDemoWindow;
+        static bool m_ShowDebugMenu;
     };
 
 }
