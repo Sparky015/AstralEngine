@@ -122,4 +122,21 @@ namespace Ayla::Core::Layers {
         m_Callback = std::move(callback);
     }
 
+
+    void ILayer::SendEvent(IEvent& event, EventDestination eventDestination) const
+    {
+        if (eventDestination == FRONT_TO_BACK)
+        {
+            Application::GetLayerStack().DispatchEventFromFrontToBack(event);
+        }
+        else if (eventDestination == BACK_TO_FRONT)
+        {
+            Application::GetLayerStack().DispatchEventBackToFront(event);
+        }
+        else
+        {
+            AY_ERROR("Core/Layer.cpp: Event destination does not exist!")
+        }
+    }
+
 } // namespace Ayla::Core::Layers
