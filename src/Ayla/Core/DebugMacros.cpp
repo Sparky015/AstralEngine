@@ -17,8 +17,8 @@ namespace Ayla::Core::Macros {
 
     void initLogForMacros()
     {
-#ifndef TURN_OFF_DEBUG_MACROS
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+
+    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
 
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t);
@@ -60,14 +60,13 @@ namespace Ayla::Core::Macros {
         {
             AY_WARN("DebugMacros.cpp: Log file failed to open!");
         }
-        #endif
-#endif
+    #endif
+
     }
 
 
     void closeLogForMacros()
     {
-#ifndef TURN_OFF_DEBUG_MACROS
     #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         LogFile.close();
         if (LogFile.fail())
@@ -75,7 +74,6 @@ namespace Ayla::Core::Macros {
             AY_WARN("DebugMacros.cpp: Log file failed to close!");
         }
     #endif
-#endif
     }
 
 
@@ -185,7 +183,7 @@ namespace Ayla::Core::Macros {
 
 
     AY_PROFILER::AY_PROFILER(std::string&& title)
-#ifndef TURN_OFF_DEBUG_MACROS
+#ifndef TURN_OFF_PROFILER_MACRO
         :
         m_title(std::move(title)),
         m_startTime(std::chrono::high_resolution_clock::now()),
@@ -196,7 +194,7 @@ namespace Ayla::Core::Macros {
 
     AY_PROFILER::~AY_PROFILER()
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+#ifndef TURN_OFF_PROFILER_MACRO
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
