@@ -16,6 +16,16 @@ else ()
     add_definitions(-DAYLA_PLATFORM_UNKNOWN)
 endif()
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    add_definitions(-DAYLA_DEBUG_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    add_definitions(-DAYLA_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+    add_definitions(-DAYLA_MINIMUM_SIZE_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+    add_definitions(-DAYLA_RELEASE_WITH_DEBUG_INFO_BUILD)
+endif()
+
 
 
 

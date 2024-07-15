@@ -17,9 +17,8 @@ namespace Ayla::Core::Macros {
 
     void initLogForMacros()
     {
-        #ifdef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            return;
-        #endif
+#ifndef TURN_OFF_DEBUG_MACROS
+        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
 
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t);
@@ -61,12 +60,14 @@ namespace Ayla::Core::Macros {
         {
             AY_WARN("DebugMacros.cpp: Log file failed to open!");
         }
-
+        #endif
+#endif
     }
 
 
     void closeLogForMacros()
     {
+#ifndef TURN_OFF_DEBUG_MACROS
     #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         LogFile.close();
         if (LogFile.fail())
@@ -74,11 +75,13 @@ namespace Ayla::Core::Macros {
             AY_WARN("DebugMacros.cpp: Log file failed to close!");
         }
     #endif
+#endif
     }
 
 
     void macro_AY_TRACE(const std::string&& title)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         /** Gets the current time */
         const std::time_t t = std::time(nullptr);
@@ -108,21 +111,25 @@ namespace Ayla::Core::Macros {
                     << "." << elapsedPrecisionTime
                     << "]" << title;
         #endif
+#endif
     }
 
 
     void macro_AY_LOG(const std::string&& message)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::cout << "\n" << "\033[0;92m" << message << "\033[0m"; // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << message;
         #endif
+#endif
     }
 
 
     void macro_AY_LOG_SS(const std::ostream& message)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::ostringstream oss;
         oss << message.rdbuf();
@@ -131,21 +138,25 @@ namespace Ayla::Core::Macros {
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << oss.str();
         #endif
+#endif
     }
 
 
     void macro_AY_WARN(const std::string&& message)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::cout << "\n\033[0;93m[Warning] " << message << "\033[0m"; // Color is bright yellow
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << message;
         #endif
+#endif
     }
 
 
     void macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
             std::ostringstream oss;
             oss << "\n\n" << errorMessage.rdbuf();
@@ -155,11 +166,13 @@ namespace Ayla::Core::Macros {
             #endif
             throw std::runtime_error(oss.str());  // color defaulted to red
         }
+#endif
     }
 
 
     void macro_AY_ERROR(const std::ostream& errorMessage)
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         std::ostringstream oss;
         oss << "\n\n" << errorMessage.rdbuf();
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
@@ -167,18 +180,23 @@ namespace Ayla::Core::Macros {
             LogFile.close();
         #endif
         throw std::runtime_error(oss.str()); // color defaulted to red
+#endif
     }
 
 
-    AY_PROFILER::AY_PROFILER(std::string&& title) :
+    AY_PROFILER::AY_PROFILER(std::string&& title)
+#ifndef TURN_OFF_DEBUG_MACROS
+        :
         m_title(std::move(title)),
         m_startTime(std::chrono::high_resolution_clock::now()),
         m_endTime()
+#endif
     {}
 
 
     AY_PROFILER::~AY_PROFILER()
     {
+#ifndef TURN_OFF_DEBUG_MACROS
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
@@ -187,6 +205,7 @@ namespace Ayla::Core::Macros {
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds";
         #endif
+#endif
     }
 
 
