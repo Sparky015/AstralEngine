@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <chrono>
 #include <string>
 
@@ -21,10 +22,11 @@
 #define AY_WARN(message) Ayla::Debug::Macros::macro_AY_WARN(message)
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
-#define AY_ASSERT(expression, errorMessage) { std::stringstream ss; Ayla::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage); }
+#define AY_ASSERT(expression, errorMessage) { std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage)); }
 
 /** Throws an error with a message outputted to the console. */
-#define AY_ERROR(errorMessage) { std::stringstream ss; Ayla::Debug::Macros::macro_AY_ERROR(ss << errorMessage); }
+#define AY_ERROR(errorMessage) { \
+std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ERROR(ss << errorMessage)); }
 
 /** Profiles a scope and outputs the time to the console. */
 #define AY_PROFILE_SCOPE(title) Ayla::Debug::Macros::AY_PROFILER localScopedProfiler = Ayla::Debug::Macros::AY_PROFILER(title);
@@ -52,10 +54,10 @@ namespace Ayla::Debug::Macros {
     void macro_AY_WARN(const std::string&& message);
 
     /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
-    void macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage);
+    bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage);
 
     /** Throws an error with a message (that can come in the form of an ostream) outputted to the console. */
-    void macro_AY_ERROR(const std::ostream& errorMessage);
+    bool macro_AY_ERROR(const std::ostream& errorMessage);
 
     /** Profiles a scope and outputs the time to the console. */
     class AY_PROFILER {

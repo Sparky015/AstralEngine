@@ -4,7 +4,6 @@
 
 #include "DebugMacros.h"
 
-#include <cassert>
 #include <fstream>
 #include <iostream>
 
@@ -153,33 +152,40 @@ namespace Ayla::Debug::Macros {
     }
 
 
-    void macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
+    bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
     {
 #ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
             std::ostringstream oss;
-            oss << "\n\n" << errorMessage.rdbuf();
+            oss << "\n\n" << errorMessage.rdbuf() << "\n\n";
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\nAssert failed. Error: " << oss.str();
+                LogFile << "\n\nAssert failed. \n\nError: " << oss.str();
                 LogFile.close();
             #endif
-                
-            throw std::runtime_error(oss.str());  // color defaulted to red
+                std::cout << "\n\n\033[0;31mAY_ASSERT failed. \n\nError: " << oss.str() << "\033[0m";
+                return false; // assert failed
+
+            //throw std::runtime_error(oss.str());  // color defaulted to red
         }
 #endif
+        return true;
     }
 
 
-    void macro_AY_ERROR(const std::ostream& errorMessage)
+    // Always returns false in order to fail the assert() in the macro. This way, the file name and line is outputted from the assert()
+    bool macro_AY_ERROR(const std::ostream& errorMessage)
     {
 #ifndef TURN_OFF_DEBUG_MACROS
         std::ostringstream oss;
-        oss << "\n\n" << errorMessage.rdbuf();
+        oss << errorMessage.rdbuf() << "\n\n";
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\nAY_ERROR called. Error: " << oss.str();
+            LogFile << "\n\nAY_ERROR called. \n\nError: " << oss.str();
             LogFile.close();
         #endif
-        throw std::runtime_error(oss.str()); // color defaulted to red
+        std::cout << "\n\n\033[0;31mAY_ERROR called. \n\nError: " << oss.str() << "\033[0m";
+        return false;
+#else
+        return true; // if the debug macros are off then it will always return without causing the error through assert()
 #endif
     }
 
