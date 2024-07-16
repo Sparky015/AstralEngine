@@ -2,10 +2,13 @@ cmake-build-debug
 cmake-build-default
 cmake-build-*
 
+build
+build-*
+
 **/.DS_Store
 
 docs/Doxygen
 
 Ayla.xcodeproj
 CMakeFiles
-build
+
