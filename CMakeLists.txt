@@ -46,33 +46,45 @@ add_library(ImGui STATIC vendor/ImGui/imgui.cpp
 target_include_directories(ImGui PUBLIC ${CMAKE_SOURCE_DIR}/vendor/ImGui)
 
 
+# Recursive globs to get a list of all source and header files.
+file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.hpp" "${CMAKE_SOURCE_DIR}/source/*.h")
+file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.cpp")
+
+foreach(FILE ${HEADER_LIST} ${SOURCE_LIST})
+    get_filename_component(PARENT_DIR "${FILE}" PATH)
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
+    string(REPLACE "/" "\\" GROUP "${GROUP}")
+    source_group("${GROUP}" FILES "${FILE}")
+endforeach()
+
+
 
 # Create the static library
 add_library(Ayla STATIC
-        src/Ayla/Core/Application.cpp
-        src/Ayla/Events/Event.cpp
-        src/Ayla/Events/EventDispatcher.cpp
-        src/Ayla/aypch.cpp
-        src/Ayla/Window/Platform/Generic/GenericWindow.cpp
-        src/Ayla/Core/Layers/Layer.cpp
-        src/Ayla/Core/Layers/LayerStack.cpp
-        src/Ayla/ImGui/ImGuiLayer.cpp
-        src/Ayla/Input/InputLayer.cpp
-        src/Ayla/Input/InputState.cpp
-        src/Ayla/Debug/DebugLayer.cpp
-        src/Ayla/Core/Time/Clock.cpp
-        src/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
-        src/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
-        src/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
-        src/Ayla/Client/UserSetup.cpp
-        src/Ayla/Core/Time/FTimer.cpp
-        src/Ayla/Debug/DebugMacros.h
-        src/Ayla/Debug/DebugMacros.cpp
+        source/Ayla/Core/Application.cpp
+        source/Ayla/Events/Event.cpp
+        source/Ayla/Events/EventDispatcher.cpp
+        source/Ayla/aypch.cpp
+        source/Ayla/Window/Platform/Generic/GenericWindow.cpp
+        source/Ayla/Core/Layers/Layer.cpp
+        source/Ayla/Core/Layers/LayerStack.cpp
+        source/Ayla/ImGui/ImGuiLayer.cpp
+        source/Ayla/Input/InputLayer.cpp
+        source/Ayla/Input/InputState.cpp
+        source/Ayla/Debug/DebugLayer.cpp
+        source/Ayla/Core/Time/Clock.cpp
+        source/Ayla/Input/KeycodeTranslation/GLFWTranslation.cpp
+        source/Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
+        source/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
+        source/Ayla/Client/UserSetup.cpp
+        source/Ayla/Core/Time/FTimer.cpp
+        source/Ayla/Debug/DebugMacros.h
+        source/Ayla/Debug/DebugMacros.cpp
 )
 
 #       ### Ayla Includes ###
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/source)
 
 #           Include library headers
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
@@ -99,11 +111,11 @@ endif ()
 
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM "glad/glad.h")
+target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 
 
 # Defining Precompiled Headers
-target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/src/Ayla/aypch.h)
+target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/source/Ayla/aypch.h)
 
 add_executable(ClientGame
         client/src/main.cpp
