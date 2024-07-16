@@ -68,8 +68,8 @@ namespace Ayla::Debug::Macros {
         ~AY_PROFILER();
     private:
         std::string m_title;
-        std::chrono::time_point<std::chrono::system_clock> m_startTime;
-        std::chrono::time_point<std::chrono::system_clock> m_endTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
     };
 
     /** Checks if std::cout is in fail state and corrects it. */
