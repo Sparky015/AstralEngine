@@ -25,6 +25,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
     add_definitions(-DAYLA_MINIMUM_SIZE_RELEASE_BUILD)
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
     add_definitions(-DAYLA_RELEASE_WITH_DEBUG_INFO_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
+    add_definitions(-DAYLA_RELEASE_WITH_DEBUG_INFO_BUILD)
 endif()
 
 
