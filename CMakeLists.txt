@@ -12,7 +12,7 @@ if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
     add_definitions(-DAYLA_PLATFORM_MACOS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined")  // Only use in Clion
 else ()
     add_definitions(-DAYLA_PLATFORM_UNKNOWN)
 endif()
@@ -117,12 +117,12 @@ target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 # Defining Precompiled Headers
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/source/Ayla/aypch.h)
 
-add_executable(ClientGame
-        client/src/main.cpp
-        client/src/ExampleLayer.cpp)
-target_compile_definitions(ClientGame PRIVATE -DGLFW_INCLUDE_NONE)
+add_executable(ExampleUserProject
+        example-user-project/src/main.cpp
+        example-user-project/src/ExampleLayer.cpp)
+target_compile_definitions(ExampleUserProject PRIVATE -DGLFW_INCLUDE_NONE)
 
-target_link_libraries(ClientGame Ayla)
+target_link_libraries(ExampleUserProject Ayla)
 
 
 
