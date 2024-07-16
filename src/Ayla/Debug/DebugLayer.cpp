@@ -223,6 +223,11 @@ namespace Ayla::Core::Debug
             if (ImGui::TreeNode("Other"))
             {
                 ImGui::Checkbox("ImGui Demo Window", &m_ShowImGuiDemoWindow);
+                static bool doCauseError = false;
+                if (ImGui::Checkbox("Force Error (AY_ERROR)", &doCauseError))
+                {
+                    AY_ERROR("Test error called from the debug menu!");
+                }
                 ImGui::TreePop();
             }
 
