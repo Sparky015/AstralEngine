@@ -14,8 +14,10 @@
 
 namespace Ayla::Core
 {
-    using namespace Ayla::Windows;
-    //using Ayla::Events::IEvent;
+    using Ayla::Windows::Window;
+    using Ayla::Events::IEvent;
+    using Layers::ILayer;
+    using Layers::LayerStack;
 
     /** The brain and backbone of the engine. */
     class Application

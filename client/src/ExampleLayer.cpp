@@ -23,9 +23,9 @@ ExampleLayer::~ExampleLayer()
 
 void ExampleLayer::OnImGuiRender()
 {
-    ImGui::Begin("Test Example!");
-    ImGui::Text("Hi hihih!");
-    ImGui::End();
+//    ImGui::Begin("Test Example!");
+//    ImGui::Text("Hi hihih!");
+//    ImGui::End();
 }
 
 

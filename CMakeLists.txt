@@ -63,8 +63,8 @@ add_library(Ayla STATIC
         src/Ayla/Window/Platform/Generic/imgui_impl_glfw.cpp
         src/Ayla/Client/UserSetup.cpp
         src/Ayla/Core/Time/FTimer.cpp
-        src/Ayla/Core/DebugMacros.h
-        src/Ayla/Core/DebugMacros.cpp
+        src/Ayla/Debug/DebugMacros.h
+        src/Ayla/Debug/DebugMacros.cpp
 )
 
 #       ### Ayla Includes ###

@@ -26,7 +26,7 @@
 
 // Other Stuff
 #include "Ayla/Core/CoreDefinitions.h"
-#include "Ayla/Core/DebugMacros.h"
+#include "Ayla/Debug/DebugMacros.h"
 
 
 #ifdef AYLA_PLATFORM_WINDOWS
