@@ -118,7 +118,7 @@ target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/source/Ayla/aypch.h)
 
 add_executable(ExampleUserProject
-        example-user-project/src/main.cpp
+        example-user-project/src/start.cpp
         example-user-project/src/ExampleLayer.cpp)
 target_compile_definitions(ExampleUserProject PRIVATE -DGLFW_INCLUDE_NONE)
 

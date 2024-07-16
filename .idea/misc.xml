@@ -6,14 +6,12 @@
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
     <sourceRoots>
-      <file path="$PROJECT_DIR$/src" />
+      <file path="$PROJECT_DIR$/source" />
     </sourceRoots>
-    <libraryRoots>
-      <file path="$PROJECT_DIR$/vendor" />
-    </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/docs/OldCodeStorage" />
       <file path="$PROJECT_DIR$/tests" />
+      <file path="$PROJECT_DIR$/vendor" />
     </excludeRoots>
   </component>
 </project>
