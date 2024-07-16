@@ -67,7 +67,6 @@ namespace Ayla::Debug::Macros {
         explicit AY_PROFILER(std::string&& title = "Profiler");
         ~AY_PROFILER();
     private:
-        std::stringstream ss;
         std::string m_title;
         std::chrono::time_point<std::chrono::system_clock> m_startTime;
         std::chrono::time_point<std::chrono::system_clock> m_endTime;

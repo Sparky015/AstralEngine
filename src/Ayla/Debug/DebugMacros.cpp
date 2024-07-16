@@ -4,13 +4,10 @@
 
 #include "DebugMacros.h"
 
-
+#include <filesystem>
 #include <fstream>
+#include <sstream>
 
-#ifdef AYLA_PLATFORM_WINDOWS
-    #include <filesystem>
-    #include <sstream>
-#endif
 
 namespace Ayla::Debug::Macros {
 
