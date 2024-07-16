@@ -5,11 +5,11 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
-using namespace Ayla::Core::Layers;
+
 
 namespace Ayla::Core::Debug
 {
-
+    using namespace Ayla::Core::Layers;
     /** Provides a way to debug the engine by pulling information into a window or the console for viewing. */
     class DebugLayer : public ILayer
     {
@@ -27,7 +27,7 @@ namespace Ayla::Core::Debug
         EEventCategory GetAcceptingEventFlags() override;
 
     private:
-        static bool m_ShowDemoWindow;
+        static bool m_ShowImGuiDemoWindow;
         static bool m_ShowDebugMenu;
     };
 

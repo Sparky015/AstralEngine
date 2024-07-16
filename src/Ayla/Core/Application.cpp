@@ -28,7 +28,7 @@ namespace Ayla::Core
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
-        m_Window = std::unique_ptr<Window>(Window::CreateWindow(WindowProperties("Ayla Engine Window", 1024, 768)));
+        m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Ayla Engine Window", 1024, 768)));
         m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
         // Layer Stack //
@@ -87,7 +87,7 @@ namespace Ayla::Core
 
     void Application::OnEvent(IEvent& event) // TODO: Make the parameter const and the depending functions const.
     {
-        if (event.GetEventType() == WINDOW_CLOSE)
+        if (event.GetEventType() == Events::WINDOW_CLOSE)
         {
             m_IsAppRunning = false;
             return;

@@ -4,14 +4,14 @@
 
 #pragma once
 
-namespace Ayla::Input::Keycodes
+namespace Ayla::Input
 {
 
     /** Keycodes that are Sholas specific. */
     enum EKeycodes : int8_t
     {
-        AY_KEY_NONE = -1,
-        AY_KEY_LEFT_CLICK = 0,
+        AY_KEY_NONE = 0, // The NONE keycode starts as 0 in order to give it a spot in the input state array for the purposes of debugging.
+        AY_KEY_LEFT_CLICK,
         AY_KEY_MIDDLE_CLICK,
         AY_KEY_RIGHT_CLICK,
 
@@ -85,6 +85,15 @@ namespace Ayla::Input::Keycodes
         AY_KEY_GRAVE_ACCENT,
         AY_KEY_PERIOD,
 
+        AY_KEY_LEFT_SHIFT,
+        AY_KEY_RIGHT_SHIFT,
+        AY_KEY_LEFT_CONTROL,
+        AY_KEY_RIGHT_CONTROL,
+        AY_KEY_LEFT_ALT,
+        AY_KEY_RIGHT_ALT,
+        AY_KEY_LEFT_SUPER,
+        AY_KEY_RIGHT_SUPER,
+
         AY_KEY_KP_0,
         AY_KEY_KP_1,
         AY_KEY_KP_2,
@@ -102,15 +111,6 @@ namespace Ayla::Input::Keycodes
         AY_KEY_KP_ADD,
         AY_KEY_KP_ENTER,
         AY_KEY_KP_EQUAL,
-
-        AY_KEY_LEFT_SHIFT,
-        AY_KEY_RIGHT_SHIFT,
-        AY_KEY_LEFT_CONTROL,
-        AY_KEY_RIGHT_CONTROL,
-        AY_KEY_LEFT_ALT,
-        AY_KEY_RIGHT_ALT,
-        AY_KEY_LEFT_SUPER,
-        AY_KEY_RIGHT_SUPER,
 
         AY_KEY_F1,
         AY_KEY_F2,

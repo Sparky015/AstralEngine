@@ -52,27 +52,24 @@ namespace Ayla::Input {
     void SInputState::OnEvent(IEvent& event)
     {
         AY_ASSERT(event.IsInCategory(INPUT_CATEGORY), "Input/InputState.cpp: InputState received an event that is not in the Input Category!");
-        //AY_TRACE("Input Received\t");
+
         if (event.IsInCategory(KEYBOARD_CATEGORY))
         {
             if (event.GetEventType() == KEY_PRESSED)
             {
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
                 m_KeyState[keyPressedEvent.GetKeycode()].IsDown = true;
-                //std::cout << keyPressedEvent.GetKeycode();.
             }
             if (event.GetEventType() == KEY_RELEASED)
             {
                 auto keyReleasedEvent = dynamic_cast<KeyReleasedEvent&>(event);
                 m_KeyState[keyReleasedEvent.GetKeycode()].IsDown = false;
                 m_KeyState[keyReleasedEvent.GetKeycode()].IsRepeating = false;
-                //std::cout << keyReleasedEvent.GetKeycode();
             }
             if (event.GetEventType() == KEY_PRESSED_REPEATING)
             {
                 auto keyPressedRepeatingEvent = dynamic_cast<KeyPressedRepeatingEvent&>(event);
                 m_KeyState[keyPressedRepeatingEvent.GetKeycode()].IsRepeating = true;
-                //std::cout << keyPressedRepeatingEvent.GetKeycode();
             }
         }
 
@@ -123,18 +120,39 @@ namespace Ayla::Input {
 
     bool SInputState::IsKeyDown(int keycode) const
     {
+#ifdef AYLA_DEBUG_BUILD
+        if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
+        {
+            AY_WARN("Ayla::Input::SInputState::IsKeyDown: Unrecognized keycode tried to access the input state");
+            return false;
+        }
+#endif
         return m_KeyState[keycode].IsDown;
     }
 
 
     bool SInputState::IsKeyRepeating(int keycode) const
     {
+#ifdef AYLA_DEBUG_BUILD
+        if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
+        {
+            AY_WARN("Ayla::Input::SInputState::IsKeyRepeating: Unrecognized keycode tried to access the input state");
+            return false;
+        }
+#endif
         return m_KeyState[keycode].IsRepeating;
     }
 
 
-    const std::string& SInputState::GetKeyName(int keycode) const
+    std::string SInputState::GetKeyName(int keycode) const
     {
+#ifdef AYLA_DEBUG_BUILD
+        if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
+        {
+            AY_WARN("Ayla::Input::SInputState::GetKeyName: Unrecognized keycode tried to access the input state");
+            return m_KeyState[AY_KEY_NONE].Name;
+        }
+#endif
         return m_KeyState[keycode].Name;
     }
 

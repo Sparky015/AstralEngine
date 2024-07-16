@@ -8,17 +8,24 @@
         /** Defines the ALYA_API for compiling Ayla into a dll/shared library file */
 
 #ifdef AYLA_PLATFORM_WINDOWS
+#define AYLA_GENERIC_WINDOW
+
+    /** Defines the ALYA_API for compiling Ayla into a dll/shared library file */
     #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __declspec(dllexport)        // Export
     #else
         #define AYLA_API __declspec(dllimport)        // Import
     #endif
 #elif AYLA_PLATFORM_MACOS
+#define AYLA_GENERIC_WINDOW
+
+    /** Defines the ALYA_API for compiling Ayla into a dll/shared library file */
     #ifdef AYLA_BUILD_SHARED_LIB
         #define AYLA_API __attribute__((visibility("default")))       // Export
     #else
         #define AYLA_API        // Import
     #endif
+
 #else
     #error Core/CoreDefinitions.h: Unsupported/Unknown Platform!
 #endif

@@ -145,11 +145,13 @@ namespace Ayla::Input::Keycodes::Translation {
             case GLFW_KEY_F22: return AY_KEY_F22;
             case GLFW_KEY_F23: return AY_KEY_F23;
             case GLFW_KEY_F24: return AY_KEY_F24;
-
+            case -1: return AY_KEY_NONE;    // GLFW defaults to -1 when the key is unrecognized
 
             default:
-                // Sanity Check to see if the keycode is not in the translation hashmap;
+#ifdef AYLA_DEBUG_BUILD
+                // Sanity Check to see if there are any keycodes that are not in the translation hashmap;
                 AY_ERROR("Input/KeycodeTranslation/GLFWTranslation.cpp: Keycode '" << glfwKeycode << "' is not in the GLFW keycode translation hashmap!");
+#endif
                 return AY_KEY_NONE;
         }
     }

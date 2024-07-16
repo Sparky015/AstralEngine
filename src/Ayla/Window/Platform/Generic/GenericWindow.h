@@ -2,6 +2,7 @@
 // Created by Andrew Fagan on 4/18/24.
 //
 #pragma once
+
 #include "Ayla/Events/Event.h"
 #include "Ayla/Window/Window.h"
 #include "Ayla/aypch.h"
@@ -9,9 +10,6 @@
 #include "GLFW/glfw3.h"
 
 namespace Ayla::Windows{
-
-
-
 
     /** Window class that is designed for cross-platform compatibility. A generic window version that any major OS can use (using GLFW). */
     class GenericWindow : public Window {
@@ -45,10 +43,10 @@ namespace Ayla::Windows{
         void Update() override;
 
         /** Enables VSync for the window. */
-        void EnableVSync();
+        void EnableVSync() override;
 
         /** Disables VSync for the window. */
-        void DisableVSync();
+        void DisableVSync() override;
 
     private:
         GLFWwindow* m_Window;

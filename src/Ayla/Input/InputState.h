@@ -23,7 +23,10 @@ namespace Ayla::Input {
         /** Deletes the singleton instance. */
         static void Destroy();
 
-        /** Receives input events and changes the key's state to reflect the input event data. */
+        /**
+         * Receives input events and changes the key's state to reflect the input event data.
+         * @note Expects the event to be an event of Input type and to contain keycode values between 0 and 119.
+         */
         void OnEvent(Events::IEvent&);
 
         SInputState(const SInputState&) = delete;
@@ -57,7 +60,7 @@ namespace Ayla::Input {
         [[nodiscard]] bool IsKeyRepeating(int keycode) const;
 
         /** Returns the name of a key in the form of a std::string. */
-        [[nodiscard]] const std::string& GetKeyName(int keycode) const;
+        [[nodiscard]] std::string GetKeyName(int keycode) const;
 
         /** Returns the X position of the mouse cursor. */
         [[nodiscard]] double MousePositionX() const;
@@ -65,7 +68,7 @@ namespace Ayla::Input {
         /** Returns the Y position of the mouse cursor. */
         [[nodiscard]] double MousePositionY() const;
 
-        static const int NUMBER_OF_KEYS = 119;
+        static const int NUMBER_OF_KEYS = 120;
 
     private:
         static SInputState* m_Instance;
@@ -74,6 +77,7 @@ namespace Ayla::Input {
 
         // The naming for each indice all match the definition order of the keycodes (so if you change the order of the key codes, change this)
         std::array<KeyState, NUMBER_OF_KEYS> m_KeyState = { // Could potentially make this multiple arrays (one array for each field)
+                KeyState("UNRECOGNIZED KEY"),
                 KeyState("LEFT CLICK"),
                 KeyState("MIDDLE CLICK"),
                 KeyState("RIGHT CLICK"),
@@ -150,6 +154,14 @@ namespace Ayla::Input {
                 KeyState("GRAVE ACCENT"),
                 KeyState("PERIOD"),
 
+                KeyState("LEFT SHIFT"),
+                KeyState("RIGHT SHIFT"),
+                KeyState("LEFT CONTROL"),
+                KeyState("RIGHT CONTROL"),
+                KeyState("LEFT ALT"),
+                KeyState("RIGHT ALT"),
+                KeyState("LEFT SUPER"),
+                KeyState("RIGHT SUPER"),
 
                 KeyState("KP 0"),
                 KeyState("KP 1"),
@@ -168,15 +180,6 @@ namespace Ayla::Input {
                 KeyState("KP ADD"),
                 KeyState("KP ENTER"),
                 KeyState("KP EQUAL"),
-
-                KeyState("LEFT SHIFT"),
-                KeyState("RIGHT SHIFT"),
-                KeyState("LEFT CONTROL"),
-                KeyState("RIGHT CONTROL"),
-                KeyState("LEFT ALT"),
-                KeyState("RIGHT ALT"),
-                KeyState("LEFT SUPER"),
-                KeyState("RIGHT SUPER"),
 
                 KeyState("F1"),
                 KeyState("F2"),

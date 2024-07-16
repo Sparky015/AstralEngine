@@ -4,6 +4,7 @@
 
 #include "DebugMacros.h"
 
+#include <cassert>
 #include <fstream>
 #include <iostream>
 
@@ -159,9 +160,10 @@ namespace Ayla::Debug::Macros {
             std::ostringstream oss;
             oss << "\n\n" << errorMessage.rdbuf();
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "Assert failed. Error: " << oss.str();
+                LogFile << "\nAssert failed. Error: " << oss.str();
                 LogFile.close();
             #endif
+                
             throw std::runtime_error(oss.str());  // color defaulted to red
         }
 #endif
@@ -174,7 +176,7 @@ namespace Ayla::Debug::Macros {
         std::ostringstream oss;
         oss << "\n\n" << errorMessage.rdbuf();
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "AY_ERROR called. Error: " << oss.str();
+            LogFile << "\nAY_ERROR called. Error: " << oss.str();
             LogFile.close();
         #endif
         throw std::runtime_error(oss.str()); // color defaulted to red

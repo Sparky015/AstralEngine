@@ -49,6 +49,12 @@ namespace Ayla::Windows { // maybe change namespace to Display or Viewport inste
         /** Returns a pointer to the native window class or struct being used. */
         [[nodiscard]] virtual void* GetNativeWindow() const = 0;
 
+        /** Enables VSync for the window. */
+        virtual void EnableVSync() = 0;
+
+        /** Disables VSync for the window. */
+        virtual void DisableVSync() = 0;
+
         /** Defines a callback that is called when events are raised by the window. */
         virtual void SetEventCallback(const EventCallback& callback) = 0;
 
