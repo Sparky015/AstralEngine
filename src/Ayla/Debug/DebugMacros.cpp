@@ -159,7 +159,7 @@ namespace Ayla::Debug::Macros {
 #ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
             std::ostringstream oss;
-            oss << "\n\n" << errorMessage.rdbuf() << "\n\n";
+            oss << errorMessage.rdbuf() << "\n\n";
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
                 LogFile << "\n\nAssert failed. \n\nError: " << oss.str();
                 LogFile.close();
