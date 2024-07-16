@@ -8,6 +8,9 @@
 #include <chrono>
 #include <string>
 
+#ifdef AYLA_PLATFORM_WINDOWS
+#include <sstream>
+#endif
 
 /** Outputs the message to the console with a time stamp. */
 #define AY_TRACE(title) Ayla::Debug::Macros::macro_AY_TRACE(title)
@@ -25,8 +28,7 @@
 #define AY_ASSERT(expression, errorMessage) { std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage)); }
 
 /** Throws an error with a message outputted to the console. */
-#define AY_ERROR(errorMessage) { \
-std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ERROR(ss << errorMessage)); }
+#define AY_ERROR(errorMessage) { std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ERROR(ss << errorMessage)); }
 
 /** Profiles a scope and outputs the time to the console. */
 #define AY_PROFILE_SCOPE(title) Ayla::Debug::Macros::AY_PROFILER localScopedProfiler = Ayla::Debug::Macros::AY_PROFILER(title);
@@ -65,9 +67,10 @@ namespace Ayla::Debug::Macros {
         explicit AY_PROFILER(std::string&& title = "Profiler");
         ~AY_PROFILER();
     private:
+        std::stringstream ss;
         std::string m_title;
-        std::chrono::time_point<std::chrono::steady_clock> m_startTime;
-        std::chrono::time_point<std::chrono::steady_clock> m_endTime;
+        std::chrono::time_point<std::chrono::system_clock> m_startTime;
+        std::chrono::time_point<std::chrono::system_clock> m_endTime;
     };
 
     /** Checks if std::cout is in fail state and corrects it. */

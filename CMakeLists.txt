@@ -4,7 +4,7 @@ project(Ayla)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined")
+
 
 
 # Set platform macros
@@ -12,6 +12,7 @@ if (WIN32)
     add_definitions(-DAYLA_PLATFORM_WINDOWS)
 elseif (APPLE)
     add_definitions(-DAYLA_PLATFORM_MACOS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined")
 else ()
     add_definitions(-DAYLA_PLATFORM_UNKNOWN)
 endif()
