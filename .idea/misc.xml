@@ -9,6 +9,9 @@
       <file path="$PROJECT_DIR$/source" />
     </sourceRoots>
     <excludeRoots>
+      <file path="$PROJECT_DIR$/build" />
+      <file path="$PROJECT_DIR$/build-xcode" />
+      <file path="$PROJECT_DIR$/build-visual-studio" />
       <file path="$PROJECT_DIR$/docs/OldCodeStorage" />
       <file path="$PROJECT_DIR$/tests" />
       <file path="$PROJECT_DIR$/vendor" />
