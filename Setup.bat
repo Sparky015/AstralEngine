@@ -1,5 +1,5 @@
 mkdir build
 cd build || exit
 cmake ..
-make
+MSBuild Ayla.sln /p:Configuration=Default
 exit
