@@ -14,5 +14,4 @@ public:
 
     virtual void OnImGuiRender() override;
     virtual Ayla::Events::EEventCategory GetAcceptingEventFlags() override;
-
 };
