@@ -41,18 +41,3 @@ add_subdirectory(source/Ayla)
 add_subdirectory(example-user-project)
 
 
-#set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT example-user-project)
-
-
-# Recursive globs to get a list of all source and header files.
-file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.hpp" "${CMAKE_SOURCE_DIR}/source/*.h")
-file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.cpp")
-
-foreach(FILE ${HEADER_LIST} ${SOURCE_LIST})
-    get_filename_component(PARENT_DIR "${FILE}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
-    string(REPLACE "/" "\\" GROUP "${GROUP}")
-    source_group("${GROUP}" FILES "${FILE}")
-endforeach()
-
-

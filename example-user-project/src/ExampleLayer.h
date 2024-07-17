@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Ayla.h"
+#include "Ayla/Core/Layers/Layer.h"
 
 class ExampleLayer : public Ayla::Core::Layers::ILayer
 {
@@ -14,5 +14,4 @@ public:
 
     virtual void OnImGuiRender() override;
     virtual Ayla::Events::EEventCategory GetAcceptingEventFlags() override;
-
 };

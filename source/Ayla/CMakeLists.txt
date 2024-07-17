@@ -67,19 +67,19 @@ target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glm)
 target_link_libraries(Ayla PRIVATE GLAD)
 target_link_libraries(Ayla PUBLIC ImGui)
 
-if (APPLE)
-    target_link_libraries(Ayla PRIVATE glfw.3)
-elseif (WIN32)
-    target_link_libraries(Ayla PUBLIC glfw3)
-endif ()
-
-
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
     target_link_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
     target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
+endif ()
+
+
+if (APPLE)
+    target_link_libraries(Ayla PRIVATE glfw.3)
+elseif (WIN32)
+    target_link_libraries(Ayla PUBLIC glfw3)
 endif ()
 
 
@@ -92,4 +92,17 @@ target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 
 # Defining Precompiled Headers
 target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/source/Ayla/aypch.h)
+
+
+
+# Recursive globs to get a list of all source and header files.
+file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.hpp" "${CMAKE_SOURCE_DIR}/source/*.h")
+file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/*.cpp")
+
+foreach(FILE ${HEADER_LIST} ${SOURCE_LIST})
+    get_filename_component(PARENT_DIR "${FILE}" PATH)
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "" RELATIVE_PATH "${PARENT_DIR}")
+    source_group("${RELATIVE_PATH}" FILES "${FILE}")
+endforeach()
+
 
