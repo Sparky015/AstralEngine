@@ -64,13 +64,13 @@ target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glm)
 
 
 #           Link Libraries to Ayla
-target_link_libraries(Ayla GLAD)
-target_link_libraries(Ayla ImGui)
+target_link_libraries(Ayla PRIVATE GLAD)
+target_link_libraries(Ayla PUBLIC ImGui)
 
 if (APPLE)
-    target_link_libraries(Ayla glfw.3)
+    target_link_libraries(Ayla PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(Ayla glfw3)
+    target_link_libraries(Ayla PRIVATE glfw3)
 endif ()
 
 
@@ -79,7 +79,7 @@ endif ()
 if (APPLE)
     target_link_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
-    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
+    target_link_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
 
 
