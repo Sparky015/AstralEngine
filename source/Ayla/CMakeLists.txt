@@ -1,35 +1,61 @@
 
+
+
 # Create the static library
 add_library(Ayla STATIC
         Core/Application.cpp
+        Core/Application.h
+        Core/CoreDefinitions.h
+        Core/EntryPoint.h
+        Events/ApplicationEvent.h
         Events/Event.cpp
+        Events/Event.h
+        Events/EventDispatcher.h
+        Events/KeyEvent.h
+        Events/MouseEvent.h
         Events/EventDispatcher.cpp
         aypch.cpp
+        aypch.h
         Window/Platform/Generic/GenericWindow.cpp
+        Window/Platform/Generic/GenericWindow.h
         Core/Layers/Layer.cpp
         Core/Layers/Layer.h
         Core/Layers/LayerStack.cpp
+        Core/Layers/LayerStack.h
         ImGui/ImGuiLayer.cpp
+        ImGui/ImGuiLayer.h
         Input/InputLayer.cpp
+        Input/InputLayer.h
         Input/InputState.cpp
+        Input/InputState.h
+        Input/Keycodes.h
         Debug/DebugLayer.cpp
+        Debug/DebugLayer.h
         Core/Time/Clock.cpp
+        Core/Time/Clock.h
         Input/KeycodeTranslation/GLFWTranslation.cpp
+        Input/KeycodeTranslation/GLFWTranslation.h
         Renderer/Platform/OpenGL/imgui_impl_opengl3.cpp
+        Renderer/Platform/OpenGL/imgui_impl_opengl3.h
         Window/Platform/Generic/imgui_impl_glfw.cpp
+        Window/Platform/Generic/imgui_impl_glfw.h
+        Window/Window.h
         Client/UserSetup.cpp
+        Client/UserSetup.h
         Core/Time/FTimer.cpp
+        Core/Time/FTimer.h
+        Core/Time/TimeLiterals.h
         Debug/DebugMacros.h
         Debug/DebugMacros.cpp
 )
 
+
+
 #       ### Ayla Includes ###
-target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/source)
-target_sources(Ayla PUBLIC
-        ${CMAKE_SOURCE_DIR}/source/Ayla/Core/Layers/Layer.h
-        ${CMAKE_SOURCE_DIR}/include/Ayla.h
-)
+target_include_directories(Ayla INTERFACE ${CMAKE_SOURCE_DIR}/include)
+
+
 
 #           Include library headers
 target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
@@ -40,11 +66,14 @@ target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glm)
 #           Link Libraries to Ayla
 target_link_libraries(Ayla GLAD)
 target_link_libraries(Ayla ImGui)
+
 if (APPLE)
     target_link_libraries(Ayla glfw.3)
 elseif (WIN32)
     target_link_libraries(Ayla glfw3)
 endif ()
+
+
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
@@ -54,9 +83,11 @@ elseif (WIN32)
 endif ()
 
 
+
 # Defining Macros
 target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+
 
 
 # Defining Precompiled Headers
