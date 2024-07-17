@@ -61,10 +61,12 @@ namespace Ayla::Core
 
         AY_LOG("\n\nRunning Application!");
 
-        while (m_IsAppRunning){
+        while (m_IsAppRunning)
+        {
 
             glClearColor(1, 0, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
+
 
             Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
             Time::Clock::Get().CheckTimers();

@@ -20,7 +20,7 @@
 namespace Ayla::Core::Debug
 {
     bool DebugLayer::m_ShowImGuiDemoWindow = false;
-    bool DebugLayer::m_ShowDebugMenu = true;
+    bool DebugLayer::m_ShowDebugMenu = false;
 
     DebugLayer::DebugLayer()
     {
