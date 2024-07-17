@@ -47,6 +47,8 @@ add_library(Ayla STATIC
         Core/Time/TimeLiterals.h
         Debug/DebugMacros.h
         Debug/DebugMacros.cpp
+        Renderer/RendererLayer.cpp
+        Renderer/RendererLayer.h
 )
 
 
@@ -70,7 +72,7 @@ target_link_libraries(Ayla PUBLIC ImGui)
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
-    target_link_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
+    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
     target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
@@ -79,7 +81,7 @@ endif ()
 if (APPLE)
     target_link_libraries(Ayla PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(Ayla PUBLIC glfw3)
+    target_link_libraries(Ayla PRIVATE glfw3)
 endif ()
 
 
