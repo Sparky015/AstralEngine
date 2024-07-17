@@ -11,4 +11,6 @@ docs/Doxygen
 
 Ayla.xcodeproj
 CMakeFiles
+.vs
+
 
