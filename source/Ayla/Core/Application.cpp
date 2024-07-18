@@ -9,7 +9,7 @@
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
 
-#include "glad/glad.h" // TEMP
+#include "Ayla/Renderer/RendererLayer.h" // TEMP
 
 namespace Ayla::Core
 {
@@ -43,6 +43,8 @@ namespace Ayla::Core
 
         // Clock //
         Time::Clock::Init();
+
+        static Renderer::RendererLayer rendererLayer = Renderer::RendererLayer(); // TEMP
     }
 
 
@@ -63,11 +65,6 @@ namespace Ayla::Core
 
         while (m_IsAppRunning)
         {
-
-            glClearColor(1, 0, 1, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-
             Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
             Time::Clock::Get().CheckTimers();
 
