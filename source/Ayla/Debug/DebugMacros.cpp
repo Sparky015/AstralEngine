@@ -154,6 +154,21 @@ namespace Ayla::Debug::Macros {
     }
 
 
+    void macro_AY_WARN_SS(const std::ostream& message)
+    {
+#ifndef TURN_OFF_DEBUG_MACROS
+        CheckIfCoutFailed();
+        std::ostringstream oss;
+        oss << message.rdbuf();
+
+        std::cout << "\n\033[0;93m[Warning] " << oss.str() << "\033[0m"; // Color is bright green
+        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+            LogFile << "\n" << oss.str();
+        #endif
+#endif
+    }
+
+
     bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
     {
 #ifndef TURN_OFF_DEBUG_MACROS

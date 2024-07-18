@@ -188,7 +188,7 @@ namespace Ayla::Core::Debug
             ImGui::SetNextItemOpen(false, ImGuiCond_Once);
             if (ImGui::TreeNode("Window Properties"))
             {
-                Windows::Window& window = Application::GetWindow();
+                Windows::Window& window = Application::Get().GetWindow();
 
                 ImGui::Text("Framebuffer: (%.2f, %.2f)", window.GetDisplayFramebufferScaleX(), window.GetDisplayFramebufferScaleY());
                 ImGui::Text("Window Dimension: %d x %d", window.GetWidth(), window.GetHeight());

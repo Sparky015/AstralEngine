@@ -46,8 +46,8 @@ namespace Ayla::GUI {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Windows::Window& appWindow = Core::Application::GetWindow();
-        io.DisplaySize = ImVec2(appWindow.GetWidth(), appWindow.GetHeight());
+        Windows::Window const& appWindow = Core::Application::Get().GetWindow();
+        io.DisplaySize = ImVec2((float)appWindow.GetWidth(), (float)appWindow.GetHeight());
         io.DisplayFramebufferScale = ImVec2(appWindow.GetDisplayFramebufferScaleX(),appWindow.GetDisplayFramebufferScaleY());
 
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -63,7 +63,7 @@ namespace Ayla::GUI {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Core::Application::GetWindow().GetNativeWindow()), true);
+        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(appWindow.GetNativeWindow()), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 

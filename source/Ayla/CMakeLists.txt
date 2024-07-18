@@ -52,6 +52,8 @@ add_library(Ayla STATIC
         Core/EntryPoint.cpp
         Debug/LogUsedToolsAndLibraries.cpp
         Debug/LogUsedToolsAndLibraries.h
+        Renderer/ParseShaders.cpp
+        Renderer/ParseShaders.h
 )
 
 

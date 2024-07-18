@@ -4,13 +4,18 @@
 
 #include "RendererLayer.h"
 
+#include "Ayla/Renderer/ParseShaders.h"
+
 #include "glad/glad.h"
 
 
 namespace Ayla::Renderer {
 
 
-    RendererLayer::RendererLayer() : m_Buffer(0)
+    RendererLayer::RendererLayer() :
+        m_Buffer(0),
+        m_VertexShader(Shader("../../source/Ayla/Renderer/Shaders/vertex.shader").GetShaderCode()),
+        m_FragmentShader(Shader("../../source/Ayla/Renderer/Shaders/fragment.shader").GetShaderCode())
     {
         AY_TRACE("[Sholas] RendererLayer: Initializing Renderer Layer");
         this->AttachLayer();

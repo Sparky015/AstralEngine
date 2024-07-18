@@ -16,11 +16,9 @@
 namespace Ayla::Core
 {
     Application* Application::m_Application = nullptr;
-    std::unique_ptr<LayerStack> Application::m_LayerStack = nullptr;
-    std::unique_ptr<Window> Application::m_Window = nullptr;
 
 
-    Application::Application() : m_ClientLoop(nullptr)
+    Application::Application() : m_Window(nullptr), m_LayerStack(nullptr), m_ClientLoop(nullptr)
     {
         AY_ASSERT(m_Application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
 
@@ -48,7 +46,7 @@ namespace Ayla::Core
 
         Ayla::Debug::LogUsedLibraries(); // Log all the systems being used after initialization
 
-        static Renderer::RendererLayer rendererLayer = Renderer::RendererLayer(); // TEMP
+        m_RendererLayer = std::make_unique<Renderer::RendererLayer>();  // TEMP
     }
 
 

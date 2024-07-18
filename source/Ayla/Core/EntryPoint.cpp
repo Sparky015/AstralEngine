@@ -16,15 +16,21 @@ int main(int argc, char *argv[])
     Ayla::Debug::Macros::initLogForMacros();
 
 
-    Ayla::Core::Application Engine = Ayla::Core::Application();
+    /**
+     * Makes the engine on the heap in order to be able to delete the engine and log all the destructor behaviors
+     * before I close the logging file.
+     */
+    Ayla::Core::Application* Engine = new Ayla::Core::Application();
 
     /** Grab the client's loop and give it to the engine */
     Ayla::Client::ClientLoop* ClientLoop = Ayla::Client::LinkClientToEngine();
     AY_ASSERT(ClientLoop != nullptr, "[Sholas] Core/Application.cpp: ClientLoop is not set up!");
-    Engine.SetClientLoop(ClientLoop);
+    Engine->SetClientLoop(ClientLoop);
 
     /** Start the engine's loop */
-    Engine.Run();
+    Engine->Run();
+
+    delete Engine;
 
     Ayla::Debug::Macros::closeLogForMacros();
 
