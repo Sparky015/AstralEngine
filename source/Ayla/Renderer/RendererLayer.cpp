@@ -28,11 +28,16 @@ namespace Ayla::Renderer {
 
     void RendererLayer::OnAttach()
     {
+        std::cout << "\n" << glGetString(GL_VERSION) << "\n";
+
         float positions[6] = {
             -0.5f, -0.5,
             0.0f, 0.5f,
             0.5f, -0.5f
         };
+
+        unsigned int VAO; glGenVertexArrays(1, &VAO); glBindVertexArray(VAO); // the secret magic sauce
+
 
         glGenBuffers(1, &m_Buffer);
         glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
