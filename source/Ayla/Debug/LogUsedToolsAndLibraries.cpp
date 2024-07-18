@@ -15,7 +15,7 @@ namespace Ayla::Debug {
 
         /** Outputs the compiler name and version */
         #ifdef __clang__
-            AY_LOG_SS("Compiler: " << __clang_version__);
+            AY_LOG_SS("Compiler: Clang " << __clang_version__);
         #elif defined(__GNUC__)
             AY_LOG_SS("Compiler: GNU GCC " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__);
         #elif defined(_MSC_VER)
