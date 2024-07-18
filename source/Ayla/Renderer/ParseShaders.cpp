@@ -48,10 +48,12 @@ namespace Ayla::Renderer{
                 if (line.find("vertex") != std::string::npos)
                 {
                     m_ShaderType = VERTEX_SHADER;
+                    break;
                 }
                 else if (line.find("fragment") != std::string::npos)
                 {
                     m_ShaderType = FRAGMENT_SHADER;
+                    break;
                 }
                 else
                 {
