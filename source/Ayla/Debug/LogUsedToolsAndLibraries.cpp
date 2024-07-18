@@ -37,7 +37,7 @@ namespace Ayla::Debug {
                                                        << (_LIBCPP_VERSION % 1000) / 10 << '.'
                                                        << _LIBCPP_VERSION % 10);
         #elif defined(_MSC_VER)
-            AY_LOG("Standard Library: Microsoft STL " << _MSC_VER);
+            AY_LOG_SS("Standard Library: Microsoft STL " << _MSC_VER);
         #else
             AY_LOG("Standard Library: Unknown);
         #endif
@@ -47,8 +47,8 @@ namespace Ayla::Debug {
             AY_LOG_SS("Window: GLFW " << glfwGetVersionString());
             AY_LOG_SS("Rendering API: OpenGL " << glGetString(GL_VERSION));
         #elif defined(AYLA_PLATFORM_WINDOWS)
-            AY_LOG_SS("Window: GLFW" << glfwGetVersionString());
-            AY_LOG_SS("Renderer API: OpenGL " << glGetString(GL_VERSION));
+            AY_LOG_SS("Window: GLFW " << glfwGetVersionString());
+            AY_LOG_SS("Rendering API: OpenGL " << glGetString(GL_VERSION));
         #endif
 
         AY_LOG(""); // Creates an extra new line
