@@ -30,8 +30,8 @@ namespace Ayla::Debug {
 
 
         // Outputs the standard library name and version
-        #if defined(__GLIBCXX__)
-            AY_LOG_SS(Standard Library: GNU libstdc++ " << __GLIBCXX__);
+        #if defined(__GLIBCXX__) //__GLIBCXX__
+            AY_LOG_SS("Standard Library: GNU libstdc++ " << __GLIBCXX__);
         #elif defined(_LIBCPP_VERSION)
             AY_LOG_SS("Standard Library: LLVM libc++ " << _LIBCPP_VERSION / 1000 << '.'
                                                        << (_LIBCPP_VERSION % 1000) / 10 << '.'
@@ -39,7 +39,7 @@ namespace Ayla::Debug {
         #elif defined(_MSC_VER)
             AY_LOG_SS("Standard Library: Microsoft STL " << _MSC_VER);
         #else
-            AY_LOG("Standard Library: Unknown);
+            AY_LOG("Standard Library: Unknown");
         #endif
 
         /** Outputs the libraries used depending on the platform. */
