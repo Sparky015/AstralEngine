@@ -17,6 +17,7 @@ public:
     ~RendererLayer();
 
     virtual void OnAttach() override;
+    virtual void OnDetach() override;
     virtual void OnUpdate() override;
     virtual Events::EEventCategory GetAcceptingEventFlags() override;
 
@@ -26,6 +27,7 @@ public:
 private:
 
     unsigned int m_Buffer;
+    unsigned int m_Shader;
 
     std::string m_VertexShader =
         "#version 410\n"

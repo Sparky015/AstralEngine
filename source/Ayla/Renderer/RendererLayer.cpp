@@ -47,8 +47,14 @@ namespace Ayla::Renderer {
 
         glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), (float*)positions, GL_STATIC_DRAW);
 
-        unsigned int shader = CreateShader(m_VertexShader, m_FragmentShader);
-        glUseProgram(shader);
+        m_Shader = CreateShader(m_VertexShader, m_FragmentShader);
+        glUseProgram(m_Shader);
+    }
+
+
+    void RendererLayer::OnDetach()
+    {
+        glDeleteProgram(m_Shader);
     }
 
 
@@ -74,6 +80,8 @@ namespace Ayla::Renderer {
         const char* src = source.c_str();
         glShaderSource(id, 1, &src, nullptr);
         glCompileShader(id);
+
+
 
         int result;
         glGetShaderiv(id, GL_COMPILE_STATUS, &result);
@@ -110,6 +118,7 @@ namespace Ayla::Renderer {
 
         return program;
     }
+
 
 
 } // namespace Ayla::Renderer
