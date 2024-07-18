@@ -28,7 +28,6 @@ namespace Ayla::Renderer {
 
     void RendererLayer::OnAttach()
     {
-        std::cout << "\n" << glGetString(GL_VERSION) << "\n";
 
         float positions[6] = {
             -0.5f, -0.5,

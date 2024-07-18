@@ -32,7 +32,7 @@ namespace Ayla::Debug::Macros {
         std::stringstream filePathStream;
 
         /** Root folder name for all the console logs. */
-        const std::string rootFolder = "ConsoleLogs";
+        const std::string rootFolder = "../../ConsoleLogs";
         filePathStream << rootFolder << '/';
 
         /** create_directories will fail most of the time because the folders have already been made most of the time. */

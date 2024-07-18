@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Ayla/Core/Layers/Layer.h"
+#include "Ayla.h"
 
 class ExampleLayer : public Ayla::Core::Layers::ILayer
 {

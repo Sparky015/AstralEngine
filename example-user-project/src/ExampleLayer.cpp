@@ -3,7 +3,7 @@
 //
 
 #include "ExampleLayer.h"
-#include "Ayla/Core/CoreDefinitions.h"
+
 #include "imgui.h"
 
 
