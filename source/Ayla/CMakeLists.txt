@@ -50,8 +50,8 @@ add_library(Ayla STATIC
         Renderer/RendererLayer.cpp
         Renderer/RendererLayer.h
         Core/EntryPoint.cpp
-        Debug/LogTools.cpp
-        Debug/LogTools.h
+        Debug/LogUsedToolsAndLibraries.cpp
+        Debug/LogUsedToolsAndLibraries.h
 )
 
 

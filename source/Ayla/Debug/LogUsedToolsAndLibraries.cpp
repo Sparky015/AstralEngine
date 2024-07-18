@@ -2,16 +2,16 @@
 // Created by Andrew Fagan on 7/18/24.
 //
 
-#include "LogTools.h"
+#include "LogUsedToolsAndLibraries.h"
 
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
 
 namespace Ayla::Debug {
 
-    void LogTools()
+    void LogUsedLibraries()
     {
-        AY_LOG("\n      Engine Tools:");
+        AY_LOG("\n      Engine Tools/Libraries:");
 
         /** Outputs the compiler name and version */
         #ifdef __clang__

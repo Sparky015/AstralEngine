@@ -6,7 +6,7 @@
 
 #include "Ayla/Client/UserSetup.h"
 #include "Ayla/Core/Application.h"
-#include "Ayla/Debug/LogTools.h"
+#include "Ayla/Debug/LogUsedToolsAndLibraries.h"
 
 int main(int argc, char *argv[])
 {

@@ -6,7 +6,7 @@
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/Core/Time/Clock.h"
 #include "Ayla/Debug/DebugLayer.h"
-#include "Ayla/Debug/LogTools.h"
+#include "Ayla/Debug/LogUsedToolsAndLibraries.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
 
@@ -46,7 +46,7 @@ namespace Ayla::Core
         // Clock //
         Time::Clock::Init();
 
-        Ayla::Debug::LogTools(); // Log all the systems being used after initialization
+        Ayla::Debug::LogUsedLibraries(); // Log all the systems being used after initialization
 
         static Renderer::RendererLayer rendererLayer = Renderer::RendererLayer(); // TEMP
     }

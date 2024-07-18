@@ -7,6 +7,6 @@
 
 namespace Ayla::Debug {
 
-    void LogTools();
+    void LogUsedLibraries();
 
 } // namespace Ayla::Debug
