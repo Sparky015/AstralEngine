@@ -17,7 +17,9 @@ namespace Ayla::Debug::Macros {
     namespace {
         std::fstream LogFile;
 
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        #ifdef AYLA_PLATFORM_WINDOWS
+            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        #endif
 
         enum ConsoleOutputColors : uint8
         {
@@ -60,6 +62,7 @@ namespace Ayla::Debug::Macros {
                         return "\033[95m";
                     default:
                         std::cout << "\n" << "Color not defined!";
+                        return "";
                 }
             #elif defined(AYLA_PLATFORM_WINDOWS)
                 switch (color)
@@ -157,7 +160,7 @@ namespace Ayla::Debug::Macros {
     #endif
     }
 
-
+//TODO: Utilize __func__ __FILE__ and __LINE__ in the debugging macros
     void macro_AY_TRACE(const std::string&& title)
     {
     #ifndef TURN_OFF_DEBUG_MACROS

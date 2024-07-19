@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
     #endif
     Ayla::Debug::Macros::initLogForMacros();
-
+    AY_LOG_SS("Compiled on " __DATE__ << " " << __TIME__);
 
     /**
      * Makes the engine on the heap in order to be able to delete the engine and log all the destructor behaviors
