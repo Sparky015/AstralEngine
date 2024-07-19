@@ -10,31 +10,35 @@
 
 namespace Ayla::Renderer{
 
-class RendererLayer : public Core::Layers::ILayer
-{
-public:
-    RendererLayer();
-    ~RendererLayer();
+    class RendererLayer : public Core::Layers::ILayer
+    {
+    public:
+        RendererLayer();
+        ~RendererLayer();
 
-    virtual void OnAttach() override;
-    virtual void OnDetach() override;
-    virtual void OnUpdate() override;
-    virtual Events::EEventCategory GetAcceptingEventFlags() override;
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        virtual void OnUpdate() override;
+        virtual Events::EEventCategory GetAcceptingEventFlags() override;
 
-    static unsigned int CompileShader(unsigned int type, const std::string& source);
-    static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+        static unsigned int CompileShader(unsigned int type, const std::string& source);
+        static unsigned int CreateShaderProgram(const std::string& vertexShader, const std::string& fragmentShader);
 
-private:
+        void InitializeGPUData();
+        void Render() const;
 
-    unsigned int m_Buffer;
-    unsigned int m_Shader;
+    private:
 
-    std::string m_VertexShader;
-    std::string m_FragmentShader;
+        unsigned int m_Buffer;
+        unsigned int m_Ibo;
+        unsigned int m_ShaderProgram;
+
+        std::string m_VertexShader;
+        std::string m_FragmentShader;
 
 
-};
+    };
 
 
 
-}
+} // namespace Ayla::Renderer

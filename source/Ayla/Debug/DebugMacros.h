@@ -7,10 +7,8 @@
 #include <cassert>
 #include <chrono>
 #include <string>
-
-#ifdef AYLA_PLATFORM_WINDOWS
 #include <sstream>
-#endif
+
 
 /** Outputs the message to the console with a time stamp. */
 #define AY_TRACE(title) Ayla::Debug::Macros::macro_AY_TRACE(title)

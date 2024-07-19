@@ -8,12 +8,92 @@
 #include <fstream>
 #include <sstream>
 
+#ifdef AYLA_PLATFORM_WINDOWS
+    #include <windows.h>
+#endif
 
 namespace Ayla::Debug::Macros {
 
-
     namespace {
         std::fstream LogFile;
+
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        enum ConsoleOutputColors : uint8
+        {
+            BLACK,
+            BLUE,
+            GREEN,
+            CYAN,
+            RED,
+            PURPLE,
+            YELLOW,
+            DEFAULT,
+            GRAY,
+            LIGHT_BLUE,
+            LIGHT_GREEN,
+            LIGHT_CYAN,
+            LIGHT_RED,
+            LIGHT_PURPLE,
+            LIGHT_YELLOW,
+            BRIGHT_WHITE
+        };
+
+        std::string SetColor(ConsoleOutputColors color)
+        {
+            #ifdef AYLA_PLATFORM_MACOS
+                switch (color)
+                {
+                    case ConsoleOutputColors::DEFAULT:
+                        return "\033[0m";
+                    case ConsoleOutputColors::CYAN:
+                        return "\033[36m";
+                    case ConsoleOutputColors::LIGHT_CYAN:
+                        return "\033[96m";
+                    case ConsoleOutputColors::YELLOW:
+                        return "\033[93m";
+                    case ConsoleOutputColors::RED:
+                        return "\033[31m";
+                    case ConsoleOutputColors::LIGHT_GREEN:
+                        return "\033[92m";
+                    case ConsoleOutputColors::LIGHT_PURPLE:
+                        return "\033[95m";
+                    default:
+                        std::cout << "\n" << "Color not defined!";
+                }
+            #elif defined(AYLA_PLATFORM_WINDOWS)
+                switch (color)
+                {
+                    case ConsoleOutputColors::DEFAULT:
+                        SetConsoleTextAttribute(hConsole, DEFAULT);
+                        break;
+                    case ConsoleOutputColors::CYAN:
+                        SetConsoleTextAttribute(hConsole, CYAN);
+                        break;
+                    case ConsoleOutputColors::LIGHT_CYAN:
+                        SetConsoleTextAttribute(hConsole, LIGHT_CYAN);
+                        break;
+                    case ConsoleOutputColors::YELLOW:
+                        SetConsoleTextAttribute(hConsole, YELLOW);
+                        break;
+                    case ConsoleOutputColors::RED:
+                        SetConsoleTextAttribute(hConsole, RED);
+                        break;
+                    case ConsoleOutputColors::LIGHT_GREEN:
+                        SetConsoleTextAttribute(hConsole, LIGHT_GREEN);
+                        break;
+                    case ConsoleOutputColors::LIGHT_PURPLE:
+                        SetConsoleTextAttribute(hConsole, LIGHT_PURPLE);
+                        break;
+                    default:
+                        std::cout << "\n" << "Color not defined!";
+                }
+                return "";
+            #else
+                return "";
+            #endif
+        }
+
     } // namespace
 
 
@@ -46,7 +126,7 @@ namespace Ayla::Debug::Macros {
 
         /** Creates another folder to subdivide the logs by the day in a month */
         std::stringstream dayFolderNameStream;
-        dayFolderNameStream << currentTime->tm_mday;
+        dayFolderNameStream << "Day-" << currentTime->tm_mday;
         filePathStream << dayFolderNameStream.str() << '/';
         std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
 
@@ -63,7 +143,6 @@ namespace Ayla::Debug::Macros {
             AY_WARN("DebugMacros.cpp: Log file failed to open!");
         }
     #endif
-
     }
 
 
@@ -99,10 +178,10 @@ namespace Ayla::Debug::Macros {
 #endif
 
         /** Outputs the message with the time info prefixing it */
-        std::cout << "\n\033[0;36m[" << currentTime->tm_hour
+        std::cout << "\n" << SetColor(CYAN) << "[" << currentTime->tm_hour
                   << ":" << currentTime->tm_min << ":"
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
-                  << "]\033[0;96m " << title << "\033[0m";
+                  << "] " << SetColor(LIGHT_CYAN) << title << SetColor(DEFAULT);
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n[" << currentTime->tm_hour
@@ -119,7 +198,7 @@ namespace Ayla::Debug::Macros {
     {
 #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
-        std::cout << "\n" << "\033[0;92m" << message << "\033[0m"; // Color is bright green
+        std::cout << "\n" << SetColor(LIGHT_GREEN) << message << SetColor(DEFAULT); // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << message;
         #endif
@@ -134,7 +213,7 @@ namespace Ayla::Debug::Macros {
         std::ostringstream oss;
         oss << message.rdbuf();
 
-        std::cout << "\n\033[0;92m" << oss.str() << "\033[0m"; // Color is bright green
+        std::cout << "\n" << SetColor(LIGHT_GREEN) << oss.str() << SetColor(DEFAULT); // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << oss.str();
         #endif
@@ -144,28 +223,28 @@ namespace Ayla::Debug::Macros {
 
     void macro_AY_WARN(const std::string&& message)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
-        CheckIfCoutFailed();
-        std::cout << "\n\033[0;93m[Warning] " << message << "\033[0m"; // Color is bright yellow
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n" << message;
+        #ifndef TURN_OFF_DEBUG_MACROS
+            CheckIfCoutFailed();
+            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << message << SetColor(DEFAULT); // Color is bright yellow
+            #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+                LogFile << "\n" << message;
+            #endif
         #endif
-#endif
     }
 
 
     void macro_AY_WARN_SS(const std::ostream& message)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
-        CheckIfCoutFailed();
-        std::ostringstream oss;
-        oss << message.rdbuf();
+        #ifndef TURN_OFF_DEBUG_MACROS
+            CheckIfCoutFailed();
+            std::ostringstream oss;
+            oss << message.rdbuf();
 
-        std::cout << "\n\033[0;93m[Warning] " << oss.str() << "\033[0m"; // Color is bright green
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n" << oss.str();
+            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << oss.str() << SetColor(DEFAULT); // Color is bright green
+            #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
+                LogFile << "\n" << oss.str();
+            #endif
         #endif
-#endif
     }
 
 
@@ -179,7 +258,7 @@ namespace Ayla::Debug::Macros {
                 LogFile << "\n\nAssert failed. \n\nError: " << oss.str();
                 LogFile.close();
             #endif
-                std::cout << "\n\n\033[0;31mAY_ASSERT failed. \n\nError: " << oss.str() << "\033[0m";
+                std::cout << "\n\n" << SetColor(RED) << "AY_ASSERT failed. \n\nError: " << oss.str() << SetColor(DEFAULT);
                 return false; // assert failed
 
             //throw std::runtime_error(oss.str());  // color defaulted to red
@@ -199,7 +278,7 @@ namespace Ayla::Debug::Macros {
             LogFile << "\n\nAY_ERROR called. \n\nError: " << oss.str();
             LogFile.close();
         #endif
-        std::cout << "\n\n\033[0;31mAY_ERROR called. \n\nError: " << oss.str() << "\033[0m";
+        std::cout << "\n\n" << SetColor(RED) << "AY_ERROR called. \n\nError: " << oss.str() << "\033[0m";
         return false;
 #else
         return true; // if the debug macros are off then it will always return without causing the error through assert()
@@ -223,7 +302,7 @@ namespace Ayla::Debug::Macros {
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
-        std::cout << "\n\033[0;95m[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds\033[0m";
+        std::cout << "\n" << SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds" << SetColor(DEFAULT);
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds";
@@ -236,7 +315,7 @@ namespace Ayla::Debug::Macros {
     {
         if (std::cout.fail())
         {
-            std::cout << "\n" << "\033[0;93m" << "std::cout failed!" << "\033[0m"; // Color is bright yellow
+            std::cout << "\n" << SetColor(YELLOW) << "std::cout failed!" << SetColor(DEFAULT);
             std::cout.clear();
         }
     }

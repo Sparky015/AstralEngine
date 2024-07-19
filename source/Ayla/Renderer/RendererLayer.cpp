@@ -33,42 +33,19 @@ namespace Ayla::Renderer {
 
     void RendererLayer::OnAttach()
     {
-
-        float positions[6] = {
-            -0.5f, -0.5,
-            0.0f, 0.5f,
-            0.5f, -0.5f
-        };
-
-        unsigned int VAO; glGenVertexArrays(1, &VAO); glBindVertexArray(VAO); // the secret magic sauce
-
-
-        glGenBuffers(1, &m_Buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
-
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-        glEnableVertexAttribArray(0);
-
-        glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), (float*)positions, GL_STATIC_DRAW);
-
-        m_Shader = CreateShader(m_VertexShader, m_FragmentShader);
-        glUseProgram(m_Shader);
+        InitializeGPUData();
     }
 
 
     void RendererLayer::OnDetach()
     {
-        glDeleteProgram(m_Shader);
+        glDeleteProgram(m_ShaderProgram);
     }
 
 
     void RendererLayer::OnUpdate()
     {
-        glClearColor(1, 0, 1, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        Render();
     }
 
 
@@ -87,11 +64,11 @@ namespace Ayla::Renderer {
 
 
 
-        int result;
+        int result = 0;
         glGetShaderiv(id, GL_COMPILE_STATUS, &result);
         if (result == GL_FALSE)
         {
-            int length;
+            int length = 0;
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
@@ -105,11 +82,11 @@ namespace Ayla::Renderer {
     }
 
 
-    unsigned int RendererLayer::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+    unsigned int RendererLayer::CreateShaderProgram(const std::string& vertexShader, const std::string& fragmentShader)
     {
-        unsigned int program = glCreateProgram();
-        unsigned int vs_id = CompileShader(GL_VERTEX_SHADER, vertexShader);
-        unsigned int fs_id = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+        const unsigned int program = glCreateProgram();
+        const unsigned int vs_id = CompileShader(GL_VERTEX_SHADER, vertexShader);
+        const unsigned int fs_id = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
         glAttachShader(program, vs_id);
         glAttachShader(program, fs_id);
@@ -123,6 +100,50 @@ namespace Ayla::Renderer {
         return program;
     }
 
+
+    void RendererLayer::InitializeGPUData()
+    {
+        float positions[8] = {
+                -0.5f, -0.5,
+                0.5f, -0.5f,
+                -0.5f, 0.5f,
+                0.5f, 0.5f
+        };
+
+        unsigned int indices[6] = {
+                0, 1, 2,
+                1, 3, 2
+        };
+
+        unsigned int VAO; glGenVertexArrays(1, &VAO); glBindVertexArray(VAO); // the secret magic sauce
+
+
+        glGenBuffers(1, &m_Buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
+        glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), (float*)positions, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+        glEnableVertexAttribArray(0);
+
+        glGenBuffers(1, &m_Ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), (unsigned int*)indices, GL_STATIC_DRAW);
+
+
+
+
+        m_ShaderProgram = CreateShaderProgram(m_VertexShader, m_FragmentShader);
+        glUseProgram(m_ShaderProgram);
+    }
+
+
+    void RendererLayer::Render() const
+    {
+        glClearColor(1, 0, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    }
 
 
 } // namespace Ayla::Renderer
