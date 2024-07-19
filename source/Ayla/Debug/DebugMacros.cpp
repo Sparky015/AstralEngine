@@ -160,22 +160,22 @@ namespace Ayla::Debug::Macros {
 
     void macro_AY_TRACE(const std::string&& title)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         /** Gets the current time */
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t); // Puts the information of the time into a struct that is separated into min, sec, hr, day, etc.
 
 
-#ifdef DEBUG_TRACE_USE_MICROSECONDS
+    #ifdef DEBUG_TRACE_USE_MICROSECONDS
         /** Calculates the elapsed microseconds as they were not included in the std::tm struct */
         auto microsecondsSinceEpoch = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         int64 elapsedPrecisionTime = microsecondsSinceEpoch % 1000000; // 1000000 microseconds in a millisecond
-#else
+    #else
         /** Calculates the elapsed milliseconds as they were not included in the std::tm struct */
         int64 millisecondsSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         int64 elapsedPrecisionTime = millisecondsSinceEpoch % 1000;
-#endif
+    #endif
 
         /** Outputs the message with the time info prefixing it */
         std::cout << "\n" << SetColor(CYAN) << "[" << currentTime->tm_hour
@@ -190,25 +190,25 @@ namespace Ayla::Debug::Macros {
                     << "." << elapsedPrecisionTime
                     << "]" << title;
         #endif
-#endif
+    #endif
     }
 
 
     void macro_AY_LOG(const std::string&& message)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::cout << "\n" << SetColor(LIGHT_GREEN) << message << SetColor(DEFAULT); // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << message;
         #endif
-#endif
+    #endif
     }
 
 
     void macro_AY_LOG_SS(const std::ostream& message)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::ostringstream oss;
         oss << message.rdbuf();
@@ -217,7 +217,7 @@ namespace Ayla::Debug::Macros {
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n" << oss.str();
         #endif
-#endif
+    #endif
     }
 
 
@@ -250,7 +250,7 @@ namespace Ayla::Debug::Macros {
 
     bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
             std::ostringstream oss;
             oss << errorMessage.rdbuf() << "\n\n";
@@ -263,7 +263,7 @@ namespace Ayla::Debug::Macros {
 
             //throw std::runtime_error(oss.str());  // color defaulted to red
         }
-#endif
+    #endif
         return true;
     }
 
@@ -271,7 +271,7 @@ namespace Ayla::Debug::Macros {
     // Always returns false in order to fail the assert() in the macro. This way, the file name and line is outputted from the assert()
     bool macro_AY_ERROR(const std::ostream& errorMessage)
     {
-#ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_OFF_DEBUG_MACROS
         std::ostringstream oss;
         oss << errorMessage.rdbuf() << "\n\n";
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
@@ -280,25 +280,25 @@ namespace Ayla::Debug::Macros {
         #endif
         std::cout << "\n\n" << SetColor(RED) << "AY_ERROR called. \n\nError: " << oss.str() << "\033[0m";
         return false;
-#else
+    #else
         return true; // if the debug macros are off then it will always return without causing the error through assert()
-#endif
+    #endif
     }
 
 
     AY_PROFILER::AY_PROFILER(std::string&& title)
-#ifndef TURN_OFF_PROFILER_MACRO
+    #ifndef TURN_OFF_PROFILER_MACRO
         :
         m_title(std::move(title)),
         m_startTime(std::chrono::high_resolution_clock::now()),
         m_endTime()
-#endif
+    #endif
     {}
 
 
     AY_PROFILER::~AY_PROFILER()
     {
-#ifndef TURN_OFF_PROFILER_MACRO
+    #ifndef TURN_OFF_PROFILER_MACRO
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
@@ -307,7 +307,7 @@ namespace Ayla::Debug::Macros {
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "\n[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds";
         #endif
-#endif
+    #endif
     }
 
 
