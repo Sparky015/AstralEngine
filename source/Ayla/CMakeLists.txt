@@ -54,6 +54,12 @@ add_library(Ayla STATIC
         Debug/LogUsedToolsAndLibraries.h
         Renderer/ParseShaders.cpp
         Renderer/ParseShaders.h
+        Renderer/ShaderProgram.cpp
+        Renderer/ShaderProgram.h
+        Renderer/Renderer.cpp
+        Renderer/Renderer.h
+        Renderer/Platform/OpenGL/OpenGLRenderer.cpp
+        Renderer/Platform/OpenGL/OpenGLRenderer.h
 )
 
 

@@ -7,6 +7,12 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
+#include "Renderer.h"
+
+#ifdef AYLA_OPENGL_RENDERER
+    #include "Ayla/Renderer/Platform/OpenGL/OpenGLRenderer.h"
+#endif
+
 
 namespace Ayla::Renderer{
 
@@ -17,26 +23,13 @@ namespace Ayla::Renderer{
         ~RendererLayer();
 
         virtual void OnAttach() override;
-        virtual void OnDetach() override;
         virtual void OnUpdate() override;
         virtual Events::EEventCategory GetAcceptingEventFlags() override;
 
-        static unsigned int CompileShader(unsigned int type, const std::string& source);
-        static unsigned int CreateShaderProgram(const std::string& vertexShader, const std::string& fragmentShader);
-
-        void InitializeGPUData();
-        void Render() const;
-
     private:
-
-        unsigned int m_Buffer;
-        unsigned int m_Ibo;
-        unsigned int m_ShaderProgram;
-
-        std::string m_VertexShader;
-        std::string m_FragmentShader;
-
-
+#ifdef AYLA_OPENGL_RENDERER
+        OpenGLRenderer m_Renderer;
+#endif
     };
 
 

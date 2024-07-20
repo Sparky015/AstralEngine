@@ -13,6 +13,7 @@ namespace Ayla::Renderer {
         FRAGMENT_SHADER,
     };
 
+    /** Parses a file to obtain a shader's source code and type from a file.*/
     class Shader
     {
     public:
@@ -24,10 +25,10 @@ namespace Ayla::Renderer {
         void ParseShader(const std::string& filePath);
 
         /** Returns the shader code in the form of a string */
-        std::string& GetShaderCode();
+        [[nodiscard]] const std::string& GetShaderCode() const;
 
         /** Returns the type of the shader */
-        ShaderType GetShaderType();
+        [[nodiscard]] ShaderType GetShaderType() const;
 
     private:
         std::string m_ShaderCode;

@@ -9,6 +9,7 @@
 
 #ifdef AYLA_PLATFORM_WINDOWS
 #define AYLA_GENERIC_WINDOW
+#define AYLA_OPENGL_RENDERER
 
     /** Defines the ALYA_API for compiling Ayla into a dll/shared library file */
     #ifdef AYLA_BUILD_SHARED_LIB
@@ -18,6 +19,7 @@
     #endif
 #elif AYLA_PLATFORM_MACOS
 #define AYLA_GENERIC_WINDOW
+#define AYLA_OPENGL_RENDERER
 
     /** Defines the ALYA_API for compiling Ayla into a dll/shared library file */
     #ifdef AYLA_BUILD_SHARED_LIB

@@ -31,8 +31,7 @@ namespace Ayla::Renderer{
         std::ifstream file = std::ifstream(filePath);
         if (!file.is_open())
         {
-            AY_WARN_SS("[" << __FILE_NAME__ << "] " << "Failed to open file: " << filePath)
-            AY_WARN(__FILE__);
+            AY_WARN_SS("[" << __FILE__ << "] " << "Failed to open file: " << filePath)
             return;
         }
 
@@ -73,13 +72,13 @@ namespace Ayla::Renderer{
     }
 
 
-    std::string& Shader::GetShaderCode()
+    const std::string& Shader::GetShaderCode() const
     {
         return m_ShaderCode;
     }
 
 
-    ShaderType Shader::GetShaderType()
+    ShaderType Shader::GetShaderType() const
     {
         return m_ShaderType;
     }
