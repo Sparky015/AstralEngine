@@ -9,6 +9,10 @@
 #include "Ayla/Core/CoreDefinitions.h"
 #include "Ayla/Core/EntryPoint.h"
 #include "Ayla/Core/Layers/Layer.h"
+#include "Ayla/ECS/EntityComponentSystem.h"
+#include "Ayla/Input/InputState.h"
+#include "Ayla/Input/Keycodes.h"
 
 using Ayla::Client::ClientLoop;
+using Ayla::Input::EKeycodes;
 
