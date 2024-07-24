@@ -8,8 +8,8 @@
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/Debug/DebugLayer.h"
 #include "Ayla/ImGui/ImGuiLayer.h"
-#include "Ayla/Window/Window.h"
 #include "Ayla/Renderer/RendererLayer.h"
+#include "Ayla/Window/Window.h"
 
 
 namespace Ayla::Core

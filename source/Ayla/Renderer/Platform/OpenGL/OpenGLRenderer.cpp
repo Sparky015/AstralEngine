@@ -4,8 +4,14 @@
 
 #include "OpenGLRenderer.h"
 
+#include "Ayla/Renderer/IndexBufferObject.h"
+#include "Ayla/Renderer/VertexArrayObject.h"
+#include "Ayla/Renderer/VertexBuffer.h"
 
 #include "glad/glad.h"
+
+
+
 
 
 namespace Ayla::Renderer {
@@ -23,12 +29,11 @@ namespace Ayla::Renderer {
 
 
     void OpenGLRenderer::InitBuffers()
-    { //8 * sizeof(float)
-        unsigned int VAO; glGenVertexArrays(1, &VAO); glBindVertexArray(VAO); // the secret magic sauce
+    {
+        static VertexArrayObject vertexArrayObject = VertexArrayObject();
 
-        GenerateBuffer(1, &m_VertexBufferID);
-        BindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
-        CopyDataToBuffer(GL_ARRAY_BUFFER, sizeof(m_VertexBufferData.positions), m_VertexBufferData.positions, GL_STATIC_DRAW);
+
+        static VertexBuffer vertexBuffer = VertexBuffer(m_VertexBufferData.positions, sizeof(m_VertexBufferData.positions));
 
         SetVertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
         EnableVertexAttribute(0);
@@ -36,9 +41,8 @@ namespace Ayla::Renderer {
         SetVertexAttribute(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float),(void*)8);
         EnableVertexAttribute(1);
 
-        GenerateBuffer(1, &m_IndexBufferObjectID);
-        BindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBufferObjectID);
-        CopyDataToBuffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_VertexBufferData.indices), m_VertexBufferData.indices, GL_STATIC_DRAW);
+
+        static IndexBufferObject indexBufferObject = IndexBufferObject(m_VertexBufferData.indices,sizeof(m_VertexBufferData.indices));
 
 
         glUseProgram(m_ShaderProgram.GetID());
@@ -46,6 +50,7 @@ namespace Ayla::Renderer {
         m_UniformLocation = glGetUniformLocation(m_ShaderProgram.GetID(), "u_Color");
         AY_ASSERT(m_UniformLocation != -1, "Uniform not found!");
         glUniform4f(m_UniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+
     }
 
 

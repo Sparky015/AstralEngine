@@ -7,6 +7,7 @@
 #include "Ayla/Core/Time/Clock.h"
 #include "Ayla/Debug/DebugLayer.h"
 #include "Ayla/Debug/LogUsedToolsAndLibraries.h"
+#include "Ayla/ECS/EntityComponentSystem.h" // TEMP
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
 
@@ -30,6 +31,9 @@ namespace Ayla::Core
         AY_LOG("--- Application: Initializing Window ---");
         m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Ayla Engine Window", 1024, 768)));
         m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+        // Systems //
+        ECS::EntitySystem::Init();
 
         // Layer Stack //
         AY_LOG("--- Application: Initializing Layer Stack ---");
@@ -55,6 +59,7 @@ namespace Ayla::Core
         AY_TRACE("[Sholas] Application: Destroying Application");
         delete m_ClientLoop;
         Input::SInputState::Destroy();
+        ECS::EntitySystem::Destroy();
         Time::Clock::Destroy();
     };
 

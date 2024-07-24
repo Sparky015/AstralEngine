@@ -8,6 +8,7 @@
 
 
 
+
 namespace Ayla::Renderer {
 
 
@@ -32,9 +33,6 @@ namespace Ayla::Renderer {
         virtual void DisableVertexAttribute(int attributeIndex) override;
 
     private:
-
-
-
 
     };
 

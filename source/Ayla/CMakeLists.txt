@@ -60,6 +60,16 @@ add_library(Ayla STATIC
         Renderer/Renderer.h
         Renderer/Platform/OpenGL/OpenGLRenderer.cpp
         Renderer/Platform/OpenGL/OpenGLRenderer.h
+        Renderer/VertexBuffer.cpp
+        Renderer/VertexBuffer.h
+        Renderer/VertexArrayObject.cpp
+        Renderer/VertexArrayObject.h
+        Renderer/IndexBufferObject.cpp
+        Renderer/IndexBufferObject.h
+        ECS/EntityComponentSystem.cpp
+        ECS/EntityComponentSystem.h
+        ECS/Entity.cpp
+        ECS/Entity.h
         Events/EventBus.h
         Events/EventListener.h
         Events/EventPublisher.h

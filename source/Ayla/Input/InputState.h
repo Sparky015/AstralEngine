@@ -11,6 +11,27 @@
 
 namespace Ayla::Input {
 
+    /** Data being tracked for each key. */
+    struct KeyState
+    {
+    public:
+        KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
+        explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
+
+        bool IsDown;
+        bool IsRepeating;
+        std::string Name;
+    };
+
+
+    /** Data being tracked for the mouse. */
+    struct MouseCursorState
+    {
+        double MouseXPosition;
+        double MouseYPosition;
+    };
+
+
     /** Stores the state of keys and mouse in the form of a singleton. */
     class SInputState
     {
@@ -35,25 +56,6 @@ namespace Ayla::Input {
         SInputState& operator=(const SInputState&) = delete;
         SInputState(SInputState&&) = delete;
         SInputState& operator=(SInputState&&) = delete;
-
-        /** Data being tracked for each key. */
-        struct KeyState
-        {
-        public:
-            KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
-            explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
-
-            bool IsDown;
-            bool IsRepeating;
-            std::string Name;
-        };
-
-        /** Data being tracked for the mouse. */
-        struct MouseCursorState
-        {
-            double MouseXPosition;
-            double MouseYPosition;
-        };
 
         /** Checks if a key is down. */
         [[nodiscard]] bool IsKeyDown(int keycode) const;
