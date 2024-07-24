@@ -7,12 +7,12 @@ add_library(Ayla STATIC
         Core/Application.h
         Core/CoreDefinitions.h
         Core/EntryPoint.h
-        Events/ApplicationEvent.h
+        Events/EventTypes/ApplicationEvent.h
         Events/Event.cpp
         Events/Event.h
         Events/EventDispatcher.h
-        Events/KeyEvent.h
-        Events/MouseEvent.h
+        Events/EventTypes/KeyEvent.h
+        Events/EventTypes/MouseEvent.h
         Events/EventDispatcher.cpp
         aypch.cpp
         aypch.h
@@ -63,6 +63,7 @@ add_library(Ayla STATIC
         Events/EventBus.h
         Events/EventListener.h
         Events/EventPublisher.h
+        Events/EventTypes/EventTypes.h
 )
 
 

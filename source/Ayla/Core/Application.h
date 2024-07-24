@@ -15,7 +15,7 @@
 namespace Ayla::Core
 {
     using Ayla::Windows::Window;
-    using Ayla::Events::IEvent;
+    using Ayla::EventManagement::IEvent;
     using Layers::ILayer;
     using Layers::LayerStack;
 

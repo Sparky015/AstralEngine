@@ -8,7 +8,7 @@
 
 
 namespace Ayla::GUI {
-    using namespace Ayla::Events;
+    using namespace Ayla::EventManagement;
     using namespace Ayla::Core::Layers;
 
     class ImGuiLayer : public ILayer

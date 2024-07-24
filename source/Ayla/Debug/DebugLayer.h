@@ -6,7 +6,7 @@
 #include "Ayla/Core/Layers/Layer.h"
 
 #include "Ayla/Events/EventListener.h"
-#include "Ayla/Events/KeyEvent.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
 
 
 namespace Ayla::Core::Debug

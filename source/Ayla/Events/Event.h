@@ -5,8 +5,7 @@
 #pragma once
 #include "Ayla/aypch.h"
 
-namespace Ayla::Events {
-
+namespace Ayla::EventManagement {
 
     enum EEventTypes : uint8_t
     {
@@ -60,4 +59,4 @@ namespace Ayla::Events {
     };
 
 
-} // namespace Ayla::Events
+} // namespace Ayla::EventManagement

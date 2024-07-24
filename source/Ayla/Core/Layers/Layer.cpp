@@ -65,37 +65,12 @@ namespace Ayla::Core::Layers {
     }
 
 
-    void ILayer::AttachOverlay()
-    {
-        if (!m_IsInitializedInTower)
-        {
-            Application& app = Application::Get();
-            app.GetLayerStack().AppendOverlay(this);
-            m_IsInitializedInTower = true;
-            OnAttach();
-            m_IsEnabled = true;
-        }
-    }
-
-
     void ILayer::DetachLayer()
     {
         if (m_IsInitializedInTower)
         {
             Application& app = Application::Get();
             app.GetLayerStack().RemoveLayer(this);
-            m_IsInitializedInTower = false;
-            m_IsEnabled = false;
-        }
-    }
-
-
-    void ILayer::DetachOverlay()
-    {
-        if (m_IsInitializedInTower)
-        {
-            Application& app = Application::Get();
-            app.GetLayerStack().RemoveOverlay(this);
             m_IsInitializedInTower = false;
             m_IsEnabled = false;
         }

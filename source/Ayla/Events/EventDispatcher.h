@@ -6,7 +6,7 @@
 #include "Ayla/Events/Event.h"
 
 
-namespace Ayla::Events{
+namespace Ayla::EventManagement{
 
     enum class EEventDispatchTypes : uint8_t
     {
@@ -25,19 +25,11 @@ namespace Ayla::Events{
 
     class EventDispatcher {
     public:
-            // TODO: Refactor all of this.
-        static void addEventToQueue(IEvent &);
 
-
-        void dispatchAllEvents();
-        void dispatchBlockingEvent(IEvent &);
 
     private:
 
-        static std::shared_ptr <IEvent> takeEventFromQueue();
-        void dispatchEvent(const std::shared_ptr <IEvent> &);
-        int PollEvent(IEvent &);
 
-        static std::queue <std::shared_ptr<IEvent>> eventQueue;
+
     };
-}
+} // namespace Ayla::EventManagement
