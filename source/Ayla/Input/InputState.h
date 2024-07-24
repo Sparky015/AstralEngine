@@ -6,6 +6,8 @@
 #include "Ayla/Events/Event.h"
 #include "Ayla/Input/InputLayer.h"
 
+#include "Ayla/Events/EventPublisher.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
 
 namespace Ayla::Input {
 
@@ -27,7 +29,7 @@ namespace Ayla::Input {
          * Receives input events and changes the key's state to reflect the input event data.
          * @note Expects the event to be an event of Input type and to contain keycode values between 0 and 119.
          */
-        void OnEvent(Events::IEvent&);
+        void OnEvent(EventManagement::IEvent&);
 
         SInputState(const SInputState&) = delete;
         SInputState& operator=(const SInputState&) = delete;
@@ -71,6 +73,7 @@ namespace Ayla::Input {
         static const int NUMBER_OF_KEYS = 120;
 
     private:
+        EventManagement::EventPublisher<EventManagement::KeyPressedEvent&> m_KeyPressedPublisher;
         static SInputState* m_Instance;
         SInputState();
         ~SInputState();

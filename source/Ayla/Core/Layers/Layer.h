@@ -10,7 +10,7 @@
 
 namespace Ayla::Core::Layers
 {
-    using namespace Ayla::Events;
+    using namespace Ayla::EventManagement;
     /**
      * Allows systems a way to receive and send data to each other through events without explicitly linking to each other.
      * @note Systems own the layer that they operate.
@@ -42,14 +42,8 @@ namespace Ayla::Core::Layers
         /** Adds the layer as a layer to the Layer Stack. */
         void AttachLayer();
 
-        /** Adds the layer as an overlay to the Layer Stack */
-        void AttachOverlay(); // TODO: Fix this layer/overlay mumbo jumbo
-
         /** Removes the layer as a layer from the Layer Stack. */
         void DetachLayer();
-
-        /** Removes the layer as a overlay from the Layer Stack. */
-        void DetachOverlay();
 
         /** Allows a system to set a callback from the layer in order for systems to be able to react to events. */
         void SetCallback(std::function<void(IEvent&)> callback);

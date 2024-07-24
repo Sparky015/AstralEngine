@@ -6,7 +6,7 @@
 
 #include "Ayla/Events/Event.h"
 
-namespace Ayla::Events {
+namespace Ayla::EventManagement {
 
     /** General key event to derive from. */
     class KeyEvent : public IEvent

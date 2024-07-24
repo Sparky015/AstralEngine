@@ -3,9 +3,9 @@
 //
 #include "GenericWindow.h"
 
-#include "Ayla/Events/ApplicationEvent.h"
-#include "Ayla/Events/KeyEvent.h"
-#include "Ayla/Events/MouseEvent.h"
+#include "Ayla/Events/EventTypes/ApplicationEvent.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
+#include "Ayla/Events/EventTypes/MouseEvent.h"
 #include "Ayla/Input/KeycodeTranslation/GLFWTranslation.h"
 
 #include "glad/glad.h"
@@ -97,7 +97,7 @@ namespace Ayla::Windows {
             glfwSwapInterval(0);
         }
 
-        using namespace Events;
+        using namespace EventManagement;
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
         {
             WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
