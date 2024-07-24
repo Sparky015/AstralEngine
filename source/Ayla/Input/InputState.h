@@ -6,6 +6,8 @@
 #include "Ayla/Events/Event.h"
 #include "Ayla/Input/InputLayer.h"
 
+#include "Ayla/Events/EventPublisher.h"
+#include "Ayla/Events/KeyEvent.h"
 
 namespace Ayla::Input {
 
@@ -71,6 +73,7 @@ namespace Ayla::Input {
         static const int NUMBER_OF_KEYS = 120;
 
     private:
+        EventManagement::EventPublisher<Events::KeyPressedEvent&> m_KeyPressedPublisher;
         static SInputState* m_Instance;
         SInputState();
         ~SInputState();

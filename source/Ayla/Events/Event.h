@@ -59,4 +59,5 @@ namespace Ayla::Events {
         bool m_IsHandled = false;
     };
 
- } // namespace Ayla::Events
+
+} // namespace Ayla::Events

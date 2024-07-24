@@ -50,4 +50,5 @@ namespace Ayla::Events {
 
         std::queue<std::shared_ptr<IEvent>> EventDispatcher::eventQueue;
 
+
 };

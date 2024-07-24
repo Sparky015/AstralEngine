@@ -60,6 +60,9 @@ add_library(Ayla STATIC
         Renderer/Renderer.h
         Renderer/Platform/OpenGL/OpenGLRenderer.cpp
         Renderer/Platform/OpenGL/OpenGLRenderer.h
+        Events/EventBus.h
+        Events/EventListener.h
+        Events/EventPublisher.h
 )
 
 
