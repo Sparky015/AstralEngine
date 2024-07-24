@@ -13,5 +13,5 @@ public:
     virtual ~ExampleLayer() override;
 
     virtual void OnImGuiRender() override;
-    virtual Ayla::Events::EEventCategory GetAcceptingEventFlags() override;
+    virtual Ayla::EventManagement::EEventCategory GetAcceptingEventFlags() override;
 };

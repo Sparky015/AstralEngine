@@ -8,9 +8,9 @@
 #include "Ayla/Window/Platform/Generic/imgui_impl_glfw.h"
 
 
-#include "Ayla/Events/ApplicationEvent.h"
-#include "Ayla/Events/MouseEvent.h"
-#include "Ayla/Events/KeyEvent.h"
+#include "Ayla/Events/EventTypes/ApplicationEvent.h"
+#include "Ayla/Events/EventTypes/MouseEvent.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
 
 #include "Ayla/Input/Keycodes.h"
 

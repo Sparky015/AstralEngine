@@ -3,19 +3,20 @@
 //
 
 #include "InputState.h"
-#include "Ayla/Events/ApplicationEvent.h"
-#include "Ayla/Events/KeyEvent.h"
-#include "Ayla/Events/MouseEvent.h"
+
+#include "Ayla/Events/EventTypes/ApplicationEvent.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
+#include "Ayla/Events/EventTypes/MouseEvent.h"
 #include "Ayla/Input/Keycodes.h"
 
 
 namespace Ayla::Input {
 
-    using namespace Ayla::Events;
+    using namespace Ayla::EventManagement;
 
     SInputState* SInputState::m_Instance = nullptr;
 
-    SInputState::SInputState()
+    SInputState::SInputState() : m_KeyPressedPublisher()
     {
         AY_TRACE("[Sholas] InputState: Initializing Input State");
         m_InputLayer.SetCallback(std::bind(&SInputState::OnEvent, this, std::placeholders::_1));
@@ -58,6 +59,7 @@ namespace Ayla::Input {
             if (event.GetEventType() == KEY_PRESSED)
             {
                 auto keyPressedEvent = dynamic_cast<KeyPressedEvent&>(event);
+                m_KeyPressedPublisher.PublishEvent(keyPressedEvent);
                 m_KeyState[keyPressedEvent.GetKeycode()].IsDown = true;
             }
             if (event.GetEventType() == KEY_RELEASED)

@@ -41,9 +41,9 @@ namespace Ayla::Renderer {
     }
 
 
-    Events::EEventCategory RendererLayer::GetAcceptingEventFlags()
+    EventManagement::EEventCategory RendererLayer::GetAcceptingEventFlags()
     {
-        return Ayla::Events::None;
+        return Ayla::EventManagement::None;
     }
 
 

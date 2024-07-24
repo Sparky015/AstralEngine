@@ -4,16 +4,21 @@
 
 #include "DebugLayer.h"
 
+#include <utility>
+
 #include "Ayla/Core/Application.h"
 #include "Ayla/Core/Time/Clock.h"
+#include "Ayla/Events/EventListener.h"
 #include "Ayla/Input/InputState.h"
 #include "Ayla/Input/Keycodes.h"
 #include "Ayla/Window/Window.h"
+
 #ifdef AYLA_GENERIC_WINDOW
-#include "Ayla/Window/Platform/Generic/GenericWindow.h"
+    #include "Ayla/Window/Platform/Generic/GenericWindow.h"
 #endif
 
 #include "imgui.h"
+
 
 
 
@@ -21,7 +26,6 @@ namespace Ayla::Core::Debug
 {
     bool DebugLayer::m_ShowImGuiDemoWindow = false;
     bool DebugLayer::m_ShowDebugMenu = false;
-
     DebugLayer::DebugLayer()
     {
         AY_TRACE("[Sholas] DebugLayer: Initializing Debug Layer");
@@ -40,25 +44,7 @@ namespace Ayla::Core::Debug
 
     void DebugLayer::OnUpdate()
     {
-#ifndef TURN_OFF_DEBUG_MENU
-        using namespace Ayla::Input;
 
-        static int64 accumulatedTime;
-        accumulatedTime += Time::Clock::Get().GetDeltaTime();
-        const Input::SInputState& inputState = Input::SInputState::Get();
-
-        if (inputState.IsKeyDown(AY_KEY_R) && !inputState.IsKeyRepeating(AY_KEY_R))
-        {
-            if (accumulatedTime <= 300){return;}
-            accumulatedTime = 0;
-            AY_TRACE("Resetting stopwatch.");
-            Time::Clock::Get().ResetStopwatch();
-        }
-        if (inputState.IsKeyDown(AY_KEY_D))
-        {
-            m_ShowDebugMenu = true;
-        }
-#endif
     }
 
 
@@ -215,7 +201,7 @@ namespace Ayla::Core::Debug
             ImGui::SetNextItemOpen(false, ImGuiCond_Once);
             if (ImGui::TreeNode("Action Keys"))
             {
-                ImGui::Text("T: Toggle Mouse Position");
+                ImGui::Text("D: Toggle Debug Menu");
                 ImGui::Text("R: Reset Stopwatch");
                 ImGui::TreePop();
             }
@@ -235,6 +221,27 @@ namespace Ayla::Core::Debug
         }
 
 #endif
+    }
+
+    void DebugLayer::OnKeyPressEvent(KeyPressedEvent& event)
+    {
+        switch(event.GetKeycode())
+        {
+            case Input::AY_KEY_A:
+                AY_LOG("Key A was pressed!");
+                break;
+            case Input::AY_KEY_D:
+                #ifndef TURN_OFF_DEBUG_MENU
+                    m_ShowDebugMenu = (m_ShowDebugMenu == false) ? true : false;
+                #endif
+                break;
+            case Input::AY_KEY_R:
+                AY_TRACE("Resetting stopwatch.");
+                Time::Clock::Get().ResetStopwatch();
+                break;
+            default:
+                break;
+        }
     }
 
 } // namespace Ayla::Core::Debug

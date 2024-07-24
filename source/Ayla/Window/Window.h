@@ -8,7 +8,7 @@
 
 
 namespace Ayla::Windows { // maybe change namespace to Display or Viewport instead of Windows?
-    using EventCallback = std::function<void(Events::IEvent& event)>;
+    using EventCallback = std::function<void(EventManagement::IEvent& event)>;
 
     /** Values used to create the desire window */
     struct WindowProperties

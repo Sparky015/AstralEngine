@@ -24,7 +24,7 @@ namespace Ayla::Renderer{
 
         virtual void OnAttach() override;
         virtual void OnUpdate() override;
-        virtual Events::EEventCategory GetAcceptingEventFlags() override;
+        virtual EventManagement::EEventCategory GetAcceptingEventFlags() override;
 
     private:
 #ifdef AYLA_OPENGL_RENDERER

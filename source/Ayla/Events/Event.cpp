@@ -6,7 +6,7 @@
 #include "Ayla/Events/Event.h"
 
 
-namespace Ayla::Events
+namespace Ayla::EventManagement
 {
 
     bool IEvent::IsInCategory(const EEventCategory category) const
@@ -38,4 +38,4 @@ namespace Ayla::Events
         m_IsHandled = isHandled;
     }
 
-} // namespace Ayla::Events
+} // namespace Ayla::EventManagement
