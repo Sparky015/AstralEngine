@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Ayla/Renderer/ParseShaders.h"
+#include "ParseShaders.h"
 
 namespace Ayla::Renderer {
 

@@ -17,12 +17,12 @@ void GLCheckError()
 
 namespace Ayla::Renderer {
 
-    IndexBufferObject::IndexBufferObject(void* data, unsigned int size)
+    IndexBufferObject::IndexBufferObject(void* data, unsigned int count)
     {
         AY_LOG("Creating Index Buffer Object!");
         glGenBuffers(1, &m_RendererID);
         Bind();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * count, data, GL_STATIC_DRAW);
     }
 
 

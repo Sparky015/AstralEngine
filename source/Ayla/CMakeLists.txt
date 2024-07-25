@@ -10,10 +10,8 @@ add_library(Ayla STATIC
         Events/EventTypes/ApplicationEvent.h
         Events/Event.cpp
         Events/Event.h
-        Events/EventDispatcher.h
         Events/EventTypes/KeyEvent.h
         Events/EventTypes/MouseEvent.h
-        Events/EventDispatcher.cpp
         aypch.cpp
         aypch.h
         Window/Platform/Generic/GenericWindow.cpp
@@ -52,20 +50,20 @@ add_library(Ayla STATIC
         Core/EntryPoint.cpp
         Debug/LogUsedToolsAndLibraries.cpp
         Debug/LogUsedToolsAndLibraries.h
-        Renderer/ParseShaders.cpp
-        Renderer/ParseShaders.h
-        Renderer/ShaderProgram.cpp
-        Renderer/ShaderProgram.h
+        Renderer/Shaders/ParseShaders.cpp
+        Renderer/Shaders/ParseShaders.h
+        Renderer/Shaders/ShaderProgram.cpp
+        Renderer/Shaders/ShaderProgram.h
         Renderer/Renderer.cpp
         Renderer/Renderer.h
         Renderer/Platform/OpenGL/OpenGLRenderer.cpp
         Renderer/Platform/OpenGL/OpenGLRenderer.h
-        Renderer/VertexBuffer.cpp
-        Renderer/VertexBuffer.h
-        Renderer/VertexArrayObject.cpp
-        Renderer/VertexArrayObject.h
-        Renderer/IndexBufferObject.cpp
-        Renderer/IndexBufferObject.h
+        Renderer/Abstractions/VertexBuffer.cpp
+        Renderer/Abstractions/VertexBuffer.h
+        Renderer/Abstractions/VertexArrayObject.cpp
+        Renderer/Abstractions/VertexArrayObject.h
+        Renderer/Abstractions/IndexBufferObject.cpp
+        Renderer/Abstractions/IndexBufferObject.h
         ECS/EntityComponentSystem.cpp
         ECS/EntityComponentSystem.h
         ECS/Entity.cpp
@@ -74,6 +72,8 @@ add_library(Ayla STATIC
         Events/EventListener.h
         Events/EventPublisher.h
         Events/EventTypes/EventTypes.h
+        Renderer/Abstractions/BufferLayout.cpp
+        Renderer/Abstractions/BufferLayout.h
 )
 
 

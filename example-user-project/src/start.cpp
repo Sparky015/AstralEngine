@@ -10,11 +10,10 @@ public:
 
     void Update() override {
         //AY_LOG("[ClientLoop] Application: Update function called!");
-        if (m_InputState.IsKeyDown(Ayla::Input::AY_KEY_A))
-        {
-            AY_LOG("TEST");
-            m_EntitySystem.EditEntity(m_EntityHandle).m_Position.x -= .05;
-        }
+//        if (m_InputState.IsKeyDown(Ayla::Input::AY_KEY_A))
+//        {
+//            m_EntitySystem.EditEntity(m_EntityHandle).m_Position.x -= .05;
+//        }
 
     };
 

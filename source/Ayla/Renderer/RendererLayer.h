@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 #include "Ayla/Core/Layers/Layer.h"
 
 #include "Renderer.h"
