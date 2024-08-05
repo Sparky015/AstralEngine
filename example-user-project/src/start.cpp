@@ -10,14 +10,28 @@ public:
 
     void Update() override {
         //AY_LOG("[ClientLoop] Application: Update function called!");
+//        if (m_InputState.IsKeyDown(Ayla::Input::AY_KEY_A))
+//        {
+//            m_EntitySystem.EditEntity(m_EntityHandle).m_Position.x -= .05;
+//        }
+
     };
 
     void Init() override {
         AY_LOG("[ClientLoop] Application: Init function called!");
         el = ExampleLayer();
+
+        m_EntityHandle = m_EntitySystem.AddEntity(Ayla::ECS::Entity());
     }
 
     ExampleLayer el;
+
+
+
+private:
+    Ayla::ECS::EntitySystem& m_EntitySystem{Ayla::ECS::EntitySystem::Get()};
+    Ayla::Input::SInputState& m_InputState{Ayla::Input::SInputState::Get()};
+    uint8 m_EntityHandle;
 };
 
 

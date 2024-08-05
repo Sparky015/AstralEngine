@@ -5,6 +5,8 @@
 
 #include "Ayla/Core/Layers/Layer.h"
 
+#include "Ayla/Events/EventListener.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
 
 
 namespace Ayla::Core::Debug
@@ -26,7 +28,9 @@ namespace Ayla::Core::Debug
         /** The Debug Layer does not accept events. */
         EEventCategory GetAcceptingEventFlags() override;
 
+        void OnKeyPressEvent(KeyPressedEvent& event);
     private:
+        EventManagement::EventListener<KeyPressedEvent&> m_KeyPressedListener{[this](KeyPressedEvent& e){ this->OnKeyPressEvent(e);}};
         static bool m_ShowImGuiDemoWindow;
         static bool m_ShowDebugMenu;
     };

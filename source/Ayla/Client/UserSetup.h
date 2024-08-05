@@ -4,9 +4,6 @@
 
 #pragma once
 
-#include "Ayla/Core/CoreDefinitions.h"
-
-
 namespace Ayla::Client
 {
 

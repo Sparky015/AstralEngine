@@ -7,13 +7,11 @@ add_library(Ayla STATIC
         Core/Application.h
         Core/CoreDefinitions.h
         Core/EntryPoint.h
-        Events/ApplicationEvent.h
+        Events/EventTypes/ApplicationEvent.h
         Events/Event.cpp
         Events/Event.h
-        Events/EventDispatcher.h
-        Events/KeyEvent.h
-        Events/MouseEvent.h
-        Events/EventDispatcher.cpp
+        Events/EventTypes/KeyEvent.h
+        Events/EventTypes/MouseEvent.h
         aypch.cpp
         aypch.h
         Window/Platform/Generic/GenericWindow.cpp
@@ -47,6 +45,35 @@ add_library(Ayla STATIC
         Core/Time/TimeLiterals.h
         Debug/DebugMacros.h
         Debug/DebugMacros.cpp
+        Renderer/RendererLayer.cpp
+        Renderer/RendererLayer.h
+        Core/EntryPoint.cpp
+        Debug/LogUsedToolsAndLibraries.cpp
+        Debug/LogUsedToolsAndLibraries.h
+        Renderer/Shaders/ParseShaders.cpp
+        Renderer/Shaders/ParseShaders.h
+        Renderer/Shaders/ShaderProgram.cpp
+        Renderer/Shaders/ShaderProgram.h
+        Renderer/Renderer.cpp
+        Renderer/Renderer.h
+        Renderer/Platform/OpenGL/OpenGLRenderer.cpp
+        Renderer/Platform/OpenGL/OpenGLRenderer.h
+        Renderer/Abstractions/VertexBuffer.cpp
+        Renderer/Abstractions/VertexBuffer.h
+        Renderer/Abstractions/VertexArrayObject.cpp
+        Renderer/Abstractions/VertexArrayObject.h
+        Renderer/Abstractions/IndexBufferObject.cpp
+        Renderer/Abstractions/IndexBufferObject.h
+        ECS/EntityComponentSystem.cpp
+        ECS/EntityComponentSystem.h
+        ECS/Entity.cpp
+        ECS/Entity.h
+        Events/EventBus.h
+        Events/EventListener.h
+        Events/EventPublisher.h
+        Events/EventTypes/EventTypes.h
+        Renderer/Abstractions/BufferLayout.cpp
+        Renderer/Abstractions/BufferLayout.h
 )
 
 
@@ -70,7 +97,7 @@ target_link_libraries(Ayla PUBLIC ImGui)
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
-    target_link_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
+    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
     target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
@@ -79,7 +106,7 @@ endif ()
 if (APPLE)
     target_link_libraries(Ayla PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(Ayla PUBLIC glfw3)
+    target_link_libraries(Ayla PRIVATE glfw3)
 endif ()
 
 

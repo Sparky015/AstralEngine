@@ -28,20 +28,8 @@ namespace Ayla::Core::Layers
         /** Adds a layer to the layer stack. */
         void AppendLayer(ILayer* layer);
 
-        /** Inserts a layer in the position given in the layer stack */
-        void InsertLayer(ILayer*, int position);
-
         /** Removes a layer from the layer stack. */
         void RemoveLayer(ILayer* layer);
-
-        /** Adds a layer to the overlays stack. */
-        void AppendOverlay(ILayer* layer);
-
-        /** Inserts a layer in the position given in the overlay stack. */
-        void InsertOverlay(ILayer* layer, int position);
-
-        /** Removes a layer from the overlay stack. */
-        void RemoveOverlay(ILayer* layer);
 
         /** Dispatches an event to the overlay stack and then the layer stack. */
         void DispatchEventFromFrontToBack(IEvent& event);
@@ -66,9 +54,6 @@ namespace Ayla::Core::Layers
 
         /** Stores all the layers */
         std::vector<ILayer*> m_Layers;
-
-        /** Stores all the overlays */
-        std::vector<ILayer*> m_OverlayLayers;
     };
 
 } // namespace Ayla::Core::Layers

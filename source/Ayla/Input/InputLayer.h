@@ -14,10 +14,10 @@ namespace Ayla::Input {
         ~InputLayer() override;
 
         /** Passes the events to the InputState for adjusting the Input State. */
-        void OnEvent(Events::IEvent& event) override;
+        void OnEvent(EventManagement::IEvent& event) override;
 
         /** Accepts Input flags for changing the InputState */
-        Events::EEventCategory GetAcceptingEventFlags() override;
+        EventManagement::EEventCategory GetAcceptingEventFlags() override;
 
     private:
 

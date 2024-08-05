@@ -5,7 +5,7 @@
 #pragma once
 #include "Ayla/Events/Event.h"
 
-namespace Ayla::Events {
+namespace Ayla::EventManagement {
 
     /** General mouse event to derive from. */
     class MouseButtonEvent : public IEvent

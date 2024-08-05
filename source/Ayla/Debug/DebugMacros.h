@@ -7,10 +7,8 @@
 #include <cassert>
 #include <chrono>
 #include <string>
-
-#ifdef AYLA_PLATFORM_WINDOWS
 #include <sstream>
-#endif
+
 
 /** Outputs the message to the console with a time stamp. */
 #define AY_TRACE(title) Ayla::Debug::Macros::macro_AY_TRACE(title)
@@ -23,6 +21,9 @@
 
 /** Logs warnings to the console with a yellow color. */
 #define AY_WARN(message) Ayla::Debug::Macros::macro_AY_WARN(message)
+
+/** Logs warnings (that can be a stream) to the console with a yellow color. */
+#define AY_WARN_SS(message) { std::stringstream ss; Ayla::Debug::Macros::macro_AY_WARN_SS(ss << message); }
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
 #define AY_ASSERT(expression, errorMessage) { std::stringstream ss; assert(Ayla::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage)); }
@@ -54,6 +55,9 @@ namespace Ayla::Debug::Macros {
 
     /** Logs warnings to the console with a yellow color. */
     void macro_AY_WARN(const std::string&& message);
+
+    /** Logs warnings (that can be a stream) to the console with a yellow color. */
+    void macro_AY_WARN_SS(const std::ostream& message);
 
     /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
     bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage);

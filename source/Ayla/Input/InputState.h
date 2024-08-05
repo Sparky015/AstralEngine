@@ -6,8 +6,31 @@
 #include "Ayla/Events/Event.h"
 #include "Ayla/Input/InputLayer.h"
 
+#include "Ayla/Events/EventPublisher.h"
+#include "Ayla/Events/EventTypes/KeyEvent.h"
 
 namespace Ayla::Input {
+
+    /** Data being tracked for each key. */
+    struct KeyState
+    {
+    public:
+        KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
+        explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
+
+        bool IsDown;
+        bool IsRepeating;
+        std::string Name;
+    };
+
+
+    /** Data being tracked for the mouse. */
+    struct MouseCursorState
+    {
+        double MouseXPosition;
+        double MouseYPosition;
+    };
+
 
     /** Stores the state of keys and mouse in the form of a singleton. */
     class SInputState
@@ -27,31 +50,12 @@ namespace Ayla::Input {
          * Receives input events and changes the key's state to reflect the input event data.
          * @note Expects the event to be an event of Input type and to contain keycode values between 0 and 119.
          */
-        void OnEvent(Events::IEvent&);
+        void OnEvent(EventManagement::IEvent&);
 
         SInputState(const SInputState&) = delete;
         SInputState& operator=(const SInputState&) = delete;
         SInputState(SInputState&&) = delete;
         SInputState& operator=(SInputState&&) = delete;
-
-        /** Data being tracked for each key. */
-        struct KeyState
-        {
-        public:
-            KeyState() : IsDown(false), IsRepeating(false), Name("No Name Given"){}
-            explicit KeyState(std::string&& name)  : IsDown(false), IsRepeating(false), Name(std::move(name)){}
-
-            bool IsDown;
-            bool IsRepeating;
-            std::string Name;
-        };
-
-        /** Data being tracked for the mouse. */
-        struct MouseCursorState
-        {
-            double MouseXPosition;
-            double MouseYPosition;
-        };
 
         /** Checks if a key is down. */
         [[nodiscard]] bool IsKeyDown(int keycode) const;
@@ -71,6 +75,7 @@ namespace Ayla::Input {
         static const int NUMBER_OF_KEYS = 120;
 
     private:
+        EventManagement::EventPublisher<EventManagement::KeyPressedEvent&> m_KeyPressedPublisher;
         static SInputState* m_Instance;
         SInputState();
         ~SInputState();

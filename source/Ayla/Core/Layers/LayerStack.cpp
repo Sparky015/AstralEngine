@@ -4,6 +4,8 @@
 
 #include "LayerStack.h"
 
+#include "Ayla/aypch.h"
+
 namespace Ayla::Core::Layers
 {
 
@@ -25,61 +27,25 @@ namespace Ayla::Core::Layers
     }
 
 
-    void LayerStack::InsertLayer(ILayer* layer, int position)
-    {
-
-    }
-
-
     void LayerStack::RemoveLayer(ILayer* layer)
     {
-        // TODO: Iterate through vector, find matching layer pointer and remove from vector
+        m_Layers.erase(std::remove(m_Layers.begin(), m_Layers.end(), layer), m_Layers.end());
     }
 
 
-    void LayerStack::AppendOverlay(ILayer* layer)
+    void LayerStack::DispatchEventBackToFront(Ayla::EventManagement::IEvent& event)
     {
-        m_OverlayLayers.push_back(layer);
-    }
-
-
-    void LayerStack::InsertOverlay(ILayer* layer, int position)
-    {
-
-    }
-
-
-    void LayerStack::RemoveOverlay(ILayer* layer)
-    {
-        // TODO: Iterate through vector, find matching layer pointer and remove from vector
-    }
-
-
-    void LayerStack::DispatchEventBackToFront(Ayla::Events::IEvent& event)
-    {
-            for (ILayer* layer : m_Layers)
-            {
-                if (event.IsHandled()) {return;}
-                if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {continue;}
-                layer->OnEvent(event);
-            }
-            for (ILayer* layer : m_OverlayLayers)
-            {
-                if (event.IsHandled()) {return;}
-                if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {continue;}
-                layer->OnEvent(event);
-            }
-    }
-
-
-    void LayerStack::DispatchEventFromFrontToBack(Ayla::Events::IEvent& event)
-    {
-        for (ILayer* layer : m_OverlayLayers)
+        for (ILayer* layer : m_Layers)
         {
             if (event.IsHandled()) {return;}
-            if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {return;}
+            if (!event.IsInCategory(layer->GetAcceptingEventFlags())) {continue;}
             layer->OnEvent(event);
         }
+    }
+
+
+    void LayerStack::DispatchEventFromFrontToBack(Ayla::EventManagement::IEvent& event)
+    {
         for (ILayer* layer : m_Layers)
         {
             if (event.IsHandled()) {return;}
@@ -92,10 +58,6 @@ namespace Ayla::Core::Layers
 
     void LayerStack::Update()
     {
-        for (ILayer* layer : m_OverlayLayers)
-        {
-            layer->OnUpdate();
-        }
         for (ILayer* layer : m_Layers)
         {
             layer->OnUpdate();
@@ -106,10 +68,6 @@ namespace Ayla::Core::Layers
     void LayerStack::RenderImGui()
     {
         for (ILayer* layer : m_Layers)
-        {
-            layer->OnImGuiRender();
-        }
-        for (ILayer* layer : m_OverlayLayers)
         {
             layer->OnImGuiRender();
         }

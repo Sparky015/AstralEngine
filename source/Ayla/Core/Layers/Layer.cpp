@@ -56,20 +56,8 @@ namespace Ayla::Core::Layers {
     {
         if (!m_IsInitializedInTower)
         {
-            Application::GetLayerStack().AppendLayer(this);
-            m_IsInitializedInTower = true;
-            OnAttach();
-            m_IsEnabled = true;
-        }
-    }
-
-
-    void ILayer::AttachOverlay()
-    {
-        if (!m_IsInitializedInTower)
-        {
-
-            Application::GetLayerStack().AppendOverlay(this);
+            Application& app = Application::Get();
+            app.GetLayerStack().AppendLayer(this);
             m_IsInitializedInTower = true;
             OnAttach();
             m_IsEnabled = true;
@@ -81,18 +69,8 @@ namespace Ayla::Core::Layers {
     {
         if (m_IsInitializedInTower)
         {
-            Application::GetLayerStack().RemoveLayer(this);
-            m_IsInitializedInTower = false;
-            m_IsEnabled = false;
-        }
-    }
-
-
-    void ILayer::DetachOverlay()
-    {
-        if (m_IsInitializedInTower)
-        {
-            Application::GetLayerStack().RemoveOverlay(this);
+            Application& app = Application::Get();
+            app.GetLayerStack().RemoveLayer(this);
             m_IsInitializedInTower = false;
             m_IsEnabled = false;
         }
@@ -127,11 +105,13 @@ namespace Ayla::Core::Layers {
     {
         if (eventDestination == FRONT_TO_BACK)
         {
-            Application::GetLayerStack().DispatchEventFromFrontToBack(event);
+            Application& app = Application::Get();
+            app.GetLayerStack().DispatchEventFromFrontToBack(event);
         }
         else if (eventDestination == BACK_TO_FRONT)
         {
-            Application::GetLayerStack().DispatchEventBackToFront(event);
+            Application& app = Application::Get();
+            app.GetLayerStack().DispatchEventBackToFront(event);
         }
         else
         {

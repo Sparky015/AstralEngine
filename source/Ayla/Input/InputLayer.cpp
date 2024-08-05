@@ -8,7 +8,7 @@
 
 namespace Ayla::Input {
 
-    using namespace Events;
+    using namespace EventManagement;
 
     InputLayer::InputLayer()
     {

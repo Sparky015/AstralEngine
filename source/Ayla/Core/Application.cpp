@@ -6,19 +6,20 @@
 #include "Ayla/Core/Layers/LayerStack.h"
 #include "Ayla/Core/Time/Clock.h"
 #include "Ayla/Debug/DebugLayer.h"
+#include "Ayla/Debug/LogUsedToolsAndLibraries.h"
+#include "Ayla/ECS/EntityComponentSystem.h" // TEMP
 #include "Ayla/ImGui/ImGuiLayer.h"
 #include "Ayla/Input/InputState.h"
 
-#include "glad/glad.h" // TEMP
+#include "Ayla/Renderer/RendererLayer.h" // TEMP
+
 
 namespace Ayla::Core
 {
     Application* Application::m_Application = nullptr;
-    std::unique_ptr<LayerStack> Application::m_LayerStack = nullptr;
-    std::unique_ptr<Window> Application::m_Window = nullptr;
 
 
-    Application::Application() : m_ClientLoop(nullptr)
+    Application::Application() : m_Window(nullptr), m_LayerStack(nullptr), m_ClientLoop(nullptr)
     {
         AY_ASSERT(m_Application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
 
@@ -30,6 +31,9 @@ namespace Ayla::Core
         AY_LOG("--- Application: Initializing Window ---");
         m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Ayla Engine Window", 1024, 768)));
         m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+        // Systems //
+        ECS::EntitySystem::Init();
 
         // Layer Stack //
         AY_LOG("--- Application: Initializing Layer Stack ---");
@@ -43,6 +47,10 @@ namespace Ayla::Core
 
         // Clock //
         Time::Clock::Init();
+
+        Ayla::Debug::LogUsedLibraries(); // Log all the systems being used after initialization
+
+        m_RendererLayer = std::make_unique<Renderer::RendererLayer>();  // TEMP
     }
 
 
@@ -51,6 +59,7 @@ namespace Ayla::Core
         AY_TRACE("[Sholas] Application: Destroying Application");
         delete m_ClientLoop;
         Input::SInputState::Destroy();
+        ECS::EntitySystem::Destroy();
         Time::Clock::Destroy();
     };
 
@@ -61,11 +70,8 @@ namespace Ayla::Core
 
         AY_LOG("\n\nRunning Application!");
 
-        while (m_IsAppRunning){
-
-            glClearColor(1, 0, 1, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
-
+        while (m_IsAppRunning)
+        {
             Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
             Time::Clock::Get().CheckTimers();
 
@@ -87,7 +93,7 @@ namespace Ayla::Core
 
     void Application::OnEvent(IEvent& event) // TODO: Make the parameter const and the depending functions const.
     {
-        if (event.GetEventType() == Events::WINDOW_CLOSE)
+        if (event.GetEventType() == EventManagement::WINDOW_CLOSE)
         {
             m_IsAppRunning = false;
             return;

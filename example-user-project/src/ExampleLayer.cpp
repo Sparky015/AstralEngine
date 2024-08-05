@@ -3,7 +3,7 @@
 //
 
 #include "ExampleLayer.h"
-#include "Ayla/Core/CoreDefinitions.h"
+
 #include "imgui.h"
 
 
@@ -29,9 +29,9 @@ void ExampleLayer::OnImGuiRender()
 }
 
 
-Ayla::Events::EEventCategory ExampleLayer::GetAcceptingEventFlags()
+Ayla::EventManagement::EEventCategory ExampleLayer::GetAcceptingEventFlags()
 {
-    return Ayla::Events::None;
+    return Ayla::EventManagement::None;
 }
 
 
