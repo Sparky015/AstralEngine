@@ -33,7 +33,6 @@ Sums up to: exploration, skill development
 > - Watch introduction to a topic
 > - Identify the problem
 > - Plan and design my solution with all the expectations of the api
-> - fail
 > - Watch Cherno's solution he came up with
 > - Compare the designs and reflect on the good parts and bad parts of my solution 
 > - Reflect on why Cherno did it the way he did over what I did
