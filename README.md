@@ -28,7 +28,7 @@ Sums up to: exploration, skill development
 > 
 >
 > 
-> ### How I am building this engine? (REVISE BEFORE COMMIT)
+> ### How I am building this engine? 
 > 
 > - Watch introduction to a topic
 > - Identify the problem
@@ -41,7 +41,7 @@ Sums up to: exploration, skill development
 > 
 > 
 > 
-> ### Why am I building the engine the way I am?   (REVISE BEFORE COMMIT)
+> ### Why am I building the engine the way I am? 
 >
 > - builds a solid foundation
 > - I can't solve problems I didn't know were a thing
@@ -49,7 +49,7 @@ Sums up to: exploration, skill development
 > - Helps learn engine basics without wasting time 
 > - Helps me get to learning more advanced and niche topics quicker
 > - Helps me avoid cementing bad practices in designing and implementations
-> - Creditable resources help me learn best practices from people with the experience and knowledge of expectations
+> - Creditable resources help me learn best practices from people with the experience and knowledge of expectations  (cherno)
 > - Allows me to develop an expertise or realm of expertise quicker
 >
 >
@@ -64,10 +64,27 @@ Sums up to: exploration, skill development
 
 
 > ### Operating System Support
-> Ayla supports use on macOS and Windows. There are no plans for any operating system 
+> Ayla supports use on macOS and Windows on 64-bit systems. There are no plans for any operating system 
 > outside of that. CMake is used as for the build system to support 
 > cross-platform building, which also supports creating project files for IDEs like Visual Studio
 > and Xcode.
+> 
+> Windows:
+>1. Download CMake
+>2. Download Visual Studio 2022
+>3. Run 'GenerateVisualStudioProject.bat' in the root directory of the engine
+>4. Open the generated .sln file
+>5. Set the platform to x64
+>6. Compile and Run through Visual Studio
+>
+>
+> MacOS:
+>1. Download CMake
+>2. Download Xcode.
+>3. Run 'GenerateXcodeProject.sh' in the root directory of the engine
+>4. Open the generated .xcodeproj file
+>5. Compile and Run through Xcode
+
 
 ###
 
