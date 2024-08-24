@@ -5,6 +5,7 @@
 ## Data Transformations
 
 - Board split into array of 8 arrays (because statistically, the access of the data will be more in certain rows like
-the first two rows of each color piece)
+the first two rows of each color piece
 
+Click & Drags -> Coordinate -> Square Location & Piece Moved -> Check if Valid -> (if no, reset) (if yes, move piece & compute valid moves)
 
