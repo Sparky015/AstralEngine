@@ -9,3 +9,4 @@ the first two rows of each color piece
 
 Click & Drags -> Coordinate -> Square Location & Piece Moved -> Check if Valid -> (if no, reset) (if yes, move piece & compute valid moves)
 
+![img.png](img.png)
