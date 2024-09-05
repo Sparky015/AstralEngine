@@ -27,8 +27,8 @@ namespace Ayla::ECS {
         glm::vec2 m_Vertices[4];
 
     private:
-        Renderer::IndexBufferObject m_IndexBuffer = Renderer::IndexBufferObject(,);
-        Renderer::VertexBuffer m_VertexBuffer = Renderer::VertexBuffer(,);
+//        Renderer::IndexBufferObject m_IndexBuffer = Renderer::IndexBufferObject(,);
+//        Renderer::VertexBuffer m_VertexBuffer = Renderer::VertexBuffer(,);
 
     };
 
