@@ -15,7 +15,7 @@ namespace Ayla::Client
         virtual ~ClientLoop();
 
         /** Provides a method to the client for an update loop. */
-        virtual void Update();
+        virtual void Update(int deltaTime);
 
         /** Provides a method to the client to initialize anything before the application loop starts. */
         virtual void Init();

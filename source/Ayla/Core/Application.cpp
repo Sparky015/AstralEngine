@@ -75,8 +75,7 @@ namespace Ayla::Core
             Time::Clock::Get().UpdateDeltaTime(); // Phase 1  -> Updates the clock.
             Time::Clock::Get().CheckTimers();
 
-            // TODO: Provide the delta time to the update function
-            m_ClientLoop->Update(); // Phase 2  -> Calls the client's application update function.
+            m_ClientLoop->Update(Time::Clock::Get().GetDeltaTime()); // Phase 2  -> Calls the client's application update function.
 
             m_LayerStack->Update(); // Phase 3  -> Calls the update function on all the layers in the engine.
 

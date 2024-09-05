@@ -27,7 +27,7 @@ namespace Ayla::Client
 
 
     /** Update is not a pure virtual function so we can throw an error if the client does not override the Update function */
-    void ClientLoop::Update()
+    void ClientLoop::Update(int deltaTime)
     {
         AY_ERROR("[Ayla] Client.cpp: Update function was not defined or overridden!");
     }
