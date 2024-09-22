@@ -1,0 +1,31 @@
+//
+// Created by Andrew Fagan on 7/5/24.
+//
+#include "FTimer.h"
+
+#include <utility>
+#include "Clock.h"
+
+namespace Solas::Core::Time {
+    int FTimer::m_TimerIDTracker = 0;
+
+    FTimer::FTimer(float amountOfTime, std::function<void()> callback) :
+        StartingTimeStamp(Clock::Get().GetCurrentTimeStamp()),
+        LengthOfTimer(amountOfTime),
+        Callback(std::move(callback)),
+        m_TimerID(++m_TimerIDTracker)
+    {}
+
+    bool FTimer::operator==(const FTimer& other) const noexcept
+    {
+        return m_TimerID == other.GetTimerId();
+    }
+
+    int FTimer::GetTimerId() const
+    {
+        return m_TimerID;
+    }
+
+}
+
+

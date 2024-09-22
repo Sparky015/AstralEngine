@@ -29,9 +29,9 @@ void ExampleLayer::OnImGuiRender()
 }
 
 
-Ayla::EventManagement::EEventCategory ExampleLayer::GetAcceptingEventFlags()
+Solas::EventManagement::EEventCategory ExampleLayer::GetAcceptingEventFlags()
 {
-    return Ayla::EventManagement::None;
+    return Solas::EventManagement::None;
 }
 
 

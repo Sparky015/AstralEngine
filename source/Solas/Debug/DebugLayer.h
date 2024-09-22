@@ -1,0 +1,38 @@
+//
+// Created by Andrew Fagan on 6/25/24.
+//
+#pragma once
+
+#include "Solas/Core/Layers/Layer.h"
+
+#include "Solas/Events/EventListener.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
+
+
+namespace Solas::Core::Debug
+{
+    using namespace Solas::Core::Layers;
+    /** Provides a way to debug the engine by pulling information into a window or the console for viewing. */
+    class DebugLayer : public ILayer
+    {
+    public:
+        DebugLayer();
+        ~DebugLayer() override;
+
+        /** Checks if keys are pressed, so we know when to show debugging info */
+        void OnUpdate() override;
+
+        /** A space to create the ImGui windows to show debugging info. */
+        void OnImGuiRender() override;
+
+        /** The Debug Layer does not accept events. */
+        EEventCategory GetAcceptingEventFlags() override;
+
+        void OnKeyPressEvent(KeyPressedEvent& event);
+    private:
+        EventManagement::EventListener<KeyPressedEvent&> m_KeyPressedListener{[this](KeyPressedEvent& e){ this->OnKeyPressEvent(e);}};
+        static bool m_ShowImGuiDemoWindow;
+        static bool m_ShowDebugMenu;
+    };
+
+}

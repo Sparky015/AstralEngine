@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include "Ayla.h"
+#include "Solas.h"
 
-class ExampleLayer : public Ayla::Core::Layers::ILayer
+class ExampleLayer : public Solas::Core::Layers::ILayer
 {
 public:
     ExampleLayer();
     virtual ~ExampleLayer() override;
 
     virtual void OnImGuiRender() override;
-    virtual Ayla::EventManagement::EEventCategory GetAcceptingEventFlags() override;
+    virtual Solas::EventManagement::EEventCategory GetAcceptingEventFlags() override;
 };

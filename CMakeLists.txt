@@ -38,7 +38,7 @@ endif()
 add_subdirectory(vendor/GLAD)
 add_subdirectory(vendor/ImGui)
 add_subdirectory(vendor/glm)
-add_subdirectory(source/Ayla)
+add_subdirectory(source/Solas)
 add_subdirectory(example-user-project)
 
 
