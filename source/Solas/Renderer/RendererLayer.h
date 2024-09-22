@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "Ayla/Core/Layers/Layer.h"
+#include "Solas/Core/Layers/Layer.h"
 
 #include "Renderer.h"
 
 #ifdef AYLA_OPENGL_RENDERER
-    #include "Ayla/Renderer/Platform/OpenGL/OpenGLRenderer.h"
+    #include "Solas/Renderer/Platform/OpenGL/OpenGLRenderer.h"
 #endif
 
 

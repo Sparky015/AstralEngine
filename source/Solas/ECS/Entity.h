@@ -7,8 +7,8 @@
 #include "../../../vendor/glm/glm/vec2.hpp"
 #include "../../../vendor/glm/glm/vec4.hpp"
 
-#include "Ayla/Renderer/Abstractions/IndexBufferObject.h"
-#include "Ayla/Renderer/Abstractions/VertexBuffer.h"
+#include "Solas/Renderer/Abstractions/IndexBufferObject.h"
+#include "Solas/Renderer/Abstractions/VertexBuffer.h"
 
 // TEMP
 namespace Ayla::ECS {

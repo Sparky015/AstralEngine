@@ -4,9 +4,9 @@
 
 #include "OpenGLRenderer.h"
 
-#include "Ayla/Renderer/Abstractions/IndexBufferObject.h"
-#include "Ayla/Renderer/Abstractions/VertexArrayObject.h"
-#include "Ayla/Renderer/Abstractions/VertexBuffer.h"
+#include "Solas/Renderer/Abstractions/IndexBufferObject.h"
+#include "Solas/Renderer/Abstractions/VertexArrayObject.h"
+#include "Solas/Renderer/Abstractions/VertexBuffer.h"
 
 #include "glad/glad.h"
 

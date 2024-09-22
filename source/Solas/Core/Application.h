@@ -3,13 +3,13 @@
 //
 #pragma once
 
-#include "Ayla/Client/UserSetup.h"
-#include "Ayla/Core/CoreDefinitions.h"
-#include "Ayla/Core/Layers/LayerStack.h"
-#include "Ayla/Debug/DebugLayer.h"
-#include "Ayla/ImGui/ImGuiLayer.h"
-#include "Ayla/Renderer/RendererLayer.h"
-#include "Ayla/Window/Window.h"
+#include "Solas/Client/UserSetup.h"
+#include "Solas/Core/CoreDefinitions.h"
+#include "Solas/Core/Layers/LayerStack.h"
+#include "Solas/Debug/DebugLayer.h"
+#include "Solas/ImGui/ImGuiLayer.h"
+#include "Solas/Renderer/RendererLayer.h"
+#include "Solas/Window/Window.h"
 
 
 namespace Ayla::Core

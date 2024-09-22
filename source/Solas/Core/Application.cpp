@@ -2,16 +2,16 @@
 // Created by sparky on 4/16/2024.
 //
 
-#include "Ayla/Core/Application.h"
-#include "Ayla/Core/Layers/LayerStack.h"
-#include "Ayla/Core/Time/Clock.h"
-#include "Ayla/Debug/DebugLayer.h"
-#include "Ayla/Debug/LogUsedToolsAndLibraries.h"
-#include "Ayla/ECS/EntityComponentSystem.h" // TEMP
-#include "Ayla/ImGui/ImGuiLayer.h"
-#include "Ayla/Input/InputState.h"
+#include "Solas/Core/Application.h"
+#include "Solas/Core/Layers/LayerStack.h"
+#include "Solas/Core/Time/Clock.h"
+#include "Solas/Debug/DebugLayer.h"
+#include "Solas/Debug/LogUsedToolsAndLibraries.h"
+#include "Solas/ECS/EntityComponentSystem.h" // TEMP
+#include "Solas/ImGui/ImGuiLayer.h"
+#include "Solas/Input/InputState.h"
 
-#include "Ayla/Renderer/RendererLayer.h" // TEMP
+#include "Solas/Renderer/RendererLayer.h" // TEMP
 
 
 namespace Ayla::Core

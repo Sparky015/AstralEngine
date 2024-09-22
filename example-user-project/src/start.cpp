@@ -2,8 +2,8 @@
 // Created by sparky on 4/16/2024.
 //
 
-#include "Ayla.h"
 #include "ExampleLayer.h"
+#include "Solas.h"
 
 class ClientApplication : public ClientLoop {
 public:

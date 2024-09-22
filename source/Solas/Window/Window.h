@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include "Ayla/Events/Event.h"
-#include "Ayla/aypch.h"
+#include "Solas/Events/Event.h"
+#include "Solas/aypch.h"
 
 
 namespace Ayla::Windows { // maybe change namespace to Display or Viewport instead of Windows?

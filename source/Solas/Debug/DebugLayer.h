@@ -3,10 +3,10 @@
 //
 #pragma once
 
-#include "Ayla/Core/Layers/Layer.h"
+#include "Solas/Core/Layers/Layer.h"
 
-#include "Ayla/Events/EventListener.h"
-#include "Ayla/Events/EventTypes/KeyEvent.h"
+#include "Solas/Events/EventListener.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
 
 
 namespace Ayla::Core::Debug

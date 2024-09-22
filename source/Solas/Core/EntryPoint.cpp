@@ -4,9 +4,9 @@
 
 #include "EntryPoint.h"
 
-#include "Ayla/Client/UserSetup.h"
-#include "Ayla/Core/Application.h"
-#include "Ayla/Debug/LogUsedToolsAndLibraries.h"
+#include "Solas/Client/UserSetup.h"
+#include "Solas/Core/Application.h"
+#include "Solas/Debug/LogUsedToolsAndLibraries.h"
 
 int main(int argc, char *argv[])
 {

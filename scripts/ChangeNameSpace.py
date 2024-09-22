@@ -1,7 +1,6 @@
 # Created by Andrew Fagan on 9/22/24.
 
-# This script is to rename all the Ayla's in the root of header includes. For example "#include Ayla/Core/Application.h" needs to change to "#include Solas/Core/Application.h".
-# All files in the codebase have includes that start with Ayla, so this script we go through and change them all to Solas.
+# This script takes a two namespaces and changes the first namespace to the second namespace
 
 
 # This must run in root directory.
@@ -10,15 +9,21 @@ import os
 
 isInSourceDirectory = False # Checks to see if we should go deeper into the directory which we would if it is the source directory
 
+oldNamespace = ""
+replacementNamespace = ""
+
+
 # This function checks a given directory for "#include Ayla" and renames them to "#include Solas"
 def CheckDirectory(directory):
     global isInSourceDirectory
+    global oldNamespace
+    global replacementNamespace
 
     for item in os.listdir(directory):
         itemPath = os.path.join(directory, item)  # Get the full path of the item
 
         if os.path.isfile(itemPath):
-            # file is actually a file. We are going to scan for "#include Ayla" now.
+            # file is actually a file. We are going to scan for the old namespace now.
 
             if not itemPath.endswith(('.h', '.cpp')):
                 continue
@@ -32,9 +37,9 @@ def CheckDirectory(directory):
                     print("-" * 40)  # Separator for readability
                     
                     # Check if the content contains "#include Ayla"
-                    if '#include "Ayla/' in content:
+                    if oldNamespace in content:
                         # Replace occurrences of "#include Ayla" with "#include Solas"
-                        newContent = content.replace('#include "Ayla/', '#include "Solas/')
+                        newContent = content.replace(oldNamespace, replacementNamespace)
 
                         # Write the new content back to the file
                         with open(itemPath, 'w') as file:
@@ -42,10 +47,6 @@ def CheckDirectory(directory):
                             print(newContent)
                         print(f"Updated: {itemPath}")
                      
-                    
-                except UnicodeDecodeError:
-                    print(f"Skipping non-text file: {itemPath}")
-
                 except Exception as e:
                     print(f"Error processing file {itemPath}: {e}")
 
@@ -66,7 +67,9 @@ def CheckDirectory(directory):
         else:
             print("Unknown item: ", itemPath)
 
-    
+oldNamespace = input("What is the namespace you want to replace? : ")
+replacementNamespace = input("What is namespace replacing the old namespace? : ")
+
 # We start here with the first call to CheckDirectory and then recursively check each file in the Solas codebase.
 CheckDirectory(os.path.curdir)
 

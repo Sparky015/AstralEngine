@@ -3,9 +3,9 @@
 //
 #pragma once
 
-#include "Ayla/Events/Event.h"
-#include "Ayla/Window/Window.h"
-#include "Ayla/aypch.h"
+#include "Solas/Events/Event.h"
+#include "Solas/Window/Window.h"
+#include "Solas/aypch.h"
 
 #include "GLFW/glfw3.h"
 

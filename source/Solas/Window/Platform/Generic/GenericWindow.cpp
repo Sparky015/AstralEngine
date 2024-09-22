@@ -3,10 +3,10 @@
 //
 #include "GenericWindow.h"
 
-#include "Ayla/Events/EventTypes/ApplicationEvent.h"
-#include "Ayla/Events/EventTypes/KeyEvent.h"
-#include "Ayla/Events/EventTypes/MouseEvent.h"
-#include "Ayla/Input/KeycodeTranslation/GLFWTranslation.h"
+#include "Solas/Events/EventTypes/ApplicationEvent.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
+#include "Solas/Events/EventTypes/MouseEvent.h"
+#include "Solas/Input/KeycodeTranslation/GLFWTranslation.h"
 
 #include "glad/glad.h"
 #include "imgui.h"

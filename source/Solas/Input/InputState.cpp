@@ -4,10 +4,10 @@
 
 #include "InputState.h"
 
-#include "Ayla/Events/EventTypes/ApplicationEvent.h"
-#include "Ayla/Events/EventTypes/KeyEvent.h"
-#include "Ayla/Events/EventTypes/MouseEvent.h"
-#include "Ayla/Input/Keycodes.h"
+#include "Solas/Events/EventTypes/ApplicationEvent.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
+#include "Solas/Events/EventTypes/MouseEvent.h"
+#include "Solas/Input/Keycodes.h"
 
 
 namespace Ayla::Input {

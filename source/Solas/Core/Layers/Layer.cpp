@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 4/24/24.
 //
 
-#include "Ayla/Core/Application.h"
+#include "Solas/Core/Application.h"
 #include "Layer.h"
 
 namespace Ayla::Core::Layers {

@@ -2,17 +2,17 @@
 // Created by sparky on 4/24/2024.
 //
 #include "ImGuiLayer.h"
-#include "Ayla/Core/Application.h"
+#include "Solas/Core/Application.h"
 
-#include "Ayla/Renderer/Platform/OpenGL/imgui_impl_opengl3.h"
-#include "Ayla/Window/Platform/Generic/imgui_impl_glfw.h"
+#include "Solas/Renderer/Platform/OpenGL/imgui_impl_opengl3.h"
+#include "Solas/Window/Platform/Generic/imgui_impl_glfw.h"
 
 
-#include "Ayla/Events/EventTypes/ApplicationEvent.h"
-#include "Ayla/Events/EventTypes/MouseEvent.h"
-#include "Ayla/Events/EventTypes/KeyEvent.h"
+#include "Solas/Events/EventTypes/ApplicationEvent.h"
+#include "Solas/Events/EventTypes/MouseEvent.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
 
-#include "Ayla/Input/Keycodes.h"
+#include "Solas/Input/Keycodes.h"
 
 //TEMPORARY
 #include "GLFW/glfw3.h"

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Ayla/Events/Event.h"
+#include "Solas/Events/Event.h"
 
 namespace Ayla::EventManagement {
 

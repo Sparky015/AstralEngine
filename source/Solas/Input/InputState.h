@@ -3,11 +3,11 @@
 //
 #pragma once
 
-#include "Ayla/Events/Event.h"
-#include "Ayla/Input/InputLayer.h"
+#include "Solas/Events/Event.h"
+#include "Solas/Input/InputLayer.h"
 
-#include "Ayla/Events/EventPublisher.h"
-#include "Ayla/Events/EventTypes/KeyEvent.h"
+#include "Solas/Events/EventPublisher.h"
+#include "Solas/Events/EventTypes/KeyEvent.h"
 
 namespace Ayla::Input {
 

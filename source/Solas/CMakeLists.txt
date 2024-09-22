@@ -74,6 +74,7 @@ add_library(Solas STATIC
         Events/EventTypes/EventTypes.h
         Renderer/Abstractions/BufferLayout.cpp
         Renderer/Abstractions/BufferLayout.h
+
 )
 
 

@@ -6,15 +6,15 @@
 
 #include <utility>
 
-#include "Ayla/Core/Application.h"
-#include "Ayla/Core/Time/Clock.h"
-#include "Ayla/Events/EventListener.h"
-#include "Ayla/Input/InputState.h"
-#include "Ayla/Input/Keycodes.h"
-#include "Ayla/Window/Window.h"
+#include "Solas/Core/Application.h"
+#include "Solas/Core/Time/Clock.h"
+#include "Solas/Events/EventListener.h"
+#include "Solas/Input/InputState.h"
+#include "Solas/Input/Keycodes.h"
+#include "Solas/Window/Window.h"
 
 #ifdef AYLA_GENERIC_WINDOW
-    #include "Ayla/Window/Platform/Generic/GenericWindow.h"
+    #include "Solas/Window/Platform/Generic/GenericWindow.h"
 #endif
 
 #include "imgui.h"
