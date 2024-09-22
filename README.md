@@ -1,13 +1,13 @@
 
 
-# Ayla Engine
+# Solas Engine
 
 An overview of the Ayla Engine. Covers the purpose and focus of the engine, how to build it, and what the roadmap for
 the future is.
 
 ---
 
-## Purpose and Focus of Ayla
+## Purpose and Focus of Solas
 
 A section to answer a few questions that state the purpose and set the focus of the engine.
 
