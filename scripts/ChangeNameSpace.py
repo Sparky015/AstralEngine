@@ -32,9 +32,6 @@ def CheckDirectory(directory):
 
                 try:
                     content = file.read()
-                    print(f"\n\nContents of {item}:")
-                    #print(content)
-                    print("-" * 40)  # Separator for readability
                     
                     # Check if the content contains "#include Ayla"
                     if oldNamespace in content:
