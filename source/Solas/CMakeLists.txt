@@ -2,7 +2,7 @@
 
 
 # Create the static library
-add_library(Ayla STATIC
+add_library(Solas STATIC
         Core/Application.cpp
         Core/Application.h
         Core/CoreDefinitions.h
@@ -79,46 +79,46 @@ add_library(Ayla STATIC
 
 
 #       ### Ayla Includes ###
-target_include_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/source)
-target_include_directories(Ayla INTERFACE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(Solas PUBLIC ${CMAKE_SOURCE_DIR}/source)
+target_include_directories(Solas INTERFACE ${CMAKE_SOURCE_DIR}/include)
 
 
 
 #           Include library headers
-target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
-target_include_directories(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glm)
+target_include_directories(Solas PRIVATE ${CMAKE_SOURCE_DIR}/vendor/GLFW/include)
+target_include_directories(Solas PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glm)
 
 
 
 #           Link Libraries to Ayla
-target_link_libraries(Ayla PRIVATE GLAD)
-target_link_libraries(Ayla PUBLIC ImGui)
+target_link_libraries(Solas PRIVATE GLAD)
+target_link_libraries(Solas PUBLIC ImGui)
 
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
-    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
+    target_link_directories(Solas PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/mac-lib)
 elseif (WIN32)
-    target_link_directories(Ayla PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
+    target_link_directories(Solas PUBLIC ${CMAKE_SOURCE_DIR}/vendor/GLFW/windows-lib)
 endif ()
 
 
 if (APPLE)
-    target_link_libraries(Ayla PRIVATE glfw.3)
+    target_link_libraries(Solas PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(Ayla PRIVATE glfw3)
+    target_link_libraries(Solas PRIVATE glfw3)
 endif ()
 
 
 
 # Defining Macros
-target_compile_definitions(Ayla PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(Ayla PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+target_compile_definitions(Solas PRIVATE -DGLFW_INCLUDE_NONE)
+target_compile_definitions(Solas PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 
 
 
 # Defining Precompiled Headers
-target_precompile_headers(Ayla PRIVATE ${CMAKE_SOURCE_DIR}/source/Ayla/aypch.h)
+target_precompile_headers(Solas PRIVATE ${CMAKE_SOURCE_DIR}/source/Solas/aypch.h)
 
 
 

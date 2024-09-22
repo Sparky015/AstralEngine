@@ -25,8 +25,8 @@
 #include <vector>
 
 // Other Stuff
-#include "Ayla/Core/CoreDefinitions.h"
-#include "Ayla/Debug/DebugMacros.h"
+#include "Solas/Core/CoreDefinitions.h"
+#include "Solas/Debug/DebugMacros.h"
 
 
 #ifdef AYLA_PLATFORM_WINDOWS
