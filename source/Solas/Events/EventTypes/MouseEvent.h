@@ -5,7 +5,7 @@
 #pragma once
 #include "Solas/Events/Event.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     /** General mouse event to derive from. */
     class MouseButtonEvent : public IEvent
@@ -154,4 +154,4 @@ namespace Ayla::EventManagement {
         double m_Ypos;
     };
 
-} // namespace Ayla::Events
+} // namespace Solas::Events

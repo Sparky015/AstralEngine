@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     enum ShaderType : uint8
     {

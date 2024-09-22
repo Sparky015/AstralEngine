@@ -6,7 +6,7 @@
 #include "Solas/Events/Event.h"
 
 
-namespace Ayla::EventManagement
+namespace Solas::EventManagement
 {
 
     bool IEvent::IsInCategory(const EEventCategory category) const
@@ -38,4 +38,4 @@ namespace Ayla::EventManagement
         m_IsHandled = isHandled;
     }
 
-} // namespace Ayla::EventManagement
+} // namespace Solas::EventManagement

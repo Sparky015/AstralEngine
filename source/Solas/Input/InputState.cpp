@@ -10,9 +10,9 @@
 #include "Solas/Input/Keycodes.h"
 
 
-namespace Ayla::Input {
+namespace Solas::Input {
 
-    using namespace Ayla::EventManagement;
+    using namespace Solas::EventManagement;
 
     SInputState* SInputState::m_Instance = nullptr;
 
@@ -125,7 +125,7 @@ namespace Ayla::Input {
 #ifdef AYLA_DEBUG_BUILD
         if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
         {
-            AY_WARN("Ayla::Input::SInputState::IsKeyDown: Unrecognized keycode tried to access the input state");
+            AY_WARN("Solas::Input::SInputState::IsKeyDown: Unrecognized keycode tried to access the input state");
             return false;
         }
 #endif
@@ -138,7 +138,7 @@ namespace Ayla::Input {
 #ifdef AYLA_DEBUG_BUILD
         if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
         {
-            AY_WARN("Ayla::Input::SInputState::IsKeyRepeating: Unrecognized keycode tried to access the input state");
+            AY_WARN("Solas::Input::SInputState::IsKeyRepeating: Unrecognized keycode tried to access the input state");
             return false;
         }
 #endif
@@ -151,13 +151,13 @@ namespace Ayla::Input {
 #ifdef AYLA_DEBUG_BUILD
         if (keycode < 0 || keycode > NUMBER_OF_KEYS - 1)
         {
-            AY_WARN("Ayla::Input::SInputState::GetKeyName: Unrecognized keycode tried to access the input state");
+            AY_WARN("Solas::Input::SInputState::GetKeyName: Unrecognized keycode tried to access the input state");
             return m_KeyState[AY_KEY_NONE].Name;
         }
 #endif
         return m_KeyState[keycode].Name;
     }
 
-} // namespace Ayla::Input
+} // namespace Solas::Input
 
 

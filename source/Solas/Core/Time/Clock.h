@@ -7,7 +7,7 @@
 #include "TimeLiterals.h"
 #include "FTimer.h"
 
-namespace Ayla::Core::Time
+namespace Solas::Core::Time
 {
     /**
      * Provides delta time as well as a stopwatch for a way to measure how much time has passed between things or events.

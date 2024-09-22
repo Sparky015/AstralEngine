@@ -22,7 +22,7 @@
 
 
 
-namespace Ayla::Core::Debug
+namespace Solas::Core::Debug
 {
     bool DebugLayer::m_ShowImGuiDemoWindow = false;
     bool DebugLayer::m_ShowDebugMenu = false;
@@ -244,7 +244,7 @@ namespace Ayla::Core::Debug
         }
     }
 
-} // namespace Ayla::Core::Debug
+} // namespace Solas::Core::Debug
 
 
 

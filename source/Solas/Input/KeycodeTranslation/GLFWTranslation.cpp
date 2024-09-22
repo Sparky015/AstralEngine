@@ -11,7 +11,7 @@
 
 
 
-namespace Ayla::Input::Keycodes::Translation {
+namespace Solas::Input::Keycodes::Translation {
 
 
 

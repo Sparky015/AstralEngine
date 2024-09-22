@@ -14,7 +14,7 @@
 #include "Solas/Renderer/RendererLayer.h" // TEMP
 
 
-namespace Ayla::Core
+namespace Solas::Core
 {
     Application* Application::m_Application = nullptr;
 
@@ -48,7 +48,7 @@ namespace Ayla::Core
         // Clock //
         Time::Clock::Init();
 
-        Ayla::Debug::LogUsedLibraries(); // Log all the systems being used after initialization
+        Solas::Debug::LogUsedLibraries(); // Log all the systems being used after initialization
 
         m_RendererLayer = std::make_unique<Renderer::RendererLayer>();  // TEMP
     }
@@ -128,4 +128,4 @@ namespace Ayla::Core
     }
 
 
-} // namespace Ayla::Core
+} // namespace Solas::Core

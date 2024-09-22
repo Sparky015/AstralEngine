@@ -7,9 +7,9 @@
 
 
 
-namespace Ayla::Core::Layers
+namespace Solas::Core::Layers
 {
-    using namespace Ayla::EventManagement;
+    using namespace Solas::EventManagement;
     /**
      * Allows systems a way to receive and send data to each other through events without explicitly linking to each other.
      * @note Systems own the layer that they operate.
@@ -75,4 +75,4 @@ namespace Ayla::Core::Layers
         std::string m_DebugName;
     };
 
-} // namespace Ayla::Core::Layers
+} // namespace Solas::Core::Layers

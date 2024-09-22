@@ -9,7 +9,7 @@
 void GLCheckError();
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     class IndexBufferObject {
     public:
@@ -24,4 +24,4 @@ namespace Ayla::Renderer {
 
     };
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ayla::Input::Keycodes::Translation {
+namespace Solas::Input::Keycodes::Translation {
 
     /** Converts GLFW keycodes to Ayla keycodes, so events are able use the Ayla keycodes. */
     int TranslateGlfwKeycodesToAyla(int glfwKeycode);

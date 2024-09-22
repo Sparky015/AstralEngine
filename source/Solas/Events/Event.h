@@ -5,7 +5,7 @@
 #pragma once
 #include "Solas/aypch.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     enum EEventTypes : uint8_t
     {
@@ -59,4 +59,4 @@ namespace Ayla::EventManagement {
     };
 
 
-} // namespace Ayla::EventManagement
+} // namespace Solas::EventManagement

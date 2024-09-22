@@ -17,9 +17,9 @@
 //TEMPORARY
 #include "GLFW/glfw3.h"
 
-using namespace Ayla::Input;
+using namespace Solas::Input;
 
-namespace Ayla::GUI {
+namespace Solas::GUI {
 
     float ImGuiLayer::m_Time = 0.0f;
 

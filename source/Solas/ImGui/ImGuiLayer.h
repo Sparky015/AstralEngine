@@ -7,9 +7,9 @@
 
 
 
-namespace Ayla::GUI {
-    using namespace Ayla::EventManagement;
-    using namespace Ayla::Core::Layers;
+namespace Solas::GUI {
+    using namespace Solas::EventManagement;
+    using namespace Solas::Core::Layers;
 
     class ImGuiLayer : public ILayer
     {

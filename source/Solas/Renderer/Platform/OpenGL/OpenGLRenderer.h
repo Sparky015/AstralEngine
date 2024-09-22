@@ -9,7 +9,7 @@
 
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
 
     class OpenGLRenderer : public IRenderer {
@@ -38,4 +38,4 @@ namespace Ayla::Renderer {
 
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

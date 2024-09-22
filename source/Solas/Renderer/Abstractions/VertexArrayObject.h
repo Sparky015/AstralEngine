@@ -5,7 +5,7 @@
 #pragma once
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     class VertexArrayObject {
     public:
@@ -20,4 +20,4 @@ namespace Ayla::Renderer {
     };
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

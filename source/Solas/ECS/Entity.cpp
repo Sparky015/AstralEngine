@@ -4,7 +4,7 @@
 
 #include "Entity.h"
 
-namespace Ayla::ECS{
+namespace Solas::ECS{
 
 
     Entity::Entity() : m_Position(0, 0), m_Color(1, 1, 1, 1)
@@ -24,4 +24,4 @@ namespace Ayla::ECS{
 
     }
 
-} // namespace Ayla::ECS
+} // namespace Solas::ECS

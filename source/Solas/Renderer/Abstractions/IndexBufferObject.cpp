@@ -15,7 +15,7 @@ void GLCheckError()
 }
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     IndexBufferObject::IndexBufferObject(void* data, unsigned int count)
     {
@@ -45,4 +45,4 @@ namespace Ayla::Renderer {
     }
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

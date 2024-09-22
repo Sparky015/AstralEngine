@@ -7,7 +7,7 @@
 #include "TimeLiterals.h"
 
 
-namespace Ayla::Core::Time
+namespace Solas::Core::Time
 {
     /** Contains the details needed to maintain a timer. */
     struct FTimer

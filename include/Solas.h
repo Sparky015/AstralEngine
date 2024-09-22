@@ -13,6 +13,6 @@
 #include "Solas/Input/InputState.h"
 #include "Solas/Input/Keycodes.h"
 
-using Ayla::Client::ClientLoop;
-using Ayla::Input::EKeycodes;
+using Solas::Client::ClientLoop;
+using Solas::Input::EKeycodes;
 

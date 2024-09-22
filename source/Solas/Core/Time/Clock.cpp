@@ -4,7 +4,7 @@
 
 #include "Clock.h"
 
-namespace Ayla::Core::Time
+namespace Solas::Core::Time
 {
     Clock* Clock::m_Instance = nullptr;
 
@@ -104,4 +104,4 @@ namespace Ayla::Core::Time
         m_Timers.emplace_back(amountOfTime, callback);
     }
 
-} // namespace Ayla::Core::Time
+} // namespace Solas::Core::Time

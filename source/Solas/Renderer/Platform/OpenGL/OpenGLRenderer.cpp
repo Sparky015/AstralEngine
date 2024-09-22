@@ -14,7 +14,7 @@
 
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     OpenGLRenderer::OpenGLRenderer(const Shader& vertexShader, const Shader& fragmentShader) : IRenderer(vertexShader, fragmentShader)
     {
@@ -101,4 +101,4 @@ namespace Ayla::Renderer {
         glDisableVertexAttribArray(attributeIndex);
     }
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

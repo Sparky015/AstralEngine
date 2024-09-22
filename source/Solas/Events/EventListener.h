@@ -6,7 +6,7 @@
 
 #include "Solas/Events/EventBus.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     /** Manages the listener callback with the event bus. */
     template<typename T>
@@ -32,4 +32,4 @@ namespace Ayla::EventManagement {
         std::function<void(T&)> m_Callback;
     };
 
-} // namespace Ayla::EventManagement
+} // namespace Solas::EventManagement

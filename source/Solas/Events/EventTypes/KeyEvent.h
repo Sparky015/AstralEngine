@@ -6,7 +6,7 @@
 
 #include "Solas/Events/Event.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     /** General key event to derive from. */
     class KeyEvent : public IEvent
@@ -137,4 +137,4 @@ namespace Ayla::EventManagement {
         int m_Keycode;
     };
 
-} // namespace Ayla::Events
+} // namespace Solas::Events

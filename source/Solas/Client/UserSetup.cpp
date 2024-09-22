@@ -4,7 +4,7 @@
 
 #include "UserSetup.h"
 
-namespace Ayla::Client
+namespace Solas::Client
 {
 
     ClientLoop::ClientLoop()
@@ -32,6 +32,6 @@ namespace Ayla::Client
         AY_ERROR("[Ayla] Client.cpp: Update function was not defined or overridden!");
     }
 
-} // namespace Ayla::Client
+} // namespace Solas::Client
 
 

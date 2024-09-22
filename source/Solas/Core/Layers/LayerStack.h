@@ -8,7 +8,7 @@
 
 #include "Solas/Events/Event.h"
 
-namespace Ayla::Core::Layers
+namespace Solas::Core::Layers
 {
     // Problem: Systems might have to fight to be able to receive an event of a type that is contested by another system.
     // TODO: Create channels that layers can be in instead of a layer and an "overlay" layer
@@ -56,4 +56,4 @@ namespace Ayla::Core::Layers
         std::vector<ILayer*> m_Layers;
     };
 
-} // namespace Ayla::Core::Layers
+} // namespace Solas::Core::Layers

@@ -7,7 +7,7 @@
 #include "glad/glad.h"
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     VertexBuffer::VertexBuffer(void* data, unsigned int size)
     {
@@ -36,4 +36,4 @@ namespace Ayla::Renderer {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

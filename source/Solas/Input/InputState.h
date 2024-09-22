@@ -9,7 +9,7 @@
 #include "Solas/Events/EventPublisher.h"
 #include "Solas/Events/EventTypes/KeyEvent.h"
 
-namespace Ayla::Input {
+namespace Solas::Input {
 
     /** Data being tracked for each key. */
     struct KeyState
@@ -217,5 +217,5 @@ namespace Ayla::Input {
         InputLayer m_InputLayer;
     };
 
-} // namespace Ayla::Input
+} // namespace Solas::Input
 

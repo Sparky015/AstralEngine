@@ -5,8 +5,8 @@
 #pragma once
 
 
-namespace Ayla::Debug {
+namespace Solas::Debug {
 
     void LogUsedLibraries();
 
-} // namespace Ayla::Debug
+} // namespace Solas::Debug

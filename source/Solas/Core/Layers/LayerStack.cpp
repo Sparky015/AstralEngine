@@ -6,7 +6,7 @@
 
 #include "Solas/aypch.h"
 
-namespace Ayla::Core::Layers
+namespace Solas::Core::Layers
 {
 
     LayerStack::LayerStack()
@@ -33,7 +33,7 @@ namespace Ayla::Core::Layers
     }
 
 
-    void LayerStack::DispatchEventBackToFront(Ayla::EventManagement::IEvent& event)
+    void LayerStack::DispatchEventBackToFront(Solas::EventManagement::IEvent& event)
     {
         for (ILayer* layer : m_Layers)
         {
@@ -44,7 +44,7 @@ namespace Ayla::Core::Layers
     }
 
 
-    void LayerStack::DispatchEventFromFrontToBack(Ayla::EventManagement::IEvent& event)
+    void LayerStack::DispatchEventFromFrontToBack(Solas::EventManagement::IEvent& event)
     {
         for (ILayer* layer : m_Layers)
         {
@@ -74,4 +74,4 @@ namespace Ayla::Core::Layers
     }
 
 
-} // namespace Ayla::Core::Layers
+} // namespace Solas::Core::Layers

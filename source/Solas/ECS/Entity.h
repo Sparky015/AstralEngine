@@ -11,7 +11,7 @@
 #include "Solas/Renderer/Abstractions/VertexBuffer.h"
 
 // TEMP
-namespace Ayla::ECS {
+namespace Solas::ECS {
 
     class Entity
     {
@@ -33,4 +33,4 @@ namespace Ayla::ECS {
     };
 
 
-} // namespace Ayla::ECS
+} // namespace Solas::ECS

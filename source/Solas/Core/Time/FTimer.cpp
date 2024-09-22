@@ -6,7 +6,7 @@
 #include <utility>
 #include "Clock.h"
 
-namespace Ayla::Core::Time {
+namespace Solas::Core::Time {
     int FTimer::m_TimerIDTracker = 0;
 
     FTimer::FTimer(float amountOfTime, std::function<void()> callback) :

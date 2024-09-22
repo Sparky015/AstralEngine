@@ -13,7 +13,7 @@
 
 
 
-namespace Ayla::Windows {
+namespace Solas::Windows {
 
     void GlfwErrorCallback(int error, const char* description)
     {
@@ -152,7 +152,7 @@ namespace Ayla::Windows {
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
         {
-            using Ayla::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
+            using Solas::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
 
             const WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
@@ -177,7 +177,7 @@ namespace Ayla::Windows {
 
         glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {
-            using Ayla::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
+            using Solas::Input::Keycodes::Translation::TranslateGlfwKeycodesToAyla;
 
             const WindowData& windowData = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
@@ -298,4 +298,4 @@ namespace Ayla::Windows {
         m_WindowData.IsVSyncEnabled = false;
     }
 
-} // namespace Ayla::Windows
+} // namespace Solas::Windows

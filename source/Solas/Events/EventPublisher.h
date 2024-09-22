@@ -6,7 +6,7 @@
 
 #include "Solas/Events/EventBus.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     /** Publishes an event to any listeners. Also, helps manage the lifetime of event buses as
      * when there are no event publishers and event listeners, the event bus is destroyed. */
@@ -39,4 +39,4 @@ namespace Ayla::EventManagement {
 
     };
 
-} // namespace Ayla::EventManagement
+} // namespace Solas::EventManagement

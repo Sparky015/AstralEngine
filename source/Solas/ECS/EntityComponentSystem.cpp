@@ -4,7 +4,7 @@
 
 #include "EntityComponentSystem.h"
 
-namespace Ayla::ECS{
+namespace Solas::ECS{
 
     EntitySystem* EntitySystem::m_Instance = nullptr;
 
@@ -69,5 +69,5 @@ namespace Ayla::ECS{
 
 
 
-} // namespace Ayla::ECS
+} // namespace Solas::ECS
 

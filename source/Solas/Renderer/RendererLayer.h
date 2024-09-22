@@ -13,7 +13,7 @@
 #endif
 
 
-namespace Ayla::Renderer{
+namespace Solas::Renderer{
 
     class RendererLayer : public Core::Layers::ILayer
     {
@@ -33,4 +33,4 @@ namespace Ayla::Renderer{
 
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

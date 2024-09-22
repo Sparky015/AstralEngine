@@ -12,7 +12,7 @@
     #include <windows.h>
 #endif
 
-namespace Ayla::Debug::Macros {
+namespace Solas::Debug::Macros {
 
     namespace {
         std::fstream LogFile;
@@ -323,4 +323,4 @@ namespace Ayla::Debug::Macros {
         }
     }
 
-} // namespace Ayla::Debug::Macros
+} // namespace Solas::Debug::Macros

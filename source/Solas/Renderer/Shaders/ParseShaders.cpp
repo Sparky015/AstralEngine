@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace Ayla::Renderer{
+namespace Solas::Renderer{
 
 
     Shader::Shader() :

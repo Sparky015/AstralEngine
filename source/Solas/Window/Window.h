@@ -7,7 +7,7 @@
 #include "Solas/aypch.h"
 
 
-namespace Ayla::Windows { // maybe change namespace to Display or Viewport instead of Windows?
+namespace Solas::Windows { // maybe change namespace to Display or Viewport instead of Windows?
     using EventCallback = std::function<void(EventManagement::IEvent& event)>;
 
     /** Values used to create the desire window */
@@ -62,4 +62,4 @@ namespace Ayla::Windows { // maybe change namespace to Display or Viewport inste
         static Window* CreateWindow(const WindowProperties& properties);
     };
 
-} // namespace Ayla::Windows
+} // namespace Solas::Windows

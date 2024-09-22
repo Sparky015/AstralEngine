@@ -6,7 +6,7 @@
 
 #include "Solas/aypch.h"
 
-namespace Ayla::Core::Time
+namespace Solas::Core::Time
 {
     /** Shorthands to use because chrono is so verbose */
     using TimeStamp = std::chrono::time_point<std::chrono::high_resolution_clock>;

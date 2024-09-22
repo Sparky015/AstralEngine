@@ -9,9 +9,9 @@
 #include "Solas/Events/EventTypes/KeyEvent.h"
 
 
-namespace Ayla::Core::Debug
+namespace Solas::Core::Debug
 {
-    using namespace Ayla::Core::Layers;
+    using namespace Solas::Core::Layers;
     /** Provides a way to debug the engine by pulling information into a window or the console for viewing. */
     class DebugLayer : public ILayer
     {

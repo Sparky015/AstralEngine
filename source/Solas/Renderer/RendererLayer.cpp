@@ -10,7 +10,7 @@
 #include "glad/glad.h"
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
 
     RendererLayer::RendererLayer() :
@@ -43,11 +43,11 @@ namespace Ayla::Renderer {
 
     EventManagement::EEventCategory RendererLayer::GetAcceptingEventFlags()
     {
-        return Ayla::EventManagement::None;
+        return Solas::EventManagement::None;
     }
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer
 
 
 

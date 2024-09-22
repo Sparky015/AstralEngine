@@ -6,7 +6,7 @@
 
 #include "glad/glad.h"
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     IRenderer::IRenderer(const Shader& vertexShader, const Shader& fragmentShader) :
             m_ShaderProgram(ShaderProgram(vertexShader, fragmentShader)),
@@ -22,4 +22,4 @@ namespace Ayla::Renderer {
     }
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

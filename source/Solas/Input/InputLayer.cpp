@@ -6,7 +6,7 @@
 #include "Solas/Events/Event.h"
 
 
-namespace Ayla::Input {
+namespace Solas::Input {
 
     using namespace EventManagement;
 

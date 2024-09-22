@@ -9,7 +9,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Ayla::Windows{
+namespace Solas::Windows{
 
     /** Window class that is designed for cross-platform compatibility. A generic window version that any major OS can use (using GLFW). */
     class GenericWindow : public Window {
@@ -69,4 +69,4 @@ namespace Ayla::Windows{
 
     static void GlfwErrorCallback(int error, const char* description);
 
-} // namespace Ayla::Windows
+} // namespace Solas::Windows

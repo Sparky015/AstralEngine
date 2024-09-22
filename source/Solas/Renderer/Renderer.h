@@ -38,7 +38,7 @@ struct VertexBufferData
 
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     class IRenderer {
     public:
@@ -72,4 +72,4 @@ namespace Ayla::Renderer {
 
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ayla::Input
+namespace Solas::Input
 {
 
     /** Keycodes that are Sholas specific. */

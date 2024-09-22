@@ -7,7 +7,7 @@
 #include "Entity.h"
 
 //TEMP
-namespace Ayla::ECS {
+namespace Solas::ECS {
 
     class EntitySystem
     {
@@ -46,4 +46,4 @@ namespace Ayla::ECS {
     };
 
 
-} // namespace Ayla::ECS
+} // namespace Solas::ECS

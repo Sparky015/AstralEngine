@@ -7,7 +7,7 @@
 #include "glad/glad.h"
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
 
     VertexArrayObject::VertexArrayObject()
@@ -43,4 +43,4 @@ namespace Ayla::Renderer {
 
 
 
-} // namespace Ayla::Renderer
+} // namespace Solas::Renderer

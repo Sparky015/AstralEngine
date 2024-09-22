@@ -6,7 +6,7 @@
 
 #include "ParseShaders.h"
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
 
     /** Takes two shaders and creates a program from them. */

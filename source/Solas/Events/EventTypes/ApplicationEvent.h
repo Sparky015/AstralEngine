@@ -5,7 +5,7 @@
 #pragma once
 #include "Solas/Events/Event.h"
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
 
     /** General application event to derive from. */
@@ -206,4 +206,4 @@ namespace Ayla::EventManagement {
 
     };
 
- }  // namespace Ayla::Events
+ }  // namespace Solas::Events

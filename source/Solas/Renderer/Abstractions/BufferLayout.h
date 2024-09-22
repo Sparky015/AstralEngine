@@ -5,7 +5,7 @@
 #pragma once
 
 
-namespace Ayla::Renderer {
+namespace Solas::Renderer {
 
     class BufferLayout
     {

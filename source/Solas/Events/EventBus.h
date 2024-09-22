@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Ayla::EventManagement {
+namespace Solas::EventManagement {
 
     /** Holds function callbacks for when an event needs to be propagated. */
     template<typename T>
@@ -100,4 +100,4 @@ namespace Ayla::EventManagement {
     template<typename T>
     EventBus<T>* EventBus<T>::m_Instance = nullptr;
 
-} // namespace Ayla::EventManagement
+} // namespace Solas::EventManagement

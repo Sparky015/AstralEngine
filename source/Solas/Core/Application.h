@@ -12,10 +12,10 @@
 #include "Solas/Window/Window.h"
 
 
-namespace Ayla::Core
+namespace Solas::Core
 {
-    using Ayla::Windows::Window;
-    using Ayla::EventManagement::IEvent;
+    using Solas::Windows::Window;
+    using Solas::EventManagement::IEvent;
     using Layers::ILayer;
     using Layers::LayerStack;
 
@@ -56,6 +56,6 @@ namespace Ayla::Core
         Client::ClientLoop* m_ClientLoop;
     };
 
-} // namespace Ayla::Core
+} // namespace Solas::Core
 
 

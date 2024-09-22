@@ -5,7 +5,7 @@
 
 #include "Solas/Core/Layers/Layer.h"
 
-namespace Ayla::Input {
+namespace Solas::Input {
 
     class InputLayer : public Core::Layers::ILayer
     {
