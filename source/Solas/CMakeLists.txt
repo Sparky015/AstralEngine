@@ -74,6 +74,9 @@ add_library(Solas STATIC
         Events/EventTypes/EventTypes.h
         Renderer/Abstractions/BufferLayout.cpp
         Renderer/Abstractions/BufferLayout.h
+        Renderer/RendererContext.h
+        Renderer/OpenGLRenderingContext.cpp
+        Renderer/OpenGLRenderingContext.h
 
 )
 
@@ -115,7 +118,7 @@ endif ()
 # Defining Macros
 target_compile_definitions(Solas PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(Solas PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
-
+target_compile_definitions(Solas PRIVATE -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 
 
 # Defining Precompiled Headers

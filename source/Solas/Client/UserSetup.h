@@ -15,7 +15,7 @@ namespace Solas::Client
         virtual ~ClientLoop();
 
         /** Provides a method to the client for an update loop. */
-        virtual void Update(int deltaTime);
+        virtual void Update(float deltaTime);
 
         /** Provides a method to the client to initialize anything before the application loop starts. */
         virtual void Init();

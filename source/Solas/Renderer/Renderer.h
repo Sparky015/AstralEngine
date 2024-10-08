@@ -4,8 +4,8 @@
 
 #pragma once
 
-
 #include "Solas/Renderer/Shaders/ShaderProgram.h"
+#include "Solas/aypch.h"
 
 
 /*
@@ -14,6 +14,7 @@
 */
 struct VertexBufferData
 {
+
     float positions[8] = {
             -0.5f, -0.5,
             0.5f, -0.5f,

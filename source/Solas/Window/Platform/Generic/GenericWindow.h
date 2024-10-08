@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Solas/Events/Event.h"
+#include "Solas/Renderer/OpenGLRenderingContext.h"
 #include "Solas/Window/Window.h"
 #include "Solas/aypch.h"
 
@@ -65,6 +66,9 @@ namespace Solas::Windows{
 
         WindowData m_WindowData;
         static bool m_IsGlfwInitialized;
+
+        Renderer::OpenGLRenderingContext m_Context;
+
     };
 
     static void GlfwErrorCallback(int error, const char* description);

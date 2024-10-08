@@ -14,8 +14,8 @@ namespace Solas::Renderer {
 
 
     RendererLayer::RendererLayer() :
-            m_Renderer(Shader("../../source/Solas/Renderer/Shaders/vertex.shader"),
-                       Shader("../../source/Solas/Renderer/Shaders/fragment.shader"))
+            m_Renderer(Shader(std::string(SHADER_DIR) + "vertex.shader"),
+                       Shader(std::string(SHADER_DIR) + "fragment.shader"))
     {
         AY_TRACE("[Sholas] RendererLayer: Initializing Renderer Layer");
         this->AttachLayer();

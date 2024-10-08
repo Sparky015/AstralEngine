@@ -80,17 +80,17 @@ namespace Solas::Core::Time
 
 
     /** Returns the time in milliseconds. */
-    int64 Clock::GetDeltaTime() const
+    float Clock::GetDeltaTime() const
     {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(m_DeltaTime).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>(m_DeltaTime).count() * .001;
     }
 
 
     /** Returns the time in milliseconds. */
-    int64 Clock::GetStopwatchTime() const
+    float Clock::GetStopwatchTime() const
     {
         const TimeStamp currentTimeStamp = GetCurrentTimeStamp();
-        return std::chrono::duration_cast<std::chrono::milliseconds>(currentTimeStamp - m_ClockStartingTimeStamp).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>(currentTimeStamp - m_ClockStartingTimeStamp).count() * .001;
     }
 
 

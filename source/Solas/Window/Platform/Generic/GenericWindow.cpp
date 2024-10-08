@@ -8,9 +8,6 @@
 #include "Solas/Events/EventTypes/MouseEvent.h"
 #include "Solas/Input/KeycodeTranslation/GLFWTranslation.h"
 
-#include "glad/glad.h"
-#include "imgui.h"
-
 
 
 namespace Solas::Windows {
@@ -21,7 +18,8 @@ namespace Solas::Windows {
     }
 
 
-    GenericWindow::GenericWindow(const WindowProperties& properties) : m_Window(), m_WindowProperties(properties)
+    GenericWindow::GenericWindow(const WindowProperties& properties) : m_Window(), m_WindowProperties(properties),
+                                                                       m_Context(m_Window)
     {
         AY_TRACE("[Sholas] GenericWindow: Initializing Generic Window");
         Init(properties);
@@ -49,7 +47,9 @@ namespace Solas::Windows {
         m_WindowData.Width = windowProperties.Width;
         m_WindowData.IsVSyncEnabled = true;
 
+
         // GLFW Implementation
+
         if (!m_IsGlfwInitialized)
         {
             if (!glfwInit())
@@ -61,7 +61,7 @@ namespace Solas::Windows {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
         m_Window = glfwCreateWindow(windowProperties.Width, windowProperties.Height, windowProperties.Title.c_str(),
@@ -72,22 +72,24 @@ namespace Solas::Windows {
             AY_ERROR("Failed to create GLFW window!");
         }
 
-        glfwMakeContextCurrent(m_Window);
-        int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        if (status != 1)
-        {
-            AY_ERROR("GLAD failed to load!");
-        }
-        glfwSetWindowUserPointer(m_Window, &m_WindowData);
+
+        // Define the Rendering Context
+
+        m_Context = Renderer::OpenGLRenderingContext(m_Window);
+        m_Context.Init();
+
 
         // Initializes the DisplayFramebufferScale
+
         int framebufferWidth = 0;
         int framebufferHeight = 0;
         glfwGetFramebufferSize(m_Window, &framebufferWidth, &framebufferHeight);
         m_WindowData.DisplayFramebufferScaleX = framebufferWidth > 0 ? (static_cast<float>(framebufferWidth) / static_cast<float>(m_WindowData.Width)) : 0;
         m_WindowData.DisplayFramebufferScaleY = framebufferHeight > 0 ? (static_cast<float>(framebufferHeight) / static_cast<float>(m_WindowData.Height)) : 0;
 
+
         /** Enable/Disable Vsync */
+
         if (m_WindowData.IsVSyncEnabled)
         {
             glfwSwapInterval(1);
@@ -97,6 +99,9 @@ namespace Solas::Windows {
             glfwSwapInterval(0);
         }
 
+
+        // Define GLFW callbacks
+        glfwSetWindowUserPointer(m_Window, &m_WindowData);
         using namespace EventManagement;
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
         {
@@ -275,7 +280,7 @@ namespace Solas::Windows {
     void GenericWindow::Update()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context.SwapBuffers();
     }
 
 

@@ -42,10 +42,10 @@ namespace Solas::Core::Time
         void CheckTimers();
 
         /** Returns the delta time. */
-        [[nodiscard]] int64 GetDeltaTime() const;
+        [[nodiscard]] float GetDeltaTime() const;
 
         /** Returns the current stopwatch time in milliseconds. */
-        [[nodiscard]] int64 GetStopwatchTime() const;
+        [[nodiscard]] float GetStopwatchTime() const;
 
         /** Resets the stopwatch. */
         void ResetStopwatch();

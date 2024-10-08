@@ -8,13 +8,16 @@
     <sourceRoots>
       <file path="$PROJECT_DIR$/source" />
     </sourceRoots>
+    <libraryRoots>
+      <file path="$PROJECT_DIR$/vendor" />
+    </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/build" />
       <file path="$PROJECT_DIR$/build-visual-studio" />
       <file path="$PROJECT_DIR$/build-xcode" />
+      <file path="$PROJECT_DIR$/docs" />
       <file path="$PROJECT_DIR$/docs/OldCodeStorage" />
       <file path="$PROJECT_DIR$/tests" />
-      <file path="$PROJECT_DIR$/vendor" />
     </excludeRoots>
   </component>
 </project>

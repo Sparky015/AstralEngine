@@ -8,13 +8,13 @@
 class ClientApplication : public ClientLoop {
 public:
 
-    void Update(int deltaTime) override {
+    void Update(float deltaTime) override {
         //AY_LOG("[ClientLoop] Application: Update function called!");
 //        if (m_InputState.IsKeyDown(Ayla::Input::AY_KEY_A))
 //        {
 //            m_EntitySystem.EditEntity(m_EntityHandle).m_Position.x -= .05;
 //        }
-        AY_LOG_SS("Delta time is: " << deltaTime);
+        //AY_LOG_SS("Delta time is: " << deltaTime);
     };
 
     void Init() override {
