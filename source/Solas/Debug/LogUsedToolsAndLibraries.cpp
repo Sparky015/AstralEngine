@@ -56,9 +56,13 @@ namespace Solas::Debug {
         #ifdef AYLA_PLATFORM_MACOS
             AY_LOG_SS("Window: GLFW " << glfwGetVersionString());
             AY_LOG_SS("Rendering API: OpenGL " << glGetString(GL_VERSION));
+            AY_LOG_SS("Graphics Vendor: " << glGetString(GL_VENDOR));
+            AY_LOG_SS("Graphics Processor: " << glGetString(GL_RENDERER));
         #elif AYLA_PLATFORM_WINDOWS
             AY_LOG_SS("Window: GLFW " << glfwGetVersionString());
             AY_LOG_SS("Rendering API: OpenGL " << glGetString(GL_VERSION));
+            AY_LOG_SS("Graphics Vendor: " << glGetString(GL_VENDOR));
+            AY_LOG_SS("Graphics Processor: " << glGetString(GL_RENDERER));
         #endif
 
         // make ayla defined macro for file name (__file_name__)
