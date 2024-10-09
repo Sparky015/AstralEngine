@@ -224,11 +224,11 @@ namespace Solas::Debug::Macros {
     }
 
 
-    void macro_AY_WARN(const std::string&& message)
+    void macro_AY_WARN(const std::string&& message, const char* file, int line)
     {
         #ifndef TURN_OFF_DEBUG_MACROS
             CheckIfCoutFailed();
-            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << message << SetColor(DEFAULT); // Color is bright yellow
+            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << "[" << file << ": Line " << line << "] " << message << SetColor(DEFAULT); // Color is bright yellow
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
                 LogFile << "\n" << message;
             #endif
@@ -236,14 +236,14 @@ namespace Solas::Debug::Macros {
     }
 
 
-    void macro_AY_WARN_SS(const std::ostream& message)
+    void macro_AY_WARN_SS(const std::ostream& message, const char* file, int line)
     {
         #ifndef TURN_OFF_DEBUG_MACROS
             CheckIfCoutFailed();
             std::ostringstream oss;
             oss << message.rdbuf();
 
-            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << oss.str() << SetColor(DEFAULT); // Color is bright green
+            std::cout << "\n" << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << oss.str() << SetColor(DEFAULT); // Color is bright green
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
                 LogFile << "\n" << oss.str();
             #endif

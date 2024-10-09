@@ -20,10 +20,10 @@
 #define AY_LOG_SS(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_LOG_SS(ss << message); }
 
 /** Logs warnings to the console with a yellow color. */
-#define AY_WARN(message) Solas::Debug::Macros::macro_AY_WARN(message)
+#define AY_WARN(message) Solas::Debug::Macros::macro_AY_WARN(message, __FILE_NAME__, __LINE__)
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define AY_WARN_SS(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_WARN_SS(ss << message); }
+#define AY_WARN_SS(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_WARN_SS(ss << message, __FILE_NAME__, __LINE__); }
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
 #define AY_ASSERT(expression, errorMessage) { std::stringstream ss; assert(Solas::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage)); }
@@ -54,10 +54,10 @@ namespace Solas::Debug::Macros {
     void macro_AY_LOG_SS(const std::ostream& message);
 
     /** Logs warnings to the console with a yellow color. */
-    void macro_AY_WARN(const std::string&& message);
+    void macro_AY_WARN(const std::string&& message, const char* file, int line);
 
     /** Logs warnings (that can be a stream) to the console with a yellow color. */
-    void macro_AY_WARN_SS(const std::ostream& message);
+    void macro_AY_WARN_SS(const std::ostream& message, const char* file, int line);
 
     /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
     bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage);
