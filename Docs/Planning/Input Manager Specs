@@ -1,0 +1,26 @@
+		Input Manager
+Job:
+- Verify if mouse clicks are over a piece
+- Move piece if mouse click is held down over piece
+- Convert mouse coordinates to board tiles
+- Output an attempted move
+
+Goals:
+- Calculate board tiles regardless of window size
+- Log attempted moves
+
+Inputs:
+- mouse clicks and mouse moves
+
+Outputs:
+- Board tile locations
+
+Events:
+
+Listener: onMouseClick
+Listener: onMouseMove
+Publisher: onMoveAttempt
+
+
+Relations:
+Access piece locations / data
