@@ -1,7 +1,7 @@
-#include <iostream>
-
+#include "pch.h"
+#define AYLA_PLATFORM_MACOS
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    TRACE("Test");
     return 0;
 }

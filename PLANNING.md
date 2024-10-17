@@ -52,3 +52,24 @@ Output: void
 Input: board ptr
 Output: void
 
+
+
+
+
+
+Data Representation:
+
+Boards: 64 byte array -> uint8 board[64]
+OR
+blackPieces -> uint8 bp[16]
+whitePieces -> uint8 wp[16]
+OR 
+activePieces -> uint8 ap[32]
+/
+activeBlackPieces -> uint8 abp[16]
+activeWhitePieces -> uint8 awp[16]
+
+struct Pieces {
+    uint8 location[32];
+    uint
+}
