@@ -11,7 +11,7 @@ namespace Solas::ECS{
 
     void EntitySystem::Init()
     {
-        AY_TRACE("[Sholas] EntitySystem: Initializing EntitySystem");
+        AY_TRACE("[Solas] EntitySystem: Initializing EntitySystem");
         AY_ASSERT(m_Instance == nullptr, "ECS has already been created!");
         m_Instance = new EntitySystem();
     }
@@ -26,7 +26,7 @@ namespace Solas::ECS{
 
     void EntitySystem::Destroy()
     {
-        AY_TRACE("[Sholas] EntitySystem: Destroying EntitySystem");
+        AY_TRACE("[Solas] EntitySystem: Destroying EntitySystem");
         delete m_Instance;
         m_Instance = nullptr;
     }

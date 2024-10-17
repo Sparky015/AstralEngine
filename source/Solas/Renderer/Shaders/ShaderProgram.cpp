@@ -59,8 +59,8 @@ namespace Solas::Renderer {
             glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(shaderID, length, &length, message);
-            AY_LOG_SS("Failed to compile " << (shaderType == GL_VERTEX_SHADER ? "vertex!" : "fragment!"));
-            AY_LOG(message);
+            AY_WARN("Failed to compile " << (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!");
+            AY_WARN(message);
             glDeleteShader(shaderID);
             return 0;
         }

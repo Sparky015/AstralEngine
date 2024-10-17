@@ -21,15 +21,15 @@ namespace Solas::Core
 
     Application::Application() : m_Window(nullptr), m_LayerStack(nullptr), m_ClientLoop(nullptr)
     {
-        AY_ASSERT(m_Application == nullptr, "[Sholas] Core/Application.cpp: Can not create more than one application!");
+        AY_ASSERT(m_Application == nullptr, "[Solas] Core/Application.cpp: Can not create more than one application!");
 
         // Application //
-        AY_TRACE("[Sholas] Application: Initializing Application");
+        AY_TRACE("[Solas] Application: Initializing Application");
         m_Application = this;
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
-        m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Ayla Engine Window", 1024, 768)));
+        m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Solas Engine Window", 1024, 768)));
         m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
         // Systems //
@@ -56,7 +56,7 @@ namespace Solas::Core
 
     Application::~Application()
     {
-        AY_TRACE("[Sholas] Application: Destroying Application");
+        AY_TRACE("[Solas] Application: Destroying Application");
         delete m_ClientLoop;
         Input::SInputState::Destroy();
         ECS::EntitySystem::Destroy();
@@ -86,7 +86,7 @@ namespace Solas::Core
             m_Window->Update(); // Phase 5  ->  Polls the Window events and swaps the buffer. Must be called last.
         }
 
-        AY_LOG_SS("\nStopwatch: " << static_cast<double>(Time::Clock::Get().GetStopwatchTime()) * .001 << " seconds\n");
+        AY_LOG("\nStopwatch: " << static_cast<double>(Time::Clock::Get().GetStopwatchTime()) * .001 << " seconds\n");
     }
 
 
@@ -116,14 +116,14 @@ namespace Solas::Core
 
     Application& Application::Get()
     {
-        AY_ASSERT(m_Application != nullptr, "[Sholas] Core/Application.cpp: Application must be initialized before using it!");
+        AY_ASSERT(m_Application != nullptr, "[Solas] Core/Application.cpp: Application must be initialized before using it!");
         return *m_Application;
     }
 
 
     void Application::SetClientLoop(Client::ClientLoop* clientLoop)
     {
-        AY_ASSERT(m_ClientLoop == nullptr, "[Sholas] Core/Application.cpp: ClientLoop has already been initialized!");
+        AY_ASSERT(m_ClientLoop == nullptr, "[Solas] Core/Application.cpp: ClientLoop has already been initialized!");
         m_ClientLoop = clientLoop;
     }
 

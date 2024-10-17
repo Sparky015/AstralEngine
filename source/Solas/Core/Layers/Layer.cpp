@@ -9,13 +9,13 @@ namespace Solas::Core::Layers {
 
     ILayer::ILayer() : m_IsEnabled(false), m_IsInitializedInTower(false)
     {
-        AY_TRACE("[Sholas] Layer: Initializing Base Class Layer");
+        AY_TRACE("[Solas] Layer: Initializing Base Class Layer");
     }
 
 
     ILayer::~ILayer()
     {
-        AY_TRACE("[Sholas] Layer: Destroying Base Class Layer");
+        AY_TRACE("[Solas] Layer: Destroying Base Class Layer");
         DetachLayer();
     }
 

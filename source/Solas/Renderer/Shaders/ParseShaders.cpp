@@ -31,7 +31,7 @@ namespace Solas::Renderer{
         std::ifstream file = std::ifstream(filePath);
         if (!file.is_open())
         {
-            AY_WARN_SS("[" << __FILE__ << "] " << "Failed to open file: " << filePath)
+            AY_WARN("[" << __FILE__ << "] " << "Failed to open file: " << filePath)
             return;
         }
 

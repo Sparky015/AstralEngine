@@ -7,7 +7,7 @@
 namespace Solas::Input
 {
 
-    /** Keycodes that are Sholas specific. */
+    /** Keycodes that are Solas specific. */
     enum EKeycodes : int8_t
     {
         AY_KEY_NONE = 0, // The NONE keycode starts as 0 in order to give it a spot in the input state array for the purposes of debugging.

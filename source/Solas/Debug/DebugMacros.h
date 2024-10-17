@@ -13,17 +13,11 @@
 /** Outputs the message to the console with a time stamp. */
 #define AY_TRACE(title) Solas::Debug::Macros::macro_AY_TRACE(title)
 
-/** A simple log to console that standardizes which side of the string the new line character is on. */
-#define AY_LOG(message) Solas::Debug::Macros::macro_AY_LOG(message)
-
 /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
-#define AY_LOG_SS(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_LOG_SS(ss << message); }
-
-/** Logs warnings to the console with a yellow color. */
-#define AY_WARN(message) Solas::Debug::Macros::macro_AY_WARN(message, __FILE_NAME__, __LINE__)
+#define AY_LOG(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_LOG(ss << message); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define AY_WARN_SS(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_WARN_SS(ss << message, __FILE_NAME__, __LINE__); }
+#define AY_WARN(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_WARN(ss << message, __FILE_NAME__, __LINE__); }
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
 #define AY_ASSERT(expression, errorMessage) { std::stringstream ss; assert(Solas::Debug::Macros::macro_AY_ASSERT(expression, ss << errorMessage)); }
@@ -47,17 +41,11 @@ namespace Solas::Debug::Macros {
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
     void macro_AY_TRACE(const std::string&& title);
 
-    /** A simple log to console that standardizes which side of the string the new line character is on. */
-    void macro_AY_LOG(const std::string&& message);
-
-    /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
-    void macro_AY_LOG_SS(const std::ostream& message);
-
-    /** Logs warnings to the console with a yellow color. */
-    void macro_AY_WARN(const std::string&& message, const char* file, int line);
+    /** A simple log to console that can take a stream while also standardizing which side of the string the new line character is on. */
+    void macro_AY_LOG(const std::ostream& message);
 
     /** Logs warnings (that can be a stream) to the console with a yellow color. */
-    void macro_AY_WARN_SS(const std::ostream& message, const char* file, int line);
+    void macro_AY_WARN(const std::ostream& message, const char* file, int line);
 
     /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
     bool macro_AY_ASSERT(const bool expression, const std::ostream& errorMessage);

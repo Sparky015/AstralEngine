@@ -12,7 +12,7 @@ namespace Solas::Input {
 
     InputLayer::InputLayer()
     {
-        AY_TRACE("[Sholas] InputLayer: Initializing Input Layer");
+        AY_TRACE("[Solas] InputLayer: Initializing Input Layer");
         this->AttachLayer();
         m_DebugName = "Input Layer";
     }
@@ -20,7 +20,7 @@ namespace Solas::Input {
 
     InputLayer::~InputLayer()
     {
-        AY_TRACE("[Sholas] InputLayer: Destroying Input Layer");
+        AY_TRACE("[Solas] InputLayer: Destroying Input Layer");
         OnDetach();
         this->DetachLayer();
     }

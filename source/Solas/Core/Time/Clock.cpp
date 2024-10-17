@@ -10,15 +10,15 @@ namespace Solas::Core::Time
 
     void Clock::Init()
     {
-        AY_ASSERT(m_Instance == nullptr, "[Ayla] Core/Time.cpp: Clock has already been initialized!");
-        AY_TRACE("[Sholas] Clock: Initializing Clock");
+        AY_ASSERT(m_Instance == nullptr, "[Solas] Core/Time.cpp: Clock has already been initialized!");
+        AY_TRACE("[Solas] Clock: Initializing Clock");
         m_Instance = new Clock();
     }
 
 
     Clock& Clock::Get()
     {
-        AY_ASSERT(m_Instance != nullptr, "[Ayla] Core/Time.cpp: Clock has not been initialized!");
+        AY_ASSERT(m_Instance != nullptr, "[Solas] Core/Time.cpp: Clock has not been initialized!");
         return *m_Instance;
     }
 
@@ -39,7 +39,7 @@ namespace Solas::Core::Time
 
     Clock::~Clock()
     {
-        AY_TRACE("[Sholas] Clock: Destroying Clock");
+        AY_TRACE("[Solas] Clock: Destroying Clock");
     }
 
 

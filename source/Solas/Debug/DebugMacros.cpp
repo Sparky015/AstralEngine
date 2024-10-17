@@ -181,71 +181,47 @@ namespace Solas::Debug::Macros {
     #endif
 
         /** Outputs the message with the time info prefixing it */
-        std::cout << "\n" << SetColor(CYAN) << "[" << currentTime->tm_hour
+        std::cout << SetColor(CYAN) << "[" << currentTime->tm_hour
                   << ":" << currentTime->tm_min << ":"
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
-                  << "] " << SetColor(LIGHT_CYAN) << title << SetColor(DEFAULT);
+                  << "] " << SetColor(LIGHT_CYAN) << title << SetColor(DEFAULT) << "\n";
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n[" << currentTime->tm_hour
+            LogFile << "[" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
-                    << "]" << title;
+                    << "]" << title << "\n";
         #endif
     #endif
     }
 
 
-    void macro_AY_LOG(const std::string&& message)
-    {
-    #ifndef TURN_OFF_DEBUG_MACROS
-        CheckIfCoutFailed();
-        std::cout << "\n" << SetColor(LIGHT_GREEN) << message << SetColor(DEFAULT); // Color is bright green
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n" << message;
-        #endif
-    #endif
-    }
-
-
-    void macro_AY_LOG_SS(const std::ostream& message)
+    void macro_AY_LOG(const std::ostream& message)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
         std::ostringstream oss;
         oss << message.rdbuf();
 
-        std::cout << "\n" << SetColor(LIGHT_GREEN) << oss.str() << SetColor(DEFAULT); // Color is bright green
+        std::cout << SetColor(LIGHT_GREEN) << oss.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n" << oss.str();
+            LogFile << oss.str() << "\n";
         #endif
     #endif
     }
 
 
-    void macro_AY_WARN(const std::string&& message, const char* file, int line)
-    {
-        #ifndef TURN_OFF_DEBUG_MACROS
-            CheckIfCoutFailed();
-            std::cout << "\n" << SetColor(YELLOW) << "[Warning] " << "[" << file << ": Line " << line << "] " << message << SetColor(DEFAULT); // Color is bright yellow
-            #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\n" << message;
-            #endif
-        #endif
-    }
-
-
-    void macro_AY_WARN_SS(const std::ostream& message, const char* file, int line)
+    void macro_AY_WARN(const std::ostream& message, const char* file, int line)
     {
         #ifndef TURN_OFF_DEBUG_MACROS
             CheckIfCoutFailed();
             std::ostringstream oss;
             oss << message.rdbuf();
 
-            std::cout << "\n" << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << oss.str() << SetColor(DEFAULT); // Color is bright green
+            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << oss.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\n" << oss.str();
+                LogFile << oss.str() << "\n";
             #endif
         #endif
     }
@@ -305,10 +281,10 @@ namespace Solas::Debug::Macros {
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
-        std::cout << "\n" << SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds" << SetColor(DEFAULT);
+        std::cout<< SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds" << SetColor(DEFAULT) << "\n";
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds";
+            LogFile << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds\n";
         #endif
     #endif
     }

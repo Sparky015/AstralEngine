@@ -14,7 +14,7 @@ public:
 //        {
 //            m_EntitySystem.EditEntity(m_EntityHandle).m_Position.x -= .05;
 //        }
-        //AY_LOG_SS("Delta time is: " << deltaTime);
+        //AY_LOG("Delta time is: " << deltaTime);
     };
 
     void Init() override {

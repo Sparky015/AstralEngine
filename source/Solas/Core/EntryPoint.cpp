@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     AY_ERROR("[Ayla] Core/EntryPoint.h: Unsupported/Unknown Platform!");
     #endif
     Solas::Debug::Macros::initLogForMacros();
-    AY_LOG_SS("Compiled on " __DATE__ << " " << __TIME__);
+    AY_LOG("Compiled on " __DATE__ << " " << __TIME__);
 
     /**
      * Makes the engine on the heap in order to be able to delete the engine and log all the destructor behaviors
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     /** Grab the client's loop and give it to the engine */
     Solas::Client::ClientLoop* ClientLoop = Solas::Client::LinkClientToEngine();
-    AY_ASSERT(ClientLoop != nullptr, "[Sholas] Core/Application.cpp: ClientLoop is not set up!");
+    AY_ASSERT(ClientLoop != nullptr, "[Solas] Core/Application.cpp: ClientLoop is not set up!");
     Engine->SetClientLoop(ClientLoop);
 
     /** Start the engine's loop */

@@ -10,7 +10,7 @@ void GLCheckError()
 {
     while (GLenum error = glGetError())
     {
-    AY_WARN_SS("[OpenGL] Error Code: " << error);
+        AY_WARN("[OpenGL] Error Code: " << error);
     }
 }
 
