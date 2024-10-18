@@ -4,11 +4,14 @@ project(Chess_Engine)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Chess_Engine main.cpp
-        Source/CoreMacroDefinitions.h
-        Source/Debug/DebugMacros.h
-        Source/Debug/DebugMacros.cpp
+        Source/Core/CoreMacroDefinitions.h
+        Source/Core/Debug/DebugMacros.h
+        Source/Core/Debug/DebugMacros.cpp
         Source/pch.h
         Source/pch.cpp
+        "Source/Core/Events/EventBus.h"
+        "Source/Core/Events/EventListener.h"
+        "Source/Core/Events/EventPublisher.h"
 )
 
 target_include_directories(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/Source")

@@ -163,10 +163,12 @@ namespace Debug::Macros {
     }
 
 //TODO: Utilize __func__ __FILE__ and __LINE__ in the debugging macros
-    void macro_TRACE(const std::string&& title)
+    void macro_TRACE(const std::ostream& message)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
+        std::ostringstream oss;
+        oss << message.rdbuf();
         /** Gets the current time */
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t); // Puts the information of the time into a struct that is separated into min, sec, hr, day, etc.
@@ -186,14 +188,14 @@ namespace Debug::Macros {
         std::cout << SetColor(CYAN) << "[" << currentTime->tm_hour
                   << ":" << currentTime->tm_min << ":"
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
-                  << "] " << SetColor(LIGHT_CYAN) << title << SetColor(DEFAULT) << "\n";
+                  << "] " << SetColor(LIGHT_CYAN) << oss.str() << SetColor(DEFAULT) << "\n";
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "[" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
-                    << "]" << title << "\n";
+                    << "]" << oss.str() << "\n";
         #endif
     #endif
     }

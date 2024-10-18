@@ -6,5 +6,5 @@
 
 #include <iostream>
 
-#include "CoreMacroDefinitions.h"
-#include "Debug/DebugMacros.h"
+#include "Core/CoreMacroDefinitions.h"
+#include "Core/Debug/DebugMacros.h"

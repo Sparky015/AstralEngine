@@ -11,7 +11,7 @@
 
 
 /** Outputs the message to the console with a time stamp. */
-#define TRACE(title) Debug::Macros::macro_TRACE(title)
+#define TRACE(message) { std::stringstream ss; Debug::Macros::macro_TRACE(ss << message); }
 
 /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
 #define LOG(message) { std::stringstream ss; Debug::Macros::macro_LOG(ss << message); }
@@ -39,7 +39,7 @@ namespace Debug::Macros {
     void CloseLogFileForMacros();
 
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
-    void macro_TRACE(const std::string&& title);
+    void macro_TRACE(const std::ostream& message);
 
     /** A simple log to console that can take a stream while also standardizing which side of the string the new line character is on. */
     void macro_LOG(const std::ostream& message);
