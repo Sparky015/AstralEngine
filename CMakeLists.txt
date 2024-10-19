@@ -12,6 +12,8 @@ add_executable(Chess_Engine main.cpp
         "Source/Core/Events/EventBus.h"
         "Source/Core/Events/EventListener.h"
         "Source/Core/Events/EventPublisher.h"
+        Source/InputManager/InputManager.cpp
+        Source/InputManager/InputManager.h
 )
 
 target_include_directories(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/Source")

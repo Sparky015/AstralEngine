@@ -24,3 +24,32 @@ Publisher: onMoveAttempt
 
 Relations:
 Access piece locations / data
+
+
+Classes / Functions
+
+/*
+* @brief Calculates the position of the tile that the given mouse coordinates are on
+* @param x The x mouse coordinate
+* @param y The y mouse coordinate
+* @return The calculated tile location
+*/
+MousePosToSquarePos
+    Impl Note: Need to check the window width and height when doing calculation each time
+
+/*
+* @brief Checks if a mouse coordinate is on the tile
+* @param x The x mouse coordinate
+* @param y The y mouse coordinate
+* @return True or false depending on if the mouse click over a piece on the chess board
+*/
+IsMouseClickOverPiece
+    Impl Note: Need to check with piece data
+
+
+/*
+* @brief Moves a piece to the coordinates of the mouse
+* @param pieceID The ID of the piece being moved.
+*/
+DragPieceToLocation
+    Impl Note: Will need ImGui or GLFW to get mouse state
