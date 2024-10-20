@@ -1,0 +1,25 @@
+		Console Output
+Job:
+-
+
+Goals:
+-
+
+Inputs:
+-
+
+Outputs:
+- Outputs the board, pieces, and moves to the console
+
+Events:
+
+Listener:
+Listener: onOutputBoard (given Board&)
+
+
+
+Relations:
+Access piece locations / data
+
+
+Classes / Functions

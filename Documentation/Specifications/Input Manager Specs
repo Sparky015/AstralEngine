@@ -28,6 +28,8 @@ Access piece locations / data
 
 Classes / Functions
 
+/* @class InputManager Takes input from the mouse and calculates attempted piece moves */
+
 /*
 * @brief Calculates the position of the tile that the given mouse coordinates are on
 * @param x The x mouse coordinate
