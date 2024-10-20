@@ -5,6 +5,7 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
 
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Debug/DebugMacros.h"
