@@ -11,6 +11,5 @@ int main()
     int f = 5;
     pub.PublishEvent(f);
 
-
     return 0;
 }
