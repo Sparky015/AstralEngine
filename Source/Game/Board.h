@@ -42,7 +42,7 @@ public:
      * @param pieceIndex The index of the piece being moved.
      * @param targetBoardLocation The location that the piece is being moved to. Expected range is 0-63 inclusive.
      * @throws std::logic_error Errors when the square being moved to is already occupied.
-     * @throws std::invalid_argument Errors when the specified location is not 0-63 inclusive.
+     * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
      * @note The move piece functionality is separated from the take piece functionality, so it will throw errors when the intention
      * is to move to a square that is empty, but the square actually isn't. This assumes that there is a valid check being made
      * to see if the move is possible prior to this function's call.
@@ -56,7 +56,7 @@ public:
      * @param pieceIndex The index of the piece being moved.
      * @param targetBoardLocation The location that the piece is being moved to. Expected range is 0-63 inclusive.
      * @throws std::logic_error Errors when the square being moved to is empty.
-     * @throws std::invalid_argument Errors when the specified location is not 0-63 inclusive.
+     * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
      * @note The take piece functionality is separated the move piece functionality, so it will throw errors when the intention
      * is to move to a square that is occupied, but the square actually isn't. This assumes that there is a valid check being made
      * to see if the take is possible prior to this function's call.
@@ -68,7 +68,7 @@ public:
       * @param color The color of the piece being moved.
       * @param pieceIndex The index of the piece being moved.
       * @param promotionType The type of piece that the pawn in being promoted to.
-      * @throws std::invalid_argument Errors when the specified location is not 0-63 inclusive.
+      * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
       */
       void PromotePawn(const PieceColor color, const PieceID pieceIndex, const PieceType promotionType) const;
 
@@ -87,7 +87,7 @@ public:
      * @param color The color of the piece being moved.
      * @param pieceID The ID of the piece that is being written to.
      * @param boardLocation The location that is being written to the piece.
-     * @throws std::invalid_argument Errors when the specified location is not 0-63 inclusive.
+     * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
      */
     void WriteBoardLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
 
