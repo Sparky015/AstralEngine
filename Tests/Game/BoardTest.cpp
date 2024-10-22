@@ -13,7 +13,7 @@ public:
     Board StandardBoard = Board();
 };
 
-TEST_F(BoardTest, MovePiece_UpdateLocation)
+TEST_F(BoardTest, MovePiece_Test)
 {
     StandardBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_2, B4);
     EXPECT_EQ(StandardBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), B4);
