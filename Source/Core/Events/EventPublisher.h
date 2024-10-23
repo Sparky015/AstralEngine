@@ -7,7 +7,7 @@
 #include "EventBus.h"
 
 namespace Event {
-
+//TODO: Make the T var always a reference
     /** Publishes an event to any listeners. Also, helps manage the lifetime of event buses as
      * when there are no event publishers and event listeners, the event bus is destroyed. */
     template<typename T>

@@ -75,6 +75,3 @@ TEST_F(BoardTest, MovePiece_SquareAlreadyOccupied2)
 {
     EXPECT_THROW(StandardBoard.MovePiece(PieceColor::WHITE, PieceID::BISHOP_1, H2), std::logic_error);
 }
-
-
-
