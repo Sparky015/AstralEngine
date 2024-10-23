@@ -57,3 +57,13 @@ TEST(ExceptionTest, ValidateAge) {
     EXPECT_NO_THROW(validateAge(0));    // Boundary case
     EXPECT_NO_THROW(validateAge(150));  // Boundary case
 }
+
+
+
+/*
+ * Writing Tests:
+ * 2-3 for functionality (or more until the whole function has coverage)
+ * 1 for each error status or exception that can be thrown
+ * 1 for each edge case of inputs
+ *
+ * */

@@ -31,8 +31,9 @@ class Board
 {
 public:
 
-    Board() = default;
-    Board(const std::string FEN);
+    explicit Board(const bool isDefaultBoard);
+    explicit Board(const std::string& FEN);
+
     ~Board() = default;
 
 

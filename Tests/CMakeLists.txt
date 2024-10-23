@@ -5,7 +5,8 @@ enable_testing()
 
 set(TEST_FILES
         ExampleTest.cpp
-        Game/BoardTest.cpp
+        "Game/BoardClass/Board_MovePieceTest.cpp"
+        Game/BoardClass/Board_FEN_Constructor.cpp
 )
 
 list(TRANSFORM SOURCE_FILES PREPEND ${CMAKE_SOURCE_DIR}/Source/) # Set up the SOURCE_FILES variable for use in this CMakeList file
