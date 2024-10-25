@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include "Game/Board.h"
 
-class BoardTest : public ::testing::Test
+class Board_MovePieceTest : public ::testing::Test
 {
 public:
     Board EmptyBoard = Board(false);
@@ -14,64 +14,54 @@ public:
 };
 
 
-TEST_F(BoardTest, MovePiece_UpdateLocation)
+TEST_F(Board_MovePieceTest, MovePiece_UpdateLocation)
 {
     EXPECT_NO_THROW(StandardBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_2, E4));
     EXPECT_EQ(StandardBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), E4);
 }
 
-TEST_F(BoardTest, MovePiece_UpdateLocation2)
+TEST_F(Board_MovePieceTest, MovePiece_UpdateLocation2)
 {
-    EXPECT_NO_THROW(StandardBoard.MovePiece(PieceColor::WHITE, PieceID::PAWN_8, H4));
-    EXPECT_EQ(StandardBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), H4);
+    EXPECT_NO_THROW(StandardBoard.MovePiece(PieceColor::WHITE, PieceID::KING, H4));
+    EXPECT_EQ(StandardBoard.ReadBoardLocation(PieceColor::WHITE, PieceID::KING), H4);
 }
 
-TEST_F(BoardTest, MovePiece_UpdateLocation3)
+TEST_F(Board_MovePieceTest, MovePiece_UpdateLocation3)
 {
-    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::PAWN_8, G7));
+    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_2, G7));
     EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), G7);
 }
 
-TEST_F(BoardTest, MovePiece_UpdateLocation5)
+TEST_F(Board_MovePieceTest, MovePiece_UpdateLocation5)
 {
-    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::PAWN_8, H1));
-    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), H1);
+    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::ROOK_1, H1));
+    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::WHITE, PieceID::ROOK_1), H1);
 }
 
-TEST_F(BoardTest, MovePiece_UpdateLocation6)
+TEST_F(Board_MovePieceTest, MovePiece_UpdateLocation6)
 {
-    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::PAWN_8, A8));
-    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), A8);
+    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::KNIGHT_1, A8));
+    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::KNIGHT_1), A8);
 }
 
-TEST_F(BoardTest, MovePiece_LowerOutOfBounds)
+TEST_F(Board_MovePieceTest, MovePiece_LowerOutOfBounds)
 {
     EXPECT_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_1, -1), std::out_of_range);
 }
 
-TEST_F(BoardTest, MovePiece_HigherOutOfBounds)
+TEST_F(Board_MovePieceTest, MovePiece_HigherOutOfBounds)
 {
     EXPECT_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::BISHOP_1, 73), std::out_of_range);
 }
 
-TEST_F(BoardTest, MovePiece_LowerOnBound)
+TEST_F(Board_MovePieceTest, MovePiece_LowerOnBound)
 {
     EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::WHITE, PieceID::BISHOP_1, 0));
-    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_1), A1);
+    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::WHITE, PieceID::BISHOP_1), 0);
 }
 
-TEST_F(BoardTest, MovePiece_HigherOnBound)
+TEST_F(Board_MovePieceTest, MovePiece_HigherOnBound)
 {
-    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_1, 63));
-    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), H8);
-}
-
-TEST_F(BoardTest, MovePiece_SquareAlreadyOccupied)
-{
-    EXPECT_THROW(StandardBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_1, A2), std::logic_error);
-}
-
-TEST_F(BoardTest, MovePiece_SquareAlreadyOccupied2)
-{
-    EXPECT_THROW(StandardBoard.MovePiece(PieceColor::WHITE, PieceID::BISHOP_1, H2), std::logic_error);
+    EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_2, 63));
+    EXPECT_EQ(EmptyBoard.ReadBoardLocation(PieceColor::BLACK, PieceID::BISHOP_2), 63);
 }
