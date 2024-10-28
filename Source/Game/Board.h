@@ -136,13 +136,13 @@ private:
         TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
 
         PieceType ReadSquareOneType();
-        PieceColor ReadColorOne();
-        void WriteSquareOneType(PieceType type);
-        void WriteSquareOneColor(PieceColor color);
-
         PieceType ReadSquareTwoType();
+        PieceColor ReadColorOne();
         PieceColor ReadColorTwo();
+
+        void WriteSquareOneType(PieceType type);
         void WriteSquareTwoType(PieceType type);
+        void WriteSquareOneColor(PieceColor color);
         void WriteSquareTwoColor(PieceColor color);
 
     private:
