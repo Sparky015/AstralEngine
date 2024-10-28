@@ -14,6 +14,9 @@ set(SOURCE_FILES
         Game/Board.cpp
         Game/Board.h
         Game/PieceInfo.h
+        Game/PieceInfo.cpp
+
+
         CACHE INTERNAL "Source Files"
 )
 

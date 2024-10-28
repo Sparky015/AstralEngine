@@ -22,8 +22,7 @@ enum BoardLocation : uint8
     A2, B2, C2, D2, E2, F2, G2, H2,
     A1, B1, C1, D1, E1, F1, G1, H1,
 
-    EMPTY = 254,
-    UNDEFINED_LOCATION = 255
+    EMPTY = 255
 };
 
 
@@ -74,7 +73,7 @@ public:
       * @param promotionType The type of piece that the pawn in being promoted to.
       * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
       */
-      void PromotePawn(const PieceColor color, const PieceID pieceIndex, const PieceType promotionType) const;
+      void PromotePawn(const PieceColor color, const PieceID pieceID, const PieceType promotionType) const;
 
 
     /**
@@ -83,7 +82,7 @@ public:
      * @param pieceID The ID of the piece that is being read.
      * @return The location of the specified piece (or 255 if piece is not on board)
      */
-    uint8 ReadBoardLocation(const PieceColor color, const PieceID pieceID) const;
+    uint8 ReadPieceLocation(const PieceColor color, const PieceID pieceID) const;
 
 
     /**
@@ -93,18 +92,78 @@ public:
      * @param boardLocation The location that is being written to the piece.
      * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
      */
-    void WriteBoardLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
+    void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation);
+
+
+
+    /**
+    * @brief Reads the information of a square in the chess board.
+    * @param squareLocation The color of the piece being moved.
+    * @return The location of the specified piece (or 255 if piece is not on board)
+    */
+    Piece ReadBoardLocation(uint8 squareLocation) const;
+
+
+    /**
+     * @brief Writes a location of a piece to the chess board
+     * @param color The color of the piece being moved.
+     * @param pieceID The ID of the piece that is being written to.
+     * @param boardLocation The location that is being written to the piece.
+     * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
+     */
+    void WriteBoardLocation(bool isOccupied, PieceType pieceType,  PieceColor pieceColor);
+
+    /**
+     * @brief Writes a piece to the board of a piece to the chess board
+     * @param color The color of the piece being moved.
+     * @param pieceID The ID of the piece that is being written to.
+     * @param boardLocation The location that is being written to the piece.
+     * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
+     */
+    void WriteBoardLocation(Piece piece, uint8 boardLocation);
+
+
 
 private:
+    //TODO: Make this one byte with piece color and piece type as 3 and 1 bit respectively for each square. 8 bits total for two squares
+    // Piece type none indicates empty square
 
-    // TODO: Improve the information density of the piece types
+    /**
+    * @struct Contains properties of two combined horizontally adjacent squares in a chess board
+    */
+    struct TwoSquares
+    {
+        TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
+
+        PieceType ReadSquareOneType();
+        PieceColor ReadColorOne();
+        void WriteSquareOneType(PieceType type);
+        void WriteSquareOneColor(PieceColor color);
+
+        PieceType ReadSquareTwoType();
+        PieceColor ReadColorTwo();
+        void WriteSquareTwoType(PieceType type);
+        void WriteSquareTwoColor(PieceColor color);
+
+    private:
+        uint8 m_Data;
+    };
+
+    struct InternalBoardRepresentation
+    {
+        InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board);
+
+        PieceType ReadType(uint8 squareLocation);
+        PieceColor ReadColor(uint8 squareLocation);
+
+    private:
+        std::array<TwoSquares, 32> m_Board;
+    };
+
+
+    //TODO: Profile different memory layouts for speed
+
     std::array<uint8, 16> m_BlackPieceLocations;
     std::array<uint8, 16> m_WhitePieceLocations;
-    struct SquareInfo
-    {
-        bool color;
-        PieceType type;
-    };
-    //TODO: Combine color, pieceType into one byte
-    std::array<SquareInfo, 64> m_Board;
+    InternalBoardRepresentation m_Board;
 };

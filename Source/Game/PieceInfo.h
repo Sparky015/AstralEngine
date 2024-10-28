@@ -29,7 +29,7 @@ enum PieceID : uint8
     KING,
     BISHOP_2,
     KNIGHT_2,
-    ROOK_2,
+    ROOK_2
 };
 
 /**
@@ -42,7 +42,9 @@ enum class PieceType : uint8
     KNIGHT,
     ROOK,
     QUEEN,
-    KING
+    KING,
+
+    NONE
 };
 
 /**
@@ -52,4 +54,27 @@ enum PieceColor : bool
 {
     BLACK,
     WHITE
+};
+
+
+PieceType ConvertPieceIDToPieceType(PieceID pieceID);
+
+/**
+* @struct Represents a chess piece
+*/
+struct Piece
+{
+    Piece(PieceID pieceID, PieceColor pieceColor);
+
+    void SetColor(PieceColor pieceColor);
+    void SetType(PieceType pieceType);
+    void SetPieceID(PieceID pieceID);
+
+    PieceColor ReadColor();
+    PieceType ReadType();
+    PieceID ReadPieceID();
+
+    uint8 ReadInternalData() const; // For testing
+private:
+    uint8 m_Data; /// This is where the piece type, piece color, and piece ID is stored.
 };
