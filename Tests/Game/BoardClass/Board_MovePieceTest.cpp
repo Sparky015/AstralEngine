@@ -9,8 +9,13 @@
 class Board_MovePieceTest : public ::testing::Test
 {
 public:
-    Board EmptyBoard = Board(false);
-    Board StandardBoard = Board(true);
+    Board StandardBoard = Board();
+    Board EmptyBoard = Board();
+
+    void SetUp() override
+    {
+        EmptyBoard.ClearBoard();
+    }
 };
 
 
@@ -64,4 +69,14 @@ TEST_F(Board_MovePieceTest, MovePiece_HigherOnBound)
 {
     EXPECT_NO_THROW(EmptyBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_2, 63));
     EXPECT_EQ(EmptyBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::BISHOP_2), 63);
+}
+
+TEST_F(Board_MovePieceTest, MovePiece_SpaceOccupied1)
+{
+    EXPECT_THROW(StandardBoard.MovePiece(PieceColor::BLACK, PieceID::BISHOP_1, D7), std::logic_error);
+}
+
+TEST_F(Board_MovePieceTest, MovePiece_SpaceOccupied2)
+{
+    EXPECT_THROW(StandardBoard.MovePiece(PieceColor::WHITE, PieceID::BISHOP_1, D2), std::logic_error);
 }

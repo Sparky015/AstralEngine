@@ -74,7 +74,9 @@ struct Piece
     PieceType ReadType();
     PieceID ReadPieceID();
 
-    uint8 ReadInternalData() const; // For testing
 private:
     uint8 m_Data; /// This is where the piece type, piece color, and piece ID is stored.
+
+public:
+    uint8 ReadInternalData() const; // For testing only
 };

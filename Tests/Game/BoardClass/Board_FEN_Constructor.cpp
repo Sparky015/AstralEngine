@@ -25,3 +25,11 @@ TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingLocation2)
     EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::QUEEN), A1);
     EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::BISHOP_1), E7);
 }
+
+TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingLocation3)
+{
+// Example test to check if board initialized correctly from FEN string
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_3), D3);
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PAWN_1), A7);
+}
+

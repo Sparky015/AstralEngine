@@ -9,40 +9,28 @@
 
 
 
-Board::Board(const bool isDefaultBoard)
+Board::Board()
 {
-//    if (isDefaultBoard)
-//    {
-//        m_BlackPieceLocations = std::array<uint8, 16>({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8});
-//        m_WhitePieceLocations = std::array<uint8, 16>({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1});
-//    }
-//    else
-//    {
-//        m_BlackPieceLocations.fill(EMPTY);
-//        m_WhitePieceLocations.fill(EMPTY);
-//    }
-//
-//    // First, we populate every square as empty.
-//
-//    m_Board.fill({NONE,PieceType::NONE});
-//
-//
-//
-//    // Next, we take the location of each piece and populate that square with the piece's info
-//
-//    for (uint8 pieceID = 0; pieceID < m_BlackPieceLocations.size(); pieceID++)
-//    {
-//        uint8 pieceLocation = m_BlackPieceLocations[pieceID];
-//        m_Board[pieceLocation].color = BLACK;
-//        m_Board[pieceLocation].type = ConvertPieceIDToPieceType(static_cast<PieceID>(pieceID));
-//    }
-//
-//    for (uint8 pieceID = 0; pieceID < m_WhitePieceLocations.size(); pieceID++)
-//    {
-//        uint8 pieceLocation = m_WhitePieceLocations[pieceID];
-//        m_Board[pieceLocation].color = WHITE;
-//        m_Board[pieceLocation].type = ConvertPieceIDToPieceType(static_cast<PieceID>(pieceID));
-//    }
+    m_BlackPieceLocations = std::array<uint8, 16>({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8});
+    m_WhitePieceLocations = std::array<uint8, 16>({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1});
+
+
+
+    // Next, we take the location of each piece and populate that square with the piece's info
+
+    for (uint8 pieceID = 0; pieceID < m_BlackPieceLocations.size(); pieceID++)
+    {
+        uint8 pieceLocation = m_BlackPieceLocations[pieceID];
+        m_Board.WriteColor(BLACK, pieceLocation);
+        m_Board.WriteType(ConvertPieceIDToPieceType((PieceID)pieceID), pieceLocation);
+    }
+
+    for (uint8 pieceID = 0; pieceID < m_WhitePieceLocations.size(); pieceID++)
+    {
+        uint8 pieceLocation = m_WhitePieceLocations[pieceID];
+        m_Board.WriteColor(WHITE, pieceLocation);
+        m_Board.WriteType(ConvertPieceIDToPieceType((PieceID)pieceID), pieceLocation);
+    }
 
 }
 
@@ -58,6 +46,12 @@ void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8
     {
         throw std::out_of_range("targetBoardLocation is not between 0 and 63");
     }
+
+    if (m_Board.ReadType(targetBoardLocation) != PieceType::NONE)
+    {
+        throw std::logic_error("targetBoardLocation already has a piece on the square");
+    }
+
 
     if (color == PieceColor::WHITE)
     {
@@ -108,26 +102,11 @@ void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, co
 }
 
 
-
-
-PieceType Board::InternalBoardRepresentation::ReadType(uint8_t squareLocation)
+void Board::ClearBoard()
 {
-    // If the square location is an even number, then read the type of the first square in the TwoSquare object at
-    // the index of squareLocation divided by two, else read the type of the second square in the TwoSquare object.
-    uint8 halfOfSquareLocation = squareLocation >> 1;
-    return (squareLocation % 2 == 0) ? m_Board[halfOfSquareLocation].ReadSquareOneType() : m_Board[halfOfSquareLocation].ReadSquareTwoType();
+    m_Board = InternalBoardRepresentation();
 }
 
-PieceColor Board::InternalBoardRepresentation::ReadColor(uint8_t squareLocation)
-{
-    // If the square location is an even number, then read the color of the first square in the TwoSquare object at
-    // the index of squareLocation divided by two, else read the color of the second square in the TwoSquare object.
-    uint8 halfOfSquareLocation = squareLocation >> 1;
-    return (squareLocation % 2 == 0) ? m_Board[halfOfSquareLocation].ReadColorOne() : m_Board[halfOfSquareLocation].ReadColorTwo();;
-}
-
-Board::InternalBoardRepresentation::InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board) : m_Board{m_Board}
-{}
 
 Board::TwoSquares::TwoSquares(PieceType pieceTypeOne, PieceColor pieceColorOne, PieceType pieceTypeTwo,
                               PieceColor pieceColorTwo)
@@ -138,51 +117,113 @@ Board::TwoSquares::TwoSquares(PieceType pieceTypeOne, PieceColor pieceColorOne, 
     m_Data = colorOneShifted | typeOneShifted | colorTwoShifted | (uint8)pieceTypeTwo;
 }
 
-PieceType Board::TwoSquares::ReadSquareOneType()
+
+PieceType Board::TwoSquares::ReadSquareType(bool isSecondSquare)
 {
-    uint8 typeOneShifted = m_Data >> 4 & (0b00001111);
-    return (PieceType)typeOneShifted;
+    if (isSecondSquare)
+    {
+        uint8 squareTwoTypeShifted = m_Data & (0b00000111);
+        return (PieceType)squareTwoTypeShifted;
+    }
+    else
+    {
+        uint8 squareOneTypeShifted = m_Data >> 4 & (0b00000111);
+        return (PieceType)squareOneTypeShifted;
+    }
 }
 
-PieceColor Board::TwoSquares::ReadColorOne()
+
+PieceColor Board::TwoSquares::ReadSquareColor(bool isSecondSquare)
 {
-    uint8 typeOneShifted = m_Data >> 7;
-    return (PieceColor)typeOneShifted;
+    if (isSecondSquare)
+    {
+        uint8 squareTwoColorShifted = m_Data >> 3 & (0b00000001);
+        return (PieceColor)squareTwoColorShifted;
+    }
+    else
+    {
+        uint8 squareOneColorShifted = m_Data >> 7;
+        return (PieceColor)squareOneColorShifted;
+    }
 }
 
 
-PieceType Board::TwoSquares::ReadSquareTwoType()
+void Board::TwoSquares::WriteSquareType(PieceType type, bool isSecondSquare)
 {
-    uint8 typeOneShifted = m_Data & (0b00000111);
-    return (PieceType)typeOneShifted;
+    if (isSecondSquare)
+    {
+        m_Data &= 0b11111000;
+        m_Data |= (uint8)type;
+    }
+    else
+    {
+        m_Data &= 0b10001111;
+        m_Data |= (uint8)type << 4;
+    }
 }
 
-PieceColor Board::TwoSquares::ReadColorTwo()
+
+void Board::TwoSquares::WriteSquareColor(PieceColor color, bool isSecondSquare)
 {
-    uint8 typeOneShifted = m_Data >> 3 & (0b00000001);
-    return (PieceColor)typeOneShifted;
+    if (isSecondSquare)
+    {
+        m_Data &= 0b11110111;
+        m_Data |= (uint8)color << 3;
+    }
+    else
+    {
+        m_Data &= 0b01111111;
+        m_Data |= (uint8)color << 7;
+    }
+
 }
 
-void Board::TwoSquares::WriteSquareOneType(PieceType type)
+
+Board::TwoSquares::TwoSquares() : m_Data{0b01100110} {}
+
+
+Board::InternalBoardRepresentation::InternalBoardRepresentation()
 {
-    m_Data &= 0b10001111;
-    m_Data |= (uint8)type << 4;
+    m_InternalBoard.fill(TwoSquares(PieceType::NONE, BLACK, PieceType::NONE, BLACK));
 }
 
-void Board::TwoSquares::WriteSquareTwoType(PieceType type)
+
+Board::InternalBoardRepresentation::InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board) : m_InternalBoard{m_Board} {}
+
+
+PieceType Board::InternalBoardRepresentation::ReadType(uint8_t squareLocation)
 {
-    m_Data &= 0b11111000;
-    m_Data |= (uint8)type;
+    uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
+    bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
+    return m_InternalBoard[halfOfSquareLocation].ReadSquareType(isSecondSquare);
 }
 
-void Board::TwoSquares::WriteSquareOneColor(PieceColor color)
+
+PieceColor Board::InternalBoardRepresentation::ReadColor(uint8_t squareLocation)
 {
-    m_Data &= 0b01111111;
-    m_Data |= (uint8)color << 7;
+    uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
+    bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
+    return m_InternalBoard[halfOfSquareLocation].ReadSquareColor(isSecondSquare);
 }
 
-void Board::TwoSquares::WriteSquareTwoColor(PieceColor color)
+
+void Board::InternalBoardRepresentation::WriteType(PieceType pieceType, uint8_t squareLocation)
 {
-    m_Data &= 0b11110111;
-    m_Data |= (uint8)color << 3;
+    uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
+    bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
+    m_InternalBoard[halfOfSquareLocation].WriteSquareType(pieceType, isSecondSquare);
 }
+
+
+void Board::InternalBoardRepresentation::WriteColor(PieceColor pieceColor, uint8_t squareLocation)
+{
+    uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
+    bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
+    m_InternalBoard[halfOfSquareLocation].WriteSquareColor(pieceColor, isSecondSquare);
+}
+
+
+
+
+
+

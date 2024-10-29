@@ -11,7 +11,7 @@
 #include "PieceInfo.h"
 
 
-enum BoardLocation : uint8
+ enum [[maybe_unused]] BoardLocation : uint8
 {
     A8, B8, C8, D8, E8, F8, G8, H8,
     A7, B7, C7, D7, E7, F7, G7, H7,
@@ -33,7 +33,7 @@ class Board
 {
 public:
 
-    explicit Board(const bool isDefaultBoard);
+    Board();
     explicit Board(const std::string& FEN);
 
     ~Board() = default;
@@ -82,7 +82,7 @@ public:
      * @param pieceID The ID of the piece that is being read.
      * @return The location of the specified piece (or 255 if piece is not on board)
      */
-    uint8 ReadPieceLocation(const PieceColor color, const PieceID pieceID) const;
+    [[nodiscard]] uint8 ReadPieceLocation(const PieceColor color, const PieceID pieceID) const;
 
 
     /**
@@ -93,7 +93,6 @@ public:
      * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive.
      */
     void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation);
-
 
 
     /**
@@ -123,27 +122,26 @@ public:
     void WriteBoardLocation(Piece piece, uint8 boardLocation);
 
 
+    /**
+    * @brief Clears the chess board of any pieces. Results in an empty chess board.
+    */
+    void ClearBoard();
+
 
 private:
-    //TODO: Make this one byte with piece color and piece type as 3 and 1 bit respectively for each square. 8 bits total for two squares
-    // Piece type none indicates empty square
 
     /**
     * @struct Contains properties of two combined horizontally adjacent squares in a chess board
     */
     struct TwoSquares
     {
+        TwoSquares();
         TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
 
-        PieceType ReadSquareOneType();
-        PieceType ReadSquareTwoType();
-        PieceColor ReadColorOne();
-        PieceColor ReadColorTwo();
-
-        void WriteSquareOneType(PieceType type);
-        void WriteSquareTwoType(PieceType type);
-        void WriteSquareOneColor(PieceColor color);
-        void WriteSquareTwoColor(PieceColor color);
+        PieceType ReadSquareType(bool isSecondSquare);
+        PieceColor ReadSquareColor(bool isSecondSquare);
+        void WriteSquareType(PieceType type, bool isSecondSquare);
+        void WriteSquareColor(PieceColor color, bool isSecondSquare);
 
     private:
         uint8 m_Data;
@@ -151,13 +149,16 @@ private:
 
     struct InternalBoardRepresentation
     {
-        InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board);
+        InternalBoardRepresentation();
+        explicit InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board);
 
         PieceType ReadType(uint8 squareLocation);
         PieceColor ReadColor(uint8 squareLocation);
+        void WriteType(PieceType pieceType, uint8 squareLocation);
+        void WriteColor(PieceColor pieceColor, uint8 squareLocation);
 
     private:
-        std::array<TwoSquares, 32> m_Board;
+        std::array<TwoSquares, 32> m_InternalBoard;
     };
 
 
@@ -166,4 +167,7 @@ private:
     std::array<uint8, 16> m_BlackPieceLocations;
     std::array<uint8, 16> m_WhitePieceLocations;
     InternalBoardRepresentation m_Board;
+
+public:
+    inline InternalBoardRepresentation& GetInternalBoard() {return m_Board;} /// For testing only!
 };
