@@ -11,6 +11,9 @@ set(TEST_FILES
         Game/BoardClass/Board_Standard_Constructor.cpp
         Game/PieceTest.cpp
         Game/BoardClass/Board_InternalBoardRepresentation.cpp
+        Game/BoardClass/Board_PromotePawn.cpp
+        Game/BoardClass/Board_TakePiece.cpp
+        Game/BoardClass/Board_ReadSquarePieceID.cpp
 )
 
 list(TRANSFORM SOURCE_FILES PREPEND ${CMAKE_SOURCE_DIR}/Source/) # Set up the SOURCE_FILES variable for use in this CMakeList file

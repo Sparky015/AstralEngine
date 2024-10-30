@@ -15,8 +15,8 @@ public:
 
 TEST_F(Board_StandardConstructorTest, Standard_Constructor_CheckingLocation1)
 {
-EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::ROOK_1), A8);
-EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_1), A2);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::ROOK_1), A8);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_1), A2);
 }
 
 TEST_F(Board_StandardConstructorTest, Standard_Constructor_CheckingLocation2)
