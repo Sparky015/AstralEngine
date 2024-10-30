@@ -142,7 +142,7 @@ Board::Board(const std::string& FEN)
 
 void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
 {
-    if (targetBoardLocation < 0 || targetBoardLocation > 63) { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
+    if (targetBoardLocation > 63) { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
     if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE) { throw std::logic_error("targetBoardLocation already has a piece on the square"); }
 
     if (color == PieceColor::WHITE)
@@ -158,7 +158,7 @@ void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8
 
 void Board::TakePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
 {
-    if (targetBoardLocation < 0 || targetBoardLocation > 63) { throw std::out_of_range("targetBoardLocation is not a valid location on the chess board"); }
+    if (targetBoardLocation > 63) { throw std::out_of_range("targetBoardLocation is not a valid location on the chess board"); }
     if (ReadSquareType(targetBoardLocation) == PieceType::NONE) { throw std::logic_error("Can't take on a square that is empty"); }
     if (ReadSquareColor(targetBoardLocation) == color) { throw std::logic_error("Can't take a piece of the same type"); }
 
@@ -241,37 +241,37 @@ void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, co
 }
 
 
-PieceColor Board::ReadSquareColor(uint8 squareLocation)
+PieceColor Board::ReadSquareColor(uint8 squareLocation) const
 {
-    if (squareLocation < 0 || squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+    if (squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
     return m_Board.ReadSquareColor(squareLocation);
 }
 
 
 void Board::WriteSquareColor(uint8_t squareLocation, PieceColor pieceColor)
 {
-    if (squareLocation < 0 || squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+    if (squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
     m_Board.WriteSquareColor(pieceColor, squareLocation);
 }
 
 
-PieceType Board::ReadSquareType(uint8 squareLocation)
+PieceType Board::ReadSquareType(uint8 squareLocation) const
 {
-    if (squareLocation < 0 || squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+    if (squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
     return m_Board.ReadSquareType(squareLocation);
 }
 
 
 void Board::WriteSquareType(uint8_t squareLocation, PieceType pieceType)
 {
-    if (squareLocation < 0 || squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+    if (squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
     m_Board.WriteSquareType(pieceType, squareLocation);
 }
 
 
-PieceID Board::ReadSquarePieceID(uint8_t squareLocation)
+PieceID Board::ReadSquarePieceID(uint8_t squareLocation) const
 {
-    if (squareLocation < 0 || squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+    if (squareLocation > 63) { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
     PieceType pieceType = ReadSquareType(squareLocation);
     PieceColor pieceColor = ReadSquareColor(squareLocation);
@@ -369,7 +369,7 @@ Board::TwoSquares::TwoSquares(PieceType pieceTypeOne, PieceColor pieceColorOne, 
 }
 
 
-PieceType Board::TwoSquares::ReadSquareType(bool isSecondSquare)
+PieceType Board::TwoSquares::ReadSquareType(bool isSecondSquare) const
 {
     if (isSecondSquare)
     {
@@ -384,7 +384,7 @@ PieceType Board::TwoSquares::ReadSquareType(bool isSecondSquare)
 }
 
 
-PieceColor Board::TwoSquares::ReadSquareColor(bool isSecondSquare)
+PieceColor Board::TwoSquares::ReadSquareColor(bool isSecondSquare) const
 {
     if (isSecondSquare)
     {
@@ -444,10 +444,7 @@ Board::InternalBoardRepresentation::InternalBoardRepresentation()
 }
 
 
-Board::InternalBoardRepresentation::InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board) : m_InternalBoard{m_Board} {}
-
-
-PieceType Board::InternalBoardRepresentation::ReadSquareType(uint8_t squareLocation)
+PieceType Board::InternalBoardRepresentation::ReadSquareType(uint8_t squareLocation) const
 {
     uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
     bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
@@ -455,7 +452,7 @@ PieceType Board::InternalBoardRepresentation::ReadSquareType(uint8_t squareLocat
 }
 
 
-PieceColor Board::InternalBoardRepresentation::ReadSquareColor(uint8_t squareLocation)
+PieceColor Board::InternalBoardRepresentation::ReadSquareColor(uint8_t squareLocation) const
 {
     uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
     bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square

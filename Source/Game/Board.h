@@ -84,7 +84,7 @@ public:
      * @param pieceID The ID of the piece that is being written to.
      * @param boardLocation The location that is being written to the piece.
      * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive. */
-    void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation);
+    void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
 
 
     /** @brief Reads the color of the piece on the square of the given location. This assumes there is a piece on the
@@ -93,7 +93,7 @@ public:
      * @throws std::logic_error Errors if there is not a piece on the square of the given location.
      * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63
      * @return The color of the piece at the given location. */
-    [[nodiscard]] PieceColor ReadSquareColor(uint8 squareLocation);
+    [[nodiscard]] PieceColor ReadSquareColor(uint8 squareLocation) const;
 
 
     /** @brief Writes the color of the piece on the square of the given location.
@@ -107,7 +107,7 @@ public:
      * @param squareLocation The location of the square being read.
      * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63
      * @return The type of piece on the square at the location given. */
-    [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation);
+    [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation) const;
 
 
     /** @brief Writes the type of the piece on the square of the given location.
@@ -122,7 +122,7 @@ public:
      * @throws std::logic_error Errors if there is not a piece on the square of the given location.
      * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63
      * @return The ID of the piece on the square at the given location. */
-    [[nodiscard]] PieceID ReadSquarePieceID(uint8 squareLocation);
+    [[nodiscard]] PieceID ReadSquarePieceID(uint8 squareLocation) const;
 
 
     /** @brief Clears the chess board of any pieces. Results in an empty chess board. */
@@ -140,10 +140,10 @@ private:
         TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
 
         /** @brief Reads the type of the selected square. */
-        PieceType ReadSquareType(bool isSecondSquare);
+        [[nodiscard]] PieceType ReadSquareType(bool isSecondSquare) const;
 
         /** @brief Reads the color of the selected square. */
-        PieceColor ReadSquareColor(bool isSecondSquare);
+        [[nodiscard]] PieceColor ReadSquareColor(bool isSecondSquare) const;
 
         /** @brief Writes the type to the selected square. */
         void WriteSquareType(PieceType type, bool isSecondSquare);
@@ -159,13 +159,12 @@ private:
     struct InternalBoardRepresentation
     {
         InternalBoardRepresentation();
-        explicit InternalBoardRepresentation(std::array<TwoSquares, 32> m_Board);
 
         /** @brief Reads the type of the square at the location given. */
-        PieceType ReadSquareType(uint8 squareLocation);
+        [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation) const;
 
         /** @brief Reads the color of the square at the location given. */
-        PieceColor ReadSquareColor(uint8 squareLocation);
+        [[nodiscard]] PieceColor ReadSquareColor(uint8 squareLocation) const;
 
         /** @brief Writes the type of the square at the location given. */
         void WriteSquareType(PieceType pieceType, uint8 squareLocation);
