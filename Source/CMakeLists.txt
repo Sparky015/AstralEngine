@@ -15,10 +15,15 @@ set(SOURCE_FILES
         Game/Board.h
         Game/PieceInfo.h
         Game/PieceInfo.cpp
+        IO/PrintBoardEvent.h
+        Core/Events/Event.h
+        IO/IOManager.cpp
+        IO/IOManager.h
 
-
-        CACHE INTERNAL "Source Files"
 )
+
+set(SOURCE_FILES ${SOURCE_FILES} CACHE INTERNAL "Source Files")
+
 
 add_executable(Chess_Engine
         main.cpp
