@@ -12,8 +12,5 @@ public:
     IOManager() = default;
     ~IOManager() override = default;
 
-    void Setup();
-    void Shutdown();
-
     void Update() override;
 };

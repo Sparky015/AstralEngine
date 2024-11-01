@@ -31,7 +31,7 @@ namespace Event {
 
 
         /** Propagates an event to listeners. */
-        void PublishEvent(T& event)
+        void PublishEvent(T event)
         {
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RaiseEvent(event);
