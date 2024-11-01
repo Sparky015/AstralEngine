@@ -22,6 +22,8 @@ set(SOURCE_FILES
         Core/SystemUpdateEvent.h
         Core/SystemManager.h
         Core/SystemManager.cpp
+        WindowManager/WindowManager.cpp
+        WindowManager/WindowManager.h
 
 )
 

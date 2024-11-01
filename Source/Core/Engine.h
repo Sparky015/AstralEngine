@@ -9,6 +9,7 @@
 #include "Core/Events/EventPublisher.h"
 
 #include "IOManager/IOManager.h"
+#include "WindowManager/WindowManager.h"
 
 class Engine
 {
@@ -22,6 +23,7 @@ private:
     Event::EventPublisher<SystemUpdateEvent> m_SystemUpdatePublisher;
 
     IOManager m_IOManager;
+    WindowManager m_WindowManager;
 
 
 };
