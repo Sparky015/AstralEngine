@@ -5,14 +5,13 @@
 */
 #include "Engine.h"
 
-#include "IO/IOManager.h"
+#include "IOManager/IOManager.h"
+#include "Core/Events/EventListener.h"
+#include "Core/Events/EventPublisher.h"
 
 Engine::Engine()
 {
     m_IOManager.Setup();
-
-
-    
 }
 
 Engine::~Engine()
@@ -20,9 +19,17 @@ Engine::~Engine()
     m_IOManager.Shutdown();
 }
 
-void Engine::Run() const
+void Engine::Run()
 {
+    using namespace Event;
 
+    EventPublisher<int&> pub;
+    EventListener<int&> listener = EventListener<int&>([](int& i){LOG(i)});
+    int f = 5;
+    pub.PublishEvent(f);
+
+    SystemUpdateEvent sue = SystemUpdateEvent();
+    m_SystemUpdatePublisher.PublishEvent(sue);
 }
 
 

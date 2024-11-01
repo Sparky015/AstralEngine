@@ -13,3 +13,8 @@ void IOManager::Shutdown()
 {
 
 }
+
+void IOManager::Update()
+{
+    LOG("Derived class update is called!");
+}

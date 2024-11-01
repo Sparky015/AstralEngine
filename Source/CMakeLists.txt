@@ -13,12 +13,15 @@ set(SOURCE_FILES
         Game/Board.h
         Game/PieceInfo.h
         Game/PieceInfo.cpp
-        IO/PrintBoardEvent.h
+        IOManager/PrintBoardEvent.h
         Core/Events/Event.h
-        IO/IOManager.cpp
-        IO/IOManager.h
+        IOManager/IOManager.cpp
+        IOManager/IOManager.h
         Core/Engine.h
         Core/Engine.cpp
+        Core/SystemUpdateEvent.h
+        Core/SystemManager.h
+        Core/SystemManager.cpp
 
 )
 

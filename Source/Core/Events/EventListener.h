@@ -16,7 +16,7 @@ namespace Event {
     public:
 
         /** Adds the listener callback to the event bus. */
-        explicit EventListener(std::function<void(T&)>&& callback) : m_Callback(callback)
+        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(callback)
         {
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.AddListener(&m_Callback);
@@ -30,7 +30,7 @@ namespace Event {
         }
 
     private:
-        std::function<void(T&)> m_Callback;
+        std::function<void(T)> m_Callback;
     };
 
 } // namespace Solas::EventManagement

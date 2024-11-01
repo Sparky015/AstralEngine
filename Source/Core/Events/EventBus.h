@@ -19,7 +19,7 @@ namespace Event {
         {
             if (m_Instance == nullptr)
             {
-                TRACE("Creating new type of EventBus! Type ID: " << typeid(T).name());
+                TRACE("Creating new type of EventBus! Type ID: " << typeid(T).name() << " | Event Object Size: " << sizeof(T) << " byte(s)");
                 m_Instance = new EventBus<T>;
             }
             return *m_Instance;
@@ -29,7 +29,7 @@ namespace Event {
         /** Deletes the singleton instance of the type of Eventbus */
         static void Destroy()
         {
-            TRACE("Destroying a type of EventBus! Type ID: " << typeid(T).name());
+            TRACE("Destroying a type of EventBus! Type ID: " << typeid(T).name() << " | Event Object Size: " << sizeof(T) << " byte(s)");
             delete m_Instance;
             m_Instance = nullptr;
         }

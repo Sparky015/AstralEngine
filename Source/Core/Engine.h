@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include "IO/IOManager.h"
+#include "Core/Events/EventPublisher.h"
+
+#include "IOManager/IOManager.h"
 
 class Engine
 {
@@ -14,9 +16,11 @@ public:
     Engine();
     ~Engine();
 
-    void Run() const;
+    void Run();
 
 private:
+    Event::EventPublisher<SystemUpdateEvent> m_SystemUpdatePublisher;
+
     IOManager m_IOManager;
 
 
