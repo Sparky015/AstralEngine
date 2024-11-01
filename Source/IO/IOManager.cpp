@@ -3,3 +3,13 @@
 //
 
 #include "IOManager.h"
+
+void IOManager::Setup()
+{
+
+}
+
+void IOManager::Shutdown()
+{
+
+}

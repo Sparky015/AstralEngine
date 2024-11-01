@@ -4,3 +4,12 @@
 
 #pragma once
 
+class IOManager
+{
+public:
+    IOManager() = default;
+    ~IOManager() = default;
+
+    void Setup();
+    void Shutdown();
+};

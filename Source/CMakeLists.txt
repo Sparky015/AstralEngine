@@ -9,8 +9,6 @@ set(SOURCE_FILES
         Core/Events/EventBus.h
         Core/Events/EventListener.h
         Core/Events/EventPublisher.h
-        InputManager/InputManager.cpp
-        InputManager/InputManager.h
         Game/Board.cpp
         Game/Board.h
         Game/PieceInfo.h
@@ -19,6 +17,8 @@ set(SOURCE_FILES
         Core/Events/Event.h
         IO/IOManager.cpp
         IO/IOManager.h
+        Core/Engine.h
+        Core/Engine.cpp
 
 )
 

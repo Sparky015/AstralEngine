@@ -5,7 +5,7 @@ enable_testing()
 
 set(TEST_FILES
         ExampleTest.cpp
-        "Game/BoardClass/Board_MovePieceTest.cpp"
+        Game/BoardClass/Board_MovePieceTest.cpp
         Game/BoardClass/Board_FEN_Constructor.cpp
         Core/Events/EventSystemTest.cpp
         Game/BoardClass/Board_Standard_Constructor.cpp
