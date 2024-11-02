@@ -35,6 +35,8 @@ add_library(ChessEngine
         Debug/DebugEvents.h
         Game/BoardManager.cpp
         Game/BoardManager.h
+        Game/MoveGeneration.cpp
+        Game/MoveGeneration.h
 )
 
 
