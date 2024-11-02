@@ -5,6 +5,8 @@
 #include <gtest/gtest.h>
 #include "Game/Board.h"
 
+using namespace Game;
+
 class Board_ReadSquarePieceID : public ::testing::Test
 {
 public:

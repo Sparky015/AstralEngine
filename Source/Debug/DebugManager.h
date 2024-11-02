@@ -6,6 +6,8 @@
 
 #include "Core/SystemManager.h"
 
+#include "Window/WindowEvents.h"
+
 namespace Debug{
 
     class DebugManager : public SystemManager
@@ -28,13 +30,18 @@ namespace Debug{
         DebugManager& operator=(DebugManager&&) = delete;
 
     private:
-        DebugManager() = default;
+        DebugManager();
         ~DebugManager() override = default;
 
         void InitImGui();
         void ShutdownImGui();
 
+        void onKeyPress(KeyPressedEvent keyPressedEvent);
+
         float m_Time{0};
+        bool m_ShowDebugMenu{false};
+
+        Event::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
     extern DebugManager& g_DebugManager;

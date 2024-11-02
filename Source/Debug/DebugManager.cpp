@@ -9,7 +9,8 @@
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 
-#include "WindowManager/WindowManager.h"
+#include "Window/WindowManager.h"
+#include "Game/BoardManager.h"
 
 namespace Debug{
 
@@ -44,48 +45,28 @@ namespace Debug{
     void DebugManager::RenderImGui()
     {
         ImGuiIO& io = ImGui::GetIO();
+        const static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
 
-        static bool showAnotherWindow = false;
-        static bool showDemoNumbersWindow = true;
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        if (showDemoNumbersWindow)
+        if (m_ShowDebugMenu)
         {
-            static float sliderFloat = 0.0f;
-            static int counter = 0;
+            ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
 
-            ImGui::Begin("Hello, world!", &showDemoNumbersWindow);                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            static bool showDemoWindow;
-            ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
-            if (showDemoWindow) ImGui::ShowDemoWindow();
-
-            ImGui::Checkbox("Another Window", &showAnotherWindow);
-
-            ImGui::SliderFloat("float", &sliderFloat, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
-            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::TreeNode("Board"))
             {
-                counter++;
+                if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
+                {
+                    Game::Board& board = Game::g_BoardManager.GetBoard();
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%c", board.GetCharacterOfPiece(square));
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
             }
 
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (showAnotherWindow)
-        {
-            ImGui::Begin("Another Window", &showAnotherWindow);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-            {
-                showAnotherWindow = false;
-            }
             ImGui::End();
         }
     }
@@ -117,6 +98,12 @@ namespace Debug{
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backupCurrentContext);
         }
+    }
+
+
+    DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){this->onKeyPress(e);})
+    {
+
     }
 
 
@@ -154,6 +141,14 @@ namespace Debug{
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
+    }
+
+    void DebugManager::onKeyPress(KeyPressedEvent keyPressedEvent)
+    {
+        if (keyPressedEvent.keycode == GLFW_KEY_D)
+        {
+            m_ShowDebugMenu = !m_ShowDebugMenu;
+        }
     }
 
 }

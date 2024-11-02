@@ -1,6 +1,6 @@
 
 
-set(SOURCE_FILES
+add_library(ChessEngine
         Core/CoreMacroDefinitions.h
         Debug/DebugMacros.h
         Debug/DebugMacros.cpp
@@ -13,19 +13,19 @@ set(SOURCE_FILES
         Game/Board.h
         Game/PieceInfo.h
         Game/PieceInfo.cpp
-        IOManager/PrintBoardEvent.h
+        IO/PrintBoardEvent.h
         Core/Events/Event.h
-        IOManager/IOManager.cpp
-        IOManager/IOManager.h
+        IO/IOManager.cpp
+        IO/IOManager.h
         Core/Engine.h
         Core/Engine.cpp
         Core/SystemEvents.h
         Core/SystemManager.h
         Core/SystemManager.cpp
-        WindowManager/WindowManager.cpp
-        WindowManager/WindowManager.h
+        Window/WindowManager.cpp
+        Window/WindowManager.h
         Debug/AllocationTracker.h
-        WindowManager/WindowEvents.h
+        Window/WindowEvents.h
         Debug/DebugManager.h
         Debug/DebugManager.cpp
         Debug/ImGuiDependencies/imgui_impl_glfw.cpp
@@ -33,40 +33,38 @@ set(SOURCE_FILES
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/DebugEvents.h
-
-
+        Game/BoardManager.cpp
+        Game/BoardManager.h
 )
 
-set(SOURCE_FILES ${SOURCE_FILES} CACHE INTERNAL "Source Files")
 
-
-add_executable(Chess_Engine
+add_executable(Sozin
         main.cpp
-        ${SOURCE_FILES}
 )
 
+target_link_libraries(Sozin PRIVATE ChessEngine)
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
-    target_link_directories(Chess_Engine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/mac-lib)
+    target_link_directories(ChessEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/mac-lib)
 elseif (WIN32)
-    target_link_directories(Chess_Engine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
+    target_link_directories(ChessEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
 
 
 if (APPLE)
-    target_link_libraries(Chess_Engine PRIVATE glfw.3)
+    target_link_libraries(ChessEngine PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(Chess_Engine PRIVATE glfw3)
+    target_link_libraries(ChessEngine PRIVATE glfw3)
 endif ()
-target_link_libraries(Chess_Engine PRIVATE ImGui)
-target_link_libraries(Chess_Engine PRIVATE GLAD)
+target_link_libraries(ChessEngine PRIVATE ImGui)
+target_link_libraries(ChessEngine PRIVATE GLAD)
 
-target_include_directories(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
-target_precompile_headers(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/Source/pch.h")
+target_include_directories(ChessEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
+target_precompile_headers(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source/pch.h")
 
-target_include_directories(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
-target_include_directories(Chess_Engine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
+target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
+target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 
-target_compile_definitions(Chess_Engine PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(Chess_Engine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+target_compile_definitions(ChessEngine PRIVATE -DGLFW_INCLUDE_NONE)
+target_compile_definitions(ChessEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)

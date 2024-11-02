@@ -9,7 +9,7 @@
 #include "Core/Events/EventPublisher.h"
 #include "Core/Events/EventListener.h"
 
-#include "WindowManager/WindowEvents.h"
+#include "Window/WindowEvents.h"
 #include "Debug/DebugEvents.h"
 #include "SystemEvents.h"
 

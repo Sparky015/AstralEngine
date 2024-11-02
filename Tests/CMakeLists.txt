@@ -14,20 +14,17 @@ set(TEST_FILES
         Game/BoardClass/Board_PromotePawn.cpp
         Game/BoardClass/Board_TakePiece.cpp
         Game/BoardClass/Board_ReadSquarePieceID.cpp
+        Game/BoardClass/Board_GetCharacterOfPiece.cpp
 )
 
-list(TRANSFORM SOURCE_FILES PREPEND ${CMAKE_SOURCE_DIR}/Source/) # Set up the SOURCE_FILES variable for use in this CMakeList file
 
 add_executable(
         AllTests
         ${TEST_FILES}
-        ${SOURCE_FILES}
 )
 
-target_link_libraries(
-        AllTests
-        GTest::gtest_main
-)
+target_link_libraries(AllTests GTest::gtest_main)
+target_link_libraries(AllTests ChessEngine)
 
 target_include_directories(AllTests PRIVATE ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AllTests PRIVATE ${CMAKE_SOURCE_DIR}/Source)

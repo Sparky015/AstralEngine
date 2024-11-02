@@ -7,6 +7,8 @@
 #include <gtest/gtest.h>
 #include "Game/Board.h"
 
+using namespace Game;
+
 class Board_StandardConstructorTest : public ::testing::Test
 {
 public:

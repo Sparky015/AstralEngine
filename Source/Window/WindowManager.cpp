@@ -88,6 +88,16 @@ namespace Window{
             Event::EventPublisher<WindowClosedEvent> windowClosedPublisher;
             windowClosedPublisher.PublishEvent(WindowClosedEvent());
         });
+
+        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            if (action == GLFW_PRESS)
+            {
+                Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                keyPressedEvent.PublishEvent(KeyPressedEvent(key));
+            }
+
+        });
     }
 
     void WindowManager::Shutdown()
