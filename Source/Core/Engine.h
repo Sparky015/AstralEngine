@@ -7,9 +7,12 @@
 #pragma once
 
 #include "Core/Events/EventPublisher.h"
+#include "Core/Events/EventListener.h"
 
-#include "IOManager/IOManager.h"
-#include "WindowManager/WindowManager.h"
+#include "WindowManager/WindowEvents.h"
+#include "SystemEvents.h"
+
+
 
 class Engine
 {
@@ -19,11 +22,13 @@ public:
 
     void Run();
 
+   static inline Engine& Get() { return *m_Instance; }
+
 private:
     Event::EventPublisher<SystemUpdateEvent> m_SystemUpdatePublisher;
+    Event::EventListener<WindowClosedEvent> m_WindowClosedListener;
 
-    IOManager m_IOManager;
-    WindowManager m_WindowManager;
+    bool m_IsLoopRunning;
 
-
+    static Engine* m_Instance;
 };

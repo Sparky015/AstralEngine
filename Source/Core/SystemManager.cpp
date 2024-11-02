@@ -7,8 +7,4 @@ SystemManager::SystemManager() :
     m_UpdateListener([this](SystemUpdateEvent e){this->Update();})
 {}
 
-void SystemManager::Update()
-{
-    LOG("Default system update called!");
-}
 

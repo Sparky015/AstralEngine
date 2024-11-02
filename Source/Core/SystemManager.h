@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/SystemUpdateEvent.h"
+#include "Core/SystemEvents.h"
 #include "Core/Events/EventListener.h"
 
 class SystemManager
@@ -13,8 +13,12 @@ public:
     SystemManager();
     virtual ~SystemManager() = default;
 
+    virtual void Init() = 0;
+    virtual void Shutdown() = 0;
+    virtual void Update() = 0;
+
 private:
-    virtual void Update();
+
 
     Event::EventListener<SystemUpdateEvent> m_UpdateListener;
 };

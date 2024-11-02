@@ -4,8 +4,32 @@
 
 #include "IOManager.h"
 
+namespace IO{
 
-void IOManager::Update()
-{
-    LOG("Derived class update is called!");
+    IOManager& g_IOManager = IOManager::Get();
+
+    IOManager& IOManager::Get()
+    {
+        static IOManager m_Instance = IOManager();
+        return m_Instance;
+    }
+
+
+    void IOManager::Init()
+    {
+
+    }
+
+
+    void IOManager::Shutdown()
+    {
+
+    }
+
+
+    void IOManager::Update()
+    {
+
+    }
+
 }

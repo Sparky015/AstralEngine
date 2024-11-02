@@ -16,7 +16,7 @@ namespace Event {
     public:
 
         /** Adds the listener callback to the event bus. */
-        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(callback)
+        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback))
         {
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.AddListener(&m_Callback);

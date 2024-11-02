@@ -8,7 +8,7 @@
 
 namespace Event {
 
-    /** Holds function callbacks for when an event needs to be propagated. */
+    /** @brief Holds function callbacks for when an event needs to be propagated. */
     template<typename T>
     class EventBus
     {
@@ -17,21 +17,20 @@ namespace Event {
         /** Retrieves the event bus or creates (and returns) it on the first call */
         static EventBus<T>& Get()
         {
-            if (m_Instance == nullptr)
+            if (!m_IsInitialized)
             {
+                m_IsInitialized = true;
                 TRACE("Creating new type of EventBus! Type ID: " << typeid(T).name() << " | Event Object Size: " << sizeof(T) << " byte(s)");
-                m_Instance = new EventBus<T>;
             }
-            return *m_Instance;
-        }
 
+            static EventBus<T> m_Instance = EventBus<T>();
+            return m_Instance;
+        }
 
         /** Deletes the singleton instance of the type of Eventbus */
         static void Destroy()
         {
-            TRACE("Destroying a type of EventBus! Type ID: " << typeid(T).name() << " | Event Object Size: " << sizeof(T) << " byte(s)");
-            delete m_Instance;
-            m_Instance = nullptr;
+            TRACE("A type of EventBus has been emptied! Type ID: " << typeid(T).name() << " | Event Object Size: " << sizeof(T) << " byte(s)");
         }
 
 
@@ -52,9 +51,9 @@ namespace Event {
 
 
         /** Takes an event and propagates it to listeners. */
-        void RaiseEvent(T& event)
+        void RaiseEvent(const T& event)
         {
-            for (std::function<void(T)>* callback : m_Callbacks)
+            for (const std::function<void(T)>* callback : m_Callbacks)
             {
                 (*callback)(event);
             }
@@ -81,8 +80,8 @@ namespace Event {
         EventBus<T>() = default;
         ~EventBus<T>() = default;
 
-        static EventBus<T>* m_Instance;
         std::vector<std::function<void(T)>*> m_Callbacks;
+        static bool m_IsInitialized;
 
         uint16 m_NumberOfListeners{0};
         uint16 m_NumberOfPublishers{0};
@@ -99,7 +98,8 @@ namespace Event {
         }
     };
 
-    template<typename T>
-    EventBus<T>* EventBus<T>::m_Instance = nullptr;
+    template <typename T>
+    bool EventBus<T>::m_IsInitialized = false;
+
 
 } // namespace Solas::EventManagement

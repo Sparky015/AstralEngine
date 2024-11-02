@@ -3,13 +3,46 @@
 //
 
 #pragma once
+
 #include "Core/SystemManager.h"
 
-class WindowManager : public SystemManager
-{
-public:
-    WindowManager() = default;
-    ~WindowManager() override = default;
+#include "GLFW/glfw3.h"
 
-    void Update() override;
-};
+
+namespace Window {
+
+    class WindowManager : public SystemManager
+    {
+    public:
+
+        static WindowManager& Get();
+
+        void Init() override;
+        void Shutdown() override;
+        void Update() override;
+
+        [[nodiscard]] inline int GetWidth() const {return m_WindowWidth;}
+        [[nodiscard]] inline int GetHeight() const {return m_WindowHeight;}
+
+        [[nodiscard]] inline GLFWwindow* GetNativeWindow() const {return m_Window; };
+
+
+        WindowManager(WindowManager&&) = delete;
+        WindowManager& operator=(WindowManager&&) = delete;
+        WindowManager(const WindowManager&) = delete;
+        WindowManager& operator=(const WindowManager&) = delete;
+
+    private:
+        WindowManager();
+        ~WindowManager() override;
+        
+        static bool m_IsGLFWInitialized;
+        GLFWwindow* m_Window;
+
+        int m_WindowWidth = 500;
+        int m_WindowHeight = 500;
+
+    };
+
+    extern WindowManager& g_WindowManager;
+}
