@@ -22,7 +22,6 @@ namespace IO{
         IOManager& operator=(const IOManager&) = delete;
         IOManager(IOManager&&) = delete;
         IOManager& operator=(IOManager&&) = delete;
-
     private:
         IOManager() = default;
         ~IOManager() override = default;

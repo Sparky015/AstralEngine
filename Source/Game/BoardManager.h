@@ -19,6 +19,11 @@ namespace Game{
         void Update() override;
 
         [[nodiscard]] inline Board& GetBoard() {return m_Board; }
+
+        BoardManager(const BoardManager&) = delete;
+        BoardManager& operator=(const BoardManager&) = delete;
+        BoardManager(BoardManager&&) = delete;
+        BoardManager& operator=(BoardManager&&) = delete;
     private:
         BoardManager();
         ~BoardManager() override = default;

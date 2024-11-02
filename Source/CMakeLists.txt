@@ -38,9 +38,7 @@ add_library(ChessEngine
 )
 
 
-add_executable(Sozin
-        main.cpp
-)
+add_executable(Sozin main.cpp)
 
 target_link_libraries(Sozin PRIVATE ChessEngine)
 
