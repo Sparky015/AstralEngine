@@ -6,6 +6,7 @@
 
 #include "Core/SystemEvents.h"
 #include "Core/Events/EventListener.h"
+#include "Debug/DebugEvents.h"
 
 class SystemManager
 {
@@ -16,9 +17,11 @@ public:
     virtual void Init() = 0;
     virtual void Shutdown() = 0;
     virtual void Update() = 0;
+    virtual void RenderImGui();
 
 private:
 
 
     Event::EventListener<SystemUpdateEvent> m_UpdateListener;
+    Event::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

@@ -39,8 +39,8 @@ namespace Window {
         static bool m_IsGLFWInitialized;
         GLFWwindow* m_Window;
 
-        int m_WindowWidth = 500;
-        int m_WindowHeight = 500;
+        int m_WindowWidth = 640;
+        int m_WindowHeight = 640;
 
     };
 

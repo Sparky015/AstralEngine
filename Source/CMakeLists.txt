@@ -32,6 +32,7 @@ set(SOURCE_FILES
         Debug/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
+        Debug/DebugEvents.h
 
 
 )

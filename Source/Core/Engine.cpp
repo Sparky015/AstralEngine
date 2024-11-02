@@ -39,8 +39,11 @@ void Engine::Run()
     while (m_IsLoopRunning)
     {
         m_SystemUpdatePublisher.PublishEvent( SystemUpdateEvent() );
-    }
 
+        Debug::g_DebugManager.ImGuiBegin();
+        m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
+        Debug::g_DebugManager.ImGuiEnd();
+    }
 }
 
 

@@ -36,18 +36,14 @@ namespace Debug{
 
     void DebugManager::Update()
     {
-        ImGuiIO& io = ImGui::GetIO();
-        float time = static_cast<float>(glfwGetTime());
-        io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
-        m_Time = time;
-
-        ImGui_ImplGlfw_NewFrame();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui::NewFrame();
-
         glClearColor(.1,.8,.5,1);
         glClear(GL_COLOR_BUFFER_BIT);
+    }
 
+
+    void DebugManager::RenderImGui()
+    {
+        ImGuiIO& io = ImGui::GetIO();
 
         static bool showAnotherWindow = false;
         static bool showDemoNumbersWindow = true;
@@ -92,9 +88,25 @@ namespace Debug{
             }
             ImGui::End();
         }
+    }
 
 
+    void DebugManager::ImGuiBegin()
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        float time = static_cast<float>(glfwGetTime());
+        io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
+        m_Time = time;
 
+        ImGui_ImplGlfw_NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui::NewFrame();
+    }
+
+
+    void DebugManager::ImGuiEnd()
+    {
+        ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

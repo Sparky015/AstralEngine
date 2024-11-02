@@ -10,6 +10,7 @@
 #include "Core/Events/EventListener.h"
 
 #include "WindowManager/WindowEvents.h"
+#include "Debug/DebugEvents.h"
 #include "SystemEvents.h"
 
 
@@ -26,6 +27,7 @@ public:
 
 private:
     Event::EventPublisher<SystemUpdateEvent> m_SystemUpdatePublisher;
+    Event::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
     Event::EventListener<WindowClosedEvent> m_WindowClosedListener;
 
     bool m_IsLoopRunning;

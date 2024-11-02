@@ -17,7 +17,10 @@ namespace Debug{
         void Init() override;
         void Shutdown() override;
         void Update() override;
+        void RenderImGui() override;
 
+        void ImGuiBegin();
+        void ImGuiEnd();
 
         DebugManager(const DebugManager&) = delete;
         DebugManager& operator=(const DebugManager&) = delete;
@@ -31,7 +34,7 @@ namespace Debug{
         void InitImGui();
         void ShutdownImGui();
 
-        float m_Time;
+        float m_Time{0};
     };
 
     extern DebugManager& g_DebugManager;

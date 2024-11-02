@@ -42,8 +42,6 @@ namespace Window{
 
     void WindowManager::Init()
     {
-
-
         ///  Initializing GLFW
 
         if (!m_IsGLFWInitialized)
@@ -60,6 +58,9 @@ namespace Window{
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
+
+        /// Creating the GLFW window
+
         m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Chess", nullptr, nullptr);
 
         if (m_Window == nullptr)
@@ -70,11 +71,15 @@ namespace Window{
 
         glfwMakeContextCurrent(m_Window);
 
+
+        /// Setting up OpenGL context with GLAD.
+
         int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         if (status != 1)
         {
             ERROR("GLAD failed to load!");
         }
+
 
         /// Setting GLFW callbacks
 
