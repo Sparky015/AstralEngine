@@ -52,7 +52,7 @@ namespace Debug{
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
 
-            if (ImGui::TreeNode("Board"))
+            if (ImGui::TreeNode("Piece Locations"))
             {
                 if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
                 {
@@ -61,6 +61,21 @@ namespace Debug{
                     {
                         ImGui::TableNextColumn();
                         ImGui::Text("%c", board.GetCharacterOfPiece(square));
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Board Location IDs"))
+            {
+                if (ImGui::BeginTable("BoardLocationIDs", 8, flags, ImVec2(200, 130)))
+                {
+                    Game::Board& board = Game::g_BoardManager.GetBoard();
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%d", square);
                     }
                     ImGui::EndTable();
                 }

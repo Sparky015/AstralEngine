@@ -11,7 +11,7 @@
  * @enum This tracks the index of each piece in the Board's piece arrays.
  * @note The names of each ID is what the piece is at the start of the game.
 */
-enum PieceID : uint8
+enum PieceID //: uint8
 {
     PAWN_1,
     PAWN_2,
