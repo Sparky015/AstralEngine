@@ -124,14 +124,13 @@ namespace Debug{
 
     void DebugManager::InitImGui()
     {
-        IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
         Window::WindowManager& windowManager = Window::g_WindowManager;
         io.DisplaySize = ImVec2((float)windowManager.GetWidth(), (float)windowManager.GetHeight());
-        io.DisplayFramebufferScale = ImVec2(2,2);
+        io.DisplayFramebufferScale = ImVec2(1,1);
 
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
@@ -163,7 +162,7 @@ namespace Debug{
         if (keyPressedEvent.keycode == GLFW_KEY_D)
         {
             m_ShowDebugMenu = !m_ShowDebugMenu;
+            LOG("D is pressed and ShowDebugMenu is switched! Debug Menu: " << m_ShowDebugMenu);
         }
     }
-
 }

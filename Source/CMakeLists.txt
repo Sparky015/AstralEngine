@@ -1,5 +1,18 @@
 
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    add_definitions(-DDEBUG_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    add_definitions(-DRELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+    add_definitions(-DMINIMUM_SIZE_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
+    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
+endif()
+
+
 add_library(ChessEngine
         Core/CoreMacroDefinitions.h
         Debug/DebugMacros.h
@@ -37,6 +50,8 @@ add_library(ChessEngine
         Game/BoardManager.h
         Game/MoveGeneration.cpp
         Game/MoveGeneration.h
+        Debug/LogUsedTools.h
+        Debug/LogUsedTools.cpp
 )
 
 
@@ -68,3 +83,9 @@ target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 
 target_compile_definitions(ChessEngine PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(ChessEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+if (APPLE)
+    target_compile_definitions(ChessEngine PRIVATE -DPLATFORM_MACOS)
+elseif (WIN32)
+    target_compile_definitions(ChessEngine PRIVATE -DPLATFORM_WINDOWS)
+endif ()
+target_compile_definitions(ChessEngine PRIVATE -DTURN_OFF_LOGGING_CONSOLE_TO_FILE)
