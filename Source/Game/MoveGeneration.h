@@ -54,12 +54,27 @@ struct MoveList
 
 namespace Game{
 
-    void GenerateMoveList(MoveList& outMoveList, Board& board, PieceColor pieceColor);
+    class MoveListGenerator
+    {
+    public:
+        explicit MoveListGenerator(Board& board);
+        ~MoveListGenerator() = default;
 
-    void CalculatePawnMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
-    void CalculateRookMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
-    void CalculateBishopMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
-    void CalculateKnightMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
-    void CalculateQueenMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
-    void CalculateKingMoveList(MoveList& outMoveList, PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void GenerateMoveList(MoveList* outMoveList, PieceColor pieceColor);
+
+    private:
+        void CalculatePawnMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void CalculateRookMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void CalculateBishopMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void CalculateKnightMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void CalculateQueenMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+        void CalculateKingMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
+
+        MoveList* m_MoveList;
+        Board& m_Board;
+    };
+
+
+
+
 }
