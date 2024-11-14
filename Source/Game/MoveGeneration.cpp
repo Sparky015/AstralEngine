@@ -43,7 +43,7 @@ namespace Game{
         {
             uint8 pieceLocation = m_Board->ReadPieceLocation(pieceColor, (PieceID)pieceID);
             if (pieceLocation == EMPTY) { continue; }
-
+            // TODO: Fix bounds check on the first step
             switch (ConvertPieceIDToPieceType((PieceID)pieceID))
             {
                 case PieceType::PAWN:
@@ -53,12 +53,16 @@ namespace Game{
                     CalculateKnightMoveList((PieceID)pieceID, pieceColor, pieceLocation);
                     break;
                 case PieceType::ROOK:
+                    CalculateRookMoveList((PieceID)pieceID, pieceColor, pieceLocation);
                     break;
                 case PieceType::BISHOP:
+                    CalculateBishopMoveList((PieceID)pieceID, pieceColor, pieceLocation);
                     break;
                 case PieceType::KING:
+                    CalculateKingMoveList((PieceID)pieceID, pieceColor, pieceLocation);
                     break;
                 case PieceType::QUEEN:
+                    CalculateQueenMoveList((PieceID)pieceID, pieceColor, pieceLocation);
                     break;
                 case PieceType::NONE:
                     ERROR("Piece type should not be NONE here.")
@@ -77,7 +81,7 @@ namespace Game{
         uint8 directionMultiplier = (pieceColor == PieceColor::BLACK) ? -1 : 1;
         uint8 nextPieceLocation = pieceLocation + (UP * directionMultiplier);
         if (m_Board->ReadSquareType(nextPieceLocation) == PieceType::NONE)
-        {
+        { // TODO: Add bounds checks
             m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
         }
 
@@ -133,10 +137,10 @@ namespace Game{
                 m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
-                if (moveStep == UP && nextPieceLocation < 8) {break;}
-                else if (moveStep == LEFT && nextPieceLocation % 8 == 0) {break;}
-                else if (moveStep == RIGHT && nextPieceLocation % 8 == 7) {break;}
-                else if (moveStep == DOWN && nextPieceLocation > 55) {break;}
+                if (moveStep == DIAGONAL_UP_LEFT && (nextPieceLocation < 8 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == DIAGONAL_UP_RIGHT && (nextPieceLocation < 8 || nextPieceLocation % 8 == 7)) {break;}
+                else if (moveStep == DIAGONAL_DOWN_LEFT && (nextPieceLocation > 55 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == DIAGONAL_DOWN_RIGHT && (nextPieceLocation > 55 || nextPieceLocation % 8 == 7)) {break;}
 
                 nextPieceLocation += moveStep;
             }
@@ -163,10 +167,15 @@ namespace Game{
                 m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
-                if (moveStep == UP && nextPieceLocation < 8) {break;}
-                else if (moveStep == LEFT && nextPieceLocation % 8 == 0) {break;}
-                else if (moveStep == RIGHT && nextPieceLocation % 8 == 7) {break;}
-                else if (moveStep == DOWN && nextPieceLocation > 55) {break;}
+                if (moveStep == UP_LEFT && (nextPieceLocation < 16 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == UP_RIGHT && (nextPieceLocation < 16) || nextPieceLocation % 8 == 7) {break;}
+                else if (moveStep == DOWN_LEFT && (nextPieceLocation > 47 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == DOWN_RIGHT && (nextPieceLocation > 47 || nextPieceLocation % 8 == 7)) {break;}
+                else if (moveStep == LEFT_UP && (nextPieceLocation < 8 || nextPieceLocation % 8 == 1)) {break;}
+                else if (moveStep == LEFT_DOWN && (nextPieceLocation > 55 || nextPieceLocation % 8 == 1)) {break;}
+                else if (moveStep == RIGHT_UP && (nextPieceLocation < 8 || nextPieceLocation % 8 == 6)) {break;}
+                else if (moveStep == RIGHT_DOWN && (nextPieceLocation > 55 || nextPieceLocation % 8 == 6)) {break;}
+
             }
         }
     }
@@ -192,6 +201,10 @@ namespace Game{
                 else if (moveStep == LEFT && nextPieceLocation % 8 == 0) {break;}
                 else if (moveStep == RIGHT && nextPieceLocation % 8 == 7) {break;}
                 else if (moveStep == DOWN && nextPieceLocation > 55) {break;}
+                else if (moveStep == DIAGONAL_UP_LEFT && (nextPieceLocation < 8 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == DIAGONAL_UP_RIGHT && (nextPieceLocation < 8 || nextPieceLocation % 8 == 7)) {break;}
+                else if (moveStep == DIAGONAL_DOWN_LEFT && (nextPieceLocation > 55 || nextPieceLocation % 8 == 0)) {break;}
+                else if (moveStep == DIAGONAL_DOWN_RIGHT && (nextPieceLocation > 55 || nextPieceLocation % 8 == 7)) {break;}
 
                 nextPieceLocation += moveStep;
             }
