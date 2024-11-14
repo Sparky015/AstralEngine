@@ -17,4 +17,4 @@
 #define uint64 uint64_t
 
 
-#define PLATFORM_MACOS
+//#define PLATFORM_MACOS

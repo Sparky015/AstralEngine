@@ -15,7 +15,7 @@ Engine* Engine::m_Instance = nullptr;
 
 Engine::Engine() :
     m_IsLoopRunning(true),
-    m_WindowClosedListener({[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}})
+    m_WindowClosedListener(Event::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}})
 {
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;

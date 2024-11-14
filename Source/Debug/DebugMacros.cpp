@@ -66,7 +66,7 @@ namespace Debug::Macros {
                         std::cout << "\n" << "Color not defined!";
                         return "";
                 }
-            #elif defined(PLATFORM_WINDOWS)
+            #elif PLATFORM_WINDOWS
                 switch (color)
                 {
                     case ConsoleOutputColors::DEFAULT:

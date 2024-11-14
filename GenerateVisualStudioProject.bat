@@ -1,7 +1,7 @@
 @echo off
 REM Must be used from the root of the project.
 IF EXIST build-visual-studio (
-rmdir build-visual-studio /S /Q    REM mainly for iterating on the development of the build process and testing it
+rmdir build-visual-studio /S /Q    REM To replace existing build for iterating on the development of the build process and testing it
 )
 mkdir build-visual-studio
 cd build-visual-studio || exit
