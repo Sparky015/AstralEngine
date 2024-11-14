@@ -57,10 +57,10 @@ namespace Game{
     class MoveListGenerator
     {
     public:
-        explicit MoveListGenerator(Board& board);
+        MoveListGenerator();
         ~MoveListGenerator() = default;
 
-        void GenerateMoveList(MoveList* outMoveList, PieceColor pieceColor);
+        void GenerateMoveList(MoveList* outMoveList, const Board* board, PieceColor pieceColor);
 
     private:
         void CalculatePawnMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
@@ -71,7 +71,7 @@ namespace Game{
         void CalculateKingMoveList(PieceID pieceID, PieceColor pieceColor, uint8 pieceLocation);
 
         MoveList* m_MoveList;
-        Board& m_Board;
+        const Board* m_Board;
     };
 
 
