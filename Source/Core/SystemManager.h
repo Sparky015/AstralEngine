@@ -22,6 +22,6 @@ public:
 private:
 
 
-    Event::EventListener<SystemUpdateEvent> m_UpdateListener;
+    Event::EventListener<SubSystemUpdateEvent> m_UpdateListener;
     Event::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

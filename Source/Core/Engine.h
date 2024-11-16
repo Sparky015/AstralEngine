@@ -26,7 +26,7 @@ public:
    static inline Engine& Get() { return *m_Instance; }
 
 private:
-    Event::EventPublisher<SystemUpdateEvent> m_SystemUpdatePublisher;
+    Event::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
     Event::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
     Event::EventListener<WindowClosedEvent> m_WindowClosedListener;
 

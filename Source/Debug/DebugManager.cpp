@@ -47,7 +47,6 @@ namespace Debug{
         ImGuiIO& io = ImGui::GetIO();
         const static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
 
-
         if (m_ShowDebugMenu)
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
@@ -87,6 +86,7 @@ namespace Debug{
     }
 
 
+    float DebugManager::m_Time = 0.0f;
     void DebugManager::ImGuiBegin()
     {
         ImGuiIO& io = ImGui::GetIO();
@@ -118,7 +118,12 @@ namespace Debug{
 
     DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){this->onKeyPress(e);})
     {
+        LOG("Constructing Debug System!")
+    }
 
+    DebugManager::~DebugManager()
+    {
+        LOG("Destroying Debug System!")
     }
 
 
@@ -165,4 +170,5 @@ namespace Debug{
             LOG("D is pressed and ShowDebugMenu is switched! Debug Menu: " << m_ShowDebugMenu);
         }
     }
+
 }

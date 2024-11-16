@@ -17,17 +17,16 @@ namespace Window{
     void WindowManager::Update()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
     }
 
     WindowManager::WindowManager() : m_Window{nullptr}
     {
-        LOG("Window Created!")
+        LOG("Constructing Window System!")
     }
 
     WindowManager::~WindowManager()
     {
-        LOG("Window Destroyed!")
+        LOG("Destroying Window System!")
     }
 
 

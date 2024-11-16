@@ -4,7 +4,7 @@
 
 #pragma once
 
-struct SystemUpdateEvent
+struct SubSystemUpdateEvent
 {
-    SystemUpdateEvent() = default;
+    SubSystemUpdateEvent() = default;
 };

@@ -23,8 +23,8 @@ namespace IO{
         IOManager(IOManager&&) = delete;
         IOManager& operator=(IOManager&&) = delete;
     private:
-        IOManager() = default;
-        ~IOManager() override = default;
+        IOManager();
+        ~IOManager() override;
     };
 
     extern IOManager& g_IOManager;

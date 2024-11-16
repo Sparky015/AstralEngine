@@ -32,4 +32,15 @@ namespace IO{
 
     }
 
+
+    IOManager::IOManager()
+    {
+        LOG("Constructing IO System!")
+    }
+
+    IOManager::~IOManager()
+    {
+        LOG("Destroying IO System!")
+    }
+
 }

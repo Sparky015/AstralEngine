@@ -26,7 +26,7 @@ namespace Game{
         BoardManager& operator=(BoardManager&&) = delete;
     private:
         BoardManager();
-        ~BoardManager() override = default;
+        ~BoardManager() override;
 
         Board m_Board;
     };

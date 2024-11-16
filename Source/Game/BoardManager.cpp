@@ -36,7 +36,12 @@ namespace Game
 
     BoardManager::BoardManager() : m_Board(Board())
     {
+        LOG("Constructing Board Manager!")
+    }
 
+    BoardManager::~BoardManager()
+    {
+        LOG("Destroying Board Manager!")
     }
 
 

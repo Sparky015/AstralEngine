@@ -6,9 +6,11 @@
 
 int main()
 {
+    LOG("Starting engine execution! (entered main)");
+
     {
         Engine engine = Engine();
-        Debug::LogEngineDebugInfo();
+        Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
         engine.Run();
     }
 

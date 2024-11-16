@@ -21,8 +21,8 @@ namespace Debug{
         void Update() override;
         void RenderImGui() override;
 
-        void ImGuiBegin();
-        void ImGuiEnd();
+        static void ImGuiBegin();
+        static void ImGuiEnd();
 
         DebugManager(const DebugManager&) = delete;
         DebugManager& operator=(const DebugManager&) = delete;
@@ -31,14 +31,14 @@ namespace Debug{
 
     private:
         DebugManager();
-        ~DebugManager() override = default;
+        ~DebugManager() override;
 
         void InitImGui();
         void ShutdownImGui();
 
         void onKeyPress(KeyPressedEvent keyPressedEvent);
 
-        float m_Time{0};
+        static float m_Time;
         bool m_ShowDebugMenu{false};
 
         Event::EventListener<KeyPressedEvent> m_KeyPressedListener;
