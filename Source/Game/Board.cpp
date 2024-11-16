@@ -148,6 +148,9 @@ namespace Game {
         if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
         { throw std::logic_error("targetBoardLocation already has a piece on the square"); }
 
+        m_Board.WriteSquareType(ConvertPieceIDToPieceType(pieceID), targetBoardLocation);
+        m_Board.WriteSquareColor(color, targetBoardLocation);
+
         if (color == PieceColor::WHITE)
         {
             m_WhitePieceLocations[pieceID] = targetBoardLocation;
