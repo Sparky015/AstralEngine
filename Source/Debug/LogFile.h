@@ -26,17 +26,16 @@ namespace Debug {
             return m_Instance;
         }
 
-        // Constructs and initializes the LogFile on first call
+        /// Constructs and initializes the LogFile on first call
         inline std::fstream& GetFileStream()
         {
             static std::fstream m_LogFile;
             return m_LogFile;
         }
 
-        // Returns true if the log file is open
+        /// Returns true if the log file is open
         inline bool IsOpen()
         {
-            GetFileStream(); // This statement is to check that the LogFile instance has been set up to ensure that m_IsLogFileOpen is initialized.
             return m_IsLogFileOpen;
         }
 

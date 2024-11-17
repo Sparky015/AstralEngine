@@ -13,8 +13,10 @@ namespace Debug {
     {
         LOG("\n      Engine Info/Tools/Libraries:");
 
-        /** Most of these will never be used but I will keep it just in case logging gets turned on for some reason. (Logging is turned
-         * off for other builds like release. */
+        LOG("Compiled on " __DATE__ << " " << __TIME__);
+
+
+        /** Outputs the build configuration of the engine. */
         #ifdef DEBUG_BUILD
         LOG("Build Configuration: Debug");
         #elif RELEASE_WITH_DEBUG_INFO_BUILD
@@ -65,11 +67,7 @@ namespace Debug {
             LOG("Rendering API: OpenGL " << glGetString(GL_VERSION));
             LOG("Graphics Vendor: " << glGetString(GL_VENDOR));
             LOG("Graphics Processor: " << glGetString(GL_RENDERER));
-
-
         #endif
-
-        // make ayla defined macro for file name (__file_name__)
 
         LOG(""); // Creates an extra new line
     }

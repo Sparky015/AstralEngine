@@ -4,6 +4,8 @@
 
 #include "LogFile.h"
 
+#include <filesystem>
+
 namespace Debug {
 
      bool LogFile::m_IsLogFileOpen = false;

@@ -5,7 +5,6 @@
 #include "DebugMacros.h"
 
 #include "Debug/LogFile.h"
-#include <filesystem>
 #include <sstream>
 
 #include "pch.h"
@@ -135,7 +134,7 @@ namespace Debug::Macros {
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
-                    << "]" << message.str() << "\n";
+                    << "] " << message.str() << "\n";
         }
         else
         {

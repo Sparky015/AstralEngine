@@ -53,8 +53,3 @@ void Engine::Run()
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
     }
 }
-
-
-
-
-
