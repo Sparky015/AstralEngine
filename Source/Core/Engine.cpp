@@ -24,11 +24,15 @@ Engine::Engine() :
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
     Game::g_BoardManager.Init();
+
+    m_WindowClosedListener.StartListening();
 }
 
 
 Engine::~Engine()
 {
+    m_WindowClosedListener.StopListening();
+
     Game::g_BoardManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
     IO::g_IOManager.Shutdown();
@@ -40,11 +44,11 @@ void Engine::Run()
 {
     while (m_IsLoopRunning)
     {
-        m_SystemUpdatePublisher.PublishEvent( SystemUpdateEvent() );
+        m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
 
-        Debug::g_DebugManager.ImGuiBegin();
+        Debug::DebugManager::ImGuiBegin();
         m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
-        Debug::g_DebugManager.ImGuiEnd();
+        Debug::DebugManager::ImGuiEnd();
     }
 }
 

@@ -163,12 +163,11 @@ namespace Debug::Macros {
     }
 
 //TODO: Utilize __func__ __FILE__ and __LINE__ in the debugging macros
-    void macro_TRACE(const std::ostream& message)
+    void macro_TRACE(const std::ostringstream& message)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
-        std::ostringstream oss;
-        oss << message.rdbuf();
+
         /** Gets the current time */
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t); // Puts the information of the time into a struct that is separated into min, sec, hr, day, etc.
@@ -188,63 +187,58 @@ namespace Debug::Macros {
         std::cout << SetColor(CYAN) << "[" << currentTime->tm_hour
                   << ":" << currentTime->tm_min << ":"
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
-                  << "] " << SetColor(LIGHT_CYAN) << oss.str() << SetColor(DEFAULT) << "\n";
+                  << "] " << SetColor(LIGHT_CYAN) << message.str() << SetColor(DEFAULT) << "\n";
 
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
             LogFile << "[" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
-                    << "]" << oss.str() << "\n";
+                    << "]" << message.str() << "\n";
         #endif
     #endif
     }
 
 
-    void macro_LOG(const std::ostream& message)
+    void macro_LOG(const std::ostringstream& message)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
-        std::ostringstream oss;
-        oss << message.rdbuf();
 
-        std::cout << SetColor(LIGHT_GREEN) << oss.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
+        std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << oss.str() << "\n";
+            LogFile << message.str() << "\n";
         #endif
     #endif
     }
 
 
-    void macro_WARN(const std::ostream& message, const char* file, int line)
+    void macro_WARN(const std::ostringstream& message, const char* file, int line)
     {
         #ifndef TURN_OFF_DEBUG_MACROS
             CheckIfCoutFailed();
-            std::ostringstream oss;
-            oss << message.rdbuf();
 
-            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << oss.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
+            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << oss.str() << "\n";
+                LogFile << message.str() << "\n";
             #endif
         #endif
     }
 
 
-    bool macro_ASSERT(const bool expression, const std::ostream& errorMessage)
+    bool macro_ASSERT(const bool expression, std::ostringstream& errorMessage)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
-            std::ostringstream oss;
-            oss << errorMessage.rdbuf() << "\n\n";
+            errorMessage << "\n\n";
             #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\n\nAssert failed. \n\nError: " << oss.str();
+                LogFile << "\n\nAssert failed. \n\nError: " << errorMessage.str();
                 LogFile.close();
             #endif
-                std::cout << "\n\n" << SetColor(RED) << "AY_ASSERT failed. \n\nError: " << oss.str() << SetColor(DEFAULT);
+                std::cout << "\n\n" << SetColor(RED) << "AY_ASSERT failed. \n\nError: " << errorMessage.str() << SetColor(DEFAULT);
                 return false; // assert failed
 
-            //throw std::runtime_error(oss.str());  // color defaulted to red
+            //throw std::runtime_error(errorMessage.str());  // color defaulted to red
         }
     #endif
         return true;
@@ -252,16 +246,15 @@ namespace Debug::Macros {
 
 
     // Always returns false in order to fail the assert() in the macro. This way, the file name and line is outputted from the assert()
-    bool macro_ERROR(const std::ostream& errorMessage)
+    bool macro_ERROR(std::ostringstream& errorMessage)
     {
     #ifndef TURN_OFF_DEBUG_MACROS
-        std::ostringstream oss;
-        oss << errorMessage.rdbuf() << "\n\n";
+        errorMessage << "\n\n";
         #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n\nAY_ERROR called. \n\nError: " << oss.str();
+            LogFile << "\n\nERROR called. \n\nError: " << errorMessage.str();
             LogFile.close();
         #endif
-        std::cout << "\n\n" << SetColor(RED) << "AY_ERROR called. \n\nError: " << oss.str() << "\033[0m";
+        std::cout << "\n\n" << SetColor(RED) << "ERROR called. \n\nError: " << errorMessage.str() << "\033[0m";
         return false;
     #else
         return true; // if the debug macros are off then it will always return without causing the error through assert()
@@ -269,7 +262,7 @@ namespace Debug::Macros {
     }
 
 
-    AY_PROFILER::AY_PROFILER(std::string&& title)
+    macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(std::string&& title)
     #ifndef TURN_OFF_PROFILER_MACRO
         :
         m_title(std::move(title)),
@@ -279,7 +272,7 @@ namespace Debug::Macros {
     {}
 
 
-    AY_PROFILER::~AY_PROFILER()
+    macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER()
     {
     #ifndef TURN_OFF_PROFILER_MACRO
         m_endTime = std::chrono::high_resolution_clock::now();

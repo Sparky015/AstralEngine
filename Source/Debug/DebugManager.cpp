@@ -25,12 +25,20 @@ namespace Debug{
 
     void DebugManager::Init()
     {
+        TRACE("Initializing Debug Manager!")
         InitImGui();
+        m_UpdateListener.StartListening();
+        m_RenderImGuiListener.StartListening();
+        m_KeyPressedListener.StartListening();
     }
 
 
     void DebugManager::Shutdown()
     {
+        TRACE("Shutting down Debug Manager!")
+        m_KeyPressedListener.StopListening();
+        m_RenderImGuiListener.StopListening();
+        m_UpdateListener.StopListening();
         ShutdownImGui();
     }
 
@@ -116,14 +124,14 @@ namespace Debug{
     }
 
 
-    DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){this->onKeyPress(e);})
+    DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
     {
-        LOG("Constructing Debug System!")
+        TRACE("Constructing Debug System!")
     }
 
     DebugManager::~DebugManager()
     {
-        LOG("Destroying Debug System!")
+        TRACE("Destroying Debug System!")
     }
 
 
@@ -162,12 +170,11 @@ namespace Debug{
         ImGui::DestroyContext();
     }
 
-    void DebugManager::onKeyPress(KeyPressedEvent keyPressedEvent)
+    void DebugManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
         if (keyPressedEvent.keycode == GLFW_KEY_D)
         {
             m_ShowDebugMenu = !m_ShowDebugMenu;
-            LOG("D is pressed and ShowDebugMenu is switched! Debug Menu: " << m_ShowDebugMenu);
         }
     }
 

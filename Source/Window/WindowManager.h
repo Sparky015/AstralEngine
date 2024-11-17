@@ -24,8 +24,8 @@ namespace Window {
         [[nodiscard]] inline int GetWidth() const {return m_WindowWidth;}
         [[nodiscard]] inline int GetHeight() const {return m_WindowHeight;}
 
-        [[nodiscard]] inline GLFWwindow* GetNativeWindow() const {return m_Window; };
-        inline void SwapBuffers() const {glfwSwapBuffers(m_Window);}
+        [[nodiscard]] inline GLFWwindow* GetNativeWindow() const { return m_Window; };
+        inline void SwapBuffers() const { glfwSwapBuffers(m_Window); }
 
 
         WindowManager(WindowManager&&) = delete;

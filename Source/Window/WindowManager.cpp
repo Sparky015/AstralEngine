@@ -17,16 +17,17 @@ namespace Window{
     void WindowManager::Update()
     {
         glfwPollEvents();
+        glfwSwapBuffers(m_Window);
     }
 
     WindowManager::WindowManager() : m_Window{nullptr}
     {
-        LOG("Constructing Window System!")
+        TRACE("Constructing Window System!")
     }
 
     WindowManager::~WindowManager()
     {
-        LOG("Destroying Window System!")
+        TRACE("Destroying Window System!")
     }
 
 
@@ -41,6 +42,10 @@ namespace Window{
 
     void WindowManager::Init()
     {
+        TRACE("Initializing Window Manager!")
+        m_UpdateListener.StartListening();
+
+
         ///  Initializing GLFW
 
         if (!m_IsGLFWInitialized)
@@ -101,6 +106,9 @@ namespace Window{
 
     void WindowManager::Shutdown()
     {
+        TRACE("Shutting down Window Manager!")
+        m_UpdateListener.StopListening();
+        m_RenderImGuiListener.StopListening();
         glfwTerminate();
     }
 

@@ -17,10 +17,9 @@ public:
     virtual void Init() = 0;
     virtual void Shutdown() = 0;
     virtual void Update() = 0;
-    virtual void RenderImGui();
+    virtual void RenderImGui(); // Override to display debug info
 
-private:
-
+protected:
 
     Event::EventListener<SubSystemUpdateEvent> m_UpdateListener;
     Event::EventListener<RenderImGuiEvent> m_RenderImGuiListener;

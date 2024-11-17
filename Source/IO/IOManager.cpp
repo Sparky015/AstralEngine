@@ -17,13 +17,13 @@ namespace IO{
 
     void IOManager::Init()
     {
-
+        TRACE("Initializing IO Manager!")
     }
 
 
     void IOManager::Shutdown()
     {
-
+        TRACE("Shutting down IO Manager!")
     }
 
 
@@ -35,12 +35,12 @@ namespace IO{
 
     IOManager::IOManager()
     {
-        LOG("Constructing IO System!")
+        TRACE("Constructing IO System!")
     }
 
     IOManager::~IOManager()
     {
-        LOG("Destroying IO System!")
+        TRACE("Destroying IO System!")
     }
 
 }

@@ -36,7 +36,7 @@ namespace Debug{
         void InitImGui();
         void ShutdownImGui();
 
-        void onKeyPress(KeyPressedEvent keyPressedEvent);
+        void OnKeyPress(KeyPressedEvent keyPressedEvent);
 
         static float m_Time;
         bool m_ShowDebugMenu{false};

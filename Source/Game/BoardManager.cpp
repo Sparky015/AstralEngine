@@ -19,13 +19,15 @@ namespace Game
 
     void BoardManager::Init()
     {
-
+        TRACE("Initializing Board Manager!")
+        m_UpdateListener.StartListening();
     }
 
 
     void BoardManager::Shutdown()
     {
-
+        TRACE("Shutting down Board Manager!")
+        m_UpdateListener.StopListening();
     }
 
 
@@ -36,12 +38,12 @@ namespace Game
 
     BoardManager::BoardManager() : m_Board(Board())
     {
-        LOG("Constructing Board Manager!")
+        TRACE("Constructing Board Manager!")
     }
 
     BoardManager::~BoardManager()
     {
-        LOG("Destroying Board Manager!")
+        TRACE("Destroying Board Manager!")
     }
 
 

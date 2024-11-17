@@ -8,29 +8,40 @@
 
 namespace Event {
 
-//TODO Add support for non reference arguments and parameters (for passing by value)
     /** Manages the listener callback with the event bus. */
     template<typename T>
     class EventListener
     {
     public:
 
-        /** Adds the listener callback to the event bus. */
-        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback))
-        {
-            EventBus<T>& eventBus = EventBus<T>::Get();
-            eventBus.AddListener(&m_Callback);
-        }
+        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback)), m_IsListening(false) {};
 
-        /** Removes the listener callback to the event bus. */
         ~EventListener()
         {
+            StopListening();
+        }
+
+        /** Adds the listener callback to the event bus. */
+        void StartListening()
+        {
+            if (m_IsListening) {return;}
+            EventBus<T>& eventBus = EventBus<T>::Get();
+            eventBus.AddListener(&m_Callback);
+        };
+
+        /** Removes the listener callback to the event bus. */
+        void StopListening()
+        {
+            if (!m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RemoveListener(&m_Callback);
-        }
+        };
 
     private:
         std::function<void(T)> m_Callback;
+        bool m_IsListening;
     };
 
-} // namespace Solas::EventManagement
+
+
+} // namespace Event
