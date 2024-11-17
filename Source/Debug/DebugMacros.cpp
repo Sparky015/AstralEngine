@@ -4,8 +4,8 @@
 
 #include "DebugMacros.h"
 
+#include "Debug/LogFile.h"
 #include <filesystem>
-#include <fstream>
 #include <sstream>
 
 #include "pch.h"
@@ -16,36 +16,7 @@
 
 namespace Debug::Macros {
 
-    class LogFileManager
-    {
-    public:
-
-        // This ensures that the log file is created and opened when any of the logging files call it.
-        static std::fstream& GetLogFile()
-        {
-            if (!m_IsLogFileInitialized)
-            {
-                InitLogFileForMacros();
-                m_IsLogFileInitialized = true;
-            }
-
-            return m_LogFile;
-        }
-//TODO: Implement a way to close the log file when the program ends
-//TODO: Redesign the log file system to allow for log files to be opened and closed on the fly
-    private:
-        static bool m_IsLogFileInitialized;
-        static std::fstream m_LogFile;
-    };
-
-    bool LogFileManager::m_IsLogFileInitialized = false;
-
-
     namespace {
-
-        #ifdef PLATFORM_WINDOWS
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        #endif
 
         enum ConsoleOutputColors : uint8
         {
@@ -91,6 +62,9 @@ namespace Debug::Macros {
                         return "";
                 }
             #elif PLATFORM_WINDOWS
+
+                static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
                 switch (color)
                 {
                     case ConsoleOutputColors::DEFAULT:
@@ -126,66 +100,6 @@ namespace Debug::Macros {
     } // namespace
 
 
-    void InitLogFileForMacros()
-    {
-
-    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-
-        const std::time_t t = std::time(nullptr);
-        const std::tm* currentTime = std::localtime(&t);
-
-        /**
-         * Overall filepath of log file. It will progressively have folders appended to it in the lines
-         * following to form the full filepath.
-         * */
-        std::stringstream filePathStream;
-
-        /** Root folder name for all the console logs. */
-        const std::string rootFolder = "../../ConsoleLogs";
-        filePathStream << rootFolder << '/';
-
-        /** create_directories will fail most of the time because the folders have already been made most of the time. */
-        std::filesystem::create_directories(rootFolder); // filePathStream = "ConsoleLog/"
-
-        /** Creates a folder to subdivide the logs by the month and year */
-        std::stringstream monthAndYearFolderNameStream;
-        monthAndYearFolderNameStream << currentTime->tm_year + 1900 << "-" << currentTime->tm_mon + 1;
-        filePathStream << monthAndYearFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
-
-        /** Creates another folder to subdivide the logs by the day in a month */
-        std::stringstream dayFolderNameStream;
-        dayFolderNameStream << "Day-" << currentTime->tm_mday;
-        filePathStream << dayFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
-
-        /** Name of the text file based on the time it was created. */
-        std::stringstream hrMinSecTextFileNameStream;
-        hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec;
-
-        /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
-        filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
-
-        LogFile.open(filePathStream.str(), std::ios::out);
-        if (LogFile.fail())
-        {
-            WARN("DebugMacros.cpp: Log file failed to open!");
-        }
-    #endif
-    }
-
-
-    void CloseLogFileForMacros()
-    {
-    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-        LogFile.close();
-        if (LogFile.fail())
-        {
-            WARN("DebugMacros.cpp: Log file failed to close!");
-        }
-    #endif
-    }
-
 //TODO: Utilize __func__ __FILE__ and __LINE__ in the debugging macros
     void macro_TRACE(const std::ostringstream& message)
     {
@@ -213,12 +127,20 @@ namespace Debug::Macros {
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
                   << "] " << SetColor(LIGHT_CYAN) << message.str() << SetColor(DEFAULT) << "\n";
 
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "[" << currentTime->tm_hour
+        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        LogFile& logFile = LogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << "[" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
                     << "]" << message.str() << "\n";
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
         #endif
     #endif
     }
@@ -230,8 +152,16 @@ namespace Debug::Macros {
         CheckIfCoutFailed();
 
         std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << message.str() << "\n";
+        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        LogFile& logFile = LogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << message.str() << "\n";
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
         #endif
     #endif
     }
@@ -242,9 +172,17 @@ namespace Debug::Macros {
         #ifndef TURN_OFF_DEBUG_MACROS
             CheckIfCoutFailed();
 
-            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
-            #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << message.str() << "\n";
+            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n";
+            #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+            LogFile& logFile = LogFile::GetInstance();
+            if (logFile.IsOpen())
+            {
+                logFile.GetFileStream() << message.str() << "\n";
+            }
+            else
+            {
+                std::cout << SetColor(YELLOW) << "[Warning] [In macro_WARN] Attempted write to a log file that is already closed!" << SetColor(DEFAULT) << "\n";
+            }
             #endif
         #endif
     }
@@ -255,11 +193,19 @@ namespace Debug::Macros {
     #ifndef TURN_OFF_DEBUG_MACROS
         if (!expression){
             errorMessage << "\n\n";
-            #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-                LogFile << "\n\nAssert failed. \n\nError: " << errorMessage.str();
-                LogFile.close();
+            #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+            LogFile& logFile = LogFile::GetInstance();
+            if (logFile.IsOpen())
+            {
+                logFile.GetFileStream() << "\n\nAssert failed. \n\nError: " << errorMessage.str();
+                LogFile::Shutdown();
+            }
+            else
+            {
+                WARN("Attempted write to a log file that is already closed!");
+            }
             #endif
-                std::cout << "\n\n" << SetColor(RED) << "AY_ASSERT failed. \n\nError: " << errorMessage.str() << SetColor(DEFAULT);
+                std::cout << "\n\n" << SetColor(RED) << "ASSERT failed. \n\nError: " << errorMessage.str() << SetColor(DEFAULT);
                 return false; // assert failed
 
             //throw std::runtime_error(errorMessage.str());  // color defaulted to red
@@ -274,9 +220,17 @@ namespace Debug::Macros {
     {
     #ifndef TURN_OFF_DEBUG_MACROS
         errorMessage << "\n\n";
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "\n\nERROR called. \n\nError: " << errorMessage.str();
-            LogFile.close();
+        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        LogFile& logFile = LogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << "\n\nERROR called. \n\nError: " << errorMessage.str();
+            LogFile::Shutdown();
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
         #endif
         std::cout << "\n\n" << SetColor(RED) << "ERROR called. \n\nError: " << errorMessage.str() << "\033[0m";
         return false;
@@ -304,8 +258,17 @@ namespace Debug::Macros {
 
         std::cout<< SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds" << SetColor(DEFAULT) << "\n";
 
-        #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
-            LogFile << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds\n";
+        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        LogFile& logFile = LogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << "[Profiling " << m_title << "] Elapsed Time: " << (float) duration.count() * .000001
+                    << " seconds\n";
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
         #endif
     #endif
     }

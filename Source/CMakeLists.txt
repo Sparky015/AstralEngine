@@ -50,8 +50,10 @@ add_library(ChessEngine
         Game/BoardManager.h
         Game/MoveGeneration.cpp
         Game/MoveGeneration.h
-        Debug/LogUsedTools.h
-        Debug/LogUsedTools.cpp
+        Debug/EngineDebugInfoLogger.h
+        Debug/EngineDebugInfoLogger.cpp
+        Debug/LogFile.cpp
+        Debug/LogFile.h
 )
 
 
@@ -93,4 +95,5 @@ if (APPLE)
 elseif (WIN32)
     target_compile_definitions(ChessEngine PRIVATE -DPLATFORM_WINDOWS)
 endif ()
-#target_compile_definitions(ChessEngine PRIVATE -DTURN_OFF_LOGGING_CONSOLE_TO_FILE)
+target_compile_definitions(ChessEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
+target_compile_definitions(ChessEngine PRIVATE -DROOT_DIR="${CMAKE_SOURCE_DIR}")

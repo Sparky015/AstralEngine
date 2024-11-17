@@ -16,7 +16,6 @@
 /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
 #define LOG(message) { std::ostringstream ss; ss << message; Debug::Macros::macro_LOG(ss); }
 
-
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
 #define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE_NAME__, __LINE__); }
 
@@ -32,12 +31,6 @@
 
 /** Macro Land */
 namespace Debug::Macros {
-
-    /** Initializes the file stream for logging the macro outputs. This includes the creation of the folder structure that contains the logs. */
-    void InitLogFileForMacros();
-
-    /** Closes the file stream for logging macro outputs. */
-    void CloseLogFileForMacros();
 
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
     void macro_TRACE(const std::ostringstream& message);

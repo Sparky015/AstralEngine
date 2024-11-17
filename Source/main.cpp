@@ -1,12 +1,11 @@
 #include "Core/Engine.h"
-#include "Debug/LogUsedTools.h"
+#include "Debug/EngineDebugInfoLogger.h"
 
 //#include "Debug/AllocationTracker.h"
 
 
 int main()
 {
-    Debug::Macros::InitLogFileForMacros();
     LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
 
     {
@@ -16,6 +15,5 @@ int main()
     }
 
     LOG("\n---   Exiting main() ---     (static and global object destruction below)\n");
-    Debug::Macros::CloseLogFileForMacros();
     return 0;
 }

@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 7/18/24.
 //
 
-#include "LogUsedTools.h"
+#include "EngineDebugInfoLogger.h"
 
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
