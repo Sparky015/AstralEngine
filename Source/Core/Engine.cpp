@@ -20,6 +20,7 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
+    // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
@@ -42,13 +43,14 @@ Engine::~Engine()
 
 void Engine::Run()
 {
+
     while (m_IsLoopRunning)
     {
-        m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
-
         Debug::DebugManager::ImGuiBegin();
         m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
         Debug::DebugManager::ImGuiEnd();
+
+        m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
     }
 }
 

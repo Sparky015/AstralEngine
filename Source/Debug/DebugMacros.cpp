@@ -16,8 +16,32 @@
 
 namespace Debug::Macros {
 
+    class LogFileManager
+    {
+    public:
+
+        // This ensures that the log file is created and opened when any of the logging files call it.
+        static std::fstream& GetLogFile()
+        {
+            if (!m_IsLogFileInitialized)
+            {
+                InitLogFileForMacros();
+                m_IsLogFileInitialized = true;
+            }
+
+            return m_LogFile;
+        }
+//TODO: Implement a way to close the log file when the program ends
+//TODO: Redesign the log file system to allow for log files to be opened and closed on the fly
+    private:
+        static bool m_IsLogFileInitialized;
+        static std::fstream m_LogFile;
+    };
+
+    bool LogFileManager::m_IsLogFileInitialized = false;
+
+
     namespace {
-        std::fstream LogFile;
 
         #ifdef PLATFORM_WINDOWS
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

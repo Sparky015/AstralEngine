@@ -23,7 +23,7 @@ namespace Event {
                 //TRACE("Creating " << typeid(T).name() << " EventBus! | Event Object Size: "  << sizeof(T) << " byte(s)");
             }
 
-            static EventBus<T> m_Instance = EventBus<T>();
+            static EventBus<T> m_Instance;
             return m_Instance;
         }
 

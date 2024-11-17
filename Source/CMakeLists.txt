@@ -58,6 +58,7 @@ add_library(ChessEngine
 add_executable(Sozin main.cpp)
 
 target_link_libraries(Sozin PRIVATE ChessEngine)
+set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sozin)
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
@@ -66,20 +67,24 @@ elseif (WIN32)
     target_link_directories(ChessEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
 
+target_link_libraries(ChessEngine PRIVATE ImGui)
+target_link_libraries(ChessEngine PRIVATE GLAD)
 
 if (APPLE)
     target_link_libraries(ChessEngine PRIVATE glfw.3)
 elseif (WIN32)
     target_link_libraries(ChessEngine PRIVATE glfw3)
 endif ()
-target_link_libraries(ChessEngine PRIVATE ImGui)
-target_link_libraries(ChessEngine PRIVATE GLAD)
+
 
 target_include_directories(ChessEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
 target_precompile_headers(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source/pch.h")
 
 target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
 target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
+
+
+# Defining Macros
 
 target_compile_definitions(ChessEngine PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(ChessEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
