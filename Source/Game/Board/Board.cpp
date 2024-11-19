@@ -95,6 +95,8 @@ namespace Game {
                 // Set the piece type.
                 m_Board.WriteSquareType(ConvertCharToPieceType(c), squareLocation);
 
+                //TODO: Potentially just start writing locations in for each piece without regard to the type
+
                 // Increment the square location for the next iteration
                 squareLocation++;
             }
@@ -104,6 +106,7 @@ namespace Game {
         // Assigning the pieces in the m_[Color]PieceLocation arrays locations, so we need to find each piece ID's location from m_Board.
         for (uint8 pieceID = 0; pieceID < 16; pieceID++)
         {
+            //TODO: Fix this use of Converting the piece ID to piece type
             PieceType pieceType = ConvertPieceIDToPieceType((PieceID) pieceID);
             for (uint8 squareNum = 0; squareNum < 64; squareNum++)
             {
