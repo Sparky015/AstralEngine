@@ -13,9 +13,6 @@ namespace Debug {
     {
         LOG("\n      Engine Info/Tools/Libraries:");
 
-        LOG("Compiled on " __DATE__ << " " << __TIME__);
-
-
         /** Outputs the build configuration of the engine. */
         #ifdef DEBUG_BUILD
         LOG("Build Configuration: Debug");
