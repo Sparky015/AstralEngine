@@ -15,22 +15,22 @@ public:
 
 TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy1)
 {
-    EXPECT_EQ(board.ReadSquarePieceID(A8), ROOK_1);
+    EXPECT_EQ(board.ReadSquarePieceID(A8), PIECE_9);
 }
 
 TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy2)
 {
-    EXPECT_EQ(board.ReadSquarePieceID(E2), PAWN_5);
+    EXPECT_EQ(board.ReadSquarePieceID(E2), PIECE_5);
 }
 
 TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy3)
 {
-    EXPECT_EQ(board.ReadSquarePieceID(B1), KNIGHT_1);
+    EXPECT_EQ(board.ReadSquarePieceID(B1), PIECE_10);
 }
 
 TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy4)
 {
-    EXPECT_EQ(board.ReadSquarePieceID(F1), BISHOP_2);
+    EXPECT_EQ(board.ReadSquarePieceID(F1), PIECE_14);
 }
 
 TEST_F(Board_ReadSquarePieceID, SquareEmpty1)

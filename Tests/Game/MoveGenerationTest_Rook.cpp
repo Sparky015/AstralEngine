@@ -8,21 +8,22 @@
 
 using namespace Game;
 
-class MoveGenerationTest : public ::testing::Test
-{
-public:
-    void SetUp() override
-    {
-        moveListGen.GenerateMoveList(&blackMoveList, &board, PieceColor::BLACK);
-        moveListGen.GenerateMoveList(&whiteMoveList, &board, PieceColor::WHITE);
-    }
 
-    Board board; // standard starting board setup
-    MoveListGenerator moveListGen;
-
-    MoveList blackMoveList;
-    MoveList whiteMoveList;
-};
+//class MoveGenerationTest : public ::testing::Test
+//{
+//public:
+//    void SetUp() override
+//    {
+//        moveListGen.GenerateMoveList(&blackMoveList, &board, PieceColor::BLACK);
+//        moveListGen.GenerateMoveList(&whiteMoveList, &board, PieceColor::WHITE);
+//    }
+//
+//    Board board; // standard starting board setup
+//    MoveListGenerator moveListGen;
+//
+//    MoveList blackMoveList;
+//    MoveList whiteMoveList;
+//};
 //
 //// Tests for the rook piece that checks if the move list generated is correct and that the moves are valid for the rook
 //TEST_F(MoveGenerationTest, BlackRookRegularMove)

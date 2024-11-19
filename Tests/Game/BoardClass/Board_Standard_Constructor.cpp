@@ -17,18 +17,18 @@ public:
 
 TEST_F(Board_StandardConstructorTest, Standard_Constructor_CheckingLocation1)
 {
-    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::ROOK_1), A8);
-    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_1), A2);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_9), A8);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_1), A2);
 }
 
 TEST_F(Board_StandardConstructorTest, Standard_Constructor_CheckingLocation2)
 {
-    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::PAWN_4), D7);
-    EXPECT_EQ((uint8) StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::BISHOP_2), F1);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_4), D7);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_14), F1);
 }
 
 TEST_F(Board_StandardConstructorTest, Standard_Constructor_CheckingLocation3)
 {
-    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::KING), E8);
-    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::KING), E1);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_13), E8);
+    EXPECT_EQ(StandardBoard.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_13), E1);
 }

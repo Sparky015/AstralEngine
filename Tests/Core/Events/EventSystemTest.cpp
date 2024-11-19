@@ -29,33 +29,38 @@ struct Vector
 class EventSystemTest : public ::testing::Test
 {
 public:
-    EventListener<Vector&> eventListener = EventListener<Vector&>([this](Vector& v){this->result = v;});
-    EventPublisher<Vector&> eventPublisher = EventPublisher<Vector&>();
+    void SetUp() override
+    {
+        Listener.StartListening();
+    }
+    EventListener<Vector&> Listener = EventListener<Vector&>([this](Vector& v){ this->result = v;});
+    EventPublisher<Vector&> Publisher = EventPublisher<Vector&>();
     Vector result = Vector(0, 0, 0);
 };
 
 TEST_F(EventSystemTest, SystemTestBasic1)
 {
     Vector v = Vector(5,4,1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
 TEST_F(EventSystemTest, SystemTestBasic2)
 {
     Vector u = Vector(-1,0,1);
-    eventPublisher.PublishEvent(u);
+    Publisher.PublishEvent(u);
 
-    Vector v = Vector(0,0,0);
-    eventPublisher.PublishEvent(v);
+    Vector v = Vector(1,2,3);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
 TEST_F(EventSystemTest, SystemTestWithMoreThanOneListener1)
 {
     EventListener<Vector&> eventListener = EventListener<Vector&>([](Vector& v){});
+    eventListener.StartListening();
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -69,12 +74,20 @@ TEST_F(EventSystemTest, SystemTestWithMoreThanOneListener2)
     EventListener<Vector&> eventListener6 = EventListener<Vector&>([](Vector& v){});
     EventListener<Vector&> eventListener7 = EventListener<Vector&>([](Vector& v){});
     EventListener<Vector&> eventListener8 = EventListener<Vector&>([](Vector& v){});
+    eventListener.StartListening();
+    eventListener2.StartListening();
+    eventListener3.StartListening();
+    eventListener4.StartListening();
+    eventListener5.StartListening();
+    eventListener6.StartListening();
+    eventListener7.StartListening();
+    eventListener8.StartListening();
 
     Vector u = Vector(-1,0,1);
-    eventPublisher.PublishEvent(u);
+    Publisher.PublishEvent(u);
 
     Vector v = Vector(-5,-4,1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -82,10 +95,11 @@ TEST_F(EventSystemTest, RemoveOneListener)
 {
     {
         EventListener<Vector&> eventListener = EventListener<Vector&>([](Vector& v){});
+        eventListener.StartListening();
     }
 
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -96,10 +110,14 @@ TEST_F(EventSystemTest, RemoveMultipleListeners)
         EventListener<Vector&> eventListener2 = EventListener<Vector&>([](Vector& v){});
         EventListener<Vector&> eventListener3 = EventListener<Vector&>([](Vector& v){});
         EventListener<Vector&> eventListener4 = EventListener<Vector&>([](Vector& v){});
+        eventListener.StartListening();
+        eventListener2.StartListening();
+        eventListener3.StartListening();
+        eventListener4.StartListening();
     }
 
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -113,7 +131,7 @@ TEST_F(EventSystemTest, RemoveMultiplePublishers)
     }
 
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -124,6 +142,10 @@ TEST_F(EventSystemTest, RemoveMultipleListenersAndPublishers)
         EventListener<Vector&> eventListener2 = EventListener<Vector&>([](Vector& v){});
         EventListener<Vector&> eventListener3 = EventListener<Vector&>([](Vector& v){});
         EventListener<Vector&> eventListener4 = EventListener<Vector&>([](Vector& v){});
+        eventListener.StartListening();
+        eventListener2.StartListening();
+        eventListener3.StartListening();
+        eventListener4.StartListening();
     }
 
     {
@@ -134,7 +156,7 @@ TEST_F(EventSystemTest, RemoveMultipleListenersAndPublishers)
     }
 
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -144,8 +166,9 @@ TEST_F(EventSystemTest, SystemTestWithTwoPublisher)
     Vector u = Vector(-24,1222,-1);
     eventPublisher2.PublishEvent(u);
     EventListener<Vector&> eventListener = EventListener<Vector&>([](Vector& v){});
+    eventListener.StartListening();
     Vector v = Vector(1,0,-1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 
@@ -165,7 +188,7 @@ TEST_F(EventSystemTest, SystemTestWithMultiplePublishers)
 
 
     Vector v = Vector(-5,-4,1);
-    eventPublisher.PublishEvent(v);
+    Publisher.PublishEvent(v);
     EXPECT_EQ(v, result);
 }
 

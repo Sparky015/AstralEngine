@@ -10,6 +10,10 @@ using namespace Game;
 class Board_FEN_ConstructorTest : public ::testing::Test
 {
 public:
+    void SetUp() override{
+        FEN_Board.PrintBoardToConsole();
+        FEN2_Board.PrintBoardToConsole();
+    }
 
     Board FEN_Board = Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     Board FEN2_Board = Board("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1");
@@ -18,19 +22,19 @@ public:
 TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingLocation1)
 {
 // Example test to check if board initialized correctly from FEN string
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::ROOK_1), A8);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_1), A2);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::ROOK_2), H1);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PAWN_6), F7);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_1), A8);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_1), A2);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_16), H1);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_14), F7);
 }
 
 TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingLocation2)
 {
 // Example test to check if board initialized correctly from FEN string
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::KING), E8);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::BISHOP_2), F8);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::KING), E1);
-    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_3), C2);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_5), E8);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_6), F8);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_13), E1);
+    EXPECT_EQ(FEN_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_3), C2);
 }
 
 TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingEmptyLocations1)
@@ -45,14 +49,14 @@ TEST_F(Board_FEN_ConstructorTest, FEN_Constructor_CheckingEmptyLocations1)
 
 TEST_F(Board_FEN_ConstructorTest, FEN2_Constructor_CheckingLocation1)
 {
-    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::QUEEN), A1);
-    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::BISHOP_1), E7);
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_12), A1);
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_1), E7);
 }
 
 TEST_F(Board_FEN_ConstructorTest, FEN2_Constructor_CheckingLocation2)
 {
-    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PAWN_3), G4);
-    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PAWN_1), A7);
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::WHITE, PieceID::PIECE_6), G4);
+    EXPECT_EQ(FEN2_Board.ReadPieceLocation(PieceColor::BLACK, PieceID::PIECE_5), A7);
 }
 
 TEST_F(Board_FEN_ConstructorTest, FEN2_Constructor_CheckingEmptyLocation1)
