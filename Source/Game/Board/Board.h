@@ -60,6 +60,9 @@ namespace Game {
         void WriteSquareColor(uint8 squareLocation, PieceColor pieceColor);
 
         //TODO: Profile different memory layouts for speed
+        uint16 m_FullMoveCount;
+        uint8 m_HalfMoveCount;
+        uint8 m_BoardState; // Holds castling rights and active color
         std::array<uint8, 16> m_BlackPieceLocations; // These two contain the location info of a piece
         std::array<uint8, 16> m_WhitePieceLocations;
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece

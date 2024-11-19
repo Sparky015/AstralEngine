@@ -32,7 +32,7 @@ namespace Game {
     };
 
 
-    /** @struct Representation of the chess board internally. Gives useful helper functions to access compacted data. */
+    /** @struct Representation of the chess board internally. Gives helper functions to access compacted data. */
     struct InternalBoardRepresentation
     {
         InternalBoardRepresentation();
