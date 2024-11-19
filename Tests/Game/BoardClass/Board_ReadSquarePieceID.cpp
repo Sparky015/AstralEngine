@@ -13,22 +13,22 @@ public:
     Board board = Board();
 };
 
-TEST_F(Board_ReadSquarePieceID, CheckIDAccuracy1)
+TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy1)
 {
     EXPECT_EQ(board.ReadSquarePieceID(A8), PIECE_9);
 }
 
-TEST_F(Board_ReadSquarePieceID, CheckIDAccuracy2)
+TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy2)
 {
     EXPECT_EQ(board.ReadSquarePieceID(E2), PIECE_5);
 }
 
-TEST_F(Board_ReadSquarePieceID, CheckIDAccuracy3)
+TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy3)
 {
     EXPECT_EQ(board.ReadSquarePieceID(B1), PIECE_10);
 }
 
-TEST_F(Board_ReadSquarePieceID, CheckIDAccuracy4)
+TEST_F(Board_ReadSquarePieceID, CheckPieceIDAccuracy4)
 {
     EXPECT_EQ(board.ReadSquarePieceID(F1), PIECE_14);
 }

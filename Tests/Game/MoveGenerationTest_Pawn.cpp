@@ -8,6 +8,7 @@
 
 using namespace Game;
 
+
 //class MoveGenerationTest : public ::testing::Test
 //{
 //public:
@@ -23,6 +24,7 @@ using namespace Game;
 //    MoveList blackMoveList;
 //    MoveList whiteMoveList;
 //};
+
 //
 //TEST_F(MoveGenerationTest, BlackPawnRegularMove)
 //{
