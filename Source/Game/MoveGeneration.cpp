@@ -44,7 +44,7 @@ namespace Game{
             uint8 pieceLocation = m_Board->ReadPieceLocation(pieceColor, (PieceID)pieceID);
             if (pieceLocation == EMPTY) { continue; }
             // TODO: Fix bounds check on the first step
-            switch (ConvertPieceIDToPieceType((PieceID)pieceID))
+            switch (m_Board->ReadPieceType(pieceColor, (PieceID)pieceID))
             {
                 case PieceType::PAWN:
                     CalculatePawnMoveList((PieceID)pieceID, pieceColor, pieceLocation);
@@ -82,7 +82,7 @@ namespace Game{
         uint8 nextPieceLocation = pieceLocation + (UP * directionMultiplier);
         if (m_Board->ReadSquareType(nextPieceLocation) == PieceType::NONE)
         { // TODO: Add bounds checks
-            m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//            m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
         }
 
         // Check if en passant is applicable
@@ -106,7 +106,7 @@ namespace Game{
             nextPieceLocation = pieceLocation + moveStep;
             while (m_Board->ReadSquareType(pieceLocation) == PieceType::NONE)
             {
-                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
                 if (moveStep == UP && nextPieceLocation < 8) {break;}
@@ -134,7 +134,7 @@ namespace Game{
             nextPieceLocation = pieceLocation + moveStep;
             while (m_Board->ReadSquareType(pieceLocation) == PieceType::NONE)
             {
-                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
                 if (moveStep == DIAGONAL_UP_LEFT && (nextPieceLocation < 8 || nextPieceLocation % 8 == 0)) {break;}
@@ -164,7 +164,7 @@ namespace Game{
 
             if (m_Board->ReadSquareType(pieceLocation) == PieceType::NONE) // Only checks each direction once
             {
-                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
                 if (moveStep == UP_LEFT && (nextPieceLocation < 16 || nextPieceLocation % 8 == 0)) {break;}
@@ -194,7 +194,7 @@ namespace Game{
             nextPieceLocation = pieceLocation + moveStep;
             while (m_Board->ReadSquareType(pieceLocation) == PieceType::NONE)
             {
-                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
                 if (moveStep == UP && nextPieceLocation < 8) {break;}
@@ -226,7 +226,7 @@ namespace Game{
 
             if (m_Board->ReadSquareType(pieceLocation) == PieceType::NONE) // Only checks each direction once
             {
-                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
+//                m_MoveList->GetPieceVec(pieceID).push_back(nextPieceLocation);
 
                 // Checking if the next move will be in bounds before updating again
                 if (moveStep == UP && nextPieceLocation < 8) {break;}
