@@ -4,7 +4,8 @@
 
 #include "PieceInfo.h"
 
-
+// TODO: Remove this function and replace it with the use of the Piece struct. I can't assume the Piece IDs will match the
+// PieceTypes due to promotions. Therefore, the types could change, but I would still assume it to be the first type.
 PieceType ConvertPieceIDToPieceType(PieceID pieceID)
 {
     switch (pieceID)

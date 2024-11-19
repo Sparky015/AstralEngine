@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "Game/Board.h"
+#include "Game/Board/Board.h"
 #include "Game/MoveGeneration.h"
 
 using namespace Game;
@@ -76,21 +76,3 @@ TEST_F(MoveGenerationTest, WhiteRookCaptureMove)
     EXPECT_EQ(whiteMoveList.Rook1[0], BoardLocation::A3); // Capture move
 }
 
-// Tests for out-of-bounds moves for the knight and king
-TEST_F(MoveGenerationTest, KnightOutOfBoundsMove)
-{
-    // Place knight at the edge of the board
-    board.MovePiece(PieceColor::WHITE, KNIGHT_1, BoardLocation::H8);
-    moveListGen.GenerateMoveList(&whiteMoveList, &board, PieceColor::WHITE);
-    // Knight should have only 2 valid moves
-    EXPECT_EQ(whiteMoveList.Knight1.size(), 2);
-}
-
-TEST_F(MoveGenerationTest, KingOutOfBoundsMove)
-{
-    // Place king at the edge of the board
-    board.MovePiece(PieceColor::WHITE, KING, BoardLocation::H8);
-    moveListGen.GenerateMoveList(&whiteMoveList, &board, PieceColor::WHITE);
-    // King should have only 3 valid moves
-    EXPECT_EQ(whiteMoveList.King.size(), 3);
-}

@@ -213,7 +213,7 @@ namespace Debug::Macros {
         return true;
     }
 
-
+// TODO: Redesign this without the assert and use compiler intrinsics instead
     // Always returns false in order to fail the assert() in the macro. This way, the file name and line is outputted from the assert()
     bool macro_ERROR(std::ostringstream& errorMessage)
     {

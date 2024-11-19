@@ -10,7 +10,7 @@
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 
 #include "Window/WindowManager.h"
-#include "Game/BoardManager.h"
+#include "Game/Board/BoardManager.h"
 
 namespace Debug{
 

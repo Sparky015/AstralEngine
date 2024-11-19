@@ -1,3 +1,9 @@
+//
+// Created by Andrew Fagan on 11/18/24.
+//
+
+#pragma once
+
 /**
 * @file Board.h
 * @author Andrew Fagan
@@ -8,7 +14,8 @@
 
 #include "pch.h"
 
-#include "PieceInfo.h"
+#include "Game/Board/InternalBoardData.h"
+#include "Game/PieceInfo.h"
 
 namespace Game {
 
@@ -82,14 +89,11 @@ namespace Game {
          * @return The location of the specified piece (or 255 if piece is not on board) */
         [[nodiscard]] uint8 ReadPieceLocation(const PieceColor color, const PieceID pieceID) const;
 
-
-        /** @brief Writes a location of a piece to the chess board
+        /** @brief Gets the type of a piece in the chess board.
          * @param color The color of the piece being moved.
-         * @param pieceID The ID of the piece that is being written to.
-         * @param boardLocation The location that is being written to the piece.
-         * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive. */
-        void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
-
+         * @param pieceID The ID of the piece that is being read.
+         * @return The piece type of the specified piece */
+        [[nodiscard]] PieceType ReadPieceType(const PieceColor color, const PieceID pieceID) const;
 
         /** @brief Reads the color of the piece on the square of the given location. This assumes there is a piece on the
          * given location.
@@ -99,27 +103,11 @@ namespace Game {
          * @return The color of the piece at the given location. */
         [[nodiscard]] PieceColor ReadSquareColor(uint8 squareLocation) const;
 
-
-        /** @brief Writes the color of the piece on the square of the given location.
-         * @param squareLocation The location of the square being read.
-         * @param The color of the piece being written.
-         * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63 */
-        void WriteSquareColor(uint8 squareLocation, PieceColor pieceColor);
-
-
         /** @brief Reads the type of the piece on the square of the given location. Returns Piece::NONE if there are no pieces on the square.
          * @param squareLocation The location of the square being read.
          * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63
          * @return The type of piece on the square at the location given. */
         [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation) const;
-
-
-        /** @brief Writes the type of the piece on the square of the given location.
-            * @param squareLocation The location of the square being read.
-            * @param pieceType The type of the piece being written.
-            * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63 */
-        void WriteSquareType(uint8 squareLocation, PieceType pieceType);
-
 
         /** @brief Reads the the ID of the piece on the square. This assumes that there is a piece on the location given.
          * @param squareLocation The location of the square being read.
@@ -143,49 +131,24 @@ namespace Game {
 
     private:
 
-        /** @struct Contains the compacted properties of two horizontally adjacent squares in a chess board. */
-        struct TwoSquares
-        {
-            TwoSquares();
+        /** @brief Writes the type of the piece on the square of the given location.
+         * @param squareLocation The location of the square being read.
+         * @param pieceType The type of the piece being written.
+         * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63 */
+        void WriteSquareType(uint8 squareLocation, PieceType pieceType);
 
-            TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
+        /** @brief Writes the color of the piece on the square of the given location.
+         * @param squareLocation The location of the square being read.
+         * @param The color of the piece being written.
+         * @throws std::out_of_range Errors if the squareLocation is not in a valid range of 0-63 */
+        void WriteSquareColor(uint8 squareLocation, PieceColor pieceColor);
 
-            /** @brief Reads the type of the selected square. */
-            [[nodiscard]] PieceType ReadSquareType(bool isSecondSquare) const;
-
-            /** @brief Reads the color of the selected square. */
-            [[nodiscard]] PieceColor ReadSquareColor(bool isSecondSquare) const;
-
-            /** @brief Writes the type to the selected square. */
-            void WriteSquareType(PieceType type, bool isSecondSquare);
-
-            /** @brief Writes the color to the selected square. */
-            void WriteSquareColor(PieceColor color, bool isSecondSquare);
-
-        private:
-            uint8 m_Data;
-        };
-
-        /** @struct Representation of the chess board internally. Gives useful helper functions to access compacted data. */
-        struct InternalBoardRepresentation
-        {
-            InternalBoardRepresentation();
-
-            /** @brief Reads the type of the square at the location given. */
-            [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation) const;
-
-            /** @brief Reads the color of the square at the location given. */
-            [[nodiscard]] PieceColor ReadSquareColor(uint8 squareLocation) const;
-
-            /** @brief Writes the type of the square at the location given. */
-            void WriteSquareType(PieceType pieceType, uint8 squareLocation);
-
-            /** @brief Writes the color of the square at the location given. */
-            void WriteSquareColor(PieceColor pieceColor, uint8 squareLocation);
-
-        private:
-            std::array<TwoSquares, 32> m_InternalBoard;
-        };
+        /** @brief Writes a location of a piece to the chess board
+         * @param color The color of the piece being moved.
+         * @param pieceID The ID of the piece that is being written to.
+         * @param boardLocation The location that is being written to the piece.
+         * @throws std::out_of_range Errors when the specified location is not 0-63 inclusive. */
+        void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
 
 
         //TODO: Profile different memory layouts for speed

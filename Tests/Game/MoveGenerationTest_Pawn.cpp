@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "Game/Board.h"
+#include "Game/Board/Board.h"
 #include "Game/MoveGeneration.h"
 
 using namespace Game;

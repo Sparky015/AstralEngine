@@ -8,7 +8,7 @@
 #include "IO/IOManager.h"
 #include "Window/WindowManager.h"
 #include "Debug/DebugManager.h"
-#include "Game/BoardManager.h"
+#include "Game/Board/BoardManager.h"
 
 
 Engine* Engine::m_Instance = nullptr;

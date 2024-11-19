@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-#include "Game/Board.h"
+#include "Board.h"
 
 namespace Game{
 
