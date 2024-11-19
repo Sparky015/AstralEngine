@@ -39,7 +39,7 @@ namespace Game{
         m_MoveList = outMoveList;
         *m_MoveList = MoveList();
 
-        for (uint8 pieceID = PAWN_1; pieceID != ROOK_2; pieceID++)
+        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16; pieceID++)
         {
             uint8 pieceLocation = m_Board->ReadPieceLocation(pieceColor, (PieceID)pieceID);
             if (pieceLocation == EMPTY) { continue; }

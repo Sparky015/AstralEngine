@@ -25,6 +25,7 @@ namespace Event {
         void StartListening()
         {
             if (m_IsListening) {return;}
+            m_IsListening = true;
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.AddListener(&m_Callback);
         };

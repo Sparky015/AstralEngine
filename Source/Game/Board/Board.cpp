@@ -18,20 +18,25 @@ namespace Game {
             m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
 
     {
+        std::array<PieceType, 16> OrderOfPieceTypes
+        {PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
+         PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
+         PieceType::ROOK,PieceType::KNIGHT, PieceType::BISHOP, PieceType::QUEEN,
+         PieceType::KING,PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK};
         // Take the location of each piece and populate that square with the piece's info
 
         for (uint8 pieceID = 0; pieceID < m_BlackPieceLocations.size(); pieceID++)
         {
             uint8 pieceLocation = m_BlackPieceLocations[pieceID];
             m_Board.WriteSquareColor(BLACK, pieceLocation);
-            m_Board.WriteSquareType(ConvertPieceIDToPieceType((PieceID) pieceID), pieceLocation);
+            m_Board.WriteSquareType(OrderOfPieceTypes[pieceID], pieceLocation);
         }
 
         for (uint8 pieceID = 0; pieceID < m_WhitePieceLocations.size(); pieceID++)
         {
             uint8 pieceLocation = m_WhitePieceLocations[pieceID];
             m_Board.WriteSquareColor(WHITE, pieceLocation);
-            m_Board.WriteSquareType(ConvertPieceIDToPieceType((PieceID) pieceID), pieceLocation);
+            m_Board.WriteSquareType(OrderOfPieceTypes[pieceID], pieceLocation);
         }
 
     }
@@ -66,7 +71,10 @@ namespace Game {
         m_WhitePieceLocations.fill(EMPTY);
         m_BlackPieceLocations.fill(EMPTY);
 
-        // Going through each character in the FEN sequence and adding the piece to the board
+        uint8 whitePieceIDMarker = 0; // Holds the next white piece ID that needs to be assigned
+        uint8 blackPieceIDMarker = 0; // Holds the next black piece ID that needs to be assigned
+
+        // Going through each character in the FEN sequence and adding the piece to the board (top to bottom)
         uint8 squareLocation = 0;
         for (char c: FEN)
         {
@@ -75,8 +83,9 @@ namespace Game {
             {
                 squareLocation += (c - '0');
             }
-            else // Character is a letter
-            {
+            else
+            { // Then the character is a letter
+
                 // Check to see if there is a break symbol (which means to go to the next row)
                 if (c == '/')
                 {
@@ -95,52 +104,21 @@ namespace Game {
                 // Set the piece type.
                 m_Board.WriteSquareType(ConvertCharToPieceType(c), squareLocation);
 
-                //TODO: Potentially just start writing locations in for each piece without regard to the type
+                if (pieceColor == PieceColor::WHITE)
+                {
+                    m_WhitePieceLocations[whitePieceIDMarker] = squareLocation;
+                    whitePieceIDMarker++;
+                }
+                else
+                {
+                    m_BlackPieceLocations[blackPieceIDMarker] = squareLocation;
+                    blackPieceIDMarker++;
+                }
 
                 // Increment the square location for the next iteration
                 squareLocation++;
             }
         }
-
-
-        // Assigning the pieces in the m_[Color]PieceLocation arrays locations, so we need to find each piece ID's location from m_Board.
-        for (uint8 pieceID = 0; pieceID < 16; pieceID++)
-        {
-            //TODO: Fix this use of Converting the piece ID to piece type
-            PieceType pieceType = ConvertPieceIDToPieceType((PieceID) pieceID);
-            for (uint8 squareNum = 0; squareNum < 64; squareNum++)
-            {
-                // For white pieces
-                if (m_Board.ReadSquareType(squareNum) == pieceType && m_Board.ReadSquareColor(squareNum) == WHITE)
-                {
-                    // Checking to see if the square location was already assigned to another PieceID
-                    auto it = std::find(m_WhitePieceLocations.begin(), m_WhitePieceLocations.end(), squareNum);
-                    if (it != m_WhitePieceLocations.end())
-                    { continue; }
-
-                    // Square location hasn't been used yet, so assigning location to the piece ID
-                    m_WhitePieceLocations[pieceID] = squareNum;
-                    break;
-                }
-            }
-
-            for (uint8 squareNum = 0; squareNum < 64; squareNum++)
-            {
-                // For black pieces
-                if (m_Board.ReadSquareType(squareNum) == pieceType && m_Board.ReadSquareColor(squareNum) == BLACK)
-                {
-                    // Checking to see if the square location was already assigned to another PieceID
-                    auto it = std::find(m_BlackPieceLocations.begin(), m_BlackPieceLocations.end(), squareNum);
-                    if (it != m_BlackPieceLocations.end())
-                    { continue; }
-
-                    // Square location hasn't been used yet, so assigning location to the piece ID
-                    m_BlackPieceLocations[pieceID] = squareNum;
-                    break;
-                }
-            }
-        }
-
     }
 
 
@@ -150,8 +128,17 @@ namespace Game {
         { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
         if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
         { throw std::logic_error("targetBoardLocation already has a piece on the square"); }
+        if (ReadPieceType(color, pieceID) == PieceType::NONE)
+        { throw std::logic_error("Can't move a piece of type NONE (aka that piece isn't on the board)"); }
 
-        m_Board.WriteSquareType(ReadPieceType(color, pieceID), targetBoardLocation);
+        // Getting type of the piece from the old location
+        PieceType pieceType = ReadPieceType(color, pieceID);
+
+        // Clearing piece type from old location
+        m_Board.WriteSquareType(PieceType::NONE, ReadPieceLocation(color, pieceID));
+
+        // Updating new location with piece information
+        m_Board.WriteSquareType(pieceType, targetBoardLocation);
         m_Board.WriteSquareColor(color, targetBoardLocation);
 
         if (color == PieceColor::WHITE)
@@ -173,39 +160,26 @@ namespace Game {
         { throw std::logic_error("Can't take on a square that is empty"); }
         if (ReadSquareColor(targetBoardLocation) == color)
         { throw std::logic_error("Can't take a piece of the same type"); }
+        if (ReadPieceType(color, pieceID) == PieceType::NONE)
+        { throw std::logic_error("Can't take with a piece of type NONE (aka that piece isn't on the board)"); }
 
-        if (color == PieceColor::WHITE)
-        {
-            uint8 oldPieceLocation = m_WhitePieceLocations[pieceID];
 
-            // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from black piece locations
-            PieceID targetPieceID = ReadSquarePieceID(targetBoardLocation);
-            m_BlackPieceLocations[targetPieceID] = EMPTY;
+        uint8 oldPieceLocation = (color == PieceColor::WHITE) ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
 
-            // Clear the old position of the piece that is taking
-            m_Board.WriteSquareType(PieceType::NONE, oldPieceLocation);
+        // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from piece locations
+        PieceID targetPieceID = ReadSquarePieceID(targetBoardLocation);
+        (color == PieceColor::WHITE) ? m_BlackPieceLocations[targetPieceID] = EMPTY : m_WhitePieceLocations[targetPieceID] = EMPTY;
 
-            // Move the taking piece to the new location
-            m_Board.WriteSquareType(ReadPieceType(PieceColor::WHITE, pieceID), targetBoardLocation);
-            m_Board.WriteSquareColor(color, targetBoardLocation);
-            m_WhitePieceLocations[pieceID] = targetBoardLocation;
-        }
-        else // Piece color is black
-        {
-            uint8 oldTakingPieceLocation = m_BlackPieceLocations[pieceID];
 
-            // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from white piece locations
-            PieceID targetPieceID = ReadSquarePieceID(targetBoardLocation);
-            m_WhitePieceLocations[targetPieceID] = EMPTY;
+        // Move the taking piece to the new location
+        m_Board.WriteSquareType(ReadPieceType(color, pieceID), targetBoardLocation);
+        m_Board.WriteSquareColor(color, targetBoardLocation);
+        if (color == PieceColor::WHITE) {m_WhitePieceLocations[pieceID] = targetBoardLocation;}
+        else {m_BlackPieceLocations[pieceID] = targetBoardLocation;}
 
-            // Clear the old position of the piece that is taking
-            m_Board.WriteSquareType(PieceType::NONE, oldTakingPieceLocation);
 
-            // Move the taking piece to the new location
-            m_Board.WriteSquareType(ReadPieceType(PieceColor::BLACK, pieceID), targetBoardLocation);
-            m_Board.WriteSquareColor(color, targetBoardLocation);
-            m_BlackPieceLocations[pieceID] = targetBoardLocation;
-        }
+        // Clear the old position of the piece that is taking
+        m_Board.WriteSquareType(PieceType::NONE, oldPieceLocation);
     }
 
 
