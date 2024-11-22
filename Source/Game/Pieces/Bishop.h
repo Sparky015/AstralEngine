@@ -6,19 +6,27 @@
 
 #include "pch.h"
 #include "Game/PieceInfo.h"
+#include "Game/Pieces/ChessPiece.h"
 
 namespace Game {
 
-    class Bishop
+    class Bishop : public ChessPiece
     {
     public:
-        void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor);
-        [[nodiscard]] inline const std::array<uint8, 14>& GetRegularMoves() const { return m_RegularMoves; }
-        [[nodiscard]] inline const std::array<uint8, 4>& GetAttackingMoves() const { return m_AttackingMoves; }
+        Bishop();
+
+        void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor) override;
+        PieceType GetType() override { return PieceType::BISHOP; }
+
+        [[nodiscard]] inline const std::vector<uint8>& GetRegularMoves() const override { return m_RegularMoves; }
+        [[nodiscard]] inline const std::vector<uint8>& GetAttackingMoves() const override { return m_AttackingMoves; }
 
     private:
-        std::array<uint8, 14> m_RegularMoves;
-        std::array<uint8, 4> m_AttackingMoves;
+        std::vector<uint8> m_RegularMoves;
+        std::vector<uint8> m_AttackingMoves;
+
+//        std::array<uint8, 14> m_RegularMoves;
+//        std::array<uint8, 4> m_AttackingMoves;
     };
 
 } // Game

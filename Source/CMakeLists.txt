@@ -48,8 +48,6 @@ add_library(ChessEngine
         Debug/DebugEvents.h
         Game/Board/BoardManager.cpp
         Game/Board/BoardManager.h
-        Game/MoveGeneration.cpp
-        Game/MoveGeneration.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
         Debug/LogFile.cpp
@@ -71,6 +69,7 @@ add_library(ChessEngine
         Game/Pieces/ChessPiece.h
         Game/Board/InternalBoardData.h
         Game/Board/InternalBoardData.cpp
+        Game/Pieces/ChessPiece.cpp
 )
 
 

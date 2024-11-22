@@ -5,12 +5,21 @@
 #pragma once
 
 #include "Game/PieceInfo.h"
+#include "Game/Board/Board.h"
 
 namespace Game {
 
     class ChessPiece
     {
-        virtual void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor) = 0;
+    public:
+        ChessPiece() = default;
+        virtual ~ChessPiece() = default;
+
+        virtual void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor);
+        virtual PieceType GetType();
+
+        [[nodiscard]] virtual const std::vector<uint8>& GetRegularMoves() const;
+        [[nodiscard]] virtual const std::vector<uint8>& GetAttackingMoves() const;
     };
 
 }
