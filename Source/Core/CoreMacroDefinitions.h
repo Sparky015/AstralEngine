@@ -24,7 +24,7 @@
 
 /** Debug build with logging and symbols. */
 #ifdef DEBUG_BUILD
-#define TURN_OFF_DEBUG_MACROS
+
 #endif
 
 
