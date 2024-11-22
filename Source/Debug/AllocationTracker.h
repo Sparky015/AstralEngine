@@ -10,14 +10,12 @@
 #include <iostream>
 
 void* operator new(std::size_t size) {
-    TRACE("Allocating " << size << " bytes")
-    std::cout << "Allocating " << size << " bytes";
+
     void* p = std::malloc(size);
     if (!p) throw std::bad_alloc();
     return p;
 }
 
 void operator delete(void* p) noexcept {
-    std::cout << "Deallocating";
     std::free(p);
 }

@@ -240,20 +240,20 @@ namespace Debug::Macros {
     }
 
 
-    macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title)
-        :
-        m_startTime(std::chrono::high_resolution_clock::now()),
-        m_endTime(m_startTime)
-    {
-        std::strncpy(m_title, title, sizeof(m_title) - 1);
-        m_title[sizeof(m_title) - 1] = '\0'; // Ensure null-termination
-    }
+    macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title) noexcept
+        : m_title(title),
+        m_startTime(std::chrono::high_resolution_clock::now())
+    {}
 
 
-    macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER()
+    macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER() noexcept
     {
         m_endTime = std::chrono::high_resolution_clock::now();
-        ProfilerLogFile::GetInstance().WriteProfile({m_title,m_startTime.time_since_epoch().count(),m_endTime.time_since_epoch().count()});
+
+        int64 startTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_startTime).time_since_epoch().count();
+        int64 endTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_endTime).time_since_epoch().count();
+
+        ProfilerLogFile::GetInstance().WriteProfile({m_title,startTimePoint,endTimePoint});
     }
 
 

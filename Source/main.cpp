@@ -3,10 +3,6 @@
 
 //#include "Debug/AllocationTracker.h"
 
-#include "Game/Pieces/Pawn.h"
-#include "Game/Pieces/Rook.h"
-#include "Game/Pieces/Queen.h"
-
 int main()
 {
     LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
