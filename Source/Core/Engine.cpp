@@ -49,10 +49,13 @@ void Engine::Run()
     while (m_IsLoopRunning)
     {
         PROFILE_SCOPE();
+
+        m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+
         Debug::DebugManager::ImGuiBegin();
         m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
         Debug::DebugManager::ImGuiEnd();
 
-        m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+        Window::g_WindowManager.SwapBuffers();
     }
 }

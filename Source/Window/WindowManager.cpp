@@ -18,7 +18,6 @@ namespace Window{
     {
         PROFILE_SCOPE();
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
     }
 
     WindowManager::WindowManager() : m_Window{nullptr}

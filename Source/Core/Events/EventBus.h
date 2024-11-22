@@ -17,7 +17,6 @@ namespace Event {
         /** Retrieves the event bus or creates (and returns) it on the first call */
         static EventBus<T>& Get()
         {
-            PROFILE_SCOPE();
             if (!m_IsInitialized)
             {
                 m_IsInitialized = true;
@@ -38,7 +37,6 @@ namespace Event {
         /** Adds a listener to the callback list. */
         void AddListener(std::function<void(T)>* callback)
         {
-            PROFILE_SCOPE();
             m_Callbacks.push_back(callback);
             IncrementListenerCount();
         }
@@ -47,7 +45,6 @@ namespace Event {
         /** Removes a listener from the callback list. */
         void RemoveListener(std::function<void(T)>* callback)
         {
-            PROFILE_SCOPE();
             m_Callbacks.erase(std::remove(m_Callbacks.begin(), m_Callbacks.end(), callback), m_Callbacks.end());
             DecrementListenerCount();
         }

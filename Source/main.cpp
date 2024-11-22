@@ -10,6 +10,16 @@ int main()
     LOG("Compiled On: " << __DATE__ << " " << __TIME__ << "\n");
 
     {
+        PROFILE_SCOPE()
+    }
+    {
+        PROFILE_SCOPE()
+    }
+    {
+        PROFILE_SCOPE()
+    }
+
+    {
         Engine engine = Engine();
         Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
         engine.Run();

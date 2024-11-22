@@ -61,7 +61,7 @@ namespace Debug {
         << "\"tid\": 0,"
         << 	"\"ts\": " << profileResult.StartTimeStamp << " }";
 
-        fileStream.flush();
+//        fileStream.flush(); // Only use if the program is crashing.
 
         m_ProfileCount++;
     }

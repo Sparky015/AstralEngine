@@ -45,7 +45,6 @@ namespace Game {
 // Helper function for FEN constructor
     PieceType ConvertCharToPieceType(char c)
     {
-        PROFILE_SCOPE();
         c = tolower(c);
         switch (c)
         {
@@ -332,7 +331,6 @@ namespace Game {
 // Helper function for printing board to console and converting piece to character
     char ConvertPieceTypeToChar(PieceType pieceType)
     {
-        PROFILE_SCOPE();
         switch (pieceType)
         {
             case PieceType::PAWN:
@@ -357,7 +355,6 @@ namespace Game {
 
     char Board::GetCharacterOfPiece(uint8 squareLocation)
     {
-        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 

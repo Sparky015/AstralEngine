@@ -19,6 +19,7 @@ namespace IO{
     {
         PROFILE_SCOPE();
         TRACE("Initializing IO Manager!")
+        m_UpdateListener.StartListening();
     }
 
 
@@ -26,6 +27,7 @@ namespace IO{
     {
         PROFILE_SCOPE();
         TRACE("Shutting down IO Manager!")
+        m_UpdateListener.StopListening();
     }
 
 
