@@ -91,12 +91,14 @@ namespace Game {
 
     InternalBoardRepresentation::InternalBoardRepresentation()
     {
+        PROFILE_SCOPE();
         m_InternalBoard.fill(TwoSquares(PieceType::NONE, BLACK, PieceType::NONE, BLACK));
     }
 
 
     PieceType InternalBoardRepresentation::ReadSquareType(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
@@ -107,6 +109,7 @@ namespace Game {
 
     PieceColor InternalBoardRepresentation::ReadSquareColor(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
@@ -117,6 +120,7 @@ namespace Game {
 
     void InternalBoardRepresentation::WriteSquareType(PieceType pieceType, uint8_t squareLocation)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
@@ -127,6 +131,7 @@ namespace Game {
 
     void InternalBoardRepresentation::WriteSquareColor(PieceColor pieceColor, uint8_t squareLocation)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
