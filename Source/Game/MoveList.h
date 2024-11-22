@@ -20,34 +20,34 @@ namespace Game {
     class MoveList
     {
     public:
-        MoveList();
+        explicit MoveList(Board& board, PieceColor color);
         ~MoveList() = default;
 
-        Pawn& GetPawn(PieceID pieceID);
-        Rook& GetRook(PieceID pieceID);
-        Knight& GetKnight(PieceID pieceID);
-        Bishop& GetBishop(PieceID pieceID);
-        King& GetKing(PieceID pieceID);
-        Queen& GetQueen(PieceID pieceID);
+        void GenerateMoves(Board& board, PieceColor color);
+
+        const std::vector<uint8>& GetRegularMoves(PieceID pieceID);
+        const std::vector<uint8>& GetAttackingMoves(PieceID pieceID);
 
     private:
+        void SyncPieceTypesToBoard(Board& board, PieceColor color);
+        std::unique_ptr<ChessPiece>& GetPiecePtr(PieceID pieceID);
 
-        Pawn m_Pawn1;
-        Pawn m_Pawn2;
-        Pawn m_Pawn3;
-        Pawn m_Pawn4;
-        Pawn m_Pawn5;
-        Pawn m_Pawn6;
-        Pawn m_Pawn7;
-        Pawn m_Pawn8;
-        Rook m_Rook1;
-        Rook m_Rook2;
-        Knight m_Knight1;
-        Knight m_Knight2;
-        Bishop m_Bishop1;
-        Bishop m_Bishop2;
-        King m_King;
-        Queen m_Queen;
+        std::unique_ptr<ChessPiece> m_Piece1;
+        std::unique_ptr<ChessPiece> m_Piece2;
+        std::unique_ptr<ChessPiece> m_Piece3;
+        std::unique_ptr<ChessPiece> m_Piece4;
+        std::unique_ptr<ChessPiece> m_Piece5;
+        std::unique_ptr<ChessPiece> m_Piece6;
+        std::unique_ptr<ChessPiece> m_Piece7;
+        std::unique_ptr<ChessPiece> m_Piece8;
+        std::unique_ptr<ChessPiece> m_Piece9;
+        std::unique_ptr<ChessPiece> m_Piece10;
+        std::unique_ptr<ChessPiece> m_Piece11;
+        std::unique_ptr<ChessPiece> m_Piece12;
+        std::unique_ptr<ChessPiece> m_Piece13;
+        std::unique_ptr<ChessPiece> m_Piece14;
+        std::unique_ptr<ChessPiece> m_Piece15;
+        std::unique_ptr<ChessPiece> m_Piece16;
     };
 
 } // Game
