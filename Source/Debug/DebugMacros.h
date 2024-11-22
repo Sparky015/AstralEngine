@@ -65,8 +65,8 @@ namespace Debug::Macros {
         ~macro_SCOPE_PROFILER();
     private:
         char m_title[256];
-        std::chrono::time_point<std::chrono::steady_clock> m_startTime;
-        std::chrono::time_point<std::chrono::steady_clock> m_endTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
     };
 
     /** Checks if std::cout is in fail state and corrects it. */

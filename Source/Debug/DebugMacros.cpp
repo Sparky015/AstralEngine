@@ -242,7 +242,7 @@ namespace Debug::Macros {
 
     macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title)
         :
-        m_startTime(std::chrono::steady_clock::now()),
+        m_startTime(std::chrono::high_resolution_clock::now()),
         m_endTime(m_startTime)
     {
         std::strncpy(m_title, title, sizeof(m_title) - 1);
@@ -252,7 +252,7 @@ namespace Debug::Macros {
 
     macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER()
     {
-        m_endTime = std::chrono::steady_clock::now();
+        m_endTime = std::chrono::high_resolution_clock::now();
         ProfilerLogFile::GetInstance().WriteProfile({m_title,m_startTime.time_since_epoch().count(),m_endTime.time_since_epoch().count()});
     }
 
