@@ -18,6 +18,7 @@ namespace Game {
             m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
 
     {
+        PROFILE_SCOPE();
         std::array<PieceType, 16> OrderOfPieceTypes
         {PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
          PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
@@ -44,6 +45,7 @@ namespace Game {
 // Helper function for FEN constructor
     PieceType ConvertCharToPieceType(char c)
     {
+        PROFILE_SCOPE();
         c = tolower(c);
         switch (c)
         {
@@ -66,6 +68,7 @@ namespace Game {
 
     Board::Board(const std::string& FEN)
     {
+        PROFILE_SCOPE();
         // Initializing an empty board and empty piece locations
         m_Board = InternalBoardRepresentation();
         m_WhitePieceLocations.fill(EMPTY);
@@ -124,6 +127,7 @@ namespace Game {
 
     void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
+        PROFILE_SCOPE();
         if (targetBoardLocation > 63)
         { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
         if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
@@ -154,6 +158,7 @@ namespace Game {
 
     void Board::TakePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
+        PROFILE_SCOPE();
         if (targetBoardLocation > 63)
         { throw std::out_of_range("targetBoardLocation is not a valid location on the chess board"); }
         if (ReadSquareType(targetBoardLocation) == PieceType::NONE)
@@ -185,6 +190,7 @@ namespace Game {
 
     void Board::PromotePawn(const PieceColor color, const PieceID pieceID, const PieceType promotionType)
     {
+        PROFILE_SCOPE();
         if (promotionType == PieceType::KING || promotionType == PieceType::PAWN)
         { throw std::logic_error("Promotion type must be bishop, knight, rook, or queen."); }
         if (ReadPieceType(color, pieceID) != PieceType::PAWN)
@@ -205,6 +211,7 @@ namespace Game {
 
     uint8 Board::ReadPieceLocation(const PieceColor color, const PieceID pieceID) const
     {
+        PROFILE_SCOPE();
         if (color == PieceColor::WHITE)
         {
             return m_WhitePieceLocations[pieceID];
@@ -226,6 +233,7 @@ namespace Game {
 
     void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation)
     {
+        PROFILE_SCOPE();
         if (color == PieceColor::WHITE)
         {
             m_WhitePieceLocations[pieceID] = boardLocation;
@@ -239,6 +247,7 @@ namespace Game {
 
     PieceColor Board::ReadSquareColor(uint8 squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         return m_Board.ReadSquareColor(squareLocation);
@@ -247,6 +256,9 @@ namespace Game {
 
     void Board::WriteSquareColor(uint8 squareLocation, PieceColor pieceColor)
     {
+        PROFILE_SCOPE();
+        if (squareLocation > 63)
+        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
         m_Board.WriteSquareColor(pieceColor, squareLocation);
     }
@@ -254,6 +266,7 @@ namespace Game {
 
     PieceType Board::ReadSquareType(uint8 squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         return m_Board.ReadSquareType(squareLocation);
@@ -262,6 +275,7 @@ namespace Game {
 
     void Board::WriteSquareType(uint8_t squareLocation, PieceType pieceType)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         m_Board.WriteSquareType(pieceType, squareLocation);
@@ -270,6 +284,7 @@ namespace Game {
 
     PieceID Board::ReadSquarePieceID(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
@@ -306,6 +321,7 @@ namespace Game {
 
     void Board::ClearBoard()
     {
+        PROFILE_SCOPE();
         m_Board = InternalBoardRepresentation();
     }
 
@@ -316,6 +332,7 @@ namespace Game {
 // Helper function for printing board to console and converting piece to character
     char ConvertPieceTypeToChar(PieceType pieceType)
     {
+        PROFILE_SCOPE();
         switch (pieceType)
         {
             case PieceType::PAWN:
@@ -340,6 +357,7 @@ namespace Game {
 
     char Board::GetCharacterOfPiece(uint8 squareLocation)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
@@ -357,6 +375,7 @@ namespace Game {
 
     void Board::PrintBoardToConsole()
     {
+        PROFILE_SCOPE();
         std::cout << "\n";
         // Loop through each square
         for (uint8 squareLocation = 0; squareLocation < 64; squareLocation++)

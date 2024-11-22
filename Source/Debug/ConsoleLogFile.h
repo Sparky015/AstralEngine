@@ -9,7 +9,7 @@
 namespace Debug {
 
     /** @class Singleton that represents the engine-wide log file that all logging macros write into. */
-    class LogFile
+    class ConsoleLogFile
     {
     public:
         /** Initializes the file stream for logging the macro outputs. This includes the creation of the folder structure that contains the logs. */
@@ -20,9 +20,9 @@ namespace Debug {
 
         /** @brief Creates the LogFile instance on first call.
          * @note This set up ensures the log file is set up when static and global objects start trying to log messages. */
-        inline static LogFile& GetInstance()
+        inline static ConsoleLogFile& GetInstance()
         {
-            static LogFile m_Instance;
+            static ConsoleLogFile m_Instance;
             return m_Instance;
         }
 
@@ -39,13 +39,13 @@ namespace Debug {
             return m_IsLogFileOpen;
         }
 
-        LogFile(const LogFile&) = delete;
-        LogFile& operator=(const LogFile&) = delete;
-        LogFile(LogFile&&) = delete;
-        LogFile& operator=(LogFile&&) = delete;
+        ConsoleLogFile(const ConsoleLogFile&) = delete;
+        ConsoleLogFile& operator=(const ConsoleLogFile&) = delete;
+        ConsoleLogFile(ConsoleLogFile&&) = delete;
+        ConsoleLogFile& operator=(ConsoleLogFile&&) = delete;
     private:
-        LogFile();
-        ~LogFile();
+        ConsoleLogFile();
+        ~ConsoleLogFile();
 
         static bool m_IsLogFileOpen;
     };

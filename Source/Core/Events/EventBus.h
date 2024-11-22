@@ -17,6 +17,7 @@ namespace Event {
         /** Retrieves the event bus or creates (and returns) it on the first call */
         static EventBus<T>& Get()
         {
+            PROFILE_SCOPE();
             if (!m_IsInitialized)
             {
                 m_IsInitialized = true;
@@ -37,6 +38,7 @@ namespace Event {
         /** Adds a listener to the callback list. */
         void AddListener(std::function<void(T)>* callback)
         {
+            PROFILE_SCOPE();
             m_Callbacks.push_back(callback);
             IncrementListenerCount();
         }
@@ -45,6 +47,7 @@ namespace Event {
         /** Removes a listener from the callback list. */
         void RemoveListener(std::function<void(T)>* callback)
         {
+            PROFILE_SCOPE();
             m_Callbacks.erase(std::remove(m_Callbacks.begin(), m_Callbacks.end(), callback), m_Callbacks.end());
             DecrementListenerCount();
         }
@@ -53,6 +56,7 @@ namespace Event {
         /** Takes an event and propagates it to listeners. */
         void RaiseEvent(const T& event)
         {
+            PROFILE_SCOPE();
             for (const std::function<void(T)>* callback : m_Callbacks)
             {
                 (*callback)(event);
@@ -60,7 +64,10 @@ namespace Event {
         }
 
 
-        inline void IncrementPublisherCount() {m_NumberOfPublishers++;}
+        inline void IncrementPublisherCount()
+        {
+            m_NumberOfPublishers++;
+        }
         inline void DecrementPublisherCount()
         {
             m_NumberOfPublishers--;
@@ -86,7 +93,8 @@ namespace Event {
         uint16 m_NumberOfListeners{0};
         uint16 m_NumberOfPublishers{0};
 
-        inline void IncrementListenerCount() {m_NumberOfListeners++;}
+        inline void IncrementListenerCount() { m_NumberOfListeners++; }
+
         inline void DecrementListenerCount()
         {
             m_NumberOfListeners--;

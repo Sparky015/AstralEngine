@@ -2,15 +2,15 @@
 // Created by Andrew Fagan on 11/17/24.
 //
 
-#include "LogFile.h"
+#include "ConsoleLogFile.h"
 
 #include <filesystem>
 
 namespace Debug {
 
-     bool LogFile::m_IsLogFileOpen = false;
+     bool ConsoleLogFile::m_IsLogFileOpen = false;
 
-    void LogFile::Init()
+    void ConsoleLogFile::Init()
     {
 #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
 
@@ -24,7 +24,7 @@ namespace Debug {
         std::stringstream filePathStream;
 
         /** Root folder name for all the console logs. */
-        const std::string rootFolder = std::string(ROOT_DIR) + "/ConsoleLogs";
+        const std::string rootFolder = std::string(ROOT_DIR) + "/Logs";
         filePathStream << rootFolder << '/';
 
         /** create_directories will fail most of the time because the folders have already been made most of the time. */
@@ -44,7 +44,7 @@ namespace Debug {
 
         /** Name of the text file based on the time it was created. */
         std::stringstream hrMinSecTextFileNameStream;
-        hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec;
+        hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec << "-Console";
 
         /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
         filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
@@ -52,7 +52,7 @@ namespace Debug {
         GetFileStream().open(filePathStream.str(), std::ios::out);
         if (GetFileStream().fail())
         {
-            WARN("DebugMacros.cpp: Log file failed to open!");
+            WARN("Console log file failed to open!");
         }
         else
         {
@@ -63,10 +63,10 @@ namespace Debug {
     }
 
 
-    void LogFile::Shutdown()
+    void ConsoleLogFile::Shutdown()
     {
 #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        LogFile& logFile = LogFile::GetInstance();
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         logFile.GetFileStream().close();
         if (logFile.GetFileStream().fail())
         {
@@ -79,12 +79,12 @@ namespace Debug {
 #endif
     }
 
-    LogFile::LogFile()
+    ConsoleLogFile::ConsoleLogFile()
     {
         Init();
     }
 
-    LogFile::~LogFile()
+    ConsoleLogFile::~ConsoleLogFile()
     {
 
     }

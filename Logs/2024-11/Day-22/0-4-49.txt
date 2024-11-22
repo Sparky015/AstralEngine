@@ -1,0 +1,33 @@
+[0:4:49.892] Constructing IO System!
+[0:4:49.892] Constructing Window System!
+[0:4:49.892] Constructing Debug System!
+[0:4:49.892] Constructing Board Manager!
+
+---   Entering main()    ---     (static and global object initialization above)
+
+[0:4:49.892] Initializing Window Manager!
+[0:4:50.178] Initializing IO Manager!
+[0:4:50.178] Initializing Debug Manager!
+[0:4:50.178] Initializing Board Manager!
+
+      Engine Info/Tools/Libraries:
+Compiled on Nov 22 2024 00:04:48
+Build Configuration: Debug
+Compiler: Clang 16.0.0 (clang-1600.0.26.4)
+Standard Library: LLVM libc++ 180.10.0
+Window: GLFW 3.4.0 Cocoa NSGL Null EGL OSMesa monotonic dynamic
+Rendering API: OpenGL 4.1 Metal - 89.3
+Graphics Vendor: Apple
+Graphics Processor: Apple M1 Pro
+
+[0:4:54.729] Shutting down Board Manager!
+[0:4:54.729] Shutting down Debug Manager!
+[0:4:54.730] Shutting down IO Manager!
+[0:4:54.730] Shutting down Window Manager!
+
+---   Exiting main() ---     (static and global object destruction below)
+
+[0:4:54.749] Destroying Board Manager!
+[0:4:54.749] Destroying Debug System!
+[0:4:54.749] Destroying Window System!
+[0:4:54.749] Destroying IO System!

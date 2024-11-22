@@ -22,8 +22,8 @@ add_library(ChessEngine
         Core/Events/EventBus.h
         Core/Events/EventListener.h
         Core/Events/EventPublisher.h
-        Game/Board/Board.cpp
-        Game/Board/Board.h
+        Game/Board.cpp
+        Game/Board.h
         Game/PieceInfo.h
         Game/PieceInfo.cpp
         IO/PrintBoardEvent.h
@@ -46,30 +46,16 @@ add_library(ChessEngine
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/DebugEvents.h
-        Game/Board/BoardManager.cpp
-        Game/Board/BoardManager.h
+        Game/BoardManager.cpp
+        Game/BoardManager.h
+        Game/MoveGeneration.cpp
+        Game/MoveGeneration.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
-        Debug/LogFile.cpp
-        Debug/LogFile.h
-        Game/Pieces/Pawn.cpp
-        Game/Pieces/Pawn.h
-        Game/Pieces/Rook.cpp
-        Game/Pieces/Rook.h
-        Game/Pieces/Knight.cpp
-        Game/Pieces/Knight.h
-        Game/Pieces/Bishop.cpp
-        Game/Pieces/Bishop.h
-        Game/Pieces/King.cpp
-        Game/Pieces/King.h
-        Game/Pieces/Queen.cpp
-        Game/Pieces/Queen.h
-        Game/MoveList.cpp
-        Game/MoveList.h
-        Game/Pieces/ChessPiece.h
-        Game/Board/InternalBoardData.h
-        Game/Board/InternalBoardData.cpp
-        Game/Pieces/ChessPiece.cpp
+        Debug/ConsoleLogFile.cpp
+        Debug/ConsoleLogFile.h
+        Debug/ProfilerLogFile.cpp
+        Debug/ProfilerLogFile.h
 )
 
 

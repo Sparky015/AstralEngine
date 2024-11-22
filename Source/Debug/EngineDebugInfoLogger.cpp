@@ -11,6 +11,7 @@ namespace Debug {
 
     void LogEngineDebugInfo()
     {
+        PROFILE_SCOPE();
         LOG("\n      Engine Info/Tools/Libraries:");
 
         /** Outputs the build configuration of the engine. */

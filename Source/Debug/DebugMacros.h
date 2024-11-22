@@ -26,12 +26,12 @@
 #define ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; assert(Debug::Macros::macro_ERROR(ss)); }
 
 /** Profiles a scope and outputs the time to the console. */
-#define PROFILE_SCOPE(title) Solas::Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(title);
+#define PROFILE_SCOPE() Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(__PRETTY_FUNCTION__);
 
 
 /** Macro Land */
 namespace Debug::Macros {
-
+    
     /** Outputs the message to the console with a time stamp [hr:min:sec:ms]. */
     void macro_TRACE(const std::ostringstream& message);
 
@@ -56,6 +56,8 @@ namespace Debug::Macros {
         std::string m_title;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
+
+
     };
 
     /** Checks if std::cout is in fail state and corrects it. */
