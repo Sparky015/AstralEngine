@@ -9,7 +9,7 @@
 #include <string>
 #include <sstream>
 
-
+#ifndef TURN_OFF_DEBUG_MACROS
 /** Outputs the message to the console with a time stamp. */
 #define TRACE(message) { std::ostringstream ss; ss << message; Debug::Macros::macro_TRACE(ss); }
 
@@ -25,9 +25,20 @@
 /** Throws an error with a message outputted to the console. */
 #define ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; assert(Debug::Macros::macro_ERROR(ss)); }
 
-/** Profiles a scope and outputs the time to the console. */
-#define PROFILE_SCOPE() Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(__PRETTY_FUNCTION__);
+#else
+#define TRACE(message)
+#define LOG(message)
+#define WARN(message)
+#define ASSERT(expression, errorMessage)
+#define ERROR(errorMessage)
+#endif
 
+/** Profiles a scope and outputs the time to the console. */
+#ifndef TURN_OFF_PROFILER_MACRO
+#define PROFILE_SCOPE() Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(__PRETTY_FUNCTION__);
+#else
+#define PROFILE_SCOPE()
+#endif
 
 /** Macro Land */
 namespace Debug::Macros {
@@ -50,14 +61,12 @@ namespace Debug::Macros {
     /** Profiles a scope and outputs the time to the console. */
     class macro_SCOPE_PROFILER {
     public:
-        explicit macro_SCOPE_PROFILER(std::string&& title);
+        explicit macro_SCOPE_PROFILER(const char* title);
         ~macro_SCOPE_PROFILER();
     private:
-        std::string m_title;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
-
-
+        char m_title[256];
+        std::chrono::time_point<std::chrono::steady_clock> m_startTime;
+        std::chrono::time_point<std::chrono::steady_clock> m_endTime;
     };
 
     /** Checks if std::cout is in fail state and corrects it. */

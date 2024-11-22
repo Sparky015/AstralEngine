@@ -17,7 +17,6 @@ namespace Event {
         /** Increments the Event Bus publisher tracker for lifetime management of the event bus. */
         EventPublisher()
         {
-            PROFILE_SCOPE();
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.IncrementPublisherCount();
         }
@@ -26,7 +25,6 @@ namespace Event {
         /** Decrements the Event Bus publisher tracker for lifetime management of the event bus. */
         ~EventPublisher()
         {
-            PROFILE_SCOPE();
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.DecrementPublisherCount();
         }
@@ -35,7 +33,6 @@ namespace Event {
         /** Propagates an event to listeners. */
         void PublishEvent(T event)
         {
-            PROFILE_SCOPE();
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RaiseEvent(event);
         }

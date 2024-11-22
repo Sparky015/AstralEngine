@@ -22,8 +22,8 @@ add_library(ChessEngine
         Core/Events/EventBus.h
         Core/Events/EventListener.h
         Core/Events/EventPublisher.h
-        Game/Board.cpp
-        Game/Board.h
+        Game/Board/Board.cpp
+        Game/Board/Board.h
         Game/PieceInfo.h
         Game/PieceInfo.cpp
         IO/PrintBoardEvent.h
@@ -46,16 +46,25 @@ add_library(ChessEngine
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/DebugEvents.h
-        Game/BoardManager.cpp
-        Game/BoardManager.h
-        Game/MoveGeneration.cpp
-        Game/MoveGeneration.h
+        Game/Board/BoardManager.cpp
+        Game/Board/BoardManager.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
         Debug/ConsoleLogFile.cpp
         Debug/ConsoleLogFile.h
         Debug/ProfilerLogFile.cpp
         Debug/ProfilerLogFile.h
+        Game/Board/InternalBoardData.cpp
+        Game/Pieces/Bishop.h
+        Game/Pieces/Bishop.cpp
+        Game/Pieces/ChessPiece.cpp
+        Game/Pieces/King.h
+        Game/Pieces/King.cpp
+        Game/Pieces/Knight.cpp
+        Game/Pieces/Pawn.cpp
+        Game/Pieces/Queen.cpp
+        Game/Pieces/Rook.cpp
+        Game/MoveList.cpp
 )
 
 

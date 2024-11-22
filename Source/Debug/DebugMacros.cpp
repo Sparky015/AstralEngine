@@ -190,7 +190,7 @@ namespace Debug::Macros {
 
     bool macro_ASSERT(const bool expression, std::ostringstream& errorMessage)
     {
-    #ifndef TURN_OFF_DEBUG_MACROS
+    #ifndef TURN_ON_DEBUG_MACROS
         if (!expression){
             errorMessage << "\n\n";
             #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
@@ -240,45 +240,20 @@ namespace Debug::Macros {
     }
 
 
-    macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(std::string&& title)
-    #ifndef TURN_OFF_PROFILER_MACRO
+    macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title)
         :
-        m_title(std::move(title)),
-        m_startTime(std::chrono::high_resolution_clock::now()),
-        m_endTime()
-    #endif
-    {}
+        m_startTime(std::chrono::steady_clock::now()),
+        m_endTime(m_startTime)
+    {
+        std::strncpy(m_title, title, sizeof(m_title) - 1);
+        m_title[sizeof(m_title) - 1] = '\0'; // Ensure null-termination
+    }
 
 
     macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER()
     {
-    #ifndef TURN_OFF_PROFILER_MACRO
-        m_endTime = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
-
-        std::cout<< SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .001 << " milliseconds" << SetColor(DEFAULT) << "\n";
-
-        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
-        if (logFile.IsOpen())
-        {
-            logFile.GetFileStream() << "[Profiling " << m_title << "] Elapsed Time: " << (float) duration.count() * .001
-                    << " milliseconds\n";
-        }
-        else
-        {
-            WARN("Attempted write to a log file that is already closed!");
-        }
-        #endif
-
-        ProfileResult profileResult;
-        profileResult.Name = m_title;
-        profileResult.StartTimeStamp = m_startTime.time_since_epoch().count();
-        profileResult.EndTimeStamp = m_endTime.time_since_epoch().count();
-
-        ProfilerLogFile::GetInstance().WriteProfile(profileResult);
-
-    #endif
+        m_endTime = std::chrono::steady_clock::now();
+        ProfilerLogFile::GetInstance().WriteProfile({m_title,m_startTime.time_since_epoch().count(),m_endTime.time_since_epoch().count()});
     }
 
 

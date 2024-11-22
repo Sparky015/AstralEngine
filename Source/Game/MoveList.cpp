@@ -12,12 +12,14 @@ namespace Game {
     m_Piece9(nullptr), m_Piece10(nullptr), m_Piece11(nullptr), m_Piece12(nullptr),
     m_Piece13(nullptr), m_Piece14(nullptr), m_Piece15(nullptr), m_Piece16(nullptr)
     {
+        PROFILE_SCOPE();
         SyncPieceTypesToBoard(board, color);
     }
 
 
     void MoveList::GenerateMoves(Board& board, PieceColor color)
     {
+        PROFILE_SCOPE();
         // First sync the piece types of the board to the move list (in case of pawn promotions)
         SyncPieceTypesToBoard(board, color);
 
@@ -36,6 +38,7 @@ namespace Game {
 
     void MoveList::SyncPieceTypesToBoard(Board& board, PieceColor color)
     {
+        PROFILE_SCOPE();
         // Loop through each piece in the board and look at its type
         for (uint8 pieceID = PIECE_1; pieceID != PIECE_16; pieceID++)
         {

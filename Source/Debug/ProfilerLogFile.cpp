@@ -50,16 +50,16 @@ namespace Debug {
 
         if (m_ProfileCount > 0)
         {
-            fileStream << ",";
+            fileStream << ",\n";
         }
-        fileStream << "\n{\n"
-        << "\t\"cat\": \"function\",\n"
-        << "\t\"dur\": " << profileResult.EndTimeStamp - profileResult.StartTimeStamp << ",\n"
-        << "\t\"name\": \"" << profileResult.Name << "\",\n"
-        << "\t\"ph\": \"X\",\n"
-        << "\t\"pid\": 0,\n"
-        << "\t\"tid\": 0,\n"
-        << 	"\t\"ts\": " << profileResult.StartTimeStamp << " \n}";
+        fileStream << "{"
+        << "\"cat\": \"function\","
+        << "\"dur\": " << profileResult.EndTimeStamp - profileResult.StartTimeStamp << ","
+        << "\"name\": \"" << profileResult.Name << "\","
+        << "\"ph\": \"X\","
+        << "\"pid\": 0,"
+        << "\"tid\": 0,"
+        << 	"\"ts\": " << profileResult.StartTimeStamp << " }";
 
         fileStream.flush();
 
@@ -117,8 +117,7 @@ namespace Debug {
     void ProfilerLogFile::SetUpJson()
     {
         std::ofstream& fileStream = GetFileStream();
-        fileStream << R"({
- "otherData": {},
+        fileStream << R"({ "otherData": {},
  "traceEvents": [)";
         fileStream.flush();
     }

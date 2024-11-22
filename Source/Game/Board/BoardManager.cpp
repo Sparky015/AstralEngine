@@ -35,7 +35,7 @@ namespace Game
 
     void BoardManager::Update()
     {
-
+        PROFILE_SCOPE();
     }
 
     BoardManager::BoardManager() : m_Board(Board())

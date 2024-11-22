@@ -17,29 +17,33 @@ namespace IO{
 
     void IOManager::Init()
     {
+        PROFILE_SCOPE();
         TRACE("Initializing IO Manager!")
     }
 
 
     void IOManager::Shutdown()
     {
+        PROFILE_SCOPE();
         TRACE("Shutting down IO Manager!")
     }
 
 
     void IOManager::Update()
     {
-
+        PROFILE_SCOPE();
     }
 
 
     IOManager::IOManager()
     {
+        PROFILE_SCOPE();
         TRACE("Constructing IO System!")
     }
 
     IOManager::~IOManager()
     {
+        PROFILE_SCOPE();
         TRACE("Destroying IO System!")
     }
 

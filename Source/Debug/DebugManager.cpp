@@ -63,6 +63,8 @@ namespace Debug{
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
 
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
             if (ImGui::TreeNode("Piece Locations"))
             {
                 if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
