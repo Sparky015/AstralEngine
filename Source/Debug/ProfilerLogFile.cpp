@@ -4,6 +4,8 @@
 
 #include "ProfilerLogFile.h"
 
+#include <filesystem>
+
 namespace Debug {
 
     bool ProfilerLogFile::m_IsLogFileOpen = false;
