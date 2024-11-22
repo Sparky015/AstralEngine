@@ -11,6 +11,7 @@ namespace Debug {
 
     void LogEngineDebugInfo()
     {
+        PROFILE_SCOPE();
         LOG("\n      Engine Info/Tools/Libraries:");
 
         LOG("Compiled on " __DATE__ << " " << __TIME__);

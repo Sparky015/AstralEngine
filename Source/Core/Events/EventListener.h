@@ -24,6 +24,7 @@ namespace Event {
         /** Adds the listener callback to the event bus. */
         void StartListening()
         {
+            PROFILE_SCOPE();
             if (m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.AddListener(&m_Callback);
@@ -32,6 +33,7 @@ namespace Event {
         /** Removes the listener callback to the event bus. */
         void StopListening()
         {
+            PROFILE_SCOPE();
             if (!m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RemoveListener(&m_Callback);

@@ -18,6 +18,7 @@ namespace Game {
             m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
 
     {
+        PROFILE_SCOPE();
         // Take the location of each piece and populate that square with the piece's info
 
         for (uint8 pieceID = 0; pieceID < m_BlackPieceLocations.size(); pieceID++)
@@ -39,6 +40,7 @@ namespace Game {
 // Helper function for FEN constructor
     PieceType ConvertCharToPieceType(char c)
     {
+        PROFILE_SCOPE();
         c = tolower(c);
         switch (c)
         {
@@ -61,6 +63,7 @@ namespace Game {
 
     Board::Board(const std::string& FEN)
     {
+        PROFILE_SCOPE();
         // Initializing an empty board and empty piece locations
         m_Board = InternalBoardRepresentation();
         m_WhitePieceLocations.fill(EMPTY);
@@ -143,6 +146,7 @@ namespace Game {
 
     void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
+        PROFILE_SCOPE();
         if (targetBoardLocation > 63)
         { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
         if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
@@ -164,6 +168,7 @@ namespace Game {
 
     void Board::TakePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
+        PROFILE_SCOPE();
         if (targetBoardLocation > 63)
         { throw std::out_of_range("targetBoardLocation is not a valid location on the chess board"); }
         if (ReadSquareType(targetBoardLocation) == PieceType::NONE)
@@ -208,6 +213,7 @@ namespace Game {
 
     void Board::PromotePawn(const PieceColor color, const PieceID pieceID, const PieceType promotionType)
     {
+        PROFILE_SCOPE();
         if (promotionType == PieceType::KING || promotionType == PieceType::PAWN)
         { throw std::logic_error("Promotion type must be bishop, knight, rook, or queen."); }
         if (ConvertPieceIDToPieceType(pieceID) != PieceType::PAWN)
@@ -228,6 +234,7 @@ namespace Game {
 
     uint8 Board::ReadPieceLocation(const PieceColor color, const PieceID pieceID) const
     {
+        PROFILE_SCOPE();
         if (color == PieceColor::WHITE)
         {
             return m_WhitePieceLocations[pieceID];
@@ -241,6 +248,7 @@ namespace Game {
 
     void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation)
     {
+        PROFILE_SCOPE();
         if (color == PieceColor::WHITE)
         {
             m_WhitePieceLocations[pieceID] = boardLocation;
@@ -254,6 +262,7 @@ namespace Game {
 
     PieceColor Board::ReadSquareColor(uint8 squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         return m_Board.ReadSquareColor(squareLocation);
@@ -262,6 +271,7 @@ namespace Game {
 
     void Board::WriteSquareColor(uint8_t squareLocation, PieceColor pieceColor)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         m_Board.WriteSquareColor(pieceColor, squareLocation);
@@ -270,6 +280,7 @@ namespace Game {
 
     PieceType Board::ReadSquareType(uint8 squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         return m_Board.ReadSquareType(squareLocation);
@@ -278,6 +289,7 @@ namespace Game {
 
     void Board::WriteSquareType(uint8_t squareLocation, PieceType pieceType)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         m_Board.WriteSquareType(pieceType, squareLocation);
@@ -286,6 +298,7 @@ namespace Game {
 
     PieceID Board::ReadSquarePieceID(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
@@ -322,6 +335,7 @@ namespace Game {
 
     void Board::ClearBoard()
     {
+        PROFILE_SCOPE();
         m_Board = InternalBoardRepresentation();
     }
 
@@ -332,6 +346,7 @@ namespace Game {
 // Helper function for printing board to console and converting piece to character
     char ConvertPieceTypeToChar(PieceType pieceType)
     {
+        PROFILE_SCOPE();
         switch (pieceType)
         {
             case PieceType::PAWN:
@@ -356,6 +371,7 @@ namespace Game {
 
     char Board::GetCharacterOfPiece(uint8 squareLocation)
     {
+        PROFILE_SCOPE();
         if (squareLocation > 63)
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
 
@@ -373,6 +389,7 @@ namespace Game {
 
     void Board::PrintBoardToConsole()
     {
+        PROFILE_SCOPE();
         std::cout << "\n";
         // Loop through each square
         for (uint8 squareLocation = 0; squareLocation < 64; squareLocation++)
@@ -397,6 +414,7 @@ namespace Game {
     Board::TwoSquares::TwoSquares(PieceType pieceTypeOne, PieceColor pieceColorOne, PieceType pieceTypeTwo,
                                   PieceColor pieceColorTwo)
     {
+        PROFILE_SCOPE();
         uint8 colorOneShifted = (uint8) pieceColorOne << 7;
         uint8 typeOneShifted = (uint8) pieceTypeOne << 4;
         uint8 colorTwoShifted = (uint8) pieceColorTwo << 3;
@@ -406,6 +424,7 @@ namespace Game {
 
     PieceType Board::TwoSquares::ReadSquareType(bool isSecondSquare) const
     {
+        PROFILE_SCOPE();
         if (isSecondSquare)
         {
             uint8 squareTwoTypeShifted = m_Data & (0b00000111);
@@ -421,6 +440,7 @@ namespace Game {
 
     PieceColor Board::TwoSquares::ReadSquareColor(bool isSecondSquare) const
     {
+        PROFILE_SCOPE();
         if (isSecondSquare)
         {
             uint8 squareTwoColorShifted = m_Data >> 3 & (0b00000001);
@@ -436,6 +456,7 @@ namespace Game {
 
     void Board::TwoSquares::WriteSquareType(PieceType type, bool isSecondSquare)
     {
+        PROFILE_SCOPE();
         if (isSecondSquare)
         {
             m_Data &= 0b11111000;
@@ -451,6 +472,7 @@ namespace Game {
 
     void Board::TwoSquares::WriteSquareColor(PieceColor color, bool isSecondSquare)
     {
+        PROFILE_SCOPE();
         if (isSecondSquare)
         {
             m_Data &= 0b11110111;
@@ -475,12 +497,14 @@ namespace Game {
 
     Board::InternalBoardRepresentation::InternalBoardRepresentation()
     {
+        PROFILE_SCOPE();
         m_InternalBoard.fill(TwoSquares(PieceType::NONE, BLACK, PieceType::NONE, BLACK));
     }
 
 
     PieceType Board::InternalBoardRepresentation::ReadSquareType(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         return m_InternalBoard[halfOfSquareLocation].ReadSquareType(isSecondSquare);
@@ -489,6 +513,7 @@ namespace Game {
 
     PieceColor Board::InternalBoardRepresentation::ReadSquareColor(uint8_t squareLocation) const
     {
+        PROFILE_SCOPE();
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         return m_InternalBoard[halfOfSquareLocation].ReadSquareColor(isSecondSquare);
@@ -497,6 +522,7 @@ namespace Game {
 
     void Board::InternalBoardRepresentation::WriteSquareType(PieceType pieceType, uint8_t squareLocation)
     {
+        PROFILE_SCOPE();
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         m_InternalBoard[halfOfSquareLocation].WriteSquareType(pieceType, isSecondSquare);
@@ -505,6 +531,7 @@ namespace Game {
 
     void Board::InternalBoardRepresentation::WriteSquareColor(PieceColor pieceColor, uint8_t squareLocation)
     {
+        PROFILE_SCOPE();
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         m_InternalBoard[halfOfSquareLocation].WriteSquareColor(pieceColor, isSecondSquare);

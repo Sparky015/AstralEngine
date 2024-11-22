@@ -1,0 +1,20 @@
+{
+otherData": {},
+ "traceEvents": [{
+	"cat": "function",
+	"dur": 270204792,
+	"name": "Init",
+	"ph": "X",
+	"pid": 0,
+	"tid": 0,
+"ts": 1915183026967708 
+},
+{
+	"cat": "function",
+	"dur": 583,
+	"name": "Init",
+	"ph": "X",
+	"pid": 0,
+	"tid": 0,
+"ts": 1915183303978833 
+}]}

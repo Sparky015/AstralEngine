@@ -4,7 +4,8 @@
 
 #include "DebugMacros.h"
 
-#include "Debug/LogFile.h"
+#include "Debug/ConsoleLogFile.h"
+#include "Debug/ProfilerLogFile.h"
 #include <sstream>
 
 #include "pch.h"
@@ -127,7 +128,7 @@ namespace Debug::Macros {
                   << "] " << SetColor(LIGHT_CYAN) << message.str() << SetColor(DEFAULT) << "\n";
 
         #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        LogFile& logFile = LogFile::GetInstance();
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
             logFile.GetFileStream() << "[" << currentTime->tm_hour
@@ -152,7 +153,7 @@ namespace Debug::Macros {
 
         std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
         #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        LogFile& logFile = LogFile::GetInstance();
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
             logFile.GetFileStream() << message.str() << "\n";
@@ -173,7 +174,7 @@ namespace Debug::Macros {
 
             std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n";
             #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-            LogFile& logFile = LogFile::GetInstance();
+            ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
             if (logFile.IsOpen())
             {
                 logFile.GetFileStream() << message.str() << "\n";
@@ -193,11 +194,11 @@ namespace Debug::Macros {
         if (!expression){
             errorMessage << "\n\n";
             #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-            LogFile& logFile = LogFile::GetInstance();
+            ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
             if (logFile.IsOpen())
             {
                 logFile.GetFileStream() << "\n\nAssert failed. \n\nError: " << errorMessage.str();
-                LogFile::Shutdown();
+                ConsoleLogFile::Shutdown();
             }
             else
             {
@@ -220,11 +221,11 @@ namespace Debug::Macros {
     #ifndef TURN_OFF_DEBUG_MACROS
         errorMessage << "\n\n";
         #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        LogFile& logFile = LogFile::GetInstance();
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
             logFile.GetFileStream() << "\n\nERROR called. \n\nError: " << errorMessage.str();
-            LogFile::Shutdown();
+            ConsoleLogFile::Shutdown();
         }
         else
         {
@@ -255,20 +256,28 @@ namespace Debug::Macros {
         m_endTime = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime);
 
-        std::cout<< SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .000001 << " seconds" << SetColor(DEFAULT) << "\n";
+        std::cout<< SetColor(LIGHT_PURPLE) << "[Profiling " << m_title << "] Elapsed Time: " << (float)duration.count() * .001 << " milliseconds" << SetColor(DEFAULT) << "\n";
 
         #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-        LogFile& logFile = LogFile::GetInstance();
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << "[Profiling " << m_title << "] Elapsed Time: " << (float) duration.count() * .000001
-                    << " seconds\n";
+            logFile.GetFileStream() << "[Profiling " << m_title << "] Elapsed Time: " << (float) duration.count() * .001
+                    << " milliseconds\n";
         }
         else
         {
             WARN("Attempted write to a log file that is already closed!");
         }
         #endif
+
+        ProfileResult profileResult;
+        profileResult.Name = m_title;
+        profileResult.StartTimeStamp = m_startTime.time_since_epoch().count();
+        profileResult.EndTimeStamp = m_endTime.time_since_epoch().count();
+
+        ProfilerLogFile::GetInstance().WriteProfile(profileResult);
+
     #endif
     }
 

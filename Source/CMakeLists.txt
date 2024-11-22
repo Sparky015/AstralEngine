@@ -52,8 +52,10 @@ add_library(ChessEngine
         Game/MoveGeneration.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
-        Debug/LogFile.cpp
-        Debug/LogFile.h
+        Debug/ConsoleLogFile.cpp
+        Debug/ConsoleLogFile.h
+        Debug/ProfilerLogFile.cpp
+        Debug/ProfilerLogFile.h
 )
 
 

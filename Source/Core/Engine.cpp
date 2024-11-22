@@ -17,6 +17,7 @@ Engine::Engine() :
     m_IsLoopRunning(true),
     m_WindowClosedListener(Event::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}})
 {
+    PROFILE_SCOPE();
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
@@ -32,6 +33,7 @@ Engine::Engine() :
 
 Engine::~Engine()
 {
+    PROFILE_SCOPE();
     m_WindowClosedListener.StopListening();
 
     Game::g_BoardManager.Shutdown();
@@ -43,9 +45,10 @@ Engine::~Engine()
 
 void Engine::Run()
 {
-
+    PROFILE_SCOPE();
     while (m_IsLoopRunning)
     {
+        PROFILE_SCOPE();
         Debug::DebugManager::ImGuiBegin();
         m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
         Debug::DebugManager::ImGuiEnd();

@@ -43,6 +43,9 @@ namespace Window{
     void WindowManager::Init()
     {
         TRACE("Initializing Window Manager!")
+
+        PROFILE_SCOPE();
+
         m_UpdateListener.StartListening();
 
 

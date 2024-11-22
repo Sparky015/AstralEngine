@@ -25,6 +25,7 @@ namespace Debug{
 
     void DebugManager::Init()
     {
+        PROFILE_SCOPE();
         TRACE("Initializing Debug Manager!")
         InitImGui();
         m_UpdateListener.StartListening();
@@ -35,6 +36,7 @@ namespace Debug{
 
     void DebugManager::Shutdown()
     {
+        PROFILE_SCOPE();
         TRACE("Shutting down Debug Manager!")
         m_KeyPressedListener.StopListening();
         m_RenderImGuiListener.StopListening();
@@ -45,6 +47,7 @@ namespace Debug{
 
     void DebugManager::Update()
     {
+        PROFILE_SCOPE();
         glClearColor(.1,.8,.5,1);
         glClear(GL_COLOR_BUFFER_BIT);
     }
@@ -52,6 +55,7 @@ namespace Debug{
 
     void DebugManager::RenderImGui()
     {
+        PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
         const static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
 
@@ -97,6 +101,7 @@ namespace Debug{
     float DebugManager::m_Time = 0.0f;
     void DebugManager::ImGuiBegin()
     {
+        PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
         float time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
@@ -110,6 +115,7 @@ namespace Debug{
 
     void DebugManager::ImGuiEnd()
     {
+        PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -126,17 +132,20 @@ namespace Debug{
 
     DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
     {
+        PROFILE_SCOPE();
         TRACE("Constructing Debug System!")
     }
 
     DebugManager::~DebugManager()
     {
+        PROFILE_SCOPE();
         TRACE("Destroying Debug System!")
     }
 
 
     void DebugManager::InitImGui()
     {
+        PROFILE_SCOPE();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
@@ -165,6 +174,7 @@ namespace Debug{
 
     void DebugManager::ShutdownImGui()
     {
+        PROFILE_SCOPE();
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -172,6 +182,7 @@ namespace Debug{
 
     void DebugManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
+        PROFILE_SCOPE();
         if (keyPressedEvent.keycode == GLFW_KEY_D)
         {
             m_ShowDebugMenu = !m_ShowDebugMenu;

@@ -1,0 +1,5 @@
+{"cat": "function","dur": 153680208,
+"name": "WindowManager Init",
+"ph": "X","pid": 0,""tid": 0,""ts": 1914229426325333 },{"cat": "function","dur": 666,
+"name": "BoardManager Init",
+"ph": "X","pid": 0,""tid": 0,""ts": 1914229585063250 }
