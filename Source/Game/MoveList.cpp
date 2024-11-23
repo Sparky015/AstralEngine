@@ -30,7 +30,7 @@ namespace Game {
 
             if (piecePtr)
             {
-                piecePtr->GenerateMoves(pieceID, color);
+                piecePtr->GenerateMoves(board, pieceID, color);
             }
         }
     }
