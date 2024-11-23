@@ -53,4 +53,22 @@ namespace Game {
         std::array<TwoSquares, 32> m_InternalBoard;
     };
 
+    struct CastleRights
+    {
+        bool Left;
+        bool Right;
+    };
+
+    struct BoardDetails
+    {
+    public: // TODO: Change this to only be can the king castle or not. Delete the directions. The king has the right to castle
+            // if they have not moved (and if the squares are empty).
+        void WriteCastleRights(PieceColor color, CastleRights castleRights);
+        CastleRights ReadCastleRights(PieceColor color);
+        PieceColor ReadActiveColor();
+        void WriteActiveColor(PieceColor color);
+    private:
+        uint8 m_Data;
+    };
+
 }

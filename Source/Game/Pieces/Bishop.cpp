@@ -17,7 +17,7 @@ namespace Game {
         std::fill(m_AttackingMoves.begin(), m_AttackingMoves.end(), EMPTY);
     }
 
-    void Bishop::GenerateMoves(const uint8_t pieceLocation, const PieceColor pieceColor)
+    void Bishop::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
 
     }

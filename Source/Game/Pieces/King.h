@@ -15,7 +15,7 @@ namespace Game {
     public:
         King();
 
-        void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor) override;
+        void GenerateMoves(const Board& board, const uint8 pieceLocation, const PieceColor pieceColor) override;
         PieceType GetType() override { return PieceType::KING; }
 
         [[nodiscard]] inline const std::vector<uint8>& GetRegularMoves() const override { return m_RegularMoves; }

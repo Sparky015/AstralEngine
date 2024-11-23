@@ -15,8 +15,9 @@ namespace Game {
 
     Board::Board() :
             m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
-            m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
-
+            m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1}),
+            m_FullMoveCount(1),
+            m_HalfMoveCount(1)
     {
         PROFILE_SCOPE();
         std::array<PieceType, 16> OrderOfPieceTypes
@@ -40,6 +41,7 @@ namespace Game {
             m_Board.WriteSquareType(OrderOfPieceTypes[pieceID], pieceLocation);
         }
 
+        m_BoardDetails.WriteActiveColor(PieceColor::WHITE);
     }
 
 // Helper function for FEN constructor
@@ -75,7 +77,7 @@ namespace Game {
 
         uint8 whitePieceIDMarker = 0; // Holds the next white piece ID that needs to be assigned
         uint8 blackPieceIDMarker = 0; // Holds the next black piece ID that needs to be assigned
-
+//TODO: Implement the grabbing of half move and full move and castle rights from the FEN.
         // Going through each character in the FEN sequence and adding the piece to the board (top to bottom)
         uint8 squareLocation = 0;
         for (char c: FEN)
@@ -134,6 +136,13 @@ namespace Game {
         if (ReadPieceType(color, pieceID) == PieceType::NONE)
         { throw std::logic_error("Can't move a piece of type NONE (aka that piece isn't on the board)"); }
 
+        // Set the half move counter. (if a pawn moves or a take happens, then reset)
+        if (ReadPieceType(color, pieceID) == PieceType::PAWN) { m_HalfMoveCount = 1;}
+        else { m_HalfMoveCount++; }
+
+        // Increment the full move counter if the piece is black
+        if (color == PieceColor::BLACK) { m_FullMoveCount++; }
+
         // Getting type of the piece from the old location
         PieceType pieceType = ReadPieceType(color, pieceID);
 
@@ -167,6 +176,8 @@ namespace Game {
         if (ReadPieceType(color, pieceID) == PieceType::NONE)
         { throw std::logic_error("Can't take with a piece of type NONE (aka that piece isn't on the board)"); }
 
+        m_HalfMoveCount = 1; // Reset the half move counter on takes
+        if (color == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
 
         uint8 oldPieceLocation = (color == PieceColor::WHITE) ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
 
@@ -325,7 +336,16 @@ namespace Game {
     }
 
 
+    CastleRights Board::CanCastle(PieceColor color)
+    {
+        return m_BoardDetails.ReadCastleRights(color);
+    }
 
+
+    PieceColor Board::GetActiveColor()
+    {
+        return m_BoardDetails.ReadActiveColor();
+    }
 
 
 // Helper function for printing board to console and converting piece to character
@@ -384,8 +404,5 @@ namespace Game {
         }
         std::cout << "\n";
     }
-
-
-
 
 }

@@ -17,7 +17,7 @@ namespace Game {
         std::fill(m_AttackingMoves.begin(), m_AttackingMoves.end(), EMPTY);
     }
 
-    void Pawn::GenerateMoves(const uint8_t pieceLocation, const PieceColor pieceColor)
+    void Pawn::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
 
     }
