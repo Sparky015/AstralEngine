@@ -20,9 +20,9 @@ namespace Game {
     void King::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
         // Check if the king can castle
-        CastleRights castleRights = board.CanCastle(pieceColor);
+        KingCastleRights castleRights = board.GetCastleRights(pieceColor);
         // TODO: Invert the checking of empty squares depending on color
-        if (castleRights.Left)
+        if (castleRights.KingSide)
         {
             // Check if the squares to the left of the king are empty
             if (board.ReadSquareType(pieceLocation - 1) == PieceType::NONE &&
@@ -33,7 +33,7 @@ namespace Game {
             }
         }
 
-        if (castleRights.Right)
+        if (castleRights.QueenSide)
         {
             // Check if the squares to the right of the king are empty
             if (board.ReadSquareType(pieceLocation + 1) == PieceType::NONE &&

@@ -20,9 +20,9 @@ namespace Game {
     }
 
 
-    PieceType TwoSquares::ReadSquareType(bool isSecondSquare) const
+    PieceType TwoSquares::ReadSquareType(SquarePosition squarePosition) const
     {
-        if (isSecondSquare)
+        if (squarePosition == SECOND_SQUARE)
         {
             uint8 squareTwoTypeShifted = m_Data & (0b00000111);
             return (PieceType) squareTwoTypeShifted;
@@ -35,9 +35,9 @@ namespace Game {
     }
 
 
-    PieceColor TwoSquares::ReadSquareColor(bool isSecondSquare) const
+    PieceColor TwoSquares::ReadSquareColor(SquarePosition squarePosition) const
     {
-        if (isSecondSquare)
+        if (squarePosition == SECOND_SQUARE)
         {
             uint8 squareTwoColorShifted = m_Data >> 3 & (0b00000001);
             return (PieceColor) squareTwoColorShifted;
@@ -50,9 +50,9 @@ namespace Game {
     }
 
 
-    void TwoSquares::WriteSquareType(PieceType type, bool isSecondSquare)
+    void TwoSquares::WriteSquareType(PieceType type, SquarePosition squarePosition)
     {
-        if (isSecondSquare)
+        if (squarePosition == SECOND_SQUARE)
         {
             m_Data &= 0b11111000;
             m_Data |= (uint8) type;
@@ -65,9 +65,9 @@ namespace Game {
     }
 
 
-    void TwoSquares::WriteSquareColor(PieceColor color, bool isSecondSquare)
+    void TwoSquares::WriteSquareColor(PieceColor color, SquarePosition squarePosition)
     {
-        if (isSecondSquare)
+        if (squarePosition == SECOND_SQUARE)
         {
             m_Data &= 0b11110111;
             m_Data |= (uint8) color << 3;
@@ -101,7 +101,7 @@ namespace Game {
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
-        return m_InternalBoard[halfOfSquareLocation].ReadSquareType(isSecondSquare);
+        return m_InternalBoard[halfOfSquareLocation].ReadSquareType(SquarePosition(isSecondSquare));
     }
 
 
@@ -111,7 +111,7 @@ namespace Game {
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
-        return m_InternalBoard[halfOfSquareLocation].ReadSquareColor(isSecondSquare);
+        return m_InternalBoard[halfOfSquareLocation].ReadSquareColor(SquarePosition(isSecondSquare));
     }
 
 
@@ -121,7 +121,7 @@ namespace Game {
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
-        m_InternalBoard[halfOfSquareLocation].WriteSquareType(pieceType, isSecondSquare);
+        m_InternalBoard[halfOfSquareLocation].WriteSquareType(pieceType, SquarePosition(isSecondSquare));
     }
 
 
@@ -131,7 +131,51 @@ namespace Game {
         { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
-        m_InternalBoard[halfOfSquareLocation].WriteSquareColor(pieceColor, isSecondSquare);
+        m_InternalBoard[halfOfSquareLocation].WriteSquareColor(pieceColor, SquarePosition(isSecondSquare));
+    }
+
+
+    void BoardCastleRights::SetCastleRight(PieceColor color, CastleRightFlags castleRights)
+    {
+        if (color == PieceColor::WHITE)
+        {
+            m_Data |= castleRights; // Set bit
+        }
+        else
+        {
+            m_Data |= (castleRights << 2);
+        }
+    }
+
+
+    void BoardCastleRights::UnsetCastleRight(PieceColor color, CastleRightFlags castleRights)
+    {
+        if (color == PieceColor::WHITE)
+        {
+            m_Data &= ~castleRights;
+        }
+        else
+        {
+            m_Data &= ~(castleRights << 2);
+        }
+    }
+
+
+    KingCastleRights BoardCastleRights::ReadCastleRights(PieceColor color) const
+    {
+        bool queenSide, kingSide;
+        if (color == PieceColor::WHITE)
+        {
+            queenSide = m_Data & QUEEN_SIDE;
+            kingSide = m_Data & KING_SIDE;
+        }
+        else
+        {
+            queenSide = m_Data & (QUEEN_SIDE << 2);
+            kingSide = m_Data & (KING_SIDE << 2);
+        }
+
+        return KingCastleRights({kingSide, queenSide});
     }
 
 }

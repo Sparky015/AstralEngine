@@ -17,7 +17,8 @@ namespace Game {
             m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
             m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1}),
             m_FullMoveCount(1),
-            m_HalfMoveCount(1)
+            m_HalfMoveCount(1),
+            m_ActiveColor(PieceColor::WHITE)
     {
         PROFILE_SCOPE();
         std::array<PieceType, 16> OrderOfPieceTypes
@@ -41,7 +42,10 @@ namespace Game {
             m_Board.WriteSquareType(OrderOfPieceTypes[pieceID], pieceLocation);
         }
 
-        m_BoardDetails.WriteActiveColor(PieceColor::WHITE);
+        m_CastleRights.SetCastleRight(PieceColor::WHITE, KING_SIDE);
+        m_CastleRights.SetCastleRight(PieceColor::WHITE, QUEEN_SIDE);
+        m_CastleRights.SetCastleRight(PieceColor::BLACK, KING_SIDE);
+        m_CastleRights.SetCastleRight(PieceColor::BLACK, QUEEN_SIDE);
     }
 
 // Helper function for FEN constructor
@@ -75,23 +79,57 @@ namespace Game {
         m_WhitePieceLocations.fill(EMPTY);
         m_BlackPieceLocations.fill(EMPTY);
 
+        std::string pieceLocations;
+        char activeColor;
+        std::string castleRights;
+        std::string enPassantPawn;
+
+        std::istringstream iss(FEN);
+        iss >> pieceLocations >> activeColor >> castleRights >> enPassantPawn >> m_HalfMoveCount >> m_FullMoveCount;
+
+        // Setting the active color
+        m_ActiveColor = (activeColor == 'w') ? PieceColor::WHITE : PieceColor::BLACK;
+
+        // Setting the castle rights of the board
+        if (castleRights[0] != 'c')
+        {
+            for (char castleRight: castleRights)
+            {
+                if (islower(castleRight))
+                {
+                    m_CastleRights.SetCastleRight(PieceColor::WHITE, (castleRight == 'q') ? QUEEN_SIDE : KING_SIDE);
+                }
+                else
+                {
+                    m_CastleRights.SetCastleRight(PieceColor::WHITE, (castleRight == 'Q') ? QUEEN_SIDE : KING_SIDE);
+                }
+            }
+        }
+
+        // Setting the en passant state
+        if (enPassantPawn != "-")
+        {
+            // TODO: Write the location of the piece to the last move made buffer
+        }
+
+
         uint8 whitePieceIDMarker = 0; // Holds the next white piece ID that needs to be assigned
         uint8 blackPieceIDMarker = 0; // Holds the next black piece ID that needs to be assigned
-//TODO: Implement the grabbing of half move and full move and castle rights from the FEN.
+
         // Going through each character in the FEN sequence and adding the piece to the board (top to bottom)
         uint8 squareLocation = 0;
-        for (char c: FEN)
+        for (char FEN_character : pieceLocations)
         {
             // Check if the character is a number (a number means to skip/set empty the that number of squares)
-            if (isdigit(c))
+            if (isdigit(FEN_character))
             {
-                squareLocation += (c - '0');
+                squareLocation += (FEN_character - '0');
             }
             else
             { // Then the character is a letter
 
                 // Check to see if there is a break symbol (which means to go to the next row)
-                if (c == '/')
+                if (FEN_character == '/')
                 {
                     if (squareLocation % 8 == 0)
                     { continue; }
@@ -101,13 +139,15 @@ namespace Game {
                     continue;
                 }
 
-                PieceColor pieceColor = (PieceColor) isupper(c);
+
                 // Set the color. Upper case is white and lower case is black
+                PieceColor pieceColor = (PieceColor)isupper(FEN_character);
                 m_Board.WriteSquareColor(pieceColor, squareLocation);
 
                 // Set the piece type.
-                m_Board.WriteSquareType(ConvertCharToPieceType(c), squareLocation);
+                m_Board.WriteSquareType(ConvertCharToPieceType(FEN_character), squareLocation);
 
+                // Set the location of the piece
                 if (pieceColor == PieceColor::WHITE)
                 {
                     m_WhitePieceLocations[whitePieceIDMarker] = squareLocation;
@@ -133,15 +173,29 @@ namespace Game {
         { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
         if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
         { throw std::logic_error("targetBoardLocation already has a piece on the square"); }
-        if (ReadPieceType(color, pieceID) == PieceType::NONE)
+        PieceType movingPieceType = ReadPieceType(color, pieceID);
+        if (movingPieceType == PieceType::NONE)
         { throw std::logic_error("Can't move a piece of type NONE (aka that piece isn't on the board)"); }
 
         // Set the half move counter. (if a pawn moves or a take happens, then reset)
-        if (ReadPieceType(color, pieceID) == PieceType::PAWN) { m_HalfMoveCount = 1;}
+        if (movingPieceType == PieceType::PAWN) { m_HalfMoveCount = 1;}
         else { m_HalfMoveCount++; }
 
         // Increment the full move counter if the piece is black
         if (color == PieceColor::BLACK) { m_FullMoveCount++; }
+
+        // Updating the castle rights when a king or rook moves
+        if (movingPieceType == PieceType::KING)
+        {
+            m_CastleRights.UnsetCastleRight(color, KING_SIDE);
+            m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);
+        }
+        else if (movingPieceType == PieceType::ROOK)
+        {
+            uint8 pieceLocation = ReadPieceLocation(color, pieceID);
+            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);}
+            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(color, KING_SIDE);}
+        }
 
         // Getting type of the piece from the old location
         PieceType pieceType = ReadPieceType(color, pieceID);
@@ -181,13 +235,43 @@ namespace Game {
 
         uint8 oldPieceLocation = (color == PieceColor::WHITE) ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
 
+        // Updating the castle rights when a rook is taken
+        if (targetBoardLocation % 8 == 0 || targetBoardLocation % 8 == 7)
+        {
+            PieceColor takenPieceColor = (color == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
+            PieceType takenPieceType = ReadPieceType(takenPieceColor, ReadSquarePieceID(targetBoardLocation));
+
+            if (takenPieceType == PieceType::ROOK)
+            {
+                if (targetBoardLocation % 8 == 0)
+                { m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE); }
+                else if (targetBoardLocation % 8 == 7)
+                { m_CastleRights.UnsetCastleRight(color, KING_SIDE); }
+            }
+        }
+
+        // Updating the castle rights if a rook or king takes
+        PieceType takingPieceType = ReadPieceType(color, pieceID);
+        if (takingPieceType == PieceType::KING)
+        {
+            m_CastleRights.UnsetCastleRight(color, KING_SIDE);
+            m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);
+        }
+        else if (takingPieceType == PieceType::ROOK)
+        {
+            uint8 pieceLocation = ReadPieceLocation(color, pieceID);
+            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);}
+            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(color, KING_SIDE);}
+        }
+
+
         // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from piece locations
         PieceID targetPieceID = ReadSquarePieceID(targetBoardLocation);
         (color == PieceColor::WHITE) ? m_BlackPieceLocations[targetPieceID] = EMPTY : m_WhitePieceLocations[targetPieceID] = EMPTY;
 
 
         // Move the taking piece to the new location
-        m_Board.WriteSquareType(ReadPieceType(color, pieceID), targetBoardLocation);
+        m_Board.WriteSquareType(takingPieceType, targetBoardLocation);
         m_Board.WriteSquareColor(color, targetBoardLocation);
         if (color == PieceColor::WHITE) {m_WhitePieceLocations[pieceID] = targetBoardLocation;}
         else {m_BlackPieceLocations[pieceID] = targetBoardLocation;}
@@ -336,15 +420,15 @@ namespace Game {
     }
 
 
-    CastleRights Board::CanCastle(PieceColor color)
+    KingCastleRights Board::GetCastleRights(PieceColor color) const
     {
-        return m_BoardDetails.ReadCastleRights(color);
+        return m_CastleRights.ReadCastleRights(color);
     }
 
 
-    PieceColor Board::GetActiveColor()
+    PieceColor Board::GetActiveColor() const
     {
-        return m_BoardDetails.ReadActiveColor();
+        return m_ActiveColor;
     }
 
 
