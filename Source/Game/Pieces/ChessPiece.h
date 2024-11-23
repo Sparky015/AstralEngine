@@ -15,7 +15,7 @@ namespace Game {
         ChessPiece() = default;
         virtual ~ChessPiece() = default;
 
-        virtual void GenerateMoves(const uint8 pieceLocation, const PieceColor pieceColor);
+        virtual void GenerateMoves(const Board& board, const uint8 pieceLocation, const PieceColor pieceColor);
         virtual PieceType GetType();
 
         [[nodiscard]] virtual const std::vector<uint8>& GetRegularMoves() const;

@@ -49,6 +49,11 @@ namespace Game {
         [[nodiscard]] PieceType ReadSquareType(uint8 squareLocation) const;
         [[nodiscard]] PieceID ReadSquarePieceID(uint8 squareLocation) const;
 
+        [[nodiscard]] KingCastleRights GetCastleRights(PieceColor color) const;
+        [[nodiscard]] PieceColor GetActiveColor() const;
+        [[nodiscard]] inline uint8 GetHalfMoveCount() const { return m_HalfMoveCount;}
+        [[nodiscard]] inline uint8 GetFullMoveCount() const { return m_HalfMoveCount;}
+
         char GetCharacterOfPiece(uint8 squareLocation);
         void ClearBoard();
         void PrintBoardToConsole();
@@ -62,7 +67,8 @@ namespace Game {
         //TODO: Profile different memory layouts for speed
         uint16 m_FullMoveCount;
         uint8 m_HalfMoveCount;
-        uint8 m_BoardState; // Holds castling rights and active color
+        BoardCastleRights m_CastleRights;
+        PieceColor m_ActiveColor;
         std::array<uint8, 16> m_BlackPieceLocations; // These two contain the location info of a piece
         std::array<uint8, 16> m_WhitePieceLocations;
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece

@@ -17,9 +17,34 @@ namespace Game {
         std::fill(m_AttackingMoves.begin(), m_AttackingMoves.end(), EMPTY);
     }
 
-    void King::GenerateMoves(const uint8_t pieceLocation, const PieceColor pieceColor)
+    void King::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
-        ChessPiece::GenerateMoves(pieceLocation, pieceColor);
+        // Check if the king can castle
+        KingCastleRights castleRights = board.GetCastleRights(pieceColor);
+        // TODO: Invert the checking of empty squares depending on color
+        if (castleRights.KingSide)
+        {
+            // Check if the squares to the left of the king are empty
+            if (board.ReadSquareType(pieceLocation - 1) == PieceType::NONE &&
+                board.ReadSquareType(pieceLocation - 2) == PieceType::NONE &&
+                board.ReadSquareType(pieceLocation - 3) == PieceType::NONE)
+            {
+                m_RegularMoves.push_back(pieceLocation - 2);
+            }
+        }
+
+        if (castleRights.QueenSide)
+        {
+            // Check if the squares to the right of the king are empty
+            if (board.ReadSquareType(pieceLocation + 1) == PieceType::NONE &&
+                board.ReadSquareType(pieceLocation + 2) == PieceType::NONE)
+            {
+                m_RegularMoves.push_back(pieceLocation + 2);
+            }
+
+        }
+
+
     }
 
 }

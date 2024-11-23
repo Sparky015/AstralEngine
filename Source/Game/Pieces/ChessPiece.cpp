@@ -6,10 +6,11 @@
 
 namespace Game {
 
-    void ChessPiece::GenerateMoves(const uint8_t pieceLocation, const PieceColor pieceColor)
+    void ChessPiece::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
         ERROR("This should not be called.")
     }
+
 
     PieceType ChessPiece::GetType()
     {
