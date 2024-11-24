@@ -65,6 +65,8 @@ add_library(ChessEngine
         Game/Pieces/Queen.cpp
         Game/Pieces/Rook.cpp
         Game/MoveList.cpp
+        Game/Board/Conversions.h
+        Game/Board/Conversions.cpp
 )
 
 

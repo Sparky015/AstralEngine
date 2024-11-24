@@ -15,6 +15,7 @@ set(TEST_FILES
         Game/BoardClass/Board_TakePiece.cpp
         Game/BoardClass/Board_ReadSquarePieceID.cpp
         Game/BoardClass/Board_GetCharacterOfPiece.cpp
+        Game/ConversionsTest.cpp
 )
 
 

@@ -6,6 +6,7 @@
 
 #include "Board.h"
 
+#include "Game/Board/Conversions.h"
 
 namespace Game {
 
@@ -46,30 +47,10 @@ namespace Game {
         m_CastleRights.SetCastleRight(PieceColor::WHITE, QUEEN_SIDE);
         m_CastleRights.SetCastleRight(PieceColor::BLACK, KING_SIDE);
         m_CastleRights.SetCastleRight(PieceColor::BLACK, QUEEN_SIDE);
+
+        memset(&m_LastMoveBuffer, 0, sizeof(m_LastMoveBuffer));
     }
 
-// Helper function for FEN constructor
-    PieceType ConvertCharToPieceType(char c)
-    {
-        c = tolower(c);
-        switch (c)
-        {
-            case 'p':
-                return PieceType::PAWN;
-            case 'r':
-                return PieceType::ROOK;
-            case 'b':
-                return PieceType::BISHOP;
-            case 'n':
-                return PieceType::KNIGHT;
-            case 'k':
-                return PieceType::KING;
-            case 'q':
-                return PieceType::QUEEN;
-            default:
-                throw std::logic_error("Char did not map to any character.");
-        }
-    }
 
     Board::Board(const std::string& FEN)
     {
@@ -105,13 +86,6 @@ namespace Game {
                 }
             }
         }
-
-        // Setting the en passant state
-        if (enPassantPawn != "-")
-        {
-            // TODO: Write the location of the piece to the last move made buffer
-        }
-
 
         uint8 whitePieceIDMarker = 0; // Holds the next white piece ID that needs to be assigned
         uint8 blackPieceIDMarker = 0; // Holds the next black piece ID that needs to be assigned
@@ -162,6 +136,25 @@ namespace Game {
                 // Increment the square location for the next iteration
                 squareLocation++;
             }
+        }
+
+        // Setting the en passant state
+        if (enPassantPawn != "-")
+        {
+            m_LastMoveBuffer.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
+
+            uint8 moveStep = (m_LastMoveBuffer.FinalPieceLocation < A4) ? -16 : 16;
+            m_LastMoveBuffer.InitialPieceLocation = m_LastMoveBuffer.FinalPieceLocation + moveStep;
+
+            m_LastMoveBuffer.MovingPieceType = PieceType::PAWN;
+            m_LastMoveBuffer.MovingPieceID = ReadSquarePieceID(m_LastMoveBuffer.FinalPieceLocation);
+
+            m_LastMoveBuffer.PieceTakenType = PieceType::NONE;
+            m_LastMoveBuffer.TakenPieceID = PIECE_1; // == 0
+        }
+        else
+        {
+            memset(&m_LastMoveBuffer, 0, sizeof(m_LastMoveBuffer));
         }
     }
 
@@ -429,31 +422,6 @@ namespace Game {
     PieceColor Board::GetActiveColor() const
     {
         return m_ActiveColor;
-    }
-
-
-// Helper function for printing board to console and converting piece to character
-    char ConvertPieceTypeToChar(PieceType pieceType)
-    {
-        switch (pieceType)
-        {
-            case PieceType::PAWN:
-                return 'p';
-            case PieceType::ROOK:
-                return 'r';
-            case PieceType::BISHOP:
-                return 'b';
-            case PieceType::KNIGHT:
-                return 'n';
-            case PieceType::KING:
-                return 'k';
-            case PieceType::QUEEN:
-                return 'q';
-            case PieceType::NONE:
-                return '_';
-            default:
-                throw std::logic_error("PieceType did not map to any character.");
-        }
     }
 
 

@@ -53,6 +53,7 @@ namespace Game {
         [[nodiscard]] PieceColor GetActiveColor() const;
         [[nodiscard]] inline uint8 GetHalfMoveCount() const { return m_HalfMoveCount;}
         [[nodiscard]] inline uint8 GetFullMoveCount() const { return m_HalfMoveCount;}
+        [[nodiscard]] inline LastMoveBuffer GetLastMoveBuffer() const {return m_LastMoveBuffer;}
 
         char GetCharacterOfPiece(uint8 squareLocation);
         void ClearBoard();
@@ -69,6 +70,8 @@ namespace Game {
         uint8 m_HalfMoveCount;
         BoardCastleRights m_CastleRights;
         PieceColor m_ActiveColor;
+        LastMoveBuffer m_LastMoveBuffer;
+
         std::array<uint8, 16> m_BlackPieceLocations; // These two contain the location info of a piece
         std::array<uint8, 16> m_WhitePieceLocations;
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece
