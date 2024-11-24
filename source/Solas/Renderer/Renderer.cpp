@@ -12,12 +12,12 @@ namespace Solas::Renderer {
             m_ShaderProgram(ShaderProgram(vertexShader, fragmentShader)),
             m_VertexBufferData()
     {
-        AY_TRACE("Initializing Renderer!");
+        TRACE("Initializing Renderer!");
     }
 
     IRenderer::~IRenderer()
     {
-        AY_TRACE("Destroying Renderer!");
+        TRACE("Destroying Renderer!");
         glDeleteProgram(m_ShaderProgram.GetID());
     }
 

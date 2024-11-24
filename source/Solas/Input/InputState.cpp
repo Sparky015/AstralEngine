@@ -18,14 +18,14 @@ namespace Solas::Input {
 
     SInputState::SInputState() : m_KeyPressedPublisher()
     {
-        AY_TRACE("[Solas] InputState: Initializing Input State");
+        TRACE("[Solas] InputState: Initializing Input State");
         m_InputLayer.SetCallback(std::bind(&SInputState::OnEvent, this, std::placeholders::_1));
     }
 
 
     SInputState::~SInputState()
     {
-        AY_TRACE("[Solas] InputState: Destroying Input State");
+        TRACE("[Solas] InputState: Destroying Input State");
     }
 
 

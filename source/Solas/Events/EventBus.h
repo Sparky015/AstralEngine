@@ -17,7 +17,7 @@ namespace Solas::EventManagement {
         {
             if (m_Instance == nullptr)
             {
-                AY_TRACE("Creating new type of EventBus!");
+                TRACE("Creating new type of EventBus!");
                 m_Instance = new EventBus<T>;
             }
             return *m_Instance;
@@ -27,7 +27,7 @@ namespace Solas::EventManagement {
         /** Deletes the singleton instance of the type of Eventbus */
         static void Destroy()
         {
-            AY_TRACE("Destroying a type of EventBus!");
+            TRACE("Destroying a type of EventBus!");
             delete m_Instance;
             m_Instance = nullptr;
         }

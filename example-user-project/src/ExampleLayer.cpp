@@ -9,7 +9,7 @@
 
 ExampleLayer::ExampleLayer()
 {
-    AY_TRACE("ExampleLayer: Initializing Template Layer");
+    TRACE("ExampleLayer: Initializing Template Layer");
     this->AttachLayer();
     m_DebugName = "Template Layer";
 }

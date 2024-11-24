@@ -64,10 +64,6 @@ add_library(Solas STATIC
         Renderer/Abstractions/VertexArrayObject.h
         Renderer/Abstractions/IndexBufferObject.cpp
         Renderer/Abstractions/IndexBufferObject.h
-        ECS/EntityComponentSystem.cpp
-        ECS/EntityComponentSystem.h
-        ECS/Entity.cpp
-        ECS/Entity.h
         Events/EventBus.h
         Events/EventListener.h
         Events/EventPublisher.h

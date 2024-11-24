@@ -28,7 +28,7 @@ namespace Solas::Core::Debug
     bool DebugLayer::m_ShowDebugMenu = false;
     DebugLayer::DebugLayer()
     {
-        AY_TRACE("[Solas] DebugLayer: Initializing Debug Layer");
+        TRACE("[Solas] DebugLayer: Initializing Debug Layer");
         this->AttachLayer();
         m_DebugName = "Debug Layer";
     }
@@ -36,7 +36,7 @@ namespace Solas::Core::Debug
 
     DebugLayer::~DebugLayer()
     {
-        AY_TRACE("[Solas] DebugLayer: Destroying Debug Layer");
+        TRACE("[Solas] DebugLayer: Destroying Debug Layer");
         OnDetach();
         this->DetachLayer();
     }
@@ -236,7 +236,7 @@ namespace Solas::Core::Debug
                 #endif
                 break;
             case Input::AY_KEY_R:
-                AY_TRACE("Resetting stopwatch.");
+                TRACE("Resetting stopwatch.");
                 Time::Clock::Get().ResetStopwatch();
                 break;
             default:

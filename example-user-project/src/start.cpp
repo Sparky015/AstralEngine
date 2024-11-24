@@ -20,16 +20,12 @@ public:
     void Init() override {
         AY_LOG("[ClientLoop] Application: Init function called!");
         el = ExampleLayer();
-
-        m_EntityHandle = m_EntitySystem.AddEntity(Solas::ECS::Entity());
     }
 
     ExampleLayer el;
 
 
-
 private:
-    Solas::ECS::EntitySystem& m_EntitySystem{Solas::ECS::EntitySystem::Get()};
     Solas::Input::SInputState& m_InputState{Solas::Input::SInputState::Get()};
     uint8 m_EntityHandle;
 };

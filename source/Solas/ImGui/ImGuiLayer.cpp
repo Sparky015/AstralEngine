@@ -25,7 +25,7 @@ namespace Solas::GUI {
 
     ImGuiLayer::ImGuiLayer()
     {
-        AY_TRACE("[Solas] ImGuiLayer: Initializing ImGui Layer");
+        TRACE("[Solas] ImGuiLayer: Initializing ImGui Layer");
         this->AttachLayer();
         m_DebugName = "ImGui Layer";
     }
@@ -33,7 +33,7 @@ namespace Solas::GUI {
 
     ImGuiLayer::~ImGuiLayer()
     {
-        AY_TRACE("[Solas] ImGuiLayer: Destroying ImGui Layer");
+        TRACE("[Solas] ImGuiLayer: Destroying ImGui Layer");
         OnDetach();
         this->DetachLayer();
     }

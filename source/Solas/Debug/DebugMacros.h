@@ -11,7 +11,7 @@
 
 
 /** Outputs the message to the console with a time stamp. */
-#define AY_TRACE(title) Solas::Debug::Macros::macro_AY_TRACE(title)
+#define TRACE(title) Solas::Debug::Macros::macro_AY_TRACE(title)
 
 /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
 #define AY_LOG(message) { std::stringstream ss; Solas::Debug::Macros::macro_AY_LOG(ss << message); }

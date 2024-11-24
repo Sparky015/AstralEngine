@@ -17,7 +17,7 @@ namespace Solas::Renderer {
             m_Renderer(Shader(std::string(SHADER_DIR) + "vertex.shader"),
                        Shader(std::string(SHADER_DIR) + "fragment.shader"))
     {
-        AY_TRACE("[Solas] RendererLayer: Initializing Renderer Layer");
+        TRACE("[Solas] RendererLayer: Initializing Renderer Layer");
         this->AttachLayer();
         m_DebugName = "Renderer Layer";
     }
@@ -25,7 +25,7 @@ namespace Solas::Renderer {
 
     RendererLayer::~RendererLayer()
     {
-        AY_TRACE("[Solas] RendererLayer: Destroying Renderer Layer");
+        TRACE("[Solas] RendererLayer: Destroying Renderer Layer");
         this->DetachLayer();
     }
 

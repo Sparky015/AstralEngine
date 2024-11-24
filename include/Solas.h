@@ -9,7 +9,6 @@
 #include "Solas/Core/CoreDefinitions.h"
 #include "Solas/Core/EntryPoint.h"
 #include "Solas/Core/Layers/Layer.h"
-#include "Solas/ECS/EntityComponentSystem.h"
 #include "Solas/Input/InputState.h"
 #include "Solas/Input/Keycodes.h"
 

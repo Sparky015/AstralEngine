@@ -9,13 +9,13 @@ namespace Solas::Client
 
     ClientLoop::ClientLoop()
     {
-        AY_TRACE("[Solas] Client: Initializing ClientLoop");
+        TRACE("[Solas] Client: Initializing ClientLoop");
     }
 
 
     ClientLoop::~ClientLoop()
     {
-        AY_TRACE("[Solas] Client: Destroying ClientLoop");
+        TRACE("[Solas] Client: Destroying ClientLoop");
     }
 
 

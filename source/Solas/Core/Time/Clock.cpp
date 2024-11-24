@@ -11,7 +11,7 @@ namespace Solas::Core::Time
     void Clock::Init()
     {
         AY_ASSERT(m_Instance == nullptr, "[Solas] Core/Time.cpp: Clock has already been initialized!");
-        AY_TRACE("[Solas] Clock: Initializing Clock");
+        TRACE("[Solas] Clock: Initializing Clock");
         m_Instance = new Clock();
     }
 
@@ -39,7 +39,7 @@ namespace Solas::Core::Time
 
     Clock::~Clock()
     {
-        AY_TRACE("[Solas] Clock: Destroying Clock");
+        TRACE("[Solas] Clock: Destroying Clock");
     }
 
 

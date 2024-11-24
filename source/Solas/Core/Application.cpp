@@ -7,7 +7,6 @@
 #include "Solas/Core/Time/Clock.h"
 #include "Solas/Debug/DebugLayer.h"
 #include "Solas/Debug/LogUsedToolsAndLibraries.h"
-#include "Solas/ECS/EntityComponentSystem.h" // TEMP
 #include "Solas/ImGui/ImGuiLayer.h"
 #include "Solas/Input/InputState.h"
 
@@ -24,16 +23,13 @@ namespace Solas::Core
         AY_ASSERT(m_Application == nullptr, "[Solas] Core/Application.cpp: Can not create more than one application!");
 
         // Application //
-        AY_TRACE("[Solas] Application: Initializing Application");
+        TRACE("[Solas] Application: Initializing Application");
         m_Application = this;
 
         // Window //
         AY_LOG("--- Application: Initializing Window ---");
         m_Window = std::unique_ptr<Window>(Window::CreateWindow(Windows::WindowProperties("Solas Engine Window", 1024, 768)));
         m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-
-        // Systems //
-        ECS::EntitySystem::Init();
 
         // Layer Stack //
         AY_LOG("--- Application: Initializing Layer Stack ---");
@@ -56,10 +52,9 @@ namespace Solas::Core
 
     Application::~Application()
     {
-        AY_TRACE("[Solas] Application: Destroying Application");
+        TRACE("[Solas] Application: Destroying Application");
         delete m_ClientLoop;
         Input::SInputState::Destroy();
-        ECS::EntitySystem::Destroy();
         Time::Clock::Destroy();
     };
 

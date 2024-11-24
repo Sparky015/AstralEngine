@@ -11,13 +11,13 @@ namespace Solas::Core::Layers
 
     LayerStack::LayerStack()
     {
-        AY_TRACE("[Solas] LayerStack: Initializing Layer Stack");
+        TRACE("[Solas] LayerStack: Initializing Layer Stack");
     }
 
 
     LayerStack::~LayerStack()
     {
-        AY_TRACE("[Solas] LayerStack: Destroying Layer Stack");
+        TRACE("[Solas] LayerStack: Destroying Layer Stack");
     }
 
 
