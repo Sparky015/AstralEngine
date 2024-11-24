@@ -13,23 +13,23 @@
 */
 enum PieceID : uint8
 {
-    PIECE_1, // [TYPE USING STANDARD BOARD CONSTRUCTOR]
-    PIECE_2, // [PAWN]
-    PIECE_3, // [PAWN]
-    PIECE_4, // [PAWN]
-    PIECE_5, // [PAWN]
-    PIECE_6, // [PAWN]
-    PIECE_7, // [PAWN]
-    PIECE_8, // [PAWN]
+    PIECE_1,
+    PIECE_2,
+    PIECE_3,
+    PIECE_4,
+    PIECE_5,
+    PIECE_6,
+    PIECE_7,
+    PIECE_8,
 
-    PIECE_9, // [ROOK]
-    PIECE_10, // [KNIGHT]
-    PIECE_11, // [BISHOP]
-    PIECE_12, // [QUEEN]
-    PIECE_13, // [KING]
-    PIECE_14, // [BISHOP]
-    PIECE_15, // [KNIGHT]
-    PIECE_16, // [ROOK]
+    PIECE_9,
+    PIECE_10,
+    PIECE_11,
+    PIECE_12,
+    PIECE_13,
+    PIECE_14,
+    PIECE_15,
+    PIECE_16
 };
 
 /**
@@ -37,14 +37,14 @@ enum PieceID : uint8
 */
 enum class PieceType : uint8
 {
+    NONE,
+
     PAWN,
     BISHOP,
     KNIGHT,
     ROOK,
     QUEEN,
-    KING,
-
-    NONE
+    KING
 };
 
 /**

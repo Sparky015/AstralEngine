@@ -84,4 +84,16 @@ namespace Game {
         uint8 m_Data;
     };
 
+
+    struct LastMoveBuffer
+    {
+        uint8 InitialPieceLocation;
+        uint8 FinalPieceLocation;
+        PieceType MovingPieceType;
+        PieceID MovingPieceID;
+
+        PieceType PieceTakenType; // Populate these if the last action was a take
+        PieceID TakenPieceID;
+    };
+
 }

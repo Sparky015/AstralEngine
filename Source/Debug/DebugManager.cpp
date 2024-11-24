@@ -11,6 +11,7 @@
 
 #include "Window/WindowManager.h"
 #include "Game/Board/BoardManager.h"
+#include "Game/Board/Conversions.h"
 
 namespace Debug{
 
@@ -84,11 +85,24 @@ namespace Debug{
             {
                 if (ImGui::BeginTable("BoardLocationIDs", 8, flags, ImVec2(200, 130)))
                 {
-                    Game::Board& board = Game::g_BoardManager.GetBoard();
                     for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
                     {
                         ImGui::TableNextColumn();
                         ImGui::Text("%d", square);
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Board Locations (In Chess Notation)"))
+            {
+                if (ImGui::BeginTable("BoardLocationChessNotation", 8, flags, ImVec2(200, 130)))
+                {
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", Game::ConvertIntToChessNotation(square).c_str());
                     }
                     ImGui::EndTable();
                 }
