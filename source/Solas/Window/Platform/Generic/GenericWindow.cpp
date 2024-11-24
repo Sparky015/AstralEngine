@@ -21,14 +21,14 @@ namespace Solas::Windows {
     GenericWindow::GenericWindow(const WindowProperties& properties) : m_Window(), m_WindowProperties(properties),
                                                                        m_Context(m_Window)
     {
-        AY_TRACE("[Solas] GenericWindow: Initializing Generic Window");
+        TRACE("[Solas] GenericWindow: Initializing Generic Window");
         Init(properties);
     }
 
 
     GenericWindow::~GenericWindow()
     {
-        AY_TRACE("[Solas] GenericWindow: Destroying Generic Window");
+        TRACE("[Solas] GenericWindow: Destroying Generic Window");
         glfwTerminate();
     }
 
