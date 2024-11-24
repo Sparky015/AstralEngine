@@ -18,22 +18,24 @@ namespace Solas::Renderer {
 
     OpenGLRenderer::OpenGLRenderer(const Shader& vertexShader, const Shader& fragmentShader) : IRenderer(vertexShader, fragmentShader)
     {
-        AY_TRACE("Initializing OpenGL Renderer!");
+        TRACE("Initializing OpenGL Renderer!");
+
     }
 
 
     OpenGLRenderer::~OpenGLRenderer()
     {
-        AY_TRACE("Destroying OpenGL Renderer!");
+        TRACE("Destroying OpenGL Renderer!");
     }
 
 
     void OpenGLRenderer::InitBuffers()
     {
-        static VertexArrayObject vertexArrayObject = VertexArrayObject();
+        // TODO: Can't use static stuff here because you can't call gl functions after the window (includes open gl context) shuts down
+         static VertexArrayObject vertexArrayObject = VertexArrayObject();
 
 
-        static VertexBuffer vertexBuffer = VertexBuffer(m_VertexBufferData.positions, sizeof(m_VertexBufferData.positions));
+         static VertexBuffer vertexBuffer = VertexBuffer(m_VertexBufferData.positions, sizeof(m_VertexBufferData.positions));
 
         SetVertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
         EnableVertexAttribute(0);
@@ -42,7 +44,7 @@ namespace Solas::Renderer {
         EnableVertexAttribute(1);
 
 
-        static IndexBufferObject indexBufferObject = IndexBufferObject(m_VertexBufferData.indices,sizeof(m_VertexBufferData.indices));
+         static IndexBufferObject indexBufferObject = IndexBufferObject(m_VertexBufferData.indices,sizeof(m_VertexBufferData.indices));
 
 
         glUseProgram(m_ShaderProgram.GetID());
