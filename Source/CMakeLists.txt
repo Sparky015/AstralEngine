@@ -27,7 +27,6 @@ add_library(ChessEngine
         Game/PieceInfo.h
         Game/PieceInfo.cpp
         IO/PrintBoardEvent.h
-        Core/Events/Event.h
         IO/IOManager.cpp
         IO/IOManager.h
         Core/Engine.h
