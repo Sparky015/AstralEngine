@@ -78,7 +78,7 @@ namespace Game {
             {
                 if (islower(castleRight))
                 {
-                    m_CastleRights.SetCastleRight(PieceColor::WHITE, (castleRight == 'q') ? QUEEN_SIDE : KING_SIDE);
+                    m_CastleRights.SetCastleRight(PieceColor::BLACK, (castleRight == 'q') ? QUEEN_SIDE : KING_SIDE);
                 }
                 else
                 {
@@ -141,7 +141,10 @@ namespace Game {
         // Setting the en passant state
         if (enPassantPawn != "-")
         {
+
             m_LastMoveBuffer.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
+            uint8 initialPositionStep = (m_LastMoveBuffer.FinalPieceLocation < A4) ? 8 : -8;
+            m_LastMoveBuffer.FinalPieceLocation += initialPositionStep;
 
             uint8 moveStep = (m_LastMoveBuffer.FinalPieceLocation < A4) ? -16 : 16;
             m_LastMoveBuffer.InitialPieceLocation = m_LastMoveBuffer.FinalPieceLocation + moveStep;

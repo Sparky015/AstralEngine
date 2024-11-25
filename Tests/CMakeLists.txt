@@ -16,6 +16,7 @@ set(TEST_FILES
         Game/BoardClass/Board_ReadSquarePieceID.cpp
         Game/BoardClass/Board_GetCharacterOfPiece.cpp
         Game/ConversionsTest.cpp
+        Game/MoveGeneration/PawnMoveGenerationTest.cpp
 )
 
 

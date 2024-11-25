@@ -77,6 +77,21 @@ namespace Game {
             }
         }
 
+
+        // Checking the regular pawn move
+
+        uint8 directionMultiplier = (pieceColor == PieceColor::WHITE ? 1 : -1);
+
+        uint8 moveLocation = pieceLocation + (UP * directionMultiplier);
+        if (board.ReadSquareType(moveLocation) == PieceType::NONE)
+        {
+            m_RegularMoves.push_back(moveLocation);
+        }
+
+        // TODO: Add bounds checks
+        // TODO: Add attacks
+        // TODO: Fix/add en passant
+
     }
 
 } // Game

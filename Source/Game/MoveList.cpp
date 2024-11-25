@@ -30,7 +30,8 @@ namespace Game {
 
             if (piecePtr)
             {
-                piecePtr->GenerateMoves(board, pieceID, color);
+                uint8 pieceLocation = board.ReadPieceLocation(color, (PieceID)pieceID);
+                piecePtr->GenerateMoves(board, pieceLocation, color);
             }
         }
     }

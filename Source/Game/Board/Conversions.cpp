@@ -106,4 +106,20 @@ namespace Game {
         return std::string(1, rowLetter) + std::to_string(column - 1);
     }
 
+    std::string VectorToString(const std::vector<uint8>& vec)
+    {
+        std::ostringstream oss;
+        oss << "[";
+        for (size_t i = 0; i < vec.size(); ++i)
+        {
+            oss << ConvertIntToChessNotation((int)vec[i]);
+            if (i != vec.size() - 1)
+            {
+                oss << ", ";
+            }
+        }
+        oss << "]";
+        return oss.str();
+    }
+
 }
