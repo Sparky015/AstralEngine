@@ -49,7 +49,7 @@ namespace Game {
             }
         }
 
-        uint8 directionMultiplier = (pieceColor == PieceColor::WHITE ? 1 : -1);
+        int8 directionMultiplier = (pieceColor == PieceColor::WHITE ? 1 : -1);
 
         // Checking the regular pawn move
         int8 moveStep = UP * directionMultiplier;

@@ -60,6 +60,7 @@ namespace Game {
                 case PieceType::BISHOP: piecePtr = std::make_unique<Bishop>(); break;
                 case PieceType::QUEEN: piecePtr = std::make_unique<Queen>(); break;
                 case PieceType::KING: piecePtr = std::make_unique<King>(); break;
+                case PieceType::NONE: piecePtr = nullptr; break;
                 default: throw std::invalid_argument("Invalid PieceType");
             }
         }
@@ -92,11 +93,13 @@ namespace Game {
 
     const std::vector<uint8>& MoveList::GetRegularMoves(PieceID pieceID)
     {
+        if (!GetPiecePtr(pieceID)) {static std::vector<uint8> vec; return vec;} // if the ptr is null
         return GetPiecePtr(pieceID)->GetRegularMoves();
     }
 
     const std::vector<uint8>& MoveList::GetAttackingMoves(PieceID pieceID)
     {
+        if (!GetPiecePtr(pieceID)) {static std::vector<uint8> vec; return vec;} // if the ptr is null
         return GetPiecePtr(pieceID)->GetAttackingMoves();
     }
 
