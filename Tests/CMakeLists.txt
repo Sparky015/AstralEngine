@@ -17,6 +17,7 @@ set(TEST_FILES
         Game/BoardClass/Board_GetCharacterOfPiece.cpp
         Game/ConversionsTest.cpp
         Game/MoveGeneration/PawnMoveGenerationTest.cpp
+        Game/MoveGeneration/BoundsCheckerTest.cpp
 )
 
 

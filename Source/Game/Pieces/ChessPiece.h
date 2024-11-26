@@ -6,6 +6,7 @@
 
 #include "Game/PieceInfo.h"
 #include "Game/Board/Board.h"
+#include "Game/MoveGenerationHelpers.h"
 
 namespace Game {
 
@@ -38,11 +39,11 @@ namespace Game {
         // These directions are just for the knight
         UP_LEFT = -17,
         UP_RIGHT = -15,
-        DOWN_LEFT = 17,
-        DOWN_RIGHT = 15,
-        LEFT_UP = -6,
-        LEFT_DOWN = -10,
-        RIGHT_UP = 6,
+        DOWN_LEFT = 15,
+        DOWN_RIGHT = 17,
+        LEFT_UP = -10,
+        LEFT_DOWN = 6,
+        RIGHT_UP = -6,
         RIGHT_DOWN = 10
     };
 

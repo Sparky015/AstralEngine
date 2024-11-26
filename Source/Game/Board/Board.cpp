@@ -64,9 +64,14 @@ namespace Game {
         char activeColor;
         std::string castleRights;
         std::string enPassantPawn;
+        std::string halfMoveCount;
+        std::string fullMoveCount;
 
         std::istringstream iss(FEN);
-        iss >> pieceLocations >> activeColor >> castleRights >> enPassantPawn >> m_HalfMoveCount >> m_FullMoveCount;
+        iss >> pieceLocations >> activeColor >> castleRights >> enPassantPawn >> halfMoveCount >> fullMoveCount;
+
+        m_HalfMoveCount = (!halfMoveCount.empty()) ? std::stoi(halfMoveCount) : 0;
+        m_FullMoveCount = (!fullMoveCount.empty()) ? std::stoi(fullMoveCount) : 0;
 
         // Setting the active color
         m_ActiveColor = (activeColor == 'w') ? PieceColor::WHITE : PieceColor::BLACK;
@@ -139,9 +144,8 @@ namespace Game {
         }
 
         // Setting the en passant state
-        if (enPassantPawn != "-")
+        if (enPassantPawn != "-" && !enPassantPawn.empty())
         {
-
             m_LastMoveBuffer.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
             uint8 initialPositionStep = (m_LastMoveBuffer.FinalPieceLocation < A4) ? 8 : -8;
             m_LastMoveBuffer.FinalPieceLocation += initialPositionStep;

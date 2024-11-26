@@ -24,7 +24,7 @@ namespace Game {
         SyncPieceTypesToBoard(board, color);
 
         // Generate the moves of each piece
-        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16; pieceID++)
+        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
         {
             std::unique_ptr<ChessPiece>& piecePtr = GetPiecePtr((PieceID)pieceID);
 
@@ -41,7 +41,7 @@ namespace Game {
     {
         PROFILE_SCOPE();
         // Loop through each piece in the board and look at its type
-        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16; pieceID++)
+        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
         {
             std::unique_ptr<ChessPiece>& piecePtr = GetPiecePtr((PieceID)pieceID);
 

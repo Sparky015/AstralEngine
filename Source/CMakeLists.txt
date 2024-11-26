@@ -66,6 +66,8 @@ add_library(ChessEngine
         Game/MoveList.cpp
         Game/Board/Conversions.h
         Game/Board/Conversions.cpp
+        Game/MoveGenerationHelpers.cpp
+        Game/MoveGenerationHelpers.h
 )
 
 
