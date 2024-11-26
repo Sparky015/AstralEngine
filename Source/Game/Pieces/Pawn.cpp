@@ -11,38 +11,10 @@ namespace Game {
         // Reserve the max amount of moves a pawn can make in the worst case
         m_RegularMoves.reserve(2);
         m_AttackingMoves.reserve(2);
-
-        // Fill each vector with EMPTY locations because 0 is a valid location on the board.
-        std::fill(m_RegularMoves.begin(), m_RegularMoves.end(), EMPTY);
-        std::fill(m_AttackingMoves.begin(), m_AttackingMoves.end(), EMPTY);
     }
 
     void Pawn::GenerateMoves(const Board& board, const uint8_t pieceLocation, const PieceColor pieceColor)
     {
-        // Check if pawn can do a double step move
-        if (pieceColor == PieceColor::WHITE)
-        {
-            if (pieceLocation >= A2 && pieceLocation <= H2)
-            {
-                if (board.ReadSquareType(pieceLocation - 16) == PieceType::NONE &&
-                        board.ReadSquareType(pieceLocation - 8) == PieceType::NONE)
-                {
-                    m_RegularMoves.push_back(pieceLocation - 16);
-                }
-            }
-        }
-        else
-        {
-            if (pieceLocation >= A7 && pieceLocation <= H7)
-            {
-                if (board.ReadSquareType(pieceLocation + 16) == PieceType::NONE &&
-                        board.ReadSquareType(pieceLocation + 8) == PieceType::NONE)
-                {
-                    m_RegularMoves.push_back(pieceLocation + 16);
-                }
-            }
-        }
-
         // Check if an en passant attack move is possible
         LastMoveBuffer lmb = board.GetLastMoveBuffer();
         if (lmb.MovingPieceType == PieceType::PAWN)
@@ -73,6 +45,54 @@ namespace Game {
                     {
                         m_AttackingMoves.push_back(pieceLocation + 9);
                     }
+                }
+            }
+        }
+
+        uint8 directionMultiplier = (pieceColor == PieceColor::WHITE ? 1 : -1);
+
+        // Checking the regular pawn move
+        int8 moveStep = UP * directionMultiplier;
+        uint8 moveLocation = pieceLocation + moveStep;
+        if (board.ReadSquareType(moveLocation) == PieceType::NONE && IsWithinBounds(moveLocation, moveStep))
+        {
+            m_RegularMoves.push_back(moveLocation);
+        }
+
+        // Checking the attack pawn moves
+        std::array<int8, 2> directions = {UP + LEFT, UP + RIGHT};
+        for (int8 direction : directions)
+        {
+            moveStep = direction * directionMultiplier;
+            moveLocation = pieceLocation + moveStep;
+            if (board.ReadSquareType(moveLocation) != PieceType::NONE
+                && IsWithinBounds(pieceLocation, moveStep)
+                && board.ReadSquareColor(moveLocation) != pieceColor)
+            {
+                m_AttackingMoves.push_back(moveLocation);
+            }
+        }
+
+        // Check if pawn can do a double step move
+        if (pieceColor == PieceColor::WHITE)
+        {
+            if (pieceLocation >= A2 && pieceLocation <= H2)
+            {
+                if (board.ReadSquareType(pieceLocation - 16) == PieceType::NONE &&
+                    board.ReadSquareType(pieceLocation - 8) == PieceType::NONE)
+                {
+                    m_RegularMoves.push_back(pieceLocation - 16);
+                }
+            }
+        }
+        else
+        {
+            if (pieceLocation >= A7 && pieceLocation <= H7)
+            {
+                if (board.ReadSquareType(pieceLocation + 16) == PieceType::NONE &&
+                    board.ReadSquareType(pieceLocation + 8) == PieceType::NONE)
+                {
+                    m_RegularMoves.push_back(pieceLocation + 16);
                 }
             }
         }

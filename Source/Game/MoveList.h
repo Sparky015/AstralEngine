@@ -14,9 +14,6 @@
 
 namespace Game {
 
-    // Before: 376 bytes with inheritance (ChessPiece base class)
-    // After: 188 bytes without inheritance
-
     class MoveList
     {
     public:
