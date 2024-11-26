@@ -18,6 +18,7 @@ set(TEST_FILES
         Game/ConversionsTest.cpp
         Game/MoveGeneration/PawnMoveGenerationTest.cpp
         Game/MoveGeneration/BoundsCheckerTest.cpp
+        Game/MoveGeneration/RookMoveGenerationTest.cpp
 )
 
 

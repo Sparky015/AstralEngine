@@ -13,10 +13,11 @@ namespace Game {
     uint8 ConvertChessNotationToInt(const std::string& chessNotation);
     const std::string ConvertIntToChessNotation(uint8 chessNotation);
 
-    std::string VectorToString(const std::vector<uint8>& vec);
+    std::string ConvertVectorToString(const std::vector<uint8>& vec);
+    std::string ConvertPieceTypeToString(const PieceType pieceType);
 
     template <typename T>
-    std::string VectorToString(const std::vector<T>& vec)
+    std::string ConvertVectorToString(const std::vector<uint8_t>& vec)
     {
         std::ostringstream oss;
         oss << "[";

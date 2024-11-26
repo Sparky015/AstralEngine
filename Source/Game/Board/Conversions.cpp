@@ -107,7 +107,7 @@ namespace Game {
         return std::string(1, columnLetter) + std::to_string(row - 1);
     }
 
-    std::string VectorToString(const std::vector<uint8>& vec)
+    std::string ConvertVectorToString(const std::vector<uint8>& vec)
     {
         std::ostringstream oss;
         oss << "[";
@@ -121,6 +121,21 @@ namespace Game {
         }
         oss << "]";
         return oss.str();
+    }
+
+    std::string ConvertPieceTypeToString(const PieceType pieceType)
+    {
+        switch (pieceType)
+        {
+            case PieceType::PAWN: return "Pawn";
+            case PieceType::ROOK: return "Rook";
+            case PieceType::BISHOP: return "Bishop";
+            case PieceType::KNIGHT: return "Knight";
+            case PieceType::KING: return "King";
+            case PieceType::QUEEN: return "Queen";
+            case PieceType::NONE: return "None";
+            default: throw std::logic_error("PieceType did not map to any string.");
+        }
     }
 
 }
