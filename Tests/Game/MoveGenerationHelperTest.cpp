@@ -8,13 +8,13 @@
 
 namespace Game {
 
-    class BoundsCheckerTest : public ::testing::Test
+    class MoveGenerationHelperTest : public ::testing::Test
     {
     public:
 
     };
 
-    TEST_F(BoundsCheckerTest, BoundsCheckerTest)
+    TEST_F(MoveGenerationHelperTest, BoundsCheckTest)
     {
         EXPECT_EQ(IsWithinBounds(A8, UP), false);
         EXPECT_EQ(IsWithinBounds(A7, UP_LEFT), false);
