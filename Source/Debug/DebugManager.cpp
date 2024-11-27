@@ -11,7 +11,7 @@
 
 #include "Window/WindowManager.h"
 #include "Game/Board/BoardManager.h"
-#include "Game/Board/Conversions.h"
+#include "Game/Conversions.h"
 
 namespace Debug{
 

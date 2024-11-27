@@ -64,10 +64,14 @@ add_library(ChessEngine
         Game/Pieces/Queen.cpp
         Game/Pieces/Rook.cpp
         Game/MoveList.cpp
-        Game/Board/Conversions.h
-        Game/Board/Conversions.cpp
+        Game/Conversions.h
+        Game/Conversions.cpp
         Game/MoveGenerationHelpers.cpp
         Game/MoveGenerationHelpers.h
+        ECS/ECSManager.cpp
+        ECS/ECSManager.h
+        ECS/ECS.cpp
+        ECS/ECS.h
 )
 
 

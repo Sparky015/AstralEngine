@@ -6,7 +6,7 @@
 
 #include "Board.h"
 
-#include "Game/Board/Conversions.h"
+#include "Game/Conversions.h"
 
 namespace Game {
 
@@ -325,18 +325,18 @@ namespace Game {
     }
 
 
-    void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation)
-    {
-        PROFILE_SCOPE();
-        if (color == PieceColor::WHITE)
-        {
-            m_WhitePieceLocations[pieceID] = boardLocation;
-        }
-        else
-        {
-            m_BlackPieceLocations[pieceID] = boardLocation;
-        }
-    }
+//    void Board::WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8_t boardLocation)
+//    {
+//        PROFILE_SCOPE();
+//        if (color == PieceColor::WHITE)
+//        {
+//            m_WhitePieceLocations[pieceID] = boardLocation;
+//        }
+//        else
+//        {
+//            m_BlackPieceLocations[pieceID] = boardLocation;
+//        }
+//    }
 
 
     PieceColor Board::ReadSquareColor(uint8 squareLocation) const
@@ -348,14 +348,14 @@ namespace Game {
     }
 
 
-    void Board::WriteSquareColor(uint8 squareLocation, PieceColor pieceColor)
-    {
-        PROFILE_SCOPE();
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
-
-        m_Board.WriteSquareColor(pieceColor, squareLocation);
-    }
+//    void Board::WriteSquareColor(uint8 squareLocation, PieceColor pieceColor)
+//    {
+//        PROFILE_SCOPE();
+//        if (squareLocation > 63)
+//        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+//
+//        m_Board.WriteSquareColor(pieceColor, squareLocation);
+//    }
 
 
     PieceType Board::ReadSquareType(uint8 squareLocation) const
@@ -367,13 +367,13 @@ namespace Game {
     }
 
 
-    void Board::WriteSquareType(uint8_t squareLocation, PieceType pieceType)
-    {
-        PROFILE_SCOPE();
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
-        m_Board.WriteSquareType(pieceType, squareLocation);
-    }
+//    void Board::WriteSquareType(uint8_t squareLocation, PieceType pieceType)
+//    {
+//        PROFILE_SCOPE();
+//        if (squareLocation > 63)
+//        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+//        m_Board.WriteSquareType(pieceType, squareLocation);
+//    }
 
 
     PieceID Board::ReadSquarePieceID(uint8_t squareLocation) const
