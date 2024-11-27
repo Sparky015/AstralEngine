@@ -61,19 +61,21 @@ namespace Game {
 
     private:
 
-        void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
-        void WriteSquareType(uint8 squareLocation, PieceType pieceType);
-        void WriteSquareColor(uint8 squareLocation, PieceColor pieceColor);
+//        void WritePieceLocation(const PieceColor color, const PieceID pieceID, const uint8 boardLocation);
+//        void WriteSquareType(uint8 squareLocation, PieceType pieceType);
+//        void WriteSquareColor(uint8 squareLocation, PieceColor pieceColor);
 
-        //TODO: Profile different memory layouts for speed
+
         uint16 m_FullMoveCount;
         uint8 m_HalfMoveCount;
-        BoardCastleRights m_CastleRights;
         PieceColor m_ActiveColor;
         LastMoveBuffer m_LastMoveBuffer;
+        BoardCastleRights m_CastleRights;
 
         std::array<uint8, 16> m_BlackPieceLocations; // These two contain the location info of a piece
         std::array<uint8, 16> m_WhitePieceLocations;
+
+        //TODO: Profile different memory layouts for speed
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece
 
     public:
