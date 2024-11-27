@@ -9,6 +9,7 @@
 #include "Window/WindowManager.h"
 #include "Debug/DebugManager.h"
 #include "Game/Board/BoardManager.h"
+#include "ECS/ECSManager.h"
 
 
 Engine* Engine::m_Instance = nullptr;
@@ -25,6 +26,7 @@ Engine::Engine() :
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
+    ECS::g_ECSManager.Init();
     Game::g_BoardManager.Init();
 
     m_WindowClosedListener.StartListening();
@@ -37,6 +39,7 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     Game::g_BoardManager.Shutdown();
+    ECS::g_ECSManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
