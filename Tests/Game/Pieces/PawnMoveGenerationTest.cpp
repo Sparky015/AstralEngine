@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "Game/Board/Board.h"
 #include "Game/MoveList.h"
-#include "Game/Board/Conversions.h"
+#include "Game/Conversions.h"
 
 namespace Game {
 
