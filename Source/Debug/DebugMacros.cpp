@@ -100,10 +100,8 @@ namespace Debug::Macros {
     } // namespace
 
 
-//TODO: Utilize __func__ __FILE__ and __LINE__ in the debugging macros
     void macro_TRACE(const std::ostringstream& message)
     {
-    #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
 
         /** Gets the current time */
@@ -142,13 +140,11 @@ namespace Debug::Macros {
             WARN("Attempted write to a log file that is already closed!");
         }
         #endif
-    #endif
     }
 
 
     void macro_LOG(const std::ostringstream& message)
     {
-    #ifndef TURN_OFF_DEBUG_MACROS
         CheckIfCoutFailed();
 
         std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
@@ -163,80 +159,149 @@ namespace Debug::Macros {
             WARN("Attempted write to a log file that is already closed!");
         }
         #endif
-    #endif
     }
 
 
     void macro_WARN(const std::ostringstream& message, const char* file, int line)
     {
-        #ifndef TURN_OFF_DEBUG_MACROS
-            CheckIfCoutFailed();
+        CheckIfCoutFailed();
 
-            std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n";
-            #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-            ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
-            if (logFile.IsOpen())
-            {
-                logFile.GetFileStream() << message.str() << "\n";
-            }
-            else
-            {
-                std::cout << SetColor(YELLOW) << "[Warning] [In macro_WARN] Attempted write to a log file that is already closed!" << SetColor(DEFAULT) << "\n";
-            }
-            #endif
-        #endif
-    }
+        std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n";
 
-
-    bool macro_ASSERT(const bool expression, std::ostringstream& errorMessage)
-    {
-    #ifndef TURN_ON_DEBUG_MACROS
-        if (!expression){
-            errorMessage << "\n\n";
-            #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
-            ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
-            if (logFile.IsOpen())
-            {
-                logFile.GetFileStream() << "\n\nAssert failed. \n\nError: " << errorMessage.str();
-                ConsoleLogFile::Shutdown();
-            }
-            else
-            {
-                WARN("Attempted write to a log file that is already closed!");
-            }
-            #endif
-                std::cout << "\n\n" << SetColor(RED) << "ASSERT failed. \n\nError: " << errorMessage.str() << SetColor(DEFAULT);
-                return false; // assert failed
-
-            //throw std::runtime_error(errorMessage.str());  // color defaulted to red
-        }
-    #endif
-        return true;
-    }
-
-// TODO: Redesign this without the assert and use compiler intrinsics instead
-    // Always returns false in order to fail the assert() in the macro. This way, the file name and line is outputted from the assert()
-    bool macro_ERROR(std::ostringstream& errorMessage)
-    {
-    #ifndef TURN_OFF_DEBUG_MACROS
-        errorMessage << "\n\n";
-        #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << "\n\nERROR called. \n\nError: " << errorMessage.str();
+            logFile.GetFileStream() << message.str() << "\n";
+        }
+        else
+        {
+            std::cout << SetColor(YELLOW) << "[Warning] [In macro_WARN] Attempted write to a log file that is already closed!" << SetColor(DEFAULT) << "\n";
+        }
+    #endif
+    }
+
+
+    void macro_ASSERT(const char* expressionString,  const char* errorMessage, const char* file, const int lineNumber, const char* func)
+    {
+        //// IF ASSERT FAILED ////
+
+        // Stripping the part of the file path prior to the root directory
+        std::string filePath(file);
+        std::string rootDir(ROOT_DIR);
+        size_t pos = filePath.find(rootDir);
+        if (pos != std::string::npos)
+        {
+            filePath.erase(pos, rootDir.length());
+        }
+
+#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << "\n\nASSERT failed. "
+                                    << "\nFile: " << filePath
+                                    << "\nLine: " << lineNumber
+                                    << "\nFunction: " << func
+                                    << "\nCondition: (" << expressionString
+                                    << ")\nError Message: " << errorMessage << "\n";
             ConsoleLogFile::Shutdown();
         }
         else
         {
             WARN("Attempted write to a log file that is already closed!");
         }
-        #endif
-        std::cout << "\n\n" << SetColor(RED) << "ERROR called. \n\nError: " << errorMessage.str() << "\033[0m";
-        return false;
-    #else
-        return true; // if the debug macros are off then it will always return without causing the error through assert()
+#endif
+
+        std::cout << "\n\n" << SetColor(RED)
+                  << "ASSERT failed. "
+                  << "\nFile: " << filePath
+                  << "\nLine: " << lineNumber
+                  << "\nFunction: " << func
+                  << "\nCondition: (" << expressionString
+                  << ")\nError Message: " << errorMessage << SetColor(DEFAULT) << "\n";
+
+        std::abort();
+    }
+
+
+    void macro_ASSERT(const char* expressionString, std::ostringstream& errorMessage, const char* file, const int lineNumber, const char* func)
+    {
+        //// IF ASSERT FAILED ////
+
+        // Stripping the part of the file path prior to the root directory
+        std::string filePath(file);
+        std::string rootDir(ROOT_DIR);
+        size_t pos = filePath.find(rootDir);
+        if (pos != std::string::npos)
+        {
+            filePath.erase(pos, rootDir.length());
+        }
+
+    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream()
+                    << "\n\nASSERT failed. "
+                    << "\nFile: " << filePath
+                    << "\nLine: " << lineNumber
+                    << "\nFunction: " << func
+                    << "\nCondition: (" << expressionString
+                    << ")\nError Message: " << errorMessage.str() << "\n";
+            ConsoleLogFile::Shutdown();
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
     #endif
+
+        std::cout << "\n\n" << SetColor(RED)
+        << "ASSERT failed. "
+        << "\nFile: " << filePath
+        << "\nLine: " << lineNumber
+        << "\nFunction: " << func
+        << "\nCondition: (" << expressionString
+        << ")\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
+
+        std::abort();
+    }
+
+
+    void macro_ERROR(std::ostringstream& errorMessage, const char* file, const int lineNumber, const char* func)
+    {
+        // Stripping the part of the file path prior to the root directory
+        std::string filePath(file);
+        std::string rootDir(ROOT_DIR);
+        size_t pos = filePath.find(rootDir);
+        if (pos != std::string::npos)
+        {
+            filePath.erase(pos, rootDir.length());
+        }
+
+    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream()
+                    << "\n\nERROR called. \n" << filePath
+                    << "\nLine: " << lineNumber
+                    << "\nFunction: " << func
+                    << "\nError Message: " << errorMessage.str() << "\n";
+            ConsoleLogFile::Shutdown();
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
+    #endif
+
+        std::cout << "\n\n" << SetColor(RED)
+        << "ERROR called. \nFile: " << filePath
+        << "\nLine: " << lineNumber
+        << "\nFunction: " << func
+        << "\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
     }
 
 

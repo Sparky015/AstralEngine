@@ -17,19 +17,21 @@
 #define LOG(message) { std::ostringstream ss; ss << message; Debug::Macros::macro_LOG(ss); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE_NAME__, __LINE__); }
+#define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE__, __LINE__); }
 
-/** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
-#define ASSERT(expression, errorMessage) { std::ostringstream ss; ss << errorMessage; assert(Debug::Macros::macro_ASSERT(expression, ss)); }
+/** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message to console. */
+#define ASSERT(expression, errorMessage)  if (!(expression)) {Debug::Macros::macro_ASSERT(#expression, errorMessage, __FILE__, __LINE__, __func__);}
+#define ASSERT_SS(expression, errorMessage) if (!(expression)) {std::ostringstream ss; ss << (errorMessage); Debug::Macros::macro_ASSERT(#expression ss, __FILE__, __LINE__, __func__); }
 
 /** Throws an error with a message outputted to the console. */
-#define ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; assert(Debug::Macros::macro_ERROR(ss)); }
+#define ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Debug::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); std::abort();}
 
 #else
 #define TRACE(message)
 #define LOG(message)
 #define WARN(message)
 #define ASSERT(expression, errorMessage)
+#define ASSERT_SS(expression, errorMessage)
 #define ERROR(errorMessage)
 #endif
 
@@ -53,10 +55,11 @@ namespace Debug::Macros {
     void macro_WARN(const std::ostringstream& message, const char* file, int line);
 
     /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message (that can come in the form of an ostream) to console. */
-    bool macro_ASSERT(const bool expression, std::ostringstream& errorMessage);
+    void macro_ASSERT(const char* expressionString, const char* errorMessage, const char* file, const int lineNumber, const char* func);
+    void macro_ASSERT(const char* expressionString, std::ostringstream& errorMessage, const char* file, const int lineNumber, const char* func);
 
     /** Throws an error with a message (that can come in the form of an ostream) outputted to the console. */
-    bool macro_ERROR(std::ostringstream& errorMessage);
+    void macro_ERROR(std::ostringstream& errorMessage, const char* fileName, const int lineNumber, const char* func);
 
 
     /** Profiles a scope and outputs the time to the console. */
