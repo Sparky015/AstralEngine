@@ -169,13 +169,10 @@ namespace Game {
     void Board::MovePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
         PROFILE_SCOPE();
-        if (targetBoardLocation > 63)
-        { throw std::out_of_range("targetBoardLocation is not between 0 and 63"); }
-        if (m_Board.ReadSquareType(targetBoardLocation) != PieceType::NONE)
-        { throw std::logic_error("targetBoardLocation already has a piece on the square"); }
+        ASSERT(targetBoardLocation < 64, "squareLocation is not a valid location on the chess board");
+        ASSERT(m_Board.ReadSquareType(targetBoardLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
         PieceType movingPieceType = ReadPieceType(color, pieceID);
-        if (movingPieceType == PieceType::NONE)
-        { throw std::logic_error("Can't move a piece of type NONE (aka that piece isn't on the board)"); }
+        ASSERT(movingPieceType != PieceType::NONE, "Can't move a piece of type NONE (aka that piece isn't on the board)")
 
         // Set the half move counter. (if a pawn moves or a take happens, then reset)
         if (movingPieceType == PieceType::PAWN) { m_HalfMoveCount = 1;}
@@ -221,14 +218,10 @@ namespace Game {
     void Board::TakePiece(const PieceColor color, const PieceID pieceID, const uint8_t targetBoardLocation)
     {
         PROFILE_SCOPE();
-        if (targetBoardLocation > 63)
-        { throw std::out_of_range("targetBoardLocation is not a valid location on the chess board"); }
-        if (ReadSquareType(targetBoardLocation) == PieceType::NONE)
-        { throw std::logic_error("Can't take on a square that is empty"); }
-        if (ReadSquareColor(targetBoardLocation) == color)
-        { throw std::logic_error("Can't take a piece of the same type"); }
-        if (ReadPieceType(color, pieceID) == PieceType::NONE)
-        { throw std::logic_error("Can't take with a piece of type NONE (aka that piece isn't on the board)"); }
+        ASSERT(targetBoardLocation < 64, "squareLocation is not a valid location on the chess board");
+        ASSERT(ReadSquareType(targetBoardLocation) != PieceType::NONE, "Can't take on a square that is empty");
+        ASSERT(ReadSquareColor(targetBoardLocation) != color, "Can't take a piece of the same type");
+        ASSERT(ReadPieceType(color, pieceID) != PieceType::NONE, "Can't take with a piece of type NONE (aka that piece isn't on the board)");
 
         m_HalfMoveCount = 1; // Reset the half move counter on takes
         if (color == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
@@ -285,10 +278,8 @@ namespace Game {
     void Board::PromotePawn(const PieceColor color, const PieceID pieceID, const PieceType promotionType)
     {
         PROFILE_SCOPE();
-        if (promotionType == PieceType::KING || promotionType == PieceType::PAWN)
-        { throw std::logic_error("Promotion type must be bishop, knight, rook, or queen."); }
-        if (ReadPieceType(color, pieceID) != PieceType::PAWN)
-        { throw std::logic_error("Piece must be a pawn to promote it."); }
+        ASSERT(promotionType != PieceType::PAWN && promotionType != PieceType::KING, "Promotion type must be bishop, knight, rook, or queen.")
+        ASSERT(ReadPieceType(color, pieceID) == PieceType::PAWN, "Piece must be a pawn to promote it.")
 
         if (color == PieceColor::WHITE)
         {
@@ -305,7 +296,6 @@ namespace Game {
 
     uint8 Board::ReadPieceLocation(const PieceColor color, const PieceID pieceID) const
     {
-        PROFILE_SCOPE();
         if (color == PieceColor::WHITE)
         {
             return m_WhitePieceLocations[pieceID];
@@ -341,9 +331,7 @@ namespace Game {
 
     PieceColor Board::ReadSquareColor(uint8 squareLocation) const
     {
-        PROFILE_SCOPE();
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         return m_Board.ReadSquareColor(squareLocation);
     }
 
@@ -360,9 +348,7 @@ namespace Game {
 
     PieceType Board::ReadSquareType(uint8 squareLocation) const
     {
-        PROFILE_SCOPE();
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         return m_Board.ReadSquareType(squareLocation);
     }
 
@@ -379,14 +365,12 @@ namespace Game {
     PieceID Board::ReadSquarePieceID(uint8_t squareLocation) const
     {
         PROFILE_SCOPE();
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
 
         PieceType pieceType = ReadSquareType(squareLocation);
         PieceColor pieceColor = ReadSquareColor(squareLocation);
 
-        if (pieceType == PieceType::NONE)
-        { throw std::logic_error("There is no piece on square"); }
+        ASSERT(pieceType != PieceType::NONE, "There is no piece on square");
 
         if (pieceColor == PieceColor::WHITE)
         {
@@ -409,7 +393,7 @@ namespace Game {
             }
         }
 
-        throw std::logic_error("No piece ID was found with that location");
+        ERROR("No piece ID was found with that location");
     }
 
 
@@ -434,8 +418,7 @@ namespace Game {
 
     char Board::GetCharacterOfPiece(uint8 squareLocation)
     {
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
 
         if (m_Board.ReadSquareColor(squareLocation) == PieceColor::WHITE)
         {
