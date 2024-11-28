@@ -97,8 +97,7 @@ namespace Game {
 
     PieceType InternalBoardRepresentation::ReadSquareType(uint8_t squareLocation) const
     {
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         return m_InternalBoard[halfOfSquareLocation].ReadSquareType(SquarePosition(isSecondSquare));
@@ -107,8 +106,7 @@ namespace Game {
 
     PieceColor InternalBoardRepresentation::ReadSquareColor(uint8_t squareLocation) const
     {
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         uint8 halfOfSquareLocation = squareLocation >> 1; // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         return m_InternalBoard[halfOfSquareLocation].ReadSquareColor(SquarePosition(isSecondSquare));
@@ -117,8 +115,7 @@ namespace Game {
 
     void InternalBoardRepresentation::WriteSquareType(PieceType pieceType, uint8_t squareLocation)
     {
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         m_InternalBoard[halfOfSquareLocation].WriteSquareType(pieceType, SquarePosition(isSecondSquare));
@@ -127,8 +124,7 @@ namespace Game {
 
     void InternalBoardRepresentation::WriteSquareColor(PieceColor pieceColor, uint8_t squareLocation)
     {
-        if (squareLocation > 63)
-        { throw std::out_of_range("squareLocation is not a valid location on the chess board"); }
+        ASSERT(squareLocation < 64, "squareLocation is not a valid location on the chess board");
         uint8 halfOfSquareLocation = squareLocation >> 1;  // Divide by 2
         bool isSecondSquare = (squareLocation % 2); // Odd numbered squares work out to be the second square
         m_InternalBoard[halfOfSquareLocation].WriteSquareColor(pieceColor, SquarePosition(isSecondSquare));
