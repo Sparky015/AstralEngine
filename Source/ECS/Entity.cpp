@@ -10,4 +10,9 @@ namespace ECS {
 
     Entity::Entity(EntityPoolSize id, bool isAlive) : m_ID(id), m_IsAlive(false) {}
 
+    Entity::Entity()
+    {
+
+    }
+
 }

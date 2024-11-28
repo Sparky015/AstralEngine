@@ -76,6 +76,9 @@ add_library(ChessEngine
         ECS/Entity.h
         ECS/Components/Transform.h
         ECS/ECSTypes.h
+        ECS/Components/Sprite.h
+        Game/GameManager.h
+        Game/GameManager.cpp
 )
 
 

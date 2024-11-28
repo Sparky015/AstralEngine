@@ -4,37 +4,15 @@
 
 #include "ECS.h"
 
+
 namespace ECS {
-
-    void ECS::ReserveMemory()
-    {
-        PROFILE_SCOPE();
-        m_Entities.reserve(MAX_ENTITIES);
-        m_ActiveEntities.reserve(MAX_ENTITIES);
-        //TODO: Reserve space for each component.
-    }
-
-    void ECS::FreeMemory()
-    {
-        PROFILE_SCOPE();
-        m_Entities.clear();
-        m_Entities.shrink_to_fit();
-//        m_Transform.clear();
-//        m_Transform.shrink_to_fit();
-//        for (auto c : m_Components)
-//        {
-//
-//        }
-
-    }
 
     Entity ECS::AddEntity()
     {
         ASSERT(m_EntityCounter != MAX_ENTITIES, "Max amount of entities reached! Can't add any more!");
 
         // Find the next empty slot
-        auto iterator = std::find(m_ActiveEntities.begin(), m_ActiveEntities.end(), false);
-        EntityPoolSize index = std::distance(m_ActiveEntities.begin(), iterator);
+        EntityPoolSize index = FindNextInactiveIndex();
 
         // Create new entity at the open slot and set it to active
         Entity entity = Entity(index);
@@ -44,12 +22,37 @@ namespace ECS {
         return entity;
     }
 
+
     void ECS::RemoveEntity(Entity entity)
     {
-        // Set the slot to being not active
-        EntityPoolSize id = entity.GetID();
-        m_ActiveEntities[id] = false;
         m_EntityCounter--;
+
+        // Setting the entity slot to not being used
+        EntityPoolSize entityID = entity.GetID();
+        m_ActiveEntities[entityID] = false;
+
+        // Sets all the possible components of an entity to not being used.
+        RemoveComponent<TransformComponent>(entity);
+        RemoveComponent<SpriteComponent>(entity);
+    }
+
+
+    EntityPoolSize ECS::FindNextInactiveIndex()
+    {
+        // Iterate through the bitfield and find the first slot that isn't being used
+        for (EntityPoolSize i = 0; i < MAX_ENTITIES; i++)
+        {
+            if (m_ActiveEntities[i] == false) { return i; }
+        };
+
+        // We did not find a empty slot since we did not return during the loop.
+        ERROR("Max amount of entities reached! Can't add any more!");
+    }
+
+
+    ECS::ECS() : m_Components(std::make_tuple(std::array<TransformComponent, MAX_ENTITIES>(), std::array<SpriteComponent, MAX_ENTITIES>())), m_EntityCounter(0)
+    {
+
     }
 
 }

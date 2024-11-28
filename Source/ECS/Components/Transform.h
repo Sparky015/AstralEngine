@@ -8,6 +8,8 @@
 
 struct TransformComponent
 {
+    TransformComponent() : x(0), y(0), isUsed(false) {}
+    TransformComponent(int16 x, int16 y) : x(x), y(y), isUsed(true) {}
     int16 x;
     int16 y;
     bool isUsed;

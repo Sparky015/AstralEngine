@@ -7,6 +7,7 @@
 #include "pch.h"
 
 #include "ECS/Components/Transform.h"
+#include "ECS/Components/Sprite.h"
 #include "ECS/Entity.h"
 #include "ECS/ECSTypes.h"
 
@@ -17,41 +18,39 @@ namespace ECS {
     class ECS
     {
     public:
+        ECS();
         Entity AddEntity();
         void RemoveEntity(Entity entity);
-
 
         template<class T>
         void AddComponent(Entity entity, T component)
         {
-            std::get<T>(m_Components)[entity.GetID()] = component;
-            std::get<T>(m_Components)[entity.GetID()].isUsed = true;
+            GetComponent<T>(entity) = component;
+            GetComponent<T>(entity).isUsed = true;
         };
 
         template<class T>
         T& GetComponent(Entity entity)
         {
-            return std::get<T>(m_Components);
+            return std::get<std::array<T, MAX_ENTITIES>>(m_Components)[entity.GetID()];
         }
 
-        template<class T>
-        void RemoveComponent(Entity entity, T component)
+        template<class ComponentType>
+        void RemoveComponent(Entity entity)
         {
-            std::get<T>(m_Components)[entity.GetID()].isUsed = false;
+            std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
         };
 
-        void ReserveMemory();
-        void FreeMemory();
+    private:
+        EntityPoolSize FindNextInactiveIndex();
 
     private:
         EntityPoolSize m_EntityCounter;
         // container for entities
-        std::vector<Entity> m_Entities;
-        std::vector<bool> m_ActiveEntities;
+        std::bitset<MAX_ENTITIES> m_ActiveEntities;
 
-        // container for components
-        std::tuple<std::vector<TransformComponent>> m_Components;
-
+        // Container for components
+        std::tuple<std::array<TransformComponent, MAX_ENTITIES>, std::array<SpriteComponent, MAX_ENTITIES>> m_Components;
 
     };
 

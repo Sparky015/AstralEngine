@@ -7,6 +7,7 @@
 #include "Core/SystemManager.h"
 #include "Board.h"
 #include "Game/MoveList.h"
+#include "ECS/Entity.h"
 
 namespace Game{
 
@@ -29,6 +30,9 @@ namespace Game{
     private:
         BoardManager();
         ~BoardManager() override;
+
+        void InitBoardEntities();
+        void DestroyBoardEntities();
 
         Board m_Board;
         MoveList m_WhiteMoveList;
