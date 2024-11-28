@@ -20,6 +20,9 @@ namespace ECS {
         TRACE("Initializing ECS Manager!")
         m_ECS.ReserveMemory();
         m_UpdateListener.StartListening();
+
+
+        m_ECS.AddEntity();
     }
 
     void ECSManager::Shutdown()
@@ -46,6 +49,5 @@ namespace ECS {
         PROFILE_SCOPE();
         TRACE("Destroying ECS Manager!")
     }
-
 
 } // ECS

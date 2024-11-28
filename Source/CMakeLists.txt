@@ -72,6 +72,10 @@ add_library(ChessEngine
         ECS/ECSManager.h
         ECS/ECS.cpp
         ECS/ECS.h
+        ECS/Entity.cpp
+        ECS/Entity.h
+        ECS/Components/Transform.h
+        ECS/ECSTypes.h
 )
 
 
