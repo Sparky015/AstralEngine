@@ -11,6 +11,7 @@
 #include "Game/Board/BoardManager.h"
 #include "ECS/ECSManager.h"
 #include "Game/GameManager.h"
+#include "Renderer/RendererManager.h"
 
 
 Engine* Engine::m_Instance = nullptr;
@@ -30,6 +31,7 @@ Engine::Engine() :
     ECS::g_ECSManager.Init();
     Game::g_BoardManager.Init();
     Game::g_GameManager.Init();
+    Renderer::g_RendererManager.Init();
 
     m_WindowClosedListener.StartListening();
 }
@@ -40,6 +42,7 @@ Engine::~Engine()
     PROFILE_SCOPE();
     m_WindowClosedListener.StopListening();
 
+    Renderer::g_RendererManager.Shutdown();
     Game::g_GameManager.Shutdown();
     Game::g_BoardManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
