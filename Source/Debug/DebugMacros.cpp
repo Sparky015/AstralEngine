@@ -220,8 +220,6 @@ namespace Debug::Macros {
                   << "\nFunction: " << func
                   << "\nCondition: (" << expressionString
                   << ")\nError Message: " << errorMessage << SetColor(DEFAULT) << "\n";
-
-        std::abort();
     }
 
 
@@ -264,8 +262,6 @@ namespace Debug::Macros {
         << "\nFunction: " << func
         << "\nCondition: (" << expressionString
         << ")\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
-
-        std::abort();
     }
 
 

@@ -20,8 +20,8 @@
 #define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE__, __LINE__); }
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message to console. */
-#define ASSERT(expression, errorMessage)  if (!(expression)) {Debug::Macros::macro_ASSERT(#expression, errorMessage, __FILE__, __LINE__, __func__);}
-#define ASSERT_SS(expression, errorMessage) if (!(expression)) {std::ostringstream ss; ss << (errorMessage); Debug::Macros::macro_ASSERT(#expression ss, __FILE__, __LINE__, __func__); }
+#define ASSERT(expression, errorMessage)  if (!(expression)) {Debug::Macros::macro_ASSERT(#expression, errorMessage, __FILE__, __LINE__, __func__); std::abort();}
+#define ASSERT_SS(expression, errorMessage) if (!(expression)) {std::ostringstream ss; ss << (errorMessage); Debug::Macros::macro_ASSERT(#expression ss, __FILE__, __LINE__, __func__); std::abort();}
 
 /** Throws an error with a message outputted to the console. */
 #define ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Debug::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); std::abort();}
