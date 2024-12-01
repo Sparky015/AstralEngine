@@ -4,12 +4,6 @@
 
 #include "WindowManager.h"
 
-#include "WindowEvents.h"
-#include "Core/Events/EventPublisher.h"
-
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
-
 namespace Window{
 
     WindowManager& g_WindowManager = WindowManager::Get();
@@ -17,14 +11,16 @@ namespace Window{
     void WindowManager::Update()
     {
         PROFILE_SCOPE();
-        glfwPollEvents();
+        m_Window->Update();
     }
+
 
     WindowManager::WindowManager() : m_Window{nullptr}
     {
         PROFILE_SCOPE();
         TRACE("Constructing Window System!")
     }
+
 
     WindowManager::~WindowManager()
     {
@@ -40,8 +36,6 @@ namespace Window{
     }
 
 
-    bool WindowManager::m_IsGLFWInitialized = false;
-
     void WindowManager::Init()
     {
         PROFILE_SCOPE();
@@ -49,63 +43,10 @@ namespace Window{
 
         m_UpdateListener.StartListening();
 
-        ///  Initializing GLFW
-
-        if (!m_IsGLFWInitialized)
-        {
-            if (!glfwInit())
-            {
-                ERROR("GLFW failed to initialize!");
-            }
-        }
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
-
-
-        /// Creating the GLFW window
-
-        m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Chess", nullptr, nullptr);
-
-        if (m_Window == nullptr)
-        {
-            glfwTerminate();
-            ERROR("GLFW failed to create the window!")
-        }
-
-        glfwMakeContextCurrent(m_Window);
-
-
-        /// Setting up OpenGL context with GLAD.
-
-        int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        if (status != 1)
-        {
-            ERROR("GLAD failed to load!");
-        }
-
-
-        /// Setting GLFW callbacks
-
-        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
-        {
-            Event::EventPublisher<WindowClosedEvent> windowClosedPublisher;
-            windowClosedPublisher.PublishEvent(WindowClosedEvent());
-        });
-
-        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-        {
-            if (action == GLFW_PRESS)
-            {
-                Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
-                keyPressedEvent.PublishEvent(KeyPressedEvent(key));
-            }
-
-        });
+        m_Window.reset( Window::CreateWindow());
+        m_Window->Init();
     }
+
 
     void WindowManager::Shutdown()
     {
@@ -113,7 +54,7 @@ namespace Window{
         TRACE("Shutting down Window Manager!")
         m_UpdateListener.StopListening();
         m_RenderImGuiListener.StopListening();
-        glfwTerminate();
+        m_Window->Shutdown();
     }
 
 }

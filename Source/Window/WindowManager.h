@@ -7,6 +7,7 @@
 #include "Core/SystemManager.h"
 
 #include "GLFW/glfw3.h"
+#include "Window.h"
 
 
 namespace Window {
@@ -24,8 +25,8 @@ namespace Window {
         [[nodiscard]] inline int GetWidth() const {return m_WindowWidth;}
         [[nodiscard]] inline int GetHeight() const {return m_WindowHeight;}
 
-        [[nodiscard]] inline GLFWwindow* GetNativeWindow() const { return m_Window; };
-        inline void SwapBuffers() const { glfwSwapBuffers(m_Window); }
+        [[nodiscard]] inline Window& GetWindow() const { return *m_Window; };
+        inline void SwapBuffers() const { m_Window->SwapBuffers(); }
 
 
         WindowManager(WindowManager&&) = delete;
@@ -36,9 +37,8 @@ namespace Window {
     private:
         WindowManager();
         ~WindowManager() override;
-        
-        static bool m_IsGLFWInitialized;
-        GLFWwindow* m_Window;
+
+        std::unique_ptr<Window> m_Window;
 
         int m_WindowWidth = 1024;
         int m_WindowHeight = 768;

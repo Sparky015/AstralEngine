@@ -4,7 +4,7 @@
 
 #include "EngineDebugInfoLogger.h"
 
-#include "GLFW/glfw3.h"
+#include "Window/WindowManager.h"
 #include "glad/glad.h"
 
 namespace Debug {
@@ -55,16 +55,22 @@ namespace Debug {
 
         /** Outputs the libraries used depending on the platform. */
         #ifdef PLATFORM_MACOS
-            LOG("Window: GLFW " << glfwGetVersionString());
-            LOG("Rendering API: OpenGL " << glGetString(GL_VERSION));
-            LOG("Graphics Vendor: " << glGetString(GL_VENDOR));
-            LOG("Graphics Processor: " << glGetString(GL_RENDERER));
+            Window::Window& window = Window::g_WindowManager.GetWindow();
+            Renderer::RendererContext& rendererContext = window.GetRendererContext();
+
+            LOG("Window: " << window.GetVersion());
+            LOG("Rendering API: " << rendererContext.GetRenderingAPI());
+            LOG("Graphics Vendor: " << rendererContext.GetGraphicsVendor());
+            LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
 
         #elif PLATFORM_WINDOWS
-            LOG("Window: GLFW " << glfwGetVersionString());
-            LOG("Rendering API: OpenGL " << glGetString(GL_VERSION));
-            LOG("Graphics Vendor: " << glGetString(GL_VENDOR));
-            LOG("Graphics Processor: " << glGetString(GL_RENDERER));
+            Window::Window& window = Window::g_WindowManager.GetWindow();
+            Renderer::RendererContext& rendererContext = window.GetRendererContext();
+
+            LOG("Window: " << window.GetVersion());
+            LOG("Rendering API: " << rendererContext.GetRenderingAPI());
+            LOG("Graphics Vendor: " << rendererContext.GetGraphicsVendor());
+            LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
         #endif
 
         LOG(""); // Creates an extra new line

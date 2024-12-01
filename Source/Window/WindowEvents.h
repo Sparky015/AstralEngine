@@ -4,10 +4,7 @@
 
 #pragma once
 
-struct WindowClosedEvent
-{
-    WindowClosedEvent() = default;
-};
+struct WindowClosedEvent {};
 
 struct KeyPressedEvent
 {
