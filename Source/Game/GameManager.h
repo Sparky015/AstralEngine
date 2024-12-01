@@ -8,7 +8,7 @@
 
 namespace Game {
 
-    class GameManager : SystemManager
+    class GameManager : public SystemManager
     {
     public:
         static GameManager& Get();
@@ -17,9 +17,9 @@ namespace Game {
         void Shutdown() override;
 
         GameManager(const GameManager&) = delete;
-        GameManager operator=(const GameManager&) = delete;
+        GameManager& operator=(const GameManager&) = delete;
         GameManager(GameManager&&) = delete;
-        GameManager operator=(GameManager&&) = delete;
+        GameManager& operator=(GameManager&&) = delete;
     private:
         GameManager();
         ~GameManager() override;

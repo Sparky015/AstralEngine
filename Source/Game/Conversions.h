@@ -33,4 +33,7 @@ namespace Game {
         return oss.str();
     }
 
+    Vec2 ConvertPieceLocationToCoordinates(uint8 pieceLocation);
+    uint8 ConvertCoordinatesToPieceLocation(Vec2 coordinates);
+
 }

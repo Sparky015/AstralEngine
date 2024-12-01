@@ -12,6 +12,7 @@
 #include "Window/WindowManager.h"
 #include "Game/Board/BoardManager.h"
 #include "Game/Conversions.h"
+#include "Window/Platform/Generic/GenericWindow.h"
 
 namespace Debug{
 
@@ -49,8 +50,6 @@ namespace Debug{
     void DebugManager::Update()
     {
         PROFILE_SCOPE();
-        glClearColor(.1,.8,.5,1);
-        glClear(GL_COLOR_BUFFER_BIT);
     }
 
 
@@ -238,7 +237,7 @@ namespace Debug{
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(windowManager.GetNativeWindow()), true);
+        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 

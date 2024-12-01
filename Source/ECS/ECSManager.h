@@ -9,7 +9,7 @@
 
 namespace ECS {
 
-    class ECSManager : SystemManager
+    class ECSManager : public SystemManager
     {
     public:
         static ECSManager& Get();

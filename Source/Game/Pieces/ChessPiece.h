@@ -16,11 +16,11 @@ namespace Game {
         ChessPiece() = default;
         virtual ~ChessPiece() = default;
 
-        virtual void GenerateMoves(const Board& board, const uint8 pieceLocation, const PieceColor pieceColor);
-        virtual PieceType GetType();
+        virtual void GenerateMoves(const Board& board, const uint8 pieceLocation, const PieceColor pieceColor) = 0;
+        virtual PieceType GetType() = 0;
 
-        [[nodiscard]] virtual const std::vector<uint8>& GetRegularMoves() const;
-        [[nodiscard]] virtual const std::vector<uint8>& GetAttackingMoves() const;
+        [[nodiscard]] virtual const std::vector<uint8>& GetRegularMoves() const = 0;
+        [[nodiscard]] virtual const std::vector<uint8>& GetAttackingMoves() const = 0;
     };
 
 

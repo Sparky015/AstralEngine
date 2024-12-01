@@ -20,7 +20,9 @@ namespace ECS {
         TRACE("Initializing ECS Manager!")
         m_UpdateListener.StartListening();
 
-        m_ECS.AddEntity();
+        Entity e = m_ECS.AddEntity();
+        m_ECS.AddComponent(e, TransformComponent(2,2));
+        m_ECS.GetComponent<TransformComponent>(e);
     }
 
     void ECSManager::Shutdown()
@@ -33,9 +35,7 @@ namespace ECS {
     void ECSManager::Update()
     {
         PROFILE_SCOPE();
-        Entity e = m_ECS.AddEntity();
-        m_ECS.AddComponent(e, TransformComponent(2,2));
-        m_ECS.GetComponent<TransformComponent>(e);
+
     }
 
     ECSManager::ECSManager()

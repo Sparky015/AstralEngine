@@ -56,7 +56,6 @@ add_library(ChessEngine
         Game/Board/InternalBoardData.cpp
         Game/Pieces/Bishop.h
         Game/Pieces/Bishop.cpp
-        Game/Pieces/ChessPiece.cpp
         Game/Pieces/King.h
         Game/Pieces/King.cpp
         Game/Pieces/Knight.cpp
@@ -79,6 +78,40 @@ add_library(ChessEngine
         ECS/Components/Sprite.h
         Game/GameManager.h
         Game/GameManager.cpp
+        Renderer/RendererManager.cpp
+        Renderer/RendererManager.h
+        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
+        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
+        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
+        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
+        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
+        Renderer/Platform/OpenGL/Primitives/OpenGLBufferLayout.cpp
+        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
+        Renderer/Platform/OpenGL/Primitives/OpenGLBufferLayout.h
+        Renderer/Shaders/ShaderProgram.cpp
+        Renderer/Shaders/ShaderProgram.h
+        Renderer/Shaders/ShaderSource.h
+        Renderer/Shaders/ShaderSource.cpp
+        Renderer/Primitives/VertexBuffer.cpp
+        Renderer/Primitives/VertexBuffer.h
+        Renderer/Primitives/IndexBuffer.cpp
+        Renderer/Primitives/IndexBuffer.h
+        Renderer/Renderer.cpp
+        Renderer/Renderer.h
+        Renderer/Platform/OpenGL/OpenGLRenderingContext.h
+        Renderer/Platform/OpenGL/OpenGLRenderingContext.cpp
+        Renderer/RendererContext.h
+        Renderer/RendererContext.cpp
+        Window/Window.cpp
+        Window/Window.h
+        Window/Platform/Generic/GenericWindow.cpp
+        Window/Platform/Generic/GenericWindow.h
+        Renderer/Primitives/VertexArrayObject.cpp
+        Renderer/Primitives/VertexArrayObject.h
+        Renderer/Texture.cpp
+        Renderer/Texture.h
+        Renderer/Platform/OpenGL/OpenGLTexture.cpp
+        Renderer/Platform/OpenGL/OpenGLTexture.h
 )
 
 
@@ -94,8 +127,13 @@ elseif (WIN32)
     target_link_directories(ChessEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
 
+
+
+# Linking Libraries
 target_link_libraries(ChessEngine PRIVATE ImGui)
 target_link_libraries(ChessEngine PRIVATE GLAD)
+target_link_libraries(ChessEngine PRIVATE glm)
+target_link_libraries(ChessEngine PRIVATE std_image)
 
 if (APPLE)
     target_link_libraries(ChessEngine PRIVATE glfw.3)
@@ -104,15 +142,21 @@ elseif (WIN32)
 endif ()
 
 
-target_include_directories(ChessEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
-target_precompile_headers(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source/pch.h")
 
+# Include Directories
+target_include_directories(ChessEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
 target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
 target_include_directories(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
+target_include_directories(ChessEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
+
+
+
+# Precompiled Header
+target_precompile_headers(ChessEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source/pch.h")
+
 
 
 # Defining Macros
-
 target_compile_definitions(ChessEngine PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(ChessEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
@@ -122,3 +166,4 @@ elseif (WIN32)
 endif ()
 target_compile_definitions(ChessEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(ChessEngine PRIVATE -DROOT_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions(ChessEngine PRIVATE -DSHADER_DIR="${CMAKE_SOURCE_DIR}/Source/Renderer/Shaders/")

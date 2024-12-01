@@ -107,6 +107,7 @@ namespace Game {
         return std::string(1, columnLetter) + std::to_string(row - 1);
     }
 
+
     std::string ConvertVectorToString(const std::vector<uint8>& vec)
     {
         std::ostringstream oss;
@@ -123,6 +124,7 @@ namespace Game {
         return oss.str();
     }
 
+
     std::string ConvertPieceTypeToString(const PieceType pieceType)
     {
         switch (pieceType)
@@ -136,6 +138,22 @@ namespace Game {
             case PieceType::NONE: return "None";
             default: throw std::logic_error("PieceType did not map to any string.");
         }
+    }
+
+
+    Vec2 ConvertPieceLocationToCoordinates(uint8 pieceLocation)
+    {
+        if (pieceLocation == 255) {return {0,0};}
+        int row = (pieceLocation / 8);
+        int column = (pieceLocation % 8) + 1;
+        row = 9 - row; // invert the row
+        return Vec2((row - 1) * 40,(column - 1) * 40);
+    }
+
+
+    uint8 ConvertCoordinatesToPieceLocation(Vec2 coordinates)
+    {
+        return 0;
     }
 
 }

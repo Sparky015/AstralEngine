@@ -15,12 +15,6 @@ namespace ECS {
         explicit Entity(EntityPoolSize id);
         explicit Entity(EntityPoolSize id, bool isAlive);
 
-//        template<class T>
-//        T& Get()
-//        {
-//
-//        }
-
         [[nodiscard]] inline EntityPoolSize GetID() const {return m_ID;}
         [[nodiscard]] inline bool IsAlive() const { return m_IsAlive; }
     private:
