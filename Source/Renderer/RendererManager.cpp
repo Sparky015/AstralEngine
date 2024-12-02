@@ -93,6 +93,14 @@ namespace Renderer {
 
         TRACE("Shutting down Renderer Manager!")
         m_UpdateListener.StopListening();
+
+        // TODO: Fix this situation where member variable destructors are actually called.
+        m_ShaderProgram.Unbind();
+        m_IndexBuffer.reset(nullptr);
+        m_VertexBuffer.reset(nullptr);
+        m_VAO.reset(nullptr);
+        m_Texture.reset(nullptr);
+//        RendererManager::~RendererManager();
     }
 
 

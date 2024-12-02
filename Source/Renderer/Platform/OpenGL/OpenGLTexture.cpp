@@ -6,6 +6,7 @@
 
 #include "std_image.h"
 #include "glad/glad.h"
+#include "Renderer/Renderer.h"
 
 namespace Renderer {
 
@@ -27,12 +28,15 @@ namespace Renderer {
         glBindTexture(GL_TEXTURE_2D, 0);
 
          stbi_image_free(m_ImageBuffer);
+        GLCheckError();
     }
 
 
     OpenGLTexture::~OpenGLTexture()
     {
+        GLCheckError();
         glDeleteTextures(1, &m_RendererID);
+        GLCheckError();
     }
 
 

@@ -5,6 +5,7 @@
 #include "OpenGLIndexBuffer.h"
 
 #include "glad/glad.h"
+#include "Renderer/Renderer.h"
 
 namespace Renderer {
 
@@ -14,6 +15,7 @@ namespace Renderer {
         glGenBuffers(1, &m_RendererID);
         Bind();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * count, indices, GL_STATIC_DRAW);
+        GLCheckError();
     }
 
 
@@ -21,6 +23,7 @@ namespace Renderer {
     {
         LOG("Deleting Index Buffer Object!");
         glDeleteBuffers(1, &m_RendererID);
+        GLCheckError();
     }
 
 

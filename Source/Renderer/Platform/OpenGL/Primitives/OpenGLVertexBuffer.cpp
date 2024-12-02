@@ -5,6 +5,7 @@
 #include "OpenGLVertexBuffer.h"
 
 #include "glad/glad.h"
+#include "Renderer/Renderer.h"
 
 
 namespace Renderer {
@@ -15,6 +16,7 @@ namespace Renderer {
         glGenBuffers(1, &m_RendererID);
         Bind();
         glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+        GLCheckError();
     }
 
 
@@ -22,6 +24,7 @@ namespace Renderer {
     {
         LOG("Deleting Vertex Buffer!");
         glDeleteBuffers(1, &m_RendererID);
+        GLCheckError();
     }
 
 
