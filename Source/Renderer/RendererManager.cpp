@@ -47,7 +47,7 @@ namespace Renderer {
         m_VertexBuffer->Bind();
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-// Add an attribute to the vertex attrib array
+
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 3));

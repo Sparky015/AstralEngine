@@ -112,20 +112,20 @@ add_library(ChessEngine
         Renderer/Texture.h
         Renderer/Platform/OpenGL/OpenGLTexture.cpp
         Renderer/Platform/OpenGL/OpenGLTexture.h
+        Renderer/Primitives/BufferLayout.cpp
+        Renderer/Primitives/BufferLayout.h
 )
 
-# Set static linking flags for all targets
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-set(BUILD_SHARED_LIBS OFF)
+
 
 add_executable(Sozin main.cpp)
 
 target_link_libraries(Sozin PRIVATE ChessEngine)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sozin)
-set_target_properties(Sozin PROPERTIES
-        LINK_FLAGS "-static"
-)
+
+if (WIN32) #MacOS doesn't like this, so I will only do it for windows
+    set_target_properties(Sozin PROPERTIES LINK_FLAGS "-static")
+endif()
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
