@@ -6,7 +6,7 @@
 
 namespace Renderer {
 
-    enum ShaderDataTypes
+    enum ShaderDataType
     {
         Float,
         Float2,
@@ -21,8 +21,8 @@ namespace Renderer {
 
     struct BufferAttribute
     {
-        explicit BufferAttribute(ShaderDataTypes shaderDataTypes, std::string&& name) : DataType(shaderDataTypes) {};
-        ShaderDataTypes DataType;
+        BufferAttribute(ShaderDataType shaderDataType, std::string&& name) : DataType(shaderDataType) {};
+        ShaderDataType DataType;
         uint32 GetAttributeSize() const;
         uint32 GetAttributeComponentCount() const;
     };
@@ -32,8 +32,6 @@ namespace Renderer {
     {
     public:
         BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes);
-
-
 
         std::vector<BufferAttribute>::iterator begin() { return m_Attributes.begin(); }
         std::vector<BufferAttribute>::iterator end() { return m_Attributes.end(); }

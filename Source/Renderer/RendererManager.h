@@ -9,7 +9,7 @@
 
 #include "Renderer/Primitives/VertexBuffer.h"
 #include "Renderer/Primitives/IndexBuffer.h"
-#include "Shaders/ShaderProgram.h"
+#include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "Renderer/Primitives/VertexArrayObject.h"
 #include "Renderer/Texture.h"
 
@@ -38,7 +38,7 @@ namespace Renderer {
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
         std::unique_ptr<Texture> m_Texture;
-        ShaderProgram m_ShaderProgram;
+        OpenGLShaderProgram m_ShaderProgram;
 
     };
 

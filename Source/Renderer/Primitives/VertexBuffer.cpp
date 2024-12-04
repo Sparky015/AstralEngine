@@ -9,7 +9,7 @@
 
 namespace Renderer {
 
-    VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout)
+    VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
     {
         switch (Renderer::GetAPI())
         {
@@ -17,6 +17,7 @@ namespace Renderer {
             case RendererAPI::Vulkan: ERROR("Vulkan is not supported yet!");
             case RendererAPI::DirectX12: ERROR("DirectX12 is not supported yet!");
             case RendererAPI::Metal: ERROR("Metal is not supported yet!");
+            default: ERROR("Invalid Renderer API");
         }
     }
 

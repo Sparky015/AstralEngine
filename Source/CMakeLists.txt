@@ -88,8 +88,8 @@ add_library(ChessEngine
         Renderer/Platform/OpenGL/Primitives/OpenGLBufferLayout.cpp
         Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
         Renderer/Platform/OpenGL/Primitives/OpenGLBufferLayout.h
-        Renderer/Shaders/ShaderProgram.cpp
-        Renderer/Shaders/ShaderProgram.h
+        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.cpp
+        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
         Renderer/Primitives/VertexBuffer.cpp
@@ -114,6 +114,9 @@ add_library(ChessEngine
         Renderer/Platform/OpenGL/OpenGLTexture.h
         Renderer/Primitives/BufferLayout.cpp
         Renderer/Primitives/BufferLayout.h
+        Core/Math.h
+        Renderer/Shaders/ShaderProgram.cpp
+        Renderer/Shaders/ShaderProgram.h
 )
 
 

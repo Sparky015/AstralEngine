@@ -1,89 +1,25 @@
-//
-// Created by Andrew Fagan on 7/19/24.
-//
-
+/**
+* @file ShaderProgram.cpp
+* @author Andrew Fagan
+* @date 12/4/2024
+*/
 #include "ShaderProgram.h"
-
-#include "glad/glad.h"
-
+#include "Renderer/Renderer.h"
+#include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 
 namespace Renderer {
 
-    ShaderProgram::ShaderProgram() : m_ShaderProgramID(0), m_FragmentShaderCode(""), m_VertexShaderCode("") {}
-
-    ShaderProgram::ShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader) :
-            m_VertexShaderCode(vertexShader.GetShaderCode()),
-            m_FragmentShaderCode(fragmentShader.GetShaderCode()),
-            m_ShaderProgramID(glCreateProgram())
+    ShaderProgram* ShaderProgram::CreateShaderProgram(const ShaderSource &vertexShader,
+                                                      const ShaderSource &fragmentShader)
     {
-        const unsigned int vertexShaderID = CompileShader(GL_VERTEX_SHADER, m_VertexShaderCode);
-        const unsigned int fragmentShaderID = CompileShader(GL_FRAGMENT_SHADER, m_FragmentShaderCode);
-
-        /** Attach the two shaders to the program */
-        glAttachShader(m_ShaderProgramID, vertexShaderID);
-        glAttachShader(m_ShaderProgramID, fragmentShaderID);
-
-        /** Link and validate the program. */
-        glLinkProgram(m_ShaderProgramID);
-        glValidateProgram(m_ShaderProgramID);
-
-        /** Delete the shaders now that we are done with making the program. */
-        glDeleteShader(vertexShaderID);
-        glDeleteShader(fragmentShaderID);
-    }
-
-
-    unsigned int ShaderProgram::GetID() const
-    {
-        return m_ShaderProgramID;
-    }
-
-
-    void ShaderProgram::Bind()
-    {
-        glUseProgram(m_ShaderProgramID);
-    }
-
-
-    void ShaderProgram::Unbind()
-    {
-        glUseProgram(0);
-    }
-
-
-    unsigned int ShaderProgram::CompileShader(unsigned int shaderType, const std::string& shaderSource)
-    {
-        /** Create a shader and get the shader ID. */
-        const unsigned int shaderID = glCreateShader(shaderType);
-
-        /** Convert the std::string into a usable C string. */
-        const char* shaderSourceCode = shaderSource.c_str();
-
-        /** Give OpenGL the shader code for the shader we created earlier and compile it. */
-        glShaderSource(shaderID, 1, &shaderSourceCode, nullptr);
-        glCompileShader(shaderID);
-
-
-        /** Log errors if any. */
-        int result = 0;
-        glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
-        if (result == GL_FALSE)
+        switch (Renderer::GetAPI())
         {
-            int length = 0;
-            glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
-            char* message = (char*)alloca(length * sizeof(char));
-            glGetShaderInfoLog(shaderID, length, &length, message);
-            WARN("Failed to compile " << (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!");
-            WARN(message);
-            glDeleteShader(shaderID);
-            return 0;
+            case RendererAPI::OpenGL: return new OpenGLShaderProgram(vertexShader, fragmentShader);
+            case RendererAPI::Vulkan: ERROR("Vulkan is not supported yet!");
+            case RendererAPI::DirectX12: ERROR("DirectX12 is not supported yet!");
+            case RendererAPI::Metal: ERROR("Metal is not supported yet!");
+            default: ERROR("Invalid Renderer API");
         }
-
-        /** Return the ID of the final shader form to be used in the program. */
-        return shaderID;
     }
 
-
-
-
-} // namespace Renderer
+}

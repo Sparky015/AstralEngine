@@ -17,7 +17,7 @@ namespace Renderer {
         virtual void SetLayout(BufferLayout& bufferLayout) = 0;
         virtual BufferLayout& GetLayout() = 0;
 
-        static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout);
+        static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout);
     };
 
 } // Renderer

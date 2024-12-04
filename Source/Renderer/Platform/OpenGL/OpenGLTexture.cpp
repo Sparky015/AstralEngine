@@ -27,16 +27,14 @@ namespace Renderer {
         glTexImage2D(GL_TEXTURE_2D, 0 ,GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_ImageBuffer);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-         stbi_image_free(m_ImageBuffer);
+        stbi_image_free(m_ImageBuffer);
         GLCheckError();
     }
 
 
     OpenGLTexture::~OpenGLTexture()
     {
-        GLCheckError();
         glDeleteTextures(1, &m_RendererID);
-        GLCheckError();
     }
 
 

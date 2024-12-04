@@ -10,11 +10,10 @@
 namespace Renderer {
 
 
-    OpenGLVertexArrayObject::OpenGLVertexArrayObject()
+    OpenGLVertexArrayObject::OpenGLVertexArrayObject() : m_AttributeCounter(0), m_StrideSize(0)
     {
         LOG("Creating Vertex Array Object!");
         glGenVertexArrays(1, &m_RendererID);
-        Bind();
         GLCheckError();
     }
 

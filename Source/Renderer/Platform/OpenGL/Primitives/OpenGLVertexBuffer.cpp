@@ -4,15 +4,16 @@
 
 #include "OpenGLVertexBuffer.h"
 
+#include <utility>
+
 #include "glad/glad.h"
 #include "Renderer/Renderer.h"
 
 
 namespace Renderer {
 
-    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(bufferLayout)
+    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
     {
-        LOG("Creating Vertex Buffer!");
         glGenBuffers(1, &m_RendererID);
         Bind();
         glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
@@ -22,7 +23,6 @@ namespace Renderer {
 
     OpenGLVertexBuffer::~OpenGLVertexBuffer()
     {
-        LOG("Deleting Vertex Buffer!");
         glDeleteBuffers(1, &m_RendererID);
         GLCheckError();
     }

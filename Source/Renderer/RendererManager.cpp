@@ -32,7 +32,7 @@ namespace Renderer {
         };
 
 
-        m_ShaderProgram = ShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
+        m_ShaderProgram = OpenGLShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
                 , ShaderSource(std::string(SHADER_DIR) + "basic.frag"));
         m_ShaderProgram.Bind();
 
@@ -40,16 +40,17 @@ namespace Renderer {
 
         BufferLayout bufferLayout = {
                 {Float3, "a_Position"},
-                {Float2, "a_TextureCoords"}
+                {Float2, "a_TexCords"}
         };
 
         m_VertexBuffer.reset(VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout));
         m_VAO.reset(VertexArrayObject::CreateVertexArrayObject());
-        m_VAO->AddBuffer(m_VertexBuffer.get());
         m_VAO->Bind();
 
+        m_VAO->AddBuffer(m_VertexBuffer.get());
         m_Texture.reset(Texture::CreateTexture(std::string(SHADER_DIR) + "../Resources/water.jpeg"));
         m_Texture->Bind();
+
         int textureUniformLocation = glGetUniformLocation(m_ShaderProgram.GetID(), "u_Texture");
         glUniform1i(textureUniformLocation, 0);
 
@@ -57,13 +58,10 @@ namespace Renderer {
         m_IndexBuffer->Bind();
 
 
-        unsigned int m_UniformLocation = glGetUniformLocation(m_ShaderProgram.GetID(), "u_Color");
-        ASSERT(m_UniformLocation != -1, "Uniform not found!");
-
         float g = sin(sin(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
         float r = cos(sin(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
         float b = cos(cos(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
-        glUniform4f(m_UniformLocation, r, g, b, 1.0f);
+        m_ShaderProgram.SetUniform("u_Color", r, g, b, 1.0f);
 
         GLCheckError();
     }

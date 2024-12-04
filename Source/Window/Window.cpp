@@ -17,6 +17,7 @@ namespace Window {
             case WindowAPI::GLFW: return new GenericWindow();
             case WindowAPI::Cocoa: ERROR("Cocoa Window API not supported yet!");
             case WindowAPI::Win32: ERROR("Win32 Window API supported yet!");
+            default: ERROR("Invalid Window API");
         }
     }
 

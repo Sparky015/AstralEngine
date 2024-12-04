@@ -1,6 +1,8 @@
-//
-// Created by Andrew Fagan on 7/19/24.
-//
+/**
+* @file ShaderProgram.h
+* @author Andrew Fagan
+* @date 12/4/2024
+*/
 
 #pragma once
 
@@ -8,35 +10,16 @@
 
 namespace Renderer {
 
-
-    /** Takes two shaders and creates a program from them. */
     class ShaderProgram
     {
     public:
-        ShaderProgram();
-        explicit ShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
-        ~ShaderProgram() = default;
+        virtual ~ShaderProgram() = default;
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0;
 
-        [[nodiscard]] unsigned int GetID() const;
+        [[nodiscard]] virtual uint32 GetCount() const = 0;
 
-        void Bind();
-        void Unbind();
-
-    private:
-
-        /*
-        * Compiles a shader and returns the ID to the shader.
-        * @param type: The type of shader that is being compiled.
-        * @param source: The source code of the shader in the form of a string
-        * @return The id of the shader
-        */
-        unsigned int CompileShader(unsigned int shaderType, const std::string& shaderSource);
-
-        std::string m_VertexShaderCode;
-        std::string m_FragmentShaderCode;
-        unsigned int m_ShaderProgramID;
+        static ShaderProgram* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
     };
 
-
-
-}
+} // Renderer

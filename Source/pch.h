@@ -34,6 +34,6 @@
 // Other Headers
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/DebugMacros.h"
-#include "glm/glm.hpp"
+#include "Core/Math.h"
 
-using Vec2 = glm::vec2;
+
