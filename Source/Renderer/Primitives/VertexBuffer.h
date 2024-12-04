@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "BufferLayout.h"
+
 namespace Renderer {
 
     class VertexBuffer
@@ -12,8 +14,10 @@ namespace Renderer {
         virtual ~VertexBuffer() = default;
         virtual void Bind() = 0;
         virtual void Unbind() = 0;
+        virtual void SetLayout(BufferLayout& bufferLayout) = 0;
+        virtual BufferLayout& GetLayout() = 0;
 
-        static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size);
+        static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout);
     };
 
 } // Renderer

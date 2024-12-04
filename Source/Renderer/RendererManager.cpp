@@ -8,6 +8,7 @@
 
 namespace Renderer {
 
+
     RendererManager& g_RendererManager = RendererManager::Get();
 
     RendererManager& RendererManager::Get()
@@ -36,20 +37,22 @@ namespace Renderer {
         m_ShaderProgram.Bind();
 
         uint32 indices[3] = { 0, 1, 2};
+
+        BufferLayout bufferLayout = {
+                {Float3, "a_Position"},
+                {Float2, "a_TextureCoords"}
+        };
+
+        m_VertexBuffer.reset(VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout));
         m_VAO.reset(VertexArrayObject::CreateVertexArrayObject());
+        m_VAO->AddBuffer(m_VertexBuffer.get());
         m_VAO->Bind();
+
         m_Texture.reset(Texture::CreateTexture(std::string(SHADER_DIR) + "../Resources/water.jpeg"));
         m_Texture->Bind();
         int textureUniformLocation = glGetUniformLocation(m_ShaderProgram.GetID(), "u_Texture");
         glUniform1i(textureUniformLocation, 0);
 
-        m_VertexBuffer.reset(VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices)));
-        m_VertexBuffer->Bind();
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 3));
         m_IndexBuffer->Bind();
 

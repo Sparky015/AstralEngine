@@ -10,7 +10,7 @@
 
 namespace Renderer {
 
-    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size)
+    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(bufferLayout)
     {
         LOG("Creating Vertex Buffer!");
         glGenBuffers(1, &m_RendererID);
@@ -38,5 +38,18 @@ namespace Renderer {
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
+
+    void OpenGLVertexBuffer::SetLayout(BufferLayout& bufferLayout)
+    {
+        m_BufferLayout = bufferLayout;
+    }
+
+
+    BufferLayout& OpenGLVertexBuffer::GetLayout()
+    {
+        return m_BufferLayout;
+    }
+
 
 } // namespace Renderer

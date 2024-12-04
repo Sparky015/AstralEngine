@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "VertexBuffer.h"
+
 namespace Renderer {
 
     class VertexArrayObject
@@ -12,6 +14,7 @@ namespace Renderer {
         virtual ~VertexArrayObject() = default;
         virtual void Bind() = 0;
         virtual void Unbind() = 0;
+        virtual void AddBuffer(VertexBuffer* vertexBuffer) = 0;
 
         static VertexArrayObject* CreateVertexArrayObject();
     };
