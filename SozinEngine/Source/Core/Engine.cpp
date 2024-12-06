@@ -30,9 +30,7 @@ Engine::Engine() :
     ECS::g_ECSManager.Init();
     Renderer::g_RendererManager.Init();
 
-    Client::Client client = Client::Client();
-    client.Init();
-//    Client::Init();
+    Client::Init();
 //    Client::Update();
     m_WindowClosedListener.StartListening();
 }

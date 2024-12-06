@@ -9,20 +9,11 @@
 
 namespace Client {
 
-    class ClientTest
-    {
-    public:
-        virtual void Init();
-
-    };
-
-    class Client : public ClientTest
-    {
-    public:
-        void Init() override;
-    };
-
     void Init();
     void Update();
 
+    class Manager
+    {
+        void Init();
+    };
 }
