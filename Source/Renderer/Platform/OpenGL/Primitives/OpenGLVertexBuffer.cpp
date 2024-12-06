@@ -17,6 +17,7 @@ namespace Renderer {
         glGenBuffers(1, &m_RendererID);
         Bind();
         glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+        Unbind();
         GLCheckError();
     }
 

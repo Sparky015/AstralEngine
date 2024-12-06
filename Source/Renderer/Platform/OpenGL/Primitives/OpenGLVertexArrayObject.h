@@ -16,12 +16,16 @@ namespace Renderer {
 
         void Bind() override;
         void Unbind() override;
-        void AddBuffer(VertexBuffer* vertexBuffer) override;
+        void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
+        void SetIndexBuffer(IndexBuffer* indexBuffer) override;
+
+        uint32_t GetElementCount() override;
 
     private:
         unsigned int m_RendererID;
         uint8 m_AttributeCounter;
         uint32 m_StrideSize;
+        uint32 m_ElementCount;
     };
 
 } // namespace Renderer

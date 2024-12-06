@@ -45,12 +45,8 @@ namespace Renderer {
 //        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
     // slot, number of elements, something, something, size of stride (total size of each element), offset
-    void OpenGLVertexArrayObject::AddBuffer(VertexBuffer* vertexBuffer)
+    void OpenGLVertexArrayObject::AddVertexBuffer(VertexBuffer* vertexBuffer)
     {
-        GLint vaoID, vboID = 0;
-        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vaoID);
-        glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &vboID);
-
         Bind();
         vertexBuffer->Bind();
 
@@ -72,9 +68,20 @@ namespace Renderer {
             m_AttributeCounter++;
         }
 
-        // Rebind the previous buffers
-        glBindVertexArray(vaoID);
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    }
+
+    void OpenGLVertexArrayObject::SetIndexBuffer(IndexBuffer* indexBuffer)
+    {
+        Bind();
+        indexBuffer->Bind();
+        m_ElementCount = indexBuffer->GetCount();
+        Unbind();
+        indexBuffer->Unbind();
+    }
+
+    uint32_t OpenGLVertexArrayObject::GetElementCount()
+    {
+        return m_ElementCount;
     }
 
 

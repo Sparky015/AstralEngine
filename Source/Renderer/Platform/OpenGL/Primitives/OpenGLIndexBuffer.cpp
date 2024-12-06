@@ -15,6 +15,7 @@ namespace Renderer {
         glGenBuffers(1, &m_RendererID);
         Bind();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * count, indices, GL_STATIC_DRAW);
+        Unbind();
         GLCheckError();
     }
 

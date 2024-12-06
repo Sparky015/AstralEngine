@@ -117,6 +117,8 @@ add_library(ChessEngine
         Core/Math.h
         Renderer/Shaders/ShaderProgram.cpp
         Renderer/Shaders/ShaderProgram.h
+        Renderer/RendererCommands.cpp
+        Renderer/RendererCommands.h
 )
 
 

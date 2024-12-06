@@ -38,7 +38,8 @@ namespace Renderer {
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
         std::unique_ptr<Texture> m_Texture;
-        OpenGLShaderProgram m_ShaderProgram;
+        std::unique_ptr<ShaderProgram> m_ShaderProgram;
+        OpenGLShaderProgram m_ShaderProgram1;
 
     };
 

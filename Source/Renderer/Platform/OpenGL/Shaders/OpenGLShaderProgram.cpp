@@ -39,19 +39,19 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::Bind()
+    void OpenGLShaderProgram::Bind() const
     {
         glUseProgram(m_ShaderProgramID);
     }
 
 
-    void OpenGLShaderProgram::Unbind()
+    void OpenGLShaderProgram::Unbind() const
     {
         glUseProgram(0);
     }
 
 
-    unsigned int OpenGLShaderProgram::CompileShader(unsigned int shaderType, const std::string& shaderSource)
+    uint32 OpenGLShaderProgram::CompileShader(uint32 shaderType, const std::string& shaderSource)
     {
         /** Create a shader and get the shader ID. */
         const unsigned int shaderID = glCreateShader(shaderType);
@@ -84,7 +84,15 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string&& uniformName, float f1) const
+    void OpenGLShaderProgram::SetTextureUniform(const std::string& uniformName, int slot)
+    {
+        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
+        glUniform1i(uniformLocation, slot);
+    }
+
+
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -92,7 +100,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, float f1, float f2) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -100,7 +108,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, float f1, float f2, float f3) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2, float f3) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -108,7 +116,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, float f1, float f2, float f3, float f4) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2, float f3, float f4) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -116,7 +124,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, int32 i1) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -124,7 +132,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, int32 i1, int32 i2) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -132,7 +140,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, int32 i1, int32 i2, int32 i3) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2, int32 i3) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -140,7 +148,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, int32 i1, int32 i2, int32 i3, int32 i4) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2, int32 i3, int32 i4) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -148,7 +156,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, uint32 ui1) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -156,7 +164,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, uint32 ui1, uint32 ui2) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -164,7 +172,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, uint32 ui1, uint32 ui2, uint32 ui3) const
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
@@ -172,7 +180,7 @@ namespace Renderer {
     }
 
 
-    void OpenGLShaderProgram::SetUniform(std::string &&uniformName, uint32 ui1, uint32 ui2, uint32 ui3,
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3,
                                          uint32 ui4) const
     {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
