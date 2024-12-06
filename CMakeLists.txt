@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 add_subdirectory(ThirdPartyLibraries)
-add_subdirectory(Source)
-add_subdirectory(Tests)
+add_subdirectory(SozinEngine)
+add_subdirectory(Chess)
 
 
