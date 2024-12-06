@@ -11,17 +11,19 @@
 #include "ECS/ECSManager.h"
 #include "Renderer/RendererManager.h"
 
-#include "Application/ClientManager.h"
+#include "ApplicationModule.h"
 
 Engine* Engine::m_Instance = nullptr;
 
 Engine::Engine() :
     m_IsLoopRunning(true),
-    m_WindowClosedListener(Event::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}})
+    m_WindowClosedListener(Event::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}}),
+    m_ApplicationModule(Application::CreateApplicationModule())
 {
     PROFILE_SCOPE();
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
+
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
@@ -29,9 +31,8 @@ Engine::Engine() :
     Debug::g_DebugManager.Init();
     ECS::g_ECSManager.Init();
     Renderer::g_RendererManager.Init();
+    m_ApplicationModule->Init();
 
-    Client::Init();
-//    Client::Update();
     m_WindowClosedListener.StartListening();
 }
 
@@ -41,6 +42,7 @@ Engine::~Engine()
     PROFILE_SCOPE();
     m_WindowClosedListener.StopListening();
 
+    m_ApplicationModule->Shutdown();
     Renderer::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
@@ -57,6 +59,7 @@ void Engine::Run()
         PROFILE_SCOPE();
 
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+        m_ApplicationModule->Update();
 
         Debug::DebugManager::ImGuiBegin();
         m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );

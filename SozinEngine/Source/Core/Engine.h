@@ -8,11 +8,10 @@
 
 #include "Core/Events/EventPublisher.h"
 #include "Core/Events/EventListener.h"
-
 #include "Window/WindowEvents.h"
 #include "Debug/DebugEvents.h"
 #include "SystemEvents.h"
-
+#include "ApplicationModule.h"
 
 
 class Engine
@@ -33,4 +32,5 @@ private:
     bool m_IsLoopRunning;
 
     static Engine* m_Instance;
+    Application::ApplicationModule* m_ApplicationModule;
 };

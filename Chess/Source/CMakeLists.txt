@@ -22,7 +22,7 @@ add_executable(Chess
         Game/MoveGenerationHelpers.h
         Game/GameManager.h
         Game/GameManager.cpp
-        start.cpp
+        EntryPoint.cpp
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

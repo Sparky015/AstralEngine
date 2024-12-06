@@ -100,9 +100,9 @@ add_library(SozinEngine
         Source/Renderer/Platform/OpenGL/OpenGLRendererAPI.cpp
         Source/Renderer/Platform/OpenGL/OpenGLRendererAPI.h
         Source/Renderer/Platform/OpenGL/OpenGLErrorTracking.h
-        Source/Application/ClientManager.cpp
-        Source/Application/ClientManager.h
+        Source/Core/ApplicationModule.h
         Source/main.cpp
+        Source/Sozin.h
 )
 
 
