@@ -5,7 +5,7 @@
 */
 #include "Engine.h"
 
-#include "IO/IOManager.h"
+#include "Input/InputManager.h"
 #include "Window/WindowManager.h"
 #include "Debug/DebugManager.h"
 #include "ECS/ECSManager.h"

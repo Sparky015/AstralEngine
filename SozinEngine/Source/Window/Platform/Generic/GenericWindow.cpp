@@ -6,7 +6,7 @@
 
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
-#include "glad/glad.h"
+#include "Input/KeycodeConversions.h"
 
 namespace Window {
 
@@ -117,7 +117,17 @@ namespace Window {
             if (action == GLFW_PRESS)
             {
                 Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
-                keyPressedEvent.PublishEvent(KeyPressedEvent(key));
+                keyPressedEvent.PublishEvent(KeyPressedEvent(Input::TranslateGLFWKeycodesToSozin(key)));
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                keyReleasedEvent.PublishEvent(KeyReleasedEvent(Input::TranslateGLFWKeycodesToSozin(key)));
+            }
+            else if (action == GLFW_REPEAT)
+            {
+                Event::EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
+                keyRepeatingEvent.PublishEvent(KeyRepeatingEvent(Input::TranslateGLFWKeycodesToSozin(key)));
             }
 
         });

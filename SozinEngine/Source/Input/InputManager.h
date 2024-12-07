@@ -2,9 +2,11 @@
 // Created by Andrew Fagan on 10/30/24.
 //
 
-#include "Core/SystemManager.h"
-
 #pragma once
+
+#include "Core/SystemManager.h"
+#include "InputState.h"
+
 
 namespace IO{
 
@@ -25,6 +27,8 @@ namespace IO{
     private:
         InputManager();
         ~InputManager() override;
+
+        InputState m_InputState;
     };
 
     extern InputManager& g_IOManager;

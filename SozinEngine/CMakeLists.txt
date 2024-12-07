@@ -22,7 +22,6 @@ add_library(SozinEngine
         Source/Core/Events/EventBus.h
         Source/Core/Events/EventListener.h
         Source/Core/Events/EventPublisher.h
-        Source/Input/PrintBoardEvent.h
         Source/Input/InputManager.cpp
         Source/Input/InputManager.h
         Source/Core/Engine.h
@@ -104,6 +103,10 @@ add_library(SozinEngine
         Source/main.cpp
         Source/Sozin.h
         Source/Input/InputState.h
+        Source/Input/InputState.cpp
+        Source/Input/Keycodes.h
+        Source/Input/KeycodeConversions.h
+        Source/Input/KeycodeConversions.cpp
 )
 
 
