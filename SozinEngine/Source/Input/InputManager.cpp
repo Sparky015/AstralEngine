@@ -2,48 +2,50 @@
 // Created by Andrew Fagan on 10/30/24.
 //
 
-#include "IOManager.h"
+#include "InputManager.h"
 
 namespace IO{
 
-    IOManager& g_IOManager = IOManager::Get();
+    InputManager& g_IOManager = InputManager::Get();
 
-    IOManager& IOManager::Get()
+    InputManager& InputManager::Get()
     {
-        static IOManager m_Instance = IOManager();
+        static InputManager m_Instance = InputManager();
         return m_Instance;
     }
 
 
-    void IOManager::Init()
+    void InputManager::Init()
     {
         PROFILE_SCOPE();
         TRACE("Initializing IO Manager!")
+        InputState::Init();
         m_UpdateListener.StartListening();
     }
 
 
-    void IOManager::Shutdown()
+    void InputManager::Shutdown()
     {
         PROFILE_SCOPE();
         TRACE("Shutting down IO Manager!")
+        InputState::Shutdown();
         m_UpdateListener.StopListening();
     }
 
 
-    void IOManager::Update()
+    void InputManager::Update()
     {
         PROFILE_SCOPE();
     }
 
 
-    IOManager::IOManager()
+    InputManager::InputManager()
     {
         PROFILE_SCOPE();
         TRACE("Constructing IO System!")
     }
 
-    IOManager::~IOManager()
+    InputManager::~InputManager()
     {
         PROFILE_SCOPE();
         TRACE("Destroying IO System!")

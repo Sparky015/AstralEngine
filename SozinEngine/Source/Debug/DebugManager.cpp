@@ -13,6 +13,7 @@
 //#include "Game/Board/BoardManager.h"
 //#include "Game/Conversions.h"
 #include "Window/Platform/Generic/GenericWindow.h"
+#include "Input/Keycodes.h"
 
 namespace Debug{
 
@@ -253,7 +254,7 @@ namespace Debug{
     void DebugManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
         PROFILE_SCOPE();
-        if (keyPressedEvent.keycode == GLFW_KEY_D)
+        if (keyPressedEvent.keycode == KEY_D)
         {
             m_ShowDebugMenu = !m_ShowDebugMenu;
         }

@@ -8,8 +8,7 @@
 
 namespace Event {
 
-    /** Publishes an event to any listeners. Also, helps manage the lifetime of event buses as
-     * when there are no event publishers and event listeners, the event bus is destroyed. */
+    /** Publishes an event to any listeners. */
     template<typename T>
     class EventPublisher
     {
