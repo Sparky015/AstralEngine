@@ -22,9 +22,9 @@ add_library(SozinEngine
         Source/Core/Events/EventBus.h
         Source/Core/Events/EventListener.h
         Source/Core/Events/EventPublisher.h
-        Source/IO/PrintBoardEvent.h
-        Source/IO/IOManager.cpp
-        Source/IO/IOManager.h
+        Source/Input/PrintBoardEvent.h
+        Source/Input/InputManager.cpp
+        Source/Input/InputManager.h
         Source/Core/Engine.h
         Source/Core/Engine.cpp
         Source/Core/SystemEvents.h
@@ -103,6 +103,7 @@ add_library(SozinEngine
         Source/Core/ApplicationModule.h
         Source/main.cpp
         Source/Sozin.h
+        Source/Input/InputState.h
 )
 
 

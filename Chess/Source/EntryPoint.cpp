@@ -9,10 +9,17 @@
 class Chess : public ApplicationModule
 {
 public:
+
     void Init() override
     {
-        std::cout << "test";
+        TRACE("Initializing Application")
     }
+
+    void Shutdown() override
+    {
+        TRACE("Shutting down Application")
+    }
+
 };
 
 IMPLEMENT_APPLICATION_MODULE(Chess);
