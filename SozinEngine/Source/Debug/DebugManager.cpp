@@ -60,6 +60,9 @@ namespace Debug{
         ImGuiIO& io = ImGui::GetIO();
         const static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
 
+        static bool show_demo_window = true;
+        ImGui::ShowDemoWindow(&show_demo_window);
+
         if (m_ShowDebugMenu)
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);

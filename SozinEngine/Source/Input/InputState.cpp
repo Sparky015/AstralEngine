@@ -163,6 +163,7 @@ double InputState::MousePositionY()
 Event::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Event::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
 Event::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Event::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
 Event::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Event::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
+Event::EventListener<MouseMovedEvent> InputState::m_MouseMovedListener = Event::EventListener<MouseMovedEvent> {[](MouseMovedEvent mouseMovedEvent){InputState::OnMouseMoved(mouseMovedEvent);}};
 
 
 InputState::InputState()
@@ -196,11 +197,19 @@ void InputState::OnKeyRepeating(KeyRepeatingEvent keyRepeatingEvent)
 }
 
 
+void InputState::OnMouseMoved(MouseMovedEvent mouseMovedEvent)
+{
+    m_MouseCursorState.MouseXPosition = mouseMovedEvent.xPosition;
+    m_MouseCursorState.MouseYPosition = mouseMovedEvent.yPosition;
+}
+
+
 void InputState::Init()
 {
     m_KeyPressListener.StartListening();
     m_KeyReleaseListener.StartListening();
     m_KeyRepeatingListener.StartListening();
+    m_MouseMovedListener.StartListening();
 }
 
 
@@ -209,4 +218,5 @@ void InputState::Shutdown()
     m_KeyPressListener.StopListening();
     m_KeyReleaseListener.StopListening();
     m_KeyRepeatingListener.StopListening();
+    m_MouseMovedListener.StopListening();
 }

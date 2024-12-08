@@ -131,6 +131,32 @@ namespace Window {
             }
 
         });
+
+        // Called when the cursor is moved
+        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)
+        {
+            int height;
+            int width;
+            glfwGetWindowSize(window, &width, &height);
+            Event::EventPublisher<MouseMovedEvent> mouseMovedEvent;
+            mouseMovedEvent.PublishEvent(MouseMovedEvent(xpos, height - ypos));
+        });
+    }
+
+
+    int GenericWindow::GetWidth()
+    {
+        int width;
+        glfwGetWindowSize(m_Window, &width, nullptr);
+        return width;
+    }
+
+
+    int GenericWindow::GetHeight()
+    {
+        int height;
+        glfwGetWindowSize(m_Window, nullptr, &height);
+        return height;
     }
 
 } // Window

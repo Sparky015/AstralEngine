@@ -24,6 +24,8 @@ namespace Window {
         virtual void SwapBuffers() = 0;
         virtual void EnableVsync() = 0;
         virtual void DisableVsync() = 0;
+        virtual int GetWidth() = 0;
+        virtual int GetHeight() = 0;
 
         virtual void* GetNativeWindow() = 0;
         virtual Renderer::RendererContext& GetRendererContext() = 0;

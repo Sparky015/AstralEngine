@@ -13,7 +13,7 @@ namespace Renderer {
 
     OpenGLTexture::OpenGLTexture(const std::string& filePath) : m_ImageBuffer(nullptr), m_Height(0), m_Width(0), m_BPP(0), m_RendererID(0)
     {
-//        stbi_set_flip_vertically_on_load(1);
+        stbi_set_flip_vertically_on_load(1);
         m_ImageBuffer = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
         if (!m_ImageBuffer) { WARN("Texture failed to load!"); return;}
 

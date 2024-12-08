@@ -36,6 +36,9 @@ class OpenGLShaderProgram : public ShaderProgram
         void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2) const override;
         void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3) const override;
         void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3, uint32 ui4) const override;
+        void SetUniform(const std::string& uniformName, Mat4 mat4) const override;
+        void SetUniform(const std::string& uniformName, Vec4 vec4) const override;
+        void SetUniform(const std::string& uniformName, Vec3 vec3) const override;
 
     private:
 

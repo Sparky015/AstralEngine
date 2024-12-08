@@ -5,6 +5,7 @@
 #include "OpenGLShaderProgram.h"
 
 #include "glad/glad.h"
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace Renderer {
@@ -186,6 +187,30 @@ namespace Renderer {
         unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform4ui(uniformLocation, ui1, ui2, ui3, ui4);
+    }
+
+
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Mat4 mat4) const
+    {
+        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat4));
+    }
+
+
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Vec4 vec4) const
+    {
+        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
+        glUniform4fv(uniformLocation, 1, glm::value_ptr(vec4));
+    }
+
+
+    void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Vec3 vec3) const
+    {
+        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
+        glUniform3fv(uniformLocation, 1, glm::value_ptr(vec3));
     }
 
 } // namespace Renderer
