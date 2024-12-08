@@ -33,6 +33,9 @@ namespace Renderer {
         virtual void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2) const = 0;
         virtual void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3) const = 0;
         virtual void SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3, uint32 ui4) const = 0;
+        virtual void SetUniform(const std::string& uniformName, Mat4 mat4) const = 0;
+        virtual void SetUniform(const std::string& uniformName, Vec4 vec4) const = 0;
+        virtual void SetUniform(const std::string& uniformName, Vec3 vec3) const = 0;
 
         static ShaderProgram* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
 

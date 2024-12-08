@@ -25,6 +25,8 @@ namespace Window {
         std::string GetVersion() override;
         void EnableVsync() override;
         void DisableVsync() override;
+        int GetWidth() override;
+        int GetHeight() override;
 
         Renderer::RendererContext & GetRendererContext() override;
         void* GetNativeWindow() override;

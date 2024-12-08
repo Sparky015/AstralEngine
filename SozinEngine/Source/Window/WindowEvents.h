@@ -25,3 +25,11 @@ struct KeyRepeatingEvent
     explicit KeyRepeatingEvent(int keycode) : keycode(keycode) {}
     int keycode;
 };
+
+
+struct MouseMovedEvent
+{
+    explicit MouseMovedEvent(double xPos, double yPos) : xPosition(xPos), yPosition(yPos) {}
+    double xPosition;
+    double yPosition;
+};

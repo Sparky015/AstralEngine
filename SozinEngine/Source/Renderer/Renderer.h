@@ -10,9 +10,6 @@
 
 namespace Renderer {
 
-
-
-
     class Renderer
     {
     public:

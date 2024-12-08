@@ -59,11 +59,13 @@ private:
     static void OnKeyPress(KeyPressedEvent keyPressedEvent);
     static void OnKeyRelease(KeyReleasedEvent keyReleasedEvent);
     static void OnKeyRepeating(KeyRepeatingEvent keyRepeatingEvent);
+    static void OnMouseMoved(MouseMovedEvent mouseMovedEvent);
 
     static std::array<KeyState, NUMBER_OF_KEYS> m_KeyState;
     static MouseCursorState m_MouseCursorState;
     static Event::EventListener<KeyPressedEvent> m_KeyPressListener;
     static Event::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
     static Event::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;
+    static Event::EventListener<MouseMovedEvent> m_MouseMovedListener;
 
 };
