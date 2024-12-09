@@ -121,6 +121,32 @@ namespace Renderer {
                     uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
                     if (board.ReadSquareType(location) == PieceType::NONE)
                     {
+                        static int numOfMeMoves = 0;
+                        if (lockedOnPieceID == PIECE_2 && lockedOnPieceColor == PieceColor::WHITE)
+                        {
+                            numOfMeMoves++;
+                            ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+                            switch (numOfMeMoves)
+                            {
+                                case 1: ecs.AddComponent<SpriteComponent>
+                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_knight.png")));
+                                    break;
+                                    case 2: case 3: ecs.AddComponent<SpriteComponent>
+                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_bishop.png")));
+                                    break;
+                                case 4: ecs.AddComponent<SpriteComponent>
+                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_queen.png")));
+                                    break;
+                                case 5: ecs.AddComponent<SpriteComponent>
+                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_pawn.png")));
+                                        numOfMeMoves = 0;
+                                    break;
+                            }
+                        }
                         board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
                     }
                     else if (board.ReadSquareColor(location) != lockedOnPieceColor)
@@ -160,8 +186,8 @@ namespace Renderer {
 
         Renderer::Submit(*m_ShaderProgram, m_VAO.get(), chessboardTransform);
 
-        m_Texture->Bind(0);
-        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
+//        m_Texture->Bind(0);
+//        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
 
         SubmitEntitySystem(m_BlackPawn1);
         SubmitEntitySystem(m_BlackPawn2);
