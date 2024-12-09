@@ -6,12 +6,12 @@
 
 #include "pch.h"
 
+#include "Renderer/Primitives/Texture.h"
+
 struct SpriteComponent
 {
-    // TEMP PLACEHOLDER CODE
-    SpriteComponent() : x(0), y(0), isUsed(false) {}
-    SpriteComponent(int16 x, int16 y) : x(x), y(y), isUsed(true) {}
-    int16 x;
-    int16 y;
+    SpriteComponent() : texture(nullptr), isUsed(false) {}
+    explicit SpriteComponent(Renderer::Texture* texture) : texture(texture), isUsed(true) {}
+    Renderer::Texture* texture;
     bool isUsed;
 };

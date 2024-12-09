@@ -1,27 +1,27 @@
 
 add_executable(Chess
-        Source/Game/Board/Board.cpp
-        Source/Game/Board/Board.h
-        Source/Game/PieceInfo.h
-        Source/Game/PieceInfo.cpp
-        Source/Game/Board/BoardManager.cpp
-        Source/Game/Board/BoardManager.h
-        Source/Game/Board/InternalBoardData.cpp
-        Source/Game/Pieces/Bishop.h
-        Source/Game/Pieces/Bishop.cpp
-        Source/Game/Pieces/King.h
-        Source/Game/Pieces/King.cpp
-        Source/Game/Pieces/Knight.cpp
-        Source/Game/Pieces/Pawn.cpp
-        Source/Game/Pieces/Queen.cpp
-        Source/Game/Pieces/Rook.cpp
-        Source/Game/MoveList.cpp
-        Source/Game/Conversions.h
-        Source/Game/Conversions.cpp
-        Source/Game/MoveGenerationHelpers.cpp
-        Source/Game/MoveGenerationHelpers.h
-        Source/Game/GameManager.h
-        Source/Game/GameManager.cpp
+        ../SozinEngine/Source/Game/Board/Board.cpp
+        ../SozinEngine/Source/Game/Board/Board.h
+        ../SozinEngine/Source/Game/PieceInfo.h
+        ../SozinEngine/Source/Game/PieceInfo.cpp
+        ../SozinEngine/Source/Game/Board/BoardManager.cpp
+        ../SozinEngine/Source/Game/Board/BoardManager.h
+        ../SozinEngine/Source/Game/Board/InternalBoardData.cpp
+        ../SozinEngine/Source/Game/Pieces/Bishop.h
+        ../SozinEngine/Source/Game/Pieces/Bishop.cpp
+        ../SozinEngine/Source/Game/Pieces/King.h
+        ../SozinEngine/Source/Game/Pieces/King.cpp
+        ../SozinEngine/Source/Game/Pieces/Knight.cpp
+        ../SozinEngine/Source/Game/Pieces/Pawn.cpp
+        ../SozinEngine/Source/Game/Pieces/Queen.cpp
+        ../SozinEngine/Source/Game/Pieces/Rook.cpp
+        ../SozinEngine/Source/Game/MoveList.cpp
+        ../SozinEngine/Source/Input/Conversions.h
+        ../SozinEngine/Source/Input/Conversions.cpp
+        ../SozinEngine/Source/Game/MoveGenerationHelpers.cpp
+        ../SozinEngine/Source/Game/MoveGenerationHelpers.h
+        ../SozinEngine/Source/Game/GameManager.h
+        ../SozinEngine/Source/Game/GameManager.cpp
         Source/EntryPoint.cpp
 )
 

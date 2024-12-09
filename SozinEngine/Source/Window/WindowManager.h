@@ -40,8 +40,8 @@ namespace Window {
 
         std::unique_ptr<Window> m_Window;
 
-        int m_WindowWidth = 1024;
-        int m_WindowHeight = 768;
+        int m_WindowWidth = 800;
+        int m_WindowHeight = 800;
 
     };
 

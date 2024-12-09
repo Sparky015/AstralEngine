@@ -10,8 +10,9 @@
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 
 #include "Window/WindowManager.h"
-//#include "Game/Board/BoardManager.h"
-//#include "Game/Conversions.h"
+#include "Game/Board/BoardManager.h"
+#include "Input/Conversions.h"
+#include "Game/MoveList.h"
 #include "Window/Platform/Generic/GenericWindow.h"
 #include "Input/Keycodes.h"
 
@@ -71,96 +72,96 @@ namespace Debug{
 
             if (ImGui::TreeNode("Piece Locations"))
             {
-//                if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
-//                {
-//                    Game::Board& board = Game::g_BoardManager.GetBoard();
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%c", board.GetCharacterOfPiece(square));
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-//
-//            if (ImGui::TreeNode("Board Location IDs"))
-//            {
-//                if (ImGui::BeginTable("BoardLocationIDs", 8, flags, ImVec2(200, 130)))
-//                {
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%d", square);
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-//
-//            if (ImGui::TreeNode("Board Locations (In Chess Notation)"))
-//            {
-//                if (ImGui::BeginTable("BoardLocationChessNotation", 8, flags, ImVec2(200, 130)))
-//                {
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%s", Game::ConvertIntToChessNotation(square).c_str());
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-//
-//            if (ImGui::TreeNode("Piece Moves"))
-//            {
-//                if (ImGui::TreeNode("White"))
-//                {
-//                    if (ImGui::BeginTable("WhitePieceMoves", 1, flags, ImVec2(500, 130)))
-//                    {
-//                        Game::Board& board = Game::g_BoardManager.GetBoard();
-//                        Game::MoveList& whiteMoveList = Game::g_BoardManager.GetMoveList(PieceColor::WHITE);
-//                        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
-//                        {
-//                            ImGui::TableNextColumn();
-//
-//                            std::string regularMoveStr = Game::ConvertVectorToString(
-//                                    whiteMoveList.GetRegularMoves((PieceID) pieceID));
-//                            std::string attackingMoveStr = Game::ConvertVectorToString(
-//                                    whiteMoveList.GetAttackingMoves((PieceID) pieceID));
-//
-//                            PieceType pieceType = board.ReadPieceType(PieceColor::WHITE, (PieceID) pieceID);
-//                            uint8 pieceLocation = board.ReadPieceLocation(PieceColor::WHITE, (PieceID) pieceID);
-//                            ImGui::Text("[%s (%s)] Reg:%s Atk:%s", Game::ConvertPieceTypeToString(pieceType).c_str(), Game::ConvertIntToChessNotation(pieceLocation).c_str(), regularMoveStr.c_str(), attackingMoveStr.c_str());
-//                        }
-//                        ImGui::EndTable();
-//                    }
-//                    ImGui::TreePop();
-//                }
-//
-//                if (ImGui::TreeNode("Black"))
-//                {
-//                    if (ImGui::BeginTable("BlackPieceMoves", 1, flags, ImVec2(500, 130)))
-//                    {
-//                        Game::Board& board = Game::g_BoardManager.GetBoard();
-//                        Game::MoveList& blackMoveList = Game::g_BoardManager.GetMoveList(PieceColor::BLACK);
-//                        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
-//                        {
-//                            ImGui::TableNextColumn();
-//
-//                            std::string regularMoveStr = Game::ConvertVectorToString(
-//                                    blackMoveList.GetRegularMoves((PieceID) pieceID));
-//                            std::string attackingMoveStr = Game::ConvertVectorToString(
-//                                    blackMoveList.GetAttackingMoves((PieceID) pieceID));
-//                            PieceType pieceType = board.ReadPieceType(PieceColor::BLACK, (PieceID) pieceID);
-//                            uint8 pieceLocation = board.ReadPieceLocation(PieceColor::BLACK, (PieceID) pieceID);
-//                            ImGui::Text("[%s (%s)] Reg:%s Atk:%s", Game::ConvertPieceTypeToString(pieceType).c_str(), Game::ConvertIntToChessNotation(pieceLocation).c_str(), regularMoveStr.c_str(), attackingMoveStr.c_str());
-//                        }
-//                        ImGui::EndTable();
-//                    }
-//                    ImGui::TreePop();
-//                }
-//                ImGui::TreePop();
+                if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
+                {
+                    Game::Board& board = Game::g_BoardManager.GetBoard();
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%c", board.GetCharacterOfPiece(square));
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Board Location IDs"))
+            {
+                if (ImGui::BeginTable("BoardLocationIDs", 8, flags, ImVec2(200, 130)))
+                {
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%d", square);
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Board Locations (In Chess Notation)"))
+            {
+                if (ImGui::BeginTable("BoardLocationChessNotation", 8, flags, ImVec2(200, 130)))
+                {
+                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", Game::ConvertIntToChessNotation(square).c_str());
+                    }
+                    ImGui::EndTable();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Piece Moves"))
+            {
+                if (ImGui::TreeNode("White"))
+                {
+                    if (ImGui::BeginTable("WhitePieceMoves", 1, flags, ImVec2(500, 130)))
+                    {
+                        Game::Board& board = Game::g_BoardManager.GetBoard();
+                        Game::MoveList& whiteMoveList = Game::g_BoardManager.GetMoveList(PieceColor::WHITE);
+                        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
+                        {
+                            ImGui::TableNextColumn();
+
+                            std::string regularMoveStr = Game::ConvertVectorToString(
+                                    whiteMoveList.GetRegularMoves((PieceID) pieceID));
+                            std::string attackingMoveStr = Game::ConvertVectorToString(
+                                    whiteMoveList.GetAttackingMoves((PieceID) pieceID));
+
+                            PieceType pieceType = board.ReadPieceType(PieceColor::WHITE, (PieceID) pieceID);
+                            uint8 pieceLocation = board.ReadPieceLocation(PieceColor::WHITE, (PieceID) pieceID);
+                            ImGui::Text("[%s (%s)] Reg:%s Atk:%s", Game::ConvertPieceTypeToString(pieceType).c_str(), Game::ConvertIntToChessNotation(pieceLocation).c_str(), regularMoveStr.c_str(), attackingMoveStr.c_str());
+                        }
+                        ImGui::EndTable();
+                    }
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Black"))
+                {
+                    if (ImGui::BeginTable("BlackPieceMoves", 1, flags, ImVec2(500, 130)))
+                    {
+                        Game::Board& board = Game::g_BoardManager.GetBoard();
+                        Game::MoveList& blackMoveList = Game::g_BoardManager.GetMoveList(PieceColor::BLACK);
+                        for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
+                        {
+                            ImGui::TableNextColumn();
+
+                            std::string regularMoveStr = Game::ConvertVectorToString(
+                                    blackMoveList.GetRegularMoves((PieceID) pieceID));
+                            std::string attackingMoveStr = Game::ConvertVectorToString(
+                                    blackMoveList.GetAttackingMoves((PieceID) pieceID));
+                            PieceType pieceType = board.ReadPieceType(PieceColor::BLACK, (PieceID) pieceID);
+                            uint8 pieceLocation = board.ReadPieceLocation(PieceColor::BLACK, (PieceID) pieceID);
+                            ImGui::Text("[%s (%s)] Reg:%s Atk:%s", Game::ConvertPieceTypeToString(pieceType).c_str(), Game::ConvertIntToChessNotation(pieceLocation).c_str(), regularMoveStr.c_str(), attackingMoveStr.c_str());
+                        }
+                        ImGui::EndTable();
+                    }
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
             }
 
 

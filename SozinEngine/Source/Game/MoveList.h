@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "Board/Board.h"
-#include "Pieces/Pawn.h"
-#include "Pieces/Rook.h"
-#include "Pieces/Knight.h"
-#include "Pieces/Bishop.h"
-#include "Pieces/Queen.h"
-#include "Pieces/King.h"
+#include "Game/Board/Board.h"
+#include "Game/Pieces/Pawn.h"
+#include "Game/Pieces/Rook.h"
+#include "Game/Pieces/Knight.h"
+#include "Game/Pieces/Bishop.h"
+#include "Game/Pieces/Queen.h"
+#include "Game/Pieces/King.h"
 
 namespace Game {
 

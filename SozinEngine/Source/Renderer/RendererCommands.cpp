@@ -8,6 +8,7 @@
 #include "Renderer/Primitives/VertexArrayObject.h"
 #include "Renderer/Platform/OpenGL/OpenGLRendererAPI.h"
 
+
 namespace Renderer {
 
     RendererAPI* RendererCommand::s_RendererAPI = new OpenGLRendererAPI();
@@ -22,8 +23,10 @@ namespace Renderer {
         s_RendererAPI->SetClearColor(r, g, b, a);
     }
 
-    void RendererCommand::DrawElements(VertexArrayObject* vertexArrayObject)
+    void RendererCommand::DrawElements(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
     {
+        shaderProgram.SetUniform("u_Transform", transform);
+        shaderProgram.Bind();
         s_RendererAPI->DrawElements(vertexArrayObject);
     }
 

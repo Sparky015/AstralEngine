@@ -9,7 +9,7 @@
 #include "pch.h"
 
 #include "InternalBoardData.h"
-#include "../PieceInfo.h"
+#include "Game/PieceInfo.h"
 
 namespace Game {
 

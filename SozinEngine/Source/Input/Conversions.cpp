@@ -4,6 +4,8 @@
 
 #include "Conversions.h"
 
+
+
 namespace Game {
 
     PieceType ConvertCharToPieceType(char c)
@@ -147,13 +149,16 @@ namespace Game {
         int row = (pieceLocation / 8);
         int column = (pieceLocation % 8) + 1;
         row = 9 - row; // invert the row
-        return Vec2((row - 1) * 40,(column - 1) * 40);
+        return Vec2((column - 1) * 100 + 50,(row - 2) * 100 + 50);
     }
 
 
     uint8 ConvertCoordinatesToPieceLocation(Vec2 coordinates)
     {
-        return 0;
+        int row = ((800 - coordinates.x) / 100);
+        int column = ((800 - coordinates.y) / 100) + 1;
+        row = 9 - row; // invert the row
+        return ((column - 1) * 8) + (row - 1) - 1;
     }
 
 }

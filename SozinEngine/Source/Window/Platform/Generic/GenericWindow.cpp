@@ -141,6 +141,28 @@ namespace Window {
             Event::EventPublisher<MouseMovedEvent> mouseMovedEvent;
             mouseMovedEvent.PublishEvent(MouseMovedEvent(xpos, height - ypos));
         });
+
+
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+        {
+            switch (action)
+            {
+                case GLFW_PRESS:
+                {
+                    KeyPressedEvent event(Input::TranslateGLFWKeycodesToSozin(button));
+                    Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                    keyPressedEvent.PublishEvent(event);
+                    break;
+                }
+                case GLFW_RELEASE:
+                {
+                    KeyReleasedEvent event(Input::TranslateGLFWKeycodesToSozin(button));
+                    Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                    keyReleasedEvent.PublishEvent(event);
+                    break;
+                }
+            }
+        });
     }
 
 
