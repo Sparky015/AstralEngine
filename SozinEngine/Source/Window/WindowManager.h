@@ -6,7 +6,6 @@
 
 #include "Core/SystemManager.h"
 
-#include "GLFW/glfw3.h"
 #include "Window.h"
 
 

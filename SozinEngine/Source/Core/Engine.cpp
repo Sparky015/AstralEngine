@@ -31,7 +31,7 @@ Engine::Engine() :
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
     ECS::g_ECSManager.Init();
-    Renderer::g_RendererManager.Init();
+//    Renderer::g_RendererManager.Init();
     Game::g_BoardManager.Init();
     m_ApplicationModule->Init();
 
@@ -46,7 +46,7 @@ Engine::~Engine()
 
     m_ApplicationModule->Shutdown();
     Game::g_BoardManager.Shutdown();
-    Renderer::g_RendererManager.Shutdown();
+//    Renderer::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
     IO::g_IOManager.Shutdown();

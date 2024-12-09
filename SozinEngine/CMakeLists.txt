@@ -157,8 +157,8 @@ elseif (WIN32)
     target_compile_definitions(SozinEngine PRIVATE -DPLATFORM_WINDOWS)
 endif ()
 target_compile_definitions(SozinEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
-target_compile_definitions(SozinEngine PRIVATE -DROOT_DIR="${CMAKE_SOURCE_DIR}")
-target_compile_definitions(SozinEngine PRIVATE -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Source/Renderer/Shaders/")
+target_compile_definitions(SozinEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions(SozinEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Source/Renderer/Shaders/")
 
 
 add_subdirectory(Tests)
