@@ -122,31 +122,31 @@ namespace Renderer {
                     if (board.ReadSquareType(location) == PieceType::NONE)
                     {
                         static int numOfMeMoves = 0;
-                        if (lockedOnPieceID == PIECE_2 && lockedOnPieceColor == PieceColor::WHITE)
-                        {
-                            numOfMeMoves++;
-                            ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
-                            switch (numOfMeMoves)
-                            {
-                                case 1: ecs.AddComponent<SpriteComponent>
-                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
-                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_knight.png")));
-                                    break;
-                                    case 2: case 3: ecs.AddComponent<SpriteComponent>
-                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
-                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_bishop.png")));
-                                    break;
-                                case 4: ecs.AddComponent<SpriteComponent>
-                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
-                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_queen.png")));
-                                    break;
-                                case 5: ecs.AddComponent<SpriteComponent>
-                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
-                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_pawn.png")));
-                                        numOfMeMoves = 0;
-                                    break;
-                            }
-                        }
+//                        if (lockedOnPieceID == PIECE_2 && lockedOnPieceColor == PieceColor::WHITE)
+//                        {
+//                            numOfMeMoves++;
+//                            ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+//                            switch (numOfMeMoves)
+//                            {
+//                                case 1: ecs.AddComponent<SpriteComponent>
+//                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+//                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_knight.png")));
+//                                    break;
+//                                    case 2: case 3: ecs.AddComponent<SpriteComponent>
+//                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+//                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_bishop.png")));
+//                                    break;
+//                                case 4: ecs.AddComponent<SpriteComponent>
+//                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+//                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_queen.png")));
+//                                    break;
+//                                case 5: ecs.AddComponent<SpriteComponent>
+//                                            (lockedOnEntity, SpriteComponent(Texture::CreateTexture(
+//                                                    std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_pawn.png")));
+//                                        numOfMeMoves = 0;
+//                                    break;
+//                            }
+//                        }
                         board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
                     }
                     else if (board.ReadSquareColor(location) != lockedOnPieceColor)
@@ -181,7 +181,7 @@ namespace Renderer {
 
         Mat4 chessboardTransform = glm::translate(Mat4(1.0f), Vec3(0.0f)) * glm::scale(Mat4(1.0f), Vec3(2.0f));
 
-        static Texture* chessboardTexture = Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/art_chessboard.png");
+        static Texture* chessboardTexture = Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/chessboard.png");
         chessboardTexture->Bind(0);
 
         Renderer::Submit(*m_ShaderProgram, m_VAO.get(), chessboardTransform);
@@ -339,7 +339,7 @@ namespace Renderer {
         ecs.AddComponent(m_WhitePawn1, TransformComponent(50, 150));
         ecs.AddComponent(m_WhitePawn1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
         ecs.AddComponent(m_WhitePawn2, TransformComponent(150, 150));
-        ecs.AddComponent(m_WhitePawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
         ecs.AddComponent(m_WhitePawn3, TransformComponent(250, 150));
         ecs.AddComponent(m_WhitePawn3, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
         ecs.AddComponent(m_WhitePawn4, TransformComponent(350, 150));

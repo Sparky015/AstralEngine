@@ -23,6 +23,8 @@ add_executable(Chess
         ../SozinEngine/Source/Game/GameManager.h
         ../SozinEngine/Source/Game/GameManager.cpp
         Source/EntryPoint.cpp
+        Source/RenderStuff.cpp
+        Source/RenderStuff.h
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

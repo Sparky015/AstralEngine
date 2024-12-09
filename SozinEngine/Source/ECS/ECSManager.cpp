@@ -20,9 +20,6 @@ namespace ECS {
         TRACE("Initializing ECS Manager!")
         m_UpdateListener.StartListening();
 
-        Entity e = m_ECS.AddEntity();
-        m_ECS.AddComponent(e, TransformComponent(2,2));
-        m_ECS.GetComponent<TransformComponent>(e);
     }
 
     void ECSManager::Shutdown()

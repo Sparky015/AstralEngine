@@ -42,8 +42,6 @@ namespace Renderer {
         Mat4 GetMouseTransform();
         ECS::Entity GetEntity(uint8 location);
 
-        Renderer m_Renderer;
-
         std::unique_ptr<IndexBuffer> m_IndexBuffer;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
