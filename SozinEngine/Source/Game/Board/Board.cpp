@@ -6,7 +6,7 @@
 
 #include "Board.h"
 
-#include "../Conversions.h"
+#include "Input/Conversions.h"
 
 namespace Game {
 

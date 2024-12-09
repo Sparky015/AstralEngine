@@ -11,6 +11,10 @@
 #include "Window/WindowManager.h" // TEMP
 #include "glm/ext/matrix_transform.hpp"
 
+#include "ECS/ECSManager.h" // TEMP
+#include "Input/Conversions.h"
+#include "Game/Board/BoardManager.h"
+
 namespace Renderer {
 
 
@@ -56,7 +60,8 @@ namespace Renderer {
         m_VAO->Bind();
 
         m_VAO->AddVertexBuffer(m_VertexBuffer.get());
-        m_Texture.reset(Texture::CreateTexture(std::string(SHADER_DIR) + "white_bishop.png"));
+
+        m_Texture.reset(Texture::CreateTexture(std::string(SHADER_DIR) + "water.jpeg"));
         m_Texture->Bind();
 
         m_ShaderProgram->SetTextureUniform("u_Texture", 0);
@@ -64,8 +69,10 @@ namespace Renderer {
         m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 6));
         m_VAO->SetIndexBuffer(m_IndexBuffer.get());
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
+        InitEntities();
     }
 
 
@@ -76,36 +83,119 @@ namespace Renderer {
 
         RendererCommand::Clear();
 
-//        unsigned int m_UniformLocation = glGetUniformLocation(m_ShaderProgram.GetID(), "u_Color");
-//        ASSERT(m_UniformLocation != -1, "Uniform not found!");
-//
-//        float g = sin(sin(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
-//        float r = cos(sin(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
-//        float b = cos(cos(static_cast<float>(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::steady_clock::now()).time_since_epoch().count())));
-//        glUniform4f(m_UniformLocation, r, g, b, 1.0f);
+        Mat4 transform;
 
-        Mat4 scale = glm::scale(Mat4(1.0f), Vec3(0.5f));
-        static Vec3 position = {.2, .1 ,.1};
-        Vec3 normalizedPosition;
-        normalizedPosition.x = position.x / Window::g_WindowManager.GetWidth() * 2 - 1;
-        normalizedPosition.y = position.y / Window::g_WindowManager.GetHeight() * 2 - 1;
-        LOG(normalizedPosition.x << " " << normalizedPosition.y);
-        Mat4 transform = glm::translate(Mat4(1.0f), normalizedPosition) * scale;
+        static bool isMouseDown;
+        static uint8 lockedOnPieceID = 255;
+        static PieceColor lockedOnPieceColor;
+        Game::Board& board = Game::g_BoardManager.GetBoard();
+        static ECS::Entity lockedOnEntity;
+        static ECS::Entity none = ECS::g_ECSManager.GetECS().AddEntity();
+        if (InputState::IsKeyDown(Keycode::KEY_LEFT_CLICK))
+        {
+            uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+            if (!isMouseDown)
+            {
+
+                if (board.ReadSquareType(location) != PieceType::NONE)
+                {
+                    lockedOnEntity = GetEntity(location);
+                    lockedOnPieceID = board.ReadSquarePieceID(location);
+                    lockedOnPieceColor = board.ReadSquareColor(location);
+                }
+                else
+                {
+                    lockedOnPieceID = 255;
+                }
+
+            }
+            isMouseDown = true;
+            ECS::g_ECSManager.GetECS().AddComponent<TransformComponent>(lockedOnEntity, TransformComponent(InputState::MousePositionX(), InputState::MousePositionY()));
+        }
+        else
+        {
+            if (isMouseDown)
+            {
+                if (lockedOnPieceID != 255)
+                {
+                    uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+                    if (board.ReadSquareType(location) == PieceType::NONE)
+                    {
+                        board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                    }
+                    else if (board.ReadSquareColor(location) != lockedOnPieceColor)
+                    {
+                        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+
+                        SpriteComponent& pieceSprite = ecs.GetComponent<SpriteComponent>(GetEntity(location));
+                        pieceSprite.isUsed = false;
+                        board.TakePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+
+                    }
+
+                    uint8 pieceLocation = board.ReadPieceLocation(lockedOnPieceColor, (PieceID)lockedOnPieceID);
+//                    LOG((int)pieceLocation);
+                    Vec2 thing = Game::ConvertPieceLocationToCoordinates(pieceLocation);
+                    LOG(thing.x << " " << thing.y);
+//                    LOG(Game::ConvertIntToChessNotation(Game::ConvertCoordinatesToPieceLocation(thing)));
+                    ECS::g_ECSManager.GetECS().AddComponent<TransformComponent>(lockedOnEntity,
+                                                                                TransformComponent(thing.x, thing.y));
+                }
+                isMouseDown = false;
+                lockedOnEntity = none;
+
+            }
+        }
+
+        TransformComponent transformComponent = ECS::g_ECSManager.GetECS().GetComponent<TransformComponent>(m_WhiteKing);
+        transform = CreateTransform(Vec3(transformComponent.x, transformComponent.y, 1));
+
 
         m_ShaderProgram->SetUniform("u_Transform", transform);
 
-        position.x = InputState::MousePositionX();
-        position.y = InputState::MousePositionY();
+        Mat4 chessboardTransform = glm::translate(Mat4(1.0f), Vec3(0.0f)) * glm::scale(Mat4(1.0f), Vec3(2.0f));
 
-        TRACE("Position: " << position.x << " " << position.y);
+        static Texture* chessboardTexture = Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/art_chessboard.png");
+        chessboardTexture->Bind(0);
 
-        if (InputState::IsKeyDown(KEY_R))
-        {
-            position.x = .1;
-            position.y = .1;
-        }
+        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), chessboardTransform);
 
-        Renderer::Submit(m_VAO.get());
+        m_Texture->Bind(0);
+        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
+
+        SubmitEntitySystem(m_BlackPawn1);
+        SubmitEntitySystem(m_BlackPawn2);
+        SubmitEntitySystem(m_BlackPawn3);
+        SubmitEntitySystem(m_BlackPawn4);
+        SubmitEntitySystem(m_BlackPawn5);
+        SubmitEntitySystem(m_BlackPawn6);
+        SubmitEntitySystem(m_BlackPawn7);
+        SubmitEntitySystem(m_BlackPawn8);
+        SubmitEntitySystem(m_BlackRook1);
+        SubmitEntitySystem(m_BlackRook2);
+        SubmitEntitySystem(m_BlackKnight1);
+        SubmitEntitySystem(m_BlackKnight2);
+        SubmitEntitySystem(m_BlackBishop1);
+        SubmitEntitySystem(m_BlackBishop2);
+        SubmitEntitySystem(m_BlackQueen);
+        SubmitEntitySystem(m_BlackKing);
+
+        SubmitEntitySystem(m_WhitePawn1);
+        SubmitEntitySystem(m_WhitePawn2);
+        SubmitEntitySystem(m_WhitePawn3);
+        SubmitEntitySystem(m_WhitePawn4);
+        SubmitEntitySystem(m_WhitePawn5);
+        SubmitEntitySystem(m_WhitePawn6);
+        SubmitEntitySystem(m_WhitePawn7);
+        SubmitEntitySystem(m_WhitePawn8);
+        SubmitEntitySystem(m_WhiteRook1);
+        SubmitEntitySystem(m_WhiteRook2);
+        SubmitEntitySystem(m_WhiteKnight1);
+        SubmitEntitySystem(m_WhiteKnight2);
+        SubmitEntitySystem(m_WhiteBishop1);
+        SubmitEntitySystem(m_WhiteBishop2);
+        SubmitEntitySystem(m_WhiteQueen);
+        SubmitEntitySystem(m_WhiteKing);
 
     }
 
@@ -137,5 +227,237 @@ namespace Renderer {
     {
         TRACE("Destroying Renderer Manager!")
     }
+
+
+    void RendererManager::InitEntities()
+    {
+
+        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+
+        m_BlackPawn1 = ecs.AddEntity();
+        m_BlackPawn2 = ecs.AddEntity();
+        m_BlackPawn3 = ecs.AddEntity();
+        m_BlackPawn4 = ecs.AddEntity();
+        m_BlackPawn5 = ecs.AddEntity();
+        m_BlackPawn6 = ecs.AddEntity();
+        m_BlackPawn7 = ecs.AddEntity();
+        m_BlackPawn8 = ecs.AddEntity();
+        m_BlackRook1 = ecs.AddEntity();
+        m_BlackRook2 = ecs.AddEntity();
+        m_BlackKnight1 = ecs.AddEntity();
+        m_BlackKnight2 = ecs.AddEntity();
+        m_BlackBishop1 = ecs.AddEntity();
+        m_BlackBishop2 = ecs.AddEntity();
+        m_BlackQueen = ecs.AddEntity();
+        m_BlackKing = ecs.AddEntity();
+
+        m_WhitePawn1 = ecs.AddEntity();
+        m_WhitePawn2 = ecs.AddEntity();
+        m_WhitePawn3 = ecs.AddEntity();
+        m_WhitePawn4 = ecs.AddEntity();
+        m_WhitePawn5 = ecs.AddEntity();
+        m_WhitePawn6 = ecs.AddEntity();
+        m_WhitePawn7 = ecs.AddEntity();
+        m_WhitePawn8 = ecs.AddEntity();
+        m_WhiteRook1 = ecs.AddEntity();
+        m_WhiteRook2 = ecs.AddEntity();
+        m_WhiteKnight1 = ecs.AddEntity();
+        m_WhiteKnight2 = ecs.AddEntity();
+        m_WhiteBishop1 = ecs.AddEntity();
+        m_WhiteBishop2 = ecs.AddEntity();
+        m_WhiteQueen = ecs.AddEntity();
+        m_WhiteKing = ecs.AddEntity();
+
+        m_ChessBoard = ecs.AddEntity();
+
+// Add all black pawns
+        ecs.AddComponent(m_BlackPawn1, TransformComponent(50, 650));
+        ecs.AddComponent(m_BlackPawn1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn2, TransformComponent(150, 650));
+        ecs.AddComponent(m_BlackPawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn3, TransformComponent(250, 650));
+        ecs.AddComponent(m_BlackPawn3, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn4, TransformComponent(350, 650));
+        ecs.AddComponent(m_BlackPawn4, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn5, TransformComponent(450, 650));
+        ecs.AddComponent(m_BlackPawn5, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn6, TransformComponent(550, 650));
+        ecs.AddComponent(m_BlackPawn6, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn7, TransformComponent(650, 650));
+        ecs.AddComponent(m_BlackPawn7, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+        ecs.AddComponent(m_BlackPawn8, TransformComponent(750, 650));
+        ecs.AddComponent(m_BlackPawn8, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png")));
+
+        ecs.AddComponent(m_BlackRook1, TransformComponent(50, 750));
+        ecs.AddComponent(m_BlackRook1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_rook.png")));
+        ecs.AddComponent(m_BlackRook2, TransformComponent(750, 750));
+        ecs.AddComponent(m_BlackRook2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_rook.png")));
+
+        ecs.AddComponent(m_BlackKnight1, TransformComponent(150, 750));
+        ecs.AddComponent(m_BlackKnight1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_knight.png")));
+        ecs.AddComponent(m_BlackKnight2, TransformComponent(650, 750));
+        ecs.AddComponent(m_BlackKnight2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_knight.png")));
+
+        ecs.AddComponent(m_BlackBishop1, TransformComponent(250, 750));
+        ecs.AddComponent(m_BlackBishop1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_bishop.png")));
+        ecs.AddComponent(m_BlackBishop2, TransformComponent(550, 750));
+        ecs.AddComponent(m_BlackBishop2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_bishop.png")));
+
+        ecs.AddComponent(m_BlackQueen, TransformComponent(350, 750));
+        ecs.AddComponent(m_BlackQueen, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_queen.png")));
+
+        ecs.AddComponent(m_BlackKing, TransformComponent(450, 750));
+        ecs.AddComponent(m_BlackKing, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_king.png")));
+
+        // Add all white pawns
+        ecs.AddComponent(m_WhitePawn1, TransformComponent(50, 150));
+        ecs.AddComponent(m_WhitePawn1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn2, TransformComponent(150, 150));
+        ecs.AddComponent(m_WhitePawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/me_white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn3, TransformComponent(250, 150));
+        ecs.AddComponent(m_WhitePawn3, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn4, TransformComponent(350, 150));
+        ecs.AddComponent(m_WhitePawn4, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn5, TransformComponent(450, 150));
+        ecs.AddComponent(m_WhitePawn5, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn6, TransformComponent(550, 150));
+        ecs.AddComponent(m_WhitePawn6, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn7, TransformComponent(650, 150));
+        ecs.AddComponent(m_WhitePawn7, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+        ecs.AddComponent(m_WhitePawn8, TransformComponent(750, 150));
+        ecs.AddComponent(m_WhitePawn8, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png")));
+
+        ecs.AddComponent(m_WhiteRook1, TransformComponent(50, 50));
+        ecs.AddComponent(m_WhiteRook1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_rook.png")));
+        ecs.AddComponent(m_WhiteRook2, TransformComponent(750, 50));
+        ecs.AddComponent(m_WhiteRook2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_rook.png")));
+
+        ecs.AddComponent(m_WhiteKnight1, TransformComponent(150, 50));
+        ecs.AddComponent(m_WhiteKnight1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_knight.png")));
+        ecs.AddComponent(m_WhiteKnight2, TransformComponent(650, 50));
+        ecs.AddComponent(m_WhiteKnight2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_knight.png")));
+
+        ecs.AddComponent(m_WhiteBishop1, TransformComponent(250, 50));
+        ecs.AddComponent(m_WhiteBishop1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_bishop.png")));
+        ecs.AddComponent(m_WhiteBishop2, TransformComponent(550, 50));
+        ecs.AddComponent(m_WhiteBishop2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_bishop.png")));
+
+        ecs.AddComponent(m_WhiteQueen, TransformComponent(350, 50));
+        ecs.AddComponent(m_WhiteQueen, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_queen.png")));
+
+        ecs.AddComponent(m_WhiteKing, TransformComponent(450, 50));
+        ecs.AddComponent(m_WhiteKing, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_king.png")));
+    }
+
+
+    void RendererManager::SubmitEntitySystem(ECS::Entity entity)
+    {
+        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+
+        TransformComponent pieceTransform = ecs.GetComponent<TransformComponent>(entity);
+        SpriteComponent pieceSprite = ecs.GetComponent<SpriteComponent>(entity);
+        if (!pieceSprite.isUsed) { return;}
+        Vec3 piecePosition = Vec3(pieceTransform.x, pieceTransform.y, 1.0f);
+        Mat4 transform = CreateTransform(piecePosition);
+        pieceSprite.texture->Bind(0);
+        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
+    }
+
+
+    Mat4 RendererManager::CreateTransform(Vec3 position)
+    {
+        Window::Window& window = Window::g_WindowManager.GetWindow();
+        static const Mat4 pieceScale = glm::scale(Mat4(1.0f), Vec3(0.25f, .25f, .25f));
+
+        Vec3 normalizedPosition = Vec3(1.0f);
+        normalizedPosition.x = position.x / window.GetWidth() * 2 - 1;
+        normalizedPosition.y = position.y / window.GetHeight() * 2 - 1;
+
+        Mat4 transform = glm::translate(Mat4(1.0f), normalizedPosition) * pieceScale;
+        return transform;
+    }
+
+
+    Mat4 RendererManager::GetMouseTransform()
+    {
+        Window::Window& window = Window::g_WindowManager.GetWindow();
+
+        Mat4 pieceScale = glm::scale(Mat4(1.0f), Vec3(0.25f, .25f, .25f));
+        Vec3 position = Vec3(1.0f);
+        position.x = InputState::MousePositionX();
+        position.y = InputState::MousePositionY();
+        position.x = position.x / window.GetWidth() * 2 - 1;
+        position.y = position.y / window.GetHeight() * 2 - 1;
+
+        if (InputState::IsKeyDown(KEY_R))
+        {
+            position.x = .1;
+            position.y = .1;
+        }
+
+        return glm::translate(Mat4(1.0f), position) * pieceScale;
+    }
+
+    ECS::Entity RendererManager::GetEntity(uint8_t location)
+    {
+        Game::Board& board = Game::g_BoardManager.GetBoard();
+        if (board.ReadSquareType(location) == PieceType::NONE)
+        {
+            return m_WhiteKing;
+        }
+
+        PieceColor color = board.ReadSquareColor(location);
+        uint8 pieceID = board.ReadSquarePieceID(location);
+
+        if (color == PieceColor::BLACK)
+        {
+            switch (pieceID)
+            {
+                case 0: return m_BlackPawn1;
+                case 1: return m_BlackPawn2;
+                case 2: return m_BlackPawn3;
+                case 3: return m_BlackPawn4;
+                case 4: return m_BlackPawn5;
+                case 5: return m_BlackPawn6;
+                case 6: return m_BlackPawn7;
+                case 7: return m_BlackPawn8;
+                case 8: return m_BlackRook1;
+                case 9: return m_BlackKnight1;
+                case 10: return m_BlackBishop1;
+                case 11: return m_BlackQueen;
+                case 12: return m_BlackKing;
+                case 13: return m_BlackBishop2;
+                case 14: return m_BlackKnight2;
+                case 15: return m_BlackRook2;
+                default: return m_WhiteKing;
+            }
+        }
+        else
+        {
+            switch (pieceID)
+            {
+                case 0: return m_WhitePawn1;
+                case 1: return m_WhitePawn2;
+                case 2: return m_WhitePawn3;
+                case 3: return m_WhitePawn4;
+                case 4: return m_WhitePawn5;
+                case 5: return m_WhitePawn6;
+                case 6: return m_WhitePawn7;
+                case 7: return m_WhitePawn8;
+                case 8: return m_WhiteRook1;
+                case 9: return m_WhiteKnight1;
+                case 10: return m_WhiteBishop1;
+                case 11: return m_WhiteQueen;
+                case 12: return m_WhiteKing;
+                case 13: return m_WhiteBishop2;
+                case 14: return m_WhiteKnight2;
+                case 15: return m_WhiteRook2;
+                default: return m_WhiteKing;
+            }
+        }
+
+
+    }
+
 
 }

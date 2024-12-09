@@ -8,9 +8,9 @@
 
 namespace Renderer {
 
-    void Renderer::Submit(VertexArrayObject* vertexArrayBuffer)
+    void Renderer::Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform)
     {
-        RendererCommand::DrawElements(vertexArrayBuffer);
+        RendererCommand::DrawElements(shaderProgram, vertexArrayBuffer, transform);
     }
 
 } // Renderer

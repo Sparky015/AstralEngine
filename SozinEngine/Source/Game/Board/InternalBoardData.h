@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../PieceInfo.h"
+#include "Game/PieceInfo.h"
 
 namespace Game {
 
