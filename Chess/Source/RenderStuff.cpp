@@ -2,11 +2,12 @@
 // Created by Andrew Fagan on 12/9/24.
 //
 
+
 #include "RenderStuff.h"
 #include "Window/Window.h"
 #include "Input/InputState.h"
-#include "Game/Board/Board.h"
-#include "Game/Board/BoardManager.h"
+#include "Board/Board.h"
+#include "Board/BoardManager.h"
 #include "Window/WindowManager.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Renderer/RendererCommands.h"
@@ -266,7 +267,8 @@ namespace Renderer {
 
 
     void RenderStuff::Update()
-    {RendererCommand::Clear();
+    {
+        RendererCommand::Clear();
 
         Mat4 transform;
 

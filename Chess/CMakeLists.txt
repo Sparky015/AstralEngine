@@ -1,27 +1,27 @@
 
 add_executable(Chess
-        Source/Game/Board/Board.cpp
-        Source/Game/Board/Board.h
-        Source/Game/PieceInfo.h
-        Source/Game/PieceInfo.cpp
-        Source/Game/Board/BoardManager.cpp
-        Source/Game/Board/BoardManager.h
-        Source/Game/Board/InternalBoardData.cpp
-        Source/Game/Pieces/Bishop.h
-        Source/Game/Pieces/Bishop.cpp
-        Source/Game/Pieces/King.h
-        Source/Game/Pieces/King.cpp
-        Source/Game/Pieces/Knight.cpp
-        Source/Game/Pieces/Pawn.cpp
-        Source/Game/Pieces/Queen.cpp
-        Source/Game/Pieces/Rook.cpp
-        Source/Game/MoveList.cpp
+        Source/Board/Board.cpp
+        Source/Board/Board.h
+        Source/PieceInfo.h
+        Source/PieceInfo.cpp
+        Source/Board/BoardManager.cpp
+        Source/Board/BoardManager.h
+        Source/Board/InternalBoardData.cpp
+        Source/Pieces/Bishop.h
+        Source/Pieces/Bishop.cpp
+        Source/Pieces/King.h
+        Source/Pieces/King.cpp
+        Source/Pieces/Knight.cpp
+        Source/Pieces/Pawn.cpp
+        Source/Pieces/Queen.cpp
+        Source/Pieces/Rook.cpp
+        Source/MoveList.cpp
         Source/Conversions.h
         Source/Conversions.cpp
-        Source/Game/MoveGenerationHelpers.cpp
-        Source/Game/MoveGenerationHelpers.h
-        Source/Game/GameManager.h
-        Source/Game/GameManager.cpp
+        Source/MoveGenerationHelpers.cpp
+        Source/MoveGenerationHelpers.h
+        Source/GameManager.h
+        Source/GameManager.cpp
         Source/EntryPoint.cpp
         Source/RenderStuff.cpp
         Source/RenderStuff.h

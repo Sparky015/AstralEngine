@@ -1,22 +1,33 @@
 //
-// Created by Andrew Fagan on 12/9/24.
+// Created by Andrew Fagan on 11/28/24.
 //
 
 #pragma once
 
+#include "Core/SystemManager.h"
 #include "Sozin.h"
 #include "ECS/ECSManager.h"
 #include "Renderer/Renderer.h"
 
-namespace Renderer {
+namespace Game {
 
-    class RenderStuff {
+    using namespace Renderer;
+
+    class GameManager : public SystemManager
+    {
     public:
-        void Init();
-        void Update();
-        void Shutdown();
+        static GameManager& Get();
+        void Init() override;
+        void Update() override;
+        void Shutdown() override;
 
+        GameManager(const GameManager&) = delete;
+        GameManager& operator=(const GameManager&) = delete;
+        GameManager(GameManager&&) = delete;
+        GameManager& operator=(GameManager&&) = delete;
     private:
+        GameManager();
+        ~GameManager() override;
 
         void InitEntities();
         Mat4 GetMouseTransform(Vec3 scale);
@@ -65,5 +76,7 @@ namespace Renderer {
 
         ECS::Entity m_ChessBoard;
     };
+
+    extern GameManager& g_GameManager;
 
 }
