@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Renderer {
+namespace Graphics {
 
     class IndexBuffer
     {

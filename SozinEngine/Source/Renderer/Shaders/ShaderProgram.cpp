@@ -8,7 +8,7 @@
 #include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     ShaderProgram* ShaderProgram::CreateShaderProgram(const ShaderSource &vertexShader,
                                                       const ShaderSource &fragmentShader)

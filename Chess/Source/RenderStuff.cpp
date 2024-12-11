@@ -15,7 +15,7 @@
 
 #include "ECS/Systems/RenderingSystem.h"
 
-namespace Renderer {
+namespace Graphics {
 
     void RenderStuff::InitEntities()
     {

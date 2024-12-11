@@ -44,7 +44,7 @@ namespace Window {
             ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(Renderer::RendererContext::CreateRendererContext());
+        m_RenderContext.reset(Graphics::RendererContext::CreateRendererContext());
         m_RenderContext->Init();
 
         SetGLFWCallbacks();
@@ -90,7 +90,7 @@ namespace Window {
     }
 
 
-    Renderer::RendererContext& GenericWindow::GetRendererContext()
+    Graphics::RendererContext& GenericWindow::GetRendererContext()
     {
         ASSERT(m_RenderContext, "Renderer context has not been created!");
         return *m_RenderContext;

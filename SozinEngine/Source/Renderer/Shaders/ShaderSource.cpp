@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace Renderer{
+namespace Graphics {
 
 
     ShaderSource::ShaderSource() :

@@ -9,7 +9,7 @@
 #include "Renderer/Platform/OpenGL/OpenGLRendererAPI.h"
 
 
-namespace Renderer {
+namespace Graphics {
 
     RendererAPI* RendererCommand::s_RendererAPI = new OpenGLRendererAPI();
 

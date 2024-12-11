@@ -16,7 +16,8 @@
 #include "ECS/Entity.h"
 
 
-namespace Renderer {
+namespace Graphics {
+
     class RendererManager : public SystemManager
     {
     public:

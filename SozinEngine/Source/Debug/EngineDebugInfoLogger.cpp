@@ -56,7 +56,7 @@ namespace Debug {
         /** Outputs the libraries used depending on the platform. */
         #ifdef PLATFORM_MACOS
             Window::Window& window = Window::g_WindowManager.GetWindow();
-            Renderer::RendererContext& rendererContext = window.GetRendererContext();
+            Graphics::RendererContext& rendererContext = window.GetRendererContext();
 
             LOG("Window: " << window.GetVersion());
             LOG("Rendering API: " << rendererContext.GetRenderingAPI());

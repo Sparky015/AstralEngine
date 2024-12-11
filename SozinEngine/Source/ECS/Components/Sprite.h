@@ -13,8 +13,8 @@
 struct SpriteComponent
 {
     SpriteComponent() : texture(nullptr), isUsed(false), vertexArrayObject(nullptr) {}
-    explicit SpriteComponent(Renderer::Texture* texture, Renderer::VertexArrayObject* vertexArrayObject) : texture(texture), vertexArrayObject(vertexArrayObject), isUsed(true) {}
-    Renderer::Texture* texture;
-    Renderer::VertexArrayObject* vertexArrayObject;
+    explicit SpriteComponent(Graphics::Texture* texture, Graphics::VertexArrayObject* vertexArrayObject) : texture(texture), vertexArrayObject(vertexArrayObject), isUsed(true) {}
+    Graphics::Texture* texture;
+    Graphics::VertexArrayObject* vertexArrayObject;
     bool isUsed;
 };

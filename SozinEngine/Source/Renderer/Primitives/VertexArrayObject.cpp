@@ -7,7 +7,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     VertexArrayObject* VertexArrayObject::CreateVertexArrayObject()
     {

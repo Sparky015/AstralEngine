@@ -6,7 +6,7 @@
 
 #include "BufferLayout.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class VertexBuffer
     {

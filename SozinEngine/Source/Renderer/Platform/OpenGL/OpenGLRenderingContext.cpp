@@ -6,7 +6,7 @@
 
 #include <glad/glad.h>
 
-namespace Renderer{
+namespace Graphics {
 
     OpenGLRenderingContext::OpenGLRenderingContext(GLFWwindow* window) :
         m_Window(window)

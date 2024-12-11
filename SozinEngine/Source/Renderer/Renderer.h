@@ -9,7 +9,7 @@
 #include "Renderer/Primitives/VertexArrayObject.h"
 #include "Renderer/Shaders/ShaderProgram.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class Renderer
     {

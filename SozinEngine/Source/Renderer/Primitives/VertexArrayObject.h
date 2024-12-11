@@ -7,7 +7,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class VertexArrayObject
     {

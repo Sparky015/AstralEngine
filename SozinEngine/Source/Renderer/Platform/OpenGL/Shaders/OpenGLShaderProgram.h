@@ -8,7 +8,7 @@
 
 #include "Renderer/Shaders/ShaderProgram.h"
 
-namespace Renderer {
+namespace Graphics {
 
     /** Takes two shaders and creates a program from them. */
 class OpenGLShaderProgram : public ShaderProgram

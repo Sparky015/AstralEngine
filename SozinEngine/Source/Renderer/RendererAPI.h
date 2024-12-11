@@ -8,7 +8,7 @@
 
 #include "Renderer/Primitives/VertexArrayObject.h"
 
-namespace Renderer {
+namespace Graphics {
 
     enum class API : uint8 {
         OpenGL = 0, Vulkan, DirectX12, Metal

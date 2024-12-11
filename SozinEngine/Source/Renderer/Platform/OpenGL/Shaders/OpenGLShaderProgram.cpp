@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-namespace Renderer {
+namespace Graphics {
 
     OpenGLShaderProgram::OpenGLShaderProgram() : m_ShaderProgramID(0) {}
 

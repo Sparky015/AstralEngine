@@ -8,7 +8,7 @@
 
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class OpenGLRendererAPI : public RendererAPI
     {

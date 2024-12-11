@@ -7,7 +7,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     Texture* Texture::CreateTexture(const std::string& filePath)
     {

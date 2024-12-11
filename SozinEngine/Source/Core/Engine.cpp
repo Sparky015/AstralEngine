@@ -30,7 +30,7 @@ Engine::Engine() :
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
     ECS::g_ECSManager.Init();
-    Renderer::g_RendererManager.Init();
+    Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     m_WindowClosedListener.StartListening();
@@ -43,7 +43,7 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
-    Renderer::g_RendererManager.Shutdown();
+    Graphics::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
     IO::g_IOManager.Shutdown();

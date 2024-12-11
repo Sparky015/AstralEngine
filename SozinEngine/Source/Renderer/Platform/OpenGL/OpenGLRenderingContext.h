@@ -7,7 +7,7 @@
 #include "Renderer/RendererContext.h"
 #include <GLFW/glfw3.h>
 
-namespace Renderer{
+namespace Graphics {
 
     /*
     * This sets up the rendering context for when OpenGL is used. It defines functions that are overridden from

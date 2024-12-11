@@ -11,7 +11,7 @@
 
 namespace Game {
 
-    using namespace Renderer;
+    using namespace Graphics;
 
     class GameManager : public SystemManager
     {

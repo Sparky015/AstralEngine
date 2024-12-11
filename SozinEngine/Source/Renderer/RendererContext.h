@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Renderer {
+namespace Graphics {
 
     /**
      * RendererContext is an interface to which each Rendering API will override and provide their own way to create

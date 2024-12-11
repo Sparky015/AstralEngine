@@ -7,21 +7,21 @@
 
 #include "glad/glad.h"
 
-namespace Renderer {
+namespace Graphics {
 
-    void Renderer::OpenGLRendererAPI::Clear()
+    void Graphics::OpenGLRendererAPI::Clear()
     {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
 
-    void Renderer::OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a)
+    void Graphics::OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a)
     {
         glClearColor(r, g, b, a);
     }
 
 
-    void Renderer::OpenGLRendererAPI::DrawElements(Renderer::VertexArrayObject* vertexArrayObject)
+    void Graphics::OpenGLRendererAPI::DrawElements(Graphics::VertexArrayObject* vertexArrayObject)
     {
         vertexArrayObject->Bind();
         glDrawElements(GL_TRIANGLES, vertexArrayObject->GetElementCount(), GL_UNSIGNED_INT, nullptr);

@@ -6,7 +6,7 @@
 
 #include "Renderer/RendererCommands.h"
 
-namespace Renderer {
+namespace Graphics {
 
     void Renderer::Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform)
     {

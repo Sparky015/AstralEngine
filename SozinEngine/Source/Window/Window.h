@@ -28,14 +28,14 @@ namespace Window {
         virtual int GetHeight() = 0;
 
         virtual void* GetNativeWindow() = 0;
-        virtual Renderer::RendererContext& GetRendererContext() = 0;
+        virtual Graphics::RendererContext& GetRendererContext() = 0;
         virtual std::string GetVersion() = 0;
 
         static Window* CreateWindow();
 
     protected:
         static WindowAPI s_RendererAPI;
-        std::unique_ptr<Renderer::RendererContext> m_RenderContext;
+        std::unique_ptr<Graphics::RendererContext> m_RenderContext;
     };
 
 } // Window

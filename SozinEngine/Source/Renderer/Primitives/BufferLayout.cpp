@@ -4,7 +4,7 @@
 
 #include "BufferLayout.h"
 
-namespace Renderer {
+namespace Graphics {
 
     BufferLayout::BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes) : m_Attributes(bufferAttributes) {}
 

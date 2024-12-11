@@ -9,7 +9,7 @@
 #include "Input/InputState.h"
 #include "Core/Events/EventListener.h"
 #include "RenderStuff.h"
-#include "Game/Board/BoardManager.h"
+#include "Board/BoardManager.h"
 
 class Chess : public ApplicationModule
 {
@@ -40,7 +40,7 @@ public:
     }
 
     Event::EventListener<KeyPressedEvent> keyPressListener = Event::EventListener<KeyPressedEvent>{[](KeyPressedEvent e){LOG("Key Pressed: " << InputState::GetKeyName(e.keycode))}};
-    Renderer::RenderStuff m_RenderStuff;
+    Graphics::RenderStuff m_RenderStuff;
 };
 
 IMPLEMENT_APPLICATION_MODULE(Chess);

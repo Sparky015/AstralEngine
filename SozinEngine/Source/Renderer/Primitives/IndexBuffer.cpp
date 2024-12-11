@@ -7,7 +7,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {

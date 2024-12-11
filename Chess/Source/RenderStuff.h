@@ -8,7 +8,7 @@
 #include "ECS/ECSManager.h"
 #include "Renderer/Renderer.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class RenderStuff {
     public:

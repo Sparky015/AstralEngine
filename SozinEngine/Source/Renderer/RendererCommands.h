@@ -9,7 +9,7 @@
 #include "RendererAPI.h"
 #include "Renderer/Shaders/ShaderProgram.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class RendererCommand
     {

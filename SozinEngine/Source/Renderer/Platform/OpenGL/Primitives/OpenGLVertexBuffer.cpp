@@ -10,7 +10,7 @@
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Renderer {
+namespace Graphics {
 
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
     {

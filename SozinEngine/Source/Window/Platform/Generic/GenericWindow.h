@@ -28,7 +28,7 @@ namespace Window {
         int GetWidth() override;
         int GetHeight() override;
 
-        Renderer::RendererContext & GetRendererContext() override;
+        Graphics::RendererContext & GetRendererContext() override;
         void* GetNativeWindow() override;
 
     private:

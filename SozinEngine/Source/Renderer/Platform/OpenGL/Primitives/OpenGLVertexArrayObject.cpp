@@ -8,7 +8,7 @@
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Renderer {
+namespace Graphics {
 
 
     OpenGLVertexArrayObject::OpenGLVertexArrayObject() : m_AttributeCounter(0), m_StrideSize(0)

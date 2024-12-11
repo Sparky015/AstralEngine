@@ -14,7 +14,7 @@ namespace Sozin {
     {
     public:
 
-        static void RenderEntities(Renderer::ShaderProgram* shader);
+        static void RenderEntities(Graphics::ShaderProgram* shader);
 
     private:
 

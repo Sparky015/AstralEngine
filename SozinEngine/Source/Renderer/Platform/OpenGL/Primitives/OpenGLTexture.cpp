@@ -9,7 +9,7 @@
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Renderer {
+namespace Graphics {
 
     OpenGLTexture::OpenGLTexture(const std::string& filePath) : m_ImageBuffer(nullptr), m_Height(0), m_Width(0), m_BPP(0), m_RendererID(0)
     {

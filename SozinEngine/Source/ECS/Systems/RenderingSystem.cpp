@@ -14,7 +14,7 @@
 
 namespace Sozin {
 
-    void RenderingSystem::RenderEntities(Renderer::ShaderProgram* shader)
+    void RenderingSystem::RenderEntities(Graphics::ShaderProgram* shader)
     {
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
@@ -33,7 +33,7 @@ namespace Sozin {
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
             spriteComponent.texture->Bind(0);
-            Renderer::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
+            Graphics::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
         }
     }
 

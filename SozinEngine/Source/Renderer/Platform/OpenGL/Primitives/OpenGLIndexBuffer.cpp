@@ -7,7 +7,7 @@
 #include "glad/glad.h"
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 
-namespace Renderer {
+namespace Graphics {
 
     OpenGLIndexBuffer::OpenGLIndexBuffer(uint32* indices, uint32 count) : m_Count(count), m_RendererID(0)
     {

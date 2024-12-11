@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Renderer {
+namespace Graphics {
 
 #define GLCheckError() while (GLenum error = glGetError()) { WARN("[OpenGL] Error Code: " << error); }
 

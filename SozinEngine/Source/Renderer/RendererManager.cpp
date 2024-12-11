@@ -4,8 +4,7 @@
 
 #include "RendererManager.h"
 
-namespace Renderer {
-
+namespace Graphics {
 
     RendererManager& g_RendererManager = RendererManager::Get();
 

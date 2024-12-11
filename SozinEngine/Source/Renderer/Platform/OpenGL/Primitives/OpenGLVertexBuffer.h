@@ -6,7 +6,7 @@
 
 #include "Renderer/Primitives/VertexBuffer.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class OpenGLVertexBuffer : public VertexBuffer
     {

@@ -6,7 +6,7 @@
 
 #include "Renderer/Primitives/IndexBuffer.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class OpenGLIndexBuffer : public IndexBuffer
     {

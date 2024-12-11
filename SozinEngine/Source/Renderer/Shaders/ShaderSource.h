@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Renderer {
+namespace Graphics {
 
     enum ShaderType : uint8
     {

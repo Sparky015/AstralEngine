@@ -7,7 +7,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
     {

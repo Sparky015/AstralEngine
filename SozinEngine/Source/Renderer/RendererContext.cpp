@@ -9,7 +9,7 @@
 #include "Platform/OpenGL/OpenGLRenderingContext.h"
 #include "RendererAPI.h"
 
-namespace Renderer {
+namespace Graphics {
 
     RendererContext* RendererContext::CreateRendererContext()
     {

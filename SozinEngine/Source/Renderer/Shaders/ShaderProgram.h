@@ -8,7 +8,7 @@
 
 #include "ShaderSource.h"
 
-namespace Renderer {
+namespace Graphics {
 
     class ShaderProgram
     {
