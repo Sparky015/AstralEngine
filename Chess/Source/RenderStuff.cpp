@@ -341,14 +341,6 @@ namespace Renderer {
             }
         }
 
-
-//        Mat4 chessboardTransform = glm::translate(Mat4(1.0f), Vec3(0.0f)) * glm::scale(Mat4(1.0f), Vec3(2.0f));
-//
-//        static Texture* chessboardTexture = Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/chessboard.png");
-//        chessboardTexture->Bind(0);
-//
-//        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), chessboardTransform);
-
         m_Texture->Bind(0);
         Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
 
