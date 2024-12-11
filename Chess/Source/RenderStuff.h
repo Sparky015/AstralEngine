@@ -19,9 +19,7 @@ namespace Renderer {
     private:
 
         void InitEntities();
-        void SubmitEntitySystem(ECS::Entity entity);
-        Mat4 CreateTransform(Vec3 position);
-        Mat4 GetMouseTransform();
+        Mat4 GetMouseTransform(Vec3 scale);
         ECS::Entity GetEntity(uint8 location);
 
         std::unique_ptr<IndexBuffer> m_IndexBuffer;

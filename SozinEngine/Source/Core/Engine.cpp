@@ -10,7 +10,6 @@
 #include "Debug/DebugManager.h"
 #include "ECS/ECSManager.h"
 #include "Renderer/RendererManager.h"
-#include "Game/Board/BoardManager.h"
 
 #include "ApplicationModule.h"
 
@@ -31,8 +30,7 @@ Engine::Engine() :
     IO::g_IOManager.Init();
     Debug::g_DebugManager.Init();
     ECS::g_ECSManager.Init();
-//    Renderer::g_RendererManager.Init();
-    Game::g_BoardManager.Init();
+    Renderer::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     m_WindowClosedListener.StartListening();
@@ -45,8 +43,7 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
-    Game::g_BoardManager.Shutdown();
-//    Renderer::g_RendererManager.Shutdown();
+    Renderer::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     Debug::g_DebugManager.Shutdown();
     IO::g_IOManager.Shutdown();

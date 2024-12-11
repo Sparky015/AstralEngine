@@ -5,23 +5,24 @@
 #pragma once
 
 #include "pch.h"
-#include "Game/PieceInfo.h"
+#include "../PieceInfo.h"
 #include "ChessPiece.h"
 
 namespace Game {
 
-    class Pawn : public ChessPiece
+    class Queen : public ChessPiece
     {
     public:
-        Pawn();
+        Queen();
 
         void GenerateMoves(const Board& board, const uint8 pieceLocation, const PieceColor pieceColor) override;
-        PieceType GetType() override { return PieceType::PAWN; }
+        PieceType GetType() override { return PieceType::QUEEN; }
 
         [[nodiscard]] inline const std::vector<uint8>& GetRegularMoves() const override { return m_RegularMoves; }
         [[nodiscard]] inline const std::vector<uint8>& GetAttackingMoves() const override { return m_AttackingMoves; }
 
     private:
+
         std::vector<uint8> m_RegularMoves;
         std::vector<uint8> m_AttackingMoves;
     };

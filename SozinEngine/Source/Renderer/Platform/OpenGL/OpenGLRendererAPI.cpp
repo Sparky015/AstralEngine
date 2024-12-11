@@ -27,4 +27,19 @@ namespace Renderer {
         glDrawElements(GL_TRIANGLES, vertexArrayObject->GetElementCount(), GL_UNSIGNED_INT, nullptr);
     }
 
+
+    void OpenGLRendererAPI::SetBlending(bool enable)
+    {
+        if (enable)
+        {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
+        else
+        {
+            glDisable(GL_BLEND);
+        }
+
+    }
+
 }

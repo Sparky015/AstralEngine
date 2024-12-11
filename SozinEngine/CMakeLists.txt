@@ -107,6 +107,8 @@ add_library(SozinEngine
         Source/Input/Keycodes.h
         Source/Input/KeycodeConversions.h
         Source/Input/KeycodeConversions.cpp
+        Source/ECS/Systems/RenderingSystem.cpp
+        Source/ECS/Systems/RenderingSystem.h
 )
 
 

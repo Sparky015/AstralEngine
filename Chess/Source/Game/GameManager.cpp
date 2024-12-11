@@ -5,7 +5,7 @@
 #include "GameManager.h"
 
 #include "ECS/ECSManager.h"
-#include "Game/Board/BoardManager.h"
+#include "Board/BoardManager.h"
 
 namespace Game {
 

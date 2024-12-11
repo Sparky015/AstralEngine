@@ -5,7 +5,7 @@
 #pragma once
 
 #include "pch.h"
-#include "Game/PieceInfo.h"
+#include "../PieceInfo.h"
 #include "ChessPiece.h"
 
 namespace Game {

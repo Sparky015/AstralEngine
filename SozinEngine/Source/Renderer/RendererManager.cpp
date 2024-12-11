@@ -3,17 +3,6 @@
 //
 
 #include "RendererManager.h"
-#include "RendererCommands.h"
-#include "Shaders/ShaderSource.h"
-
-#include "glad/glad.h" //TEMP
-#include "Input/InputState.h" // TEMP
-#include "Window/WindowManager.h" // TEMP
-#include "glm/ext/matrix_transform.hpp"
-
-#include "ECS/ECSManager.h" // TEMP
-#include "Input/Conversions.h"
-#include "Game/Board/BoardManager.h"
 
 namespace Renderer {
 
@@ -49,10 +38,6 @@ namespace Renderer {
 
         TRACE("Shutting down Renderer Manager!")
         m_UpdateListener.StopListening();
-
-        // TODO: Fix this situation where member variable destructors are actually called.
-
-//        RendererManager::~RendererManager();
     }
 
 

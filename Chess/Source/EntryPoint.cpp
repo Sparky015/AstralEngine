@@ -9,6 +9,7 @@
 #include "Input/InputState.h"
 #include "Core/Events/EventListener.h"
 #include "RenderStuff.h"
+#include "Game/Board/BoardManager.h"
 
 class Chess : public ApplicationModule
 {
@@ -17,6 +18,7 @@ public:
     void Init() override
     {
         TRACE("Initializing Application")
+        Game::g_BoardManager.Init();
         keyPressListener.StartListening();
         m_RenderStuff.Init();
     }
@@ -28,12 +30,12 @@ public:
         {
             LOG("TEST SUCCESSFUL!")
         }
-
     }
 
     void Shutdown() override
     {
         TRACE("Shutting down Application")
+        Game::g_BoardManager.Shutdown();
         m_RenderStuff.Shutdown();
     }
 

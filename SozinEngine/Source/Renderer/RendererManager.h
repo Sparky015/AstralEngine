@@ -14,7 +14,6 @@
 #include "Renderer/Primitives/Texture.h"
 
 #include "ECS/Entity.h"
-#include "Game/PieceInfo.h"
 
 
 namespace Renderer {

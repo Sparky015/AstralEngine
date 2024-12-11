@@ -41,6 +41,15 @@ namespace ECS {
             std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
         };
 
+        template<class ComponentType>
+        using ComponentDisplay = std::array<ComponentType, MAX_ENTITIES>;
+
+        template<class ComponentType>
+        const std::array<ComponentType, MAX_ENTITIES>& GetComponentDisplay()
+        {
+            return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components);
+        }
+
     private:
         EntityPoolSize FindNextInactiveIndex();
 

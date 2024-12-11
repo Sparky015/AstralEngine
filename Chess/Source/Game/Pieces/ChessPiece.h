@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "Game/PieceInfo.h"
-#include "Game/Board/Board.h"
-#include "Game/MoveGenerationHelpers.h"
+#include "../PieceInfo.h"
+#include "../Board/Board.h"
+#include "../MoveGenerationHelpers.h"
 
 namespace Game {
 

@@ -23,6 +23,7 @@ namespace Renderer {
         virtual void Clear() = 0;
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         virtual void DrawElements(VertexArrayObject* vertexArrayObject) = 0;
+        virtual void SetBlending(bool enable) = 0 ;
 
     private:
         static API s_RendererAPI;

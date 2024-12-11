@@ -15,7 +15,7 @@
 #include "pch.h"
 
 #include "InternalBoardData.h"
-#include "Game/PieceInfo.h"
+#include "../PieceInfo.h"
 
 namespace Game {
 
