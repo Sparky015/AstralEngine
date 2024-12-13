@@ -8,8 +8,8 @@
 
 #include "Input/InputState.h"
 #include "Core/Events/EventListener.h"
-#include "RenderStuff.h"
 #include "Board/BoardManager.h"
+#include "GameManager.h"
 
 class Chess : public ApplicationModule
 {
@@ -17,15 +17,15 @@ public:
 
     void Init() override
     {
+
         TRACE("Initializing Application")
         Game::g_BoardManager.Init();
+        Game::g_GameManager.Init();
         keyPressListener.StartListening();
-        m_RenderStuff.Init();
     }
 
     void Update() override
     {
-        m_RenderStuff.Update();
         if (InputState::IsKeyDown(Keycode::KEY_F))
         {
             LOG("TEST SUCCESSFUL!")
@@ -36,11 +36,11 @@ public:
     {
         TRACE("Shutting down Application")
         Game::g_BoardManager.Shutdown();
-        m_RenderStuff.Shutdown();
+        Game::g_GameManager.Shutdown();
     }
 
     Event::EventListener<KeyPressedEvent> keyPressListener = Event::EventListener<KeyPressedEvent>{[](KeyPressedEvent e){LOG("Key Pressed: " << InputState::GetKeyName(e.keycode))}};
-    Graphics::RenderStuff m_RenderStuff;
+
 };
 
 IMPLEMENT_APPLICATION_MODULE(Chess);

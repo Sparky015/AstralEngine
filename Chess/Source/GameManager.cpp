@@ -15,6 +15,7 @@
 #include "Conversions.h"
 
 #include "ECS/Systems/RenderingSystem.h"
+#include "EntityManager.h"
 
 namespace Game {
 
@@ -67,7 +68,7 @@ namespace Game {
         m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 6));
         m_VAO->SetIndexBuffer(m_IndexBuffer.get());
 
-        InitEntities();
+        EntityManager::InitEntities(m_VAO.get());
 
         RendererCommand::SetBlending(true);
     }
@@ -92,7 +93,7 @@ namespace Game {
             {
                 if (board.ReadSquareType(location) != PieceType::NONE)
                 {
-                    lockedOnEntity = GetEntity(location);
+                    lockedOnEntity = EntityManager::GetEntity(location);
                     lockedOnPieceID = board.ReadSquarePieceID(location);
                     lockedOnPieceColor = board.ReadSquareColor(location);
                 }
@@ -103,14 +104,13 @@ namespace Game {
             }
             isMouseDown = true;
             ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
-            if (lockedOnEntity.GetID() != m_ChessBoard.GetID()) // this makes sure the chessboard doesn't move
-            {
-                TransformComponent &transformComponent = ecs.GetComponent<TransformComponent>(lockedOnEntity);
-                transformComponent.x = InputState::MousePositionX();
-                transformComponent.y = InputState::MousePositionY();
-                ecs.AddComponent<TransformComponent>(lockedOnEntity,
-                                                     TransformComponent(transformComponent));
-            }
+
+            TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(lockedOnEntity);
+            transformComponent.x = InputState::MousePositionX();
+            transformComponent.y = InputState::MousePositionY();
+            ecs.AddComponent<TransformComponent>(lockedOnEntity,
+                                                 TransformComponent(transformComponent));
+
         }
         else
         {
@@ -127,7 +127,7 @@ namespace Game {
                     {
                         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
-                        SpriteComponent& pieceSprite = ecs.GetComponent<SpriteComponent>(GetEntity(location));
+                        SpriteComponent& pieceSprite = ecs.GetComponent<SpriteComponent>(EntityManager::GetEntity(location));
                         pieceSprite.isUsed = false;
                         board.TakePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
 
@@ -180,212 +180,5 @@ namespace Game {
     {
         TRACE("Destroying Game Manager");
     }
-
-
-    ECS::Entity GameManager::GetEntity(uint8_t location)
-    {
-        Game::Board& board = Game::g_BoardManager.GetBoard();
-        if (board.ReadSquareType(location) == PieceType::NONE)
-        {
-            return m_WhiteKing;
-        }
-
-        PieceColor color = board.ReadSquareColor(location);
-        uint8 pieceID = board.ReadSquarePieceID(location);
-
-        if (color == PieceColor::BLACK)
-        {
-            switch (pieceID)
-            {
-                case 0: return m_BlackPawn1;
-                case 1: return m_BlackPawn2;
-                case 2: return m_BlackPawn3;
-                case 3: return m_BlackPawn4;
-                case 4: return m_BlackPawn5;
-                case 5: return m_BlackPawn6;
-                case 6: return m_BlackPawn7;
-                case 7: return m_BlackPawn8;
-                case 8: return m_BlackRook1;
-                case 9: return m_BlackKnight1;
-                case 10: return m_BlackBishop1;
-                case 11: return m_BlackQueen;
-                case 12: return m_BlackKing;
-                case 13: return m_BlackBishop2;
-                case 14: return m_BlackKnight2;
-                case 15: return m_BlackRook2;
-                default: return m_WhiteKing;
-            }
-        }
-        else
-        {
-            switch (pieceID)
-            {
-                case 0: return m_WhitePawn1;
-                case 1: return m_WhitePawn2;
-                case 2: return m_WhitePawn3;
-                case 3: return m_WhitePawn4;
-                case 4: return m_WhitePawn5;
-                case 5: return m_WhitePawn6;
-                case 6: return m_WhitePawn7;
-                case 7: return m_WhitePawn8;
-                case 8: return m_WhiteRook1;
-                case 9: return m_WhiteKnight1;
-                case 10: return m_WhiteBishop1;
-                case 11: return m_WhiteQueen;
-                case 12: return m_WhiteKing;
-                case 13: return m_WhiteBishop2;
-                case 14: return m_WhiteKnight2;
-                case 15: return m_WhiteRook2;
-                default: return m_WhiteKing;
-            }
-        }
-    }
-
-
-    Mat4 GameManager::GetMouseTransform(Vec3 scale)
-    {
-        Window::Window& window = Window::g_WindowManager.GetWindow();
-
-        Mat4 pieceScale = glm::scale(Mat4(1.0f), scale);
-        Vec3 position = Vec3(1.0f);
-
-        position.x = InputState::MousePositionX() / window.GetWidth() * 2 - 1;
-        position.y = InputState::MousePositionY() / window.GetHeight() * 2 - 1;
-
-        if (InputState::IsKeyDown(KEY_R))
-        {
-            position.x = .1;
-            position.y = .1;
-        }
-
-        return glm::translate(Mat4(1.0f), position) * pieceScale;
-    }
-
-
-    void GameManager::InitEntities()
-    {
-        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
-
-        m_ChessBoard = ecs.AddEntity();
-
-        m_BlackPawn1 = ecs.AddEntity();
-        m_BlackPawn2 = ecs.AddEntity();
-        m_BlackPawn3 = ecs.AddEntity();
-        m_BlackPawn4 = ecs.AddEntity();
-        m_BlackPawn5 = ecs.AddEntity();
-        m_BlackPawn6 = ecs.AddEntity();
-        m_BlackPawn7 = ecs.AddEntity();
-        m_BlackPawn8 = ecs.AddEntity();
-        m_BlackRook1 = ecs.AddEntity();
-        m_BlackRook2 = ecs.AddEntity();
-        m_BlackKnight1 = ecs.AddEntity();
-        m_BlackKnight2 = ecs.AddEntity();
-        m_BlackBishop1 = ecs.AddEntity();
-        m_BlackBishop2 = ecs.AddEntity();
-        m_BlackQueen = ecs.AddEntity();
-        m_BlackKing = ecs.AddEntity();
-
-        m_WhitePawn1 = ecs.AddEntity();
-        m_WhitePawn2 = ecs.AddEntity();
-        m_WhitePawn3 = ecs.AddEntity();
-        m_WhitePawn4 = ecs.AddEntity();
-        m_WhitePawn5 = ecs.AddEntity();
-        m_WhitePawn6 = ecs.AddEntity();
-        m_WhitePawn7 = ecs.AddEntity();
-        m_WhitePawn8 = ecs.AddEntity();
-        m_WhiteRook1 = ecs.AddEntity();
-        m_WhiteRook2 = ecs.AddEntity();
-        m_WhiteKnight1 = ecs.AddEntity();
-        m_WhiteKnight2 = ecs.AddEntity();
-        m_WhiteBishop1 = ecs.AddEntity();
-        m_WhiteBishop2 = ecs.AddEntity();
-        m_WhiteQueen = ecs.AddEntity();
-        m_WhiteKing = ecs.AddEntity();
-
-
-        ecs.AddComponent(m_ChessBoard, TransformComponent(Vec3(400.0f), Vec3(2.0f)));
-        ecs.AddComponent(m_ChessBoard, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/chessboard.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackPawn1, TransformComponent(50, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn2, TransformComponent(150, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn3, TransformComponent(250, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn3, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn4, TransformComponent(350, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn4, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn5, TransformComponent(450, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn5, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn6, TransformComponent(550, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn6, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn7, TransformComponent(650, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn7, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackPawn8, TransformComponent(750, 650, .25, .25));
-        ecs.AddComponent(m_BlackPawn8, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_pawn.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackRook1, TransformComponent(50, 750, .25, .25));
-        ecs.AddComponent(m_BlackRook1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_rook.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackRook2, TransformComponent(750, 750, .25, .25));
-        ecs.AddComponent(m_BlackRook2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_rook.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackKnight1, TransformComponent(150, 750, .25, .25));
-        ecs.AddComponent(m_BlackKnight1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_knight.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackKnight2, TransformComponent(650, 750, .25, .25));
-        ecs.AddComponent(m_BlackKnight2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_knight.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackBishop1, TransformComponent(250, 750, .25, .25));
-        ecs.AddComponent(m_BlackBishop1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_bishop.png"), m_VAO.get()));
-        ecs.AddComponent(m_BlackBishop2, TransformComponent(550, 750, .25, .25));
-        ecs.AddComponent(m_BlackBishop2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_bishop.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackQueen, TransformComponent(350, 750, .25, .25));
-        ecs.AddComponent(m_BlackQueen, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_queen.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_BlackKing, TransformComponent(450, 750, .25, .25));
-        ecs.AddComponent(m_BlackKing, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/black_king.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhitePawn1, TransformComponent(50, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn2, TransformComponent(150, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn3, TransformComponent(250, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn3, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn4, TransformComponent(350, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn4, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn5, TransformComponent(450, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn5, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn6, TransformComponent(550, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn6, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn7, TransformComponent(650, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn7, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhitePawn8, TransformComponent(750, 150, .25, .25));
-        ecs.AddComponent(m_WhitePawn8, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_pawn.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhiteRook1, TransformComponent(50, 50, .25, .25));
-        ecs.AddComponent(m_WhiteRook1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_rook.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhiteRook2, TransformComponent(750, 50, .25, .25));
-        ecs.AddComponent(m_WhiteRook2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_rook.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhiteKnight1, TransformComponent(150, 50, .25, .25));
-        ecs.AddComponent(m_WhiteKnight1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_knight.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhiteKnight2, TransformComponent(650, 50, .25, .25));
-        ecs.AddComponent(m_WhiteKnight2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_knight.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhiteBishop1, TransformComponent(250, 50, .25, .25));
-        ecs.AddComponent(m_WhiteBishop1, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_bishop.png"), m_VAO.get()));
-        ecs.AddComponent(m_WhiteBishop2, TransformComponent(550, 50, .25, .25));
-        ecs.AddComponent(m_WhiteBishop2, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_bishop.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhiteQueen, TransformComponent(350, 50, .25, .25));
-        ecs.AddComponent(m_WhiteQueen, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_queen.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_WhiteKing, TransformComponent(450, 50, .25, .25));
-        ecs.AddComponent(m_WhiteKing, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/white_king.png"), m_VAO.get()));
-
-        ecs.AddComponent(m_ChessBoard, TransformComponent(Vec3(400.0f), Vec3(2.0f)));
-        ecs.AddComponent(m_ChessBoard, SpriteComponent(Texture::CreateTexture(std::string(ROOT_DIR) + "/Chess/Source/Resources/chessboard.png"), m_VAO.get()));
-    }
-
-
 
 }
