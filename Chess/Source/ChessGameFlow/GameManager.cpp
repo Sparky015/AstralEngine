@@ -41,22 +41,28 @@ namespace Game {
 
     void GameManager::Update()
     {
+        // Clear screen
         RendererCommand::Clear();
-
-
-
-        static bool isMouseDown;
 
         Game::ChessBoard& board = Game::g_BoardManager.GetBoard();
 
-        // Game::GameManager::TrackedPiece trackedPiece;
 
+        // enum PieceTrackingState
+        static bool isMouseDown;
+
+
+        // struct PieceTracked
+        // --------------------------------------------------------------------------------------------------------
         static uint8 lockedOnPieceID = 255;
         static PieceColor lockedOnPieceColor;
         static ECS::Entity lockedOnEntity;
+        // --------------------------------------------------------------------------------------------------------
         static ECS::Entity none = ECS::g_ECSManager.GetECS().AddEntity();
 
 
+        // onMouseClick
+        // --------------------------------------------------------------------------------------------------------
+        // Detect mouse clicks and track piece
         if (InputState::IsKeyDown(Keycode::KEY_LEFT_CLICK))
         {
             uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
@@ -64,6 +70,7 @@ namespace Game {
             {
                 if (board.ReadSquareType(location) != PieceType::NONE)
                 {
+                    // Get info of piece clicked on
                     lockedOnEntity = ChessEntities::GetEntity(location);
                     lockedOnPieceID = board.ReadSquarePieceID(location);
                     lockedOnPieceColor = board.ReadSquareColor(location);
@@ -76,44 +83,67 @@ namespace Game {
             isMouseDown = true;
             ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
+
+            // Place the piece being tracked onto the mouse coordinates
             TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(lockedOnEntity);
             transformComponent.x = InputState::MousePositionX();
             transformComponent.y = InputState::MousePositionY();
             ecs.AddComponent<TransformComponent>(lockedOnEntity,
                                                  TransformComponent(transformComponent));
+        } // --------------------------------------------------------------------------------------------------------
 
-        }
+
+        // onMouseRelease
+        // --------------------------------------------------------------------------------------------------------
         else
         {
             if (isMouseDown)
             {
+                // On mouse release
                 if (lockedOnPieceID != 255)
                 {
+
+
+
+                    // --------------------------------------------------------------------------------------------------------
+                    // Find the square the mouse is over
                     uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
                     if (board.ReadSquareType(location) == PieceType::NONE)
                     {
                         Game::ChessBoardManager& boardManager = Game::g_BoardManager;
 
-                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), ))
+                        // Move piece to the square the mouse was released over
+                        ChessMove chessMove = ChessMove((PieceID)lockedOnPieceID, lockedOnPieceColor, location, MoveType::REGULAR);
+                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), chessMove))
                         {
                             board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                            g_BoardManager.GetMoveList().GenerateMoves(board, board.GetActiveColor());
                         }
                     }
                     else if (board.ReadSquareColor(location) != lockedOnPieceColor)
                     {
                         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
+                        // Perform take with piece to the square the mouse was released over
                         SpriteComponent& pieceSprite = ecs.GetComponent<SpriteComponent>(ChessEntities::GetEntity(location));
                         pieceSprite.isUsed = false;
 
                         Game::ChessBoardManager& boardManager = Game::g_BoardManager;
-                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), ))
+                        ChessMove chessMove = ChessMove((PieceID)lockedOnPieceID, lockedOnPieceColor, location, MoveType::TAKE);
+                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), chessMove))
                         {
                             board.TakePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                            g_BoardManager.GetMoveList().GenerateMoves(board, board.GetActiveColor());
                         }
 
                     }
+                    // --------------------------------------------------------------------------------------------------------
 
+
+
+                    // Transform GetSquareTransform()
+                    // --------------------------------------------------------------------------------------------------------
+                    // Place the piece transform back to the square it was released over
                     uint8 pieceLocation = board.ReadPieceLocation(lockedOnPieceColor, (PieceID)lockedOnPieceID);
                     Vec2 thing = Game::ConvertPieceLocationToCoordinates(pieceLocation);
                     LOG(thing.x << " " << thing.y);
@@ -125,6 +155,12 @@ namespace Game {
                     ecs.AddComponent<TransformComponent>(lockedOnEntity,
                                                          TransformComponent(transformComponent));
                 }
+                // --------------------------------------------------------------------------------------------------------
+
+
+        // --------------------------------------------------------------------------------------------------------
+
+                // Reset the mouse and entity
                 isMouseDown = false;
                 lockedOnEntity = none;
 
@@ -134,6 +170,7 @@ namespace Game {
 //        m_Texture->Bind(0);
 //        Renderer::Submit(*m_ShaderProgram, m_VAO.get(), transform);
 
+        // Render Entities
         Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get());
     }
 

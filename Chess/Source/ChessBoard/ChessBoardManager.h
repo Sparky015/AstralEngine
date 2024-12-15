@@ -21,7 +21,7 @@ namespace Game{
         void Update() override;
 
         [[nodiscard]] inline ChessBoard& GetBoard() {return m_Board; }
-        [[nodiscard]] inline const BoardMoveList& GetMoveList() const {return m_MoveList; }
+        [[nodiscard]] inline BoardMoveList& GetMoveList() {return m_MoveList; }
 
         ChessBoardManager(const ChessBoardManager&) = delete;
         ChessBoardManager& operator=(const ChessBoardManager&) = delete;

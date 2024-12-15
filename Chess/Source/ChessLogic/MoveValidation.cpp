@@ -14,15 +14,17 @@ namespace Game {
     {
         ASSERT(!chessMove.IsValid(), "Invalid move given!");
 
+        if (chessBoard.GetActiveColor() != chessMove.movingPieceColor) { return false; }
+
         if (chessMove.moveType == MoveType::REGULAR)
         {
             const PieceMoveList& pieceMoveList = boardMoveList.GetRegularMoves(chessMove.movingPieceID, chessMove.movingPieceColor);
-            return pieceMoveList.Contains(chessMove.targetLocation);
+            return pieceMoveList.Contains(chessMove);
         }
         else
         {
             const PieceMoveList& pieceMoveList = boardMoveList.GetAttackingMoves(chessMove.movingPieceID, chessMove.movingPieceColor);
-            return pieceMoveList.Contains(chessMove.targetLocation);
+            return pieceMoveList.Contains(chessMove);
         }
     }
 

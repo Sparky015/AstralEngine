@@ -26,6 +26,12 @@ namespace Game {
     }
 
 
+    bool PieceMoveList::Contains(ChessMove chessMove) const
+    {
+        return std::find(m_MoveList.begin(), m_MoveList.end(), chessMove.targetLocation) != m_MoveList.end();
+    }
+
+
     void PieceMoveList::ReserveSpace(size_t size)
     {
         m_MoveList.reserve(size);

@@ -174,6 +174,7 @@ namespace Game {
         ASSERT(m_Board.ReadSquareType(targetBoardLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
         PieceType movingPieceType = ReadPieceType(color, pieceID);
         ASSERT(movingPieceType != PieceType::NONE, "Can't move a piece of type NONE (aka that piece isn't on the board)")
+        ASSERT(color == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
 
         // Set the half move counter. (if a pawn moves or a take happens, then reset)
         if (movingPieceType == PieceType::PAWN) { m_HalfMoveCount = 1;}
@@ -213,6 +214,9 @@ namespace Game {
         {
             m_BlackPieceLocations[pieceID] = targetBoardLocation;
         }
+
+        // Flip active color
+        m_ActiveColor = (m_ActiveColor == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
     }
 
 
@@ -223,6 +227,7 @@ namespace Game {
         ASSERT(ReadSquareType(targetBoardLocation) != PieceType::NONE, "Can't take on a square that is empty");
         ASSERT(ReadSquareColor(targetBoardLocation) != color, "Can't take a piece of the same type");
         ASSERT(ReadPieceType(color, pieceID) != PieceType::NONE, "Can't take with a piece of type NONE (aka that piece isn't on the board)");
+        ASSERT(color == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
 
         m_HalfMoveCount = 1; // Reset the half move counter on takes
         if (color == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
@@ -273,6 +278,9 @@ namespace Game {
 
         // Clear the old position of the piece that is taking
         m_Board.WriteSquareType(PieceType::NONE, oldPieceLocation);
+
+        // Flip active color
+        m_ActiveColor = (m_ActiveColor == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
     }
 
 

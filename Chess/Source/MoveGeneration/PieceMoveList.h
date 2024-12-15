@@ -7,6 +7,7 @@
 #pragma once
 
 #include "ChessPieceTypes.h"
+#include "ChessMove.h"
 
 namespace Game {
 
@@ -17,6 +18,7 @@ namespace Game {
         void AddMove(SquareLocation squareLocation);
         void Clear();
         bool Contains(SquareLocation squareLocation) const;
+        bool Contains(ChessMove chessMove) const;
         void ReserveSpace(size_t size);
 
         inline std::vector<SquareLocation>::iterator begin() { return m_MoveList.begin(); };
