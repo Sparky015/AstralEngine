@@ -9,8 +9,8 @@ namespace Game {
     QueenMoveList::QueenMoveList()
     {
         // Reserve the max amount of moves a knight can make in the worst case
-        m_RegularMoves.reserve(28);
-        m_AttackingMoves.reserve(8);
+        m_RegularMoves.ReserveSpace(28);
+        m_AttackingMoves.ReserveSpace(8);
     }
 
     void QueenMoveList::GenerateMoves(const ChessBoard& board, const uint8_t pieceLocation, const PieceColor pieceColor)
@@ -35,7 +35,7 @@ namespace Game {
             while (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
             board.ReadSquareType(moveLocation) == PieceType::NONE)
             {
-                m_RegularMoves.push_back(moveLocation);
+                m_RegularMoves.AddMove(moveLocation);
                 currentPieceLocation = moveLocation;
                 moveLocation += moveStep;
             }
@@ -44,7 +44,7 @@ namespace Game {
             if (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
                 board.ReadSquareColor(moveLocation) != pieceColor)
             {
-                m_AttackingMoves.push_back(moveLocation);
+                m_AttackingMoves.AddMove(moveLocation);
             }
 
         }

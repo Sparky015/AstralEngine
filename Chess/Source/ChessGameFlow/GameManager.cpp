@@ -9,13 +9,14 @@
 #include "Input/InputState.h"
 #include "ChessBoard/ChessBoard.h"
 #include "ChessBoard/ChessBoardManager.h"
-#include "Window/WindowManager.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Renderer/RendererCommands.h"
 #include "Utils/ChessConversions.h"
 
 #include "ECS/Systems/RenderingSystem.h"
-#include "ChessEntities.h"
+#include "ChessGameState/ChessEntities.h"
+#include "ChessLogic/MoveValidation.h"
+#include "Window/WindowManager.h"
 
 namespace Game {
 
@@ -91,7 +92,12 @@ namespace Game {
                     uint8 location = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
                     if (board.ReadSquareType(location) == PieceType::NONE)
                     {
-                        board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                        Game::ChessBoardManager& boardManager = Game::g_BoardManager;
+
+                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), ))
+                        {
+                            board.MovePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                        }
                     }
                     else if (board.ReadSquareColor(location) != lockedOnPieceColor)
                     {
@@ -99,7 +105,12 @@ namespace Game {
 
                         SpriteComponent& pieceSprite = ecs.GetComponent<SpriteComponent>(ChessEntities::GetEntity(location));
                         pieceSprite.isUsed = false;
-                        board.TakePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+
+                        Game::ChessBoardManager& boardManager = Game::g_BoardManager;
+                        if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), ))
+                        {
+                            board.TakePiece(lockedOnPieceColor, (PieceID)lockedOnPieceID, location);
+                        }
 
                     }
 

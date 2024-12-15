@@ -10,7 +10,6 @@
 
 #include "InternalChessBoardData.h"
 #include "ChessPieceTypes.h"
-#include "MoveGeneration/BoardMoveList.h"
 
 namespace Game {
 
@@ -55,7 +54,6 @@ namespace Game {
         [[nodiscard]] inline uint8 GetHalfMoveCount() const { return m_HalfMoveCount;}
         [[nodiscard]] inline uint8 GetFullMoveCount() const { return m_HalfMoveCount;}
         [[nodiscard]] inline LastMoveBuffer GetLastMoveBuffer() const {return m_LastMoveBuffer;}
-        inline const BoardMoveList& GetMoveList() const { return m_MoveList; }
 
         char GetCharacterOfPiece(uint8 squareLocation);
         void ClearBoard();
@@ -79,8 +77,6 @@ namespace Game {
 
         //TODO: Profile different memory layouts for speed
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece
-
-        BoardMoveList m_MoveList;
 
     public:
         inline InternalBoardRepresentation& GetInternalBoard()

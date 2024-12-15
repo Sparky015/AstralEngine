@@ -10,6 +10,7 @@
 
 namespace Game {
 
+
     class BoardMoveList
     {
     public:
@@ -18,8 +19,8 @@ namespace Game {
 
         void GenerateMoves(ChessBoard& board, PieceColor color);
 
-        const std::vector<uint8>& GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const;
-        const std::vector<uint8>& GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const;
+        const PieceMoveList& GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const;
+        const PieceMoveList& GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const;
 
     private:
         void SyncPieceTypesToBoard(ChessBoard& board, PieceColor color);

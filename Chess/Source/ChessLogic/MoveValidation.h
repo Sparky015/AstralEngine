@@ -8,6 +8,7 @@
 
 #include "../ChessPieceTypes.h"
 #include "ChessBoard/ChessBoard.h"
+#include "MoveGeneration/BoardMoveList.h"
 
 namespace Game {
 
@@ -23,6 +24,7 @@ namespace Game {
         ChessMove() : movingPieceColor(PieceColor::BLACK), movingPieceID(PIECE_1), moveType(MoveType::REGULAR), originatingLocation(255),
                       targetLocation(255) {}
 
+
         SquareLocation originatingLocation;
         SquareLocation targetLocation;
         PieceColor movingPieceColor;
@@ -33,6 +35,6 @@ namespace Game {
     };
 
 
-    bool IsMoveValid(const ChessBoard& chessBoard, ChessMove chessMove);
+    bool IsMoveValid(const ChessBoard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove);
 
 }

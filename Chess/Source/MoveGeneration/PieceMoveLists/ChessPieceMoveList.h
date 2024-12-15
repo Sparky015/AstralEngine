@@ -7,6 +7,7 @@
 #include "ChessPieceTypes.h"
 #include "ChessBoard/ChessBoard.h"
 #include "MoveGeneration/MoveListGenerationUtils.h"
+#include "MoveGeneration/PieceMoveList.h"
 
 namespace Game {
 
@@ -19,8 +20,8 @@ namespace Game {
         virtual void GenerateMoves(const ChessBoard& board, const uint8 pieceLocation, const PieceColor pieceColor) = 0;
         virtual PieceType GetType() = 0;
 
-        [[nodiscard]] virtual const std::vector<uint8>& GetRegularMoves() const = 0;
-        [[nodiscard]] virtual const std::vector<uint8>& GetAttackingMoves() const = 0;
+        [[nodiscard]] virtual const PieceMoveList& GetRegularMoves() const = 0;
+        [[nodiscard]] virtual const PieceMoveList& GetAttackingMoves() const = 0;
     };
 
 

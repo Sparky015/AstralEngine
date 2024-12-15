@@ -9,8 +9,8 @@ namespace Game {
     KnightMoveList::KnightMoveList()
     {
         // Reserve the max amount of moves a knight can make in the worst case
-        m_RegularMoves.reserve(8);
-        m_AttackingMoves.reserve(8);
+        m_RegularMoves.ReserveSpace(8);
+        m_AttackingMoves.ReserveSpace(8);
     }
 
     void KnightMoveList::GenerateMoves(const ChessBoard& board, const uint8_t pieceLocation, const PieceColor pieceColor)
@@ -26,11 +26,11 @@ namespace Game {
             if (!IsMoveWithinBounds(pieceLocation, moveStep)) { continue; }
             if (board.ReadSquareType(moveLocation) == PieceType::NONE)
             {
-                m_RegularMoves.push_back(moveLocation);
+                m_RegularMoves.AddMove(moveLocation);
             }
             else if (board.ReadSquareColor(moveLocation) != pieceColor)
             {
-                m_AttackingMoves.push_back(moveLocation);
+                m_AttackingMoves.AddMove(moveLocation);
             }
         }
     }

@@ -33,6 +33,8 @@ add_executable(Chess
         Source/MoveGeneration/PieceMoveLists/ChessPieceMoveList.h
         Source/ChessLogic/MoveValidation.cpp
         Source/ChessLogic/MoveValidation.h
+        Source/MoveGeneration/PieceMoveList.h
+        Source/MoveGeneration/PieceMoveList.cpp
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

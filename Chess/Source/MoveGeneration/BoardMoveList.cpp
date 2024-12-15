@@ -182,15 +182,15 @@ namespace Game {
 
 
 
-    const std::vector<uint8>& BoardMoveList::GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const
+    const PieceMoveList& BoardMoveList::GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const
     {
-        if (!GetPiecePtr(pieceID, pieceColor)) {static std::vector<uint8> emptyVec; return emptyVec;} // if the ptr is null
+        if (!GetPiecePtr(pieceID, pieceColor)) {static PieceMoveList emptyList; return emptyList;} // if the ptr is null
         return GetPiecePtr(pieceID, pieceColor)->GetRegularMoves();
     }
 
-    const std::vector<uint8>& BoardMoveList::GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const
+    const PieceMoveList& BoardMoveList::GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const
     {
-        if (!GetPiecePtr(pieceID, pieceColor)) {static std::vector<uint8> emptyVec; return emptyVec;} // if the ptr is null
+        if (!GetPiecePtr(pieceID, pieceColor)) {static PieceMoveList emptyList; return emptyList;} // if the ptr is null
         return GetPiecePtr(pieceID, pieceColor)->GetAttackingMoves();
     }
 

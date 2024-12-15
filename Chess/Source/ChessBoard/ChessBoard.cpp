@@ -14,19 +14,20 @@ namespace Game {
                    Board
 **********************************************/
 
-    ChessBoard::ChessBoard() :
-            m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
-            m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1}),
-            m_FullMoveCount(1),
-            m_HalfMoveCount(1),
-            m_ActiveColor(PieceColor::WHITE)
+    ChessBoard::ChessBoard() : m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
+                               m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1}),
+                               m_FullMoveCount(1),
+                               m_HalfMoveCount(1),
+                               m_ActiveColor(PieceColor::WHITE)
     {
         PROFILE_SCOPE();
         std::array<PieceType, 16> OrderOfPieceTypes
-        {PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
-         PieceType::PAWN,PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
-         PieceType::ROOK,PieceType::KNIGHT, PieceType::BISHOP, PieceType::QUEEN,
-         PieceType::KING,PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK};
+        {
+            PieceType::PAWN, PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
+            PieceType::PAWN, PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
+            PieceType::ROOK, PieceType::KNIGHT, PieceType::BISHOP, PieceType::QUEEN,
+            PieceType::KING, PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK
+        };
         // Take the location of each piece and populate that square with the piece's info
 
         for (uint8 pieceID = 0; pieceID < m_BlackPieceLocations.size(); pieceID++)

@@ -9,8 +9,8 @@ namespace Game {
     PawnMoveList::PawnMoveList()
     {
         // Reserve the max amount of moves a pawn can make in the worst case
-        m_RegularMoves.reserve(2);
-        m_AttackingMoves.reserve(2);
+        m_RegularMoves.ReserveSpace(2);
+        m_AttackingMoves.ReserveSpace(2);
     }
 
     void PawnMoveList::GenerateMoves(const ChessBoard& board, const uint8_t pieceLocation, const PieceColor pieceColor)
@@ -25,11 +25,11 @@ namespace Game {
                 {
                     if (lmb.FinalPieceLocation == pieceLocation - 1)
                     {
-                        m_AttackingMoves.push_back(pieceLocation - 9);
+                        m_AttackingMoves.AddMove(pieceLocation - 9);
                     }
                     else if (lmb.FinalPieceLocation == pieceLocation + 1)
                     {
-                        m_AttackingMoves.push_back(pieceLocation - 7);
+                        m_AttackingMoves.AddMove(pieceLocation - 7);
                     }
                 }
             }
@@ -39,11 +39,11 @@ namespace Game {
                 {
                     if (lmb.FinalPieceLocation == pieceLocation - 1)
                     {
-                        m_AttackingMoves.push_back(pieceLocation + 7);
+                        m_AttackingMoves.AddMove(pieceLocation + 7);
                     }
                     else if (lmb.FinalPieceLocation == pieceLocation + 1)
                     {
-                        m_AttackingMoves.push_back(pieceLocation + 9);
+                        m_AttackingMoves.AddMove(pieceLocation + 9);
                     }
                 }
             }
@@ -56,7 +56,7 @@ namespace Game {
         uint8 moveLocation = pieceLocation + moveStep;
         if (board.ReadSquareType(moveLocation) == PieceType::NONE && IsMoveWithinBounds(moveLocation, moveStep))
         {
-            m_RegularMoves.push_back(moveLocation);
+            m_RegularMoves.AddMove(moveLocation);
         }
 
         // Checking the attack pawn moves
@@ -69,7 +69,7 @@ namespace Game {
                 && IsMoveWithinBounds(pieceLocation, moveStep)
                 && board.ReadSquareColor(moveLocation) != pieceColor)
             {
-                m_AttackingMoves.push_back(moveLocation);
+                m_AttackingMoves.AddMove(moveLocation);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Game {
                 if (board.ReadSquareType(pieceLocation - 16) == PieceType::NONE &&
                     board.ReadSquareType(pieceLocation - 8) == PieceType::NONE)
                 {
-                    m_RegularMoves.push_back(pieceLocation - 16);
+                    m_RegularMoves.AddMove(pieceLocation - 16);
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace Game {
                 if (board.ReadSquareType(pieceLocation + 16) == PieceType::NONE &&
                     board.ReadSquareType(pieceLocation + 8) == PieceType::NONE)
                 {
-                    m_RegularMoves.push_back(pieceLocation + 16);
+                    m_RegularMoves.AddMove(pieceLocation + 16);
                 }
             }
         }

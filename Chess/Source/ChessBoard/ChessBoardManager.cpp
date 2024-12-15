@@ -23,8 +23,7 @@ namespace Game
         TRACE("Initializing Board Manager!")
 
         m_UpdateListener.StartListening();
-        m_WhiteMoveList.GenerateMoves(m_Board, PieceColor::WHITE);
-        m_BlackMoveList.GenerateMoves(m_Board, PieceColor::BLACK);
+        m_MoveList.GenerateMoves(m_Board, PieceColor::WHITE);
     }
 
 
@@ -43,7 +42,7 @@ namespace Game
 
 
     ChessBoardManager::ChessBoardManager() : m_Board(ChessBoard()), //"5kr1/1p2qp2/1Qb1p1pp/p1ppn1R1/PrN1PBnP/1RP1bN2/1P2KPP1/5B2 w - - 3 23"
-        m_BlackMoveList(m_Board, PieceColor::BLACK), m_WhiteMoveList(m_Board, PieceColor::WHITE)
+        m_MoveList(m_Board, PieceColor::WHITE)
     {
         PROFILE_SCOPE();
         TRACE("Constructing Board Manager!")

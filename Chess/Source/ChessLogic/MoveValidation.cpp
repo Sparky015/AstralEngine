@@ -10,13 +10,20 @@
 
 namespace Game {
 
-    bool IsMoveValid(const ChessBoard& chessBoard, ChessMove chessMove)
+    bool IsMoveValid(const ChessBoard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove)
     {
         ASSERT(!chessMove.IsValid(), "Invalid move given!");
 
-        const BoardMoveList& boardMoveList = chessBoard.GetMoveList();
-
-        boardMoveList.
+        if (chessMove.moveType == MoveType::REGULAR)
+        {
+            const PieceMoveList& pieceMoveList = boardMoveList.GetRegularMoves(chessMove.movingPieceID, chessMove.movingPieceColor);
+            return pieceMoveList.Contains(chessMove.targetLocation);
+        }
+        else
+        {
+            const PieceMoveList& pieceMoveList = boardMoveList.GetAttackingMoves(chessMove.movingPieceID, chessMove.movingPieceColor);
+            return pieceMoveList.Contains(chessMove.targetLocation);
+        }
     }
 
 }
