@@ -37,6 +37,18 @@ namespace ECS {
     }
 
 
+    bool ECS::IsEntityUsed(const Entity entity)
+    {
+        return entity.IsAlive();
+    }
+
+
+    bool ECS::IsEntityUsed(const EntityPoolSize entityID)
+    {
+        return m_ActiveEntities[entityID];
+    }
+
+
     EntityPoolSize ECS::FindNextInactiveIndex()
     {
         // Iterate through the bitfield and find the first slot that isn't being used
