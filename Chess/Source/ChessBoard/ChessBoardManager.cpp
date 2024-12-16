@@ -23,7 +23,7 @@ namespace Game
         TRACE("Initializing Board Manager!")
 
         m_UpdateListener.StartListening();
-        m_MoveList.GenerateMoves(m_Board, PieceColor::WHITE);
+        m_MoveList.UpdateMoveList(m_Board, PieceColor::WHITE);
     }
 
 

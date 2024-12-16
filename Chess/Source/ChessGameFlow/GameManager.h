@@ -5,8 +5,8 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-#include "Sozin.h"
-#include "ECS/ECSManager.h"
+#include "PlayerInput/PieceTracking.h"
+// TODO: Fix the header dependencies. Somehow, graphics classes are being included from PieceTracking.h. Look into Dependabot(?)
 #include "Renderer/Renderer.h"
 
 namespace Game {
@@ -31,15 +31,13 @@ namespace Game {
 
         void InitializeRenderingComponents();
 
-
-        struct TrackedPiece;
-        void TrackPiece(TrackedPiece& outTrackedPiece);
-
         std::unique_ptr<IndexBuffer> m_IndexBuffer;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
         std::unique_ptr<Texture> m_Texture;
         std::unique_ptr<ShaderProgram> m_ShaderProgram;
+
+        PieceTracking m_PieceTracker;
     };
 
     extern GameManager& g_GameManager;

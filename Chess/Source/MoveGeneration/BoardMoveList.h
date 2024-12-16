@@ -17,13 +17,13 @@ namespace Game {
         explicit BoardMoveList(ChessBoard& board, PieceColor color);
         ~BoardMoveList() = default;
 
-        void GenerateMoves(ChessBoard& board, PieceColor color);
+        void UpdateMoveList(const ChessBoard& board, PieceColor color);
 
         const PieceMoveList& GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const;
         const PieceMoveList& GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const;
 
     private:
-        void SyncPieceTypesToBoard(ChessBoard& board, PieceColor color);
+        void SyncPieceTypesToBoard(const ChessBoard& board, PieceColor color);
         std::unique_ptr<ChessPieceMoveList>& GetPiecePtr(PieceID pieceID, PieceColor pieceColor);
         const std::unique_ptr<ChessPieceMoveList>& GetPiecePtr(PieceID pieceID, PieceColor pieceColor) const;
 

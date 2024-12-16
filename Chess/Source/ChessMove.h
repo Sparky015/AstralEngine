@@ -8,22 +8,27 @@
 
 #include "ChessPieceTypes.h"
 
-enum class MoveType : bool
-{
-    REGULAR,
-    TAKE
-};
+namespace Game {
 
-struct ChessMove
-{
-    ChessMove() : movingPieceColor(PieceColor::BLACK), movingPieceID(PIECE_1), moveType(MoveType::REGULAR), targetLocation(255) {}
-    ChessMove(PieceID movingPieceID, PieceColor movingPieceColor, SquareLocation targetLocation, MoveType moveType)
-        : targetLocation(targetLocation), movingPieceColor(movingPieceColor), movingPieceID(movingPieceID), moveType(moveType) {}
+    enum class MoveType : bool
+    {
+        REGULAR,
+        TAKE
+    };
 
-    SquareLocation targetLocation;
-    PieceColor movingPieceColor;
-    PieceID movingPieceID;
-    MoveType moveType;
 
-    inline bool IsValid() const { return targetLocation == 255; }
-};
+    struct ChessMove
+    {
+        ChessMove() : movingPieceColor(PieceColor::BLACK), movingPieceID(PIECE_1), moveType(MoveType::REGULAR), targetLocation(255) {}
+        ChessMove(PieceID movingPieceID, PieceColor movingPieceColor, SquareLocation targetLocation, MoveType moveType)
+            : targetLocation(targetLocation), movingPieceColor(movingPieceColor), movingPieceID(movingPieceID), moveType(moveType) {}
+
+        SquareLocation targetLocation;
+        PieceColor movingPieceColor;
+        PieceID movingPieceID;
+        MoveType moveType;
+
+        inline bool IsValid() const { return targetLocation == 255; }
+    };
+
+}

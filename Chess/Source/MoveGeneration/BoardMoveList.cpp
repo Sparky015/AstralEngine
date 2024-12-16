@@ -28,7 +28,7 @@ namespace Game {
     }
 
 
-    void BoardMoveList::GenerateMoves(ChessBoard& board, PieceColor color)
+    void BoardMoveList::UpdateMoveList(const ChessBoard& board, PieceColor color)
     {
         PROFILE_SCOPE();
         // First sync the piece types of the board to the move list (in case of pawn promotions)
@@ -48,7 +48,7 @@ namespace Game {
     }
 
 
-    void BoardMoveList::SyncPieceTypesToBoard(ChessBoard& board, PieceColor color)
+    void BoardMoveList::SyncPieceTypesToBoard(const ChessBoard& board, PieceColor color)
     {
         PROFILE_SCOPE();
         // Loop through each piece in the board and look at its type

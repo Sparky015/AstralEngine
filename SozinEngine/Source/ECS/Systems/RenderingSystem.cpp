@@ -23,6 +23,7 @@ namespace Sozin {
 
         for (ECS::EntityPoolSize entityID = 0; entityID < ECS::MAX_ENTITIES; entityID++)
         {
+            if (!ecs.IsEntityUsed(entityID)) { continue; }
             if (!spriteDisplay[entityID].isUsed) { continue; }
             if (!transformDisplay[entityID].isUsed) { continue; }
 

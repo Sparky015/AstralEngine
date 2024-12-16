@@ -36,6 +36,8 @@ add_executable(Chess
         Source/MoveGeneration/PieceMoveList.h
         Source/MoveGeneration/PieceMoveList.cpp
         Source/ChessMove.h
+        Source/PlayerInput/PieceTracking.cpp
+        Source/PlayerInput/PieceTracking.h
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

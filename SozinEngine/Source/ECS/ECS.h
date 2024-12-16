@@ -21,25 +21,38 @@ namespace ECS {
         ECS();
         Entity AddEntity();
         void RemoveEntity(Entity entity);
+        bool IsEntityUsed(const Entity entity);
+        bool IsEntityUsed(const EntityPoolSize entityID);
 
-        template<class T>
-        void AddComponent(Entity entity, T component)
+
+        template<class ComponentType>
+        void AddComponent(Entity entity, const ComponentType& component)
         {
-            GetComponent<T>(entity) = component;
-            GetComponent<T>(entity).isUsed = true;
+            GetComponent<ComponentType>(entity) = component;
+            GetComponent<ComponentType>(entity).isUsed = true;
         };
 
-        template<class T>
-        T& GetComponent(Entity entity)
+
+        template<class ComponentType>
+        void UpdateComponent(Entity entity, const ComponentType& component)
         {
-            return std::get<std::array<T, MAX_ENTITIES>>(m_Components)[entity.GetID()];
-        }
+            GetComponent<ComponentType>(entity) = component;
+        };
+
 
         template<class ComponentType>
         void RemoveComponent(Entity entity)
         {
             std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
         };
+
+
+        template<class ComponentType>
+        ComponentType& GetComponent(Entity entity)
+        {
+            return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()];
+        }
+
 
         template<class ComponentType>
         using ComponentDisplay = std::array<ComponentType, MAX_ENTITIES>;
@@ -48,6 +61,13 @@ namespace ECS {
         const std::array<ComponentType, MAX_ENTITIES>& GetComponentDisplay()
         {
             return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components);
+        }
+
+
+        template<class ComponentType>
+        bool IsComponentUsed(const Entity entity, ComponentType component)
+        {
+            return GetComponent<ComponentType>(entity).isUsed;
         }
 
     private:
