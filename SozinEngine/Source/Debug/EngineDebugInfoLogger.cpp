@@ -65,7 +65,7 @@ namespace Debug {
 
         #elif PLATFORM_WINDOWS
             Window::Window& window = Window::g_WindowManager.GetWindow();
-            Renderer::RendererContext& rendererContext = window.GetRendererContext();
+            Graphics::RendererContext& rendererContext = window.GetRendererContext();
 
             LOG("Window: " << window.GetVersion());
             LOG("Rendering API: " << rendererContext.GetRenderingAPI());
