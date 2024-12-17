@@ -9,7 +9,7 @@
 #include "ChessPieceTypes.h"
 #include "ChessBoard/ChessBoard.h"
 #include "ChessBoard/ChessBoardManager.h"
-#include "ECS/ECSManager.h"
+#include "ECS/Entity.h"
 
 namespace Game {
 

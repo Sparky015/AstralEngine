@@ -5,15 +5,6 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-#include "Renderer.h"
-
-#include "Renderer/Primitives/VertexBuffer.h"
-#include "Renderer/Primitives/IndexBuffer.h"
-#include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
-#include "Renderer/Primitives/Texture.h"
-
-#include "ECS/Entity.h"
 
 
 namespace Graphics {

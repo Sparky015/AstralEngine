@@ -8,7 +8,6 @@
 
 #include "Window.h"
 
-
 namespace Window {
 
     class WindowManager : public SystemManager

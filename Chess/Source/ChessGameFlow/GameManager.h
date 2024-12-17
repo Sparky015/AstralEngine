@@ -6,8 +6,14 @@
 
 #include "Core/SystemManager.h"
 #include "PlayerInput/PieceTracking.h"
-// TODO: Fix the header dependencies. Somehow, graphics classes are being included from PieceTracking.h. Look into Dependabot(?)
-#include "Renderer/Renderer.h"
+
+
+#include "Renderer/Primitives/IndexBuffer.h"
+#include "Renderer/Primitives/VertexBuffer.h"
+#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Renderer/Primitives/Texture.h"
+#include "Renderer/Shaders/ShaderProgram.h"
+
 
 namespace Game {
 
