@@ -12,7 +12,7 @@ namespace Game {
 
     bool IsMoveValid(const ChessBoard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove)
     {
-        ASSERT(!chessMove.IsValid(), "Invalid move given!");
+        ASSERT(chessMove.IsValid(), "Invalid move given!");
 
         if (chessBoard.GetActiveColor() != chessMove.movingPieceColor) { return false; }
 
