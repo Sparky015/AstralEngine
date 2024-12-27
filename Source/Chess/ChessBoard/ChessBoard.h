@@ -1,5 +1,5 @@
 /**
-* @file Board.h
+* @file ChessBoard.h
 * @author Andrew Fagan
 * @date 10/20/2024
 */
@@ -9,14 +9,14 @@
 #include "pch.h"
 
 #include "InternalChessBoardData.h"
-#include "../GameState/ChessPieceTypes.h"
+#include "GameState/ChessPieceTypes.h"
 
 namespace Game {
 
-
-/**
- * @class This holds the data representation of a chess board.
- */
+   /**
+    * @class ChessBoard
+    * @brief This holds the data representation of a chess board.
+    */
     class ChessBoard
     {
     public:
@@ -52,30 +52,31 @@ namespace Game {
         /**@brief Gets the piece type of a chess piece
          * @param pieceID ID of chess piece
          * @param pieceColor Color of chess piece
-         * @return Piece type of chess piece */
+         * @return Piece type of chess piece
+         * @note This relies on the piece's location to find its type */
         [[nodiscard]] PieceType ReadPieceType(const PieceID pieceID, const PieceColor pieceColor) const;
 
         /**@brief Gets the color of a piece on a square
          * @param squareLocation Location to check color of piece at
          * @return Color of a piece at given square
-         * @note This assumes that there is a piece on the square given */
-        [[nodiscard]] PieceColor GetSquareColor(SquareLocation squareLocation) const;
+         * @note This assumes that there is a piece on the given square */
+        [[nodiscard]] PieceColor GetSquareColor(const SquareLocation squareLocation) const;
 
         /**@brief Gets the type of a piece on a square
          * @param squareLocation Location to check type of piece at
          * @return Type of piece at given square
-         * @note This assumes that there is a piece on the square given */
-        [[nodiscard]] PieceType GetSquareType(SquareLocation squareLocation) const;
+         * @note This assumes that there is a piece on the given square */
+        [[nodiscard]] PieceType GetSquareType(const SquareLocation squareLocation) const;
 
         /**@brief Gets the ID of a piece on a square
          * @param squareLocation Location to check type of piece at.
          * @return ID of piece at given square
          * @note There must be a piece on the square given. */
-        [[nodiscard]] PieceID ReadSquarePieceID(SquareLocation squareLocation) const;
+        [[nodiscard]] PieceID ReadSquarePieceID(const SquareLocation squareLocation) const;
 
         /**@brief Gets the state of the castle rights of the chess board.
          * @return The castle rights of the board */
-        [[nodiscard]] KingCastleRights GetCastleRights(PieceColor color) const;
+        [[nodiscard]] KingCastleRights GetCastleRights(const PieceColor color) const;
 
         /**@brief Gets color of the side whose turn it is
          * @return The active color of the board */
@@ -96,32 +97,30 @@ namespace Game {
         /**@brief Gets the piece ID of the king
          * @param kingColor The color of the king
          * @return The piece ID of the king */
-        [[nodiscard]] PieceID GetKingPieceID(PieceColor kingColor) const;
+        [[nodiscard]] PieceID GetKingPieceID(const PieceColor kingColor) const;
 
         /**@brief Gets the character representation of the given square
          * @param squareLocation The location of the square
          * @return The character that represents the piece
          * @note Upper case letters represent white*/
-        char GetCharacterOfPiece(SquareLocation squareLocation);
+        [[nodiscard]] char GetCharacterOfPiece(const SquareLocation squareLocation) const;
 
         /**@brief Clears the board to an empty board */
         void ClearBoard();
 
         /**@brief Prints the state of the board to the console */
-        void PrintBoardToConsole();
+        void PrintBoardToConsole() const;
 
+        static constexpr uint8 NUMBER_OF_SQUARES = 64;
+        static constexpr uint8 NUMBER_OF_PIECES_PER_COLOR = 16;
     private:
-
-
         uint16 m_FullMoveCount;
         uint8 m_HalfMoveCount;
         PieceColor m_ActiveColor;
         PreviousMoveData m_PreviousMoveData;
         BoardCastleRights m_CastleRights;
-
-        std::array<SquareLocation, 16> m_BlackPieceLocations; // These two contain the location info of a piece
-        std::array<SquareLocation, 16> m_WhitePieceLocations;
-
+        std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR> m_BlackPieceLocations; // These two contain the location info of a piece
+        std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR> m_WhitePieceLocations;
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece
 
     public:

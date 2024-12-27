@@ -27,8 +27,10 @@ public:
     constexpr SquareLocation(BoardLocation squareLocation) : m_Location(static_cast<uint8>(squareLocation)) {};
     constexpr SquareLocation(uint8 squareLocation) : m_Location(squareLocation) {}
 
+
     [[nodiscard]] constexpr bool IsOnBoard() const { return m_Location < 64; }
     [[nodiscard]] constexpr bool IsOffBoard() const { return m_Location > 63; }
+    [[nodiscard]] constexpr bool IsEmpty() const { return m_Location == EMPTY; }
     [[nodiscard]] constexpr uint8 GetRow() const { return 8 - (m_Location / 8); }
     [[nodiscard]] constexpr uint8 GetColumn() const { return (m_Location % 8) + 1; }
     [[nodiscard]] constexpr bool IsInSameRow(SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
@@ -37,7 +39,7 @@ public:
 
     static constexpr SquareLocation FromRowAndColumn(uint8 row, uint8 column)
     {
-        uint8 rawLocation = ((8 - row) * 8) + (column - 1);
+        const uint8 rawLocation = ((8 - row) * 8) + (column - 1);
         return SquareLocation(rawLocation);
     };
 
@@ -62,6 +64,7 @@ public:
     constexpr SquareLocation operator--(int) { SquareLocation temp = *this; --m_Location; return temp; }
 
 private:
+
     uint8 m_Location;
 };
 
