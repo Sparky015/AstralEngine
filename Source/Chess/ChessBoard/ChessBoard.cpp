@@ -49,7 +49,7 @@ namespace Game {
         m_CastleRights.SetCastleRight(PieceColor::BLACK, KING_SIDE);
         m_CastleRights.SetCastleRight(PieceColor::BLACK, QUEEN_SIDE);
 
-        memset(&m_LastMoveBuffer, 0, sizeof(m_LastMoveBuffer));
+        memset(&m_PreviousMoveData, 0, sizeof(m_PreviousMoveData));
     }
 
 
@@ -147,72 +147,72 @@ namespace Game {
         // Setting the en passant state
         if (enPassantPawn != "-" && !enPassantPawn.empty())
         {
-            m_LastMoveBuffer.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
-            int8 initialPositionStep = (m_LastMoveBuffer.FinalPieceLocation.GetRow() > 5) ? 8 : -8;
-            m_LastMoveBuffer.FinalPieceLocation += initialPositionStep;
+            m_PreviousMoveData.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
+            int8 initialPositionStep = (m_PreviousMoveData.FinalPieceLocation.GetRow() > 5) ? 8 : -8;
+            m_PreviousMoveData.FinalPieceLocation += initialPositionStep;
 
-            uint8 moveStep = (m_LastMoveBuffer.FinalPieceLocation.GetRow() > 5) ? -16 : 16;
-            m_LastMoveBuffer.InitialPieceLocation = m_LastMoveBuffer.FinalPieceLocation + moveStep;
+            uint8 moveStep = (m_PreviousMoveData.FinalPieceLocation.GetRow() > 5) ? -16 : 16;
+            m_PreviousMoveData.InitialPieceLocation = m_PreviousMoveData.FinalPieceLocation + moveStep;
 
-            m_LastMoveBuffer.MovingPieceType = PieceType::PAWN;
-            m_LastMoveBuffer.MovingPieceID = ReadSquarePieceID(m_LastMoveBuffer.FinalPieceLocation);
+            m_PreviousMoveData.MovingPieceType = PieceType::PAWN;
+            m_PreviousMoveData.MovingPieceID = ReadSquarePieceID(m_PreviousMoveData.FinalPieceLocation);
 
-            m_LastMoveBuffer.PieceTakenType = PieceType::NONE;
-            m_LastMoveBuffer.TakenPieceID = PIECE_1; // == 0
+            m_PreviousMoveData.PieceTakenType = PieceType::NONE;
+            m_PreviousMoveData.TakenPieceID = PIECE_1; // == 0
         }
         else
         {
-            memset(&m_LastMoveBuffer, 0, sizeof(m_LastMoveBuffer));
+            memset(&m_PreviousMoveData, 0, sizeof(m_PreviousMoveData));
         }
     }
 
 
-    void ChessBoard::MovePiece(const PieceColor color, const PieceID pieceID, const SquareLocation targetBoardLocation)
+    void ChessBoard::MovePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetLocation)
     {
         PROFILE_SCOPE();
-        ASSERT(targetBoardLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
-        ASSERT(m_Board.ReadSquareType(targetBoardLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
-        PieceType movingPieceType = ReadPieceType(color, pieceID);
+        ASSERT(targetLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(m_Board.ReadSquareType(targetLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
+        PieceType movingPieceType = ReadPieceType(pieceID, pieceColor);
         ASSERT(movingPieceType != PieceType::NONE, "Can't move a piece of type NONE (aka that piece isn't on the board)")
-        ASSERT(color == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
+        ASSERT(pieceColor == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
 
         // Set the half move counter. (if a pawn moves or a take happens, then reset)
         if (movingPieceType == PieceType::PAWN) { m_HalfMoveCount = 1;}
         else { m_HalfMoveCount++; }
 
         // Increment the full move counter if the piece is black
-        if (color.IsBlack()) { m_FullMoveCount++; }
+        if (pieceColor.IsBlack()) { m_FullMoveCount++; }
 
         // Updating the castle rights when a king or rook moves
         if (movingPieceType == PieceType::KING)
         {
-            m_CastleRights.UnsetCastleRight(color, KING_SIDE);
-            m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);
+            m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE);
+            m_CastleRights.UnsetCastleRight(pieceColor, QUEEN_SIDE);
         }
         else if (movingPieceType == PieceType::ROOK)
         {
-            SquareLocation pieceLocation = ReadPieceLocation(color, pieceID);
-            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);}
-            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(color, KING_SIDE);}
+            SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
+            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(pieceColor, QUEEN_SIDE);}
+            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE);}
         }
 
         // Getting type of the piece from the old location
-        PieceType pieceType = ReadPieceType(color, pieceID);
+        PieceType pieceType = ReadPieceType(pieceID, pieceColor);
 
         // Clearing piece type from old location
-        m_Board.WriteSquareType(PieceType::NONE, ReadPieceLocation(color, pieceID));
+        m_Board.WriteSquareType(PieceType::NONE, GetPieceLocation(pieceID, pieceColor));
 
         // Updating new location with piece information
-        m_Board.WriteSquareType(pieceType, targetBoardLocation);
-        m_Board.WriteSquareColor(color, targetBoardLocation);
+        m_Board.WriteSquareType(pieceType, targetLocation);
+        m_Board.WriteSquareColor(pieceColor, targetLocation);
 
-        if (color.IsWhite())
+        if (pieceColor.IsWhite())
         {
-            m_WhitePieceLocations[pieceID] = targetBoardLocation;
+            m_WhitePieceLocations[pieceID] = targetLocation;
         }
         else
         {
-            m_BlackPieceLocations[pieceID] = targetBoardLocation;
+            m_BlackPieceLocations[pieceID] = targetLocation;
         }
 
         // Flip active color
@@ -220,60 +220,60 @@ namespace Game {
     }
 
 
-    void ChessBoard::TakePiece(const PieceColor color, const PieceID pieceID, const SquareLocation targetBoardLocation)
+    void ChessBoard::CapturePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetPieceLocation)
     {
         PROFILE_SCOPE();
-        ASSERT(targetBoardLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
-        ASSERT(ReadSquareType(targetBoardLocation) != PieceType::NONE, "Can't take on a square that is empty");
-        ASSERT(ReadSquareColor(targetBoardLocation) != color, "Can't take a piece of the same type");
-        ASSERT(ReadPieceType(color, pieceID) != PieceType::NONE, "Can't take with a piece of type NONE (aka that piece isn't on the board)");
-        ASSERT(color == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
+        ASSERT(targetPieceLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(GetSquareType(targetPieceLocation) != PieceType::NONE, "Can't take on a square that is empty");
+        ASSERT(GetSquareColor(targetPieceLocation) != pieceColor, "Can't take a piece of the same type");
+        ASSERT(ReadPieceType(pieceID, pieceColor) != PieceType::NONE, "Can't take with a piece of type NONE (aka that piece isn't on the board)");
+        ASSERT(pieceColor == m_ActiveColor, "Can't take when it is not the piece's turn to go.")
 
         m_HalfMoveCount = 1; // Reset the half move counter on takes
-        if (color == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
+        if (pieceColor == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
 
-        SquareLocation oldPieceLocation = (color == PieceColor::WHITE) ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
+        SquareLocation oldPieceLocation = (pieceColor == PieceColor::WHITE) ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
 
         // Updating the castle rights when a rook is taken
-        if (targetBoardLocation % 8 == 0 || targetBoardLocation % 8 == 7)
+        if (targetPieceLocation % 8 == 0 || targetPieceLocation % 8 == 7)
         {
-            PieceColor takenPieceColor = (color == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
-            PieceType takenPieceType = ReadPieceType(takenPieceColor, ReadSquarePieceID(targetBoardLocation));
+            PieceColor takenPieceColor = (pieceColor == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
+            PieceType takenPieceType = ReadPieceType(ReadSquarePieceID(targetPieceLocation), takenPieceColor);
 
             if (takenPieceType == PieceType::ROOK)
             {
-                if (targetBoardLocation % 8 == 0)
-                { m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE); }
-                else if (targetBoardLocation % 8 == 7)
-                { m_CastleRights.UnsetCastleRight(color, KING_SIDE); }
+                if (targetPieceLocation % 8 == 0)
+                { m_CastleRights.UnsetCastleRight(pieceColor, QUEEN_SIDE); }
+                else if (targetPieceLocation % 8 == 7)
+                { m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE); }
             }
         }
 
         // Updating the castle rights if a rook or king takes
-        PieceType takingPieceType = ReadPieceType(color, pieceID);
+        PieceType takingPieceType = ReadPieceType(pieceID, pieceColor);
         if (takingPieceType == PieceType::KING)
         {
-            m_CastleRights.UnsetCastleRight(color, KING_SIDE);
-            m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);
+            m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE);
+            m_CastleRights.UnsetCastleRight(pieceColor, QUEEN_SIDE);
         }
         else if (takingPieceType == PieceType::ROOK)
         {
-            SquareLocation pieceLocation = ReadPieceLocation(color, pieceID);
-            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(color, QUEEN_SIDE);}
-            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(color, KING_SIDE);}
+            SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
+            if (pieceLocation % 8 == 0) {m_CastleRights.UnsetCastleRight(pieceColor, QUEEN_SIDE);}
+            else if (pieceLocation % 8 == 7) {m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE);}
         }
 
 
         // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from piece locations
-        PieceID targetPieceID = ReadSquarePieceID(targetBoardLocation);
-        (color == PieceColor::WHITE) ? m_BlackPieceLocations[targetPieceID] = EMPTY : m_WhitePieceLocations[targetPieceID] = EMPTY;
+        PieceID targetPieceID = ReadSquarePieceID(targetPieceLocation);
+        (pieceColor == PieceColor::WHITE) ? m_BlackPieceLocations[targetPieceID] = EMPTY : m_WhitePieceLocations[targetPieceID] = EMPTY;
 
 
         // Move the taking piece to the new location
-        m_Board.WriteSquareType(takingPieceType, targetBoardLocation);
-        m_Board.WriteSquareColor(color, targetBoardLocation);
-        if (color == PieceColor::WHITE) {m_WhitePieceLocations[pieceID] = targetBoardLocation;}
-        else {m_BlackPieceLocations[pieceID] = targetBoardLocation;}
+        m_Board.WriteSquareType(takingPieceType, targetPieceLocation);
+        m_Board.WriteSquareColor(pieceColor, targetPieceLocation);
+        if (pieceColor == PieceColor::WHITE) {m_WhitePieceLocations[pieceID] = targetPieceLocation;}
+        else {m_BlackPieceLocations[pieceID] = targetPieceLocation;}
 
 
         // Clear the old position of the piece that is taking
@@ -284,13 +284,13 @@ namespace Game {
     }
 
 
-    void ChessBoard::PromotePawn(const PieceColor color, const PieceID pieceID, const PieceType promotionType)
+    void ChessBoard::PromotePawn(const PieceID pieceID, const PieceColor pieceColor, const PieceType promotionType)
     {
         PROFILE_SCOPE();
         ASSERT(promotionType != PieceType::PAWN && promotionType != PieceType::KING, "Promotion type must be bishop, knight, rook, or queen.")
-        ASSERT(ReadPieceType(color, pieceID) == PieceType::PAWN, "Piece must be a pawn to promote it.")
+        ASSERT(ReadPieceType(pieceID, pieceColor) == PieceType::PAWN, "Piece must be a pawn to promote it.")
 
-        if (color == PieceColor::WHITE)
+        if (pieceColor == PieceColor::WHITE)
         {
             SquareLocation pieceLocation = m_WhitePieceLocations[pieceID];
             m_Board.WriteSquareType(promotionType, pieceLocation);
@@ -303,9 +303,9 @@ namespace Game {
     }
 
 
-    SquareLocation ChessBoard::ReadPieceLocation(const PieceColor color, const PieceID pieceID) const
+    SquareLocation ChessBoard::GetPieceLocation(const PieceID pieceID, const PieceColor pieceColor) const
     {
-        if (color == PieceColor::WHITE)
+        if (pieceColor == PieceColor::WHITE)
         {
             return m_WhitePieceLocations[pieceID];
         }
@@ -316,11 +316,11 @@ namespace Game {
     }
 
 
-    PieceType ChessBoard::ReadPieceType(const PieceColor color, const PieceID pieceID) const
+    PieceType ChessBoard::ReadPieceType(const PieceID pieceID, const PieceColor pieceColor) const
     {
-        SquareLocation pieceLocation = ReadPieceLocation(color, pieceID);
+        SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
         if (pieceLocation == EMPTY) {return PieceType::NONE;}
-        return ReadSquareType(pieceLocation);
+        return GetSquareType(pieceLocation);
     }
 
 
@@ -338,7 +338,7 @@ namespace Game {
 //    }
 
 
-    PieceColor ChessBoard::ReadSquareColor(SquareLocation squareLocation) const
+    PieceColor ChessBoard::GetSquareColor(SquareLocation squareLocation) const
     {
         ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
         return m_Board.ReadSquareColor(squareLocation);
@@ -355,7 +355,7 @@ namespace Game {
 //    }
 
 
-    PieceType ChessBoard::ReadSquareType(SquareLocation squareLocation) const
+    PieceType ChessBoard::GetSquareType(SquareLocation squareLocation) const
     {
         ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
         return m_Board.ReadSquareType(squareLocation);
@@ -376,8 +376,8 @@ namespace Game {
         PROFILE_SCOPE();
         ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
 
-        PieceType pieceType = ReadSquareType(squareLocation);
-        PieceColor pieceColor = ReadSquareColor(squareLocation);
+        PieceType pieceType = GetSquareType(squareLocation);
+        PieceColor pieceColor = GetSquareColor(squareLocation);
 
         ASSERT(pieceType != PieceType::NONE, "There is no piece on square");
 
@@ -469,7 +469,7 @@ namespace Game {
 
             for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
             {
-                if (ReadPieceType(kingColor, (PieceID)pieceID) == PieceType::KING)
+                if (ReadPieceType((PieceID)pieceID, kingColor) == PieceType::KING)
                 {
                     whiteKingPieceID = (PieceID)pieceID;
                     hasBeenCalculated = true;
@@ -487,7 +487,7 @@ namespace Game {
 
             for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
             {
-                if (ReadPieceType(kingColor, (PieceID)pieceID) == PieceType::KING)
+                if (ReadPieceType((PieceID)pieceID, kingColor) == PieceType::KING)
                 {
                     blackKingPieceID = (PieceID)pieceID;
                     hasBeenCalculated = true;

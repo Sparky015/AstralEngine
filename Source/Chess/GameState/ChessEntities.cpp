@@ -207,12 +207,12 @@ void ChessEntities::DestroyEntities()
 ECS::Entity ChessEntities::GetEntity(SquareLocation location)
 {
     Game::ChessBoard& board = Game::g_BoardManager.GetBoard();
-    if (board.ReadSquareType(location) == PieceType::NONE)
+    if (board.GetSquareType(location) == PieceType::NONE)
     {
         return m_WhiteKing;
     }
 
-    PieceColor color = board.ReadSquareColor(location);
+    PieceColor color = board.GetSquareColor(location);
     uint8 pieceID = board.ReadSquarePieceID(location);
 
     if (color.IsBlack())

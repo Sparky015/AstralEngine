@@ -17,6 +17,8 @@ set(TEST_FILES
         Game/MoveGenerationHelperTest.cpp
         Game/Pieces/RookMoveGenerationTest.cpp
         ChessState/SquareLocationTest.cpp
+        ChessBoard/ChessBoardTest.cpp
+        ChessBoard/InternalChessBoardDataTest.cpp
 )
 
 

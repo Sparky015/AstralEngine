@@ -42,7 +42,7 @@ namespace Game {
 
             if (piecePtr)
             {
-                SquareLocation pieceLocation = board.ReadPieceLocation(color, (PieceID)pieceID);
+                SquareLocation pieceLocation = board.GetPieceLocation((PieceID)pieceID, color);
                 piecePtr->GenerateMoves(board, pieceLocation, color);
             }
         }
@@ -59,13 +59,13 @@ namespace Game {
             std::unique_ptr<ChessPieceMoveList>& piecePtr = GetPiecePtr((PieceID)pieceID, color);
 
             // Check to see if the piece types already match
-            if (piecePtr && board.ReadPieceType(color, (PieceID)pieceID) == piecePtr->GetType())
+            if (piecePtr && board.ReadPieceType((PieceID)pieceID, color) == piecePtr->GetType())
             {
                 continue;
             }
 
             // Make a unique pointer based on its type and assign it to the piece in movelist
-            switch (board.ReadPieceType(color, (PieceID)pieceID))
+            switch (board.ReadPieceType((PieceID)pieceID, color))
             {
                 case PieceType::PAWN: piecePtr = std::make_unique<PawnMoveList>(); break;
                 case PieceType::ROOK: piecePtr = std::make_unique<RookMoveList>(); break;

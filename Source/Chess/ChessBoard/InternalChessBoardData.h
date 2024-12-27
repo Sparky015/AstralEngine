@@ -85,7 +85,7 @@ namespace Game {
     };
 
 
-    struct PreviousMoveBuffer
+    struct PreviousMoveData
     {
         SquareLocation InitialPieceLocation;
         SquareLocation FinalPieceLocation;

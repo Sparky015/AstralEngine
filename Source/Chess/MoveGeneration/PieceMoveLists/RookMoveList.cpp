@@ -35,7 +35,7 @@ namespace Game {
 
             // We keep adding moves to the vector if the next square is empty.
             while (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
-                   board.ReadSquareType(moveLocation) == PieceType::NONE)
+                   board.GetSquareType(moveLocation) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(moveLocation);
                 currentPieceLocation = moveLocation;
@@ -44,7 +44,7 @@ namespace Game {
 
             // The next move's square is not empty, therefore we check if we can attack it.
             if (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
-                board.ReadSquareColor(moveLocation) != pieceColor)
+                board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }

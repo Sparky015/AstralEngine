@@ -8,9 +8,11 @@
 
 #include "ECS/Entity.h"
 #include "ECS/ECSTypes.h"
+#include <bitset>
 
 #include "ECS/Components/Transform.h" // TEMP
 #include "ECS/Components/Sprite.h" // TEMP
+
 
 namespace ECS {
 

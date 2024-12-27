@@ -20,7 +20,7 @@ namespace Game {
     bool CanPieceAttackKing(const ChessBoard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor, PieceID pieceID)
     {
         PieceID kingPieceID = chessboard.GetKingPieceID(pieceColor);
-        SquareLocation kingLocation = chessboard.ReadPieceLocation(pieceColor, kingPieceID);
+        SquareLocation kingLocation = chessboard.GetPieceLocation(kingPieceID, pieceColor);
         return boardMoveList.GetAttackingMoves(pieceID, pieceColor).Contains(kingLocation);
     }
 

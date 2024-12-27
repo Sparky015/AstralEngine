@@ -18,7 +18,7 @@ namespace Game {
     void PawnMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
         // Check if an en passant attack move is possible
-        PreviousMoveBuffer lmb = board.GetLastMoveBuffer();
+        PreviousMoveData lmb = board.GetPreviousMoveData();
         if (lmb.MovingPieceType == PieceType::PAWN)
         {
             if (pieceColor.IsWhite())
@@ -56,7 +56,7 @@ namespace Game {
         // Checking the regular pawn move
         int8 moveStep = UP * directionMultiplier;
         SquareLocation moveLocation = pieceLocation + moveStep;
-        if (board.ReadSquareType(moveLocation) == PieceType::NONE && IsMoveWithinBounds(moveLocation, moveStep))
+        if (board.GetSquareType(moveLocation) == PieceType::NONE && IsMoveWithinBounds(moveLocation, moveStep))
         {
             m_RegularMoves.AddMove(moveLocation);
         }
@@ -67,9 +67,9 @@ namespace Game {
         {
             moveStep = direction * directionMultiplier;
             moveLocation = pieceLocation + moveStep;
-            if (board.ReadSquareType(moveLocation) != PieceType::NONE
+            if (board.GetSquareType(moveLocation) != PieceType::NONE
                 && IsMoveWithinBounds(pieceLocation, moveStep)
-                && board.ReadSquareColor(moveLocation) != pieceColor)
+                && board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }
@@ -80,8 +80,8 @@ namespace Game {
         {
             if (pieceLocation.IsInSameRow(A2))
             {
-                if (board.ReadSquareType(pieceLocation - 16) == PieceType::NONE &&
-                    board.ReadSquareType(pieceLocation - 8) == PieceType::NONE)
+                if (board.GetSquareType(pieceLocation - 16) == PieceType::NONE &&
+                    board.GetSquareType(pieceLocation - 8) == PieceType::NONE)
                 {
                     m_RegularMoves.AddMove(pieceLocation - 16);
                 }
@@ -91,8 +91,8 @@ namespace Game {
         {
             if (pieceLocation.IsInSameRow(A7))
             {
-                if (board.ReadSquareType(pieceLocation + 16) == PieceType::NONE &&
-                    board.ReadSquareType(pieceLocation + 8) == PieceType::NONE)
+                if (board.GetSquareType(pieceLocation + 16) == PieceType::NONE &&
+                    board.GetSquareType(pieceLocation + 8) == PieceType::NONE)
                 {
                     m_RegularMoves.AddMove(pieceLocation + 16);
                 }

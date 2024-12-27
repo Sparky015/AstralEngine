@@ -47,7 +47,7 @@ namespace Game {
         // Getting info of piece clicked on
         m_TrackedPiece.PieceEntity = ChessEntities::GetEntity(mouseSquareLocation);
         m_TrackedPiece.PieceID = chessBoard.ReadSquarePieceID(mouseSquareLocation);
-        m_TrackedPiece.PieceColor = chessBoard.ReadSquareColor(mouseSquareLocation);
+        m_TrackedPiece.PieceColor = chessBoard.GetSquareColor(mouseSquareLocation);
 
         m_PieceTrackingState = PieceTrackingState::TRACKING;
 
@@ -88,7 +88,7 @@ namespace Game {
 
     void PieceTracking::ResetTrackedPiecePosition(const ChessBoard& chessBoard) const
     {
-        SquareLocation pieceLocation = chessBoard.ReadPieceLocation(m_TrackedPiece.PieceColor, m_TrackedPiece.PieceID);
+        SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
@@ -110,7 +110,7 @@ namespace Game {
 
             if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
             {
-                chessBoard.MovePiece(m_TrackedPiece.PieceColor, m_TrackedPiece.PieceID, attemptedMoveLocation);
+                chessBoard.MovePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, attemptedMoveLocation);
 
                 // Updating piece move lists after take move
                 BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
@@ -128,7 +128,7 @@ namespace Game {
                 ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
                 ecs.RemoveEntity(ChessEntities::GetEntity(attemptedMoveLocation));
 
-                chessBoard.TakePiece(m_TrackedPiece.PieceColor, m_TrackedPiece.PieceID, chessMove.targetLocation);
+                chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);
 
                 // Updating piece move lists after take move
                 BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
@@ -140,25 +140,25 @@ namespace Game {
 
     bool PieceTracking::IsRegularMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const
     {
-        return chessBoard.ReadSquareType(targetSquareLocation) == PieceType::NONE;
+        return chessBoard.GetSquareType(targetSquareLocation) == PieceType::NONE;
     }
 
 
     bool PieceTracking::IsTakeMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const
     {
-        return chessBoard.ReadSquareColor(targetSquareLocation) != m_TrackedPiece.PieceColor;
+        return chessBoard.GetSquareColor(targetSquareLocation) != m_TrackedPiece.PieceColor;
     }
 
 
     bool PieceTracking::IsSquareEmpty(const ChessBoard &chessBoard, SquareLocation squareLocation) const
     {
-        return chessBoard.ReadSquareType(squareLocation) == PieceType::NONE;
+        return chessBoard.GetSquareType(squareLocation) == PieceType::NONE;
     }
 
 
     bool PieceTracking::IsPieceTurn(const ChessBoard &chessBoard, SquareLocation pieceLocation) const
     {
-        return chessBoard.ReadSquareColor(pieceLocation) == chessBoard.GetActiveColor();
+        return chessBoard.GetSquareColor(pieceLocation) == chessBoard.GetActiveColor();
     }
 
 }

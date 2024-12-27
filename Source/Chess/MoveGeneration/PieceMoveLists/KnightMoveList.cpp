@@ -26,11 +26,11 @@ namespace Game {
             moveStep = direction * directionMultiplier;
             moveLocation = pieceLocation + moveStep;
             if (!IsMoveWithinBounds(pieceLocation, moveStep)) { continue; }
-            if (board.ReadSquareType(moveLocation) == PieceType::NONE)
+            if (board.GetSquareType(moveLocation) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(moveLocation);
             }
-            else if (board.ReadSquareColor(moveLocation) != pieceColor)
+            else if (board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }
