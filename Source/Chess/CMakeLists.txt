@@ -46,7 +46,7 @@ add_executable(Chess
 target_link_libraries(Chess PRIVATE SozinEngine)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Chess)
 
-target_include_directories(Chess PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(Chess PRIVATE ".")
 
 if (WIN32) #MacOS doesn't like this, so I will only do it for windows
     set_target_properties(Chess PROPERTIES LINK_FLAGS "-static")
