@@ -79,6 +79,8 @@ namespace Game {
     public:
         void SetCastleRight(PieceColor color, CastleRightFlags castleRights);
         void UnsetCastleRight(PieceColor color, CastleRightFlags castleRights);
+        void SetAllFlags();
+        void UnsetAllFlags();
         [[nodiscard]] KingCastleRights ReadCastleRights(PieceColor color) const;
     private:
         uint8 m_Data{0};
@@ -87,6 +89,8 @@ namespace Game {
 
     struct PreviousMoveData
     {
+        PreviousMoveData();
+
         SquareLocation InitialPieceLocation;
         SquareLocation FinalPieceLocation;
         PieceType MovingPieceType;

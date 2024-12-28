@@ -41,6 +41,8 @@ add_executable(Chess
         MoveGeneration/Checks.h
         GameState/SquareLocation.h
         GameState/PieceColor.h
+        ChessBoard/FENParser.cpp
+        ChessBoard/FENParser.h
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

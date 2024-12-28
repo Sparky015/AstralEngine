@@ -5,11 +5,14 @@
 #pragma once
 
 /**
-* @class PieceColor This identifies the color of a piece
+* @class PieceColor
+* @brief This identifies the color of a piece
 */
 class PieceColor
 {
 public:
+    PieceColor() : m_Color(false) {}
+
     static const PieceColor BLACK;
     static const PieceColor WHITE;
 

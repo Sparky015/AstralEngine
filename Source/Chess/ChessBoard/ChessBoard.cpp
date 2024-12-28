@@ -6,6 +6,7 @@
 
 #include "ChessBoard.h"
 
+#include "FENParser.h"
 #include "Utils/ChessConversions.h"
 
 namespace Game {
@@ -14,11 +15,10 @@ namespace Game {
                    Board
 **********************************************/
 
-    ChessBoard::ChessBoard() : m_FullMoveCount(1),
-                               m_HalfMoveCount(1),
-                               m_ActiveColor(PieceColor::WHITE),
-                               m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
-                               m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
+    ChessBoard::ChessBoard()
+        : m_FullMoveCount(1), m_HalfMoveCount(1), m_ActiveColor(PieceColor::WHITE),
+          m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
+          m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
     {
         PROFILE_SCOPE();
         constexpr std::array<PieceType, NUMBER_OF_PIECES_PER_COLOR> OrderOfPieceTypes
@@ -44,122 +44,18 @@ namespace Game {
             m_Board.WriteSquareType(OrderOfPieceTypes[pieceID], pieceLocation);
         }
 
-        m_CastleRights.SetCastleRight(PieceColor::WHITE, KING_SIDE);
-        m_CastleRights.SetCastleRight(PieceColor::WHITE, QUEEN_SIDE);
-        m_CastleRights.SetCastleRight(PieceColor::BLACK, KING_SIDE);
-        m_CastleRights.SetCastleRight(PieceColor::BLACK, QUEEN_SIDE);
+        m_CastleRights.SetAllFlags();
 
-        memset(&m_PreviousMoveData, 0, sizeof(m_PreviousMoveData));
     }
 
 
     ChessBoard::ChessBoard(const std::string& FEN) : m_ActiveColor(PieceColor::WHITE)
     {
-        PROFILE_SCOPE();
-        // Initializing an empty board and empty piece locations
-        m_Board = InternalBoardRepresentation();
-        m_WhitePieceLocations.fill(EMPTY);
-        m_BlackPieceLocations.fill(EMPTY);
+        FENParser fenParser;
 
-        std::string pieceLocations;
-        char activeColor;
-        std::string castleRights;
-        std::string enPassantPawn;
-        std::string halfMoveCount;
-        std::string fullMoveCount;
-
-        std::istringstream iss(FEN);
-        iss >> pieceLocations >> activeColor >> castleRights >> enPassantPawn >> halfMoveCount >> fullMoveCount;
-
-        m_HalfMoveCount = (!halfMoveCount.empty()) ? std::stoi(halfMoveCount) : 0;
-        m_FullMoveCount = (!fullMoveCount.empty()) ? std::stoi(fullMoveCount) : 0;
-
-        // Setting the active color
-        m_ActiveColor = (activeColor == 'w') ? PieceColor::WHITE : PieceColor::BLACK;
-
-        // Setting the castle rights of the board
-        if (castleRights[0] != 'c')
-        {
-            for (char castleRight: castleRights)
-            {
-                if (islower(castleRight))
-                    { m_CastleRights.SetCastleRight(PieceColor::BLACK, (castleRight == 'q') ? QUEEN_SIDE : KING_SIDE); }
-                else
-                    { m_CastleRights.SetCastleRight(PieceColor::WHITE, (castleRight == 'Q') ? QUEEN_SIDE : KING_SIDE); }
-            }
-        }
-
-        uint8 whitePieceIDMarker = 0; // Holds the next white piece ID that needs to be assigned
-        uint8 blackPieceIDMarker = 0; // Holds the next black piece ID that needs to be assigned
-
-        // Going through each character in the FEN sequence and adding the piece to the board (top to bottom)
-        SquareLocation squareLocation = SquareLocation(EMPTY);
-        for (char FEN_character : pieceLocations)
-        {
-            // Check if the character is a number (a number means to skip/set empty the that number of squares)
-            if (isdigit(FEN_character))
-            {
-                squareLocation += FEN_character - '0';
-            }
-            else
-            { // Then the character is a letter
-
-                // Check to see if there is a break symbol (which means to go to the next row)
-                if (FEN_character == '/')
-                {
-                    if (squareLocation % 8 == 0)
-                    { continue; }
-
-                    // Set squareLocation to the next row
-                    squareLocation = squareLocation + 8 - (squareLocation % 8);
-                    continue;
-                }
+        fenParser.ParseFENString(FEN);
 
 
-                // Set the color. Upper case is white and lower case is black
-                PieceColor pieceColor = isupper(FEN_character) ? PieceColor::WHITE : PieceColor::BLACK;
-                m_Board.WriteSquareColor(pieceColor, squareLocation);
-
-                // Set the piece type.
-                m_Board.WriteSquareType(ConvertCharToPieceType(FEN_character), squareLocation);
-
-                // Set the location of the piece
-                if (pieceColor.IsWhite())
-                {
-                    m_WhitePieceLocations[whitePieceIDMarker] = squareLocation;
-                    whitePieceIDMarker++;
-                }
-                else
-                {
-                    m_BlackPieceLocations[blackPieceIDMarker] = squareLocation;
-                    blackPieceIDMarker++;
-                }
-
-                // Increment the square location for the next iteration
-                ++squareLocation;
-            }
-        }
-
-        // Setting the en passant state
-        if (enPassantPawn != "-" && !enPassantPawn.empty())
-        {
-            m_PreviousMoveData.FinalPieceLocation = ConvertChessNotationToInt(enPassantPawn);
-            int8 initialPositionStep = (m_PreviousMoveData.FinalPieceLocation.GetRow() > 5) ? 8 : -8;
-            m_PreviousMoveData.FinalPieceLocation += initialPositionStep;
-
-            uint8 moveStep = (m_PreviousMoveData.FinalPieceLocation.GetRow() > 5) ? -16 : 16;
-            m_PreviousMoveData.InitialPieceLocation = m_PreviousMoveData.FinalPieceLocation + moveStep;
-
-            m_PreviousMoveData.MovingPieceType = PieceType::PAWN;
-            m_PreviousMoveData.MovingPieceID = ReadSquarePieceID(m_PreviousMoveData.FinalPieceLocation);
-
-            m_PreviousMoveData.PieceTakenType = PieceType::NONE;
-            m_PreviousMoveData.TakenPieceID = PIECE_1; // == 0
-        }
-        else
-        {
-            memset(&m_PreviousMoveData, 0, sizeof(m_PreviousMoveData));
-        }
     }
 
 

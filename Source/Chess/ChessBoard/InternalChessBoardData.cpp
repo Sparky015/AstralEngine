@@ -157,6 +157,18 @@ namespace Game {
     }
 
 
+    void BoardCastleRights::SetAllFlags()
+    {
+        m_Data &= 0b00001111;
+    }
+
+
+    void BoardCastleRights::UnsetAllFlags()
+    {
+        m_Data &= 0b00000000;
+    }
+
+
     KingCastleRights BoardCastleRights::ReadCastleRights(PieceColor color) const
     {
         bool queenSide, kingSide;
