@@ -12,10 +12,7 @@
 
 class KeycodeTranslationTest : public ::testing::Test
 {
-protected:
-    void SetUp() override {
-        // Any setup if needed
-    }
+
 };
 
 
