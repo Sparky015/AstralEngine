@@ -4,8 +4,8 @@
 
 #include "DebugMacros.h"
 
-#include "Debug/ConsoleLogFile.h"
-#include "Debug/ProfilerLogFile.h"
+#include "Loggers/ConsoleLogFile.h"
+#include "Loggers/ProfilerLogFile.h"
 #include <sstream>
 
 #include "pch.h"
@@ -212,7 +212,7 @@ namespace Debug::Macros {
             WARN("Attempted write to a log file that is already closed!");
         }
 #endif
-        std::cerr << errorMessage; // Outputting to stderr for unit tests to be able to match expected and actual error messages.
+        std::cerr << errorMessage << "\n"; // Outputting to stderr for unit tests to be able to match expected and actual error messages.
 
         std::cout << "\n\n" << SetColor(RED)
                   << "ASSERT failed. "
@@ -255,7 +255,7 @@ namespace Debug::Macros {
             WARN("Attempted write to a log file that is already closed!");
         }
     #endif
-        std::cerr << errorMessage.str(); // Outputting to stderr for unit tests to be able to match expected and actual error messages.
+        std::cerr << errorMessage.str() << "\n"; // Outputting to stderr for unit tests to be able to match expected and actual error messages.
 
         std::cout << "\n\n" << SetColor(RED)
         << "ASSERT failed. "
@@ -294,7 +294,7 @@ namespace Debug::Macros {
             WARN("Attempted write to a log file that is already closed!");
         }
     #endif
-        std::cerr << errorMessage.str(); // Outputting to stderr for unit tests to be able to match expected and actual error messages.
+        std::cerr << errorMessage.str() << "\n"; // Outputting to stderr for unit tests to be able to match expected and actual error messages.
 
         std::cout << "\n\n" << SetColor(RED)
         << "ERROR called. \nFile: " << filePath

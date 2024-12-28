@@ -40,12 +40,12 @@ add_library(SozinEngine
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/DebugEvents.h
-        Debug/EngineDebugInfoLogger.h
-        Debug/EngineDebugInfoLogger.cpp
-        Debug/ConsoleLogFile.cpp
-        Debug/ConsoleLogFile.h
-        Debug/ProfilerLogFile.cpp
-        Debug/ProfilerLogFile.h
+        Debug/Loggers/EngineDebugInfoLogger.h
+        Debug/Loggers/EngineDebugInfoLogger.cpp
+        Debug/Loggers/ConsoleLogFile.cpp
+        Debug/Loggers/ConsoleLogFile.h
+        Debug/Loggers/ProfilerLogFile.cpp
+        Debug/Loggers/ProfilerLogFile.h
         ECS/ECSManager.cpp
         ECS/ECSManager.h
         ECS/ECS.cpp
@@ -139,8 +139,8 @@ endif ()
 
 # Include Directories
 target_include_directories(SozinEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(SozinEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
-target_include_directories(SozinEngine PRIVATE "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
+target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
+target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 
 

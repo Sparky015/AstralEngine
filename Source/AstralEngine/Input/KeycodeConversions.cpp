@@ -7,7 +7,7 @@
 
 namespace Input {
 
-    int TranslateGLFWKeycodesToSozin(int glfwKeycode)
+    int TranslateGLFWKeycodesToAstral(int glfwKeycode)
     {
         switch (glfwKeycode)
         {

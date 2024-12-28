@@ -117,17 +117,17 @@ namespace Window {
             if (action == GLFW_PRESS)
             {
                 Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
-                keyPressedEvent.PublishEvent(KeyPressedEvent(Input::TranslateGLFWKeycodesToSozin(key)));
+                keyPressedEvent.PublishEvent(KeyPressedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_RELEASE)
             {
                 Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
-                keyReleasedEvent.PublishEvent(KeyReleasedEvent(Input::TranslateGLFWKeycodesToSozin(key)));
+                keyReleasedEvent.PublishEvent(KeyReleasedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_REPEAT)
             {
                 Event::EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
-                keyRepeatingEvent.PublishEvent(KeyRepeatingEvent(Input::TranslateGLFWKeycodesToSozin(key)));
+                keyRepeatingEvent.PublishEvent(KeyRepeatingEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
 
         });
@@ -149,14 +149,14 @@ namespace Window {
             {
                 case GLFW_PRESS:
                 {
-                    KeyPressedEvent event(Input::TranslateGLFWKeycodesToSozin(button));
+                    KeyPressedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
                     Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
                     keyPressedEvent.PublishEvent(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
-                    KeyReleasedEvent event(Input::TranslateGLFWKeycodesToSozin(button));
+                    KeyReleasedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
                     Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
                     keyReleasedEvent.PublishEvent(event);
                     break;

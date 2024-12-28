@@ -6,7 +6,7 @@
 
 namespace Input {
 
-    /** Converts GLFW keycodes to Sozin keycodes, so events are able use the Ayla keycodes. */
-    int TranslateGLFWKeycodesToSozin(int glfwKeycode);
+    /** Converts GLFW keycodes to Sozin keycodes, so events are able to use the Astral keycodes. */
+    int TranslateGLFWKeycodesToAstral(int glfwKeycode);
 
 }

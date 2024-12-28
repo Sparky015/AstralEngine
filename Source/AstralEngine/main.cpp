@@ -1,5 +1,5 @@
 #include "Core/Engine.h"
-#include "Debug/EngineDebugInfoLogger.h"
+#include "Debug/Loggers/EngineDebugInfoLogger.h"
 
 //#include "Debug/AllocationTracker.h"
 
