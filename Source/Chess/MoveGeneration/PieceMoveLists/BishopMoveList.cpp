@@ -13,7 +13,7 @@ namespace Game {
         m_AttackingMoves.ReserveSpace(4);
     }
 
-    void BishopMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void BishopMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
         int8 directionMultiplier = (pieceColor.IsWhite() ? 1 : -1);
         int8 moveStep;

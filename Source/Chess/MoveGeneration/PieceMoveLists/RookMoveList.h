@@ -7,7 +7,7 @@
 #include "pch.h"
 #include "../../GameState/ChessPieceTypes.h"
 #include "ChessPieceMoveList.h"
-#include "../../ChessBoard/ChessBoard.h"
+#include "../../Chessboard/Chessboard.h"
 
 namespace Game {
 
@@ -16,7 +16,7 @@ namespace Game {
     public:
         RookMoveList();
 
-        void GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor) override;
+        void GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor) override;
         PieceType GetType() override { return PieceType::ROOK; }
 
         [[nodiscard]] inline const PieceMoveList& GetRegularMoves() const override { return m_RegularMoves; }

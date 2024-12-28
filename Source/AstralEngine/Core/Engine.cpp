@@ -7,7 +7,7 @@
 
 #include "Input/InputManager.h"
 #include "Window/WindowManager.h"
-#include "Debug/DebugManager.h"
+#include "Debug/ImGuiManager.h"
 #include "ECS/ECSManager.h"
 #include "Renderer/RendererManager.h"
 
@@ -28,7 +28,7 @@ Engine::Engine() :
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
-    Debug::g_DebugManager.Init();
+    Debug::g_ImGuiManager.Init();
     ECS::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
@@ -45,7 +45,7 @@ Engine::~Engine()
     m_ApplicationModule->Shutdown();
     Graphics::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
-    Debug::g_DebugManager.Shutdown();
+    Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 }
@@ -61,9 +61,9 @@ void Engine::Run()
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
         m_ApplicationModule->Update();
 
-        Debug::DebugManager::ImGuiBegin();
-        m_RenderImGuiPublisher.PublishEvent(RenderImGuiEvent() );
-        Debug::DebugManager::ImGuiEnd();
+        Debug::ImGuiManager::ImGuiBeginFrame();
+        m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
+        Debug::ImGuiManager::ImGuiEndFrame();
 
         Window::g_WindowManager.SwapBuffers();
     }

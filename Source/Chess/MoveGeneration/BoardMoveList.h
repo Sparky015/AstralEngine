@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../ChessBoard/ChessBoard.h"
+#include "../Chessboard/Chessboard.h"
 
 #include "PieceMoveLists/ChessPieceMoveList.h"
 
@@ -14,18 +14,18 @@ namespace Game {
     class BoardMoveList
     {
     public:
-        explicit BoardMoveList(ChessBoard& board, PieceColor color);
+        explicit BoardMoveList(Chessboard& board, PieceColor color);
         ~BoardMoveList() = default;
 
-        void UpdateMoveList(const ChessBoard& board, PieceColor color);
+        void UpdateMoveList(const Chessboard& board, PieceColor color);
 
         [[nodiscard]] const PieceMoveList& GetRegularMoves(PieceID pieceID, PieceColor pieceColor) const;
         [[nodiscard]] const PieceMoveList& GetAttackingMoves(PieceID pieceID, PieceColor pieceColor) const;
 
     private:
-        void SyncPieceTypesToBoard(const ChessBoard& board, PieceColor color);
+        void SyncPieceTypesToBoard(const Chessboard& board, PieceColor color);
         std::unique_ptr<ChessPieceMoveList>& GetPiecePtr(PieceID pieceID, PieceColor pieceColor);
-        const std::unique_ptr<ChessPieceMoveList>& GetPiecePtr(PieceID pieceID, PieceColor pieceColor) const;
+        [[nodiscard]] const std::unique_ptr<ChessPieceMoveList>& GetPiecePtr(PieceID pieceID, PieceColor pieceColor) const;
 
         std::unique_ptr<ChessPieceMoveList> m_WhitePiece1;
         std::unique_ptr<ChessPieceMoveList> m_WhitePiece2;

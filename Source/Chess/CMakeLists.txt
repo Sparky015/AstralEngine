@@ -1,12 +1,12 @@
 
 add_executable(Chess
-        ChessBoard/ChessBoard.cpp
-        ChessBoard/ChessBoard.h
+        Chessboard/ChessBoard.cpp
+        Chessboard/ChessBoard.h
         GameState/ChessPieceTypes.h
         GameState/ChessPieceTypes.cpp
-        ChessBoard/ChessBoardManager.cpp
-        ChessBoard/ChessBoardManager.h
-        ChessBoard/InternalChessBoardData.cpp
+        Chessboard/ChessBoardManager.cpp
+        Chessboard/ChessBoardManager.h
+        Chessboard/InternalChessBoardData.cpp
         MoveGeneration/PieceMoveLists/BishopMoveList.h
         MoveGeneration/PieceMoveLists/BishopMoveList.cpp
         MoveGeneration/PieceMoveLists/KingMoveList.h
@@ -43,6 +43,11 @@ add_executable(Chess
         GameState/PieceColor.h
         ChessBoard/FENParser.cpp
         ChessBoard/FENParser.h
+        Debug/ChessboardImGuiComponents.cpp
+        Debug/ChessboardImGuiComponents.h
+        Chessboard/InternalChessBoardData.h
+        GameState/PieceType.h
+        GameState/PieceType.cpp
 )
 
 target_link_libraries(Chess PRIVATE SozinEngine)

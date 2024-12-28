@@ -93,7 +93,7 @@ namespace Game {
                 m_Board.WriteSquareColor(pieceColor, squareLocation);
 
                 // Set the piece type.
-                m_Board.WriteSquareType(ConvertCharToPieceType(FEN_character), squareLocation);
+                m_Board.WriteSquareType(PieceType::CreateFromCharacter(FEN_character), squareLocation);
 
                 // Set the location of the piece
                 if (pieceColor.IsWhite())
@@ -125,14 +125,10 @@ namespace Game {
             m_PreviousMoveData.InitialPieceLocation = m_PreviousMoveData.FinalPieceLocation + moveStep;
 
             m_PreviousMoveData.MovingPieceType = PieceType::PAWN;
-            m_PreviousMoveData.MovingPieceID = ReadSquarePieceID(m_PreviousMoveData.FinalPieceLocation);
+            // m_PreviousMoveData.MovingPieceID = ReadSquarePieceID(m_PreviousMoveData.FinalPieceLocation);
 
             m_PreviousMoveData.PieceTakenType = PieceType::NONE;
             m_PreviousMoveData.TakenPieceID = PIECE_1; // == 0
-        }
-        else
-        {
-            memset(&m_PreviousMoveData, 0, sizeof(m_PreviousMoveData));
         }
     }
 

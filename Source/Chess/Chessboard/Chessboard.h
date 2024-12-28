@@ -8,22 +8,22 @@
 
 #include "pch.h"
 
-#include "InternalChessBoardData.h"
+#include "InternalChessboardData.h"
 #include "GameState/ChessPieceTypes.h"
 
 namespace Game {
 
    /**
-    * @class ChessBoard
+    * @class Chessboard
     * @brief This holds the data representation of a chess board.
     */
-    class ChessBoard
+    class Chessboard
     {
     public:
 
-        ChessBoard();
-        explicit ChessBoard(const std::string& FEN);
-        ~ChessBoard() = default;
+        Chessboard();
+        explicit Chessboard(const std::string& FEN);
+        ~Chessboard() = default;
 
         /**@brief Moves a chess piece to a given location
          * @param pieceID ID of the moving chess piece
@@ -54,7 +54,7 @@ namespace Game {
          * @param pieceColor Color of chess piece
          * @return Piece type of chess piece
          * @note This relies on the piece's location to find its type */
-        [[nodiscard]] PieceType ReadPieceType(const PieceID pieceID, const PieceColor pieceColor) const;
+        [[nodiscard]] PieceType GetPieceType(const PieceID pieceID, const PieceColor pieceColor) const;
 
         /**@brief Gets the color of a piece on a square
          * @param squareLocation Location to check color of piece at
@@ -72,7 +72,7 @@ namespace Game {
          * @param squareLocation Location to check type of piece at.
          * @return ID of piece at given square
          * @note There must be a piece on the square given. */
-        [[nodiscard]] PieceID ReadSquarePieceID(const SquareLocation squareLocation) const;
+        [[nodiscard]] PieceID GetSquarePieceID(const SquareLocation squareLocation) const;
 
         /**@brief Gets the state of the castle rights of the chess board.
          * @return The castle rights of the board */

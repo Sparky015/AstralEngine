@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 11/1/24.
 //
 
-#include "DebugManager.h"
+#include "ImGuiManager.h"
 
 #include "imgui.h"
 
@@ -20,16 +20,16 @@
 
 namespace Debug{
 
-    DebugManager& g_DebugManager = DebugManager::Get();
+    ImGuiManager& g_ImGuiManager = ImGuiManager::Get();
 
-    DebugManager& DebugManager::Get()
+    ImGuiManager& ImGuiManager::Get()
     {
-        static DebugManager m_Instance = DebugManager();
+        static ImGuiManager m_Instance = ImGuiManager();
         return m_Instance;
     }
 
 
-    void DebugManager::Init()
+    void ImGuiManager::Init()
     {
         PROFILE_SCOPE();
         TRACE("Initializing Debug Manager!")
@@ -40,7 +40,7 @@ namespace Debug{
     }
 
 
-    void DebugManager::Shutdown()
+    void ImGuiManager::Shutdown()
     {
         PROFILE_SCOPE();
         TRACE("Shutting down Debug Manager!")
@@ -51,13 +51,13 @@ namespace Debug{
     }
 
 
-    void DebugManager::Update()
+    void ImGuiManager::Update()
     {
         PROFILE_SCOPE();
     }
 
 
-    void DebugManager::RenderImGui()
+    void ImGuiManager::RenderImGui()
     {
         PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
@@ -167,16 +167,13 @@ namespace Debug{
 //            }
 
 
-
-
-
             ImGui::End();
         }
     }
 
 
-    float DebugManager::m_Time = 0.0f;
-    void DebugManager::ImGuiBegin()
+    float ImGuiManager::m_Time = 0.0f;
+    void ImGuiManager::ImGuiBeginFrame()
     {
         PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
@@ -190,7 +187,7 @@ namespace Debug{
     }
 
 
-    void DebugManager::ImGuiEnd()
+    void ImGuiManager::ImGuiEndFrame()
     {
         PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
@@ -207,20 +204,20 @@ namespace Debug{
     }
 
 
-    DebugManager::DebugManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
+    ImGuiManager::ImGuiManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
     {
         PROFILE_SCOPE();
         TRACE("Constructing Debug System!")
     }
 
-    DebugManager::~DebugManager()
+    ImGuiManager::~ImGuiManager()
     {
         PROFILE_SCOPE();
         TRACE("Destroying Debug System!")
     }
 
 
-    void DebugManager::InitImGui()
+    void ImGuiManager::InitImGui()
     {
         PROFILE_SCOPE();
         ImGui::CreateContext();
@@ -249,7 +246,7 @@ namespace Debug{
     }
 
 
-    void DebugManager::ShutdownImGui()
+    void ImGuiManager::ShutdownImGui()
     {
         PROFILE_SCOPE();
         ImGui_ImplOpenGL3_Shutdown();
@@ -257,7 +254,7 @@ namespace Debug{
         ImGui::DestroyContext();
     }
 
-    void DebugManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
+    void ImGuiManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
         PROFILE_SCOPE();
         if (keyPressedEvent.keycode == KEY_D)

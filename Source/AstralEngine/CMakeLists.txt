@@ -31,10 +31,10 @@ add_library(SozinEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Debug/AllocationTracker.h
+        Debug/Loggers/AllocationTracker.h
         Window/WindowEvents.h
-        Debug/DebugManager.h
-        Debug/DebugManager.cpp
+        Debug/ImGuiManager.h
+        Debug/ImGuiManager.cpp
         Debug/ImGuiDependencies/imgui_impl_glfw.cpp
         Debug/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
@@ -142,6 +142,7 @@ target_include_directories(SozinEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
 target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
+target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
 
 
 

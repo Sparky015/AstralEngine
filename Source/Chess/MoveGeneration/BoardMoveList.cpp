@@ -14,7 +14,7 @@
 
 namespace Game {
 
-    BoardMoveList::BoardMoveList(ChessBoard& board, PieceColor color) :
+    BoardMoveList::BoardMoveList(Chessboard& board, PieceColor color) :
     m_WhitePiece1(nullptr), m_WhitePiece2(nullptr), m_WhitePiece3(nullptr), m_WhitePiece4(nullptr),
     m_WhitePiece5(nullptr), m_WhitePiece6(nullptr), m_WhitePiece7(nullptr), m_WhitePiece8(nullptr),
     m_WhitePiece9(nullptr), m_WhitePiece10(nullptr), m_WhitePiece11(nullptr), m_WhitePiece12(nullptr),
@@ -29,7 +29,7 @@ namespace Game {
     }
 
 
-    void BoardMoveList::UpdateMoveList(const ChessBoard& board, PieceColor color)
+    void BoardMoveList::UpdateMoveList(const Chessboard& board, PieceColor color)
     {
         PROFILE_SCOPE();
         // First sync the piece types of the board to the move list (in case of pawn promotions)
@@ -50,7 +50,7 @@ namespace Game {
     }
 
 
-    void BoardMoveList::SyncPieceTypesToBoard(const ChessBoard& board, PieceColor color)
+    void BoardMoveList::SyncPieceTypesToBoard(const Chessboard& board, PieceColor color)
     {
         PROFILE_SCOPE();
         // Loop through each piece in the board and look at its type
@@ -59,13 +59,14 @@ namespace Game {
             std::unique_ptr<ChessPieceMoveList>& piecePtr = GetPiecePtr((PieceID)pieceID, color);
 
             // Check to see if the piece types already match
-            if (piecePtr && board.ReadPieceType((PieceID)pieceID, color) == piecePtr->GetType())
+            if (piecePtr && board.GetPieceType((PieceID)pieceID, color) == piecePtr->GetType())
             {
                 continue;
             }
 
             // Make a unique pointer based on its type and assign it to the piece in movelist
-            switch (board.ReadPieceType((PieceID)pieceID, color))
+            PieceType pieceType = board.GetPieceType((PieceID)pieceID, color);
+            switch (pieceType.GetEnumValue())
             {
                 case PieceType::PAWN: piecePtr = std::make_unique<PawnMoveList>(); break;
                 case PieceType::ROOK: piecePtr = std::make_unique<RookMoveList>(); break;

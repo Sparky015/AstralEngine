@@ -17,8 +17,8 @@ namespace Graphics {
             m_FragmentShaderCode(fragmentShader.GetShaderCode()),
             m_ShaderProgramID(glCreateProgram())
     {
-        const unsigned int vertexShaderID = CompileShader(GL_VERTEX_SHADER, m_VertexShaderCode);
-        const unsigned int fragmentShaderID = CompileShader(GL_FRAGMENT_SHADER, m_FragmentShaderCode);
+        const unsigned int vertexShaderID = OpenGLShaderProgram::CompileShader(GL_VERTEX_SHADER, m_VertexShaderCode);
+        const unsigned int fragmentShaderID = OpenGLShaderProgram::CompileShader(GL_FRAGMENT_SHADER, m_FragmentShaderCode);
 
         /** Attach the two shaders to the program */
         glAttachShader(m_ShaderProgramID, vertexShaderID);
@@ -87,7 +87,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetTextureUniform(const std::string& uniformName, int slot)
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform1i(uniformLocation, slot);
     }
@@ -95,7 +95,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform1f(uniformLocation, f1);
     }
@@ -103,7 +103,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform2f(uniformLocation, f1, f2);
     }
@@ -111,7 +111,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2, float f3) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform3f(uniformLocation, f1, f2, f3);
     }
@@ -119,7 +119,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, float f1, float f2, float f3, float f4) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform4f(uniformLocation, f1, f2, f3, f4);
     }
@@ -127,7 +127,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform1f(uniformLocation, i1);
     }
@@ -135,7 +135,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform2f(uniformLocation, i1, i2);
     }
@@ -143,7 +143,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2, int32 i3) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform3i(uniformLocation, i1, i2, i3);
     }
@@ -151,7 +151,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, int32 i1, int32 i2, int32 i3, int32 i4) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform4i(uniformLocation, i1, i2, i3, i4);
     }
@@ -159,7 +159,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform1ui(uniformLocation, ui1);
     }
@@ -167,7 +167,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform2ui(uniformLocation, ui1, ui2);
     }
@@ -175,7 +175,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform3ui(uniformLocation, ui1, ui2, ui3);
     }
@@ -184,7 +184,7 @@ namespace Graphics {
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, uint32 ui1, uint32 ui2, uint32 ui3,
                                          uint32 ui4) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform4ui(uniformLocation, ui1, ui2, ui3, ui4);
     }
@@ -192,7 +192,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Mat4 mat4) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(mat4));
     }
@@ -200,7 +200,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Vec4 vec4) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform4fv(uniformLocation, 1, glm::value_ptr(vec4));
     }
@@ -208,7 +208,7 @@ namespace Graphics {
 
     void OpenGLShaderProgram::SetUniform(const std::string& uniformName, Vec3 vec3) const
     {
-        unsigned int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
+        const int uniformLocation = glGetUniformLocation(m_ShaderProgramID, uniformName.c_str());
         ASSERT(uniformLocation != -1, "Uniform name was not found in shader!");
         glUniform3fv(uniformLocation, 1, glm::value_ptr(vec3));
     }

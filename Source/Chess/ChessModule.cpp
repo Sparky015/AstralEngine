@@ -8,7 +8,7 @@
 
 #include "Input/InputState.h"
 #include "Core/Events/EventListener.h"
-#include "ChessBoard/ChessBoardManager.h"
+#include "Chessboard/ChessboardManager.h"
 #include "GameFlow/GameManager.h"
 
 class ChessModule : public ApplicationModule

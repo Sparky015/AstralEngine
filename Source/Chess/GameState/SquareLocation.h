@@ -20,12 +20,12 @@ enum [[maybe_unused]] BoardLocation : uint8
     EMPTY = 255
 };
 
-class SquareLocation
+class SquareLocation final
 {
 public:
     constexpr SquareLocation() : m_Location(EMPTY) {}
-    constexpr SquareLocation(BoardLocation squareLocation) : m_Location(static_cast<uint8>(squareLocation)) {};
-    constexpr SquareLocation(uint8 squareLocation) : m_Location(squareLocation) {}
+    constexpr SquareLocation(const BoardLocation squareLocation) : m_Location(static_cast<uint8>(squareLocation)) {};
+    constexpr SquareLocation(const uint8 squareLocation) : m_Location(squareLocation) {}
 
 
     [[nodiscard]] constexpr bool IsOnBoard() const { return m_Location < 64; }
@@ -33,15 +33,16 @@ public:
     [[nodiscard]] constexpr bool IsEmpty() const { return m_Location == EMPTY; }
     [[nodiscard]] constexpr uint8 GetRow() const { return 8 - (m_Location / 8); }
     [[nodiscard]] constexpr uint8 GetColumn() const { return (m_Location % 8) + 1; }
-    [[nodiscard]] constexpr bool IsInSameRow(SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
-    [[nodiscard]] constexpr bool IsInSameColumn(SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
+    [[nodiscard]] constexpr bool IsInSameRow(const SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
+    [[nodiscard]] constexpr bool IsInSameColumn(const SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
+    [[nodiscard]] std::string GetString() const { return std::to_string(m_Location); }
     [[nodiscard]] constexpr uint8 GetRawValue() const { return m_Location; }
 
-    static constexpr SquareLocation FromRowAndColumn(uint8 row, uint8 column)
+    static constexpr SquareLocation FromRowAndColumn(const uint8 row, const uint8 column)
     {
         const uint8 rawLocation = ((8 - row) * 8) + (column - 1);
         return SquareLocation(rawLocation);
-    };
+    }
 
 
     constexpr SquareLocation& operator=(const SquareLocation&) = default;
@@ -62,6 +63,7 @@ public:
     constexpr SquareLocation operator++(int) { SquareLocation temp = *this; ++m_Location; return temp; }
     constexpr SquareLocation& operator--() { --m_Location; return *this; }
     constexpr SquareLocation operator--(int) { SquareLocation temp = *this; --m_Location; return temp; }
+
 
 private:
 

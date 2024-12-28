@@ -15,7 +15,7 @@ namespace Game {
         m_AttackingMoves.ReserveSpace(8);
     }
 
-    void KingMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void KingMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
         // Check if the king can castle
         KingCastleRights castleRights = board.GetCastleRights(pieceColor);

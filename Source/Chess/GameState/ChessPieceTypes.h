@@ -8,6 +8,7 @@
 
 #include "PieceColor.h"
 #include "SquareLocation.h"
+#include "PieceType.h"
 
 /**
  * @enum PieceID This tracks the index of each piece in the Board's piece arrays.
@@ -33,22 +34,3 @@ enum PieceID : uint8
     PIECE_15,
     PIECE_16
 };
-
-/**
- * @enum PieceType This identifies the type of a piece.
-*/
-enum class PieceType : uint8
-{
-    NONE,
-
-    PAWN,
-    BISHOP,
-    KNIGHT,
-    ROOK,
-    QUEEN,
-    KING
-};
-
-
-
-

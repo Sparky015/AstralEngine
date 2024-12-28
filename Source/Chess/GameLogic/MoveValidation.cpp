@@ -10,7 +10,7 @@
 
 namespace Game {
 
-    bool IsMoveValid(const ChessBoard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove)
+    bool IsMoveValid(const Chessboard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove)
     {
         ASSERT(chessMove.IsValid(), "Invalid move given!");
 

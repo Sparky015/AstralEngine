@@ -15,7 +15,7 @@ namespace Game {
         m_AttackingMoves.ReserveSpace(8);
     }
 
-    void KnightMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void KnightMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
         int8 directionMultiplier = (pieceColor.IsWhite() ? 1 : -1);
         int8 moveStep;

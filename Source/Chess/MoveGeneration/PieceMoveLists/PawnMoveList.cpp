@@ -15,7 +15,7 @@ namespace Game {
         m_AttackingMoves.ReserveSpace(2);
     }
 
-    void PawnMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void PawnMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
         // Check if an en passant attack move is possible
         PreviousMoveData lmb = board.GetPreviousMoveData();

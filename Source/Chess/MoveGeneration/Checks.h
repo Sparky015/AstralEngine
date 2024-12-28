@@ -11,8 +11,8 @@
 
 namespace Game {
 
-    bool IsKingInCheck(const ChessBoard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor);
+    bool IsKingInCheck(const Chessboard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor);
 
-    bool CanPieceAttackKing(const ChessBoard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor, PieceID pieceID);
+    bool CanPieceAttackKing(const Chessboard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor, PieceID pieceID);
 
 }

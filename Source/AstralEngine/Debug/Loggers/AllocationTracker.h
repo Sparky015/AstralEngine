@@ -4,18 +4,20 @@
 
 #pragma once
 
-#include "pch.h"
+#include "../../pch.h"
 
 #include <cstdlib> // for std::malloc and std::free
 #include <iostream>
 
-void* operator new(std::size_t size) {
-
+inline void* operator new(std::size_t size)
+{
+    // TODO: Add logging system
     void* p = std::malloc(size);
     if (!p) throw std::bad_alloc();
     return p;
 }
 
-void operator delete(void* p) noexcept {
+inline void operator delete(void* p) noexcept
+{
     std::free(p);
 }

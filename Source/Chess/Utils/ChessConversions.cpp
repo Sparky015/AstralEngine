@@ -5,55 +5,7 @@
 #include "ChessConversions.h"
 
 
-
 namespace Game {
-
-    PieceType ConvertCharToPieceType(char c)
-    {
-        c = tolower(c);
-        switch (c)
-        {
-            case 'p':
-                return PieceType::PAWN;
-            case 'r':
-                return PieceType::ROOK;
-            case 'b':
-                return PieceType::BISHOP;
-            case 'n':
-                return PieceType::KNIGHT;
-            case 'k':
-                return PieceType::KING;
-            case 'q':
-                return PieceType::QUEEN;
-            default:
-                throw std::logic_error("Char did not map to any character.");
-        }
-    }
-
-
-    char ConvertPieceTypeToChar(PieceType pieceType)
-    {
-        switch (pieceType)
-        {
-            case PieceType::PAWN:
-                return 'p';
-            case PieceType::ROOK:
-                return 'r';
-            case PieceType::BISHOP:
-                return 'b';
-            case PieceType::KNIGHT:
-                return 'n';
-            case PieceType::KING:
-                return 'k';
-            case PieceType::QUEEN:
-                return 'q';
-            case PieceType::NONE:
-                return '_';
-            default:
-                throw std::logic_error("PieceType did not map to any character.");
-        }
-    }
-
 
     uint8 ConvertChessNotationToInt(const std::string& chessNotation)
     {
@@ -101,6 +53,7 @@ namespace Game {
             case 6: columnLetter = 'F'; break;
             case 7: columnLetter = 'G'; break;
             case 8: columnLetter = 'H'; break;
+            default: ERROR("Invalid Switch Statement Input");
         }
 
         // Invert the column number (i.e. 8 becomes 1, 7, becomes 2, 6 becomes, 3...)
@@ -110,14 +63,14 @@ namespace Game {
     }
 
 
-    std::string ConvertVectorToString(const std::vector<uint8>& vec)
+    std::string ConvertVectorToString(const PieceMoveList& vec)
     {
         std::ostringstream oss;
         oss << "[";
-        for (size_t i = 0; i < vec.size(); ++i)
+        for (size_t i = 0; i < vec.Size(); ++i)
         {
-            oss << ConvertIntToChessNotation((int)vec[i]);
-            if (i != vec.size() - 1)
+            oss << ConvertIntToChessNotation((int)vec[i].GetRawValue());
+            if (i != vec.Size() - 1) // Adding comma in between each location
             {
                 oss << ", ";
             }
@@ -127,20 +80,7 @@ namespace Game {
     }
 
 
-    std::string ConvertPieceTypeToString(const PieceType pieceType)
-    {
-        switch (pieceType)
-        {
-            case PieceType::PAWN: return "Pawn";
-            case PieceType::ROOK: return "Rook";
-            case PieceType::BISHOP: return "Bishop";
-            case PieceType::KNIGHT: return "Knight";
-            case PieceType::KING: return "King";
-            case PieceType::QUEEN: return "Queen";
-            case PieceType::NONE: return "None";
-            default: throw std::logic_error("PieceType did not map to any string.");
-        }
-    }
+
 
 
     Vec2 ConvertPieceLocationToCoordinates(uint8 pieceLocation)

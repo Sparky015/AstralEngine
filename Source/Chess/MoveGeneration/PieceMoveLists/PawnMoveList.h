@@ -15,7 +15,7 @@ namespace Game {
     public:
         PawnMoveList();
 
-        void GenerateMoves(const ChessBoard& board, SquareLocation pieceLocation, const PieceColor pieceColor) override;
+        void GenerateMoves(const Chessboard& board, SquareLocation pieceLocation, const PieceColor pieceColor) override;
         PieceType GetType() override { return PieceType::PAWN; }
 
         [[nodiscard]] inline const PieceMoveList& GetRegularMoves() const override { return m_RegularMoves; }

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../../GameState/ChessPieceTypes.h"
-#include "../../ChessBoard/ChessBoard.h"
+#include "../../Chessboard/Chessboard.h"
 #include "../PieceMoveList.h"
 #include "MoveGeneration/MoveListGenerationUtils.h"
 
@@ -17,7 +17,7 @@ namespace Game {
         ChessPieceMoveList() = default;
         virtual ~ChessPieceMoveList() = default;
 
-        virtual void GenerateMoves(const ChessBoard& board, SquareLocation pieceLocation, const PieceColor pieceColor) = 0;
+        virtual void GenerateMoves(const Chessboard& board, SquareLocation pieceLocation, const PieceColor pieceColor) = 0;
         virtual PieceType GetType() = 0;
 
         [[nodiscard]] virtual const PieceMoveList& GetRegularMoves() const = 0;

@@ -6,7 +6,7 @@
 
 namespace Game {
 
-    bool IsKingInCheck(const ChessBoard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor)
+    bool IsKingInCheck(const Chessboard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor)
     {
         for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
         {
@@ -17,7 +17,7 @@ namespace Game {
     }
 
 
-    bool CanPieceAttackKing(const ChessBoard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor, PieceID pieceID)
+    bool CanPieceAttackKing(const Chessboard& chessboard, const BoardMoveList& boardMoveList, PieceColor pieceColor, PieceID pieceID)
     {
         PieceID kingPieceID = chessboard.GetKingPieceID(pieceColor);
         SquareLocation kingLocation = chessboard.GetPieceLocation(kingPieceID, pieceColor);

@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "../ChessBoard/ChessBoard.h"
+#include "../Chessboard/Chessboard.h"
 #include "../MoveGeneration/BoardMoveList.h"
 
 namespace Game {
 
-    bool IsMoveValid(const ChessBoard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove);
+    bool IsMoveValid(const Chessboard& chessBoard, const BoardMoveList& boardMoveList, ChessMove chessMove);
 
 }

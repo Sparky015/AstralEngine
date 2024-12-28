@@ -6,7 +6,7 @@
 
 #include "PieceTracking.h"
 
-#include "../ChessBoard/ChessBoardManager.h"
+#include "../Chessboard/ChessboardManager.h"
 #include "GameState/ChessEntities.h"
 #include "GameLogic/MoveValidation.h"
 #include "Core/CoreMacroDefinitions.h"
@@ -38,7 +38,7 @@ namespace Game {
 
     void PieceTracking::StartTrackingPiece()
     {
-        const ChessBoard& chessBoard = g_BoardManager.GetBoard();
+        const Chessboard& chessBoard = g_BoardManager.GetBoard();
         SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
 
         if (IsSquareEmpty(chessBoard, mouseSquareLocation)) { return; }
@@ -46,7 +46,7 @@ namespace Game {
 
         // Getting info of piece clicked on
         m_TrackedPiece.PieceEntity = ChessEntities::GetEntity(mouseSquareLocation);
-        m_TrackedPiece.PieceID = chessBoard.ReadSquarePieceID(mouseSquareLocation);
+        m_TrackedPiece.PieceID = chessBoard.GetSquarePieceID(mouseSquareLocation);
         m_TrackedPiece.PieceColor = chessBoard.GetSquareColor(mouseSquareLocation);
 
         m_PieceTrackingState = PieceTrackingState::TRACKING;
@@ -62,7 +62,7 @@ namespace Game {
 
         // The square that the mouse is over
         SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
-        ChessBoard& chessBoard = g_BoardManager.GetBoard();
+        Chessboard& chessBoard = g_BoardManager.GetBoard();
 
         AttemptMove(chessBoard, mouseSquareLocation);
 
@@ -86,7 +86,7 @@ namespace Game {
     }
 
 
-    void PieceTracking::ResetTrackedPiecePosition(const ChessBoard& chessBoard) const
+    void PieceTracking::ResetTrackedPiecePosition(const Chessboard& chessBoard) const
     {
         SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
@@ -101,7 +101,7 @@ namespace Game {
     }
 
 
-    void PieceTracking::AttemptMove(ChessBoard& chessBoard, SquareLocation attemptedMoveLocation) const
+    void PieceTracking::AttemptMove(Chessboard& chessBoard, SquareLocation attemptedMoveLocation) const
     {
         if (IsRegularMove(chessBoard, attemptedMoveLocation))
         {
@@ -138,25 +138,25 @@ namespace Game {
     }
 
 
-    bool PieceTracking::IsRegularMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const
+    bool PieceTracking::IsRegularMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const
     {
         return chessBoard.GetSquareType(targetSquareLocation) == PieceType::NONE;
     }
 
 
-    bool PieceTracking::IsTakeMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const
+    bool PieceTracking::IsTakeMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const
     {
         return chessBoard.GetSquareColor(targetSquareLocation) != m_TrackedPiece.PieceColor;
     }
 
 
-    bool PieceTracking::IsSquareEmpty(const ChessBoard &chessBoard, SquareLocation squareLocation) const
+    bool PieceTracking::IsSquareEmpty(const Chessboard &chessBoard, SquareLocation squareLocation) const
     {
         return chessBoard.GetSquareType(squareLocation) == PieceType::NONE;
     }
 
 
-    bool PieceTracking::IsPieceTurn(const ChessBoard &chessBoard, SquareLocation pieceLocation) const
+    bool PieceTracking::IsPieceTurn(const Chessboard &chessBoard, SquareLocation pieceLocation) const
     {
         return chessBoard.GetSquareColor(pieceLocation) == chessBoard.GetActiveColor();
     }

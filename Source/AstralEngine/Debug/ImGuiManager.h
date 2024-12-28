@@ -10,28 +10,28 @@
 
 namespace Debug{
 
-    class DebugManager : public SystemManager
+    class ImGuiManager : public SystemManager
     {
     public:
 
-        static DebugManager& Get();
+        static ImGuiManager& Get();
 
         void Init() override;
         void Shutdown() override;
         void Update() override;
         void RenderImGui() override;
 
-        static void ImGuiBegin();
-        static void ImGuiEnd();
+        static void ImGuiBeginFrame();
+        static void ImGuiEndFrame();
 
-        DebugManager(const DebugManager&) = delete;
-        DebugManager& operator=(const DebugManager&) = delete;
-        DebugManager(DebugManager&&) = delete;
-        DebugManager& operator=(DebugManager&&) = delete;
+        ImGuiManager(const ImGuiManager&) = delete;
+        ImGuiManager& operator=(const ImGuiManager&) = delete;
+        ImGuiManager(ImGuiManager&&) = delete;
+        ImGuiManager& operator=(ImGuiManager&&) = delete;
 
     private:
-        DebugManager();
-        ~DebugManager() override;
+        ImGuiManager();
+        ~ImGuiManager() override;
 
         void InitImGui();
         void ShutdownImGui();
@@ -44,6 +44,6 @@ namespace Debug{
         Event::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
-    extern DebugManager& g_DebugManager;
+    extern ImGuiManager& g_ImGuiManager;
 
 }

@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 11/18/24.
 //
 
-#include "InternalChessBoardData.h"
+#include "InternalChessboardData.h"
 
 namespace Game {
 
@@ -14,9 +14,9 @@ namespace Game {
                                   PieceColor pieceColorTwo)
     {
         uint8 colorOneShifted = static_cast<uint8>(pieceColorOne.GetRawValue()) << 7;
-        uint8 typeOneShifted = static_cast<uint8>(pieceTypeOne) << 4;
+        uint8 typeOneShifted = pieceTypeOne.GetRawValue() << 4;
         uint8 colorTwoShifted = static_cast<uint8>(pieceColorTwo.GetRawValue()) << 3;
-        m_Data = colorOneShifted | typeOneShifted | colorTwoShifted | static_cast<uint8>(pieceTypeTwo);
+        m_Data = colorOneShifted | typeOneShifted | colorTwoShifted | pieceTypeTwo.GetRawValue();
     }
 
 
@@ -24,13 +24,13 @@ namespace Game {
     {
         if (squarePosition == SECOND_SQUARE)
         {
-            uint8 squareTwoTypeShifted = m_Data & (0b00000111);
-            return (PieceType) squareTwoTypeShifted;
+            const uint8 squareTwoTypeShifted = m_Data & (0b00000111);
+            return PieceType::CreateFromRawValue(squareTwoTypeShifted);
         }
         else
         {
-            uint8 squareOneTypeShifted = m_Data >> 4 & (0b00000111);
-            return (PieceType) squareOneTypeShifted;
+            const uint8 squareOneTypeShifted = m_Data >> 4 & (0b00000111);
+            return PieceType::CreateFromRawValue(squareOneTypeShifted);
         }
     }
 
@@ -40,12 +40,12 @@ namespace Game {
         if (squarePosition == SECOND_SQUARE)
         {
             uint8 squareTwoColorShifted = m_Data >> 3 & (0b00000001);
-            return PieceColor::FromRawValue(squareTwoColorShifted);
+            return PieceColor::CreateFromRawValue(squareTwoColorShifted);
         }
         else
         {
             uint8 squareOneColorShifted = m_Data >> 7;
-            return PieceColor::FromRawValue(squareOneColorShifted);
+            return PieceColor::CreateFromRawValue(squareOneColorShifted);
         }
     }
 
@@ -55,12 +55,12 @@ namespace Game {
         if (squarePosition == SECOND_SQUARE)
         {
             m_Data &= 0b11111000;
-            m_Data |= (uint8) type;
+            m_Data |= type.GetRawValue();
         }
         else
         {
             m_Data &= 0b10001111;
-            m_Data |= (uint8) type << 4;
+            m_Data |= type.GetRawValue() << 4;
         }
     }
 
@@ -185,5 +185,10 @@ namespace Game {
 
         return KingCastleRights({kingSide, queenSide});
     }
+
+    PreviousMoveData::PreviousMoveData() :
+        MovingPieceType(PieceType::NONE), MovingPieceID(PIECE_1),
+        PieceTakenType(PieceType::NONE), TakenPieceID(PIECE_1)
+    {}
 
 }
