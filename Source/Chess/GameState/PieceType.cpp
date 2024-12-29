@@ -58,3 +58,8 @@ PieceType PieceType::CreateFromCharacter(char symbol)
         default: ERROR("Invalid Type: " << symbol);
     }
 }
+
+void Test()
+{
+    LOG("TEST")
+}

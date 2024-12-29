@@ -63,7 +63,7 @@ namespace Game {
     }
 
 
-    std::string ConvertVectorToString(const PieceMoveList& vec)
+    std::string ConvertPieceMoveListToString(const PieceMoveList& vec)
     {
         std::ostringstream oss;
         oss << "[";

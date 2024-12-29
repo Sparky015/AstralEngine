@@ -1,5 +1,5 @@
 
-add_executable(Chess
+add_library(Chess
         Chessboard/ChessBoard.cpp
         Chessboard/ChessBoard.h
         GameState/ChessPieceTypes.h
@@ -50,12 +50,19 @@ add_executable(Chess
         GameState/PieceType.cpp
 )
 
-target_link_libraries(Chess PRIVATE SozinEngine)
+add_executable(ChessExecutable ChessModule.cpp)
+target_link_libraries(ChessExecutable PUBLIC Chess)
+
+
+target_link_libraries(Chess PUBLIC AstralEngine)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Chess)
 
-target_include_directories(Chess PRIVATE ".")
+target_include_directories(Chess PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
 
 if (WIN32) #MacOS doesn't like this, so I will only do it for windows
-    set_target_properties(Chess PROPERTIES LINK_FLAGS "-static")
+    set_target_properties(ChessExecutable PROPERTIES LINK_FLAGS "-static")
 endif()
 
+add_dependencies(Chess AstralEngine)
+add_dependencies(ChessExecutable Chess)

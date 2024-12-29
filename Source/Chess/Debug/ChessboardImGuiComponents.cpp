@@ -25,8 +25,8 @@ void PieceMoveListTableComponent(const char* tableName, const Game::Chessboard& 
             const Game::PieceMoveList& whiteRegularMoves = whiteMoveList.GetRegularMoves(static_cast<PieceID>(pieceID), PieceColor::WHITE);
             const Game::PieceMoveList& whiteAttackMoves = whiteMoveList.GetAttackingMoves(static_cast<PieceID>(pieceID), PieceColor::WHITE);
 
-            const char* regularMoveStr = Game::ConvertVectorToString(whiteRegularMoves).c_str();
-            const char* attackingMoveStr = Game::ConvertVectorToString(whiteAttackMoves).c_str();
+            const char* regularMoveStr = Game::ConvertPieceMoveListToString(whiteRegularMoves).c_str();
+            const char* attackingMoveStr = Game::ConvertPieceMoveListToString(whiteAttackMoves).c_str();
 
             const PieceType pieceType = board.GetPieceType(static_cast<PieceID>(pieceID), PieceColor::WHITE);
             const SquareLocation pieceLocation = board.GetPieceLocation( static_cast<PieceID>(pieceID), PieceColor::WHITE);
@@ -45,8 +45,8 @@ void PieceMoveListTableComponent(const char* tableName, const Game::Chessboard& 
             const Game::PieceMoveList& whiteRegularMoves = whiteMoveList.GetRegularMoves(static_cast<PieceID>(pieceID), PieceColor::WHITE);
             const Game::PieceMoveList& whiteAttackMoves = whiteMoveList.GetAttackingMoves(static_cast<PieceID>(pieceID), PieceColor::WHITE);
 
-            const char* regularMoveStr = Game::ConvertVectorToString(whiteRegularMoves).c_str();
-            const char* attackingMoveStr = Game::ConvertVectorToString(whiteAttackMoves).c_str();
+            const char* regularMoveStr = Game::ConvertPieceMoveListToString(whiteRegularMoves).c_str();
+            const char* attackingMoveStr = Game::ConvertPieceMoveListToString(whiteAttackMoves).c_str();
 
             const PieceType pieceType = board.GetPieceType(static_cast<PieceID>(pieceID), PieceColor::WHITE);
             const SquareLocation pieceLocation = board.GetPieceLocation( static_cast<PieceID>(pieceID), PieceColor::WHITE);

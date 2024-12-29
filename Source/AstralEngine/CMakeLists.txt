@@ -13,7 +13,7 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
 endif()
 
 
-add_library(SozinEngine
+add_library(AstralEngine
         Core/CoreMacroDefinitions.h
         Debug/DebugMacros.h
         Debug/DebugMacros.cpp
@@ -116,49 +116,58 @@ add_library(SozinEngine
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
-    target_link_directories(SozinEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/mac-lib)
+    target_link_directories(AstralEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/mac-lib)
 elseif (WIN32)
-    target_link_directories(SozinEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
+    target_link_directories(AstralEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
 
 
 
 # Linking Libraries
-target_link_libraries(SozinEngine PRIVATE ImGui)
-target_link_libraries(SozinEngine PRIVATE GLAD)
-target_link_libraries(SozinEngine PRIVATE glm)
-target_link_libraries(SozinEngine PRIVATE std_image)
+target_link_libraries(AstralEngine PRIVATE ImGui)
+target_link_libraries(AstralEngine PRIVATE GLAD)
+target_link_libraries(AstralEngine PRIVATE glm)
+target_link_libraries(AstralEngine PRIVATE std_image)
+
+add_dependencies(AstralEngine
+        ImGui
+        GLAD
+        glm
+        std_image
+)
 
 if (APPLE)
-    target_link_libraries(SozinEngine PRIVATE glfw.3)
+    target_link_libraries(AstralEngine PRIVATE glfw.3)
 elseif (WIN32)
-    target_link_libraries(SozinEngine PRIVATE glfw3)
+    target_link_libraries(AstralEngine PRIVATE glfw3)
 endif ()
 
 
 
 # Include Directories
-target_include_directories(SozinEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
-target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
-target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
-target_include_directories(SozinEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
+target_include_directories(AstralEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
 
 
 
 # Precompiled Header
-target_precompile_headers(SozinEngine PRIVATE "pch.h")
+target_precompile_headers(AstralEngine PRIVATE "pch.h")
 
 
 
 # Defining Macros
-target_compile_definitions(SozinEngine PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(SozinEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+target_compile_definitions(AstralEngine PRIVATE -DGLFW_INCLUDE_NONE)
+target_compile_definitions(AstralEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
-    target_compile_definitions(SozinEngine PRIVATE -DPLATFORM_MACOS)
+    target_compile_definitions(AstralEngine PRIVATE -DPLATFORM_MACOS)
 elseif (WIN32)
-    target_compile_definitions(SozinEngine PRIVATE -DPLATFORM_WINDOWS)
+    target_compile_definitions(AstralEngine PRIVATE -DPLATFORM_WINDOWS)
 endif ()
-target_compile_definitions(SozinEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
-target_compile_definitions(SozinEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
-target_compile_definitions(SozinEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
+target_compile_definitions(AstralEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
+target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
+
+

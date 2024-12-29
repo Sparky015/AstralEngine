@@ -9,10 +9,7 @@
 
 namespace Game {
 
-    uint8 ConvertChessNotationToInt(const std::string& chessNotation);
-    const std::string ConvertIntToChessNotation(uint8 chessNotation);
-
-    std::string ConvertVectorToString(const PieceMoveList& vec);
+    std::string ConvertPieceMoveListToString(const PieceMoveList& vec);
 
     template <typename T>
     std::string ConvertVectorToString(const std::vector<T>& vec)
@@ -30,6 +27,13 @@ namespace Game {
         oss << "]";
         return oss.str();
     }
+
+
+
+    uint8 ConvertChessNotationToInt(const std::string& chessNotation);
+    const std::string ConvertIntToChessNotation(uint8 chessNotation);
+
+
 
     Vec2 ConvertPieceLocationToCoordinates(uint8 pieceLocation);
     uint8 ConvertCoordinatesToPieceLocation(Vec2 coordinates);

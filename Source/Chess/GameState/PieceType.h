@@ -71,3 +71,6 @@ public:
 private:
     PieceTypeEnum m_Type;
 };
+
+
+void Test();

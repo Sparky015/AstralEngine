@@ -15,7 +15,7 @@ add_executable(AstralEngineTests
 )
 
 target_link_libraries(AstralEngineTests GTest::gtest_main)
-target_link_libraries(AstralEngineTests SozinEngine)
+target_link_libraries(AstralEngineTests AstralEngine)
 
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/Source)
