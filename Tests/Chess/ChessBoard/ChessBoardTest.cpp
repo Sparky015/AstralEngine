@@ -12,8 +12,24 @@ public:
 
 };
 
-/// @test Tests the normal moves of move piece
-TEST_F(ChessBoardTest, MovePiece_Normal)
+/**
+ * @brief Verifies that move piece correctly modifies the state of the chessboard
+ * @test Ensures that */
+TEST_F(ChessBoardTest, MovePiece_ModifiesBoardStateCorrectly)
 {
+    struct TestCase
+    {
 
+        bool expectedResult;
+        std::string_view testDescription;
+    };
+
+    std::vector<TestCase> testCases = {
+
+    };
+
+    for (const auto& testCase : testCases)
+    {
+
+    }
 }

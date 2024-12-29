@@ -49,17 +49,13 @@ PieceType PieceType::CreateFromCharacter(char symbol)
     symbol = tolower(symbol);
     switch (symbol)
     {
+        case '-': return NONE;
         case 'p': return PAWN;
         case 'r': return ROOK;
         case 'b': return BISHOP;
         case 'n': return KNIGHT;
         case 'k': return KING;
         case 'q': return QUEEN;
-        default: ERROR("Invalid Type: " << symbol);
+        default: ERROR("Invalid Character: " << symbol);
     }
-}
-
-void Test()
-{
-    LOG("TEST")
 }

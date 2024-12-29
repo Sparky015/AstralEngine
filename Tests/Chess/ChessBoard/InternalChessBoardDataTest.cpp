@@ -16,7 +16,7 @@ public:
 
 TEST_F(InternalChessBoardDataTest, FirstTestName)
 {
-    EXPECT_DEATH(ASSERT( 1 == 0, "test"), "test");
+    EXPECT_ANY_THROW(ASSERT( 1 == 0, "test"));
 }
 
 TEST_F(InternalChessBoardDataTest, SecondTest)

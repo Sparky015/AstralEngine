@@ -40,6 +40,8 @@ public:
     static constexpr PieceTypeEnum QUEEN = PieceTypeEnum::QUEEN;
     static constexpr PieceTypeEnum KING = PieceTypeEnum::KING;
 
+    static constexpr uint8 NUM_OF_PIECE_TYPES = static_cast<uint8>(KING) + 1;
+
     [[nodiscard]] constexpr bool IsNone() const { return m_Type == NONE; }
     [[nodiscard]] constexpr bool IsPawn() const { return m_Type == PAWN; }
     [[nodiscard]] constexpr bool IsBishop() const { return m_Type == BISHOP; }
@@ -52,10 +54,10 @@ public:
     [[nodiscard]] std::string_view ToStringView() const;
     [[nodiscard]] char ToCharacterSymbol() const;
     [[nodiscard]] static PieceType CreateFromCharacter(char symbol);
+
     [[nodiscard]] constexpr PieceTypeEnum GetEnumValue() const { return m_Type; }
     [[nodiscard]] constexpr uint8 GetRawValue() const { return static_cast<uint8>(m_Type); }
     [[nodiscard]] static constexpr PieceType CreateFromRawValue(const uint8 typeValue) { return static_cast<PieceTypeEnum>(typeValue); }
-
 
     constexpr bool operator==(const PieceType& otherPieceType) const { return m_Type == otherPieceType.m_Type; }
     constexpr bool operator!=(const PieceType& otherPieceType) const { return m_Type != otherPieceType.m_Type; }
@@ -71,6 +73,3 @@ public:
 private:
     PieceTypeEnum m_Type;
 };
-
-
-void Test();

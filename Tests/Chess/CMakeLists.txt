@@ -29,8 +29,8 @@ add_executable(ChessTests
 
 target_link_libraries(ChessTests
         GTest::gtest_main
-        AstralEngine)
-#        Chess)
+        AstralEngine
+        Chess)
 
 add_dependencies(ChessTests Chess)
 

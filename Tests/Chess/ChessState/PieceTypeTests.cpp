@@ -1,174 +1,310 @@
 /**
 * @file PieceTypeTests.cpp
 * @author Andrew Fagan
-* @date 12/28/2024
+* @date 12/28/20
 */
 
 #include "gtest/gtest.h"
 #include "GameState/PieceType.h"
 
-// Test fixture for PieceType tests
-class PieceTypeTest : public ::testing::Test {
-protected:
-    // Setup runs before each test
-    void SetUp() override {
-        // Initialize any common resources here
-    }
+/**
+ * @brief Test suite for the PieceType class
+ * This test fixture verifies the functionality of the PieceType class,
+ * which represents different chess piece types in the game. */
+class PieceTypeTest : public ::testing::Test {};
 
-    // TearDown runs after each test
-    void TearDown() override {
-        // Clean up any resources here
-    }
-};
 
-// 1. Test Constructors and Default Values
-TEST_F(PieceTypeTest, DefaultConstructor_CreatesNonePiece) {
+/**
+ * @brief Verifies that the default constructor creates a NONE piece
+ * @test Ensures that:
+ * - A default-constructed piece is of type NONE
+ * - IsNone() returns true
+ * - GetEnumValue() returns PieceType::NONE */
+TEST_F(PieceTypeTest, DefaultConstructor_CreatesNonePiece)
+{
     PieceType piece;
     EXPECT_TRUE(piece.IsNone());
     EXPECT_EQ(piece.GetEnumValue(), PieceType::NONE);
 }
 
-// 2. Test Enum Constructor
-TEST_F(PieceTypeTest, EnumConstructor_CreatesCorrectPieceType) {
-    PieceType pawn(PieceType::PAWN);
-    EXPECT_TRUE(pawn.IsPawn());
-    EXPECT_FALSE(pawn.IsNone());
-}
 
-// 3. Test Type Checking Methods
-TEST_F(PieceTypeTest, TypeChecking_CorrectlyIdentifiesPieceTypes) {
-    // Test each piece type
-    struct TestCase {
-        PieceType piece;
-        bool (PieceType::*checkMethod)() const;
-        const char* description;
-    };
-
-    std::vector<TestCase> testCases = {
-        {PieceType(PieceType::PAWN), &PieceType::IsPawn, "Pawn"},
-        {PieceType(PieceType::BISHOP), &PieceType::IsBishop, "Bishop"},
-        {PieceType(PieceType::KNIGHT), &PieceType::IsKnight, "Knight"},
-        {PieceType(PieceType::ROOK), &PieceType::IsRook, "Rook"},
-        {PieceType(PieceType::QUEEN), &PieceType::IsQueen, "Queen"},
-        {PieceType(PieceType::KING), &PieceType::IsKing, "King"}
-    };
-
-    for (const auto& testCase : testCases) {
-        EXPECT_TRUE((testCase.piece.*testCase.checkMethod)())
-            << "Failed to identify " << testCase.description;
-    }
-}
-
-// 4. Test String Conversion
-TEST_F(PieceTypeTest, ToString_ReturnsCorrectString) {
-    struct TestCase {
-        PieceType piece;
-        std::string_view expectedString;
-    };
-
-    std::vector<TestCase> testCases = {
-        {PieceType(PieceType::NONE), "None"},
-        {PieceType(PieceType::PAWN), "Pawn"},
-        {PieceType(PieceType::BISHOP), "Bishop"},
-        {PieceType(PieceType::KNIGHT), "Knight"},
-        {PieceType(PieceType::ROOK), "Rook"},
-        {PieceType(PieceType::QUEEN), "Queen"},
-        {PieceType(PieceType::KING), "King"}
-    };
-
-    for (const auto& testCase : testCases) {
-        EXPECT_EQ(testCase.piece.ToString(), std::string(testCase.expectedString));
-        EXPECT_EQ(testCase.piece.ToStringView(), testCase.expectedString);
-    }
-}
-
-// 5. Test Character Symbol Conversion
-TEST_F(PieceTypeTest, CharacterSymbol_Conversion) {
+/**
+ * @brief Verifies that the enum constructor creates the corresponding type
+ * @test Ensures that:
+ * - The enum constructor correctly instantiates a piece type */
+TEST_F(PieceTypeTest, EnumConstructor_CreatesCorrectPieceType)
+{
     struct TestCase
     {
-        PieceType piece;
-        char expectedSymbol;
+        PieceType pieceType;
+        PieceTypeEnum pieceTypeEnum;
+        bool expectedResult;
+        std::string_view testDescription;
     };
 
     std::vector<TestCase> testCases = {
-        {PieceType(PieceType::NONE), '-'},
-        {PieceType(PieceType::PAWN), 'p'},
-        {PieceType(PieceType::BISHOP), 'b'},
-        {PieceType(PieceType::KNIGHT), 'n'},
-        {PieceType(PieceType::ROOK), 'r'},
-        {PieceType(PieceType::QUEEN), 'q'},
-        {PieceType(PieceType::KING), 'k'}
+        {PieceType(PieceType::NONE), PieceType::NONE, true, "NONE matches NONE"},
+        {PieceType(PieceType::PAWN), PieceType::PAWN, true, "PAWN matches PAWN"},
+        {PieceType(PieceType::BISHOP), PieceType::BISHOP, true, "BISHOP matches BISHOP"},
+        {PieceType(PieceType::KNIGHT), PieceType::KNIGHT, true, "KNIGHT matches KNIGHT"},
+        {PieceType(PieceType::ROOK), PieceType::ROOK, true, "ROOK matches ROOK"},
+        {PieceType(PieceType::QUEEN), PieceType::QUEEN, true, "QUEEN matches QUEEN"},
+        {PieceType(PieceType::KING), PieceType::KING, true, "KING matches KING"},
+        {PieceType(PieceType::PAWN), PieceType::BISHOP, false, "PAWN does not match BISHOP"},
+        {PieceType(PieceType::KNIGHT), PieceType::ROOK, false, "KNIGHT does not match ROOK"},
+        {PieceType(PieceType::NONE), PieceType::PAWN, false, "NONE does not match PAWN"},
+        {PieceType(PieceType::PAWN), PieceType::NONE, false, "PAWN does not match NONE"},
+        {PieceType(PieceType::NONE), PieceType::KNIGHT, false, "NONE does not match KNIGHT"},
+        {PieceType(PieceType::KING), PieceType::ROOK, false, "KING does not match ROOK"},
+    };
+
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(testCase.pieceType.GetEnumValue() == testCase.pieceTypeEnum, testCase.expectedResult)
+            << "Failed enum value comparison. Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType.GetRawValue() == PieceType(testCase.pieceTypeEnum).GetRawValue(), testCase.expectedResult)
+            << "Failed raw value comparison. Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType.ToStringView() == PieceType(testCase.pieceTypeEnum).ToStringView(), testCase.expectedResult)
+            << "Failed string representation comparison. Case Description: " << testCase.testDescription;
+    }
+}
+
+/**
+ * @brief Verifies the IsPieceType functions are return correct outputs.
+ * @test Ensures that:
+ * - IsPieceType() returns true when the its piece type calls it and false when other types call it */
+TEST_F(PieceTypeTest, TypeChecking_CorrectlyIdentifiesPieceTypes)
+{
+    struct TestCase
+    {
+        PieceType pieceType;
+        bool (PieceType::*checkMethod)() const;
+        std::string_view testDescription;
+    };
+
+    std::vector<TestCase> testCases = {
+        {PieceType(PieceType::PAWN), &PieceType::IsPawn, "IsPawn with PAWN"},
+        {PieceType(PieceType::BISHOP), &PieceType::IsBishop, "IsBishop with BISHOP"},
+        {PieceType(PieceType::KNIGHT), &PieceType::IsKnight, "IsKnight with KNIGHT"},
+        {PieceType(PieceType::ROOK), &PieceType::IsRook, "IsRook with ROOK"},
+        {PieceType(PieceType::QUEEN), &PieceType::IsQueen, "IsQueen with QUEEN"},
+        {PieceType(PieceType::KING), &PieceType::IsKing, "IsKing with KING"}
+    };
+
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_TRUE((testCase.pieceType.*testCase.checkMethod)())
+            << "Failed to identify " << testCase.testDescription;
+    }
+}
+
+/**
+ * @brief Verifies that ToString and ToStringView returns the correct corresponding string
+ * @test Ensures that the string getters are returning the correct string for each piece type */
+TEST_F(PieceTypeTest, ToString_ReturnsCorrectString)
+{
+    struct TestCase
+    {
+        PieceType pieceType;
+        std::string_view expectedString;
+        std::string_view testDescription;
+    };
+
+    std::vector<TestCase> testCases =
+    {
+        {PieceType(PieceType::NONE), "None", "NONE matches \"None\""},
+        {PieceType(PieceType::PAWN), "Pawn", "PAWN matches \"Pawn\""},
+        {PieceType(PieceType::BISHOP), "Bishop", "BISHOP matches \"Bishop\""},
+        {PieceType(PieceType::KNIGHT), "Knight", "KNIGHT matches \"Knight\""},
+        {PieceType(PieceType::ROOK), "Rook", "ROOK matches \"Rook\""},
+        {PieceType(PieceType::QUEEN), "Queen", "QUEEN matches \"Queen\""},
+        {PieceType(PieceType::KING), "King", "KING matches \"King\""}
+    };
+
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(testCase.pieceType.ToString(), std::string(testCase.expectedString))
+            << "Failed ToString() comparison. Test Case Description: " << testCase.testDescription;
+        EXPECT_EQ(testCase.pieceType.ToStringView(), testCase.expectedString)
+            << "Failed ToStringView() comparison. Test Case Description: " << testCase.testDescription;
+    }
+}
+
+/**
+ * @brief Verifies the symbol getter and PieceType creation from symbol
+ * @test Ensures that CreateFromCharacter and ToCharacterSymbol return
+ * the correct corresponding values for each piece type */
+TEST_F(PieceTypeTest, CharacterSymbol_Conversion)
+{
+    struct TestCase
+    {
+        PieceType pieceType;
+        char symbol;
+        bool expectedResult;
+        std::string_view testDescription;
+    };
+
+    std::vector<TestCase> testCases = {
+        {PieceType(PieceType::NONE),   '-', true,  "NONE matches '-'"},
+        {PieceType(PieceType::PAWN),   'p', true,  "PAWN matches 'p'"},
+        {PieceType(PieceType::BISHOP), 'b', true,  "BISHOP matches 'b'"},
+        {PieceType(PieceType::KNIGHT), 'n', true,  "KNIGHT matches 'n'"},
+        {PieceType(PieceType::ROOK),   'r', true,  "ROOK matches 'r'"},
+        {PieceType(PieceType::QUEEN),  'q', true,  "QUEEN matches 'q'"},
+        {PieceType(PieceType::KING),   'k', true,  "KING matches 'k'"},
+        {PieceType(PieceType::NONE),   'p', false, "NONE does not match 'p'"},
+        {PieceType(PieceType::PAWN),   '-', false, "PAWN does not match '-'"},
+        {PieceType(PieceType::BISHOP), 'k', false, "BISHOP does not match 'k'"},
+        {PieceType(PieceType::KNIGHT), 'r', false, "KNIGHT does not match 'r'"},
+        {PieceType(PieceType::ROOK),   'q', false, "ROOK does not match 'q'"},
+        {PieceType(PieceType::QUEEN),  'k', false, "QUEEN does not match 'k'"},
+        {PieceType(PieceType::KING),   '-', false, "KING does not match '-'"}
     };
 
     // Test ToCharacterSymbol
-    for (const auto& testCase : testCases) {
-        EXPECT_EQ(testCase.piece.ToCharacterSymbol(), testCase.expectedSymbol);
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(testCase.pieceType.ToCharacterSymbol() == testCase.symbol, testCase.expectedResult)
+            << "Failed ToCharacterSymbol() comparison. Test Case Description: " << testCase.testDescription;
     }
 
     // Test CreateFromCharacter
-    for (const auto& testCase : testCases) {
-        if (testCase.piece != PieceType::NONE) {  // Skip NONE as it's not created from character
-            EXPECT_EQ(PieceType::CreateFromCharacter(testCase.expectedSymbol), testCase.piece);
-            // Test uppercase version too
-            EXPECT_EQ(PieceType::CreateFromCharacter(toupper(testCase.expectedSymbol)), testCase.piece);
-        }
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(PieceType::CreateFromCharacter(testCase.symbol) == testCase.pieceType, testCase.expectedResult)
+            << "Failed lower case CreateFromCharacter() comparison. Test Case Description: " << testCase.testDescription;
+        EXPECT_EQ(PieceType::CreateFromCharacter(toupper(testCase.symbol)) == testCase.pieceType, testCase.expectedResult) // Test uppercase version too
+            << "Failed upper case CreateFromCharacter() comparison. Test Case Description: " << testCase.testDescription;
     }
 }
 
-// 6. Test Invalid Character Creation
+/**
+ * @brief Verifies that CreateFromCharacter errors from invalid input
+ * @test Ensures that CreateFromCharacter only returns a PieceType on valid inputs */
 TEST_F(PieceTypeTest, CreateFromCharacter_InvalidInput_ThrowsError)
 {
     EXPECT_THROW(PieceType::CreateFromCharacter('x'), std::runtime_error);
+    EXPECT_THROW(PieceType::CreateFromCharacter('_'), std::runtime_error);
+    EXPECT_THROW(PieceType::CreateFromCharacter('='), std::runtime_error);
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('-'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('p'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('n'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('b'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('r'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('k'));
+    EXPECT_NO_THROW(PieceType::CreateFromCharacter('q'));
 }
 
-// 7. Test Operator Overloads
+/**
+ * @brief Verifies that the operator overloads evaluate correctly
+ * @test Ensures the accurate evaluation of the operators of PieceType */
 TEST_F(PieceTypeTest, OperatorOverloads)
 {
-    PieceType piece1(PieceType::PAWN);
-    PieceType piece2(PieceType::PAWN);
-    PieceType piece3(PieceType::KNIGHT);
+    struct TestCase
+    {
+        PieceType pieceType1;
+        PieceType pieceType2;
+        bool expectedResult;
+        std::string_view testDescription;
+    };
 
-    // Test equality operators
-    EXPECT_TRUE(piece1 == piece2);
-    EXPECT_FALSE(piece1 == piece3);
-    EXPECT_TRUE(piece1 != piece3);
-    EXPECT_FALSE(piece1 != piece2);
+    std::vector<TestCase> testCases = {
+        {PieceType::PAWN, PieceType::PAWN, true, "Comparing PAWN and PAWN"},
+        {PieceType::BISHOP, PieceType::BISHOP, true, "Comparing BISHOP and BISHOP"},
+        {PieceType::KNIGHT, PieceType::KNIGHT, true, "Comparing KNIGHT and KNIGHT"},
+        {PieceType::ROOK, PieceType::ROOK, true, "Comparing ROOK and ROOK"},
+        {PieceType::QUEEN, PieceType::QUEEN, true, "Comparing QUEEN and QUEEN"},
+        {PieceType::KING, PieceType::KING, true, "Comparing KING and KING"},
+        {PieceType::NONE, PieceType::NONE, true, "Comparing NONE and NONE"},
+        {PieceType::PAWN, PieceType::NONE, false, "Comparing PAWN and NONE"},
+        {PieceType::BISHOP, PieceType::KNIGHT, false, "Comparing BISHOP and KNIGHT"},
+        {PieceType::ROOK, PieceType::QUEEN, false, "Comparing ROOK and QUEEN"},
+        {PieceType::KING, PieceType::PAWN, false, "Comparing KING and PAWN"},
+        {PieceType::QUEEN, PieceType::BISHOP, false, "Comparing QUEEN and BISHOP"},
+        {PieceType::KNIGHT, PieceType::ROOK, false, "Comparing KNIGHT and ROOK"}
+    };
 
-    // Test enum comparison
-    EXPECT_TRUE(piece1 == PieceType::PAWN);
-    EXPECT_FALSE(piece1 == PieceType::KNIGHT);
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(testCase.pieceType1 == testCase.pieceType2, testCase.expectedResult)
+            << "PieceType to PieceType comparison failed. Test Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType1 == testCase.pieceType2.GetEnumValue(), testCase.expectedResult)
+            << "PieceType to PieceTypeEnum comparison failed. Test Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType1.GetEnumValue() == testCase.pieceType2, testCase.expectedResult)
+            << "PieceTypeEnum to PieceType comparison failed. Test Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType1.GetEnumValue() == testCase.pieceType2.GetEnumValue(), testCase.expectedResult)
+            << "PieceTypeEnum to PieceTypeEnum comparison failed. Test Case Description: " << testCase.testDescription;
+    }
 }
 
-// 8. Test Raw Value Conversion
+
+/**
+ * @brief Verifies that the raw value getter and creator returns correct values
+ * @test Ensures that the raw value getter and creator returns the correct values for each piece type */
 TEST_F(PieceTypeTest, RawValueConversion)
 {
-    for (uint8 i = 0; i <= static_cast<uint8>(PieceType::KING); ++i)
+    for (uint8 i = 0; i <= PieceType::NUM_OF_PIECE_TYPES; ++i)
     {
         PieceType piece = PieceType::CreateFromRawValue(i);
         EXPECT_EQ(piece.GetRawValue(), i);
     }
+
+    struct TestCase
+    {
+        PieceType pieceType;
+        uint8 rawValue;
+        bool expectedResult;
+        std::string_view testDescription;
+    };
+
+    std::vector<TestCase> testCases = {
+        {PieceType::NONE, 0, true, "Comparing NONE and the raw value of 0"},
+        {PieceType::PAWN, 1, true, "Comparing PAWN and the raw value of 1"},
+        {PieceType::BISHOP, 2, true, "Comparing BISHOP and the raw value of 2"},
+        {PieceType::KNIGHT, 3, true, "Comparing KNIGHT and the raw value of 3"},
+        {PieceType::ROOK, 4, true, "Comparing ROOK and the raw value of 4"},
+        {PieceType::QUEEN, 5, true, "Comparing QUEEN and the raw value of 5"},
+        {PieceType::KING, 6, true, "Comparing KING and the raw value of 6"},
+        {PieceType::NONE, 1, false, "Comparing NONE and the raw value of 1"},
+        {PieceType::PAWN, 0, false, "Comparing PAWN and the raw value of 0"},
+        {PieceType::BISHOP, 3, false, "Comparing BISHOP and the raw value of 1"},
+        {PieceType::KNIGHT, 2, false, "Comparing KNIGHT and the raw value of 2"},
+        {PieceType::ROOK, 5, false, "Comparing ROOK and the raw value of 3"},
+        {PieceType::QUEEN, 6, false, "Comparing QUEEN and the raw value of 4"}
+    };
+
+    for (const auto& testCase : testCases)
+    {
+        EXPECT_EQ(testCase.pieceType.GetRawValue() == testCase.rawValue, testCase.expectedResult)
+            << "(GetRawValue) Raw value comparison failed. Test Case Description: " << testCase.testDescription;
+
+        EXPECT_EQ(testCase.pieceType == PieceType::CreateFromRawValue(testCase.rawValue), testCase.expectedResult)
+            << "(CreateFromRawValue) PieceType comparison failed. Test Case Description: " << testCase.testDescription;
+    }
 }
 
-// 9. Test Copy and Move Operations
-TEST_F(PieceTypeTest, CopyAndMoveOperations)
+
+/**
+ * @brief Verifies that the NUM_OF_PIECE_TYPES is correct
+ * @test Ensures that the NUM_OF_PIECE_TYPES is the max value of PieceTypeEnum */
+TEST_F(PieceTypeTest, NumberOfPieceTypes_CorrectlyIdentifiesAmountOfPieceTypes)
 {
-    PieceType original(PieceType::QUEEN);
+    EXPECT_EQ(PieceType::NUM_OF_PIECE_TYPES, static_cast<uint8>(PieceType::KING) + 1)
+            << "NUM_OF_PIECE_TYPES should be equal to the max value of PieceTypeEnum plus one.";
 
-    // Test copy constructor
-    PieceType copied(original);
-    EXPECT_EQ(copied, original);
+    std::vector<PieceTypeEnum> restOfPieceTypes = {
+            PieceTypeEnum::NONE, PieceTypeEnum::PAWN, PieceTypeEnum::KNIGHT,
+            PieceTypeEnum::BISHOP, PieceTypeEnum::ROOK, PieceTypeEnum::QUEEN};
 
-    // Test move constructor
-    PieceType moved(std::move(copied));
-    EXPECT_EQ(moved, original);
+    for (const auto& otherPieceType : restOfPieceTypes)
+    {
+        EXPECT_GT(static_cast<uint8>(PieceType::KING), static_cast<uint8>(otherPieceType))
+            << "King should be greater than " << PieceType(otherPieceType).ToStringView();
+    }
 
-    // Test copy assignment
-    PieceType copyAssigned;
-    copyAssigned = original;
-    EXPECT_EQ(copyAssigned, original);
-
-    // Test move assignment
-    PieceType moveAssigned;
-    moveAssigned = std::move(moved);
-    EXPECT_EQ(moveAssigned, original);
 }
