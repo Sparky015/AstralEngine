@@ -64,3 +64,10 @@ TEST_F(Chessboard_PieceMovementTest, MovePiece_AssertsFailOnInvalidInput)
                             << "Expected a throw to occur. No throws happened. Test Failed. Test Case Description: " << testDescription;
     }
 }
+
+/**
+ * @brief Verifies that move piece updates the half and full move counters accordingly */
+TEST_F(Chessboard_PieceMovementTest, MovePiece_UpdatesHalfAndFullMoveCountersCorrectly)
+{
+
+}

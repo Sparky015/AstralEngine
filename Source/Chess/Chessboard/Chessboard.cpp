@@ -92,14 +92,8 @@ namespace Game {
         // Getting type of the piece from the old location
         const PieceType pieceType = GetPieceType(pieceID, pieceColor);
 
-        // Clearing piece type from old location
-        m_Board.WriteSquareType(PieceType::NONE, GetPieceLocation(pieceID, pieceColor));
-
-        // Updating new location with piece information
-        m_Board.WriteSquareType(pieceType, targetLocation);
-        m_Board.WriteSquareColor(pieceColor, targetLocation);
-        std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& movingColorPieceLocations = pieceColor.IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
-        movingColorPieceLocations[pieceID] = targetLocation;
+        RemovePiece(pieceID, pieceColor); // Remove the old piece information from the board
+        AddPiece(pieceID, pieceType, pieceColor, targetLocation); // ADd the new piece information to the board
 
         // Flip active color
         m_ActiveColor = (m_ActiveColor == PieceColor::WHITE) ? PieceColor::BLACK : PieceColor::WHITE;
