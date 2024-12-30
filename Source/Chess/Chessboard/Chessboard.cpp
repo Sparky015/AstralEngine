@@ -184,6 +184,12 @@ namespace Game {
     {
         ASSERT(GetPieceLocation(pieceID, pieceColor).IsEmpty(), "This piece is already on the board!");
         ASSERT(location.IsOnBoard(), "The given location is not a valid location on the board!");
+        ASSERT(!pieceType.IsNone(), "Added piece can not of a piece type of NONE.")
+
+        std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& pieceLocations = pieceColor.IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
+        pieceLocations[pieceID] = location;
+        m_Board.WriteSquareColor(pieceColor, location);
+        m_Board.WriteSquareType(pieceType, location);
     }
 
 
@@ -253,6 +259,8 @@ namespace Game {
     {
         PROFILE_SCOPE();
         m_Board = InternalBoardRepresentation();
+        m_BlackPieceLocations.fill(EMPTY);
+        m_WhitePieceLocations.fill(EMPTY);
     }
 
 

@@ -15,11 +15,7 @@ class PieceTypeTest : public ::testing::Test {};
 
 
 /**
- * @brief Verifies that the default constructor creates a NONE piece
- * @test Ensures that:
- * - A default-constructed piece is of type NONE
- * - IsNone() returns true
- * - GetEnumValue() returns PieceType::NONE */
+ * @brief Verifies that the default constructor creates a NONE piece  */
 TEST_F(PieceTypeTest, DefaultConstructor_CreatesNonePiece)
 {
     PieceType piece;
@@ -29,9 +25,7 @@ TEST_F(PieceTypeTest, DefaultConstructor_CreatesNonePiece)
 
 
 /**
- * @brief Verifies that the enum constructor creates the corresponding type
- * @test Ensures that:
- * - The enum constructor correctly instantiates a piece type */
+ * @brief Verifies that the enum constructor creates the corresponding type */
 TEST_F(PieceTypeTest, EnumConstructor_CreatesCorrectPieceType)
 {
     struct TestCase
@@ -72,9 +66,7 @@ TEST_F(PieceTypeTest, EnumConstructor_CreatesCorrectPieceType)
 }
 
 /**
- * @brief Verifies the IsPieceType functions are return correct outputs.
- * @test Ensures that:
- * - IsPieceType() returns true when the its piece type calls it and false when other types call it */
+ * @brief Verifies the IsPieceType functions are return correct outputs */
 TEST_F(PieceTypeTest, TypeChecking_CorrectlyIdentifiesPieceTypes)
 {
     struct TestCase
@@ -101,8 +93,7 @@ TEST_F(PieceTypeTest, TypeChecking_CorrectlyIdentifiesPieceTypes)
 }
 
 /**
- * @brief Verifies that ToString and ToStringView returns the correct corresponding string
- * @test Ensures that the string getters are returning the correct string for each piece type */
+ * @brief Verifies that ToString and ToStringView returns the correct corresponding string */
 TEST_F(PieceTypeTest, ToString_ReturnsCorrectString)
 {
     struct TestCase
@@ -133,9 +124,7 @@ TEST_F(PieceTypeTest, ToString_ReturnsCorrectString)
 }
 
 /**
- * @brief Verifies the symbol getter and PieceType creation from symbol
- * @test Ensures that CreateFromCharacter and ToCharacterSymbol return
- * the correct corresponding values for each piece type */
+ * @brief Verifies the symbol getter and PieceType creation from symbol */
 TEST_F(PieceTypeTest, CharacterSymbol_Conversion)
 {
     struct TestCase
@@ -181,8 +170,7 @@ TEST_F(PieceTypeTest, CharacterSymbol_Conversion)
 }
 
 /**
- * @brief Verifies that CreateFromCharacter errors from invalid input
- * @test Ensures that CreateFromCharacter only returns a PieceType on valid inputs */
+ * @brief Verifies that CreateFromCharacter errors from invalid input */
 TEST_F(PieceTypeTest, CreateFromCharacter_InvalidInput_ThrowsError)
 {
     EXPECT_THROW(PieceType::CreateFromCharacter('x'), std::runtime_error);
@@ -198,8 +186,7 @@ TEST_F(PieceTypeTest, CreateFromCharacter_InvalidInput_ThrowsError)
 }
 
 /**
- * @brief Verifies that the operator overloads evaluate correctly
- * @test Ensures the accurate evaluation of the operators of PieceType */
+ * @brief Verifies that the operator overloads evaluate correctly */
 TEST_F(PieceTypeTest, OperatorOverloads)
 {
     struct TestCase
@@ -244,8 +231,7 @@ TEST_F(PieceTypeTest, OperatorOverloads)
 
 
 /**
- * @brief Verifies that the raw value getter and creator returns correct values
- * @test Ensures that the raw value getter and creator returns the correct values for each piece type */
+ * @brief Verifies that the raw value getter and creator returns correct values */
 TEST_F(PieceTypeTest, RawValueConversion)
 {
     for (uint8 i = 0; i <= PieceType::NUM_OF_PIECE_TYPES; ++i)
@@ -290,8 +276,7 @@ TEST_F(PieceTypeTest, RawValueConversion)
 
 
 /**
- * @brief Verifies that the NUM_OF_PIECE_TYPES is correct
- * @test Ensures that the NUM_OF_PIECE_TYPES is the max value of PieceTypeEnum */
+ * @brief Verifies that the NUM_OF_PIECE_TYPES is the max value of PieceTypeEnum */
 TEST_F(PieceTypeTest, NumberOfPieceTypes_CorrectlyIdentifiesAmountOfPieceTypes)
 {
     EXPECT_EQ(PieceType::NUM_OF_PIECE_TYPES, static_cast<uint8>(PieceType::KING) + 1)

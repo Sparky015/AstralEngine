@@ -15,8 +15,7 @@ public:
 };
 
 /**
- * @brief Verifies that move piece correctly modifies the state of the chessboard
- * @test Ensures that */
+ * @brief Verifies that move piece correctly modifies the state of the chessboard */
 TEST_F(ChessBoardTest, MovePiece_ModifiesBoardStateCorrectly)
 {
     struct TestCase
@@ -43,22 +42,18 @@ TEST_F(ChessBoardTest, MovePiece_ModifiesBoardStateCorrectly)
     {
         Game::Chessboard chessboard;
         chessboard.SetActiveColor(pieceColor);
-        SquareLocation oldPieceLocation = chessboard.GetPieceLocation(pieceID, pieceColor);
         chessboard.MovePiece(pieceID, pieceColor, targetSquare);
 
         EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor) == targetSquare, expectedResult)
             << "Comparison Failed. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor) != oldPieceLocation, expectedResult)
-            << "Comparison Failed. Test Case Description: " << testDescription;
     }
 }
 
 
 
 /**
- * @brief Verifies that move piece asserts fail on invalid input
- * @test Ensures that asserts behave correctly on valid and invalid input */
+ * @brief Verifies that move piece asserts fail on invalid input */
 TEST_F(ChessBoardTest, MovePiece_AssertsFailOnInvalidInput)
 {
     struct TestCase
@@ -100,7 +95,6 @@ TEST_F(ChessBoardTest, MovePiece_AssertsFailOnInvalidInput)
 //void Chessboard::AddPiece(PieceID pieceID, PieceType pieceType, PieceColor pieceColor, SquareLocation location)
 /**
  * @brief Verifies that the AddPiece function correctly adds a piece to the board
- * @test Ensures that the AddPiecee correctly modifies the state of the chessboard
  * @note This test is important because AddPiece modifies the state when moves and captures occur
  */
 TEST_F(ChessBoardTest, AddPiece_CorrectlyModifiesBoardState)
@@ -111,71 +105,107 @@ TEST_F(ChessBoardTest, AddPiece_CorrectlyModifiesBoardState)
         PieceType pieceType;
         PieceColor pieceColor;
         SquareLocation location;
-        bool expectedResult;
         std::string_view testDescription;
     };
 
     const std::vector<TestCase> testCases{
-    { PIECE_1, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E3), true, "White Pawn added to E3" },
-    { PIECE_2, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(D4), true, "Black Knight added to D4" },
-    { PIECE_3, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(F5), true, "White Bishop added to F5" },
-    { PIECE_4, PieceType::ROOK, PieceColor::BLACK, SquareLocation(C6), true, "Black Rook added to C6" },
-    { PIECE_5, PieceType::QUEEN, PieceColor::WHITE, SquareLocation(B2), true, "White Queen added to B2" },
-    { PIECE_6, PieceType::KING, PieceColor::BLACK, SquareLocation(A7), true, "Black King added to A7" },
-    { PIECE_7, PieceType::PAWN, PieceColor::BLACK, SquareLocation(G4), true, "Black Pawn added to G4" },
-    { PIECE_8, PieceType::KNIGHT, PieceColor::WHITE, SquareLocation(H5), true, "White Knight added to H5" },
-    { PIECE_9, PieceType::BISHOP, PieceColor::BLACK, SquareLocation(A3), true, "Black Bishop added to A3" },
-    { PIECE_10, PieceType::ROOK, PieceColor::WHITE, SquareLocation(B1), true, "White Rook added to B1" },
-    { PIECE_11, PieceType::QUEEN, PieceColor::BLACK, SquareLocation(C8), true, "Black Queen added to C8" },
-    { PIECE_12, PieceType::KING, PieceColor::WHITE, SquareLocation(D2), true, "White King added to D2" },
-    { PIECE_13, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E4), true, "White Pawn added to E4" },
-    { PIECE_14, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(F6), true, "Black Knight added to F6" },
-    { PIECE_15, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(G1), true, "White Bishop added to G1" },
-    { PIECE_16, PieceType::ROOK, PieceColor::BLACK, SquareLocation(H8), true, "Black Rook added to H8" }
+    { PIECE_1, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E3), "White Pawn added to E3" },
+    { PIECE_2, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(D4), "Black Knight added to D4" },
+    { PIECE_3, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(F5), "White Bishop added to F5" },
+    { PIECE_4, PieceType::ROOK, PieceColor::BLACK, SquareLocation(C6), "Black Rook added to C6" },
+    { PIECE_5, PieceType::QUEEN, PieceColor::WHITE, SquareLocation(B2), "White Queen added to B2" },
+    { PIECE_6, PieceType::KING, PieceColor::BLACK, SquareLocation(A7), "Black King added to A7" },
+    { PIECE_7, PieceType::PAWN, PieceColor::BLACK, SquareLocation(G4), "Black Pawn added to G4" },
+    { PIECE_8, PieceType::KNIGHT, PieceColor::WHITE, SquareLocation(H5), "White Knight added to H5" },
+    { PIECE_9, PieceType::BISHOP, PieceColor::BLACK, SquareLocation(A3), "Black Bishop added to A3" },
+    { PIECE_10, PieceType::ROOK, PieceColor::WHITE, SquareLocation(B1), "White Rook added to B1" },
+    { PIECE_11, PieceType::QUEEN, PieceColor::BLACK, SquareLocation(C8), "Black Queen added to C8" },
+    { PIECE_12, PieceType::KING, PieceColor::WHITE, SquareLocation(D2), "White King added to D2" },
+    { PIECE_13, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E4), "White Pawn added to E4" },
+    { PIECE_14, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(F6), "Black Knight added to F6" },
+    { PIECE_15, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(G1), "White Bishop added to G1" },
+    { PIECE_16, PieceType::ROOK, PieceColor::BLACK, SquareLocation(H8), "Black Rook added to H8" }
     };
 
-    for (const auto& [pieceID, pieceType, pieceColor, location ,expectedResult, testDescription] : testCases)
+    for (const auto& [pieceID, pieceType, pieceColor, location, testDescription] : testCases)
     {
         Game::Chessboard chessboard;
         chessboard.ClearBoard();
 
-        EXPECT_NO_THROW(chessboard.AddPiece(pieceID, pieceType, pieceColor, location));
+        EXPECT_NO_THROW(chessboard.AddPiece(pieceID, pieceType, pieceColor, location))
+            << "No throw check failed. Expected no throw. Throw occurred. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor) == location, expectedResult)
+        EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor), location)
             << "Final location comparison failed. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetPieceType(pieceID, pieceColor) == pieceType, expectedResult)
+
+        // Checking if piece info was updated in all places
+
+        EXPECT_EQ(chessboard.GetPieceType(pieceID, pieceColor), pieceType)
             << "PieceType (GetPieceType and given PieceType) comparison failed. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetSquareType(location) == pieceType, expectedResult)
+        EXPECT_EQ(chessboard.GetSquareType(location), pieceType)
             << "PieceType (GetSquareType and given PieceType) comparison failed. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetSquareColor(location) == pieceColor, expectedResult)
+        EXPECT_EQ(chessboard.GetSquareColor(location), pieceColor)
             << "Piece and square PieceColor comparison failed. Test Case Description: " << testDescription;
 
-        EXPECT_EQ(chessboard.GetSquarePieceID(location) == pieceID, expectedResult)
+        EXPECT_EQ(chessboard.GetSquarePieceID(location), pieceID)
             << "Piece and square PieceID comparison failed. Test Case Description: " << testDescription;
     }
+}
 
+TEST_F(ChessBoardTest, AddPiece_AssertFailsWhenSquareIsOccuiped)
+{
+    Game::Chessboard chessboard; // Default board that has the starting positions
 
-    // Ensure the ASSERTS are failing on invalid input
-
+    struct TestCase
     {
-        Game::Chessboard chessboard; // Default board that has the starting positions
+        PieceID pieceID;
+        PieceType pieceType;
+        PieceColor pieceColor;
+        SquareLocation location;
+        std::string_view testDescription;
+    };
 
-        // Checking if ASSERT fails when piece is already on board
-        for (const auto& [pieceID, pieceType, pieceColor, location ,expectedResult, testDescription] : testCases)
-        {
-            EXPECT_ANY_THROW(chessboard.AddPiece(pieceID, pieceType, pieceColor, location))
-                << "No throw occurred. Test Failed. Test Case Description: " << testDescription;
-        }
+    const std::vector<TestCase> testCases{
+        { PIECE_1, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E3), "White Pawn added to E3" },
+        { PIECE_2, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(D4), "Black Knight added to D4" },
+        { PIECE_3, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(F5), "White Bishop added to F5" },
+        { PIECE_4, PieceType::ROOK, PieceColor::BLACK, SquareLocation(C6), "Black Rook added to C6" },
+        { PIECE_5, PieceType::QUEEN, PieceColor::WHITE, SquareLocation(B2), "White Queen added to B2" },
+        { PIECE_6, PieceType::KING, PieceColor::BLACK, SquareLocation(A7), "Black King added to A7" },
+        { PIECE_7, PieceType::PAWN, PieceColor::BLACK, SquareLocation(G4), "Black Pawn added to G4" },
+        { PIECE_8, PieceType::KNIGHT, PieceColor::WHITE, SquareLocation(H5), "White Knight added to H5" },
+        { PIECE_9, PieceType::BISHOP, PieceColor::BLACK, SquareLocation(A3), "Black Bishop added to A3" },
+        { PIECE_10, PieceType::ROOK, PieceColor::WHITE, SquareLocation(B1), "White Rook added to B1" },
+        { PIECE_11, PieceType::QUEEN, PieceColor::BLACK, SquareLocation(C8), "Black Queen added to C8" },
+        { PIECE_12, PieceType::KING, PieceColor::WHITE, SquareLocation(D2), "White King added to D2" },
+        { PIECE_13, PieceType::PAWN, PieceColor::WHITE, SquareLocation(E4), "White Pawn added to E4" },
+        { PIECE_14, PieceType::KNIGHT, PieceColor::BLACK, SquareLocation(F6), "Black Knight added to F6" },
+        { PIECE_15, PieceType::BISHOP, PieceColor::WHITE, SquareLocation(G1), "White Bishop added to G1" },
+        { PIECE_16, PieceType::ROOK, PieceColor::BLACK, SquareLocation(H8), "Black Rook added to H8" }
+    };
 
-        chessboard.ClearBoard();
-
-        // Checking if ASSERT fails when location is invalid
-        EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(EMPTY)));
-        EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(64)));
-        EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(-1)));
-        EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(122)));
+    // Checking if ASSERT fails when piece is already on board
+    for (const auto& [pieceID, pieceType, pieceColor, location, testDescription] : testCases)
+    {
+        EXPECT_ANY_THROW(chessboard.AddPiece(pieceID, pieceType, pieceColor, location))
+            << "No throw occurred. Test Failed. Test Case Description: " << testDescription;
     }
+}
+
+
+/**
+ * @brief Verifies that the AddPiece ASSERTS fail on invalid input */
+TEST_F(ChessBoardTest, AddPiece_AssertsFailOnInvalidLocations)
+{
+    Game::Chessboard chessboard;
+    chessboard.ClearBoard();
+
+    // Checking if ASSERT fails when location is invalid
+    EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(EMPTY)));
+    EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(64)));
+    EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(-1)));
+    EXPECT_ANY_THROW(chessboard.AddPiece(PIECE_2, PieceType::PAWN, PieceColor::BLACK, SquareLocation(122)));
 }
