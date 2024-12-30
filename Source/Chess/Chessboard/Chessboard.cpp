@@ -195,7 +195,13 @@ namespace Game {
 
     void Chessboard::RemovePiece(PieceID pieceID, PieceColor pieceColor)
     {
+        ASSERT(GetPieceLocation(pieceID, pieceColor).IsOnBoard(), "Piece location is not on the board!")
 
+        SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
+        m_Board.WriteSquareType(PieceType::NONE, pieceLocation);
+
+        std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& colorPieceLocations = pieceColor.IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
+        colorPieceLocations[pieceID] = EMPTY;
     }
 
 
