@@ -43,6 +43,20 @@ namespace Game {
          * @param promotionType Piece type to promote the pawn to */
         void PromotePawn(const PieceID pieceID, const PieceColor pieceColor, const PieceType promotionType);
 
+
+        /**@brief Adds a piece to the board
+         * @param pieceID Piece ID of the piece being added
+         * @param pieceType Piece type of the piece being added
+         * @param pieceColor Color of piece being added
+         * @param location Location where the piece will be added
+         * @note There is a limit of 16 pieces per color */
+        void AddPiece(PieceID pieceID, PieceType pieceType, PieceColor pieceColor, SquareLocation location);
+
+        /**@brief Removes a piece from the board
+         * @param pieceID Piece ID of the piece being added
+         * @param pieceColor Color of piece being added */
+        void RemovePiece(PieceID pieceID, PieceColor pieceColor);
+
         /**@brief Gets the location of a chess piece
          * @param pieceID ID of chess piece
          * @param pieceColor Color of chess piece
@@ -82,6 +96,10 @@ namespace Game {
          * @return The active color of the board */
         [[nodiscard]] PieceColor GetActiveColor() const;
 
+        /**@brief Gets color of the side whose turn it is
+            * @return The active color of the board */
+        void SetActiveColor(PieceColor activeColor);
+
         /**@brief Gets the half move count of the board
          * @return The half move count */
         [[nodiscard]] inline uint8 GetHalfMoveCount() const { return m_HalfMoveCount;}
@@ -113,7 +131,7 @@ namespace Game {
 
         static constexpr uint8 NUMBER_OF_SQUARES = 64;
         static constexpr uint8 NUMBER_OF_PIECES_PER_COLOR = 16;
-    private:
+        private:
         uint16 m_FullMoveCount;
         uint8 m_HalfMoveCount;
         PieceColor m_ActiveColor;
@@ -123,7 +141,7 @@ namespace Game {
         std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR> m_WhitePieceLocations;
         InternalBoardRepresentation m_Board; // This contains the piece type and color of a piece
 
-    public:
+        public:
         inline InternalBoardRepresentation& GetInternalBoard()
         { return m_Board; } /// For testing only!
     };

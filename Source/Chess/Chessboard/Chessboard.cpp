@@ -180,6 +180,19 @@ namespace Game {
     }
 
 
+    void Chessboard::AddPiece(PieceID pieceID, PieceType pieceType,  PieceColor pieceColor, SquareLocation location)
+    {
+        ASSERT(GetPieceLocation(pieceID, pieceColor).IsEmpty(), "This piece is already on the board!");
+        ASSERT(location.IsOnBoard(), "The given location is not a valid location on the board!");
+    }
+
+
+    void Chessboard::RemovePiece(PieceID pieceID, PieceColor pieceColor)
+    {
+
+    }
+
+
     SquareLocation Chessboard::GetPieceLocation(const PieceID pieceID, const PieceColor pieceColor) const
     {
         if (pieceColor.IsWhite())
@@ -252,6 +265,12 @@ namespace Game {
     PieceColor Chessboard::GetActiveColor() const
     {
         return m_ActiveColor;
+    }
+
+
+    void Chessboard::SetActiveColor(PieceColor activeColor)
+    {
+        m_ActiveColor = activeColor;
     }
 
 

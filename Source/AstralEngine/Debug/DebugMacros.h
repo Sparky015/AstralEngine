@@ -8,7 +8,7 @@
 #include <chrono>
 #include <string>
 #include <sstream>
-
+// TODO: Separate these macros into different files
 #ifndef TURN_OFF_DEBUG_MACROS
 /** Outputs the message to the console with a time stamp. */
 #define TRACE(message) { std::ostringstream ss; ss << message; Debug::Macros::macro_TRACE(ss); }
