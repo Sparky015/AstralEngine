@@ -11,15 +11,19 @@ namespace Game {
     KingMoveList::KingMoveList()
     {
         // Reserve the max amount of moves a king can make in the worst case
-        m_RegularMoves.ReserveSpace(8);
-        m_AttackingMoves.ReserveSpace(8);
+        m_RegularMoves.ReserveSpace(MAX_NUMBER_OF_REGULAR_MOVES);
+        m_AttackingMoves.ReserveSpace(MAX_NUMBER_OF_ATTACKING_MOVES);
     }
 
     void KingMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
         // Check if the king can castle
         KingCastleRights castleRights = board.GetCastleRights(pieceColor);
-        // TODO: Invert the checking of empty squares depending on color
+
         if (castleRights.QueenSide)
         {
             // Check if the squares to the left of the king are empty
@@ -59,6 +63,8 @@ namespace Game {
             }
         }
 
+        ASSERT(m_RegularMoves.Size() <= MAX_NUMBER_OF_REGULAR_MOVES, "Too many regular moves generated for king!");
+        ASSERT(m_AttackingMoves.Size() <= MAX_NUMBER_OF_ATTACKING_MOVES, "Too many attacking moves generated for king!");
     }
 
 }

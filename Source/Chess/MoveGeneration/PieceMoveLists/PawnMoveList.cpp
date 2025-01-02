@@ -11,12 +11,16 @@ namespace Game {
     PawnMoveList::PawnMoveList()
     {
         // Reserve the max amount of moves a pawn can make in the worst case
-        m_RegularMoves.ReserveSpace(2);
-        m_AttackingMoves.ReserveSpace(2);
+        m_RegularMoves.ReserveSpace(MAX_NUMBER_OF_REGULAR_MOVES);
+        m_AttackingMoves.ReserveSpace(MAX_NUMBER_OF_ATTACKING_MOVES);
     }
 
     void PawnMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
         // Check if an en passant attack move is possible
         PreviousMoveData lmb = board.GetPreviousMoveData();
         if (lmb.MovingPieceType == PieceType::PAWN)
@@ -99,6 +103,8 @@ namespace Game {
             }
         }
 
+        ASSERT(m_RegularMoves.Size() <= MAX_NUMBER_OF_REGULAR_MOVES, "Too many regular moves generated for pawn!");
+        ASSERT(m_AttackingMoves.Size() <= MAX_NUMBER_OF_ATTACKING_MOVES, "Too many attacking moves generated for pawn!");
     }
 
 } // Game

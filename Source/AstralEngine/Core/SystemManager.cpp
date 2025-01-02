@@ -9,6 +9,11 @@ SystemManager::SystemManager() :
 {}
 
 
+void SystemManager::Update()
+{
+
+}
+
 void SystemManager::RenderImGui()
 {
 

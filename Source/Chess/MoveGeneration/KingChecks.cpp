@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 12/23/24.
 //
 
-#include "Checks.h"
+#include "KingChecks.h"
 
 namespace Game {
 
@@ -10,7 +10,7 @@ namespace Game {
     {
         for (uint8 pieceID = PIECE_1; pieceID != PIECE_16 + 1; pieceID++)
         {
-            if (CanPieceAttackKing(chessboard, boardMoveList, pieceColor, (PieceID)pieceID)) { LOG("IT HAPPENED!"); return true; }
+            if (CanPieceAttackKing(chessboard, boardMoveList, pieceColor, (PieceID)pieceID)) { LOG(pieceColor.ToString() << " king is in check!"); return true; }
         }
 
         return false;
@@ -21,7 +21,7 @@ namespace Game {
     {
         PieceID kingPieceID = chessboard.GetKingPieceID(pieceColor);
         SquareLocation kingLocation = chessboard.GetPieceLocation(kingPieceID, pieceColor);
-        return boardMoveList.GetAttackingMoves(pieceID, pieceColor).Contains(kingLocation);
+        return boardMoveList.GetAttackingMoves(pieceID, pieceColor.Opposite()).Contains(kingLocation);
     }
 
 }

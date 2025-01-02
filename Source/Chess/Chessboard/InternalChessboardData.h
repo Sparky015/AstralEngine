@@ -14,11 +14,11 @@ namespace Game {
         SECOND_SQUARE = true
     };
 
-    /** @struct Contains the compacted properties of two horizontally adjacent squares in a chess board. */
+    /**@struct TwoSquares
+     * @brief Contains the compacted properties of two horizontally adjacent squares in a chess board. */
     struct TwoSquares
     {
         TwoSquares();
-
         TwoSquares(PieceType pieceType1, PieceColor pieceColor1, PieceType pieceType2, PieceColor pieceColor2);
 
         /** @brief Reads the type of the selected square. */
@@ -38,7 +38,8 @@ namespace Game {
     };
 
 
-    /** @struct Representation of the chess board internally. Gives helper functions to access compacted data. */
+    /** @struct InternalBoardRepresentation
+     * @brief Representation of the chess board internally. Gives helper functions to access compacted data. */
     struct InternalBoardRepresentation
     {
         InternalBoardRepresentation();

@@ -37,17 +37,20 @@ add_library(Chess
         ChessMove.h
         PlayerInput/PieceTracking.cpp
         PlayerInput/PieceTracking.h
-        MoveGeneration/Checks.cpp
-        MoveGeneration/Checks.h
+        MoveGeneration/KingChecks.cpp
+        MoveGeneration/KingChecks.h
         GameState/SquareLocation.h
         GameState/PieceColor.h
         ChessBoard/FENParser.cpp
         ChessBoard/FENParser.h
-        Debug/ChessboardImGuiComponents.cpp
-        Debug/ChessboardImGuiComponents.h
+        Debug/ImGuiComponents/ChessboardComponents.cpp
+        Debug/ImGuiComponents/ChessboardComponents.h
         Chessboard/InternalChessBoardData.h
         GameState/PieceType.h
         GameState/PieceType.cpp
+        Debug/DebugManager.cpp
+        Debug/DebugManager.h
+        GameState/SquareLocation.cpp
 )
 
 add_executable(ChessExecutable ChessModule.cpp)

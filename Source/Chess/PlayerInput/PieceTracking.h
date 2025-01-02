@@ -44,6 +44,7 @@ namespace Game {
         void ResetTrackedPiecePosition(const Chessboard& chessBoard) const;
 
         void AttemptMove(Chessboard& chessBoard, SquareLocation attemptedMoveLocation) const;
+
         [[nodiscard]] bool IsRegularMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const;
         [[nodiscard]] bool IsTakeMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const;
         [[nodiscard]] bool IsSquareEmpty(const Chessboard& chessBoard, SquareLocation squareLocation) const;

@@ -14,6 +14,7 @@
 #include "ECS/ECSManager.h"
 #include "Input/InputState.h"
 #include "../Utils/ChessConversions.h"
+#include "MoveGeneration/KingChecks.h"
 
 
 namespace Game {
@@ -114,7 +115,11 @@ namespace Game {
 
                 // Updating piece move lists after take move
                 BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
+                boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor().Opposite());
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor());
+
+                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
+                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
             }
         }
         else if (IsTakeMove(chessBoard, attemptedMoveLocation))
@@ -132,7 +137,11 @@ namespace Game {
 
                 // Updating piece move lists after take move
                 BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
+                boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor().Opposite());
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor());
+
+                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
+                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
             }
         }
     }

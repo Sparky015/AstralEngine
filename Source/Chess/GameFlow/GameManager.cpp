@@ -7,7 +7,7 @@
 #include "Renderer/RendererCommands.h"
 #include "ECS/Systems/RenderingSystem.h"
 #include "GameState/ChessEntities.h"
-#include "MoveGeneration/Checks.h"
+#include "MoveGeneration/KingChecks.h"
 
 namespace Game {
 
@@ -35,9 +35,6 @@ namespace Game {
         RendererCommand::Clear();
         m_PieceTracker.UpdatePieceTracking();
         Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get());
-
-        IsKingInCheck(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), PieceColor::WHITE);
-        IsKingInCheck(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), PieceColor::BLACK);
     }
 
 
@@ -84,7 +81,7 @@ namespace Game {
 
         uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
 
-        BufferLayout bufferLayout = {
+        const BufferLayout bufferLayout = {
                 {Float3, "a_Position"},
                 {Float2, "a_TexCords"}
         };

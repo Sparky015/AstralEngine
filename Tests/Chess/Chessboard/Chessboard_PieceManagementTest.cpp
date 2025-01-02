@@ -18,6 +18,7 @@ public:
         SquareLocation location;
         std::string_view testDescription;
     };
+
 };
 
 const std::vector<Chessboard_PieceManagementTest::TestCase> AddPieceTestCases{
@@ -115,7 +116,6 @@ TEST_F(Chessboard_PieceManagementTest, RemovePiece_AssertsFailOnInvalidInput)
 }
 
 
-//void RemovePiece(PieceID pieceID, PieceColor pieceColor);
 /**
  * @brief Verifies that the RemovePiece correctly updates the piece's location as well as the state of the square that piece was on. */
 TEST_F(Chessboard_PieceManagementTest, RemovePiece_BoardAndPieceStateUpdateCorrectly)
@@ -128,17 +128,17 @@ TEST_F(Chessboard_PieceManagementTest, RemovePiece_BoardAndPieceStateUpdateCorre
     };
 
     std::vector<TestCase> testCases = {
-        {PIECE_1, PieceColor::BLACK, "Remove Black Piece 1 from default position"},
-        {PIECE_1, PieceColor::WHITE, "Remove White Piece 1 from default position"},
-        {PIECE_2, PieceColor::WHITE, "Remove White Piece 2 from default position"},
-        {PIECE_3, PieceColor::BLACK, "Remove Black Piece 3 from default position"},
-        {PIECE_4, PieceColor::WHITE, "Remove White Piece 4 from default position"},
-        {PIECE_5, PieceColor::BLACK, "Remove Black Piece 5 from default position"},
-        {PIECE_6, PieceColor::WHITE, "Remove White Piece 6 from default position"},
-        {PIECE_7, PieceColor::BLACK, "Remove Black Piece 7 from default position"},
-        {PIECE_8, PieceColor::WHITE, "Remove White Piece 8 from default position"},
-        {PIECE_16, PieceColor::BLACK, "Remove Black Piece 16 from default position"},
-        {PIECE_16, PieceColor::WHITE, "Remove White Piece 16 from default position"},
+        {PIECE_1, PieceColor::BLACK, "Remove Black Piece 1"},
+        {PIECE_1, PieceColor::WHITE, "Remove White Piece 1"},
+        {PIECE_2, PieceColor::WHITE, "Remove White Piece 2"},
+        {PIECE_3, PieceColor::BLACK, "Remove Black Piece 3"},
+        {PIECE_4, PieceColor::WHITE, "Remove White Piece 4"},
+        {PIECE_5, PieceColor::BLACK, "Remove Black Piece 5"},
+        {PIECE_6, PieceColor::WHITE, "Remove White Piece 6"},
+        {PIECE_7, PieceColor::BLACK, "Remove Black Piece 7"},
+        {PIECE_8, PieceColor::WHITE, "Remove White Piece 8"},
+        {PIECE_16, PieceColor::BLACK, "Remove Black Piece 16"},
+        {PIECE_16, PieceColor::WHITE, "Remove White Piece 16"},
     };
 
 
@@ -150,5 +150,136 @@ TEST_F(Chessboard_PieceManagementTest, RemovePiece_BoardAndPieceStateUpdateCorre
 
         EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor), EMPTY);
         EXPECT_EQ(chessboard.GetSquareType(oldPieceLocation), PieceType::NONE);
+    }
+}
+
+
+TEST_F(Chessboard_PieceManagementTest, PromotePawn_ValidPawnPromotions) {
+
+    Game::Chessboard board;
+
+    struct TestCase
+    {
+        PieceID pieceID;
+        PieceColor pieceColor;
+        PieceType promotionType;
+    };
+
+
+    std::vector<TestCase> testCases = {
+        {PIECE_1, PieceColor::WHITE, PieceType::BISHOP},
+        {PIECE_1, PieceColor::WHITE, PieceType::KNIGHT},
+        {PIECE_1, PieceColor::WHITE, PieceType::ROOK},
+        {PIECE_1, PieceColor::WHITE, PieceType::QUEEN},
+        {PIECE_5, PieceColor::WHITE, PieceType::ROOK},
+        {PIECE_16, PieceColor::WHITE, PieceType::QUEEN},
+    };
+
+    for (const auto& [pieceID, pieceColor, promotionType] : testCases)
+    {
+        board.SetPieceType(pieceID, PieceType::PAWN, pieceColor); // Set the piece to a pawn
+
+        EXPECT_NO_THROW(board.PromotePawn(pieceID, pieceColor, promotionType));
+        EXPECT_EQ(board.GetPieceType(pieceID, pieceColor), promotionType);
+    }
+
+}
+
+TEST_F(Chessboard_PieceManagementTest, PromotePawn_InvalidPromotionTypes)
+{
+    Game::Chessboard chessboard;
+
+    chessboard.SetPieceType(PIECE_1, PieceType::PAWN, PieceColor::WHITE);
+
+    // Invalid promotion to PAWN
+    EXPECT_ANY_THROW(chessboard.PromotePawn(PIECE_1, PieceColor::WHITE, PieceType::PAWN)) <<
+                 "Promotion type must be bishop, knight, rook, or queen.";
+
+    // Invalid promotion to KING
+    EXPECT_ANY_THROW(chessboard.PromotePawn(PIECE_1, PieceColor::WHITE, PieceType::KING)) <<
+                 "Promotion type must be bishop, knight, rook, or queen.";
+}
+
+TEST_F(Chessboard_PieceManagementTest, PromotePawn_CannotPromoteNonPawns)
+{
+    Game::Chessboard board;
+    board.SetPieceType(PIECE_1, PieceType::ROOK, PieceColor::WHITE);
+
+    // Promoting a rook is not allowed. Should throw.
+    EXPECT_ANY_THROW(board.PromotePawn(PIECE_1, PieceColor::WHITE, PieceType::QUEEN)) <<
+                 "Piece must be a pawn to promote it.";
+}
+
+
+
+TEST_F(Chessboard_PieceManagementTest, ClearBoard_ResetsAllSquaresToEmpty)
+{
+    Game::Chessboard chessboard; // Default board with starting positions
+
+    // Clear the board
+    EXPECT_NO_THROW(chessboard.ClearBoard())
+        << "ClearBoard should not throw any exceptions";
+
+    // Verify all squares are empty by checking each square from A1 to H8
+    for (SquareLocation square = 0; square < 64; ++square)
+    {
+        EXPECT_EQ(chessboard.GetSquareType(square), PieceType::NONE)
+            << "Square " << square.GetString() << " should be empty after board clear";
+    }
+}
+
+TEST_F(Chessboard_PieceManagementTest, ClearBoard_ResetsAllPieceLocations)
+{
+    Game::Chessboard chessboard; // Default board with starting positions
+
+    // Clear the board
+    chessboard.ClearBoard();
+
+    // Test all piece locations for both colors
+    for (uint8 pieceID = PIECE_1; pieceID <= PIECE_16; ++pieceID)
+    {
+        EXPECT_EQ(chessboard.GetPieceLocation((PieceID)pieceID, PieceColor::WHITE), EMPTY)
+            << "White piece " << pieceID << " location should be EMPTY after board clear";
+
+        EXPECT_EQ(chessboard.GetPieceLocation((PieceID)pieceID, PieceColor::BLACK), EMPTY)
+            << "Black piece " << pieceID << " location should be EMPTY after board clear";
+    }
+}
+
+TEST_F(Chessboard_PieceManagementTest, ClearBoard_CanAddPiecesAfterClearing)
+{
+    Game::Chessboard chessboard;
+    chessboard.ClearBoard();
+
+    // Test adding pieces after clearing using the same test cases from AddPieceTestCases
+    for (const auto& [pieceID, pieceType, pieceColor, location, testDescription] : AddPieceTestCases)
+    {
+        EXPECT_NO_THROW(chessboard.AddPiece(pieceID, pieceType, pieceColor, location))
+            << "Failed to add piece after board clear. Test Case Description: " << testDescription;
+
+        EXPECT_EQ(chessboard.GetPieceLocation(pieceID, pieceColor), location)
+            << "Piece location mismatch after adding to cleared board. Test Case Description: " << testDescription;
+
+        EXPECT_EQ(chessboard.GetPieceType(pieceID, pieceColor), pieceType)
+            << "Piece type mismatch after adding to cleared board. Test Case Description: " << testDescription;
+    }
+}
+
+TEST_F(Chessboard_PieceManagementTest, ClearBoard_MultipleClears)
+{
+    Game::Chessboard chessboard;
+
+    // Clear multiple times to ensure it's idempotent
+    for (int i = 0; i < 3; ++i)
+    {
+        EXPECT_NO_THROW(chessboard.ClearBoard())
+            << "Multiple ClearBoard calls should not throw exceptions";
+
+        // Verify a sample square and piece after each clear
+        EXPECT_EQ(chessboard.GetSquareType(E4), PieceType::NONE)
+            << "Square E4 should be empty after clear attempt " << i + 1;
+
+        EXPECT_EQ(chessboard.GetPieceLocation(PIECE_1, PieceColor::WHITE), EMPTY)
+            << "Piece location should be EMPTY after clear attempt " << i + 1;
     }
 }

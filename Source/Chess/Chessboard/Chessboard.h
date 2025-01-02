@@ -43,7 +43,6 @@ namespace Game {
          * @param promotionType Piece type to promote the pawn to */
         void PromotePawn(const PieceID pieceID, const PieceColor pieceColor, const PieceType promotionType);
 
-
         /**@brief Adds a piece to the board
          * @param pieceID Piece ID of the piece being added
          * @param pieceType Piece type of the piece being added
@@ -70,6 +69,12 @@ namespace Game {
          * @note This relies on the piece's location to find its type */
         [[nodiscard]] PieceType GetPieceType(const PieceID pieceID, const PieceColor pieceColor) const;
 
+        /**@brief Sets the PieceType of a piece
+         * @param pieceID The piece ID of the piece
+         * @param pieceType The piece type to set the given piece to
+         * @param pieceColor The piece color of the piece */
+        void SetPieceType(PieceID pieceID, PieceType pieceType, PieceColor pieceColor);
+
         /**@brief Gets the color of a piece on a square
          * @param squareLocation Location to check color of piece at
          * @return Color of a piece at given square
@@ -90,15 +95,15 @@ namespace Game {
 
         /**@brief Gets the state of the castle rights of the chess board.
          * @return The castle rights of the board */
-        [[nodiscard]] KingCastleRights GetCastleRights(const PieceColor color) const;
+        [[nodiscard]] inline KingCastleRights GetCastleRights(const PieceColor color) const { return m_CastleRights.ReadCastleRights(color); }
 
         /**@brief Gets color of the side whose turn it is
          * @return The active color of the board */
-        [[nodiscard]] PieceColor GetActiveColor() const;
+        [[nodiscard]] inline PieceColor GetActiveColor() const { return m_ActiveColor; }
 
         /**@brief Gets color of the side whose turn it is
-            * @return The active color of the board */
-        void SetActiveColor(PieceColor activeColor);
+         * @return The active color of the board */
+        inline void SetActiveColor(const PieceColor activeColor) { m_ActiveColor = activeColor; }
 
         /**@brief Gets the half move count of the board
          * @return The half move count */
@@ -106,7 +111,7 @@ namespace Game {
 
         /**@brief Gets the full move count of the board
          * @return The full move count */
-        [[nodiscard]] inline uint8 GetFullMoveCount() const { return m_HalfMoveCount;}
+        [[nodiscard]] inline uint8 GetFullMoveCount() const { return m_FullMoveCount;}
 
         /**@brief Gets the previous move data
          * @return The previous move data object */
@@ -131,7 +136,9 @@ namespace Game {
 
         static constexpr uint8 NUMBER_OF_SQUARES = 64;
         static constexpr uint8 NUMBER_OF_PIECES_PER_COLOR = 16;
-        private:
+
+    private:
+
         uint16 m_FullMoveCount;
         uint8 m_HalfMoveCount;
         PieceColor m_ActiveColor;

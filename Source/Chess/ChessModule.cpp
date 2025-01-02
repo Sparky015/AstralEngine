@@ -10,6 +10,7 @@
 #include "Core/Events/EventListener.h"
 #include "Chessboard/ChessboardManager.h"
 #include "GameFlow/GameManager.h"
+#include "Debug/DebugManager.h"
 
 class ChessModule : public ApplicationModule
 {
@@ -21,6 +22,7 @@ public:
         TRACE("Initializing Application")
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
+        Debug::g_DebugManager.Init();
         keyPressListener.StartListening();
     }
 
@@ -35,6 +37,7 @@ public:
     void Shutdown() override
     {
         TRACE("Shutting down Application")
+        Debug::g_DebugManager.Shutdown();
         Game::g_BoardManager.Shutdown();
         Game::g_GameManager.Shutdown();
     }

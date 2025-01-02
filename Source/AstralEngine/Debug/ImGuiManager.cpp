@@ -14,7 +14,6 @@
 //#include "Game/Board/BoardManager.h"
 //#include "Game/MoveList.h"
 
-// #include "../../../Chess/Source/Utils/ChessConversions.h"
 #include "Window/Platform/Generic/GenericWindow.h"
 #include "Input/Keycodes.h"
 
@@ -61,10 +60,6 @@ namespace Debug{
     {
         PROFILE_SCOPE();
         ImGuiIO& io = ImGui::GetIO();
-//        const static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
-
-        static bool show_demo_window = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
 
         if (m_ShowDebugMenu)
         {

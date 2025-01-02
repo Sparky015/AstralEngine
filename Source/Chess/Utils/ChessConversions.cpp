@@ -35,41 +35,13 @@ namespace Game {
     }
 
 
-    const std::string ConvertIntToChessNotation(uint8 location)
-    {
-        if (location == 255) {return "Empty";}
-        int row = (location / 8);
-        int column = (location % 8) + 1;
-        char columnLetter;
-
-        // Convert row number to letter
-        switch (column)
-        {
-            case 1: columnLetter = 'A'; break;
-            case 2: columnLetter = 'B'; break;
-            case 3: columnLetter = 'C'; break;
-            case 4: columnLetter = 'D'; break;
-            case 5: columnLetter = 'E'; break;
-            case 6: columnLetter = 'F'; break;
-            case 7: columnLetter = 'G'; break;
-            case 8: columnLetter = 'H'; break;
-            default: ERROR("Invalid Switch Statement Input");
-        }
-
-        // Invert the column number (i.e. 8 becomes 1, 7, becomes 2, 6 becomes, 3...)
-        row = 9 - row;
-
-        return std::string(1, columnLetter) + std::to_string(row - 1);
-    }
-
-
     std::string ConvertPieceMoveListToString(const PieceMoveList& vec)
     {
         std::ostringstream oss;
         oss << "[";
         for (size_t i = 0; i < vec.Size(); ++i)
         {
-            oss << ConvertIntToChessNotation((int)vec[i].GetRawValue());
+            oss << vec[i].GetChessNotation();
             if (i != vec.Size() - 1) // Adding comma in between each location
             {
                 oss << ", ";

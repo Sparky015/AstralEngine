@@ -4,6 +4,7 @@
 
 #include "ChessboardManager.h"
 
+
 namespace Game
 {
 
@@ -42,7 +43,7 @@ namespace Game
 
 
     ChessboardManager::ChessboardManager() : m_Board(Chessboard()), //"5kr1/1p2qp2/1Qb1p1pp/p1ppn1R1/PrN1PBnP/1RP1bN2/1P2KPP1/5B2 w - - 3 23"
-        m_MoveList(m_Board, PieceColor::WHITE)
+                                             m_MoveList(m_Board, PieceColor::WHITE)
     {
         PROFILE_SCOPE();
         TRACE("Constructing Board Manager!")

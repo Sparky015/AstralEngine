@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "pch.h"
 
 enum [[maybe_unused]] BoardLocation : uint8
 {
@@ -37,6 +38,7 @@ public:
     [[nodiscard]] constexpr bool IsInSameColumn(const SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
     [[nodiscard]] std::string GetString() const { return std::to_string(m_Location); }
     [[nodiscard]] constexpr uint8 GetRawValue() const { return m_Location; }
+    [[nodiscard]] std::string GetChessNotation() const;
 
     static constexpr SquareLocation FromRowAndColumn(const uint8 row, const uint8 column)
     {
@@ -63,7 +65,10 @@ public:
     constexpr SquareLocation operator++(int) { SquareLocation temp = *this; ++m_Location; return temp; }
     constexpr SquareLocation& operator--() { --m_Location; return *this; }
     constexpr SquareLocation operator--(int) { SquareLocation temp = *this; --m_Location; return temp; }
-
+    constexpr bool operator<(const SquareLocation otherLocation) const { return m_Location < otherLocation.m_Location; }
+    constexpr bool operator<=(const SquareLocation otherLocation) const { return m_Location <= otherLocation.m_Location; }
+    constexpr bool operator>(const SquareLocation otherLocation) const { return m_Location > otherLocation.m_Location; }
+    constexpr bool operator>=(const SquareLocation otherLocation) const { return m_Location >= otherLocation.m_Location; }
 
 private:
 

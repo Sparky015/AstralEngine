@@ -112,7 +112,6 @@ namespace Game {
         m_HalfMoveCount = 1; // Reset the half move counter on takes
         if (pieceColor == PieceColor::BLACK) { m_FullMoveCount++; } // Increment the full move counter if the piece is black
 
-        const SquareLocation oldPieceLocation = pieceColor.IsWhite() ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
 
         // Updating the castle rights when a rook is taken
         if (targetPieceLocation.GetColumn() == 1 || targetPieceLocation.GetColumn() == 8)
@@ -143,6 +142,8 @@ namespace Game {
             else if (pieceLocation.GetColumn() == 8) {m_CastleRights.UnsetCastleRight(pieceColor, KING_SIDE);}
         }
 
+        const SquareLocation oldPieceLocation = pieceColor.IsWhite() ? m_WhitePieceLocations[pieceID] : m_BlackPieceLocations[pieceID];
+
         // Get the ID of the piece being taken that is on targetBoardLocation and clear the location of the piece from piece locations
         const PieceID targetPieceID = GetSquarePieceID(targetPieceLocation);
         std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& capturedColorPieceLocation = pieceColor.Opposite().IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
@@ -167,10 +168,7 @@ namespace Game {
         PROFILE_SCOPE();
         ASSERT(promotionType != PieceType::PAWN && promotionType != PieceType::KING, "Promotion type must be bishop, knight, rook, or queen.")
         ASSERT(GetPieceType(pieceID, pieceColor) == PieceType::PAWN, "Piece must be a pawn to promote it.")
-
-        const std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& pieceLocations = pieceColor.IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
-        const SquareLocation pieceLocation = pieceLocations[pieceID];
-        m_Board.WriteSquareType(promotionType, pieceLocation);
+        SetPieceType(pieceID, promotionType, pieceColor);
     }
 
 
@@ -264,24 +262,6 @@ namespace Game {
     }
 
 
-    KingCastleRights Chessboard::GetCastleRights(const PieceColor color) const
-    {
-        return m_CastleRights.ReadCastleRights(color);
-    }
-
-
-    PieceColor Chessboard::GetActiveColor() const
-    {
-        return m_ActiveColor;
-    }
-
-
-    void Chessboard::SetActiveColor(PieceColor activeColor)
-    {
-        m_ActiveColor = activeColor;
-    }
-
-
     char Chessboard::GetCharacterOfPiece(const SquareLocation squareLocation) const
     {
         ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
@@ -308,6 +288,13 @@ namespace Game {
             std::cout << GetCharacterOfPiece(squareLocation) << " ";
         }
         std::cout << "\n";
+    }
+
+
+    void Chessboard::SetPieceType(const PieceID pieceID, const PieceType pieceType, const PieceColor pieceColor)
+    {
+        const SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
+        m_Board.WriteSquareType(pieceType, pieceLocation);
     }
 
 

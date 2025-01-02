@@ -31,8 +31,6 @@ namespace Game {
 
 
     uint8 ConvertChessNotationToInt(const std::string& chessNotation);
-    const std::string ConvertIntToChessNotation(uint8 chessNotation);
-
 
 
     Vec2 ConvertPieceLocationToCoordinates(uint8 pieceLocation);
