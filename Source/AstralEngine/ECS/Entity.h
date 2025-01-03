@@ -11,15 +11,14 @@ namespace ECS {
     class Entity
     {
     public:
-        Entity();
+        Entity() = default;
         explicit Entity(EntityPoolSize id);
-        explicit Entity(EntityPoolSize id, bool isAlive);
 
         [[nodiscard]] inline EntityPoolSize GetID() const {return m_ID;}
-        [[nodiscard]] inline bool IsAlive() const { return m_IsAlive; }
+
+        constexpr operator EntityPoolSize() const { return m_ID; }
     private:
-        bool m_IsAlive;
-        EntityPoolSize m_ID;
+        EntityPoolSize m_ID{};
     };
 
 }

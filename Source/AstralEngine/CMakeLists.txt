@@ -31,13 +31,13 @@ add_library(AstralEngine
         Window/WindowManager.h
         Debug/Loggers/AllocationTracker.h
         Window/WindowEvents.h
-        Debug/ImGuiManager.h
-        Debug/ImGuiManager.cpp
-        Debug/ImGuiDependencies/imgui_impl_glfw.cpp
-        Debug/ImGuiDependencies/imgui_impl_glfw.h
-        Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
-        Debug/ImGuiDependencies/imgui_impl_opengl3.h
-        Debug/ImGuiEvents.h
+        Debug/ImGui/ImGuiManager.h
+        Debug/ImGui/ImGuiManager.cpp
+        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.cpp
+        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
+        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
+        Debug/ImGui/ImGuiEvents.h
         Debug/Loggers/EngineDebugInfoLogger.h
         Debug/Loggers/EngineDebugInfoLogger.cpp
         Debug/Loggers/ConsoleLogFile.cpp
@@ -51,7 +51,6 @@ add_library(AstralEngine
         ECS/Entity.cpp
         ECS/Entity.h
         ECS/Components/Transform.h
-        ECS/ECSTypes.h
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
@@ -99,7 +98,7 @@ add_library(AstralEngine
         Renderer/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
-        Sozin.h
+        Astral.h
         Input/InputState.h
         Input/InputState.cpp
         Input/Keycodes.h
@@ -117,6 +116,7 @@ add_library(AstralEngine
         Debug/Macros/ConsoleColors.h
         Debug/Macros/Error.cpp
         Debug/Macros/Error.h
+        ECS/ECSTypes.h
 )
 
 

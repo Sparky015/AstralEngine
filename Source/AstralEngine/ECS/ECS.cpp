@@ -37,12 +37,6 @@ namespace ECS {
     }
 
 
-    bool ECS::IsEntityUsed(const Entity entity)
-    {
-        return entity.IsAlive();
-    }
-
-
     bool ECS::IsEntityUsed(const EntityPoolSize entityID)
     {
         return m_ActiveEntities[entityID];
@@ -62,9 +56,13 @@ namespace ECS {
     }
 
 
-    ECS::ECS() : m_EntityCounter(0), m_Components(std::make_tuple(std::array<TransformComponent, MAX_ENTITIES>(), std::array<SpriteComponent, MAX_ENTITIES>()))
+    ECS::ECS() : m_EntityCounter(0)
+    // m_Components(std::make_tuple(std::array<TransformComponent, MAX_ENTITIES>(), std::array<SpriteComponent, MAX_ENTITIES>()))
     {
-
+        // Initialize component arrays for each component type
+        m_ComponentsNew[typeid(TransformComponent)] = ComponentDisplay<TransformComponent>();
+        m_ComponentsNew[typeid(SpriteComponent)] = ComponentDisplay<SpriteComponent>();
+        // Add other component types as needed
     }
 
 }

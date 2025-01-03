@@ -54,6 +54,8 @@ public:
 
     constexpr bool operator==(const SquareLocation& otherSquareLocation) const { return m_Location == otherSquareLocation.m_Location; }
     constexpr bool operator!=(const SquareLocation& otherSquareLocation) const { return m_Location != otherSquareLocation.m_Location; }
+    constexpr std::strong_ordering operator<=>(const SquareLocation& otherSquareLocation) const { return m_Location <=> otherSquareLocation.m_Location; }
+
     constexpr SquareLocation operator+(const int8 moveStep) const { return SquareLocation(m_Location + moveStep); }
     constexpr SquareLocation operator-(const int8 moveStep) const { return SquareLocation(m_Location - moveStep); }
     constexpr SquareLocation operator+(const SquareLocation& otherSquareLocation) const { return SquareLocation(m_Location + otherSquareLocation.m_Location); }
@@ -65,10 +67,7 @@ public:
     constexpr SquareLocation operator++(int) { SquareLocation temp = *this; ++m_Location; return temp; }
     constexpr SquareLocation& operator--() { --m_Location; return *this; }
     constexpr SquareLocation operator--(int) { SquareLocation temp = *this; --m_Location; return temp; }
-    constexpr bool operator<(const SquareLocation otherLocation) const { return m_Location < otherLocation.m_Location; }
-    constexpr bool operator<=(const SquareLocation otherLocation) const { return m_Location <= otherLocation.m_Location; }
-    constexpr bool operator>(const SquareLocation otherLocation) const { return m_Location > otherLocation.m_Location; }
-    constexpr bool operator>=(const SquareLocation otherLocation) const { return m_Location >= otherLocation.m_Location; }
+
 
 private:
 

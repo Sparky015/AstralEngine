@@ -7,7 +7,7 @@
 
 #include "Input/InputManager.h"
 #include "Window/WindowManager.h"
-#include "Debug/ImGuiManager.h"
+#include "Debug/ImGui/ImGuiManager.h"
 #include "ECS/ECSManager.h"
 #include "Renderer/RendererManager.h"
 

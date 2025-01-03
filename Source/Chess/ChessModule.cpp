@@ -4,7 +4,7 @@
 * @date 12/5/2024
 */
 
-#include "Sozin.h"
+#include "Astral.h"
 
 #include "Input/InputState.h"
 #include "Core/Events/EventListener.h"
@@ -32,6 +32,7 @@ public:
         {
             LOG("TEST SUCCESSFUL!")
         }
+
     }
 
     void Shutdown() override

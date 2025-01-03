@@ -7,13 +7,13 @@
 #include "pch.h"
 
 #include "ECS/Entity.h"
-#include "ECS/ECSTypes.h"
+#include "ECSTypes.h"
+#include <any>
 #include <bitset>
 #include <typeindex>
-#include <any>
 
-#include "ECS/Components/Transform.h" // TEMP
 #include "ECS/Components/Sprite.h" // TEMP
+#include "ECS/Components/Transform.h" // TEMP
 
 
 namespace ECS {
@@ -23,10 +23,11 @@ namespace ECS {
     class ECS
     {
     public:
+
+
         ECS();
         Entity AddEntity();
         void RemoveEntity(Entity entity);
-        bool IsEntityUsed(const Entity entity);
         bool IsEntityUsed(const EntityPoolSize entityID);
 
 
@@ -48,14 +49,17 @@ namespace ECS {
         template<class ComponentType>
         void RemoveComponent(Entity entity)
         {
-            std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
+            std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity].isUsed = false;
+
+            // std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
         };
 
 
         template<class ComponentType>
         ComponentType& GetComponent(Entity entity)
         {
-            return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()];
+            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity];
+            // return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()];
         }
 
 
@@ -65,27 +69,27 @@ namespace ECS {
         template<class ComponentType>
         const std::array<ComponentType, MAX_ENTITIES>& GetComponentDisplay()
         {
-            return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components);
+            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)]);
+            // return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components);
         }
 
 
         template<class ComponentType>
         bool IsComponentUsed(const Entity entity, ComponentType component)
         {
-            return GetComponent<ComponentType>(entity).isUsed;
+            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity].isUsed;
+            // return GetComponent<ComponentType>(entity).isUsed;
         }
 
     private:
         EntityPoolSize FindNextInactiveIndex();
-
         EntityPoolSize m_EntityCounter;
-        // container for entities
         std::bitset<MAX_ENTITIES> m_ActiveEntities;
 
         // Container for components
-        std::tuple<std::array<TransformComponent, MAX_ENTITIES>, std::array<SpriteComponent, MAX_ENTITIES>> m_Components;
+        // std::tuple<std::array<TransformComponent, MAX_ENTITIES>, std::array<SpriteComponent, MAX_ENTITIES>> m_Components;
 
-        std::unordered_map<std::type_index, std::array<std::any, MAX_ENTITIES>> m_ComponentsNew;
+        std::unordered_map<std::type_index, std::any> m_ComponentsNew;
     };
 
 }
