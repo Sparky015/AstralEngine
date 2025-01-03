@@ -9,6 +9,8 @@
 #include "ECS/Entity.h"
 #include "ECS/ECSTypes.h"
 #include <bitset>
+#include <typeindex>
+#include <any>
 
 #include "ECS/Components/Transform.h" // TEMP
 #include "ECS/Components/Sprite.h" // TEMP
@@ -16,7 +18,7 @@
 
 namespace ECS {
 
-    const EntityPoolSize MAX_ENTITIES = 255;
+    constexpr EntityPoolSize MAX_ENTITIES = 255;
 
     class ECS
     {
@@ -76,7 +78,6 @@ namespace ECS {
     private:
         EntityPoolSize FindNextInactiveIndex();
 
-    private:
         EntityPoolSize m_EntityCounter;
         // container for entities
         std::bitset<MAX_ENTITIES> m_ActiveEntities;
@@ -84,6 +85,7 @@ namespace ECS {
         // Container for components
         std::tuple<std::array<TransformComponent, MAX_ENTITIES>, std::array<SpriteComponent, MAX_ENTITIES>> m_Components;
 
+        std::unordered_map<std::type_index, std::array<std::any, MAX_ENTITIES>> m_ComponentsNew;
     };
 
 }

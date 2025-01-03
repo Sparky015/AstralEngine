@@ -6,7 +6,7 @@
 
 #include "Core/SystemEvents.h"
 #include "Core/Events/EventListener.h"
-#include "Debug/DebugEvents.h"
+#include "Debug/ImGuiEvents.h"
 
 class SystemManager
 {

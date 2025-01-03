@@ -1,0 +1,95 @@
+//
+// Created by Andrew Fagan on 1/2/25.
+//
+
+#include "Asserts.h"
+
+#include "Debug/Loggers/ConsoleLogFile.h"
+#include "ConsoleColors.h"
+
+namespace Debug::Macros {
+
+    void macro_ASSERT(const char* expressionString,  const char* errorMessage, const char* file, const int lineNumber, const char* func)
+    {
+        //// IF ASSERT FAILED ////
+
+        // Stripping the part of the file path prior to the root directory
+        std::string filePath(file);
+        std::string rootDir(ROOT_DIR);
+        size_t pos = filePath.find(rootDir);
+        if (pos != std::string::npos)
+        {
+            filePath.erase(pos, rootDir.length());
+        }
+
+#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream() << "\n\nASSERT failed. "
+                                    << "\nFile: " << filePath
+                                    << "\nLine: " << lineNumber
+                                    << "\nFunction: " << func
+                                    << "\nCondition: (" << expressionString
+                                    << ")\nError Message: " << errorMessage << "\n";
+            ConsoleLogFile::Shutdown();
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
+#endif
+
+        std::cout << "\n\n" << SetColor(RED)
+                  << "ASSERT failed. "
+                  << "\nFile: " << filePath
+                  << "\nLine: " << lineNumber
+                  << "\nFunction: " << func
+                  << "\nCondition: (" << expressionString
+                  << ")\nError Message: " << errorMessage << SetColor(DEFAULT) << "\n";
+    }
+
+
+    void macro_ASSERT(const char* expressionString, std::ostringstream& errorMessage, const char* file, const int lineNumber, const char* func)
+    {
+        //// IF ASSERT FAILED ////
+
+        // Stripping the part of the file path prior to the root directory
+        std::string filePath(file);
+        std::string rootDir(ROOT_DIR);
+        size_t pos = filePath.find(rootDir);
+        if (pos != std::string::npos)
+        {
+            filePath.erase(pos, rootDir.length());
+        }
+
+    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            logFile.GetFileStream()
+                    << "\n\nASSERT failed. "
+                    << "\nFile: " << filePath
+                    << "\nLine: " << lineNumber
+                    << "\nFunction: " << func
+                    << "\nCondition: (" << expressionString
+                    << ")\nError Message: " << errorMessage.str() << "\n";
+            ConsoleLogFile::Shutdown();
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
+    #endif
+
+        std::cout << "\n\n" << SetColor(RED)
+        << "ASSERT failed. "
+        << "\nFile: " << filePath
+        << "\nLine: " << lineNumber
+        << "\nFunction: " << func
+        << "\nCondition: (" << expressionString
+        << ")\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
+    }
+
+
+}

@@ -24,7 +24,9 @@
 
 // Other Headers
 #include "Core/CoreMacroDefinitions.h"
-#include "Debug/DebugMacros.h"
 #include "Core/Math.h"
 
-
+#include "Debug/Macros/Asserts.h"
+#include "Debug/Macros/Loggers.h"
+#include "Debug/Macros/Error.h"
+#include "Debug/Macros/ScopeProfiler.h"

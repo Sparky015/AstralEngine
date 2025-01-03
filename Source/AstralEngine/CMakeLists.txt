@@ -15,8 +15,6 @@ endif()
 
 add_library(AstralEngine
         Core/CoreMacroDefinitions.h
-        Debug/DebugMacros.h
-        Debug/DebugMacros.cpp
         pch.h
         pch.cpp
         Core/Events/EventBus.h
@@ -39,7 +37,7 @@ add_library(AstralEngine
         Debug/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGuiDependencies/imgui_impl_opengl3.h
-        Debug/DebugEvents.h
+        Debug/ImGuiEvents.h
         Debug/Loggers/EngineDebugInfoLogger.h
         Debug/Loggers/EngineDebugInfoLogger.cpp
         Debug/Loggers/ConsoleLogFile.cpp
@@ -109,6 +107,16 @@ add_library(AstralEngine
         Input/KeycodeConversions.cpp
         ECS/Systems/RenderingSystem.cpp
         ECS/Systems/RenderingSystem.h
+        Debug/Macros/ScopeProfiler.cpp
+        Debug/Macros/ScopeProfiler.h
+        Debug/Macros/Asserts.cpp
+        Debug/Macros/Asserts.h
+        Debug/Macros/Loggers.cpp
+        Debug/Macros/Loggers.h
+        Debug/Macros/ConsoleColors.cpp
+        Debug/Macros/ConsoleColors.h
+        Debug/Macros/Error.cpp
+        Debug/Macros/Error.h
 )
 
 
