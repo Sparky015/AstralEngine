@@ -7,8 +7,8 @@
 #ifndef TURN_OFF_DEBUG_MACROS
 
 /** Asserts a conditional. Throws an error if the conditional isn't true and outputs a message to console. */
-#define ASSERT(expression, errorMessage)  if (!(expression)) {Debug::Macros::macro_ASSERT(#expression, errorMessage, __FILE__, __LINE__, __func__); throw std::runtime_error(errorMessage);}
-#define ASSERT_SS(expression, errorMessage) if (!(expression)) {std::ostringstream ss; ss << (errorMessage); Debug::Macros::macro_ASSERT(#expression ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
+#define ASSERT(expression, errorMessage) [[unlikely]] if (!(expression)) {Debug::Macros::macro_ASSERT(#expression, errorMessage, __FILE__, __LINE__, __func__); throw std::runtime_error(errorMessage);}
+#define ASSERT_SS(expression, errorMessage) [[unlikely]] if (!(expression)) {std::ostringstream ss; ss << (errorMessage); Debug::Macros::macro_ASSERT(#expression, ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
 #define STATIC_ASSERT(expression, errorMessage) static_assert(expression, errorMessage);
 
 #else
