@@ -4,8 +4,8 @@
 
 #include "EngineDebugInfoLogger.h"
 
-#include "../../Window/WindowManager.h"
-#include "../../../../ThirdPartyLibraries/GLAD/glad/glad.h"
+#include "../Window/WindowManager.h"
+#include "../../../ThirdPartyLibraries/GLAD/glad/glad.h"
 
 namespace Debug {
 

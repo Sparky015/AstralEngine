@@ -8,7 +8,8 @@
 
 namespace Debug {
 
-    /** @class Singleton that represents the engine-wide log file that all logging macros write into. */
+    /** @class ConsoleLogFile
+     *  @brief Singleton that represents the engine-wide log file that all logging macros write into. */
     class ConsoleLogFile
     {
     public:
@@ -34,10 +35,10 @@ namespace Debug {
         }
 
         /// Returns true if the log file is open
-        inline bool IsOpen()
-        {
-            return m_IsLogFileOpen;
-        }
+        inline bool IsOpen() { return m_IsLogFileOpen; }
+        inline bool IsLogging() { return m_IsCurrentlyLogging; }
+        inline void Enable() { m_IsCurrentlyLogging = true; }
+        inline void Disable() { m_IsCurrentlyLogging = false; }
 
         ConsoleLogFile(const ConsoleLogFile&) = delete;
         ConsoleLogFile& operator=(const ConsoleLogFile&) = delete;
@@ -47,6 +48,7 @@ namespace Debug {
         ConsoleLogFile();
         ~ConsoleLogFile();
 
+        bool m_IsCurrentlyLogging;
         static bool m_IsLogFileOpen;
     };
 

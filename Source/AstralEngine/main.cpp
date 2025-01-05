@@ -1,5 +1,6 @@
 #include "Core/Engine.h"
-#include "Debug/Loggers/EngineDebugInfoLogger.h"
+#include "Debug/EngineDebugInfoLogger.h"
+#include "Debug/Instrumentation/FunctionProfiler.h"
 
 //#include "Debug/AllocationTracker.h"
 
@@ -22,6 +23,7 @@ int main()
     {
         Engine engine = Engine();
         Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
+        Debug::FunctionProfiler::ProfileFunction(Debug::LogEngineDebugInfo, 10000);
         engine.Run();
     }
 

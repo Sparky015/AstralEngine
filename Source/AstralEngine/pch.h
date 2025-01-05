@@ -29,4 +29,4 @@
 #include "Debug/Macros/Asserts.h"
 #include "Debug/Macros/Loggers.h"
 #include "Debug/Macros/Error.h"
-#include "Debug/Macros/ScopeProfiler.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"

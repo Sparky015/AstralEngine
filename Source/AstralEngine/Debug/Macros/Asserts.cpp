@@ -4,7 +4,7 @@
 
 #include "Asserts.h"
 
-#include "Debug/Loggers/ConsoleLogFile.h"
+#include "../LogFiles/ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
 namespace Debug::Macros {

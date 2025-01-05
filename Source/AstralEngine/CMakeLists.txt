@@ -29,7 +29,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Debug/Loggers/AllocationTracker.h
+        Debug/Instrumentation/AllocationTracker.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -38,12 +38,12 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/ImGui/ImGuiEvents.h
-        Debug/Loggers/EngineDebugInfoLogger.h
-        Debug/Loggers/EngineDebugInfoLogger.cpp
-        Debug/Loggers/ConsoleLogFile.cpp
-        Debug/Loggers/ConsoleLogFile.h
-        Debug/Loggers/ProfilerLogFile.cpp
-        Debug/Loggers/ProfilerLogFile.h
+        Debug/EngineDebugInfoLogger.h
+        Debug/EngineDebugInfoLogger.cpp
+        Debug/LogFiles/ConsoleLogFile.cpp
+        Debug/LogFiles/ConsoleLogFile.h
+        Debug/LogFiles/ProfilerLogFile.cpp
+        Debug/LogFiles/ProfilerLogFile.h
         ECS/ECSManager.cpp
         ECS/ECSManager.h
         ECS/ECS.cpp
@@ -106,8 +106,8 @@ add_library(AstralEngine
         Input/KeycodeConversions.cpp
         ECS/Systems/RenderingSystem.cpp
         ECS/Systems/RenderingSystem.h
-        Debug/Macros/ScopeProfiler.cpp
-        Debug/Macros/ScopeProfiler.h
+        Debug/Instrumentation/ScopeProfiler.cpp
+        Debug/Instrumentation/ScopeProfiler.h
         Debug/Macros/Asserts.cpp
         Debug/Macros/Asserts.h
         Debug/Macros/Loggers.cpp
@@ -117,6 +117,8 @@ add_library(AstralEngine
         Debug/Macros/Error.cpp
         Debug/Macros/Error.h
         ECS/ECSTypes.h
+        Debug/Instrumentation/FunctionProfiler.h
+        Debug/Instrumentation/FunctionProfiler.cpp
 )
 
 
