@@ -15,8 +15,12 @@ namespace Game {
         m_AttackingMoves.ReserveSpace(8);
     }
 
-    void QueenMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void QueenMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
         int8 directionMultiplier = (pieceColor.IsWhite() ? 1 : -1);
         int8 moveStep;
         SquareLocation moveLocation;
@@ -35,7 +39,7 @@ namespace Game {
 
             // We keep adding moves to the vector if the next square is empty.
             while (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
-            board.ReadSquareType(moveLocation) == PieceType::NONE)
+            board.GetSquareType(moveLocation) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(moveLocation);
                 currentPieceLocation = moveLocation;
@@ -44,12 +48,15 @@ namespace Game {
 
             // The next move's square is not empty, therefore we check if we can attack it.
             if (IsMoveWithinBounds(currentPieceLocation, moveStep) &&
-                board.ReadSquareColor(moveLocation) != pieceColor)
+                board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }
 
         }
+
+        ASSERT(m_RegularMoves.Size() <= MAX_NUMBER_OF_REGULAR_MOVES, "Too many regular moves generated for queen!");
+        ASSERT(m_AttackingMoves.Size() <= MAX_NUMBER_OF_ATTACKING_MOVES, "Too many attacking moves generated for queen!");
     }
 
 }

@@ -1,12 +1,12 @@
 
-add_executable(Chess
-        ChessBoard/ChessBoard.cpp
-        ChessBoard/ChessBoard.h
+add_library(Chess
+        Chessboard/ChessBoard.cpp
+        Chessboard/ChessBoard.h
         GameState/ChessPieceTypes.h
         GameState/ChessPieceTypes.cpp
-        ChessBoard/ChessBoardManager.cpp
-        ChessBoard/ChessBoardManager.h
-        ChessBoard/InternalChessBoardData.cpp
+        Chessboard/ChessBoardManager.cpp
+        Chessboard/ChessBoardManager.h
+        Chessboard/InternalChessBoardData.cpp
         MoveGeneration/PieceMoveLists/BishopMoveList.h
         MoveGeneration/PieceMoveLists/BishopMoveList.cpp
         MoveGeneration/PieceMoveLists/KingMoveList.h
@@ -37,18 +37,35 @@ add_executable(Chess
         ChessMove.h
         PlayerInput/PieceTracking.cpp
         PlayerInput/PieceTracking.h
-        MoveGeneration/Checks.cpp
-        MoveGeneration/Checks.h
+        MoveGeneration/KingChecks.cpp
+        MoveGeneration/KingChecks.h
         GameState/SquareLocation.h
         GameState/PieceColor.h
+        ChessBoard/FENParser.cpp
+        ChessBoard/FENParser.h
+        Debug/ImGuiComponents/ChessboardComponents.cpp
+        Debug/ImGuiComponents/ChessboardComponents.h
+        Chessboard/InternalChessBoardData.h
+        GameState/PieceType.h
+        GameState/PieceType.cpp
+        Debug/DebugManager.cpp
+        Debug/DebugManager.h
+        GameState/SquareLocation.cpp
 )
 
-target_link_libraries(Chess PRIVATE SozinEngine)
+add_executable(ChessExecutable ChessModule.cpp)
+target_link_libraries(ChessExecutable PUBLIC Chess)
+
+
+target_link_libraries(Chess PUBLIC AstralEngine)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Chess)
 
-target_include_directories(Chess PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(Chess PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
 
 if (WIN32) #MacOS doesn't like this, so I will only do it for windows
-    set_target_properties(Chess PROPERTIES LINK_FLAGS "-static")
+    set_target_properties(ChessExecutable PROPERTIES LINK_FLAGS "-static")
 endif()
 
+add_dependencies(Chess AstralEngine)
+add_dependencies(ChessExecutable Chess)

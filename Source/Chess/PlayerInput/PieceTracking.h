@@ -7,8 +7,8 @@
 #pragma once
 
 #include "../GameState/ChessPieceTypes.h"
-#include "../ChessBoard/ChessBoard.h"
-#include "../ChessBoard/ChessBoardManager.h"
+#include "../Chessboard/Chessboard.h"
+#include "../Chessboard/ChessboardManager.h"
 #include "ECS/Entity.h"
 
 namespace Game {
@@ -41,13 +41,14 @@ namespace Game {
         void StopTrackingPiece();
 
         void AlignTrackedPieceWithMouse() const;
-        void ResetTrackedPiecePosition(const ChessBoard& chessBoard) const;
+        void ResetTrackedPiecePosition(const Chessboard& chessBoard) const;
 
-        void AttemptMove(ChessBoard& chessBoard, SquareLocation attemptedMoveLocation) const;
-        [[nodiscard]] bool IsRegularMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const;
-        [[nodiscard]] bool IsTakeMove(const ChessBoard& chessBoard, SquareLocation targetSquareLocation) const;
-        [[nodiscard]] bool IsSquareEmpty(const ChessBoard& chessBoard, SquareLocation squareLocation) const;
-        [[nodiscard]] bool IsPieceTurn(const ChessBoard& chessBoard, SquareLocation pieceLocation) const;
+        void AttemptMove(Chessboard& chessBoard, SquareLocation attemptedMoveLocation) const;
+
+        [[nodiscard]] bool IsRegularMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const;
+        [[nodiscard]] bool IsTakeMove(const Chessboard& chessBoard, SquareLocation targetSquareLocation) const;
+        [[nodiscard]] bool IsSquareEmpty(const Chessboard& chessBoard, SquareLocation squareLocation) const;
+        [[nodiscard]] bool IsPieceTurn(const Chessboard& chessBoard, SquareLocation pieceLocation) const;
 
         TrackedPiece m_TrackedPiece {TrackedPiece((PieceID)255, PieceColor::BLACK, ECS::Entity())};
         PieceTrackingState m_PieceTrackingState {PieceTrackingState::STANDBY};

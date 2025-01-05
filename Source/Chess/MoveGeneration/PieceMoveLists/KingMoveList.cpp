@@ -11,21 +11,25 @@ namespace Game {
     KingMoveList::KingMoveList()
     {
         // Reserve the max amount of moves a king can make in the worst case
-        m_RegularMoves.ReserveSpace(8);
-        m_AttackingMoves.ReserveSpace(8);
+        m_RegularMoves.ReserveSpace(MAX_NUMBER_OF_REGULAR_MOVES);
+        m_AttackingMoves.ReserveSpace(MAX_NUMBER_OF_ATTACKING_MOVES);
     }
 
-    void KingMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void KingMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
         // Check if the king can castle
         KingCastleRights castleRights = board.GetCastleRights(pieceColor);
-        // TODO: Invert the checking of empty squares depending on color
+
         if (castleRights.QueenSide)
         {
             // Check if the squares to the left of the king are empty
-            if (board.ReadSquareType(pieceLocation - 1) == PieceType::NONE &&
-                board.ReadSquareType(pieceLocation - 2) == PieceType::NONE &&
-                board.ReadSquareType(pieceLocation - 3) == PieceType::NONE)
+            if (board.GetSquareType(pieceLocation - 1) == PieceType::NONE &&
+                board.GetSquareType(pieceLocation - 2) == PieceType::NONE &&
+                board.GetSquareType(pieceLocation - 3) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(pieceLocation - 2);
             }
@@ -34,8 +38,8 @@ namespace Game {
         if (castleRights.KingSide)
         {
             // Check if the squares to the right of the king are empty
-            if (board.ReadSquareType(pieceLocation + 1) == PieceType::NONE &&
-                board.ReadSquareType(pieceLocation + 2) == PieceType::NONE)
+            if (board.GetSquareType(pieceLocation + 1) == PieceType::NONE &&
+                board.GetSquareType(pieceLocation + 2) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(pieceLocation + 2);
             }
@@ -49,16 +53,18 @@ namespace Game {
             int8 moveStep = direction * directionMultiplier;
             SquareLocation moveLocation = pieceLocation + moveStep;
             if (!IsMoveWithinBounds(pieceLocation, moveStep)) { continue; }
-            if (board.ReadSquareType(moveLocation) == PieceType::NONE)
+            if (board.GetSquareType(moveLocation) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(moveLocation);
             }
-            else if (board.ReadSquareColor(moveLocation) != pieceColor)
+            else if (board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }
         }
 
+        ASSERT(m_RegularMoves.Size() <= MAX_NUMBER_OF_REGULAR_MOVES, "Too many regular moves generated for king!");
+        ASSERT(m_AttackingMoves.Size() <= MAX_NUMBER_OF_ATTACKING_MOVES, "Too many attacking moves generated for king!");
     }
 
 }

@@ -17,6 +17,10 @@ set(TEST_FILES
         Game/MoveGenerationHelperTest.cpp
         Game/Pieces/RookMoveGenerationTest.cpp
         ChessState/SquareLocationTest.cpp
+        Chessboard/Chessboard_PieceManagementTest.cpp
+        Chessboard/InternalChessBoardDataTest.cpp
+        ChessState/PieceTypeTests.cpp
+        Chessboard/Chessboard_PieceMovement.cpp
 )
 
 
@@ -24,11 +28,17 @@ add_executable(ChessTests
         ${TEST_FILES}
 )
 
-target_link_libraries(ChessTests GTest::gtest_main)
-target_link_libraries(ChessTests SozinEngine)
+target_link_libraries(ChessTests
+        GTest::gtest_main
+        AstralEngine
+        Chess)
+
+add_dependencies(ChessTests Chess)
 
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Source/Chess)
+
+target_compile_options(ChessTests PRIVATE -Wno-unused-result)
 
 include(GoogleTest)
 gtest_discover_tests(ChessTests)

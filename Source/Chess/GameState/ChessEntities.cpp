@@ -6,8 +6,8 @@
 
 #include "ECS/ECSManager.h"
 #include "Renderer/Primitives/Texture.h"
-#include "../ChessBoard/ChessBoard.h"
-#include "../ChessBoard/ChessBoardManager.h"
+#include "../Chessboard/Chessboard.h"
+#include "../Chessboard/ChessboardManager.h"
 
 
 ECS::Entity ChessEntities::m_BlackPawn1;
@@ -206,14 +206,14 @@ void ChessEntities::DestroyEntities()
 
 ECS::Entity ChessEntities::GetEntity(SquareLocation location)
 {
-    Game::ChessBoard& board = Game::g_BoardManager.GetBoard();
-    if (board.ReadSquareType(location) == PieceType::NONE)
+    Game::Chessboard& board = Game::g_BoardManager.GetBoard();
+    if (board.GetSquareType(location) == PieceType::NONE)
     {
         return m_WhiteKing;
     }
 
-    PieceColor color = board.ReadSquareColor(location);
-    uint8 pieceID = board.ReadSquarePieceID(location);
+    PieceColor color = board.GetSquareColor(location);
+    uint8 pieceID = board.GetSquarePieceID(location);
 
     if (color.IsBlack())
     {

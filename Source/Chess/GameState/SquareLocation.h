@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "pch.h"
 
 enum [[maybe_unused]] BoardLocation : uint8
 {
@@ -20,26 +21,30 @@ enum [[maybe_unused]] BoardLocation : uint8
     EMPTY = 255
 };
 
-class SquareLocation
+class SquareLocation final
 {
 public:
     constexpr SquareLocation() : m_Location(EMPTY) {}
-    constexpr SquareLocation(BoardLocation squareLocation) : m_Location(static_cast<uint8>(squareLocation)) {};
-    constexpr SquareLocation(uint8 squareLocation) : m_Location(squareLocation) {}
+    constexpr SquareLocation(const BoardLocation squareLocation) : m_Location(static_cast<uint8>(squareLocation)) {};
+    constexpr SquareLocation(const uint8 squareLocation) : m_Location(squareLocation) {}
+
 
     [[nodiscard]] constexpr bool IsOnBoard() const { return m_Location < 64; }
     [[nodiscard]] constexpr bool IsOffBoard() const { return m_Location > 63; }
+    [[nodiscard]] constexpr bool IsEmpty() const { return m_Location == EMPTY; }
     [[nodiscard]] constexpr uint8 GetRow() const { return 8 - (m_Location / 8); }
     [[nodiscard]] constexpr uint8 GetColumn() const { return (m_Location % 8) + 1; }
-    [[nodiscard]] constexpr bool IsInSameRow(SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
-    [[nodiscard]] constexpr bool IsInSameColumn(SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
+    [[nodiscard]] constexpr bool IsInSameRow(const SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
+    [[nodiscard]] constexpr bool IsInSameColumn(const SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
+    [[nodiscard]] std::string GetString() const { return std::to_string(m_Location); }
     [[nodiscard]] constexpr uint8 GetRawValue() const { return m_Location; }
+    [[nodiscard]] std::string GetChessNotation() const;
 
-    static constexpr SquareLocation FromRowAndColumn(uint8 row, uint8 column)
+    static constexpr SquareLocation FromRowAndColumn(const uint8 row, const uint8 column)
     {
-        uint8 rawLocation = ((8 - row) * 8) + (column - 1);
+        const uint8 rawLocation = ((8 - row) * 8) + (column - 1);
         return SquareLocation(rawLocation);
-    };
+    }
 
 
     constexpr SquareLocation& operator=(const SquareLocation&) = default;
@@ -49,6 +54,8 @@ public:
 
     constexpr bool operator==(const SquareLocation& otherSquareLocation) const { return m_Location == otherSquareLocation.m_Location; }
     constexpr bool operator!=(const SquareLocation& otherSquareLocation) const { return m_Location != otherSquareLocation.m_Location; }
+    constexpr std::strong_ordering operator<=>(const SquareLocation& otherSquareLocation) const { return m_Location <=> otherSquareLocation.m_Location; }
+
     constexpr SquareLocation operator+(const int8 moveStep) const { return SquareLocation(m_Location + moveStep); }
     constexpr SquareLocation operator-(const int8 moveStep) const { return SquareLocation(m_Location - moveStep); }
     constexpr SquareLocation operator+(const SquareLocation& otherSquareLocation) const { return SquareLocation(m_Location + otherSquareLocation.m_Location); }
@@ -61,7 +68,9 @@ public:
     constexpr SquareLocation& operator--() { --m_Location; return *this; }
     constexpr SquareLocation operator--(int) { SquareLocation temp = *this; --m_Location; return temp; }
 
+
 private:
+
     uint8 m_Location;
 };
 

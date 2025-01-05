@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "../../../../Source/Chess/GameState/ChessPieceTypes.h"
-#include "ChessBoard/ChessBoard.h"
+#include "Chessboard/Chessboard.h"
 #include "MoveGeneration/BoardMoveList.h"
 #include "Utils/ChessConversions.h"
 
@@ -20,7 +20,7 @@ namespace Game {
             blackMoveList.UpdateMoveList(FEN_board, PieceColor::BLACK);
         }
 
-        ChessBoard FEN_board{ChessBoard("rnbqk2r/p1p3p1/5n2/Pp1ppp1p/1b1P1PP1/2P1P3/1P1B3P/RN1QKBNR w KQkq b6 0 9")};
+        Chessboard FEN_board{Chessboard("rnbqk2r/p1p3p1/5n2/Pp1ppp1p/1b1P1PP1/2P1P3/1P1B3P/RN1QKBNR w KQkq b6 0 9")};
         BoardMoveList whiteMoveList{FEN_board, PieceColor::WHITE};
         BoardMoveList blackMoveList{FEN_board, PieceColor::BLACK};
     };

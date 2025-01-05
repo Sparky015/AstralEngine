@@ -11,12 +11,20 @@ namespace Game {
     KnightMoveList::KnightMoveList()
     {
         // Reserve the max amount of moves a knight can make in the worst case
-        m_RegularMoves.ReserveSpace(8);
-        m_AttackingMoves.ReserveSpace(8);
+        m_RegularMoves.ReserveSpace(MAX_NUMBER_OF_REGULAR_MOVES);
+        m_AttackingMoves.ReserveSpace(MAX_NUMBER_OF_ATTACKING_MOVES);
     }
 
-    void KnightMoveList::GenerateMoves(const ChessBoard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
+    void KnightMoveList::GenerateMoves(const Chessboard& board, const SquareLocation pieceLocation, const PieceColor pieceColor)
     {
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
+        // Clear existing stored moves
+        m_RegularMoves.Clear();
+        m_AttackingMoves.Clear();
+
         int8 directionMultiplier = (pieceColor.IsWhite() ? 1 : -1);
         int8 moveStep;
         SquareLocation moveLocation;
@@ -26,15 +34,18 @@ namespace Game {
             moveStep = direction * directionMultiplier;
             moveLocation = pieceLocation + moveStep;
             if (!IsMoveWithinBounds(pieceLocation, moveStep)) { continue; }
-            if (board.ReadSquareType(moveLocation) == PieceType::NONE)
+            if (board.GetSquareType(moveLocation) == PieceType::NONE)
             {
                 m_RegularMoves.AddMove(moveLocation);
             }
-            else if (board.ReadSquareColor(moveLocation) != pieceColor)
+            else if (board.GetSquareColor(moveLocation) != pieceColor)
             {
                 m_AttackingMoves.AddMove(moveLocation);
             }
         }
+
+        ASSERT(m_RegularMoves.Size() <= MAX_NUMBER_OF_REGULAR_MOVES, "Too many regular moves generated for knight!");
+        ASSERT(m_AttackingMoves.Size() <= MAX_NUMBER_OF_ATTACKING_MOVES, "Too many attacking moves generated for knight!");
     }
 
 } // Game
