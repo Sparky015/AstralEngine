@@ -24,11 +24,12 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream()
-                    << "\n\nERROR called. \n" << filePath
+            std::ostringstream outputStream;
+            outputStream << "\n\nERROR called. \n" << filePath
                     << "\nLine: " << lineNumber
                     << "\nFunction: " << func
                     << "\nError Message: " << errorMessage.str() << "\n";
+            logFile << outputStream;
             ConsoleLogFile::Shutdown();
         }
         else

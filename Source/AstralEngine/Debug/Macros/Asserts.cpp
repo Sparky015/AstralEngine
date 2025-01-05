@@ -26,12 +26,14 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << "\n\nASSERT failed. "
-                                    << "\nFile: " << filePath
-                                    << "\nLine: " << lineNumber
-                                    << "\nFunction: " << func
-                                    << "\nCondition: (" << expressionString
-                                    << ")\nError Message: " << errorMessage << "\n";
+            std::ostringstream outputStream;
+            outputStream << "\n\nASSERT failed. "
+                        << "\nFile: " << filePath
+                        << "\nLine: " << lineNumber
+                        << "\nFunction: " << func
+                        << "\nCondition: (" << expressionString
+                        << ")\nError Message: " << errorMessage << "\n";
+            logFile << outputStream;
             ConsoleLogFile::Shutdown();
         }
         else
@@ -67,13 +69,14 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream()
-                    << "\n\nASSERT failed. "
-                    << "\nFile: " << filePath
-                    << "\nLine: " << lineNumber
-                    << "\nFunction: " << func
-                    << "\nCondition: (" << expressionString
-                    << ")\nError Message: " << errorMessage.str() << "\n";
+            std::ostringstream outputStream;
+            outputStream    << "\n\nASSERT failed. "
+                            << "\nFile: " << filePath
+                            << "\nLine: " << lineNumber
+                            << "\nFunction: " << func
+                            << "\nCondition: (" << expressionString
+                            << ")\nError Message: " << errorMessage.str() << "\n";
+            logFile << outputStream;
             ConsoleLogFile::Shutdown();
         }
         else

@@ -40,11 +40,13 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << "[" << currentTime->tm_hour
+            std::ostringstream outputStream;
+            outputStream  << "[" << currentTime->tm_hour
                     << ":" << currentTime->tm_min
                     << ":" << currentTime->tm_sec
                     << "." << elapsedPrecisionTime
                     << "] " << message.str() << "\n";
+            logFile << outputStream;
         }
         else
         {
@@ -63,7 +65,9 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << message.str() << "\n";
+            std::ostringstream outputStream;
+            outputStream << message.str() << "\n";
+            logFile << outputStream;
         }
         else
         {
@@ -83,7 +87,9 @@ namespace Debug::Macros {
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
-            logFile.GetFileStream() << message.str() << "\n";
+            std::ostringstream outputStream;
+            outputStream  << message.str() << "\n";
+            logFile << outputStream;
         }
     #endif
     }

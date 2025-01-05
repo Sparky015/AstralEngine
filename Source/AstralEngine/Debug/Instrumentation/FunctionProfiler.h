@@ -14,8 +14,9 @@ namespace Debug {
     class FunctionProfiler
     {
     public:
-        /**@brief Profiles a given function */
-        static void ProfileFunction(const std::function<void()>& functionToProfile, const int numberOfIterations = 10000);
+        /**@brief Profiles a given function by calling it the given number of times. Defaults to 10,000 calls. */
+        static void ProfileFunction(const std::function<void()>& functionToProfile, const char* functionName,
+            const int numberOfIterations = 10000, bool suppressCout = true);
 
     private:
         /**@brief Suppresses output to cout when profiling a function */

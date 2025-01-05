@@ -27,11 +27,13 @@ namespace Debug {
             return m_Instance;
         }
 
-        /// Constructs and initializes the LogFile on first call
-        inline std::fstream& GetFileStream()
+        ConsoleLogFile& operator<<(const std::ostringstream& ostream)
         {
-            static std::fstream m_LogFile;
-            return m_LogFile;
+            if (m_IsCurrentlyLogging)
+            {
+                GetFileStream() << ostream.str();
+            }
+            return *this;
         }
 
         /// Returns true if the log file is open
@@ -48,7 +50,14 @@ namespace Debug {
         ConsoleLogFile();
         ~ConsoleLogFile();
 
-        bool m_IsCurrentlyLogging;
+        /// Constructs and initializes the LogFile on first call
+        inline std::fstream& GetFileStream()
+        {
+            static std::fstream m_LogFile;
+            return m_LogFile;
+        }
+
+        bool m_IsCurrentlyLogging = true;
         static bool m_IsLogFileOpen;
     };
 
