@@ -4,14 +4,13 @@
 
 #include "EngineDebugInfoLogger.h"
 
-#include "../Window/WindowManager.h"
-#include "../../../ThirdPartyLibraries/GLAD/glad/glad.h"
+#include "Window/WindowManager.h"
 
 namespace Debug {
 
     void LogEngineDebugInfo()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("LogEngineDebugInfo");
         LOG("\n      Engine Info/Tools/Libraries:");
 
         /** Outputs the build configuration of the engine. */
@@ -46,7 +45,7 @@ namespace Debug {
         #elif _LIBCPP_VERSION
         LOG("Standard Library: LLVM libc++ " << _LIBCPP_VERSION / 1000 << '.'
                                                        << (_LIBCPP_VERSION % 1000) / 10 << '.'
-                                                       << _LIBCPP_VERSION % 10);
+                                                       << _LIBCPP_VERSION % 10) ;
         #elif _MSC_VER
             LOG("Standard Library: Microsoft STL " << _MSC_VER);
         #else
@@ -54,24 +53,14 @@ namespace Debug {
         #endif
 
         /** Outputs the libraries used depending on the platform. */
-        #ifdef PLATFORM_MACOS
-            Window::Window& window = Window::g_WindowManager.GetWindow();
-            Graphics::RendererContext& rendererContext = window.GetRendererContext();
+        Window::Window& window = Window::g_WindowManager.GetWindow();
+        Graphics::RendererContext& rendererContext = window.GetRendererContext();
 
-            LOG("Window: " << window.GetVersion());
-            LOG("Rendering API: " << rendererContext.GetRenderingAPI());
-            LOG("Graphics Vendor: " << rendererContext.GetGraphicsVendor());
-            LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
+        LOG("Window: " << window.GetVersion());
+        LOG("Rendering API: " << rendererContext.GetRenderingAPI());
+        LOG("Graphics Vendor: " << rendererContext.GetGPUVendor());
+        LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
 
-        #elif PLATFORM_WINDOWS
-            Window::Window& window = Window::g_WindowManager.GetWindow();
-            Graphics::RendererContext& rendererContext = window.GetRendererContext();
-
-            LOG("Window: " << window.GetVersion());
-            LOG("Rendering API: " << rendererContext.GetRenderingAPI());
-            LOG("Graphics Vendor: " << rendererContext.GetGraphicsVendor());
-            LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
-        #endif
 
         LOG(""); // Creates an extra new line
     }

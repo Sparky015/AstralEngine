@@ -20,7 +20,7 @@ Engine::Engine() :
     m_IsLoopRunning(true),
     m_ApplicationModule(Application::CreateApplicationModule())
 {
-    PROFILE_SCOPE();
+    PROFILE_SCOPE("Engine Initialization");
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
@@ -39,7 +39,7 @@ Engine::Engine() :
 
 Engine::~Engine()
 {
-    PROFILE_SCOPE();
+    PROFILE_SCOPE("Engine Shutdown");
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
@@ -53,10 +53,11 @@ Engine::~Engine()
 
 void Engine::Run()
 {
-    PROFILE_SCOPE();
+    PROFILE_SCOPE("Engine Runtime");
     while (m_IsLoopRunning)
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Frame");
+        m_NewFramePublisher.PublishEvent( NewFrameEvent() );
 
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
         m_ApplicationModule->Update();

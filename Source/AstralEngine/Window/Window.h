@@ -22,8 +22,9 @@ namespace Window {
         virtual void Update() = 0;
         virtual void Shutdown() = 0;
         virtual void SwapBuffers() = 0;
-        virtual void EnableVsync() = 0;
-        virtual void DisableVsync() = 0;
+        virtual void EnableVSync() = 0;
+        virtual void DisableVSync() = 0;
+        virtual uint8 GetVsyncSetting() = 0;
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
 
@@ -34,7 +35,7 @@ namespace Window {
         static Window* CreateWindow();
 
     protected:
-        static WindowAPI s_RendererAPI;
+        static WindowAPI s_WindowAPI;
         std::unique_ptr<Graphics::RendererContext> m_RenderContext;
     };
 

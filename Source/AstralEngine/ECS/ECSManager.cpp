@@ -4,6 +4,8 @@
 
 #include "ECSManager.h"
 
+#include "Systems/RenderingSystem.h"
+
 namespace ECS {
 
     ECSManager& g_ECSManager = ECSManager::Get();
@@ -16,34 +18,32 @@ namespace ECS {
 
     void ECSManager::Init()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ECS Manager Initialization");
         TRACE("Initializing ECS Manager!")
-        m_UpdateListener.StartListening();
+        // m_UpdateListener.StartListening();
 
     }
 
     void ECSManager::Shutdown()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ECS Manager Shutdown");
         TRACE("Shutting down ECS Manager!")
-        m_UpdateListener.StopListening();
+        // m_UpdateListener.StopListening();
     }
 
     void ECSManager::Update()
     {
-        PROFILE_SCOPE();
-
+        PROFILE_SCOPE("ECS Manager Update");
+        // Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get());
     }
 
     ECSManager::ECSManager()
     {
-        PROFILE_SCOPE();
         TRACE("Constructing ECS Manager!")
     }
 
     ECSManager::~ECSManager()
     {
-        PROFILE_SCOPE();
         TRACE("Destroying ECS Manager!")
     }
 

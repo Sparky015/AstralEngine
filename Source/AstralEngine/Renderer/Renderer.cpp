@@ -13,4 +13,9 @@ namespace Graphics {
         RendererCommand::DrawElements(shaderProgram, vertexArrayBuffer, transform);
     }
 
+    void Renderer::GetDrawCallsPerFrame()
+    {
+        RendererCommand::GetNumberOfDrawCallsPerFrame();
+    }
+
 } // Renderer

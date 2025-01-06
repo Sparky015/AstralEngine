@@ -116,7 +116,6 @@ TEST_F(Chessboard_PieceMovementTest, MovePiece_ResetsHalfAndFullMoveCountersOnPa
     {
         Game::Chessboard chessboard;
         const uint8 initFullMoveCount = chessboard.GetFullMoveCount();
-        const uint8 initHalfMoveCount = chessboard.GetHalfMoveCount();
 
         chessboard.SetActiveColor(pieceColor);
         chessboard.SetPieceType(pieceID, PieceType::PAWN, pieceColor);

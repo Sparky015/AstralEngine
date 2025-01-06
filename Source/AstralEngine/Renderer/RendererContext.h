@@ -19,7 +19,7 @@ namespace Graphics {
         virtual void Shutdown() = 0;
 
         virtual std::string GetRenderingAPI() = 0;
-        virtual std::string GetGraphicsVendor() = 0;
+        virtual std::string GetGPUVendor() = 0;
         virtual std::string GetGraphicsProcessor() = 0;
 
         static RendererContext* CreateRendererContext();

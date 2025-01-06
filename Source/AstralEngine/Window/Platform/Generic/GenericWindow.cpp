@@ -53,12 +53,14 @@ namespace Window {
 
     void GenericWindow::Update()
     {
+        PROFILE_SCOPE("GenericWindow::Update")
         glfwPollEvents();
     }
 
 
     void GenericWindow::Shutdown()
     {
+        PROFILE_SCOPE("GenericWindow::Shutdown")
         m_RenderContext->Shutdown();
         glfwTerminate();
     }
@@ -78,15 +80,17 @@ namespace Window {
     }
 
 
-    void GenericWindow::EnableVsync()
+    void GenericWindow::EnableVSync()
     {
         glfwSwapInterval(1);
+        m_Vsync = 1;
     }
 
 
-    void GenericWindow::DisableVsync()
+    void GenericWindow::DisableVSync()
     {
         glfwSwapInterval(0);
+        m_Vsync = 0;
     }
 
 

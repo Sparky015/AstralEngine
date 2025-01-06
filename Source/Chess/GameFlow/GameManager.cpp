@@ -22,7 +22,7 @@ namespace Game {
 
     void GameManager::Init()
     {
-        TRACE("Initializing Game Manager");
+        TRACE("GameManager::Init");
         m_UpdateListener.StartListening();
 
         InitializeRenderingComponents();
@@ -32,15 +32,16 @@ namespace Game {
 
     void GameManager::Update()
     {
+        PROFILE_SCOPE("GameManager::Update")
         RendererCommand::Clear();
         m_PieceTracker.UpdatePieceTracking();
-        Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get());
+        Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get()); // TODO: Refactor shader program to a component
     }
 
 
     void GameManager::Shutdown()
     {
-        TRACE("Shutting down Game Manager");
+        TRACE("GameManager::Shutdown");
         m_UpdateListener.StopListening();
 
         m_ShaderProgram.reset(nullptr);

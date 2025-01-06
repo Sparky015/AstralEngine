@@ -5,17 +5,18 @@
 #include "ImGuiManager.h"
 
 #include "imgui.h"
+#include "Components/BuildConfigComponents.h"
+#include "Components/ECSComponents.h"
+#include "Components/RendererComponents.h"
 
-#include "ImGuiDependencies/imgui_impl_opengl3.h"
 #include "ImGuiDependencies/imgui_impl_glfw.h"
+#include "ImGuiDependencies/imgui_impl_opengl3.h"
 
+#include "Debug/ImGui/Components/WindowComponents.h"
+#include "Input/Keycodes.h"
+#include "Window/Platform/Generic/GenericWindow.h" // TEMP
 #include "Window/WindowManager.h"
 
-//#include "Game/Board/BoardManager.h"
-//#include "Game/MoveList.h"
-
-#include "Window/Platform/Generic/GenericWindow.h"
-#include "Input/Keycodes.h"
 
 namespace Debug{
 
@@ -30,10 +31,10 @@ namespace Debug{
 
     void ImGuiManager::Init()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui Manager Initialization");
         TRACE("Initializing Debug Manager!")
         InitImGui();
-        m_UpdateListener.StartListening();
+        // m_UpdateListener.StartListening();
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
     }
@@ -41,31 +42,70 @@ namespace Debug{
 
     void ImGuiManager::Shutdown()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui Manager Shutdown");
         TRACE("Shutting down Debug Manager!")
         m_KeyPressedListener.StopListening();
         m_RenderImGuiListener.StopListening();
-        m_UpdateListener.StopListening();
+        // m_UpdateListener.StopListening();
         ShutdownImGui();
     }
 
 
     void ImGuiManager::Update()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui Manager Update");
     }
 
 
     void ImGuiManager::RenderImGui()
     {
-        PROFILE_SCOPE();
-        ImGuiIO& io = ImGui::GetIO();
+        PROFILE_SCOPE("Render Debug Menu ImGui");
 
         if (m_ShowDebugMenu)
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                FPSComponent();
+                FrameTimeComponent();
+                DrawCallsPerFrame();
+
+                ImGui::Spacing();
+                RendererAPIComponent();
+
+                ImGui::Spacing();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("ECS"))
+            {
+                EntityCountComponent();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Window"))
+            {
+                WindowDimensionsComponent();
+                WindowAPIInfoComponent();
+                WindowVsyncStateComponent();
+                VsyncToggleComponent();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Build Configuration"))
+            {
+                BuildProfileComponent();
+                CompilerInfoComponents();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("System Info"))
+            {
+                SystemGPUInfo();
+                ImGui::TreePop();
+            }
+
 
 //            if (ImGui::TreeNode("Piece Locations"))
 //            {
@@ -170,7 +210,7 @@ namespace Debug{
     float ImGuiManager::m_Time = 0.0f;
     void ImGuiManager::ImGuiBeginFrame()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui Begin Frame");
         ImGuiIO& io = ImGui::GetIO();
         float time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
@@ -184,7 +224,7 @@ namespace Debug{
 
     void ImGuiManager::ImGuiEndFrame()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui End Frame");
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -201,20 +241,18 @@ namespace Debug{
 
     ImGuiManager::ImGuiManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
     {
-        PROFILE_SCOPE();
         TRACE("Constructing Debug System!")
     }
 
     ImGuiManager::~ImGuiManager()
     {
-        PROFILE_SCOPE();
         TRACE("Destroying Debug System!")
     }
 
 
     void ImGuiManager::InitImGui()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Initialize ImGui");
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
@@ -243,7 +281,7 @@ namespace Debug{
 
     void ImGuiManager::ShutdownImGui()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("ImGui Manager Shutdown");
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -251,7 +289,6 @@ namespace Debug{
 
     void ImGuiManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
-        PROFILE_SCOPE();
         if (keyPressedEvent.keycode == KEY_D)
         {
             m_ShowDebugMenu = !m_ShowDebugMenu;

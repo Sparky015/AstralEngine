@@ -81,6 +81,8 @@ namespace ECS {
             // return GetComponent<ComponentType>(entity).isUsed;
         }
 
+        EntityPoolSize GetCurrentEntityCount() const;
+
     private:
         EntityPoolSize FindNextInactiveIndex();
         EntityPoolSize m_EntityCounter;
