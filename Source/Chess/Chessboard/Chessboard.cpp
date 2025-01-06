@@ -20,7 +20,7 @@ namespace Game {
           m_BlackPieceLocations({A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8}),
           m_WhitePieceLocations({A2, B2, C2, D2, E2, F2, G2, H2, A1, B1, C1, D1, E1, F1, G1, H1})
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Chessboard Constructor");
         constexpr std::array<PieceType, NUMBER_OF_PIECES_PER_COLOR> OrderOfPieceTypes
         {
             PieceType::PAWN, PieceType::PAWN, PieceType::PAWN, PieceType::PAWN,
@@ -62,7 +62,7 @@ namespace Game {
 
     void Chessboard::MovePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetLocation)
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Chessboard::MovePiece");
         ASSERT(targetLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
         ASSERT(m_Board.ReadSquareType(targetLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
         const PieceType movingPieceType = GetPieceType(pieceID, pieceColor);
@@ -102,7 +102,7 @@ namespace Game {
 
     void Chessboard::CapturePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetPieceLocation)
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Chessboard::CapturePiece");
         ASSERT(targetPieceLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
         ASSERT(GetSquareType(targetPieceLocation) != PieceType::NONE, "Can't take on a square that is empty");
         ASSERT(GetSquareColor(targetPieceLocation) != pieceColor, "Can't take a piece of the same type");
@@ -165,7 +165,7 @@ namespace Game {
 
     void Chessboard::PromotePawn(const PieceID pieceID, const PieceColor pieceColor, const PieceType promotionType)
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Chessboard::PromotePawn");
         ASSERT(promotionType != PieceType::PAWN && promotionType != PieceType::KING, "Promotion type must be bishop, knight, rook, or queen.")
         ASSERT(GetPieceType(pieceID, pieceColor) == PieceType::PAWN, "Piece must be a pawn to promote it.")
         SetPieceType(pieceID, promotionType, pieceColor);
@@ -232,7 +232,6 @@ namespace Game {
 
     PieceID Chessboard::GetSquarePieceID(const SquareLocation squareLocation) const
     {
-        PROFILE_SCOPE();
         ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
 
         const PieceType pieceType = GetSquareType(squareLocation);
@@ -255,7 +254,6 @@ namespace Game {
 
     void Chessboard::ClearBoard()
     {
-        PROFILE_SCOPE();
         m_Board = InternalBoardRepresentation();
         m_BlackPieceLocations.fill(EMPTY);
         m_WhitePieceLocations.fill(EMPTY);
@@ -277,7 +275,6 @@ namespace Game {
 
     void Chessboard::PrintBoardToConsole() const
     {
-        PROFILE_SCOPE();
         std::cout << "\n";
 
         for (uint8 squareLocation = 0; squareLocation < 64; squareLocation++)

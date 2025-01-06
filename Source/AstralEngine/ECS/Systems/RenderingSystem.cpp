@@ -16,6 +16,7 @@ namespace Sozin {
 
     void RenderingSystem::RenderEntities(Graphics::ShaderProgram* shader)
     {
+        PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
         ECS::ECS::ComponentDisplay<SpriteComponent> spriteDisplay = ecs.GetComponentDisplay<SpriteComponent>();

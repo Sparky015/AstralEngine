@@ -17,26 +17,25 @@ namespace Graphics {
 
     void RendererManager::Init()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Renderer Manager Initialization");
 
         TRACE("Initializing Renderer Manager!");
-        m_UpdateListener.StartListening();
-
+        // m_UpdateListener.StartListening();
     }
 
 
     void RendererManager::Update()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Renderer Manager Update");
     }
 
 
     void RendererManager::Shutdown()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Renderer Manager Shutdown");
 
         TRACE("Shutting down Renderer Manager!")
-        m_UpdateListener.StopListening();
+        // m_UpdateListener.StopListening();
     }
 
 

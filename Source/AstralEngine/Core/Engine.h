@@ -11,6 +11,7 @@
 #include "Window/WindowEvents.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "SystemEvents.h"
+#include "Renderer/RendererEvents.h"
 #include "ApplicationModule.h"
 
 
@@ -26,6 +27,7 @@ public:
 
 private:
     Event::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
+    Event::EventPublisher<NewFrameEvent> m_NewFramePublisher;
     Event::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
     Event::EventListener<WindowClosedEvent> m_WindowClosedListener;
 

@@ -6,16 +6,16 @@
 
 #include "Astral.h"
 
-#include "Input/InputState.h"
-#include "Core/Events/EventListener.h"
 #include "Chessboard/ChessboardManager.h"
-#include "GameFlow/GameManager.h"
+#include "Core/Events/EventListener.h"
 #include "Debug/DebugManager.h"
+#include "GameFlow/GameManager.h"
+#include "Input/InputState.h"
 
 class ChessModule : public ApplicationModule
 {
 public:
-    virtual ~ChessModule() = default;
+    ~ChessModule() override = default;
 
     void Init() override
     {

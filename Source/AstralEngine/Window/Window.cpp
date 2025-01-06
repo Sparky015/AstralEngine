@@ -8,11 +8,11 @@
 
 namespace Window {
 
-    WindowAPI Window::s_RendererAPI = WindowAPI::GLFW;
+    WindowAPI Window::s_WindowAPI = WindowAPI::GLFW;
 
     Window* Window::CreateWindow()
     {
-        switch (s_RendererAPI)
+        switch (s_WindowAPI)
         {
             case WindowAPI::GLFW: return new GenericWindow();
             case WindowAPI::Cocoa: ERROR("Cocoa Window API not supported yet!");

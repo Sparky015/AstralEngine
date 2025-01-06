@@ -13,7 +13,7 @@ int main()
     {
         Engine engine = Engine();
         Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
-        Debug::FunctionProfiler::ProfileFunction(Debug::LogEngineDebugInfo, "LogEngineDebugInfo" , 1000000);
+        // Debug::FunctionProfiler::ProfileFunction(Debug::LogEngineDebugInfo, "LogEngineDebugInfo" , 1000000);
         engine.Run();
     }
 

@@ -17,37 +17,35 @@ namespace IO{
 
     void InputManager::Init()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Input State Initialization");
         TRACE("Initializing IO Manager!")
         InputState::Init();
-        m_UpdateListener.StartListening();
+        // m_UpdateListener.StartListening();
     }
 
 
     void InputManager::Shutdown()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("Input State Shutdown");
         TRACE("Shutting down IO Manager!")
         InputState::Shutdown();
-        m_UpdateListener.StopListening();
+        // m_UpdateListener.StopListening();
     }
 
 
     void InputManager::Update()
     {
-        PROFILE_SCOPE();
+
     }
 
 
     InputManager::InputManager()
     {
-        PROFILE_SCOPE();
         TRACE("Constructing IO System!")
     }
 
     InputManager::~InputManager()
     {
-        PROFILE_SCOPE();
         TRACE("Destroying IO System!")
     }
 

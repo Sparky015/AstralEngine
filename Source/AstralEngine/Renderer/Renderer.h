@@ -17,6 +17,7 @@ namespace Graphics {
     public:
         static void Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform);
 
+        static void GetDrawCallsPerFrame();
     private:
 
     };

@@ -4,9 +4,8 @@
 
 #include "RendererCommands.h"
 
-#include "glad/glad.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
 #include "Renderer/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Renderer/Primitives/VertexArrayObject.h"
 
 
 namespace Graphics {
@@ -38,4 +37,8 @@ namespace Graphics {
         s_RendererAPI->SetBlending(enable);
     }
 
+    uint32 RendererCommand::GetNumberOfDrawCallsPerFrame()
+    {
+        return s_RendererAPI->GetNumberOfDrawCalls();
+    }
 }

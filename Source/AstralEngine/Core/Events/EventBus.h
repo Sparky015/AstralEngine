@@ -53,7 +53,6 @@ namespace Event {
         /** Takes an event and propagates it to listeners. */
         void RaiseEvent(const T& event)
         {
-            PROFILE_SCOPE();
             for (const std::function<void(T)>* callback : m_Callbacks)
             {
                 (*callback)(event);

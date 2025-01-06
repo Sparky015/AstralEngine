@@ -12,6 +12,8 @@ namespace Application {
     class ApplicationModule
     {
     public:
+        virtual ~ApplicationModule() = default;
+
         virtual void Init() {};
         virtual void Update() {};
         virtual void Shutdown() {};

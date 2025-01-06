@@ -13,7 +13,6 @@ namespace Event {
     class EventListener
     {
     public:
-
         explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback)), m_IsListening(false) {};
 
         ~EventListener()
@@ -24,7 +23,6 @@ namespace Event {
         /** Adds the listener callback to the event bus. */
         void StartListening()
         {
-            PROFILE_SCOPE();
             if (m_IsListening) {return;}
             m_IsListening = true;
             EventBus<T>& eventBus = EventBus<T>::Get();
@@ -34,7 +32,6 @@ namespace Event {
         /** Removes the listener callback to the event bus. */
         void StopListening()
         {
-            PROFILE_SCOPE();
             if (!m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RemoveListener(&m_Callback);

@@ -119,6 +119,17 @@ add_library(AstralEngine
         ECS/ECSTypes.h
         Debug/Instrumentation/FunctionProfiler.h
         Debug/Instrumentation/FunctionProfiler.cpp
+        Debug/ImGui/Components/WindowComponents.cpp
+        Debug/ImGui/Components/WindowComponents.h
+        Debug/ImGui/Components/RendererComponents.cpp
+        Debug/ImGui/Components/RendererComponents.h
+        Renderer/RendererEvents.h
+        Debug/ImGui/Components/BuildConfigComponents.cpp
+        Debug/ImGui/Components/BuildConfigComponents.h
+        Debug/ImGui/Components/ECSComponents.cpp
+        Debug/ImGui/Components/ECSComponents.h
+        Debug/ImGui/Components/InputStateComponents.cpp
+        Debug/ImGui/Components/InputStateComponents.h
 )
 
 
@@ -179,5 +190,6 @@ endif ()
 target_compile_definitions(AstralEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
+target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
 
 

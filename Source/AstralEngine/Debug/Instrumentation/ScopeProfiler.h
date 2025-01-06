@@ -8,7 +8,7 @@
 
 /** Profiles a scope and outputs the time to the console. */
 #ifndef TURN_OFF_PROFILER_MACRO
-#define PROFILE_SCOPE() Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(__PRETTY_FUNCTION__);
+#define PROFILE_SCOPE(title) Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(title);
 #else
 #define PROFILE_SCOPE()
 #endif

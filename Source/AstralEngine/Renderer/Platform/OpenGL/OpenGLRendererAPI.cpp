@@ -23,6 +23,7 @@ namespace Graphics {
 
     void Graphics::OpenGLRendererAPI::DrawElements(Graphics::VertexArrayObject* vertexArrayObject)
     {
+        m_NumberOfDrawCalls++;
         vertexArrayObject->Bind();
         glDrawElements(GL_TRIANGLES, vertexArrayObject->GetElementCount(), GL_UNSIGNED_INT, nullptr);
     }

@@ -6,15 +6,14 @@
 
 #include "PieceTracking.h"
 
-#include "../Chessboard/ChessboardManager.h"
-#include "GameState/ChessEntities.h"
-#include "GameLogic/MoveValidation.h"
-#include "Core/CoreMacroDefinitions.h"
+#include "Chessboard/ChessboardManager.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSManager.h"
+#include "GameLogic/MoveValidation.h"
+#include "GameState/ChessEntities.h"
 #include "Input/InputState.h"
-#include "../Utils/ChessConversions.h"
 #include "MoveGeneration/KingChecks.h"
+#include "Utils/ChessConversions.h"
 
 
 namespace Game {

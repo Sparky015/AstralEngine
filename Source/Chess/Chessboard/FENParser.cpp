@@ -13,7 +13,7 @@ namespace Game {
 
     void FENParser::ParseFENString(const std::string& FEN_String)
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("FENParser::ParseFENString");
         // Initializing an empty board and empty piece locations
         m_Board = InternalBoardRepresentation();
         m_WhitePieceLocations.fill(EMPTY);

@@ -43,6 +43,11 @@ namespace ECS {
     }
 
 
+    EntityPoolSize ECS::GetCurrentEntityCount() const
+    {
+        return m_ActiveEntities.count();
+    }
+
     EntityPoolSize ECS::FindNextInactiveIndex()
     {
         // Iterate through the bitfield and find the first slot that isn't being used

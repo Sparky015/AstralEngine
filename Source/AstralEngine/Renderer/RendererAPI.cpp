@@ -9,4 +9,13 @@ namespace Graphics {
 
     API RendererAPI::s_RendererAPI = API::OpenGL;
 
+    RendererAPI::RendererAPI()
+    {
+        m_NewFrameListener.StartListening();
+    }
+
+    RendererAPI::~RendererAPI()
+    {
+        m_NewFrameListener.StopListening();
+    }
 }

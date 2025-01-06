@@ -14,7 +14,7 @@ namespace Graphics {
 
     void OpenGLRenderingContext::Init()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("OpenGL Rendering Context Initialization");
         glfwMakeContextCurrent(m_Window);
         int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         if (status != 1)
@@ -26,7 +26,7 @@ namespace Graphics {
 
     void OpenGLRenderingContext::Shutdown()
     {
-        PROFILE_SCOPE();
+        PROFILE_SCOPE("OpenGL Rendering Context Shutdown");
         glfwDestroyWindow(m_Window);
     }
 
@@ -39,7 +39,7 @@ namespace Graphics {
     }
 
 
-    std::string OpenGLRenderingContext::GetGraphicsVendor()
+    std::string OpenGLRenderingContext::GetGPUVendor()
     {
         std::stringstream ss;
         ss << glGetString(GL_VENDOR);
