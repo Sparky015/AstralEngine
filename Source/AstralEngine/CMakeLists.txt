@@ -149,14 +149,12 @@ target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
-target_link_libraries(AstralEngine PRIVATE cpuinfo)
 
 add_dependencies(AstralEngine
         ImGui
         GLAD
         glm
         std_image
-        cpuinfo
 )
 
 if (APPLE)
@@ -169,7 +167,6 @@ endif ()
 
 # Include Directories
 target_include_directories(AstralEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpuinfo/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
