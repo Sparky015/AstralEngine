@@ -113,10 +113,11 @@ namespace Debug{
                 ImGui::Spacing();
                 CPUCoreInfoComponent();
 
+                ImGui::Spacing();
                 if (ImGui::TreeNode("CPU Cache Info"))
                 {
-                    CPUCacheInfoComponent();
-                    CPUCacheLineInfoComponent();
+                    CPUCacheSizeComponent();
+                    CPUCacheLineComponent();
                     ImGui::TreePop();
                 }
 

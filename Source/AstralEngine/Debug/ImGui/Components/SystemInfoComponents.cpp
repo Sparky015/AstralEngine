@@ -5,6 +5,10 @@
 */
 #include "SystemInfoComponents.h"
 
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#endif
+
 #include "Renderer/RendererContext.h"
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
@@ -48,7 +52,15 @@ namespace Debug {
 
     void SystemCPUNameComponent()
     {
+#ifdef __APPLE__ // cpuinfo doesn't support the M-series macbooks, so a macOS specific call is made here instead
+        char cpuName[256];
+        size_t size = sizeof(cpuName);
+        sysctlbyname("machdep.cpu.brand_string", &cpuName, &size, nullptr, 0);
+        ImGui::Text("CPU Name: %s", cpuName);
+#else
+
         ImGui::Text("CPU Name: %s", cpuinfo_get_package(0)->name);
+#endif
     }
 
     void SystemGPUNameComponent()
@@ -68,26 +80,55 @@ namespace Debug {
         ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().c_str());
     }
 
-    void CPUCacheInfoComponent()
+    void CPUCacheSizeComponent()
     {
-        ImGui::Text("CPU L1i Cache Size: %.3f KB", cpuinfo_get_l1i_cache(0)->size / 1000.0f);
-        ImGui::Text("CPU L1d Cache Size: %.3f KB", cpuinfo_get_l1d_cache(0)->size / 1000.0f);
-        ImGui::Text("CPU L2 Cache Size: %.3f KB", cpuinfo_get_l2_cache(0)->size / 1000.0f);
-        ImGui::Text("CPU L3 Cache Size: %.3f MB", cpuinfo_get_l3_cache(0)->size / 1000000.0f);
+        [[likely]] if (cpuinfo_get_l1i_cache(0))
+            { ImGui::Text("CPU L1i Cache Size: %.3f KB", cpuinfo_get_l1i_cache(0)->size / 1000.0f); }
+
+        [[likely]] if (cpuinfo_get_l1d_cache(0))
+            { ImGui::Text("CPU L1d Cache Size: %.3f KB", cpuinfo_get_l1d_cache(0)->size / 1000.0f); }
+
+        [[likely]] if (cpuinfo_get_l2_cache(0))
+            { ImGui::Text("CPU L2 Cache Size: %.3f KB", cpuinfo_get_l2_cache(0)->size / 1000.0f); }
+
+        if (cpuinfo_get_l3_cache(0))
+            { ImGui::Text("CPU L3 Cache Size: %.3f MB", cpuinfo_get_l3_cache(0)->size / 1000000.0f); }
+
+        [[unlikely]] if (cpuinfo_get_l4_cache(0))
+            { ImGui::Text("CPU L4 Cache Size: %.3f MB", cpuinfo_get_l4_cache(0)->size / 1000000.0f); }
     }
 
     void CPUCoreInfoComponent()
     {
         ImGui::Text("CPU Physical Core Count: %d", cpuinfo_get_package(0)->core_count);
-        ImGui::Text("CPU Logic Core Count: %d", cpuinfo_get_package(0)->processor_count);
+        ImGui::Text("CPU Hardware Thread Count: %d", cpuinfo_get_package(0)->processor_count);
     }
 
-    void CPUCacheLineInfoComponent()
+    void CPUCacheLineComponent()
     {
-        ImGui::Text("CPU L1i Cache Line Size: %d bytes", cpuinfo_get_l1i_cache(0)->line_size);
-        ImGui::Text("CPU L1d Cache Line Size: %d bytes", cpuinfo_get_l1d_cache(0)->line_size);
-        ImGui::Text("CPU L2 Cache Line Size: %d bytes", cpuinfo_get_l2_cache(0)->line_size);
-        ImGui::Text("CPU L3 Cache Line Size: %d bytes", cpuinfo_get_l3_cache(0)->line_size);
+        [[likely]] if (cpuinfo_get_l2_cache(0))
+            { ImGui::Text("CPU Cache Line Size: %d bytes", cpuinfo_get_l2_cache(0)->line_size); }
+        else if (cpuinfo_get_l1d_cache(0))
+            { ImGui::Text("CPU Cache Line Size: %d bytes", cpuinfo_get_l1d_cache(0)->line_size); }
+    }
+
+    void CPUCacheLinePerLevelComponent()
+    {
+        [[likely]] if (cpuinfo_get_l1i_cache(0))
+            { ImGui::Text("CPU L1i Cache Line Size: %d bytes", cpuinfo_get_l1i_cache(0)->line_size); }
+
+        [[likely]] if (cpuinfo_get_l1d_cache(0))
+            { ImGui::Text("CPU L1d Cache Line Size: %d bytes", cpuinfo_get_l1d_cache(0)->line_size); }
+
+        [[likely]] if (cpuinfo_get_l2_cache(0))
+            { ImGui::Text("CPU L2 Cache Line Size: %d bytes", cpuinfo_get_l2_cache(0)->line_size); }
+
+        if (cpuinfo_get_l3_cache(0))
+            { ImGui::Text("CPU L3 Cache Line Size: %d bytes", cpuinfo_get_l3_cache(0)->line_size); }
+
+        [[unlikely]] if (cpuinfo_get_l4_cache(0))
+            { ImGui::Text("CPU L4 Cache Line Size: %d bytes", cpuinfo_get_l4_cache(0)->line_size); }
+
     }
 
 }

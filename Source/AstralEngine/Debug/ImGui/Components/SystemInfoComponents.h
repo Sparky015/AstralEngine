@@ -12,8 +12,9 @@ namespace Debug {
     void SystemGPUNameComponent();
     void SystemCPUVendorComponent();
     void SystemGPUVendorComponent();
-    void CPUCacheInfoComponent();
+    void CPUCacheSizeComponent();
     void CPUCoreInfoComponent();
-    void CPUCacheLineInfoComponent();
+    void CPUCacheLineComponent();
+    void CPUCacheLinePerLevelComponent();
 
 }
