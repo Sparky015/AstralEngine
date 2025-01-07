@@ -63,7 +63,7 @@ namespace Game {
     void Chessboard::MovePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetLocation)
     {
         PROFILE_SCOPE("Chessboard::MovePiece");
-        ASSERT(targetLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(targetLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << targetLocation.GetRawValue());
         ASSERT(m_Board.ReadSquareType(targetLocation) == PieceType::NONE, "targetBoardLocation already has a piece on the square");
         const PieceType movingPieceType = GetPieceType(pieceID, pieceColor);
         ASSERT(movingPieceType != PieceType::NONE, "Can't move a piece of type NONE (aka that piece isn't on the board)")
@@ -103,7 +103,7 @@ namespace Game {
     void Chessboard::CapturePiece(const PieceID pieceID, const PieceColor pieceColor, const SquareLocation targetPieceLocation)
     {
         PROFILE_SCOPE("Chessboard::CapturePiece");
-        ASSERT(targetPieceLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(targetPieceLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << targetPieceLocation.GetRawValue());
         ASSERT(GetSquareType(targetPieceLocation) != PieceType::NONE, "Can't take on a square that is empty");
         ASSERT(GetSquareColor(targetPieceLocation) != pieceColor, "Can't take a piece of the same type");
         ASSERT(GetPieceType(pieceID, pieceColor) != PieceType::NONE, "Can't take with a piece of type NONE (aka that piece isn't on the board)");
@@ -175,7 +175,7 @@ namespace Game {
     void Chessboard::AddPiece(PieceID pieceID, PieceType pieceType,  PieceColor pieceColor, SquareLocation location)
     {
         ASSERT(GetPieceLocation(pieceID, pieceColor).IsEmpty(), "This piece is already on the board!");
-        ASSERT(location.IsOnBoard(), "The given location is not a valid location on the board!");
+        ASSERT(location.IsOnBoard(), "The given location is not a valid location on the board. Raw location: " << location.GetRawValue());
         ASSERT(!pieceType.IsNone(), "Added piece can not of a piece type of NONE.")
 
         std::array<SquareLocation, NUMBER_OF_PIECES_PER_COLOR>& pieceLocations = pieceColor.IsWhite() ? m_WhitePieceLocations : m_BlackPieceLocations;
@@ -187,7 +187,7 @@ namespace Game {
 
     void Chessboard::RemovePiece(PieceID pieceID, PieceColor pieceColor)
     {
-        ASSERT(GetPieceLocation(pieceID, pieceColor).IsOnBoard(), "Piece location is not on the board!")
+        ASSERT(GetPieceLocation(pieceID, pieceColor).IsOnBoard(), "Piece location is not on the board. Raw location: " << GetPieceLocation(pieceID, pieceColor).GetRawValue());
 
         SquareLocation pieceLocation = GetPieceLocation(pieceID, pieceColor);
         m_Board.WriteSquareType(PieceType::NONE, pieceLocation);
@@ -218,21 +218,21 @@ namespace Game {
 
     PieceColor Chessboard::GetSquareColor(const SquareLocation squareLocation) const
     {
-        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << squareLocation.GetRawValue());
         return m_Board.ReadSquareColor(squareLocation);
     }
 
 
     PieceType Chessboard::GetSquareType(const SquareLocation squareLocation) const
     {
-        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << squareLocation.GetRawValue());
         return m_Board.ReadSquareType(squareLocation);
     }
 
 
     PieceID Chessboard::GetSquarePieceID(const SquareLocation squareLocation) const
     {
-        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << squareLocation.GetRawValue());
 
         const PieceType pieceType = GetSquareType(squareLocation);
         const PieceColor pieceColor = GetSquareColor(squareLocation);
@@ -262,7 +262,7 @@ namespace Game {
 
     char Chessboard::GetCharacterOfPiece(const SquareLocation squareLocation) const
     {
-        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board");
+        ASSERT(squareLocation.IsOnBoard(), "squareLocation is not a valid location on the chess board. Raw location: " << squareLocation.GetRawValue());
         const PieceColor squareColor = m_Board.ReadSquareColor(squareLocation);
         const PieceType squareType = m_Board.ReadSquareType(squareLocation);
 
