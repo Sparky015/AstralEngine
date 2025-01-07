@@ -44,4 +44,11 @@ namespace Debug {
 
         };
     }
+
+    void WindowFramebufferScaleComponent()
+    {
+        Vec2 framebufferScale = Window::g_WindowManager.GetWindow().GetFramebufferScale();
+        ImGui::Text("Window Framebuffer Scale: %.2f x %.2f", framebufferScale.x, framebufferScale.y);
+    }
+
 }

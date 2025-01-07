@@ -185,4 +185,11 @@ namespace Window {
         return height;
     }
 
+    Vec2 GenericWindow::GetFramebufferScale()
+    {
+        int width, height;
+        glfwGetFramebufferSize(m_Window, &width, &height);
+        return Vec2(width / m_WindowWidth, height / m_WindowHeight);
+    }
+
 } // Window

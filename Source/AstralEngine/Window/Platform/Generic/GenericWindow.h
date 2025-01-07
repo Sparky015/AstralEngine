@@ -28,6 +28,7 @@ namespace Window {
         uint8 GetVsyncSetting() override { return m_Vsync; }
         int GetWidth() override;
         int GetHeight() override;
+        Vec2 GetFramebufferScale() override;
 
         Graphics::RendererContext & GetRendererContext() override;
         void* GetNativeWindow() override;

@@ -27,6 +27,7 @@ namespace Window {
         virtual uint8 GetVsyncSetting() = 0;
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
+        virtual Vec2 GetFramebufferScale() = 0;
 
         virtual void* GetNativeWindow() = 0;
         virtual Graphics::RendererContext& GetRendererContext() = 0;

@@ -8,7 +8,7 @@
 #include "InputState.h"
 
 
-namespace IO{
+namespace IO {
 
     class InputManager : public SystemManager
     {

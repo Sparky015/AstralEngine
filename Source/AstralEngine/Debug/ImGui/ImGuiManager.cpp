@@ -10,6 +10,8 @@
 #include "Components/RendererComponents.h"
 #include "Components/WindowComponents.h"
 #include "Components/SystemInfoComponents.h"
+#include "Debug/ImGui/Components/InputStateComponents.h"
+
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
@@ -95,6 +97,13 @@ namespace Debug{
                 WindowAPIInfoComponent();
                 WindowVsyncStateComponent();
                 VsyncToggleComponent();
+                WindowFramebufferScaleComponent();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Input State"))
+            {
+                CompleteInputStateComponent();
                 ImGui::TreePop();
             }
 

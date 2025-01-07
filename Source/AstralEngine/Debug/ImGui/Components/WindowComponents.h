@@ -10,5 +10,6 @@ namespace Debug {
     void WindowVsyncStateComponent();
     void WindowAPIInfoComponent();
     void VsyncToggleComponent();
+    void WindowFramebufferScaleComponent();
 
 }
