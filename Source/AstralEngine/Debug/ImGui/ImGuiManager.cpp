@@ -20,6 +20,7 @@
 #include "Window/Platform/Generic/GenericWindow.h" // TEMP
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
+#include "Components/CoreComponents.h"
 
 
 namespace Debug{
@@ -88,6 +89,12 @@ namespace Debug{
             if (ImGui::TreeNode("ECS"))
             {
                 EntityCountComponent();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Memory"))
+            {
+                MemoryTrackerComponent();
                 ImGui::TreePop();
             }
 

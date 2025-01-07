@@ -10,7 +10,7 @@ namespace Debug {
 
     struct ProfileResult
     {
-        std::string Name;
+        std::string_view Name;
         int64 StartTimeStamp;
         int64 EndTimeStamp;
     };

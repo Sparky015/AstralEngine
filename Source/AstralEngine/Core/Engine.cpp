@@ -5,13 +5,15 @@
 */
 #include "Engine.h"
 
-#include "Input/InputManager.h"
-#include "Window/WindowManager.h"
+#include "ApplicationModule.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "ECS/ECSManager.h"
+#include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
+#include "Window/WindowManager.h"
 
-#include "ApplicationModule.h"
+#include "Memory/MemoryMetricsManager.h"
+#include "Memory/AllocationTracker.h"
 
 Engine* Engine::m_Instance = nullptr;
 
@@ -23,6 +25,8 @@ Engine::Engine() :
     PROFILE_SCOPE("Engine Initialization");
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
+
+    Core::MemoryMetricsManager::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
@@ -47,6 +51,8 @@ Engine::~Engine()
     Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
+
+    Core::MemoryMetricsManager::Get().Shutdown();
 }
 
 

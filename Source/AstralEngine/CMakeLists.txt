@@ -29,7 +29,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Debug/Instrumentation/AllocationTracker.h
+        Core/Memory/AllocationTracker.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -132,6 +132,11 @@ add_library(AstralEngine
         Debug/ImGui/Components/InputStateComponents.h
         Debug/ImGui/Components/SystemInfoComponents.cpp
         Debug/ImGui/Components/SystemInfoComponents.h
+        Core/Memory/MemoryMetricsManager.cpp
+        Core/Memory/MemoryMetricsManager.h
+        Core/Memory/AllocationTracker.cpp
+        Debug/ImGui/Components/CoreComponents.cpp
+        Debug/ImGui/Components/CoreComponents.h
 )
 
 
