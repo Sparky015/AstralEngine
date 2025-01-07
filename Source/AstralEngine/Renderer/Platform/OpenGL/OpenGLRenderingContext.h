@@ -20,7 +20,7 @@ namespace Graphics {
         void Init() override;
         void Shutdown() override;
 
-        std::string GetGraphicsProcessor() override;
+        std::string GetGraphicsProcessorName() override;
         std::string GetGPUVendor() override;
         std::string GetRenderingAPI() override;
 

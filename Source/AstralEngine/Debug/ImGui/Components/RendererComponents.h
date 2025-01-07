@@ -8,9 +8,9 @@ namespace Debug {
 
     void FPSComponent();
     void FrameTimeComponent();
-    void DrawCallsPerFrame();
+    void DrawCallsPerFrameComponent();
     void RendererAPIComponent();
-    void SystemGPUInfo();
+
 
 
 }

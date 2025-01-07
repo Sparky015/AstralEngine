@@ -59,7 +59,7 @@ namespace Debug {
         LOG("Window: " << window.GetVersion());
         LOG("Rendering API: " << rendererContext.GetRenderingAPI());
         LOG("Graphics Vendor: " << rendererContext.GetGPUVendor());
-        LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessor());
+        LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessorName());
 
 
         LOG(""); // Creates an extra new line

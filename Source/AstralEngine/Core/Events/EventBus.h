@@ -80,8 +80,8 @@ namespace Event {
         EventBus& operator=(const EventBus&) = delete;
     private:
 
-        EventBus<T>() = default;
-        ~EventBus<T>() = default;
+        EventBus() = default;
+        ~EventBus() = default;
 
         std::vector<std::function<void(T)>*> m_Callbacks;
         static bool m_IsInitialized;

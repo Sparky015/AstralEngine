@@ -24,7 +24,6 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
-
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();

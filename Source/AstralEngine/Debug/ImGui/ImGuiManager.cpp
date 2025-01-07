@@ -8,14 +8,16 @@
 #include "Components/BuildConfigComponents.h"
 #include "Components/ECSComponents.h"
 #include "Components/RendererComponents.h"
+#include "Components/WindowComponents.h"
+#include "Components/SystemInfoComponents.h"
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 
-#include "Debug/ImGui/Components/WindowComponents.h"
 #include "Input/Keycodes.h"
 #include "Window/Platform/Generic/GenericWindow.h" // TEMP
 #include "Window/WindowManager.h"
+#include "cpuinfo.h"
 
 
 namespace Debug{
@@ -33,7 +35,10 @@ namespace Debug{
     {
         PROFILE_SCOPE("ImGui Manager Initialization");
         TRACE("Initializing Debug Manager!")
+
         InitImGui();
+        cpuinfo_initialize();
+
         // m_UpdateListener.StartListening();
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
@@ -69,7 +74,7 @@ namespace Debug{
             {
                 FPSComponent();
                 FrameTimeComponent();
-                DrawCallsPerFrame();
+                DrawCallsPerFrameComponent();
 
                 ImGui::Spacing();
                 RendererAPIComponent();
@@ -102,7 +107,19 @@ namespace Debug{
 
             if (ImGui::TreeNode("System Info"))
             {
-                SystemGPUInfo();
+                SystemGPUNameComponent();
+                SystemCPUNameComponent();
+
+                ImGui::Spacing();
+                CPUCoreInfoComponent();
+
+                if (ImGui::TreeNode("CPU Cache Info"))
+                {
+                    CPUCacheInfoComponent();
+                    CPUCacheLineInfoComponent();
+                    ImGui::TreePop();
+                }
+
                 ImGui::TreePop();
             }
 

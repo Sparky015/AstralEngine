@@ -47,7 +47,7 @@ namespace Graphics {
     }
 
 
-    std::string OpenGLRenderingContext::GetGraphicsProcessor()
+    std::string OpenGLRenderingContext::GetGraphicsProcessorName()
     {
         std::stringstream ss;
         ss << glGetString(GL_RENDERER);

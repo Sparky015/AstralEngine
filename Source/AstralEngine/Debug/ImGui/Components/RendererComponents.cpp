@@ -24,7 +24,7 @@ namespace Debug {
         ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
     }
 
-    void DrawCallsPerFrame()
+    void DrawCallsPerFrameComponent()
     {
         ImGui::Text("Draw Calls/Frame: %d", Graphics::RendererCommand::GetNumberOfDrawCallsPerFrame());
     }
@@ -35,10 +35,4 @@ namespace Debug {
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().c_str());
     }
 
-    void SystemGPUInfo()
-    {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
-        ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().c_str());
-        ImGui::Text("Graphics Processor: %s", rendererContext.GetGraphicsProcessor().c_str());
-    }
 }
