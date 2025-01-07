@@ -56,7 +56,7 @@ public:
     [[nodiscard]] static PieceType CreateFromCharacter(char symbol);
 
     [[nodiscard]] constexpr PieceTypeEnum GetEnumValue() const { return m_Type; }
-    [[nodiscard]] constexpr uint8 GetRawValue() const { return static_cast<uint8>(m_Type); }
+    [[nodiscard]] constexpr int GetRawValue() const { return static_cast<uint8>(m_Type); }
     [[nodiscard]] static constexpr PieceType CreateFromRawValue(const uint8 typeValue) { return static_cast<PieceTypeEnum>(typeValue); }
 
     constexpr bool operator==(const PieceType& otherPieceType) const { return m_Type == otherPieceType.m_Type; }

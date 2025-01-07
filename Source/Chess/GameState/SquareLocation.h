@@ -37,7 +37,7 @@ public:
     [[nodiscard]] constexpr bool IsInSameRow(const SquareLocation squareLocation) const { return GetRow() == squareLocation.GetRow(); }
     [[nodiscard]] constexpr bool IsInSameColumn(const SquareLocation squareLocation) const { return GetColumn() == squareLocation.GetColumn(); }
     [[nodiscard]] std::string GetString() const { return std::to_string(m_Location); }
-    [[nodiscard]] constexpr uint8 GetRawValue() const { return m_Location; }
+    [[nodiscard]] constexpr int GetRawValue() const { return m_Location; }
     [[nodiscard]] std::string GetChessNotation() const;
 
     static constexpr SquareLocation FromRowAndColumn(const uint8 row, const uint8 column)
