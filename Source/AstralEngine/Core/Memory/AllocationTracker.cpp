@@ -10,28 +10,47 @@
 #include "MemoryMetricsManager.h"
 
 
-// void operator delete[](void* pointer, std::size_t size) noexcept
-// {
-//     if (pointer) { // Check for null
-//         Core::MemoryMetricsManager::Get().Free(size);
-//         std::free(pointer);
-//     }
-// }
-//
-// void operator delete(void* ptr, std::size_t size, void* placement_ptr) noexcept
-// {
-//     std::cout << "Custom placement delete called, size: " << size << ", ptr: " << ptr << ", placement_ptr: " << placement_ptr << std::endl;
-// }
+void* operator new(std::size_t size)
+{
+    Core::MemoryMetricsManager::Get().Allocate(size);
+    void* pointer = std::malloc(size);
+    if (!pointer) throw std::bad_alloc();
+    return pointer;
+}
 
 
+void* operator new[](std::size_t size)
+{
+    Core::MemoryMetricsManager::Get().Allocate(size);
+    void* pointer = std::malloc(size);
+    if (!pointer) throw std::bad_alloc();
+    return pointer;
+}
 
 
+void operator delete(void* pointer, std::size_t size) noexcept
+{
+    Core::MemoryMetricsManager::Get().Free(size);
+    std::free(pointer);
+}
 
-// void operator delete(void* pointer) noexcept
-// {
-//     if (pointer) { // Check for null
-//         std::cout << "Freeing memory!\n";
-//         // Core::MemoryMetricsManager::Get().Free(size);
-//         std::free(pointer);
-//     }
-// }
+
+void operator delete[](void* ptr, std::size_t size) noexcept
+{
+    Core::MemoryMetricsManager::Get().Free(size);
+    std::free(ptr);
+}
+
+
+void operator delete(void* pointer) noexcept
+{
+    Core::MemoryMetricsManager::Get().Free(0);
+    std::free(pointer);
+}
+
+
+void operator delete[](void* pointer) noexcept
+{
+    Core::MemoryMetricsManager::Get().Free(0);
+    std::free(pointer);
+}

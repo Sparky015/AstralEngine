@@ -14,14 +14,14 @@ namespace Core {
 
     void MemoryMetricsManager::Allocate(size_t allocationSize)
     {
-        m_TotalAllocatedBytes += allocationSize;
+        // m_TotalAllocatedBytes += allocationSize;
         m_TotalNumberOfAllocations++;
         m_TotalNumberOfAllocationsPerFrame++;
     }
 
     void MemoryMetricsManager::Free(size_t freeSize)
     {
-        m_TotalFreedBytes += freeSize;
+        // m_TotalFreedBytes += freeSize;
         m_TotalNumberOfFrees++;
         m_TotalNumberOfFreesPerFrame++;
     }
