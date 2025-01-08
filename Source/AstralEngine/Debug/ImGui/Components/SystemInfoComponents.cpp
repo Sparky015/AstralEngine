@@ -66,7 +66,7 @@ namespace Debug {
     void SystemGPUNameComponent()
     {
         Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
-        ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName().c_str());
+        ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName());
     }
 
     void SystemCPUVendorComponent()
@@ -77,7 +77,7 @@ namespace Debug {
     void SystemGPUVendorComponent()
     {
         Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
-        ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().c_str());
+        ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor());
     }
 
     void CPUCacheSizeComponent()

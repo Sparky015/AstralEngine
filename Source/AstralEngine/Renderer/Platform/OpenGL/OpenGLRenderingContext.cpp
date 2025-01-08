@@ -31,27 +31,23 @@ namespace Graphics {
     }
 
 
-    std::string OpenGLRenderingContext::GetRenderingAPI()
+    const char* OpenGLRenderingContext::GetRenderingAPI()
     {
-        std::stringstream ss;
-        ss << "OpenGL " << glGetString(GL_VERSION);
-        return ss.str();
+        static char renderingAPI[100] = "OpenGL ";
+        static char* renderingAPIWithVersion = std::strcat(renderingAPI, reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+        return renderingAPIWithVersion;
     }
 
 
-    std::string OpenGLRenderingContext::GetGPUVendor()
+    const char* OpenGLRenderingContext::GetGPUVendor()
     {
-        std::stringstream ss;
-        ss << glGetString(GL_VENDOR);
-        return ss.str();
+        return reinterpret_cast<const char*>(glGetString(GL_VENDOR));
     }
 
 
-    std::string OpenGLRenderingContext::GetGraphicsProcessorName()
+    const char* OpenGLRenderingContext::GetGraphicsProcessorName()
     {
-        std::stringstream ss;
-        ss << glGetString(GL_RENDERER);
-        return ss.str();
+        return reinterpret_cast<const char*>(glGetString(GL_RENDERER));
     }
 
 }

@@ -23,10 +23,10 @@ namespace Debug {
         ImGui::Text("Memory Usage: %.2f MB", (memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()) / 1000000.0f);
     }
 
-    void MemoryUsageForCurrentFrame()
+    void UnfreedMemoryFromCurrentFrame()
     {
         Core::FrameAllocationData frameAllocationData = Core::MemoryMetricsManager::Get().GetFrameAllocationData();
-        ImGui::Text("Memory usage for current frame: %.3f KB", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes) / 1000.0f);
+        ImGui::Text("Unfreed memory from current frame: %u bytes", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes));
     }
 
     void AllocationsAndFreesForCurrentFrame()

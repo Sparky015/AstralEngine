@@ -7,9 +7,6 @@
 void* operator new(std::size_t size);
 void* operator new[](std::size_t size);
 
-void operator delete(void* pointer, std::size_t size) noexcept;
-void operator delete[](void* pointer, std::size_t size) noexcept;
-
 void operator delete(void* pointer) noexcept;
 void operator delete[](void* pointer) noexcept;
 

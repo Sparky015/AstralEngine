@@ -28,20 +28,6 @@ void* operator new[](std::size_t size)
 }
 
 
-void operator delete(void* pointer, std::size_t size) noexcept
-{
-    Core::MemoryMetricsManager::Get().Free(pointer);
-    std::free(pointer);
-}
-
-
-void operator delete[](void* pointer, std::size_t size) noexcept
-{
-    Core::MemoryMetricsManager::Get().Free(pointer);
-    std::free(pointer);
-}
-
-
 void operator delete(void* pointer) noexcept
 {
     Core::MemoryMetricsManager::Get().Free(pointer);

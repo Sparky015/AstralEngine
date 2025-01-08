@@ -99,7 +99,7 @@ namespace Debug{
 
                 ImGui::Spacing();
                 AllocationsAndFreesForCurrentFrame();
-                MemoryUsageForCurrentFrame();
+                UnfreedMemoryFromCurrentFrame();
 
                 ImGui::TreePop();
             }

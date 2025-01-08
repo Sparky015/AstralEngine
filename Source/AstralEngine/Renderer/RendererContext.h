@@ -18,9 +18,9 @@ namespace Graphics {
         virtual void Init() = 0;
         virtual void Shutdown() = 0;
 
-        virtual std::string GetRenderingAPI() = 0;
-        virtual std::string GetGPUVendor() = 0;
-        virtual std::string GetGraphicsProcessorName() = 0;
+        virtual const char* GetRenderingAPI() = 0;
+        virtual const char* GetGPUVendor() = 0;
+        virtual const char* GetGraphicsProcessorName() = 0;
 
         static RendererContext* CreateRendererContext();
     };
