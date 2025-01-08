@@ -12,8 +12,7 @@
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 
-#include "Memory/AllocationTracker.h"
-#include "Memory/MemoryMetricsManager.h"
+#include "Core/Memory/Tracking/MemoryMetricsManager.h"
 
 Engine* Engine::m_Instance = nullptr;
 

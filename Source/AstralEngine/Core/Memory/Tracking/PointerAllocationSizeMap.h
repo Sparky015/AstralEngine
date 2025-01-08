@@ -8,7 +8,7 @@
 
 #include <cstdlib>
 
-#include "PointerAllocationSizeMapAllocator.h"
+#include "Core/Memory/Allocators/PointerAllocationSizeMapAllocator.h"
 
 
 namespace Core {
