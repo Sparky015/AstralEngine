@@ -23,7 +23,7 @@ public:
     [[nodiscard]] constexpr PieceColor Opposite() const { return !*this; }
     [[nodiscard]] constexpr bool GetRawValue() const { return m_Color; }
     [[nodiscard]] static constexpr PieceColor CreateFromRawValue(const bool value) { return value ? WHITE : BLACK; }
-    [[nodiscard]] std::string ToString() const { return m_Color == false ? "Black" : "White"; }
+    [[nodiscard]] std::string_view ToString() const { return m_Color == false ? "Black" : "White"; }
 
     constexpr bool operator==(const PieceColor& otherPieceColor) const noexcept { return m_Color == otherPieceColor.m_Color; }
     constexpr bool operator!=(const PieceColor& otherPieceColor) const noexcept { return m_Color != otherPieceColor.m_Color; }

@@ -22,7 +22,7 @@ namespace Debug {
 
     void WindowAPIInfoComponent()
     {
-        ImGui::Text("Window API: %s", Window::g_WindowManager.GetWindow().GetVersion().c_str());
+        ImGui::Text("Window API: %s", Window::g_WindowManager.GetWindow().GetVersion().data());
     }
 
     void VsyncToggleComponent()

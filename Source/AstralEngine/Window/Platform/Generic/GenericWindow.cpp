@@ -72,10 +72,9 @@ namespace Window {
     }
 
 
-    std::string GenericWindow::GetVersion()
+    std::string_view GenericWindow::GetVersion()
     {
-        std::string version("GLFW ");
-        version += glfwGetVersionString();
+        static std::string version = "GLFW " + std::string(glfwGetVersionString());
         return version;
     }
 

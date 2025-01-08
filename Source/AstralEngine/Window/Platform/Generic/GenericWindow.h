@@ -22,7 +22,7 @@ namespace Window {
         void Update() override;
         void Shutdown() override;
         void SwapBuffers() override;
-        std::string GetVersion() override;
+        std::string_view GetVersion() override;
         void EnableVSync() override;
         void DisableVSync() override;
         uint8 GetVsyncSetting() override { return m_Vsync; }

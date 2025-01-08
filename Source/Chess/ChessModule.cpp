@@ -23,7 +23,6 @@ public:
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
         Debug::g_DebugManager.Init();
-        keyPressListener.StartListening();
     }
 
     void Update() override
@@ -42,10 +41,6 @@ public:
         Game::g_BoardManager.Shutdown();
         Game::g_GameManager.Shutdown();
     }
-
-    Event::EventListener<KeyPressedEvent> keyPressListener = Event::EventListener<KeyPressedEvent>{
-        [](KeyPressedEvent e) { LOG("Key Pressed: " << InputState::GetKeyName(e.keycode)) }
-    };
 };
 
 IMPLEMENT_APPLICATION_MODULE(ChessModule);

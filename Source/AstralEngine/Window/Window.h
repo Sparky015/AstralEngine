@@ -31,7 +31,7 @@ namespace Window {
 
         virtual void* GetNativeWindow() = 0;
         virtual Graphics::RendererContext& GetRendererContext() = 0;
-        virtual std::string GetVersion() = 0;
+        virtual std::string_view GetVersion() = 0;
 
         static Window* CreateWindow();
 

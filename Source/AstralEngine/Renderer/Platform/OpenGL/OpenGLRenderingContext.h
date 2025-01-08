@@ -20,9 +20,9 @@ namespace Graphics {
         void Init() override;
         void Shutdown() override;
 
-        const char* GetGraphicsProcessorName() override;
-        const char* GetGPUVendor() override;
-        const char* GetRenderingAPI() override;
+        std::string_view GetGraphicsProcessorName() override;
+        std::string_view GetGPUVendor() override;
+        std::string_view GetRenderingAPI() override;
 
     private:
         GLFWwindow* m_Window;
