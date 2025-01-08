@@ -12,30 +12,32 @@ namespace Core {
     //     return instance;
     // }
 
-    void MemoryMetricsManager::Allocate(size_t allocationSize)
+    void MemoryMetricsManager::Allocate(void* pointer, size_t allocationSize)
     {
-        // m_TotalAllocatedBytes += allocationSize;
+        m_PointerAllocationSizeMap.AddPointer(pointer, allocationSize);
+        m_TotalAllocatedBytes += allocationSize;
         m_TotalNumberOfAllocations++;
-        m_TotalNumberOfAllocationsPerFrame++;
+        m_TotalNumberOfAllocationsInFrame++;
     }
 
-    void MemoryMetricsManager::Free(size_t freeSize)
+    void MemoryMetricsManager::Free(void* pointer)
     {
-        // m_TotalFreedBytes += freeSize;
+        size_t freeSize = m_PointerAllocationSizeMap.GetPointerSize(pointer);
+        m_TotalFreedBytes += freeSize;
         m_TotalNumberOfFrees++;
-        m_TotalNumberOfFreesPerFrame++;
+        m_TotalNumberOfFreesInFrame++;
+
+        m_PointerAllocationSizeMap.FreePointer(pointer);
     }
 
     void MemoryMetricsManager::Init()
     {
         m_NewFrameListener.StartListening();
-
     }
 
     void MemoryMetricsManager::Shutdown()
     {
         m_NewFrameListener.StopListening();
-
     }
 
 }

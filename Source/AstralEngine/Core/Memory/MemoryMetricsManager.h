@@ -3,7 +3,9 @@
 //
 
 #pragma once
+
 #include "Core/Events/EventListener.h"
+#include "Core/Memory/PointerAllocationSizeMap.h"
 #include "Renderer/RendererEvents.h"
 
 namespace Core {
@@ -19,8 +21,8 @@ namespace Core {
         }
 
 
-        void Allocate(size_t allocationSize);
-        void Free(size_t freeSize);
+        void Allocate(void* pointer, size_t allocationSize);
+        void Free(void* pointer);
 
         void Init();
         void Shutdown();
@@ -29,7 +31,7 @@ namespace Core {
         [[nodiscard]] uint64 GetTotalFreedBytes() const { return m_TotalFreedBytes; }
         [[nodiscard]] uint32 GetTotalNumberOfAllocations() const { return m_TotalNumberOfAllocations; }
         [[nodiscard]] uint32 GetTotalNumberOfFrees() const { return m_TotalNumberOfFrees; }
-        [[nodiscard]] uint32 GetAliveAllocationsInFrame() const { return m_TotalNumberOfAllocationsPerFrame - m_TotalNumberOfFreesPerFrame; }
+        [[nodiscard]] uint32 GetUnfreedAllocationsInFrame() const { return m_TotalNumberOfAllocationsInFrame - m_TotalNumberOfFreesInFrame; }
 
 
         MemoryMetricsManager(const MemoryMetricsManager&) = delete;
@@ -41,16 +43,20 @@ namespace Core {
         MemoryMetricsManager() = default;
         ~MemoryMetricsManager() = default;
 
+        PointerAllocationSizeMap m_PointerAllocationSizeMap{};
+
         uint64 m_TotalAllocatedBytes{};
         uint64 m_TotalFreedBytes{};
+
         uint32 m_TotalNumberOfAllocations{};
         uint32 m_TotalNumberOfFrees{};
-        uint32 m_TotalNumberOfAllocationsPerFrame{};
-        uint32 m_TotalNumberOfFreesPerFrame{};
+
+        uint32 m_TotalNumberOfAllocationsInFrame{};
+        uint32 m_TotalNumberOfFreesInFrame{};
 
         Event::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent) {
-            this->m_TotalNumberOfAllocationsPerFrame = 0;
-            this->m_TotalNumberOfFreesPerFrame = 0;
+            this->m_TotalNumberOfAllocationsInFrame = 0;
+            this->m_TotalNumberOfFreesInFrame = 0;
         }};
     };
 

@@ -12,45 +12,45 @@
 
 void* operator new(std::size_t size)
 {
-    Core::MemoryMetricsManager::Get().Allocate(size);
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
+    Core::MemoryMetricsManager::Get().Allocate(pointer, size);
     return pointer;
 }
 
 
 void* operator new[](std::size_t size)
 {
-    Core::MemoryMetricsManager::Get().Allocate(size);
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
+    Core::MemoryMetricsManager::Get().Allocate(pointer, size);
     return pointer;
 }
 
 
 void operator delete(void* pointer, std::size_t size) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(size);
+    Core::MemoryMetricsManager::Get().Free(pointer);
     std::free(pointer);
 }
 
 
-void operator delete[](void* ptr, std::size_t size) noexcept
+void operator delete[](void* pointer, std::size_t size) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(size);
-    std::free(ptr);
+    Core::MemoryMetricsManager::Get().Free(pointer);
+    std::free(pointer);
 }
 
 
 void operator delete(void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(0);
+    Core::MemoryMetricsManager::Get().Free(pointer);
     std::free(pointer);
 }
 
 
 void operator delete[](void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(0);
+    Core::MemoryMetricsManager::Get().Free(pointer);
     std::free(pointer);
 }

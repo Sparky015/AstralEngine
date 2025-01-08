@@ -5,9 +5,7 @@
 int main()
 {
     LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
-    {
-        std::string test = "1234567890123456789012345678901234567890";
-    }
+
     LOG("Compiled On: " << __DATE__ << " " << __TIME__ << "\n");
 
     {
