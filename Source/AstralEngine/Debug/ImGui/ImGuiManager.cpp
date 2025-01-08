@@ -20,7 +20,7 @@
 #include "Window/Platform/Generic/GenericWindow.h" // TEMP
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
-#include "Components/CoreComponents.h"
+#include "Components/MemoryComponents.h"
 
 
 namespace Debug{
@@ -94,7 +94,13 @@ namespace Debug{
 
             if (ImGui::TreeNode("Memory"))
             {
-                MemoryTrackerComponent();
+                GlobalMemoryUsage();
+                GlobalTotalAllocationsAndFrees();
+
+                ImGui::Spacing();
+                AllocationsAndFreesForCurrentFrame();
+                MemoryUsageForCurrentFrame();
+
                 ImGui::TreePop();
             }
 

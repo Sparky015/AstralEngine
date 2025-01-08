@@ -135,8 +135,8 @@ add_library(AstralEngine
         Core/Memory/MemoryMetricsManager.cpp
         Core/Memory/MemoryMetricsManager.h
         Core/Memory/AllocationTracker.cpp
-        Debug/ImGui/Components/CoreComponents.cpp
-        Debug/ImGui/Components/CoreComponents.h
+        Debug/ImGui/Components/MemoryComponents.cpp
+        Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/PointerAllocationSizeMap.h
         Core/Memory/PointerAllocationSizeMap.cpp
         Core/Memory/PointerAllocationSizeMapAllocator.cpp

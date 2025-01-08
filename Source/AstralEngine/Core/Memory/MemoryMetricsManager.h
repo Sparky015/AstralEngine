@@ -10,6 +10,14 @@
 
 namespace Core {
 
+    struct FrameAllocationData
+    {
+        uint32 AllocatedBytes{};
+        uint32 FreedBytes{};
+        uint32 NumberOfAllocations{};
+        uint32 NumberOfFrees{};
+    };
+
     class MemoryMetricsManager
     {
     public:
@@ -19,7 +27,6 @@ namespace Core {
             static MemoryMetricsManager instance = MemoryMetricsManager();
             return instance;
         }
-
 
         void Allocate(void* pointer, size_t allocationSize);
         void Free(void* pointer);
@@ -31,7 +38,8 @@ namespace Core {
         [[nodiscard]] uint64 GetTotalFreedBytes() const { return m_TotalFreedBytes; }
         [[nodiscard]] uint32 GetTotalNumberOfAllocations() const { return m_TotalNumberOfAllocations; }
         [[nodiscard]] uint32 GetTotalNumberOfFrees() const { return m_TotalNumberOfFrees; }
-        [[nodiscard]] uint32 GetUnfreedAllocationsInFrame() const { return m_TotalNumberOfAllocationsInFrame - m_TotalNumberOfFreesInFrame; }
+        [[nodiscard]] uint32 GetUnfreedAllocationsInFrame() const { return m_FrameAllocationData.NumberOfAllocations - m_FrameAllocationData.NumberOfFrees; }
+        [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_FrameAllocationData; }
 
 
         MemoryMetricsManager(const MemoryMetricsManager&) = delete;
@@ -47,16 +55,14 @@ namespace Core {
 
         uint64 m_TotalAllocatedBytes{};
         uint64 m_TotalFreedBytes{};
-
         uint32 m_TotalNumberOfAllocations{};
         uint32 m_TotalNumberOfFrees{};
 
-        uint32 m_TotalNumberOfAllocationsInFrame{};
-        uint32 m_TotalNumberOfFreesInFrame{};
+        FrameAllocationData m_FrameAllocationData{};
 
-        Event::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent) {
-            this->m_TotalNumberOfAllocationsInFrame = 0;
-            this->m_TotalNumberOfFreesInFrame = 0;
+        Event::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent)
+        {
+            m_FrameAllocationData = FrameAllocationData();
         }};
     };
 

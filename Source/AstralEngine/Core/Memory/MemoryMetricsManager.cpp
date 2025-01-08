@@ -15,17 +15,23 @@ namespace Core {
     void MemoryMetricsManager::Allocate(void* pointer, size_t allocationSize)
     {
         m_PointerAllocationSizeMap.AddPointer(pointer, allocationSize);
+
         m_TotalAllocatedBytes += allocationSize;
         m_TotalNumberOfAllocations++;
-        m_TotalNumberOfAllocationsInFrame++;
+
+        m_FrameAllocationData.NumberOfAllocations++;
+        m_FrameAllocationData.AllocatedBytes += allocationSize;
     }
 
     void MemoryMetricsManager::Free(void* pointer)
     {
         size_t freeSize = m_PointerAllocationSizeMap.GetPointerSize(pointer);
+
         m_TotalFreedBytes += freeSize;
         m_TotalNumberOfFrees++;
-        m_TotalNumberOfFreesInFrame++;
+
+        m_FrameAllocationData.NumberOfFrees++;
+        m_FrameAllocationData.FreedBytes += freeSize;
 
         m_PointerAllocationSizeMap.FreePointer(pointer);
     }
