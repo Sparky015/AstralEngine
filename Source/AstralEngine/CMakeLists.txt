@@ -139,7 +139,6 @@ add_library(AstralEngine
         Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/PointerAllocationSizeMap.h
         Core/Memory/PointerAllocationSizeMap.cpp
-        Core/Memory/NoTrackingAllocator.cpp
         Core/Memory/NoTrackingAllocator.h
 )
 

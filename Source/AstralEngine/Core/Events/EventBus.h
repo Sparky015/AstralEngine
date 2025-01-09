@@ -30,7 +30,7 @@ namespace Event {
         /** Deletes the singleton instance of the type of Eventbus */
         static void Destroy()
         {
-            //TRACE(typeid(T).name() << "EventBus has no listeners! | Event Object Size: " << sizeof(T) << " byte(s)");
+            // TRACE(typeid(T).name() << "EventBus has no listeners! | Event Object Size: " << sizeof(T) << " byte(s)");
         }
 
 

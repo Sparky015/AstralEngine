@@ -8,6 +8,8 @@
 
 namespace Core {
 
+    /**@class NoTrackingAllocator
+     * @brief Allocator that bypasses allocation metrics tracking. Uses std::malloc and std::free. */
     template <typename T>
     class NoTrackingAllocator {
     public:
@@ -20,6 +22,8 @@ namespace Core {
         using difference_type = std::ptrdiff_t;
 
 
+        /**@brief Allocates memory with std::malloc
+         * @throws bad_alloc if std::malloc returns nullptr */
         pointer allocate(size_type n, const void* hint = nullptr)
         {
             void* ptr = std::malloc(n * sizeof(T));
@@ -27,6 +31,7 @@ namespace Core {
             return static_cast<pointer>(ptr);
         }
 
+        /**@brief Deallocates memory using std::free */
         void deallocate(pointer ptr, size_type n)
         {
             std::free(ptr);
