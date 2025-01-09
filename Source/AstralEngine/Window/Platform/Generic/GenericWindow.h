@@ -34,7 +34,7 @@ namespace Window {
         void* GetNativeWindow() override;
 
     private:
-        void SetGLFWCallbacks();
+        void SetGLFWCallbacks() const;
 
         static bool m_IsGLFWInitialized;
         GLFWwindow* m_Window;

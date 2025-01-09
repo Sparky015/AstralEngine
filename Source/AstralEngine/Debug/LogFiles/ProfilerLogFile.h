@@ -46,8 +46,8 @@ namespace Debug {
         ~ProfilerLogFile() = default;
 
         void GenerateFilePath();
-        void SetUpJson();
-        void EndJson();
+        void SetUpJson() const;
+        void EndJson() const;
 
         static bool m_IsLogFileOpen;
         std::string m_FilePath;

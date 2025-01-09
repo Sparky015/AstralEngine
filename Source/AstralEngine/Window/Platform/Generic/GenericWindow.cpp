@@ -107,7 +107,7 @@ namespace Window {
     }
 
 
-    void GenericWindow::SetGLFWCallbacks()
+    void GenericWindow::SetGLFWCallbacks() const
     {
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
         {

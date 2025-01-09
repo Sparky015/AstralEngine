@@ -116,7 +116,7 @@ namespace Debug {
     }
 
 
-    void ProfilerLogFile::SetUpJson()
+    void ProfilerLogFile::SetUpJson() const
     {
         std::ofstream& fileStream = GetFileStream();
         fileStream << R"({ "otherData": {},
@@ -125,7 +125,7 @@ namespace Debug {
     }
 
 
-    void ProfilerLogFile::EndJson()
+    void ProfilerLogFile::EndJson() const
     {
         std::ofstream& fileStream = GetFileStream();
         fileStream << "]\n}";

@@ -33,8 +33,8 @@ namespace Debug{
         ImGuiManager();
         ~ImGuiManager() override;
 
-        void InitImGui();
-        void ShutdownImGui();
+        void InitImGui() const;
+        void ShutdownImGui() const;
 
         void OnKeyPress(KeyPressedEvent keyPressedEvent);
 
