@@ -8,8 +8,7 @@
 
 #include <cstdlib>
 
-#include "PointerAllocationSizeMapAllocator.h"
-
+#include "NoTrackingAllocator.h"
 
 namespace Core {
 
@@ -24,6 +23,6 @@ namespace Core {
         size_t GetPointerSize(void* pointer);
 
     private:
-        std::unordered_map<void*, size_t, std::hash<void*>, std::equal_to<void*>, PointerAllocationSizeMapAllocator<std::pair<void* const, size_t>>> m_Storage;
+        std::unordered_map<const void*, size_t, std::hash<const void*>, std::equal_to<const void*>, NoTrackingAllocator<std::pair<const void* const, size_t>>> m_Storage;
     };
 }

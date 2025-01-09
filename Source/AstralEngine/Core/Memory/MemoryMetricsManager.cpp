@@ -6,14 +6,9 @@
 
 namespace Core {
 
-    // MemoryMetricsManager& MemoryMetricsManager::Get()
-    // {
-    //     static MemoryMetricsManager instance = MemoryMetricsManager();
-    //     return instance;
-    // }
-
     void MemoryMetricsManager::Allocate(void* pointer, size_t allocationSize)
     {
+        std::lock_guard lock(m_Mutex);
         m_PointerAllocationSizeMap.AddPointer(pointer, allocationSize);
 
         m_TotalAllocatedBytes += allocationSize;
@@ -25,6 +20,7 @@ namespace Core {
 
     void MemoryMetricsManager::Free(void* pointer)
     {
+        std::lock_guard lock(m_Mutex);
         size_t freeSize = m_PointerAllocationSizeMap.GetPointerSize(pointer);
 
         m_TotalFreedBytes += freeSize;

@@ -7,6 +7,7 @@
 #include "Core/Events/EventListener.h"
 #include "Core/Memory/PointerAllocationSizeMap.h"
 #include "Renderer/RendererEvents.h"
+#include <mutex>
 
 namespace Core {
 
@@ -50,6 +51,10 @@ namespace Core {
     private:
         MemoryMetricsManager() = default;
         ~MemoryMetricsManager() = default;
+
+        // To protect against race conditions from the multiple threads spawned by GLFW. My new and delete redefines
+        // get called on all threads, so this needs to be thread safe.
+        std::recursive_mutex m_Mutex{};
 
         PointerAllocationSizeMap m_PointerAllocationSizeMap{};
 

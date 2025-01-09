@@ -1,5 +1,5 @@
 /**
-* @file PointerAllocationSizeMapAllocator.h
+* @file NoTrackingAllocator.h
 * @author Andrew Fagan
 * @date 1/7/2025
 */
@@ -9,7 +9,7 @@
 namespace Core {
 
     template <typename T>
-    class PointerAllocationSizeMapAllocator {
+    class NoTrackingAllocator {
     public:
         using value_type = T;
         using pointer = T*;
@@ -36,24 +36,24 @@ namespace Core {
         template <typename U>
         struct rebind
         {
-            using other = PointerAllocationSizeMapAllocator<U>;
+            using other = NoTrackingAllocator<U>;
         };
 
 
-        PointerAllocationSizeMapAllocator() noexcept = default;
-        ~PointerAllocationSizeMapAllocator() = default;
+        NoTrackingAllocator() noexcept = default;
+        ~NoTrackingAllocator() = default;
 
         template <typename U>
-        PointerAllocationSizeMapAllocator(const PointerAllocationSizeMapAllocator<U>&) noexcept {};
-        PointerAllocationSizeMapAllocator(const PointerAllocationSizeMapAllocator&) noexcept = default;
+        NoTrackingAllocator(const NoTrackingAllocator<U>&) noexcept {};
+        NoTrackingAllocator(const NoTrackingAllocator&) noexcept = default;
 
     };
 
     // Equality operators for allocators
     template <typename T, typename U>
-    bool operator==(const PointerAllocationSizeMapAllocator<T>&, const PointerAllocationSizeMapAllocator<U>&) { return true; }
+    bool operator==(const NoTrackingAllocator<T>&, const NoTrackingAllocator<U>&) { return true; }
 
     template <typename T, typename U>
-    bool operator!=(const PointerAllocationSizeMapAllocator<T>&, const PointerAllocationSizeMapAllocator<U>&) { return false; }
+    bool operator!=(const NoTrackingAllocator<T>&, const NoTrackingAllocator<U>&) { return false; }
 
 }

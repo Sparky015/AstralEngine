@@ -17,13 +17,16 @@ namespace Core {
 
     void PointerAllocationSizeMap::FreePointer(void* pointer)
     {
-        m_Storage[pointer] = 0;
+        const auto it = m_Storage.find(pointer);
+        if (it == m_Storage.end()) { return; }
+        m_Storage.erase(pointer);
     }
 
 
     size_t PointerAllocationSizeMap::GetPointerSize(void* pointer)
     {
-        return m_Storage[pointer];
+        const auto it = m_Storage.find(pointer);
+        return it != m_Storage.end() ? it->second : 0;
     }
 
 }
