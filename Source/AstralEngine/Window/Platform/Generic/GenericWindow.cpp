@@ -111,7 +111,7 @@ namespace Window {
     {
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
         {
-            Event::EventPublisher<WindowClosedEvent> windowClosedPublisher;
+            Core::EventPublisher<WindowClosedEvent> windowClosedPublisher;
             windowClosedPublisher.PublishEvent(WindowClosedEvent());
         });
 
@@ -119,17 +119,17 @@ namespace Window {
         {
             if (action == GLFW_PRESS)
             {
-                Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                Core::EventPublisher<KeyPressedEvent> keyPressedEvent;
                 keyPressedEvent.PublishEvent(KeyPressedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_RELEASE)
             {
-                Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                Core::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
                 keyReleasedEvent.PublishEvent(KeyReleasedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_REPEAT)
             {
-                Event::EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
+                Core::EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
                 keyRepeatingEvent.PublishEvent(KeyRepeatingEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
 
@@ -141,7 +141,7 @@ namespace Window {
             int height;
             int width;
             glfwGetWindowSize(window, &width, &height);
-            Event::EventPublisher<MouseMovedEvent> mouseMovedEvent;
+            Core::EventPublisher<MouseMovedEvent> mouseMovedEvent;
             mouseMovedEvent.PublishEvent(MouseMovedEvent(xpos, height - ypos));
         });
 
@@ -153,14 +153,14 @@ namespace Window {
                 case GLFW_PRESS:
                 {
                     KeyPressedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
-                    Event::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                    Core::EventPublisher<KeyPressedEvent> keyPressedEvent;
                     keyPressedEvent.PublishEvent(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
                     KeyReleasedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
-                    Event::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                    Core::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
                     keyReleasedEvent.PublishEvent(event);
                     break;
                 }

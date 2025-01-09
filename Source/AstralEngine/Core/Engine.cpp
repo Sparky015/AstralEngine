@@ -18,7 +18,7 @@
 Engine* Engine::m_Instance = nullptr;
 
 Engine::Engine() :
-    m_WindowClosedListener(Event::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}}),
+    m_WindowClosedListener(Core::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}}),
     m_IsLoopRunning(true),
     m_ApplicationModule(Application::CreateApplicationModule())
 {

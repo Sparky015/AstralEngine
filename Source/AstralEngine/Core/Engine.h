@@ -26,10 +26,10 @@ public:
    static inline Engine& Get() { return *m_Instance; }
 
 private:
-    Event::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
-    Event::EventPublisher<NewFrameEvent> m_NewFramePublisher;
-    Event::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
-    Event::EventListener<WindowClosedEvent> m_WindowClosedListener;
+    Core::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
+    Core::EventPublisher<NewFrameEvent> m_NewFramePublisher;
+    Core::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
+    Core::EventListener<WindowClosedEvent> m_WindowClosedListener;
 
     bool m_IsLoopRunning;
 

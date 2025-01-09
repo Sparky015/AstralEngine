@@ -41,7 +41,7 @@ namespace Debug{
         static float m_Time;
         bool m_ShowDebugMenu{false};
 
-        Event::EventListener<KeyPressedEvent> m_KeyPressedListener;
+        Core::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
     extern ImGuiManager& g_ImGuiManager;

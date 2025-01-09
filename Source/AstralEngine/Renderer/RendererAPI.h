@@ -31,7 +31,7 @@ namespace Graphics {
         virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }
     protected:
         uint32 m_NumberOfDrawCalls = 0;
-        Event::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};
+        Core::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};
 
     private:
         static API s_RendererAPI;

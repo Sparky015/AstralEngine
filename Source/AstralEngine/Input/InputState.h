@@ -63,9 +63,9 @@ private:
 
     static std::array<KeyState, NUMBER_OF_KEYS> m_KeyState;
     static MouseCursorState m_MouseCursorState;
-    static Event::EventListener<KeyPressedEvent> m_KeyPressListener;
-    static Event::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
-    static Event::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;
-    static Event::EventListener<MouseMovedEvent> m_MouseMovedListener;
+    static Core::EventListener<KeyPressedEvent> m_KeyPressListener;
+    static Core::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
+    static Core::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;
+    static Core::EventListener<MouseMovedEvent> m_MouseMovedListener;
 
 };

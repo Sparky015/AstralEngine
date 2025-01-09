@@ -160,10 +160,10 @@ double InputState::MousePositionY()
 }
 
 
-Event::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Event::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
-Event::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Event::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
-Event::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Event::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
-Event::EventListener<MouseMovedEvent> InputState::m_MouseMovedListener = Event::EventListener<MouseMovedEvent> {[](MouseMovedEvent mouseMovedEvent){InputState::OnMouseMoved(mouseMovedEvent);}};
+Core::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Core::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
+Core::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Core::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
+Core::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Core::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
+Core::EventListener<MouseMovedEvent> InputState::m_MouseMovedListener = Core::EventListener<MouseMovedEvent> {[](MouseMovedEvent mouseMovedEvent){InputState::OnMouseMoved(mouseMovedEvent);}};
 
 
 InputState::InputState()

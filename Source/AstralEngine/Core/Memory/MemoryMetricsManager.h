@@ -91,7 +91,7 @@ namespace Core {
 
         FrameAllocationData m_FrameAllocationData{};
 
-        Event::EventListener<NewFrameEvent> m_NewFrameEventListener{[this](NewFrameEvent)
+        Core::EventListener<NewFrameEvent> m_NewFrameEventListener{[this](NewFrameEvent)
         {
             m_FrameAllocationData = FrameAllocationData();
         }};
