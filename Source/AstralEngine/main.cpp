@@ -1,12 +1,16 @@
 #include "Core/Engine.h"
 #include "Debug/EngineDebugInfoLogger.h"
 
+#include "Debug/Macros/Loggers.h" // testing
 
 int main()
 {
     LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
 
     LOG("Compiled On: " << __DATE__ << " " << __TIME__ << "\n");
+
+    std::ostringstream os;
+    Debug::Macros::macro_LOG(os);
 
     {
         Engine engine = Engine();
