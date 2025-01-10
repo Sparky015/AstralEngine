@@ -86,7 +86,7 @@ add_library(AstralEngine
         Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h
         Renderer/Primitives/BufferLayout.cpp
         Renderer/Primitives/BufferLayout.h
-        Core/Math.h
+        Core/Math/Math.h
         Renderer/Shaders/ShaderProgram.cpp
         Renderer/Shaders/ShaderProgram.h
         Renderer/RendererCommands.cpp
