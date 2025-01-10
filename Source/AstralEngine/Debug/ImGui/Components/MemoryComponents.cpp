@@ -10,6 +10,35 @@
 
 namespace Debug {
 
+    std::string_view MemorySizeLabelHelper(size_t numberOfBytes)
+    {
+        static constexpr int BUFFER_SIZE = 20;
+        thread_local char numberOfBytesString[BUFFER_SIZE] = {};
+        memset(numberOfBytesString, 0, BUFFER_SIZE);
+
+        if (numberOfBytes < 1000) // show bytes
+        {
+            snprintf(numberOfBytesString, BUFFER_SIZE, "%zu bytes", numberOfBytes);
+            return numberOfBytesString;
+        }
+        else if (numberOfBytes < 1000000) // show kilobytes
+        {
+            snprintf(numberOfBytesString, BUFFER_SIZE, "%.2f KB", numberOfBytes / 1000.0f);
+            return numberOfBytesString;
+        }
+        else if (numberOfBytes < 1000000000) // show megabytes
+        {
+            snprintf(numberOfBytesString, BUFFER_SIZE, "%.2f MB", numberOfBytes / 1000000.0f);
+            return numberOfBytesString;
+        }
+        else // show gigabytes
+        {
+            snprintf(numberOfBytesString, BUFFER_SIZE, "%.2f GB", numberOfBytes / 1000000.0f);
+            return numberOfBytesString;
+        }
+
+    }
+
     void GlobalTotalAllocationsAndFrees()
     {
         Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
@@ -20,7 +49,7 @@ namespace Debug {
     void GlobalMemoryUsage()
     {
         Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
-        ImGui::Text("Memory Usage: %.2f MB", (memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()) / 1000000.0f);
+        ImGui::Text("Memory Usage: %s", MemorySizeLabelHelper(memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()).data());
     }
 
     void UnfreedMemoryFromCurrentFrame()
