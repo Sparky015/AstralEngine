@@ -15,14 +15,12 @@ int main()
 
     using CustomOStringStream = std::basic_ostringstream<char, std::char_traits<char>, Core::StackLinearAllocator<char, 5024>>;
 
-    LinearStringStream os;
+    Debug::Macros::LinearStringStream os;
 
     os << "This is a test! jhgkuyfjthdfcgjthfchgfhgfghgknguvgebuyrgvuyergfuvberguygvufyerguyerbguybvuyegruybvrbuyfguyervgbvuygrbyugfveubyvrgbuy";
 
 
     Debug::Macros::macro_LOG(os);
-
-
 
 
     {
