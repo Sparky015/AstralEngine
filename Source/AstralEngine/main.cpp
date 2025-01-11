@@ -2,6 +2,10 @@
 #include "Debug/EngineDebugInfoLogger.h"
 
 #include "Debug/Macros/Loggers.h" // testing
+#include "Core/Memory/Allocators/LinearAllocator.h"
+
+
+
 
 int main()
 {
@@ -9,8 +13,17 @@ int main()
 
     LOG("Compiled On: " << __DATE__ << " " << __TIME__ << "\n");
 
-    std::ostringstream os;
+    using CustomOStringStream = std::basic_ostringstream<char, std::char_traits<char>, Core::StackLinearAllocator<char, 5024>>;
+
+    LinearStringStream os;
+
+    os << "This is a test! jhgkuyfjthdfcgjthfchgfhgfghgknguvgebuyrgvuyergfuvberguygvufyerguyerbguybvuyegruybvrbuyfguyervgbvuygrbyugfveubyvrgbuy";
+
+
     Debug::Macros::macro_LOG(os);
+
+
+
 
     {
         Engine engine = Engine();
