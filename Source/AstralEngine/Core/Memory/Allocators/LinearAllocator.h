@@ -19,8 +19,8 @@ namespace Core {
     template <typename T, size_t memoryBlockSize>
     class StackLinearAllocator {
     public:
-        static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.2 KB
-        static_assert(memoryBlockSize < MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
+        static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
+        static_assert(memoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
 
         using value_type = T;
         using pointer = T*;
@@ -31,7 +31,6 @@ namespace Core {
         using difference_type = std::ptrdiff_t;
         using propagate_on_container_move_assignment = std::true_type;
         using propagate_on_container_copy_assignment = std::true_type;
-        using propagate_on_container_swap = std::true_type;
         using is_always_equal = std::false_type; // This NEEDS to be false for stateful allocators!!!
 
 
@@ -56,14 +55,6 @@ namespace Core {
             throw std::bad_alloc();
         }
 
-        void swap(StackLinearAllocator& other) noexcept
-        {
-            // Swap all internal state
-            std::swap(m_MemoryBlock, other.m_MemoryBlock);
-            std::swap(m_StartBlockAddress, other.m_StartBlockAddress);
-            std::swap(m_EndBlockAddress, other.m_EndBlockAddress);
-            std::swap(m_CurrentMarker, other.m_CurrentMarker);
-        }
 
         void deallocate(pointer ptr, size_type n)
         {
@@ -72,13 +63,11 @@ namespace Core {
 
         void reset()
         {
-            std::cout << "Reset called, memory use before: " << getUseMemorySize() << "\n";  // Debug
             memset(m_MemoryBlock, 0, memoryBlockSize);
             m_CurrentMarker = m_StartBlockAddress;
-            std::cout << "Reset complete, memory use after: " << getUseMemorySize() << "\n";  // Debug
-        };
+        }
 
-        size_t getUseMemorySize()
+        size_t getUsedBlockSize()
         {
             return m_CurrentMarker - m_StartBlockAddress;
         }
@@ -90,27 +79,12 @@ namespace Core {
             using other = StackLinearAllocator<U, memoryBlockSize>;
         };
 
-
         StackLinearAllocator() noexcept = default;
-        StackLinearAllocator(size_type) noexcept : StackLinearAllocator()
-        {
+        StackLinearAllocator(size_type) noexcept : StackLinearAllocator() {}
+        ~StackLinearAllocator() { reset(); }
 
-        }
-        ~StackLinearAllocator()
-        {
-            reset();
-        };
 
-        template <typename U>
-        StackLinearAllocator(const StackLinearAllocator<U, memoryBlockSize>& other) noexcept
-        {
-            memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-        }
-
-        constexpr StackLinearAllocator(const StackLinearAllocator<T, memoryBlockSize>& other) noexcept
+        constexpr StackLinearAllocator(const StackLinearAllocator& other) noexcept
         {
             memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
             m_StartBlockAddress = m_MemoryBlock;
@@ -118,20 +92,18 @@ namespace Core {
             m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
         };
 
-        StackLinearAllocator(StackLinearAllocator<T, memoryBlockSize>&& other) noexcept
+        StackLinearAllocator(StackLinearAllocator&& other) noexcept
         {
             std::memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
             m_StartBlockAddress = m_MemoryBlock;
             m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
             m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-
-            // Reset other to initial state
             other.m_CurrentMarker = other.m_StartBlockAddress;
         };
 
+        StackLinearAllocator& operator=(const StackLinearAllocator& other) = default;
         StackLinearAllocator& operator=(StackLinearAllocator&& other) = default;
 
-        StackLinearAllocator& operator=(const StackLinearAllocator& other) = default;
 
     private:
 
@@ -142,22 +114,16 @@ namespace Core {
     };
 
 
-template <typename T, typename U, size_t memoryBlockSize>
-bool operator==(const StackLinearAllocator<T, memoryBlockSize>& lhs, const StackLinearAllocator<U, memoryBlockSize>& rhs) noexcept {
-    return false;
-}
-
-template <typename T, typename U, size_t memoryBlockSize>
-bool operator!=(const StackLinearAllocator<T, memoryBlockSize>& lhs,
-                const StackLinearAllocator<U, memoryBlockSize>& rhs) noexcept {
-    return false;
-}
-
-    // Non-member swap function (required)
-    template <typename T, size_t S>
-    void swap(StackLinearAllocator<T,S>& lhs, StackLinearAllocator<T,S>& rhs) noexcept
+    template <typename T, typename U, size_t memoryBlockSize>
+    bool operator==(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
     {
-        lhs.swap(rhs);
+        return false;
+    }
+
+    template <typename T, typename U, size_t memoryBlockSize>
+    bool operator!=(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
+    {
+        return false;
     }
 
 }
