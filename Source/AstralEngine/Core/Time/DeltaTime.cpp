@@ -13,18 +13,23 @@ namespace Core {
     void DeltaTime::UpdateDeltaTime()
     {
         const std::chrono::time_point<std::chrono::high_resolution_clock> currentTimePoint = std::chrono::high_resolution_clock::now();
-        m_DeltaTime =  std::chrono::duration_cast<std::chrono::seconds>(currentTimePoint - m_LastTimePoint).count();
+        m_DeltaTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint - m_LastTimePoint).count();
         m_LastTimePoint = currentTimePoint;
     }
 
     float DeltaTime::GetSeconds() const
     {
-        return m_DeltaTime;
+        return m_DeltaTime / 1000000.0f;
     }
 
     float DeltaTime::GetMilliseconds() const
     {
-        return m_DeltaTime * 1000.0f;
+        return m_DeltaTime / 1000.0f;
+    }
+
+    float DeltaTime::GetMicroseconds() const
+    {
+        return m_DeltaTime;
     }
 
 }

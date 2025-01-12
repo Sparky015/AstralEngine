@@ -11,7 +11,7 @@
 namespace Core {
 
     /**@class Clock
-     * @brief Provides  a stopwatch for a way to measure how much time has passed between things or events. */
+     * @brief Provides a stopwatch for a way to measure how much time has passed between things or events. */
     class Clock
     {
     public:
@@ -19,10 +19,10 @@ namespace Core {
         ~Clock() = default;
 
         /**@brief Returns the current stopwatch time in seconds. */
-        [[nodiscard]] float GetStopwatchTime() const;
+        [[nodiscard]] float GetTime() const;
 
         /**@brief Resets the stopwatch. */
-        void ResetStopwatch();
+        void Reset();
 
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> m_InitialTimePoint;

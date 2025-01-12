@@ -27,6 +27,9 @@ namespace Core {
         /**@brief Returns the delta time in milliseconds. */
         [[nodiscard]] float GetMilliseconds() const;
 
+        /**@brief Returns the delta time in microseconds. */
+        [[nodiscard]] float GetMicroseconds() const;
+
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> m_LastTimePoint;
         float m_DeltaTime;

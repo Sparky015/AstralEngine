@@ -25,13 +25,12 @@ public:
         Debug::g_DebugManager.Init();
     }
 
-    void Update() override
+    void Update(const Core::DeltaTime& deltaTime) override
     {
         if (InputState::IsKeyDown(Keycode::KEY_F))
         {
-            LOG("TEST SUCCESSFUL!")
+            LOG("Delta Time: " << deltaTime.GetSeconds());
         }
-
     }
 
     void Shutdown() override

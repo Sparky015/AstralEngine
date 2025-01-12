@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Core/Time/DeltaTime.h"
 
 namespace Application {
 
@@ -15,7 +16,7 @@ namespace Application {
         virtual ~ApplicationModule() = default;
 
         virtual void Init() {};
-        virtual void Update() {};
+        virtual void Update(const Core::DeltaTime& deltaTime) {};
         virtual void Shutdown() {};
     };
 

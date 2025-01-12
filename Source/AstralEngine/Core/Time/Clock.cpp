@@ -10,13 +10,13 @@ namespace Core {
 
     Clock::Clock() : m_InitialTimePoint(std::chrono::high_resolution_clock::now()) {}
 
-    float Clock::GetStopwatchTime() const
+    float Clock::GetTime() const
     {
         const std::chrono::time_point<std::chrono::high_resolution_clock> currentTimePoint = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration_cast<std::chrono::seconds>(currentTimePoint - m_InitialTimePoint).count();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(currentTimePoint - m_InitialTimePoint).count() / 1000.0f;
     }
 
-    void Clock::ResetStopwatch()
+    void Clock::Reset()
     {
         m_InitialTimePoint = std::chrono::high_resolution_clock::now();
     }

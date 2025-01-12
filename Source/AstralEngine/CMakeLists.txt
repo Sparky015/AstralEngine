@@ -145,6 +145,8 @@ add_library(AstralEngine
         Core/Time/Clock.cpp
         Core/Time/DeltaTime.cpp
         Core/Time/DeltaTime.h
+        Debug/ImGui/Components/EngineComponents.cpp
+        Debug/ImGui/Components/EngineComponents.h
 
 )
 

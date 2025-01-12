@@ -4,23 +4,24 @@
 
 #include "ImGuiManager.h"
 
-#include "imgui.h"
 #include "Components/BuildConfigComponents.h"
 #include "Components/ECSComponents.h"
 #include "Components/RendererComponents.h"
-#include "Components/WindowComponents.h"
 #include "Components/SystemInfoComponents.h"
+#include "Components/WindowComponents.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
+#include "imgui.h"
 
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 
+#include "Components/MemoryComponents.h"
+#include "Debug/ImGui/Components/EngineComponents.h"
 #include "Input/Keycodes.h"
 #include "Window/Platform/Generic/GenericWindow.h" // TEMP
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
-#include "Components/MemoryComponents.h"
 
 
 namespace Debug{
@@ -75,6 +76,7 @@ namespace Debug{
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
 
+
             if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 FPSComponent();
@@ -126,6 +128,13 @@ namespace Debug{
             {
                 BuildProfileComponent();
                 CompilerInfoComponents();
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Other"))
+            {
+                EngineTimeComponent();
+                EngineTimeResetButtonComponent();
                 ImGui::TreePop();
             }
 

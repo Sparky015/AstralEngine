@@ -14,12 +14,13 @@
 
 #include "Memory/Tracking/MemoryMetricsManager.h"
 
+
 Engine* Engine::m_Instance = nullptr;
 
 Engine::Engine() :
     m_WindowClosedListener(Core::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}}),
-    m_IsLoopRunning(true),
-    m_ApplicationModule(Application::CreateApplicationModule())
+    m_ApplicationModule(Application::CreateApplicationModule()),
+    m_IsLoopRunning(true)
 {
     PROFILE_SCOPE("Engine Initialization");
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
@@ -61,10 +62,13 @@ void Engine::Run()
     while (m_IsLoopRunning)
     {
         PROFILE_SCOPE("Frame");
+
+        m_DeltaTime.UpdateDeltaTime();
+
         m_NewFramePublisher.PublishEvent( NewFrameEvent() );
 
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
-        m_ApplicationModule->Update();
+        m_ApplicationModule->Update(m_DeltaTime);
 
         Debug::ImGuiManager::ImGuiBeginFrame();
         m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
