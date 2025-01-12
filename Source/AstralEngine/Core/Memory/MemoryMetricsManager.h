@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "Core/Events/EventListener.h"
+#include "../Events/EventListener.h"
 #include "PointerAllocationSizeMap.h"
-#include "Renderer/RendererEvents.h"
+#include "../../Renderer/RendererEvents.h"
 
 namespace Core {
 
