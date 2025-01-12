@@ -6,6 +6,8 @@
 
 #pragma once
 
+
+#include <cstdlib>
 #include "NoTrackingAllocator.h"
 
 namespace Core {
@@ -35,6 +37,7 @@ namespace Core {
         size_t GetPointerSize(const void* pointer);
 
     private:
+
         std::unordered_map<const void*, size_t, std::hash<const void*>, std::equal_to<const void*>, NoTrackingAllocator<std::pair<const void* const, size_t>>> m_Storage;
     };
 

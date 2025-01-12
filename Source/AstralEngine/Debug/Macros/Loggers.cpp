@@ -61,7 +61,7 @@ namespace Debug::Macros {
         CheckIfCoutFailed();
 
         std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
-    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
@@ -73,7 +73,28 @@ namespace Debug::Macros {
         {
             WARN("Attempted write to a log file that is already closed!");
         }
-    #endif
+#endif
+    }
+
+    void macro_LOG(
+        const LinearStringStream& message)
+    {
+        CheckIfCoutFailed();
+
+        std::cout << SetColor(LIGHT_GREEN) << message.view() << SetColor(DEFAULT) << "\n"; // Color is bright green
+#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+        ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
+        if (logFile.IsOpen())
+        {
+            std::ostringstream outputStream;
+            outputStream << message.view() << "\n";
+            logFile << outputStream;
+        }
+        else
+        {
+            WARN("Attempted write to a log file that is already closed!");
+        }
+#endif
     }
 
 

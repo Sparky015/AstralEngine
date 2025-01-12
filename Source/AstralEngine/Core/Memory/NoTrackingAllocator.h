@@ -31,6 +31,7 @@ namespace Core {
             return static_cast<pointer>(ptr);
         }
 
+
         /**@brief Deallocates memory using std::free */
         void deallocate(pointer ptr, size_type n)
         {

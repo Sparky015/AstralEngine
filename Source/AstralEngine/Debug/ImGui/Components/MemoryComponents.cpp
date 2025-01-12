@@ -6,7 +6,7 @@
 
 #include <imgui.h>
 
-#include "Core/Memory/MemoryMetricsManager.h"
+#include "../../../Core/Memory/MemoryMetricsManager.h"
 
 namespace Debug {
 
