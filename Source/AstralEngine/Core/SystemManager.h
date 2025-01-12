@@ -21,6 +21,6 @@ public:
 
 protected:
 
-    Event::EventListener<SubSystemUpdateEvent> m_UpdateListener;
-    Event::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
+    Core::EventListener<SubSystemUpdateEvent> m_UpdateListener;
+    Core::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

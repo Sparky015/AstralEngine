@@ -55,13 +55,13 @@ namespace Game
     }
 
 
-    void ChessboardManager::InitBoardEntities()
+    void ChessboardManager::InitBoardEntities() const
     {
 
     }
 
 
-    void ChessboardManager::DestroyBoardEntities()
+    void ChessboardManager::DestroyBoardEntities() const
     {
 
     }

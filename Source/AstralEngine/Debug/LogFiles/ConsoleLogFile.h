@@ -37,8 +37,8 @@ namespace Debug {
         }
 
         /// Returns true if the log file is open
-        inline bool IsOpen() { return m_IsLogFileOpen; }
-        inline bool IsLogging() { return m_IsCurrentlyLogging; }
+        inline bool IsOpen() const { return m_IsLogFileOpen; }
+        inline bool IsLogging() const { return m_IsCurrentlyLogging; }
         inline void Enable() { m_IsCurrentlyLogging = true; }
         inline void Disable() { m_IsCurrentlyLogging = false; }
 
@@ -51,7 +51,7 @@ namespace Debug {
         ~ConsoleLogFile();
 
         /// Constructs and initializes the LogFile on first call
-        inline std::fstream& GetFileStream()
+        inline std::fstream& GetFileStream() const
         {
             static std::fstream m_LogFile;
             return m_LogFile;

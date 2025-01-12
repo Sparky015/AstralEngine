@@ -6,7 +6,7 @@
 
 #include "EventBus.h"
 
-namespace Event {
+namespace Core {
 
     /** Manages the listener callback with the event bus. */
     template<typename T>

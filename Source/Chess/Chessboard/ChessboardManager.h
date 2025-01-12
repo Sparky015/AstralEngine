@@ -31,8 +31,8 @@ namespace Game{
         ChessboardManager();
         ~ChessboardManager() override;
 
-        void InitBoardEntities();
-        void DestroyBoardEntities();
+        void InitBoardEntities() const;
+        void DestroyBoardEntities() const;
 
         Chessboard m_Board;
         BoardMoveList m_MoveList;

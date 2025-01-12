@@ -141,6 +141,7 @@ add_library(AstralEngine
         Core/Memory/PointerAllocationSizeMap.cpp
         Core/Memory/NoTrackingAllocator.h
         Core/Memory/LinearAllocator.h
+
 )
 
 

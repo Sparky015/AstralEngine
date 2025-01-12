@@ -6,7 +6,7 @@
 
 #include "EventBus.h"
 
-namespace Event {
+namespace Core {
 
     /** Publishes an event to any listeners. */
     template<typename T>

@@ -10,7 +10,7 @@
 #include "Core/Events/EventListener.h"
 #include "Core/Events/EventBus.h"
 
-using namespace Event;
+using namespace Core;
 
 // example struct
 struct Vector

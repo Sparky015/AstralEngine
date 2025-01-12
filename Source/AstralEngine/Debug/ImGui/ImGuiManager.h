@@ -33,15 +33,15 @@ namespace Debug{
         ImGuiManager();
         ~ImGuiManager() override;
 
-        void InitImGui();
-        void ShutdownImGui();
+        void InitImGui() const;
+        void ShutdownImGui() const;
 
         void OnKeyPress(KeyPressedEvent keyPressedEvent);
 
         static float m_Time;
         bool m_ShowDebugMenu{false};
 
-        Event::EventListener<KeyPressedEvent> m_KeyPressedListener;
+        Core::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
     extern ImGuiManager& g_ImGuiManager;

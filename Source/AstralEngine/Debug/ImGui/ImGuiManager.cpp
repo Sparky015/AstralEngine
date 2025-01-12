@@ -69,6 +69,8 @@ namespace Debug{
     {
         PROFILE_SCOPE("Render Debug Menu ImGui");
 
+        static bool showDemoWindow = true;
+        ImGui::ShowDemoWindow(&showDemoWindow);
         if (m_ShowDebugMenu)
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
@@ -238,7 +240,7 @@ namespace Debug{
     }
 
 
-    void ImGuiManager::InitImGui()
+    void ImGuiManager::InitImGui() const
     {
         PROFILE_SCOPE("Initialize ImGui");
         ImGui::CreateContext();
@@ -267,7 +269,7 @@ namespace Debug{
     }
 
 
-    void ImGuiManager::ShutdownImGui()
+    void ImGuiManager::ShutdownImGui() const
     {
         PROFILE_SCOPE("ImGui Manager Shutdown");
         ImGui_ImplOpenGL3_Shutdown();
