@@ -150,7 +150,7 @@ namespace Core {
     bool operator==(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
     {
         return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
-            a1.m_MemoryBlock == a2.m_MemoryBlock &&
+            &a1.m_MemoryBlock == &a2.m_MemoryBlock &&
             a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
             a1.m_StartBlockAddress == a2.m_StartBlockAddress);
     }

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/Memory/Allocators/LinearAllocator.h"
+#include <sstream>
 
 #ifndef TURN_OFF_DEBUG_MACROS
 /** Outputs the message to the console with a time stamp. */
