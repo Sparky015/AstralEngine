@@ -131,13 +131,6 @@ namespace Debug{
                 ImGui::TreePop();
             }
 
-            if (ImGui::TreeNode("Other"))
-            {
-                EngineTimeComponent();
-                EngineTimeResetButtonComponent();
-                ImGui::TreePop();
-            }
-
             if (ImGui::TreeNode("System Info"))
             {
                 SystemGPUNameComponent();
@@ -154,6 +147,13 @@ namespace Debug{
                     ImGui::TreePop();
                 }
 
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Other"))
+            {
+                EngineTimeComponent();
+                EngineTimeResetButtonComponent();
                 ImGui::TreePop();
             }
 
