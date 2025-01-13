@@ -111,10 +111,10 @@ namespace Debug{
             if (ImGui::TreeNode("Window"))
             {
                 WindowDimensionsComponent();
+                WindowFramebufferScaleComponent();
                 WindowAPIInfoComponent();
                 WindowVsyncStateComponent();
                 VsyncToggleComponent();
-                WindowFramebufferScaleComponent();
                 ImGui::TreePop();
             }
 

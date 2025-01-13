@@ -12,7 +12,5 @@ namespace Debug {
      * (aka the amount of time the program has been running) */
     void EngineTimeComponent();
 
-    /**@brief Creates a ImGui button that will reset the engine's clock */
-    void EngineTimeResetButtonComponent();
 
 }

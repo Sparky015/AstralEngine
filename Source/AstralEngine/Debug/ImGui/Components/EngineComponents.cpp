@@ -13,15 +13,7 @@ namespace Debug {
 
     void EngineTimeComponent()
     {
-        ImGui::Text("Engine Running Time: %.3f seconds", Engine::Get().GetEngineTime());
-    }
-
-    void EngineTimeResetButtonComponent()
-    {
-        if (ImGui::Button("Reset Engine Stopwatch"))
-        {
-//            Engine::Get().ResetEngineTime();
-        }
+        ImGui::Text("Engine Running Time: %.3f seconds", Engine::Get().GetTimeSinceInitialization());
     }
 
 }
