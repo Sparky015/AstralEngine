@@ -59,6 +59,9 @@ Engine::~Engine()
 void Engine::Run()
 {
     PROFILE_SCOPE("Engine Runtime");
+
+    Core::DeltaTime m_DeltaTime;
+
     while (m_IsLoopRunning)
     {
         PROFILE_SCOPE("Frame");

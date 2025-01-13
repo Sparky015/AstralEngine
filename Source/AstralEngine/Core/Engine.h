@@ -39,6 +39,5 @@ private:
     static Engine* m_Instance;
     Application::ApplicationModule* m_ApplicationModule;
     bool m_IsLoopRunning;
-    Core::DeltaTime m_DeltaTime;
     Core::Clock m_Clock;
 };
