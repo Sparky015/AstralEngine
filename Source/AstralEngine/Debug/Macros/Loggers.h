@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/Memory/Allocators/LinearAllocator.h"
+#include "Core/Memory/Allocators/StackLinearAllocator.h"
 #include <sstream>
 
 #ifndef TURN_OFF_DEBUG_MACROS

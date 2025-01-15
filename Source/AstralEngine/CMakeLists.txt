@@ -140,13 +140,15 @@ add_library(AstralEngine
         Core/Memory/Tracking/PointerAllocationSizeMap.h
         Core/Memory/Tracking/PointerAllocationSizeMap.cpp
         Core/Memory/Allocators/NoTrackingAllocator.h
-        Core/Memory/Allocators/LinearAllocator.h
+        Core/Memory/Allocators/StackLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
         Core/Time/DeltaTime.cpp
         Core/Time/DeltaTime.h
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
+        Core/Memory/Allocators/StackAllocator.cpp
+        Core/Memory/Allocators/StackAllocator.h
 
 )
 
