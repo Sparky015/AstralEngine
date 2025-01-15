@@ -8,6 +8,16 @@
 
 namespace Graphics {
 
+    void Renderer::BeginScene(const OrthographicCamera& orthographicCamera)
+    {
+
+    }
+
+    void Renderer::EndScene()
+    {
+
+    }
+
     void Renderer::Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform)
     {
         RendererCommand::DrawElements(shaderProgram, vertexArrayBuffer, transform);
