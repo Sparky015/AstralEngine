@@ -147,6 +147,8 @@ add_library(AstralEngine
         Core/Time/DeltaTime.h
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
+        Renderer/Cameras/OrthographicCamera.cpp
+        Renderer/Cameras/OrthographicCamera.h
 
 )
 

@@ -153,7 +153,6 @@ namespace Debug{
             if (ImGui::TreeNode("Other"))
             {
                 EngineTimeComponent();
-                EngineTimeResetButtonComponent();
                 ImGui::TreePop();
             }
 
