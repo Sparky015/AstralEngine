@@ -11,6 +11,7 @@ namespace Core {
     template <typename T, size_t memoryBlockSize>
     class StackAllocator
     {
+    public:
         using value_type = T;
         using pointer = T*;
         using size_type = std::size_t;
