@@ -7,6 +7,7 @@ set(TEST_FILES
         ExampleTest.cpp
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
+        Renderer/OrthographicCamera.cpp
 )
 
 

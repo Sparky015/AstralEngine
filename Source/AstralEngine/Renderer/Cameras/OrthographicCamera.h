@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "Core/Math/Math.h"
+
 namespace Graphics {
 
     /**@class OrthographicCamera
@@ -19,15 +21,21 @@ namespace Graphics {
         const Mat4& GetProjectionViewMatrix();
 
         /**@brief Sets the position of the camera in world space */
-        void SetPosition(const Vec3& position) { m_Position = position;
-            CalculateViewProjectionMatrix(); }
+        void SetPosition(const Vec3& position)
+        {
+            m_Position = position;
+            CalculateViewProjectionMatrix();
+        }
 
         /**@brief Gets the position of the camera */
         [[nodiscard]] const Vec3& GetPosition() const { return m_Position; }
 
         /**@brief Sets the rotation of the camera */
-        void SetRotation(float rotation) { m_Rotation = rotation;
-            CalculateViewProjectionMatrix(); }
+        void SetRotation(float rotation)
+        {
+            m_Rotation = rotation;
+            CalculateViewProjectionMatrix();
+        }
 
         /**@brief Gets the rotation of the camera */
         [[nodiscard]] float GetRotation() const { return m_Rotation; }
