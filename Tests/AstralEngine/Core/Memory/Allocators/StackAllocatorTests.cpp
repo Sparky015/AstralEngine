@@ -21,9 +21,9 @@ TEST_F(StackAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
     const char* allocatedAddress2 = testAllocator.allocate(27);
     const char* allocatedAddress3 = testAllocator.allocate(57);
 
-    EXPECT_EQ(allocatedAddress2 - allocatedAddress, 5); // No need to account for alignment with chars
-    EXPECT_EQ(allocatedAddress3 - allocatedAddress2, 27);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 89); // 5 + 27 + 57 == 89
+    EXPECT_EQ(allocatedAddress2 - allocatedAddress, 5 + 1); // No need to account for alignment with chars
+    EXPECT_EQ(allocatedAddress3 - allocatedAddress2, 27 + 1);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 27 + 57 + 3); // +3 for allocation header (1 for each allocation)
 }
 
 /**@brief Tests if the allocator returns addresses that can be read from and written to */
@@ -44,7 +44,7 @@ TEST_F(StackAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
     Core::StackAllocator<char, 2056> testAllocator;
     EXPECT_THROW(testAllocator.allocate(3000), std::bad_alloc);
     EXPECT_THROW(testAllocator.allocate(2057), std::bad_alloc);
-    EXPECT_NO_THROW(testAllocator.allocate(2056));
+    EXPECT_NO_THROW(testAllocator.allocate(2055)); // 2056 minus one to take into account of the allocation header
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
@@ -79,7 +79,7 @@ TEST_F(StackAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
     testAllocator.reset(); // Total Allocation: 0
 
     EXPECT_NO_THROW(testAllocator.allocate(250)); // Total Allocation: 250
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 250);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 250 + 1);
 }
 
 
@@ -92,20 +92,20 @@ TEST_F(StackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
 
     char* memoryAddress2 = testAllocator.allocate(500);
     char* memoryAddress3 = testAllocator.allocate(1000);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 1500);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 1000 + 2); // +2 for allocation headers (1 for each allocation)
     testAllocator.deallocate(memoryAddress3, 1000);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 1);
     testAllocator.deallocate(memoryAddress2, 500);
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
 
     char* memoryAddress4 = testAllocator.allocate(500);
     char* memoryAddress5 = testAllocator.allocate(250);
     char* memoryAddress6 = testAllocator.allocate(700);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 1450);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 250 + 700 + 3);
     testAllocator.deallocate(memoryAddress6, 700);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 250);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 250 + 2);
     testAllocator.deallocate(memoryAddress5, 250);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 500 + 1);
     testAllocator.deallocate(memoryAddress4, 500);
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
 }
@@ -116,25 +116,25 @@ TEST_F(StackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurren
     Core::StackAllocator<char, 2056> testAllocator;
 
     testAllocator.allocate(5);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 1); // allocation size + 1 for header
     testAllocator.allocate(27);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 27);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 27 + 2);
     testAllocator.allocate(57);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 27 + 57);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 27 + 57 + 3);
     testAllocator.reset();
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
     testAllocator.allocate(812);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 1);
     testAllocator.allocate(11);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11 + 2);
     testAllocator.allocate(71);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11 + 71);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11 + 71 + 3);
 }
 
 TEST_F(StackAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackAllocator<AlignedStruct, 1024> alignedAllocator;
+    Core::StackAllocator<AlignedStruct, 64> alignedAllocator;
 
     AlignedStruct* ptr = alignedAllocator.allocate(1);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -144,7 +144,7 @@ TEST_F(StackAllocatorTest, moveOperations_PreserveState)
 {
     testAllocator.allocate(100);
     auto movedAllocator = std::move(testAllocator);
-    EXPECT_EQ(movedAllocator.getUsedBlockSize(), 100);
+    EXPECT_EQ(movedAllocator.getUsedBlockSize(), 100 + 1);
 
     // Test that original allocator is reset
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
@@ -154,9 +154,9 @@ TEST_F(StackAllocatorTest, copyOperations_DuplicateState)
 {
     testAllocator.allocate(100);
     auto copiedAllocator = testAllocator;
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100);
+    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100 + 1); // + 1 for header
     testAllocator.allocate(100);
 
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 200);
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 100 + 100 + 2);
+    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100 + 1);
 }

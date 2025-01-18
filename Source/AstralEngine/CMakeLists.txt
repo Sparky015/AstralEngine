@@ -147,7 +147,6 @@ add_library(AstralEngine
         Core/Time/DeltaTime.h
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
-        Core/Memory/Allocators/StackAllocator.cpp
         Core/Memory/Allocators/StackAllocator.h
 
 )

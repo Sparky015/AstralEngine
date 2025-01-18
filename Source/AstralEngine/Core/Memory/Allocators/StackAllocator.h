@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Core/CoreMacroDefinitions.h"
 #include <memory>
 
 namespace Core {
@@ -20,6 +21,14 @@ namespace Core {
         using propagate_on_container_copy_assignment = std::true_type;
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
+        struct AllocationHeader
+        {
+            explicit AllocationHeader(const uint8 alignmentOffet) : alignmentOffset(alignmentOffet) {}
+            uint8 alignmentOffset;
+        };
+        static_assert(sizeof(AllocationHeader) == 1, "The allocation header should only be one byte in size. "
+                                                     "The allocate and deallocate implementation assumes a size of 1 byte. ");
+
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
@@ -34,10 +43,22 @@ namespace Core {
             void* alignedAddress = m_CurrentMarker;
             if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
             {
-                void* returnPointer = alignedAddress;
-                m_LastAllocatedNonAlignedAddress = m_CurrentMarker;
+                if (static_cast<unsigned char*>(alignedAddress) == m_CurrentMarker)
+                {
+                    // Address is already aligned. Push the address by the alignment of T to make room for allocation header.
+                    alignedAddress = static_cast<unsigned char*>(alignedAddress) + alignof(T);
+
+                    if (static_cast<unsigned char*>(alignedAddress) + allocatedBytes > m_EndBlockAddress) { throw std::bad_alloc(); }
+                }
+
+                // Add allocation header for alignment amount
+                unsigned char* m_HeaderMarker = static_cast<unsigned char*>(alignedAddress) - 1;
+                uint8 alignmentOffset = static_cast<unsigned char*>(alignedAddress) - m_CurrentMarker;
+                AllocationHeader allocationHeader = AllocationHeader(alignmentOffset);
+                *reinterpret_cast<AllocationHeader*>(m_HeaderMarker) = allocationHeader;
+
                 m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
-                return static_cast<pointer>(returnPointer);
+                return static_cast<pointer>(alignedAddress);
             }
 
             throw std::bad_alloc();
@@ -45,16 +66,20 @@ namespace Core {
 
 
         /**@brief Resets all memory that was allocated after the pointer.
-         * @warning Even if there is memory after the passed in pointer which the pointer doesn't own, it will still
-         *          be deallocated. */
+         * @warning You can only deallocate the previous allocation. This allocator follows a last in first out approach */
         void deallocate(pointer ptr, size_type numberOfElements)
         {
-            if (!m_LastAllocatedPointer) { return; } // if there is no previously allocated pointer, do nothing
+            // Checking if this pointer is the last allocated pointer
+            size_t sizeOfAllocation = sizeof(T) * numberOfElements;
+            if (m_CurrentMarker - sizeOfAllocation != reinterpret_cast<unsigned char*>(ptr)) { throw std::runtime_error("Deallocations must follow a last in first out order!"); }
 
-            if (m_LastAllocatedPointer != ptr)
-                { throw std::runtime_error("Given pointer can not be deallocated because it was not the last allocated pointer!"); }
+            // Get the natural alignment offset size from the allocation header
+            unsigned char* headerMarker = reinterpret_cast<unsigned char*>(ptr) - 1;
+            AllocationHeader* allocationHeader = reinterpret_cast<AllocationHeader*>(headerMarker);
 
-            m_CurrentMarker = m_LastAllocatedNonAlignedAddress;
+            // Roll back the marker by the size of the allocation and the natural alignment offset
+            m_CurrentMarker -= sizeOfAllocation + allocationHeader->alignmentOffset;
+            memset(m_CurrentMarker, 0, sizeOfAllocation + allocationHeader->alignmentOffset);
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
@@ -131,9 +156,6 @@ namespace Core {
         unsigned char* m_StartBlockAddress = m_MemoryBlock;
         unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
         unsigned char* m_CurrentMarker = m_StartBlockAddress;
-
-        unsigned char* m_LastAllocatedNonAlignedAddress = m_StartBlockAddress;
-        pointer m_LastAllocatedPointer = nullptr;
 
         template<typename T1, typename T2, size_t S>
         friend bool operator==(const StackAllocator<T1, S>& a1, const StackAllocator<T2, S>& a2) noexcept;
