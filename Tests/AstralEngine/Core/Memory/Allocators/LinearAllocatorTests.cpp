@@ -4,17 +4,17 @@
 
 #include <gtest/gtest.h>
 
-#include "Core/Memory/Allocators/StackLinearAllocator.h"
+#include "Core/Memory/Allocators/LinearAllocator.h"
 
-class StackLinearAllocatorTest : public ::testing::Test
+class LinearAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::StackLinearAllocator<char, DEFAULT_ALLOCATION_SIZE> testAllocator;
+    Core::LinearAllocator<char, DEFAULT_ALLOCATION_SIZE> testAllocator;
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
-TEST_F(StackLinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
+TEST_F(LinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
 {
     const char* allocatedAddress = testAllocator.allocate(5);
     const char* allocatedAddress2 = testAllocator.allocate(27);
@@ -26,7 +26,7 @@ TEST_F(StackLinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
 }
 
 /**@brief Tests if the allocator returns addresses that can be read from and written to */
-TEST_F(StackLinearAllocatorTest, allocate_ReturnsUseableAddresses)
+TEST_F(LinearAllocatorTest, allocate_ReturnsUseableAddresses)
 {
     char* allocatedAddress = testAllocator.allocate(5); // allocates 5 chars
     std::strcpy(allocatedAddress, "abcd\0");
@@ -38,18 +38,18 @@ TEST_F(StackLinearAllocatorTest, allocate_ReturnsUseableAddresses)
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(StackLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
+TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::StackLinearAllocator<char, 2056> testAllocator;
+    Core::LinearAllocator<char, 2056> testAllocator;
     EXPECT_THROW(testAllocator.allocate(3000), std::bad_alloc);
     EXPECT_THROW(testAllocator.allocate(2057), std::bad_alloc);
     EXPECT_NO_THROW(testAllocator.allocate(2056));
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(StackLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
+TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::StackLinearAllocator<char, 2200> testAllocator;
+    Core::LinearAllocator<char, 2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -60,9 +60,9 @@ TEST_F(StackLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationS
 
 
 /**@brief Tests if the reset method correctly resets the state of the allocator back to the start of the memory block */
-TEST_F(StackLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
+TEST_F(LinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::StackLinearAllocator<char, 2200> testAllocator;
+    Core::LinearAllocator<char, 2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -83,7 +83,7 @@ TEST_F(StackLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 
 
 /**@brief Tests if the deallocate method does absolutely nothing when called */
-TEST_F(StackLinearAllocatorTest, deallocate_DoesNothing)
+TEST_F(LinearAllocatorTest, deallocate_DoesNothing)
 {
     char* memoryAddress = testAllocator.allocate(500);
     testAllocator.deallocate(memoryAddress, 500);
@@ -99,9 +99,9 @@ TEST_F(StackLinearAllocatorTest, deallocate_DoesNothing)
 }
 
 /**@brief Tests if the getUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
-TEST_F(StackLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
+TEST_F(LinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::StackLinearAllocator<char, 2056> testAllocator;
+    Core::LinearAllocator<char, 2056> testAllocator;
 
     testAllocator.allocate(5);
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 5);
@@ -119,32 +119,12 @@ TEST_F(StackLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpace
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11 + 71);
 }
 
-TEST_F(StackLinearAllocatorTest, allocate_RespectsTypeAlignment)
+TEST_F(LinearAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackLinearAllocator<AlignedStruct, 1024> alignedAllocator;
+    Core::LinearAllocator<AlignedStruct, 1024> alignedAllocator;
 
     AlignedStruct* ptr = alignedAllocator.allocate(1);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
 }
 
-TEST_F(StackLinearAllocatorTest, moveOperations_PreserveState)
-{
-    testAllocator.allocate(100);
-    auto movedAllocator = std::move(testAllocator);
-    EXPECT_EQ(movedAllocator.getUsedBlockSize(), 100);
-
-    // Test that original allocator is reset
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
-}
-
-TEST_F(StackLinearAllocatorTest, copyOperations_DuplicateState)
-{
-    testAllocator.allocate(100);
-    auto copiedAllocator = testAllocator;
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100);
-    testAllocator.allocate(100);
-
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 200);
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100);
-}

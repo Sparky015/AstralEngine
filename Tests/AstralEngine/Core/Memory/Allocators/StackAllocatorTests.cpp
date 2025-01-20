@@ -131,32 +131,14 @@ TEST_F(StackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurren
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 812 + 11 + 71 + 3);
 }
 
+/**@brief Tests if the natural alignment is applied to allocations */
 TEST_F(StackAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackAllocator<AlignedStruct, 64> alignedAllocator;
+    Core::StackAllocator<AlignedStruct, 128> alignedAllocator;
 
-    AlignedStruct* ptr = alignedAllocator.allocate(1);
+    AlignedStruct* ptr = alignedAllocator.allocate(2);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
-}
-
-TEST_F(StackAllocatorTest, moveOperations_PreserveState)
-{
-    testAllocator.allocate(100);
-    auto movedAllocator = std::move(testAllocator);
-    EXPECT_EQ(movedAllocator.getUsedBlockSize(), 100 + 1);
-
-    // Test that original allocator is reset
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
-}
-
-TEST_F(StackAllocatorTest, copyOperations_DuplicateState)
-{
-    testAllocator.allocate(100);
-    auto copiedAllocator = testAllocator;
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100 + 1); // + 1 for header
-    testAllocator.allocate(100);
-
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 100 + 100 + 2);
-    EXPECT_EQ(copiedAllocator.getUsedBlockSize(), 100 + 1);
+    AlignedStruct* ptr2 = alignedAllocator.allocate(3);
+    EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr2) % 16, 0);
 }

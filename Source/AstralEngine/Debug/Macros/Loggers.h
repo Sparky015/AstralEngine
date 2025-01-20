@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/Memory/Allocators/StackLinearAllocator.h"
+#include "Core/Memory/Allocators/LinearAllocator.h"
 #include <sstream>
 
 #ifndef TURN_OFF_DEBUG_MACROS
@@ -56,7 +56,7 @@ public:
     }
 
 private:
-    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::StackLinearAllocator<char, 5024>>;
+    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::LinearAllocator<char, 5024>>;
     StreamType m_Stream;
 
 };

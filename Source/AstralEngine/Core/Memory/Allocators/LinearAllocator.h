@@ -1,5 +1,5 @@
 /**
-* @file StackLinearAllocator.h
+* @file LinearAllocator.h
 * @author Andrew Fagan
 * @date 1/8/2025
 */
@@ -19,7 +19,7 @@ namespace Core {
      * @warning You have to use the reset method to deallocate memory. It deallocates all memory being used.
      *          It's all or nothing. */
     template <typename T, size_t memoryBlockSize>
-    class StackLinearAllocator
+    class LinearAllocator
     {
     public:
         static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
@@ -80,56 +80,12 @@ namespace Core {
         template <typename U>
         struct rebind
         {
-            using other = StackLinearAllocator<U, memoryBlockSize>;
+            using other = LinearAllocator<U, memoryBlockSize>;
         };
 
-        StackLinearAllocator() noexcept = default;
-        StackLinearAllocator(size_type) noexcept : StackLinearAllocator() {}
-        ~StackLinearAllocator() { reset(); }
-
-
-        constexpr StackLinearAllocator(const StackLinearAllocator& other) noexcept
-        {
-            memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-        };
-
-
-        StackLinearAllocator& operator=(const StackLinearAllocator& other) noexcept
-        {
-            if (this != &other)
-            {
-                memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-                m_StartBlockAddress = m_MemoryBlock;
-                m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-                m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            }
-
-            return *this;
-        }
-
-        StackLinearAllocator(StackLinearAllocator&& other) noexcept
-        {
-            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            other.m_CurrentMarker = other.m_StartBlockAddress;
-        };
-
-
-        StackLinearAllocator& operator=(StackLinearAllocator&& other) noexcept
-        {
-            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            other.m_CurrentMarker = other.m_StartBlockAddress;
-            return *this;
-        };
-
+        LinearAllocator() noexcept = default;
+        LinearAllocator(size_type) noexcept : LinearAllocator() {}
+        ~LinearAllocator() { reset(); }
 
     private:
 
@@ -139,15 +95,15 @@ namespace Core {
         unsigned char* m_CurrentMarker = m_StartBlockAddress;
 
         template<typename T1, typename T2, size_t S>
-        friend bool operator==(const StackLinearAllocator<T1, S>& a1, const StackLinearAllocator<T2, S>& a2) noexcept;
+        friend bool operator==(const LinearAllocator<T1, S>& a1, const LinearAllocator<T2, S>& a2) noexcept;
 
         template<typename T1, typename T2, size_t S>
-        friend bool operator!=(const StackLinearAllocator<T1, S>& a1, const StackLinearAllocator<T2, S>& a2) noexcept;
+        friend bool operator!=(const LinearAllocator<T1, S>& a1, const LinearAllocator<T2, S>& a2) noexcept;
     };
 
 
     template <typename T, typename U, size_t memoryBlockSize>
-    bool operator==(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
+    bool operator==(const LinearAllocator<T, memoryBlockSize>& a1, const LinearAllocator<U, memoryBlockSize>& a2) noexcept
     {
         return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
             &a1.m_MemoryBlock == &a2.m_MemoryBlock &&
@@ -156,7 +112,7 @@ namespace Core {
     }
 
     template <typename T, typename U, size_t memoryBlockSize>
-    bool operator!=(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
+    bool operator!=(const LinearAllocator<T, memoryBlockSize>& a1, const LinearAllocator<U, memoryBlockSize>& a2) noexcept
     {
         return !(a1 == a2);
     }

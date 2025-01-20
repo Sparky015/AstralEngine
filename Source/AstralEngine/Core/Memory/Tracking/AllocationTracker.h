@@ -4,6 +4,9 @@
 
 #pragma once
 
+#define TRACK_ALLOCATION(pointer, allocationSize) Core::MemoryMetricsManager::Get().Allocate(pointer, size)
+#define TRACK_DEALLOCATION(pointer) Core::MemoryMetricsManager::Get().Free(pointer)
+
 /**@brief Redefines the new operator to track memory usages and allocations
  * @throws bad_alloc if std::malloc returns nullptr */
 void* operator new(std::size_t size);
