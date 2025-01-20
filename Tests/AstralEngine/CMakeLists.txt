@@ -7,8 +7,10 @@ set(TEST_FILES
         ExampleTest.cpp
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
-        Core/Memory/Allocators/StackAllocatorTests.cpp
+        Core/Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
+        Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
         Core/Memory/Allocators/LinearAllocatorTests.cpp
+        Core/Memory/Allocators/StackAllocatorTests.cpp
 )
 
 

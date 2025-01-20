@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "Core/Memory/Allocators/LinearAllocator.h"
 #include <sstream>
+
+#include "Core/Memory/Allocators/STLAllocators/STLLinearAllocator.h"
 
 #ifndef TURN_OFF_DEBUG_MACROS
 /** Outputs the message to the console with a time stamp. */
@@ -56,7 +57,7 @@ public:
     }
 
 private:
-    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::LinearAllocator<char, 5024>>;
+    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::STLLinearAllocator<char, 5024>>;
     StreamType m_Stream;
 
 };

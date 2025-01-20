@@ -148,6 +148,8 @@ add_library(AstralEngine
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
         Core/Memory/Allocators/StackAllocator.h
+        Core/Memory/Allocators/STLAllocators/STLStackAllocator.h
+        Core/Memory/Allocators/STLAllocators/STLLinearAllocator.h
 
 )
 
