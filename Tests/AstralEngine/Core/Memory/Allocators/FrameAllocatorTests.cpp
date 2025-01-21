@@ -87,21 +87,21 @@ TEST_F(FrameAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 }
 
 
-/**@brief Tests if the Deallocate method frees the previous allocation that was made */
-TEST_F(FrameAllocatorTest, deallocate_DoesNothing)
-{
-    char* memoryAddress = (char*) testAllocator.Allocate(500, alignof(char));
-    testAllocator.Deallocate(memoryAddress, 500);
-    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 500);
-
-    char* memoryAddress2 = (char*) testAllocator.Allocate(1000, alignof(char));
-    testAllocator.Deallocate(memoryAddress2, 1000);
-    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 1500);
-
-    char* memoryAddress3 = (char*) testAllocator.Allocate(100, alignof(char));
-    testAllocator.Deallocate(memoryAddress3, 100);
-    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 1600);
-}
+// /**@brief Tests if the Deallocate method frees the previous allocation that was made */
+// TEST_F(FrameAllocatorTest, deallocate_DoesNothing)
+// {
+//     char* memoryAddress = (char*) testAllocator.Allocate(500, alignof(char));
+//     testAllocator.Deallocate(memoryAddress, 500);
+//     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 500);
+//
+//     char* memoryAddress2 = (char*) testAllocator.Allocate(1000, alignof(char));
+//     testAllocator.Deallocate(memoryAddress2, 1000);
+//     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 1500);
+//
+//     char* memoryAddress3 = (char*) testAllocator.Allocate(100, alignof(char));
+//     testAllocator.Deallocate(memoryAddress3, 100);
+//     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 1600);
+// }
 
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(FrameAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)

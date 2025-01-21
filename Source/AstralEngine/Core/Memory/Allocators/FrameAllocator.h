@@ -13,6 +13,8 @@
 
 namespace Core {
 
+    /**@brief An allocator that can be used to allocate during a frame. Do not store or cache any pointers from this allocator.
+     *        It will be deallocated after the frame has ended. */
     class FrameAllocator
     {
     public:
@@ -29,7 +31,6 @@ namespace Core {
             delete[] m_StartBlockAddress;
         }
 
-        using AllocationHeader = uint8;
         using Marker = unsigned char*;
 
         /**@brief Gets a marker to the top of the memory block */
@@ -38,6 +39,8 @@ namespace Core {
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
         void RollbackToMarker(const Marker marker)
         {
+            ASSERT(marker >= m_StartBlockAddress && marker <= m_EndBlockAddress, "Passed marker does not fall within this allocators memory block.")
+            ASSERT(marker <= m_CurrentMarker, "Can not rollback to marker that is already past the top of the stack.")
             TRACK_DEALLOCATION(m_CurrentMarker - marker);
             m_CurrentMarker = marker;
         }
@@ -64,11 +67,6 @@ namespace Core {
             return alignedAddress;
         }
 
-
-        /**@brief Does nothing. Deallocations can only be made through the marker system.
-         * @warning THIS DOES NOTHING! This is meant to be a redirection to use the marker system instead. */
-        void Deallocate(void* ptr, size_t sizeOfAllocatedBlock) {}
-
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void Reset()
         {
@@ -90,26 +88,6 @@ namespace Core {
         unsigned char* m_EndBlockAddress = m_StartBlockAddress + m_MemoryBlockSize;
         unsigned char* m_CurrentMarker = m_StartBlockAddress;
 
-
-        friend bool operator==(const FrameAllocator& a1, const FrameAllocator& a2) noexcept;
-
-        friend bool operator!=(const FrameAllocator& a1, const FrameAllocator& a2) noexcept;
     };
-
-
-
-    bool operator==(const FrameAllocator& a1, const FrameAllocator& a2) noexcept
-    {
-        return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
-                a1.m_MemoryBlockSize == a2.m_MemoryBlockSize &&
-                a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
-                a1.m_StartBlockAddress == a2.m_StartBlockAddress);
-    }
-
-
-    bool operator!=(const FrameAllocator& a1, const FrameAllocator& a2) noexcept
-    {
-        return !(a1 == a2);
-    }
 
 }
