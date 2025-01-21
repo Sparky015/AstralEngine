@@ -100,7 +100,7 @@ namespace Core {
         friend bool operator==(const LinearAllocator<S>& a1, const LinearAllocator<S>& a2) noexcept;
 
         template<size_t S>
-        friend bool operator==(const LinearAllocator<S>& a1, const LinearAllocator<S>& a2) noexcept;
+        friend bool operator!=(const LinearAllocator<S>& a1, const LinearAllocator<S>& a2) noexcept;
     };
 
 

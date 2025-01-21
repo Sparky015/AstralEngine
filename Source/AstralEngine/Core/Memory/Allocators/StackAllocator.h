@@ -25,12 +25,8 @@ namespace Core {
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
         void RollbackToMarker(const Marker marker)
         {
-            if (marker == m_StartBlockAddress) { m_CurrentMarker = m_StartBlockAddress; }
-            const AllocationHeader* alignmentOffset = marker - 1;
-
-            // Roll back the marker by the size the natural alignment offset
-            TRACK_DEALLOCATION(m_CurrentMarker - marker - *alignmentOffset);
-            m_CurrentMarker = marker - *alignmentOffset;
+            TRACK_DEALLOCATION(m_CurrentMarker - marker);
+            m_CurrentMarker = marker ;
         }
 
         /**@brief Allocates a memory block of the given size with the given required alignment.
@@ -118,7 +114,7 @@ namespace Core {
         friend bool operator==(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
 
         template<size_t S>
-        friend bool operator==(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
+        friend bool operator!=(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
     };
 
 

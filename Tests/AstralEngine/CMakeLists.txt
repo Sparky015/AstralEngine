@@ -11,6 +11,7 @@ set(TEST_FILES
         Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
         Core/Memory/Allocators/LinearAllocatorTests.cpp
         Core/Memory/Allocators/StackAllocatorTests.cpp
+        Core/Memory/Allocators/FrameAllocatorTests.cpp
 )
 
 
