@@ -57,18 +57,6 @@ namespace Core {
             // Aligns the address and will return nullptr if there is not enough space
             if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
 
-            if (static_cast<unsigned char*>(alignedAddress) == m_CurrentMarker)
-            {
-                // Address is already aligned. Push the address by the alignment of T to make room for allocation header.
-                alignedAddress = static_cast<unsigned char*>(alignedAddress) + alignment;
-                if (static_cast<unsigned char*>(alignedAddress) + size > m_EndBlockAddress) { throw std::bad_alloc(); }
-            }
-
-            // Add allocation header for alignment amount
-            unsigned char* m_HeaderMarker = static_cast<unsigned char*>(alignedAddress) - 1;
-            const uint8 alignmentOffset = static_cast<unsigned char*>(alignedAddress) - m_CurrentMarker;
-            *(m_HeaderMarker) = alignmentOffset;
-
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
