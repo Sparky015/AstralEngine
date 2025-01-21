@@ -59,7 +59,7 @@ TEST_F(STLLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSiz
 }
 
 
-/**@brief Tests if the reset method correctly resets the state of the allocator back to the start of the memory block */
+/**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(STLLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
     Core::STLLinearAllocator<char, 2200> testAllocator;
@@ -82,7 +82,7 @@ TEST_F(STLLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 }
 
 
-/**@brief Tests if the deallocate method does absolutely nothing when called */
+/**@brief Tests if the Deallocate method does absolutely nothing when called */
 TEST_F(STLLinearAllocatorTest, deallocate_DoesNothing)
 {
     char* memoryAddress = testAllocator.allocate(500);
@@ -98,7 +98,7 @@ TEST_F(STLLinearAllocatorTest, deallocate_DoesNothing)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 1600);
 }
 
-/**@brief Tests if the getUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::STLLinearAllocator<char, 2056> testAllocator;

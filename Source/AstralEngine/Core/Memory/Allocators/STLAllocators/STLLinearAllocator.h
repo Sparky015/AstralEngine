@@ -10,13 +10,14 @@
 #include <cstring>
 #include <memory>
 #include <new>
+#include "Core/Memory/Tracking/AllocationTracker.h"
 
 
 namespace Core {
 
     /**@brief A stack-based linear allocator. Max allocation size is 5.28 KB due to being on the stack.
      *        Deallocate method does nothing. Reset method deallocates the whole memory block.
-     * @warning You have to use the reset method to deallocate memory. It deallocates all memory being used.
+     * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing. */
     template <typename T, size_t memoryBlockSize>
     class STLLinearAllocator
@@ -49,7 +50,8 @@ namespace Core {
             if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
             {
                 void* returnPointer = alignedAddress;
-                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
+                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;\
+                TRACK_ALLOCATION(allocatedBytes);
                 return static_cast<pointer>(returnPointer);
             }
 
@@ -57,7 +59,7 @@ namespace Core {
         }
 
 
-        /**@brief This does nothing. Use reset method to deallocate memory. */
+        /**@brief This does nothing. Use Reset method to Deallocate memory. */
         void deallocate(pointer ptr, size_type numberOfElements)
         {
             // Does nothing. Only resets memory on call to reset()
@@ -66,6 +68,7 @@ namespace Core {
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
+            TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
             m_CurrentMarker = m_StartBlockAddress;
         }
 

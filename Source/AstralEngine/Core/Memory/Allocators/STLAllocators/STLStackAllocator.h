@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "Core/Memory/Tracking/AllocationTracker.h"
 #include <memory>
 
 namespace Core {
@@ -27,7 +28,7 @@ namespace Core {
             uint8 alignmentOffset;
         };
         static_assert(sizeof(AllocationHeader) == 1, "The allocation header should only be one byte in size. "
-                                                     "The allocate and deallocate implementation assumes a size of 1 byte. ");
+                                                     "The Allocate and Deallocate implementation assumes a size of 1 byte. ");
 
         using Marker = unsigned char*;
 
@@ -72,12 +73,14 @@ namespace Core {
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
 
+            TRACK_ALLOCATION(allocatedBytes);
+
             return static_cast<pointer>(alignedAddress);
         }
 
 
         /**@brief Deallocates the memory block at the pointer
-         * @warning You can only deallocate the previous allocation. This allocator follows a last in first out approach */
+         * @warning You can only Deallocate the previous allocation. This allocator follows a last in first out approach */
         void deallocate(pointer ptr, size_type numberOfElements)
         {
             // Checking if this pointer is the last allocated pointer
@@ -90,6 +93,8 @@ namespace Core {
 
             // Roll back the marker by the size of the allocation and the natural alignment offset
             m_CurrentMarker -= sizeOfAllocation + allocationHeader->alignmentOffset;
+
+            TRACK_DEALLOCATION(sizeOfAllocation);
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */

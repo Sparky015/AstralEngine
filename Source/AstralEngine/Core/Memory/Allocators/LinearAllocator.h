@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "Core/Memory/Tracking/AllocationTracker.h"
 #include <cstddef>
 #include <memory>
 #include <new>
@@ -16,7 +17,7 @@ namespace Core {
 
     /**@brief A stack-based linear allocator. Max allocation size is 5.28 KB due to being on the stack.
      *        Deallocate method does nothing. Reset method deallocates the whole memory block.
-     * @warning You have to use the reset method to deallocate memory. It deallocates all memory being used.
+     * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing. */
     template <size_t memoryBlockSize>
     class LinearAllocator
@@ -33,7 +34,7 @@ namespace Core {
          * @param alignment The alignment requirement for the allocation
          * @return A pointer to the allocated block
          * @throw std::bad_alloc When there is not enough memory to complete an allocation */
-        void* allocate(size_t size, uint16 alignment)
+        void* Allocate(size_t size, uint16 alignment)
         {
             if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
 
@@ -59,31 +60,34 @@ namespace Core {
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
+            TRACK_ALLOCATION(size);
+
             return alignedAddress;
         }
 
 
-        /**@brief This does nothing. Use reset method to deallocate memory. */
-        void deallocate(void* ptr, size_t sizeOfAllocatedBlock)
+        /**@brief This does nothing. Use Reset method to Deallocate memory. */
+        void Deallocate(void* ptr, size_t sizeOfAllocatedBlock)
         {
             // Does nothing. Only resets memory on call to reset()
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void reset()
+        void Reset()
         {
+            TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
             m_CurrentMarker = m_StartBlockAddress;
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        size_t getUsedBlockSize()
+        size_t GetUsedBlockSize()
         {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
         LinearAllocator() noexcept = default;
         LinearAllocator(size_t) noexcept : LinearAllocator() {}
-        ~LinearAllocator() { reset(); }
+        ~LinearAllocator() { Reset(); }
 
     private:
 

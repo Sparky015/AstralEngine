@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "Core/Memory/Tracking/AllocationTracker.h"
 #include <memory>
 
 namespace Core {
@@ -24,9 +25,11 @@ namespace Core {
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
         void RollbackToMarker(const Marker marker)
         {
+            if (marker == m_StartBlockAddress) { m_CurrentMarker = m_StartBlockAddress; }
             const AllocationHeader* alignmentOffset = marker - 1;
 
             // Roll back the marker by the size the natural alignment offset
+            TRACK_DEALLOCATION(m_CurrentMarker - marker - *alignmentOffset);
             m_CurrentMarker = marker - *alignmentOffset;
         }
 
@@ -35,7 +38,7 @@ namespace Core {
          * @param alignment The alignment requirement for the allocation
          * @return A pointer to the allocated block
          * @throw std::bad_alloc When there is not enough memory to complete an allocation */
-        void* allocate(size_t size, uint16 alignment)
+        void* Allocate(size_t size, uint16 alignment)
         {
 
             if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
@@ -62,33 +65,41 @@ namespace Core {
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
+            TRACK_ALLOCATION(size);
+
             return alignedAddress;
         }
 
 
         /**@brief Deallocates the memory block at the pointer
-         * @warning You can only deallocate the previous allocation. This allocator follows a last in first out approach */
-        void deallocate(void* ptr, size_t sizeOfAllocatedBlock)
+         * @warning You can only Deallocate the previous allocation. This allocator follows a last in first out approach */
+        void Deallocate(void* ptr, size_t sizeOfAllocatedBlock)
         {
             // Checking if this pointer is the last allocated pointer
             if (m_CurrentMarker - sizeOfAllocatedBlock != static_cast<unsigned char*>(ptr)) { throw std::runtime_error("Deallocations must follow a last in first out order!"); }
 
             // Get the natural alignment offset size from the allocation header
-            unsigned char* headerMarker = static_cast<unsigned char*>(ptr) - 1;
-            AllocationHeader alignmentOffset = *headerMarker;
+            AllocationHeader alignmentOffset = 0;
+            if (static_cast<unsigned char*>(ptr) != m_StartBlockAddress)
+            {
+                unsigned char* headerMarker = static_cast<unsigned char*>(ptr) - 1;
+                alignmentOffset = *headerMarker;
+            }
 
             // Roll back the marker by the size of the allocation and the natural alignment offset
             m_CurrentMarker -= sizeOfAllocatedBlock + alignmentOffset;
+
+            TRACK_DEALLOCATION(sizeOfAllocatedBlock);
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void reset()
+        void Reset()
         {
             m_CurrentMarker = m_StartBlockAddress;
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        [[nodiscard]] size_t getUsedBlockSize() const
+        [[nodiscard]] size_t GetUsedBlockSize() const
         {
             return m_CurrentMarker - m_StartBlockAddress;
         }
@@ -96,7 +107,7 @@ namespace Core {
 
         StackAllocator() noexcept = default;
         StackAllocator(size_t memoryBlock) noexcept : StackAllocator() {}
-        ~StackAllocator() { reset(); }
+        ~StackAllocator() { Reset(); }
 
 
     private:

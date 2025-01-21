@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 
+#include <cstring>
 #include "Core/Memory/Allocators/STLAllocators//STLStackAllocator.h"
 
 
@@ -61,7 +62,7 @@ TEST_F(STLStackAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize
 }
 
 
-/**@brief Tests if the reset method correctly resets the state of the allocator back to the start of the memory block */
+/**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(STLStackAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
     Core::STLStackAllocator<char, 2200> testAllocator;
@@ -84,7 +85,7 @@ TEST_F(STLStackAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 }
 
 
-/**@brief Tests if the deallocate method frees the previous allocation that was made */
+/**@brief Tests if the Deallocate method frees the previous allocation that was made */
 TEST_F(STLStackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
 {
     char* memoryAddress = testAllocator.allocate(500);
@@ -111,7 +112,7 @@ TEST_F(STLStackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
 }
 
-/**@brief Tests if the getUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLStackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::STLStackAllocator<char, 2056> testAllocator;
