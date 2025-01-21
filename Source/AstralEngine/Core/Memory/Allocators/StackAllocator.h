@@ -8,6 +8,8 @@
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include <memory>
 
+#include "Debug/Macros/Asserts.h"
+
 namespace Core {
 
     template <size_t memoryBlockSize>
@@ -25,8 +27,10 @@ namespace Core {
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
         void RollbackToMarker(const Marker marker)
         {
+            ASSERT(marker >= m_StartBlockAddress && marker <= m_EndBlockAddress, "Passed marker does not fall within this allocators memory block.")
+            ASSERT(marker <= m_CurrentMarker, "Can not rollback to marker that is already past the top of the stack.")
             TRACK_DEALLOCATION(m_CurrentMarker - marker);
-            m_CurrentMarker = marker ;
+            m_CurrentMarker = marker;
         }
 
         /**@brief Allocates a memory block of the given size with the given required alignment.
