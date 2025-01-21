@@ -4,10 +4,6 @@
 * @date 1/20/2025
 */
 
-//
-// Created by Andrew Fagan on 1/15/25.
-//
-
 #include <gtest/gtest.h>
 #include <cstring>
 
