@@ -14,7 +14,7 @@ void* operator new(std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryMetricsManager::Get().Allocate(pointer, size);
+    Core::MemoryMetricsManager::Get().TrackAllocation(pointer, size);
     return pointer;
 }
 
@@ -23,20 +23,20 @@ void* operator new[](std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryMetricsManager::Get().Allocate(pointer, size);
+    Core::MemoryMetricsManager::Get().TrackAllocation(pointer, size);
     return pointer;
 }
 
 
 void operator delete(void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(pointer);
+    Core::MemoryMetricsManager::Get().TrackDeallocation(pointer);
     std::free(pointer);
 }
 
 
 void operator delete[](void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().Free(pointer);
+    Core::MemoryMetricsManager::Get().TrackDeallocation(pointer);
     std::free(pointer);
 }

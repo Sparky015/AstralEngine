@@ -40,7 +40,6 @@ namespace Core {
          * @throw std::bad_alloc When there is not enough memory to complete an allocation */
         void* Allocate(size_t size, uint16 alignment)
         {
-
             if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
@@ -53,7 +52,6 @@ namespace Core {
             {
                 // Address is already aligned. Push the address by the alignment of T to make room for allocation header.
                 alignedAddress = static_cast<unsigned char*>(alignedAddress) + alignment;
-
                 if (static_cast<unsigned char*>(alignedAddress) + size > m_EndBlockAddress) { throw std::bad_alloc(); }
             }
 
@@ -66,7 +64,6 @@ namespace Core {
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
             TRACK_ALLOCATION(size);
-
             return alignedAddress;
         }
 

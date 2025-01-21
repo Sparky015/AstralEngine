@@ -10,15 +10,15 @@
 
 #include <iostream>             // C++ IO streams
 
-#include <memory>               // Smart pointers
+#include <array>                // std::array
 #include <cstring>              // C-style string operations
+#include <memory>               // Smart pointers
 #include <string>               // std::string
 #include <vector>               // std::vector
-#include <array>                // std::array
 
 #include <algorithm>            // STL algorithms
-#include <utility>              // Pair, move, forward
 #include <thread>               // Threading support
+#include <utility>              // Pair, move, forward
 
 
 
@@ -26,7 +26,7 @@
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Math/Math.h"
 
-#include "Debug/Macros/Asserts.h"
-#include "Debug/Macros/Loggers.h"
-#include "Debug/Macros/Error.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Macros/Asserts.h"
+#include "Debug/Macros/Error.h"
+#include "Debug/Macros/Loggers.h"

@@ -28,7 +28,7 @@ namespace Core {
             uint8 alignmentOffset;
         };
         static_assert(sizeof(AllocationHeader) == 1, "The allocation header should only be one byte in size. "
-                                                     "The Allocate and Deallocate implementation assumes a size of 1 byte. ");
+                                                     "The TrackAllocation and Deallocate implementation assumes a size of 1 byte. ");
 
         using Marker = unsigned char*;
 

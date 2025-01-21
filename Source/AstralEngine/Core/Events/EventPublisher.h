@@ -6,6 +6,8 @@
 
 #include "EventBus.h"
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
+
 namespace Core {
 
     /** Publishes an event to any listeners. */
