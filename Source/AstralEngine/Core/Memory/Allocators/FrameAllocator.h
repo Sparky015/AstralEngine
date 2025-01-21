@@ -1,22 +1,35 @@
-//
-// Created by Andrew Fagan on 1/15/25.
-//
+/**
+* @file FrameAllocator.h
+* @author Andrew Fagan
+* @date 1/20/2025
+*/
 
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Debug/Macros/Asserts.h"
 #include <memory>
 
 namespace Core {
 
-    template <size_t memoryBlockSize>
-    class StackAllocator
+    class FrameAllocator
     {
     public:
 
-        using AllocationHeader = uint8;
+        explicit FrameAllocator(size_t memoryBlockSize) :
+            m_MemoryBlockSize(memoryBlockSize),
+            m_StartBlockAddress(new unsigned char[memoryBlockSize])
+        {
+            ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
+        }
 
+        ~FrameAllocator()
+        {
+            delete[] m_StartBlockAddress;
+        }
+
+        using AllocationHeader = uint8;
         using Marker = unsigned char*;
 
         /**@brief Gets a marker to the top of the memory block */
@@ -68,26 +81,9 @@ namespace Core {
         }
 
 
-        /**@brief Deallocates the memory block at the pointer
-         * @warning You can only Deallocate the previous allocation. This allocator follows a last in first out approach */
-        void Deallocate(void* ptr, size_t sizeOfAllocatedBlock)
-        {
-            // Checking if this pointer is the last allocated pointer
-            if (m_CurrentMarker - sizeOfAllocatedBlock != static_cast<unsigned char*>(ptr)) { throw std::runtime_error("Deallocations must follow a last in first out order!"); }
-
-            // Get the natural alignment offset size from the allocation header
-            AllocationHeader alignmentOffset = 0;
-            if (static_cast<unsigned char*>(ptr) != m_StartBlockAddress)
-            {
-                unsigned char* headerMarker = static_cast<unsigned char*>(ptr) - 1;
-                alignmentOffset = *headerMarker;
-            }
-
-            // Roll back the marker by the size of the allocation and the natural alignment offset
-            m_CurrentMarker -= sizeOfAllocatedBlock + alignmentOffset;
-
-            TRACK_DEALLOCATION(sizeOfAllocatedBlock);
-        }
+        /**@brief Does nothing. Deallocations can only be made through the marker system.
+         * @warning THIS DOES NOTHING! This is meant to be a redirection to use the marker system instead. */
+        void Deallocate(void* ptr, size_t sizeOfAllocatedBlock) {}
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void Reset()
@@ -101,38 +97,33 @@ namespace Core {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
-
-        StackAllocator() noexcept = default;
-        StackAllocator(size_t memoryBlock) noexcept : StackAllocator() {}
-        ~StackAllocator() { Reset(); }
-
+        FrameAllocator(const FrameAllocator&) = delete;
+        FrameAllocator& operator=(const FrameAllocator&) = delete;
 
     private:
-
-        alignas(std::max_align_t) unsigned char m_MemoryBlock[memoryBlockSize] = {};
-        unsigned char* m_StartBlockAddress = m_MemoryBlock;
-        unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
+        size_t m_MemoryBlockSize;
+        unsigned char* m_StartBlockAddress;
+        unsigned char* m_EndBlockAddress = m_StartBlockAddress + m_MemoryBlockSize;
         unsigned char* m_CurrentMarker = m_StartBlockAddress;
 
-        template<size_t S>
-        friend bool operator==(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
 
-        template<size_t S>
-        friend bool operator!=(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
+        friend bool operator==(const FrameAllocator& a1, const FrameAllocator& a2) noexcept;
+
+        friend bool operator!=(const FrameAllocator& a1, const FrameAllocator& a2) noexcept;
     };
 
 
-    template <size_t memoryBlockSize>
-    bool operator==(const StackAllocator<memoryBlockSize>& a1, const StackAllocator<memoryBlockSize>& a2) noexcept
+
+    bool operator==(const FrameAllocator& a1, const FrameAllocator& a2) noexcept
     {
         return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
-            &a1.m_MemoryBlock == &a2.m_MemoryBlock &&
-            a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
-            a1.m_StartBlockAddress == a2.m_StartBlockAddress);
+                a1.m_MemoryBlockSize == a2.m_MemoryBlockSize &&
+                a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
+                a1.m_StartBlockAddress == a2.m_StartBlockAddress);
     }
 
-    template <size_t memoryBlockSize>
-    bool operator!=(const StackAllocator<memoryBlockSize>& a1, const StackAllocator<memoryBlockSize>& a2) noexcept
+
+    bool operator!=(const FrameAllocator& a1, const FrameAllocator& a2) noexcept
     {
         return !(a1 == a2);
     }
