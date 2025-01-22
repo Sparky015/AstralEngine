@@ -9,9 +9,10 @@ set(TEST_FILES
         Input/KeycodeConversionsTest.cpp
         Core/Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
         Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
-        Core/Memory/Allocators/LinearAllocatorTests.cpp
-        Core/Memory/Allocators/StackAllocatorTests.cpp
-        Core/Memory/Allocators/FrameAllocatorTests.cpp
+        Core/Memory/Allocators/LinearAllocatorTest.cpp
+        Core/Memory/Allocators/StackAllocatorTest.cpp
+        Core/Memory/Allocators/FrameAllocatorTest.cpp
+        Core/Memory/Allocators/DoubleBufferedAllocatorTest.cpp
 )
 
 
