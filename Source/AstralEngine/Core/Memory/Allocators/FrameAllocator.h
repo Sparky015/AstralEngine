@@ -21,7 +21,9 @@ namespace Core {
 
         explicit FrameAllocator(size_t memoryBlockSize) :
             m_MemoryBlockSize(memoryBlockSize),
-            m_StartBlockAddress(new unsigned char[memoryBlockSize])
+            m_StartBlockAddress(new unsigned char[memoryBlockSize]),
+            m_EndBlockAddress(m_StartBlockAddress + m_MemoryBlockSize),
+            m_CurrentMarker(m_StartBlockAddress)
         {
             ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
         }
@@ -85,8 +87,8 @@ namespace Core {
     private:
         size_t m_MemoryBlockSize;
         unsigned char* m_StartBlockAddress;
-        unsigned char* m_EndBlockAddress = m_StartBlockAddress + m_MemoryBlockSize;
-        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+        unsigned char* m_EndBlockAddress;
+        unsigned char* m_CurrentMarker;
 
     };
 
