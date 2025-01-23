@@ -13,6 +13,7 @@ set(TEST_FILES
         Core/Memory/Allocators/StackAllocatorTest.cpp
         Core/Memory/Allocators/FrameAllocatorTest.cpp
         Core/Memory/Allocators/DoubleBufferedAllocatorTest.cpp
+        Core/Memory/Allocators/DoubleSidedStackAllocatorTest.cpp
 )
 
 
