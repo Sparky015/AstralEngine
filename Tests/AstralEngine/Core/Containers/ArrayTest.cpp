@@ -5,12 +5,9 @@
 #include "Core/Containers/Array.h"
 #include <gtest/gtest.h>
 
-class ArrayTest : ::testing::Test
+class ArrayTest : public ::testing::Test
 {
+public:
 
 };
 
-TEST_F(ArrayTest, placeholder)
-{
-
-}
