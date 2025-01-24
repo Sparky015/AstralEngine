@@ -149,6 +149,8 @@ add_library(AstralEngine
         Debug/ImGui/Components/EngineComponents.h
         Renderer/Cameras/OrthographicCamera.cpp
         Renderer/Cameras/OrthographicCamera.h
+        Core/Containers/Vector.h
+        Core/Containers/Array.h
 
 )
 

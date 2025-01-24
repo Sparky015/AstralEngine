@@ -8,6 +8,8 @@ set(TEST_FILES
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
         Renderer/OrthographicCamera.cpp
+        Core/Containers/VectorTest.cpp
+        Core/Containers/ArrayTest.cpp
 )
 
 
