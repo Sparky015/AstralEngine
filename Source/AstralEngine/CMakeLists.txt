@@ -151,7 +151,6 @@ add_library(AstralEngine
         Renderer/Cameras/OrthographicCamera.h
         Core/Containers/Vector.h
         Core/Containers/Array.h
-
 )
 
 
