@@ -5,8 +5,8 @@
 #pragma once
 
 
+#include <cstring>
 #include <memory>
-
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/Macros/Asserts.h"
 
@@ -117,10 +117,11 @@ namespace Astral {
 
         // TODO: Write iterator
 
-        [[nodiscard]] constexpr size_t GetSize() const { return m_Size; }
-        [[nodiscard]] constexpr size_t GetCapacity() const { return m_Capacity; }
-        [[nodiscard]] constexpr size_t GetEndIndex() const { return m_Size - 1; }
+        [[nodiscard]] constexpr size_t Size() const { return m_Size; }
+        [[nodiscard]] constexpr size_t Capacity() const { return m_Capacity; }
+        [[nodiscard]] constexpr size_t EndIndex() const { return m_Size - 1; }
         [[nodiscard]] constexpr bool IsValid() const { return m_Buffer != nullptr; }
+        [[nodiscard]] constexpr bool IsEmpty() const { return m_Size == 0; }
 
         static constexpr int GROWTH_FACTOR = 2;
 
