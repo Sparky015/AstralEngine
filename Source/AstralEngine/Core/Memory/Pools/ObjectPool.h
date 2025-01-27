@@ -11,78 +11,62 @@
 
 namespace Core {
 
-template<typename ElementType, size_t NumberOfElements>
-class ObjectPool
-{
-public:
-    static_assert(sizeof(ElementType) >= 8, "ElementType of object pool must be at least the size of a pointer!");
-
-    ObjectPool()
+    template<typename ElementType, size_t NumberOfElements>
+    class ObjectPool
     {
-        m_HeaderPointer = &m_Data[0];
-        for (size_t i = 0; i < NumberOfElements - 1; i++)
-        {
-            *reinterpret_cast<ElementType**>(&m_Data[i]) = &m_Data[i + 1];
-        }
-        *reinterpret_cast<ElementType**>(&m_Data[NumberOfElements - 1]) = nullptr;
-    }
+    public:
+        static_assert(sizeof(ElementType) >= 8, "ElementType of object pool must be at least the size of a pointer!");
 
-    /**@brief Allocates an element from the pool and returns a pointer to it.
-     * @param args The arguments to the constructor of the element that will be created in the pool. Leave
-     *             empty to create a default constructed element
-     */
-    template<typename... Args>
-    ElementType* Allocate(Args&&... args)
-    {
-        [[likely]] if (m_HeaderPointer)
+        ObjectPool()
         {
-            // m_HeaderPointer points to the first element address
-            ElementType* secondElementAddress = *reinterpret_cast<ElementType**>(m_HeaderPointer);
-            [[likely]] if (secondElementAddress)
+            m_FreeListHead = &m_Data[0];
+            for (size_t i = 0; i < NumberOfElements - 1; i++)
             {
-                ElementType* firstElementAddress = m_HeaderPointer;
-                m_HeaderPointer = secondElementAddress;
+                // The next free element's address is stored in the memory space of the previous free element
+                *reinterpret_cast<ElementType**>(&m_Data[i]) = &m_Data[i + 1];
+            }
+            *reinterpret_cast<ElementType**>(&m_Data[NumberOfElements - 1]) = nullptr;
+        }
+
+        /**@brief Allocates an element from the pool and returns a pointer to it.
+         * @param args The arguments to the constructor of the element that will be created in the pool. Leave
+         *             empty to create a default constructed element
+         */
+        template<typename... Args>
+        ElementType* Allocate(Args&&... args)
+        {
+            [[likely]] if (m_FreeListHead)
+            {
+                // m_HeaderPointer points to the first element address
+                ElementType* firstElementAddress = m_FreeListHead;
+                ElementType* secondElementAddress = *reinterpret_cast<ElementType**>(m_FreeListHead);
+                m_FreeListHead = secondElementAddress; // Can be nullptr
+
                 new (firstElementAddress) ElementType(std::forward<Args>(args)...);
                 return firstElementAddress;
             }
-            else
-            {
-                // The next pointer is nullptr, so m_HeaderPointer is the last free element pointer
-                ElementType* lastFreeElementAddress = m_HeaderPointer;
-                m_HeaderPointer = nullptr;
-                new (lastFreeElementAddress) ElementType(std::forward<Args>(args)...);
-                return lastFreeElementAddress;
-            }
 
+            return nullptr;
         }
 
-        return nullptr;
-    }
-
-    /**@brief Frees an element to the pool.
-     * @param elementPtr The pointer to the element being freed. */
-    void Free(ElementType* elementPtr)
-    {
-        // ASSERT(m_FreeCount != NumberOfElements, "Free has been called more times than Allocate!")
-        ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this pool's memory block.")
-        elementPtr->~ElementType();
-
-        if (!m_HeaderPointer)
+        /**@brief Frees an element to the pool.
+         * @param elementPtr The pointer to the element being freed. */
+        void Free(ElementType* elementPtr)
         {
-            m_HeaderPointer = elementPtr;
-            *reinterpret_cast<ElementType**>(elementPtr) = nullptr;
-            return;
+            if (!elementPtr) return;
+
+            ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this pool's memory block.")
+            elementPtr->~ElementType();
+
+            ElementType* nextPointer = m_FreeListHead; // Can be nullptr
+            m_FreeListHead = elementPtr;
+            *reinterpret_cast<ElementType**>(elementPtr) = nextPointer;
         }
 
-        ElementType* nextPointer = m_HeaderPointer;
-        m_HeaderPointer = elementPtr;
-        *reinterpret_cast<ElementType**>(elementPtr) = nextPointer;
-    }
+    private:
 
-private:
-
-    alignas(alignof(ElementType)) std::array<ElementType, NumberOfElements> m_Data;
-    ElementType* m_HeaderPointer; // Points to the first free element address
-};
+        alignas(alignof(ElementType)) std::array<ElementType, NumberOfElements> m_Data;
+        ElementType* m_FreeListHead; // Points to the first free element address
+    };
 
 }
