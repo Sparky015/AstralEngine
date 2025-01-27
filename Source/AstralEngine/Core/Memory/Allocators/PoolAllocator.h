@@ -11,54 +11,62 @@
 
 namespace Core {
 
-template<typename ElementType, size_t NumberOfElements>
-class PoolAllocator
-{
-public:
-
-    PoolAllocator() : m_FreeCount(NumberOfElements)
+    template<typename ElementType, size_t NumberOfElements>
+    class PoolAllocator
     {
-        for (size_t i = 0; i < m_Data.size(); i++)
-        {
-            m_FreeArray[i] = &m_Data[i];
-        }
-    }
+    public:
+        static_assert(sizeof(ElementType) >= 8, "ElementType of object pool must be at least the size of a pointer!");
 
-    /**@brief Allocates an element from the pool and returns a pointer to it.
-     * @param args The arguments to the constructor of the element that will be created in the pool. Leave
-     *             empty to create a default constructed element
-     */
-    template<typename... Args>
-    ElementType* Allocate(Args&&... args)
-    {
-        [[likely]] if (m_FreeCount != 0)
+        PoolAllocator()
         {
-            ElementType* freeElement = m_FreeArray[m_FreeCount - 1];
-            m_FreeCount--;
-
-            new (freeElement) ElementType(std::forward<Args>(args)...);
-            return freeElement;
+            m_FreeListHead = &m_Data[0];
+            for (size_t i = 0; i < NumberOfElements - 1; i++)
+            {
+                // The next free element's address is stored in the memory space of the previous free element
+                *reinterpret_cast<ElementType**>(&m_Data[i]) = &m_Data[i + 1];
+            }
+            *reinterpret_cast<ElementType**>(&m_Data[NumberOfElements - 1]) = nullptr;
         }
 
-        return nullptr;
-    }
+        /**@brief Allocates an element from the pool and returns a pointer to it.
+         * @param args The arguments to the constructor of the element that will be created in the pool. Leave
+         *             empty to create a default constructed element
+         */
+        template<typename... Args>
+        ElementType* Allocate(Args&&... args)
+        {
+            [[likely]] if (m_FreeListHead)
+            {
+                // m_HeaderPointer points to the first element address
+                ElementType* firstElementAddress = m_FreeListHead;
+                ElementType* secondElementAddress = *reinterpret_cast<ElementType**>(m_FreeListHead);
+                m_FreeListHead = secondElementAddress; // Can be nullptr
 
-    /**@brief Frees an element to the pool.
-     * @param elementPtr The pointer to the element being freed. */
-    void Free(ElementType* elementPtr)
-    {
-        ASSERT(m_FreeCount != NumberOfElements, "Free has been called more times then Allocate!")
-        ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this allocators memory block.")
-        elementPtr->~ElementType();
-        m_FreeCount++;
-        m_FreeArray[m_FreeCount - 1] = elementPtr;
-    }
+                new (firstElementAddress) ElementType(std::forward<Args>(args)...);
+                return firstElementAddress;
+            }
 
-private:
+            return nullptr;
+        }
 
-    alignas(alignof(ElementType)) std::array<ElementType, NumberOfElements> m_Data;
-    alignas(alignof(ElementType*)) std::array<ElementType*, NumberOfElements> m_FreeArray;
-    size_t m_FreeCount;
-};
+        /**@brief Frees an element to the pool.
+         * @param elementPtr The pointer to the element being freed. */
+        void Free(ElementType* elementPtr)
+        {
+            if (!elementPtr) return;
+
+            ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this pool's memory block.")
+            elementPtr->~ElementType();
+
+            ElementType* nextPointer = m_FreeListHead; // Can be nullptr
+            m_FreeListHead = elementPtr;
+            *reinterpret_cast<ElementType**>(elementPtr) = nextPointer;
+        }
+
+    private:
+
+        alignas(alignof(ElementType)) std::array<ElementType, NumberOfElements> m_Data;
+        ElementType* m_FreeListHead; // Points to the first free element address
+    };
 
 }
