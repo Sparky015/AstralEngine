@@ -48,7 +48,7 @@ public:
     void Free(ElementType* elementPtr)
     {
         ASSERT(m_FreeCount != NumberOfElements, "Free has been called more times then Allocate!")
-        ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Passed marker does not fall within this allocators memory block.")
+        ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this allocators memory block.")
         elementPtr->~ElementType();
         m_FreeCount++;
         m_FreeArray[m_FreeCount - 1] = elementPtr;

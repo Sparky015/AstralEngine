@@ -79,6 +79,7 @@ TEST_F(ObjectPoolTest, Free_CanFreeInAnyOrder)
     TestStructOne* testStructPtr3 = testAllocator.Allocate(2, 9, 8.0f);
 
     testAllocator.Free(testStructPtr);
+
     // Should be able to allocate in freed slot
     TestStructOne* testStructPtr4 = testAllocator.Allocate(7, 8, 9.0f);
     EXPECT_EQ(testStructPtr, testStructPtr4);
@@ -123,58 +124,4 @@ TEST_F(ObjectPoolTest, Allocate_DoesNotReuseUnfreeddAddresses)
     }
 }
 
-
-
-struct TestStruct
-{
-    int value;
-    TestStruct(int v) : value(v) {}
-    ~TestStruct() {}
-};
-
-TEST(ObjectPoolTest, NonLIFOFreeTest) {
-    Core::ObjectPool<TestStruct, 3> pool;
-
-    TestStruct* a = pool.Allocate(1);
-    TestStruct* b = pool.Allocate(2);
-    TestStruct* c = pool.Allocate(3);
-
-    // Free in non-LIFO order (B, then A)
-    pool.Free(b);
-    pool.Free(a);
-    pool.Free(c);
-
-    // Allocate again. The order should be C, A, B if its not LIFO
-    TestStruct* d = pool.Allocate(4);
-    TestStruct* e = pool.Allocate(5);
-    TestStruct* f = pool.Allocate(6);
-
-    // Check if the order of allocation is as expected after non-LIFO free
-    EXPECT_EQ(d->value, 3);
-    EXPECT_EQ(e->value, 1);
-    EXPECT_EQ(f->value, 2);
-}
-
-TEST(ObjectPoolTest, LIFOFreeTest) {
-    Core::ObjectPool<TestStruct, 3> pool;
-
-    TestStruct* a = pool.Allocate(1);
-    TestStruct* b = pool.Allocate(2);
-    TestStruct* c = pool.Allocate(3);
-
-    // Free in LIFO order (C, then B, then A)
-    pool.Free(c);
-    pool.Free(b);
-    pool.Free(a);
-
-    // Allocate again. The order should be A, B, C if its LIFO
-    TestStruct* d = pool.Allocate(4);
-    TestStruct* e = pool.Allocate(5);
-    TestStruct* f = pool.Allocate(6);
-
-    // Check if the order of allocation is as expected after LIFO free
-    EXPECT_EQ(d->value, 1);
-    EXPECT_EQ(e->value, 2);
-    EXPECT_EQ(f->value, 3);
-}
 
