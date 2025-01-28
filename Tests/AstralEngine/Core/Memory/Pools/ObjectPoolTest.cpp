@@ -32,7 +32,7 @@ class ObjectPoolTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 3;
-    Core::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator;
+    Core::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator = Core::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE>{};
 };
 
 
