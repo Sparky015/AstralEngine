@@ -34,7 +34,7 @@ namespace Core {
             delete[] m_MemoryBlock;
         }
 
-        /**@brief Allocates an memory block from the pool and returns a pointer to it.
+        /**@brief Allocates a memory block from the pool and returns a pointer to it.
          * @return A pointer to the allocated memory block */
         void* Allocate()
         {
