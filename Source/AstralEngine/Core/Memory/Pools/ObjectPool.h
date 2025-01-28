@@ -12,7 +12,7 @@ namespace Core {
     /**@brief A generic object pool. Constructs many objects at once and lends them out. Objects are not reconstructed and
      *        will maintain the state when released back to the pool.
      * @thread_safety This class is not thread safe. User must handle thread safety if needed. */
-    template<typename ElementType, size_t NumberOfElements, typename Allocator = std::allocator<ElementType>>
+    template<typename ElementType, size_t NumberOfElements, typename ElementAllocator = std::allocator<ElementType>>
     class ObjectPool
     {
     public:
@@ -199,10 +199,10 @@ namespace Core {
             }
         }
 
-        using PointerAllocator = typename std::allocator_traits<Allocator>::template rebind_alloc<ElementType*>;
+        using PointerAllocator = typename std::allocator_traits<ElementAllocator>::template rebind_alloc<ElementType*>;
 
         [[no_unique_address]] PointerAllocator m_PointerAllocator;
-        [[no_unique_address]] Allocator m_ElementAllocator;
+        [[no_unique_address]] ElementAllocator m_ElementAllocator;
         ElementType* m_Data;
         ElementType** m_FreeArray;
         size_t m_FreeCount;

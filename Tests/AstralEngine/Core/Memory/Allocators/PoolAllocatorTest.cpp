@@ -58,15 +58,15 @@ TEST_F(PoolAllocatorTest, Free_AllBlocks)
 {
     void* firstAllocationBlocks[NUMBER_OF_BLOCKS];
     std::unordered_set<void*> firstSet;
-    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    for (auto& firstAllocationBlock : firstAllocationBlocks)
     {
-        firstAllocationBlocks[i] = testAllocator.Allocate();
-        ASSERT_NE(firstAllocationBlocks[i], nullptr);
-        firstSet.insert(firstAllocationBlocks[i]);
+        firstAllocationBlock = testAllocator.Allocate();
+        ASSERT_NE(firstAllocationBlock, nullptr);
+        firstSet.insert(firstAllocationBlock);
     }
-    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    for (auto& firstAllocationBlock : firstAllocationBlocks)
     {
-        testAllocator.Free(firstAllocationBlocks[i]);
+        testAllocator.Free(firstAllocationBlock);
     }
     void* secondAllocationBlocks[NUMBER_OF_BLOCKS];
     for (int i = 0; i < NUMBER_OF_BLOCKS; i++)
