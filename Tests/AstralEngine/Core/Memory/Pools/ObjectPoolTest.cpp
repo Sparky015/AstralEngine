@@ -63,7 +63,7 @@ TEST_F(ObjectPoolTest, Allocate_ReturnsNullptrWhenOutOfSpace)
 }
 
 
-TEST_F(ObjectPoolTest, Allocate_ResetsInstanceOnAllocate)
+TEST_F(ObjectPoolTest, Allocate_InstanceKeepsStateOverAllocates)
 {
     // Default pool allocator holds 3 instances of TestStruct
     TestStructOne* testStructPtr = testAllocator.Acquire();
@@ -87,11 +87,11 @@ TEST_F(ObjectPoolTest, Allocate_ResetsInstanceOnAllocate)
     // Now only one instance is available and it was the previous instance freed
     TestStructOne* newTestStructPtr = testAllocator.Acquire();
 
-    // Now compare the instance to see if it is still the values form differentTestStruct. They should be different
-    // because the instance should be reset.
-    EXPECT_NE(newTestStructPtr->a, differentTestStruct.a);
-    EXPECT_NE(newTestStructPtr->b, differentTestStruct.b);
-    EXPECT_NE(newTestStructPtr->c, differentTestStruct.c);
+    // Now compare the instance to see if it is still the values form differentTestStruct. They should be the same
+    // because the instances should not be reset.
+    EXPECT_EQ(newTestStructPtr->a, differentTestStruct.a);
+    EXPECT_EQ(newTestStructPtr->b, differentTestStruct.b);
+    EXPECT_EQ(newTestStructPtr->c, differentTestStruct.c);
 }
 
 TEST_F(ObjectPoolTest, Free_CanFreeInAnyOrder)

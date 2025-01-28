@@ -124,15 +124,21 @@ namespace Core {
 
         ObjectPool& operator=(ObjectPool&& other) noexcept
         {
-            if (this == &other) { return *this; }
-            m_Data = other.m_Data;
-            m_FreeArray = other.m_FreeArray;
-            m_FreeCount = other.m_FreeCount;
-            m_ElementAllocator = std::move(other.m_ElementAllocator);
-            m_PointerAllocator = std::move(other.m_PointerAllocator);
-            other.m_Data = nullptr;
-            other.m_FreeArray = nullptr;
-            other.m_FreeCount = 0;
+            if (this != &other)
+            {
+                CallAllObjectDestructors();
+                m_ElementAllocator.deallocate((ElementType*)m_Data, NumberOfElements);
+                m_PointerAllocator.deallocate(m_FreeArray, NumberOfElements);
+
+                m_Data = other.m_Data;
+                m_FreeArray = other.m_FreeArray;
+                m_FreeCount = other.m_FreeCount;
+                m_ElementAllocator = std::move(other.m_ElementAllocator);
+                m_PointerAllocator = std::move(other.m_PointerAllocator);
+                other.m_Data = nullptr;
+                other.m_FreeArray = nullptr;
+                other.m_FreeCount = 0;
+            }
             return *this;
         }
 
