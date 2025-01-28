@@ -5,120 +5,115 @@
 #include <gtest/gtest.h>
 
 #include "Core/Memory/Allocators/PoolAllocator.h"
-#include <cstring>
+#include <algorithm>
 #include <unordered_set>
 
-struct TestStructOne
-{
-    TestStructOne() : a(0), b(1), c(2.5f) {}
-    TestStructOne(int a, int b, int c) : a(a), b(b), c(c) {}
-    int a;
-    int b;
-    float c;
-};
 
 class PoolAllocatorTest : public ::testing::Test
 {
 public:
-    static constexpr int DEFAULT_ALLOCATION_SIZE = 3;
-    Core::PoolAllocator<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator;
+    static constexpr int NUMBER_OF_BLOCKS = 10;
+    Core::PoolAllocator<1024, NUMBER_OF_BLOCKS> testAllocator;
 };
 
-TEST_F(PoolAllocatorTest, Allocate_ReturnsNullptrWhenOutOfSpace)
+
+/**@brief Tests that a single block allocation is successful */
+TEST_F(PoolAllocatorTest, Allocate_SingleBlock)
 {
-    // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Allocate();
-    TestStructOne* testStructPtr2 = testAllocator.Allocate();
-    TestStructOne* testStructPtr3 = testAllocator.Allocate();
-    TestStructOne* testStructPtr4 = testAllocator.Allocate();
-
-    EXPECT_NE(testStructPtr, nullptr);
-    EXPECT_NE(testStructPtr2, nullptr);
-    EXPECT_NE(testStructPtr3, nullptr);
-
-    EXPECT_EQ(testStructPtr4, nullptr);
+    void* block = testAllocator.Allocate();
+    ASSERT_NE(block, nullptr);
+    void* nextBlock = testAllocator.Allocate();
+    ASSERT_NE(nextBlock, nullptr);
+    ASSERT_NE(block, nextBlock);
 }
 
-
-TEST_F(PoolAllocatorTest, Allocate_ResetsInstanceOnAllocate)
+/**@brief Tests allocating all blocks succeeds and subsequent allocations fail */
+TEST_F(PoolAllocatorTest, Allocate_AllBlocks)
 {
-    // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Allocate();
-    TestStructOne* testStructPtr2 = testAllocator.Allocate();
-    TestStructOne* testStructPtr3 = testAllocator.Allocate();
-
-    // testAllocator now has no more instances to allocate
-
-    TestStructOne differentTestStruct;
-    differentTestStruct.a = 12;
-    differentTestStruct.b = 13;
-    differentTestStruct.c = 13.5f;
-
-    // Set the first test struct ptr to something different from the default constructed instance
-    *testStructPtr = differentTestStruct;
-
-    // Free only one instance
-    testAllocator.Free(testStructPtr);
-    testStructPtr = nullptr;
-
-    // Now only one instance is available and it was the previous instance freed
-    TestStructOne* newTestStructPtr = testAllocator.Allocate();
-
-    // Now compare the instance to see if it is still the values form differentTestStruct. They should be different
-    // because the instance should be reset.
-    EXPECT_NE(newTestStructPtr->a, differentTestStruct.a);
-    EXPECT_NE(newTestStructPtr->b, differentTestStruct.b);
-    EXPECT_NE(newTestStructPtr->c, differentTestStruct.c);
-}
-
-TEST_F(PoolAllocatorTest, Free_CanFreeInAnyOrder)
-{
-    // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Allocate(1, 2, 3.0f);
-    TestStructOne* testStructPtr2 = testAllocator.Allocate(5, 3, 6.0f);
-    TestStructOne* testStructPtr3 = testAllocator.Allocate(2, 9, 8.0f);
-
-    testAllocator.Free(testStructPtr);
-    // Should be able to allocate in freed slot
-    TestStructOne* testStructPtr4 = testAllocator.Allocate(7, 8, 9.0f);
-    EXPECT_EQ(testStructPtr, testStructPtr4);
-
-    testAllocator.Free(testStructPtr3);
-    testAllocator.Free(testStructPtr2);
-    testAllocator.Free(testStructPtr4);
-}
-
-TEST_F(PoolAllocatorTest, Allocate_DoesNotReuseUnfreeddAddresses)
-{
-    std::unordered_set<TestStructOne*> allocatedAddresses;
-
-    // Allocate all slots
-    TestStructOne* ptr1 = testAllocator.Allocate(1, 2, 3.0f);
-    TestStructOne* ptr2 = testAllocator.Allocate(5, 3, 6.0f);
-    TestStructOne* ptr3 = testAllocator.Allocate(2, 9, 8.0f);
-
-    // Track allocated addresses
-    allocatedAddresses.insert(ptr1);
-    allocatedAddresses.insert(ptr2);
-    allocatedAddresses.insert(ptr3);
-
-    // Free middle pointer
-    testAllocator.Free(ptr2);
-    allocatedAddresses.erase(ptr2);
-
-    // New allocation should return ptr2's address
-    TestStructOne* newPtr = testAllocator.Allocate(7, 8, 9.0f);
-    EXPECT_EQ(newPtr, ptr2);
-
-    // Verify no addresses are reused
-    EXPECT_EQ(allocatedAddresses.count(newPtr), 0);
-    allocatedAddresses.insert(newPtr);
-
-    // Attempt allocation when full
-    EXPECT_EQ(testAllocator.Allocate(1, 1, 1.0f), nullptr);
-
-    // Cleanup
-    for (auto ptr : allocatedAddresses) {
-        testAllocator.Free(ptr);
+    void* blocks[NUMBER_OF_BLOCKS];
+    for (int i = 0; i < NUMBER_OF_BLOCKS; i++)
+    {
+        blocks[i] = testAllocator.Allocate();
+        ASSERT_NE(blocks[i], nullptr) << "Allocation " << i << " failed";
+        for (int j = 0; j < i; ++j)
+        {
+            ASSERT_NE(blocks[i], blocks[j]) << "Duplicate block at " << i << " and " << j;
+        }
     }
+    void* nullBlock = testAllocator.Allocate();
+    ASSERT_EQ(nullBlock, nullptr);
+}
+
+/**@brief Tests freeing a single block allows reallocation */
+TEST_F(PoolAllocatorTest, Free_SingleBlock)
+{
+    void* block = testAllocator.Allocate();
+    testAllocator.Free(block);
+    void* newBlock = testAllocator.Allocate();
+    ASSERT_EQ(newBlock, block);
+}
+
+/**@brief Tests freeing all blocks allows reallocating all */
+TEST_F(PoolAllocatorTest, Free_AllBlocks)
+{
+    void* firstAllocationBlocks[NUMBER_OF_BLOCKS];
+    std::unordered_set<void*> firstSet;
+    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    {
+        firstAllocationBlocks[i] = testAllocator.Allocate();
+        ASSERT_NE(firstAllocationBlocks[i], nullptr);
+        firstSet.insert(firstAllocationBlocks[i]);
+    }
+    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    {
+        testAllocator.Free(firstAllocationBlocks[i]);
+    }
+    void* secondAllocationBlocks[NUMBER_OF_BLOCKS];
+    for (int i = 0; i < NUMBER_OF_BLOCKS; i++)
+    {
+        secondAllocationBlocks[i] = testAllocator.Allocate();
+        ASSERT_NE(secondAllocationBlocks[i], nullptr);
+        ASSERT_TRUE(firstSet.count(secondAllocationBlocks[i])) << "Pointer not from original allocation";
+        for (int j = 0; j < i; j++)
+        {
+            ASSERT_NE(secondAllocationBlocks[i], secondAllocationBlocks[j]) << "Duplicate at " << i << " and " << j;
+        }
+    }
+}
+
+/**@brief Tests freeing an invalid pointer triggers an assertion */
+TEST_F(PoolAllocatorTest, Free_InvalidPointer)
+{
+    int dummy;
+    void* invalidPtr = &dummy;
+    EXPECT_THROW(testAllocator.Free(invalidPtr), std::runtime_error) << "ASSERT failed. Pointer does not fall within this pool's memory block.";
+}
+
+/**@brief Tests that freeing a block and reallocating returns it in LIFO order */
+TEST_F(PoolAllocatorTest, Allocate_AfterFree_Order)
+{
+    [[maybe_unused]] void* ptr0 = testAllocator.Allocate();
+    void* ptr1 = testAllocator.Allocate();
+    [[maybe_unused]] void* ptr2 = testAllocator.Allocate();
+
+    testAllocator.Free(ptr1);
+
+    void* afterFree = testAllocator.Allocate();
+    ASSERT_EQ(afterFree, ptr1);
+}
+
+/**@brief Tests double-free triggers assertion */
+TEST_F(PoolAllocatorTest, Free_DoubleFreeAssertion)
+{
+    void* ptr = testAllocator.Allocate();
+    testAllocator.Free(ptr);
+
+    EXPECT_THROW(testAllocator.Free(ptr),  std::runtime_error);
+
+    [[maybe_unused]] void* ptr1 = testAllocator.Allocate();
+    [[maybe_unused]] void* ptr2 = testAllocator.Allocate();
+    void* ptr3 = testAllocator.Allocate();
+    testAllocator.Free(ptr3);
+
+    EXPECT_THROW(testAllocator.Free(ptr3),  std::runtime_error);
 }
