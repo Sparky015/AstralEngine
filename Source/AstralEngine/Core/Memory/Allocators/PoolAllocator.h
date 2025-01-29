@@ -36,7 +36,7 @@ namespace Core {
 
         ~PoolAllocator()
         {
-            delete[] m_MemoryBlock;
+            std::free(m_MemoryBlock);
         }
 
         /**@brief Allocates a memory block from the pool and returns a pointer to it.
@@ -92,7 +92,7 @@ namespace Core {
         {
             if (this != &other)
             {
-                delete[] m_MemoryBlock;
+                std::free(m_MemoryBlock);
                 m_MemoryBlock = other.m_MemoryBlock;
                 m_FreeListHead = other.m_FreeListHead;
                 other.m_MemoryBlock = nullptr;
@@ -113,7 +113,7 @@ namespace Core {
         {
             if (this != &other)
             {
-                delete[] m_MemoryBlock;
+                std::free(m_MemoryBlock);
                 m_MemoryBlock = (unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
                 AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)));
                 m_FreeListHead = other.m_FreeListHead;

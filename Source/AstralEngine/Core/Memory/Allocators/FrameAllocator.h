@@ -34,7 +34,7 @@ namespace Core {
 
         ~FrameAllocator()
         {
-            delete[] m_StartBlockAddress;
+            std::free(m_StartBlockAddress);
         }
 
         using Marker = unsigned char*;
