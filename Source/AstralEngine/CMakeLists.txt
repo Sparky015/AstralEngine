@@ -154,6 +154,7 @@ add_library(AstralEngine
         Core/Memory/Allocators/DoubleBufferedAllocator.h
         Core/Memory/Allocators/PoolAllocator.h
         Core/Memory/Pools/ObjectPool.h
+        Core/Memory/Allocators/AllocatorUtils.h
 
 )
 

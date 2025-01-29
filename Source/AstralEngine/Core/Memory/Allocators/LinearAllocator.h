@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include "AllocatorUtils.h"
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Debug/Macros/Asserts.h"
 #include <cstddef>
 #include <memory>
 #include <new>
@@ -34,6 +36,7 @@ namespace Core {
          * @throw std::bad_alloc When there is not enough memory to complete an allocation */
         void* Allocate(size_t size, uint16 alignment)
         {
+            ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
             if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;

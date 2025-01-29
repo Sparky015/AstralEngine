@@ -11,6 +11,8 @@
 #include "Debug/Macros/Asserts.h"
 #include <memory>
 
+#include "AllocatorUtils.h"
+
 namespace Core {
 
     /**@brief An allocator that can be used to allocate during a frame. Do not store or cache any pointers from this allocator.
@@ -55,12 +57,13 @@ namespace Core {
          * @throw std::bad_alloc When there is not enough memory to complete an allocation */
         void* Allocate(size_t size, uint16 alignment)
         {
+            ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
             if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
             void* alignedAddress = m_CurrentMarker;
 
-            // Aligns the address and will return nullptr if there is not enough space
+            // Aligns the address. Will return nullptr if there is not enough space triggering a bad_alloc exception
             if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
 
             // Update current marker
