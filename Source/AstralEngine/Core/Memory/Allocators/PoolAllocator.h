@@ -17,11 +17,9 @@ namespace Core {
     class PoolAllocator
     {
     public:
-        static_assert(BlockSize >= 8, "ElementType of object pool must be at least the size of a pointer!");
 
         PoolAllocator() :
-            m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
-                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)))}
+            m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE)}
         {
             std::memset(m_MemoryBlock, 0xCD, UNIFIED_MEMORY_BLOCK_SIZE);
 
@@ -36,7 +34,7 @@ namespace Core {
 
         ~PoolAllocator()
         {
-            std::free(m_MemoryBlock);
+            AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
         }
 
         /**@brief Allocates a memory block from the pool and returns a pointer to it.
@@ -92,7 +90,7 @@ namespace Core {
         {
             if (this != &other)
             {
-                std::free(m_MemoryBlock);
+                AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
                 m_MemoryBlock = other.m_MemoryBlock;
                 m_FreeListHead = other.m_FreeListHead;
                 other.m_MemoryBlock = nullptr;
@@ -102,8 +100,7 @@ namespace Core {
         }
 
         PoolAllocator(const PoolAllocator& other) :
-        m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
-                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)))},
+        m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE)},
             m_FreeListHead(other.m_FreeListHead)
         {
             std::memcpy(m_MemoryBlock, other.m_MemoryBlock, UNIFIED_MEMORY_BLOCK_SIZE);
@@ -113,9 +110,8 @@ namespace Core {
         {
             if (this != &other)
             {
-                std::free(m_MemoryBlock);
-                m_MemoryBlock = (unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
-                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)));
+                AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
+                m_MemoryBlock = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE);
                 m_FreeListHead = other.m_FreeListHead;
             }
             return *this;
@@ -140,7 +136,7 @@ namespace Core {
         }
 
         constexpr static size_t UNIFIED_MEMORY_BLOCK_SIZE = BlockSize * NumberOfBlocks;
-        alignas(max_align_t) unsigned char* m_MemoryBlock;
+        unsigned char* m_MemoryBlock;
         void* m_FreeListHead; // Points to the first free element address
     };
 

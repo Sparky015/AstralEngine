@@ -37,4 +37,24 @@ namespace Core::AllocatorUtils {
         return ((originalBlockSize + alignment - 1) / alignment) * alignment;
     }
 
+    /** @brief Allocates a max aligned memory block that is at least the size of originalBlockSize.
+     *  @param originalBlockSize The minimum block size that should be allocated.
+     *  @return A pointer to a max aligned memory block
+     *  @note - The actual block size of the max aligned memory block might be slightly bigger due to adjusting the size
+     *        of the block to make it a multiple of the alignment.
+     *        - Use AllocatorUtils::FreeMaxAlignedBlock to free memory allocated by this function. */
+    inline void* AllocMaxAlignedBlock(size_t originalBlockSize)
+    {
+        const size_t alignedBlockSize = RoundToNextAlignmentMultiple(originalBlockSize, alignof(max_align_t));
+        return std::aligned_alloc(alignof(std::max_align_t), alignedBlockSize);
+    }
+
+    /** @brief Frees a max aligned memory block that was allocated by AllocatorUtils::AllocMaxAlignedBlock.
+     *  @param blockPtr The pointer to the block being freed.
+     *  @note This function ensures the corresponding free function for std::aligned_alloc is called. */
+    inline void FreeMaxAlignedBlock(void* blockPtr)
+    {
+        std::free(blockPtr);
+    }
+
 }
