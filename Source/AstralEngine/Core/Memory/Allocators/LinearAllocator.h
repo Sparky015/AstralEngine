@@ -18,7 +18,8 @@ namespace Core {
     /**@brief A stack-based linear allocator. Max allocation size is 5.28 KB due to being on the stack.
      *        Deallocate method does nothing. Reset method deallocates the whole memory block.
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
-     *          It's all or nothing. */
+     *          It's all or nothing.
+     * @thread_safety This class is NOT thread safe. */
     template <size_t memoryBlockSize>
     class LinearAllocator
     {

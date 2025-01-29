@@ -14,7 +14,8 @@
 namespace Core {
 
     /**@brief An allocator that can be used to allocate during a frame. Do not store or cache any pointers from this allocator.
-     *        It will be deallocated after the frame has ended. */
+     *        It will be deallocated after the frame has ended.
+     * @thread_safety This class is NOT thread safe. */
     class FrameAllocator
     {
     public:

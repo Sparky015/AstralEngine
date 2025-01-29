@@ -12,6 +12,9 @@
 
 namespace Core {
 
+    /**@brief Stack-like allocator that allocates memory in a last in first out order. This means that the user can
+     *        deallocate only the most recent unfreed memory allocation.
+     * @thread_safety This class is NOT thread safe. */
     template <size_t memoryBlockSize>
     class StackAllocator
     {

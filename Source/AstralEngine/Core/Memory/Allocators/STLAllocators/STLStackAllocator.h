@@ -10,6 +10,9 @@
 
 namespace Core {
 
+    /**@brief An STL compliant version of the StackAllocator. It is a stack-like allocator that allocates memory in a
+     *        last in first out order. This means that the user can deallocate only the most recent unfreed memory allocation.
+     * @thread_safety This class is NOT thread safe. */
     template <typename T, size_t memoryBlockSize>
     class STLStackAllocator
     {

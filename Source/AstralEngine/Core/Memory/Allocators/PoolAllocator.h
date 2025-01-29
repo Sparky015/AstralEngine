@@ -9,7 +9,7 @@
 namespace Core {
 
     /**@brief Allocator that gives memory out in fixed size blocks.
-     * @thread_safety This class is not thread safe. */
+     * @thread_safety This class is NOT thread safe. */
     template<size_t BlockSize, size_t NumberOfBlocks>
     class PoolAllocator
     {
