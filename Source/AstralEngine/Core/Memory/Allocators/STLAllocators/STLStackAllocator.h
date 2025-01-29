@@ -10,6 +10,8 @@
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include <memory>
 
+#include "Core/Memory/Allocators/AllocatorUtils.h"
+
 namespace Core {
 
     /**@brief An STL compliant version of the StackAllocator. It is a stack-like allocator that allocates memory in a
@@ -53,7 +55,7 @@ namespace Core {
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            if (m_CurrentMarker + allocatedBytes > m_EndBlockAddress) { throw std::bad_alloc(); }
+            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, allocatedBytes, m_EndBlockAddress)) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
             void* alignedAddress = m_CurrentMarker;

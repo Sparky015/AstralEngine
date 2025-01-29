@@ -47,7 +47,7 @@ namespace Core {
         void* Allocate(size_t size, uint16 alignment)
         {
             ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
-            if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
+            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { throw std::bad_alloc(); }
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
             void* alignedAddress = m_CurrentMarker;
 
@@ -58,7 +58,7 @@ namespace Core {
             {
                 // Address is already aligned. Push the address by the alignment of T to make room for allocation header.
                 alignedAddress = static_cast<unsigned char*>(alignedAddress) + alignment;
-                if (static_cast<unsigned char*>(alignedAddress) + size > m_EndBlockAddress) { throw std::bad_alloc(); }
+                if (AllocatorUtils::DoesCauseOverflow(alignedAddress, size, m_EndBlockAddress)) { throw std::bad_alloc(); }
             }
 
             // Add allocation header for alignment amount

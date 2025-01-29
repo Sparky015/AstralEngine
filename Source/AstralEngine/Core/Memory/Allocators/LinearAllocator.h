@@ -37,7 +37,7 @@ namespace Core {
         void* Allocate(size_t size, uint16 alignment)
         {
             ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
-            if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
+            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
             void* alignedAddress = m_CurrentMarker;

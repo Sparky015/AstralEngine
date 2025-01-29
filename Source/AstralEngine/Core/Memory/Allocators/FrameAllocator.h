@@ -24,7 +24,8 @@ namespace Core {
 
         explicit FrameAllocator(size_t memoryBlockSize) :
             m_MemoryBlockSize(memoryBlockSize),
-            m_StartBlockAddress((unsigned char*)std::aligned_alloc(alignof(std::max_align_t), m_MemoryBlockSize)),
+            m_StartBlockAddress((unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
+                    AllocatorUtils::RoundToNextAlignmentMultiple(m_MemoryBlockSize, alignof(max_align_t)))),
             m_EndBlockAddress(m_StartBlockAddress + m_MemoryBlockSize),
             m_CurrentMarker(m_StartBlockAddress)
         {
@@ -58,13 +59,15 @@ namespace Core {
         void* Allocate(size_t size, uint16 alignment)
         {
             ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
-            if (m_CurrentMarker + size > m_EndBlockAddress) { throw std::bad_alloc(); }
+            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { throw std::bad_alloc(); }
 
             std::size_t space = m_EndBlockAddress - m_CurrentMarker;
             void* alignedAddress = m_CurrentMarker;
 
             // Aligns the address. Will return nullptr if there is not enough space triggering a bad_alloc exception
             if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
+
+            // No allocation headers to track alignment offsets are needed due to rollback markers not requiring them.
 
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;

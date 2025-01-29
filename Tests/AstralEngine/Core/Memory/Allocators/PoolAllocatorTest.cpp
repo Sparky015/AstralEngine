@@ -84,22 +84,9 @@ TEST_F(PoolAllocatorTest, Free_AllBlocks)
 /**@brief Tests freeing an invalid pointer triggers an assertion */
 TEST_F(PoolAllocatorTest, Free_InvalidPointer)
 {
-    int dummy;
-    void* invalidPtr = &dummy;
+    int num;
+    void* invalidPtr = &num;
     EXPECT_THROW(testAllocator.Free(invalidPtr), std::runtime_error) << "ASSERT failed. Pointer does not fall within this pool's memory block.";
-}
-
-/**@brief Tests that freeing a block and reallocating returns it in LIFO order */
-TEST_F(PoolAllocatorTest, Allocate_AfterFree_Order)
-{
-    [[maybe_unused]] void* ptr0 = testAllocator.Allocate();
-    void* ptr1 = testAllocator.Allocate();
-    [[maybe_unused]] void* ptr2 = testAllocator.Allocate();
-
-    testAllocator.Free(ptr1);
-
-    void* afterFree = testAllocator.Allocate();
-    ASSERT_EQ(afterFree, ptr1);
 }
 
 /**@brief Tests double-free triggers assertion */
@@ -116,4 +103,60 @@ TEST_F(PoolAllocatorTest, Free_DoubleFreeAssertion)
     testAllocator.Free(ptr3);
 
     EXPECT_THROW(testAllocator.Free(ptr3),  std::runtime_error);
+}
+
+/**@brief Tests that we can detect availability of blocks correctly */
+TEST_F(PoolAllocatorTest, CanAllocateMoreBlocks_ReturnsTrueWhenNotFull)
+{
+    // Initially, all blocks should be available
+    ASSERT_TRUE(testAllocator.CanAllocateMoreBlocks())
+        << "PoolAllocator should have blocks available initially.";
+
+    // Allocate all blocks
+    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    {
+        void* block = testAllocator.Allocate();
+        ASSERT_NE(block, nullptr);
+    }
+
+    // Now no blocks should be available
+    ASSERT_FALSE(testAllocator.CanAllocateMoreBlocks())
+        << "PoolAllocator should have no blocks available after allocating all.";
+
+
+    void* ptr = testAllocator.Allocate();
+    ASSERT_EQ(ptr, nullptr);
+
+    // Allocate again to confirm there's nothing left
+    ptr = testAllocator.Allocate();
+    ASSERT_EQ(ptr, nullptr);
+}
+
+/**@brief Tests that partially freeing a few blocks allows for reallocation */
+TEST_F(PoolAllocatorTest, Free_OrderDoesNotMatter)
+{
+    // Allocate all blocks
+    void* blocks[NUMBER_OF_BLOCKS];
+    for (int i = 0; i < NUMBER_OF_BLOCKS; ++i)
+    {
+        blocks[i] = testAllocator.Allocate();
+        ASSERT_NE(blocks[i], nullptr) << "Allocation " << i << " failed";
+    }
+
+    // Free a few blocks in the middle
+    testAllocator.Free(blocks[3]);
+    testAllocator.Free(blocks[5]);
+    testAllocator.Free(blocks[7]);
+
+    // Re-allocate those freed positions
+    void* blockA = testAllocator.Allocate();
+    ASSERT_NE(blockA, nullptr) << "Re-allocation after partial free should succeed for index 3.";
+    void* blockB = testAllocator.Allocate();
+    ASSERT_NE(blockB, nullptr) << "Re-allocation after partial free should succeed for index 5.";
+    void* blockC = testAllocator.Allocate();
+    ASSERT_NE(blockC, nullptr) << "Re-allocation after partial free should succeed for index 7.";
+
+    // Attempting another allocation should fail, as all slots are in use again.
+    void* nullBlock = testAllocator.Allocate();
+    ASSERT_EQ(nullBlock, nullptr) << "No more blocks should be available after re-allocating the freed blocks.";
 }

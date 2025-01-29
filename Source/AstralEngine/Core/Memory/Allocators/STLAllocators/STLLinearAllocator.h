@@ -12,6 +12,8 @@
 #include <memory>
 #include <new>
 
+#include "Core/Memory/Allocators/AllocatorUtils.h"
+
 
 namespace Core {
 
@@ -41,7 +43,7 @@ namespace Core {
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            if (m_CurrentMarker + allocatedBytes > m_EndBlockAddress)
+            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, allocatedBytes, m_EndBlockAddress))
             {
                 throw std::bad_alloc();
             }
@@ -52,7 +54,7 @@ namespace Core {
             if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
             {
                 void* returnPointer = alignedAddress;
-                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;\
+                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
                 TRACK_ALLOCATION(allocatedBytes);
                 return static_cast<pointer>(returnPointer);
             }

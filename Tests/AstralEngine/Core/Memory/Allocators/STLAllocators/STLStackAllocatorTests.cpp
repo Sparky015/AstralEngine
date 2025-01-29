@@ -4,10 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include "Core/Memory/Allocators/STLAllocators/STLStackAllocator.h"
 #include <cstring>
-#include "Core/Memory/Allocators/STLAllocators//STLStackAllocator.h"
-
-
 
 class STLStackAllocatorTest : public ::testing::Test
 {

@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "AllocatorUtils.h"
 #include "Debug/Macros/Asserts.h"
 
 namespace Core {
@@ -19,7 +20,8 @@ namespace Core {
         static_assert(BlockSize >= 8, "ElementType of object pool must be at least the size of a pointer!");
 
         PoolAllocator() :
-            m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE)}
+            m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
+                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)))}
         {
             std::memset(m_MemoryBlock, 0xCD, UNIFIED_MEMORY_BLOCK_SIZE);
 
@@ -100,7 +102,8 @@ namespace Core {
         }
 
         PoolAllocator(const PoolAllocator& other) :
-        m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE)},
+        m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
+                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)))},
             m_FreeListHead(other.m_FreeListHead)
         {
             std::memcpy(m_MemoryBlock, other.m_MemoryBlock, UNIFIED_MEMORY_BLOCK_SIZE);
@@ -111,7 +114,8 @@ namespace Core {
             if (this != &other)
             {
                 delete[] m_MemoryBlock;
-                m_MemoryBlock = (unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE);
+                m_MemoryBlock = (unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
+                AllocatorUtils::RoundToNextAlignmentMultiple(UNIFIED_MEMORY_BLOCK_SIZE, alignof(max_align_t)));
                 m_FreeListHead = other.m_FreeListHead;
             }
             return *this;
