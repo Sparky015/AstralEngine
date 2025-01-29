@@ -1,6 +1,8 @@
-//
-// Created by Andrew Fagan on 1/26/25.
-//
+/**
+* @file PoolAllocator.h
+* @author Andrew Fagan
+* @date 1/26/2025
+*/
 
 #pragma once
 

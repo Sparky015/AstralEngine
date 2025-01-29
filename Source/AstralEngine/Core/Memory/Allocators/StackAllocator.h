@@ -1,6 +1,9 @@
-//
-// Created by Andrew Fagan on 1/15/25.
-//
+/**
+* @file StackAllocator.h
+* @author Andrew Fagan
+* @date 1/15/2025
+*/
+
 
 #pragma once
 
