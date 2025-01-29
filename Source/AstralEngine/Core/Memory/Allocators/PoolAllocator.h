@@ -16,7 +16,8 @@ namespace Core {
     public:
         static_assert(BlockSize >= 8, "ElementType of object pool must be at least the size of a pointer!");
 
-        PoolAllocator() : m_MemoryBlock{new unsigned char[UNIFIED_MEMORY_BLOCK_SIZE]}
+        PoolAllocator() :
+            m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE)}
         {
             std::memset(m_MemoryBlock, 0xCD, UNIFIED_MEMORY_BLOCK_SIZE);
 
@@ -97,7 +98,7 @@ namespace Core {
         }
 
         PoolAllocator(const PoolAllocator& other) :
-            m_MemoryBlock{new unsigned char[UNIFIED_MEMORY_BLOCK_SIZE]},
+        m_MemoryBlock{(unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE)},
             m_FreeListHead(other.m_FreeListHead)
         {
             std::memcpy(m_MemoryBlock, other.m_MemoryBlock, UNIFIED_MEMORY_BLOCK_SIZE);
@@ -108,7 +109,7 @@ namespace Core {
             if (this != &other)
             {
                 delete[] m_MemoryBlock;
-                m_MemoryBlock = new unsigned char[UNIFIED_MEMORY_BLOCK_SIZE];
+                m_MemoryBlock = (unsigned char*)std::aligned_alloc(alignof(std::max_align_t), UNIFIED_MEMORY_BLOCK_SIZE);
                 m_FreeListHead = other.m_FreeListHead;
             }
             return *this;

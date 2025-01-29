@@ -21,7 +21,7 @@ namespace Core {
 
         explicit FrameAllocator(size_t memoryBlockSize) :
             m_MemoryBlockSize(memoryBlockSize),
-            m_StartBlockAddress(new unsigned char[memoryBlockSize]),
+            m_StartBlockAddress((unsigned char*)std::aligned_alloc(alignof(std::max_align_t), m_MemoryBlockSize)),
             m_EndBlockAddress(m_StartBlockAddress + m_MemoryBlockSize),
             m_CurrentMarker(m_StartBlockAddress)
         {
