@@ -26,10 +26,15 @@ namespace Core::AllocatorUtils {
         return (static_cast<unsigned char*>(currentAddress) + numberOfBytes) > static_cast<unsigned char*>(endAddress);
     }
 
+    /**@brief Rounds the block size to the next multiple of the alignment. This allows for blocks to be used by
+     *        std::aligned_alloc.
+     * @param originalBlockSize The original block size of the allocator.
+     *                          Expected to be not zero. Can't be negative because of size_t.
+     * @param alignment The alignment that the memory block will be aligned to
+     * @return A block size that is the next multiple of the alignment. */
     constexpr size_t RoundToNextAlignmentMultiple(size_t originalBlockSize, size_t alignment)
     {
         return ((originalBlockSize + alignment - 1) / alignment) * alignment;
     }
-
 
 }
