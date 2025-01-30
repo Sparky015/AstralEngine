@@ -6,37 +6,29 @@
 
 #pragma once
 
-#include "Core/Memory/Allocators/AllocatorUtils.h"
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>
 #include <new>
 
+#include "Core/Memory/Allocators/AllocatorUtils.h"
+
 
 namespace Core {
 
-    /**@brief STL compliant version of LinearAllocator. It is a heap-based linear allocator.
-     *        Deallocate method does nothing. Reset method deallocates the whole memory block.
+    /**@brief STL compliant version of StackBasedLinearAllocator. It is a stack-based linear allocator. Max allocation size
+     *        is 5.28 KB due to being on the stack. Deallocate method does nothing. Reset method deallocates
+     *        the whole memory block.
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing.
      * @thread_safety This class is NOT thread safe. */
-    template <typename T>
-    class STLLinearAllocator
+    template <typename T, size_t memoryBlockSize>
+    class STLStackBasedLinearAllocator
     {
     public:
-
-        STLLinearAllocator(size_t memoryBlockSize) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
-            m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
-            m_CurrentMarker(m_StartBlockAddress)
-        {}
-
-
-        ~STLLinearAllocator()
-        {
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-        }
+        static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
+        static_assert(memoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
 
         using value_type = T;
         using pointer = T*;
@@ -45,6 +37,16 @@ namespace Core {
         using propagate_on_container_move_assignment = std::true_type;
         using propagate_on_container_copy_assignment = std::true_type;
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
+
+
+        STLStackBasedLinearAllocator() = default;
+
+        STLStackBasedLinearAllocator(size_type) noexcept : STLStackBasedLinearAllocator() {}
+
+        ~STLStackBasedLinearAllocator()
+        {
+            reset();
+        }
 
 
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
@@ -94,11 +96,11 @@ namespace Core {
         template <typename U>
         struct rebind
         {
-            using other = STLLinearAllocator<U>;
+            using other = STLStackBasedLinearAllocator<U, memoryBlockSize>;
         };
 
         template <typename U>
-        bool operator==(const STLLinearAllocator<U>& other) noexcept
+        bool operator==(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
         {
             return (m_CurrentMarker == other.m_CurrentMarker &&
                     m_EndBlockAddress == other.m_EndBlockAddress &&
@@ -106,17 +108,20 @@ namespace Core {
         }
 
         template <typename U>
-        bool operator!=(const STLLinearAllocator<U>& other) noexcept
+        bool operator!=(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
         {
             return !(*this == other);
         }
 
-
     private:
 
-        unsigned char* m_StartBlockAddress;
-        unsigned char* m_EndBlockAddress;
-        unsigned char* m_CurrentMarker;
+        alignas(std::max_align_t) unsigned char m_MemoryBlock[memoryBlockSize] = {};
+        unsigned char* m_StartBlockAddress = m_MemoryBlock;
+        unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
+        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+
     };
+
+
 
 }

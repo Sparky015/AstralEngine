@@ -117,6 +117,18 @@ namespace Core {
             return *this;
         }
 
+
+        bool operator==(const PoolAllocator& other) noexcept
+        {
+            return (m_MemoryBlock == other.m_MemoryBlock &&
+                    m_FreeListHead == other.m_FreeListHead);
+        }
+
+        bool operator!=(const PoolAllocator& other) noexcept
+        {
+            return !(*this == other);
+        }
+
     private:
 
         /**@brief Checks if a pointer is free. Intended for debug use only through ASSERT macros.

@@ -18,13 +18,24 @@ namespace Core {
     /**@brief Stack-like allocator that allocates memory in a last in first out order. This means that the user can
      *        deallocate only the most recent unfreed memory allocation.
      * @thread_safety This class is NOT thread safe. */
-    template <size_t memoryBlockSize>
     class StackAllocator
     {
     public:
 
-        using AllocationHeader = uint8;
+        explicit StackAllocator(size_t memoryBlockSize) :
+            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
+            m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
+            m_CurrentMarker(m_StartBlockAddress)
+        {
+            ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
+        }
 
+        ~StackAllocator()
+        {
+            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
+        }
+
+        using AllocationHeader = uint8;
         using Marker = unsigned char*;
 
         /**@brief Gets a marker to the top of the memory block */
@@ -108,39 +119,26 @@ namespace Core {
         }
 
 
-        StackAllocator() noexcept = default;
-        StackAllocator(size_t memoryBlock) noexcept : StackAllocator() {}
-        ~StackAllocator() { Reset(); }
+        bool operator==(const StackAllocator& other) noexcept
+        {
+            return (m_CurrentMarker == other.m_CurrentMarker &&
+                    m_EndBlockAddress == other.m_EndBlockAddress &&
+                    m_StartBlockAddress == other.m_StartBlockAddress);
+        }
 
+        bool operator!=(const StackAllocator& other) noexcept
+        {
+            return !(*this == other);
+        }
 
     private:
 
-        alignas(std::max_align_t) unsigned char m_MemoryBlock[memoryBlockSize] = {};
-        unsigned char* m_StartBlockAddress = m_MemoryBlock;
-        unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+        unsigned char* m_StartBlockAddress;
+        unsigned char* m_EndBlockAddress;
+        unsigned char* m_CurrentMarker;
 
-        template<size_t S>
-        friend bool operator==(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
-
-        template<size_t S>
-        friend bool operator!=(const StackAllocator<S>& a1, const StackAllocator<S>& a2) noexcept;
+        friend bool operator==(const StackAllocator& a1, const StackAllocator& a2) noexcept;
+        friend bool operator!=(const StackAllocator& a1, const StackAllocator& a2) noexcept;
     };
-
-
-    template <size_t memoryBlockSize>
-    bool operator==(const StackAllocator<memoryBlockSize>& a1, const StackAllocator<memoryBlockSize>& a2) noexcept
-    {
-        return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
-            &a1.m_MemoryBlock == &a2.m_MemoryBlock &&
-            a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
-            a1.m_StartBlockAddress == a2.m_StartBlockAddress);
-    }
-
-    template <size_t memoryBlockSize>
-    bool operator!=(const StackAllocator<memoryBlockSize>& a1, const StackAllocator<memoryBlockSize>& a2) noexcept
-    {
-        return !(a1 == a2);
-    }
 
 }

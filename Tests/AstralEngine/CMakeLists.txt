@@ -8,13 +8,15 @@ set(TEST_FILES
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
         Core/Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
-        Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
-        Core/Memory/Allocators/LinearAllocatorTest.cpp
+        Core/Memory/Allocators/STLAllocators/STLStackBasedLinearAllocatorTests.cpp
+        Core/Memory/Allocators/StackBasedLinearAllocatorTest.cpp
         Core/Memory/Allocators/StackAllocatorTest.cpp
         Core/Memory/Allocators/FrameAllocatorTest.cpp
         Core/Memory/Allocators/DoubleBufferedAllocatorTest.cpp
         Core/Memory/Allocators/PoolAllocatorTest.cpp
         Core/Memory/Pools/ObjectPoolTest.cpp
+        Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
+        Core/Memory/Allocators/LinearAllocatorTest.cpp
 )
 
 

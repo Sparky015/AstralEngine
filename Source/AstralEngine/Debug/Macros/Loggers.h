@@ -37,7 +37,7 @@ public:
 
     void reset()
     {
-        m_Stream.str("");
+//        m_Stream.str("");
         m_Stream.clear();
         m_Stream.rdbuf()->get_allocator().reset();
     }
@@ -57,7 +57,7 @@ public:
     }
 
 private:
-    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::STLLinearAllocator<char, 5024>>;
+    using StreamType = std::basic_ostringstream<char, std::char_traits<char>, Core::STLLinearAllocator<char>>;
     StreamType m_Stream;
 
 };

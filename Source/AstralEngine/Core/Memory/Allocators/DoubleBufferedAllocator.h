@@ -79,6 +79,17 @@ namespace Core {
         DoubleBufferedAllocator(const DoubleBufferedAllocator&) = delete;
         DoubleBufferedAllocator& operator=(const DoubleBufferedAllocator&) = delete;
 
+        bool operator==(const DoubleBufferedAllocator& other) noexcept
+        {
+            return (&m_Buffers[0] == &other.m_Buffers[0] &&
+                    m_ActiveBuffer == other.m_ActiveBuffer);
+        }
+
+        bool operator!=(const DoubleBufferedAllocator& other) noexcept
+        {
+            return !(*this == other);
+        }
+
     private:
         FrameAllocator m_Buffers[2];
         FrameAllocator* m_ActiveBuffer;

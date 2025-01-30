@@ -4,18 +4,18 @@
 
 #include <gtest/gtest.h>
 
-#include "Core/Memory/Allocators/LinearAllocator.h"
+#include "Core/Memory/Allocators/StackBasedLinearAllocator.h"
 #include <cstring>
 
-class LinearAllocatorTest : public ::testing::Test
+class StackBasedLinearAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::LinearAllocator testAllocator = Core::LinearAllocator(DEFAULT_ALLOCATION_SIZE);
+    Core::StackBasedLinearAllocator<DEFAULT_ALLOCATION_SIZE> testAllocator;
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
-TEST_F(LinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
+TEST_F(StackBasedLinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
 {
     const char* allocatedAddress = (const char*) testAllocator.Allocate(5, alignof(char));
     const char* allocatedAddress2 = (const char*) testAllocator.Allocate(27, alignof(char));
@@ -28,7 +28,7 @@ TEST_F(LinearAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
 }
 
 /**@brief Tests if the allocator returns addresses that can be read from and written to */
-TEST_F(LinearAllocatorTest, allocate_ReturnsUseableAddresses)
+TEST_F(StackBasedLinearAllocatorTest, allocate_ReturnsUseableAddresses)
 {
     char* allocatedAddress = (char*) testAllocator.Allocate(5, alignof(char)); // allocates 5 chars
     std::strcpy(allocatedAddress, "abcd\0");
@@ -40,18 +40,18 @@ TEST_F(LinearAllocatorTest, allocate_ReturnsUseableAddresses)
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
+TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::LinearAllocator testAllocator = Core::LinearAllocator(2056);
+    Core::StackBasedLinearAllocator<2056> testAllocator;
     EXPECT_THROW(testAllocator.Allocate(3000, alignof(char)), std::bad_alloc);
     EXPECT_THROW(testAllocator.Allocate(2057, alignof(char)), std::bad_alloc);
     EXPECT_NO_THROW(testAllocator.Allocate(2056, alignof(char)));
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
+TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::LinearAllocator testAllocator = Core::LinearAllocator(2200);
+    Core::StackBasedLinearAllocator<2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
@@ -62,9 +62,9 @@ TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 
 
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
-TEST_F(LinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
+TEST_F(StackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::LinearAllocator testAllocator = Core::LinearAllocator(2200);
+    Core::StackBasedLinearAllocator<2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
@@ -84,9 +84,9 @@ TEST_F(LinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 }
 
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
-TEST_F(LinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
+TEST_F(StackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::LinearAllocator testAllocator = Core::LinearAllocator(2056);
+    Core::StackBasedLinearAllocator<2056> testAllocator;
 
     testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 );
@@ -105,20 +105,20 @@ TEST_F(LinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurre
 }
 
 /**@brief Tests if the natural alignment is applied to allocations */
-TEST_F(LinearAllocatorTest, allocate_RespectsTypeAlignment)
+TEST_F(StackBasedLinearAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::LinearAllocator alignedAllocator = Core::LinearAllocator(1025);
+    Core::StackBasedLinearAllocator<1024> alignedAllocator;
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(1, alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
 }
 
 /**@brief Tests if the natural alignment is applied when different alignment requirements request allocations */
-TEST_F(LinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
+TEST_F(StackBasedLinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::LinearAllocator alignedAllocator = Core::LinearAllocator(1024);
+    Core::StackBasedLinearAllocator<1024> alignedAllocator;
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(sizeof(AlignedStruct), alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % alignof(AlignedStruct), 0);

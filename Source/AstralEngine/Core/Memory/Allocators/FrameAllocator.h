@@ -24,8 +24,7 @@ namespace Core {
 
         explicit FrameAllocator(size_t memoryBlockSize) :
             m_MemoryBlockSize(memoryBlockSize),
-            m_StartBlockAddress((unsigned char*)std::aligned_alloc(alignof(std::max_align_t),
-                    AllocatorUtils::RoundToNextAlignmentMultiple(m_MemoryBlockSize, alignof(max_align_t)))),
+            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(m_MemoryBlockSize)),
             m_EndBlockAddress(m_StartBlockAddress + m_MemoryBlockSize),
             m_CurrentMarker(m_StartBlockAddress)
         {
@@ -34,7 +33,7 @@ namespace Core {
 
         ~FrameAllocator()
         {
-            std::free(m_StartBlockAddress);
+            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
         }
 
         using Marker = unsigned char*;
@@ -90,6 +89,20 @@ namespace Core {
 
         FrameAllocator(const FrameAllocator&) = delete;
         FrameAllocator& operator=(const FrameAllocator&) = delete;
+
+
+
+        bool operator==(const FrameAllocator& other) noexcept
+        {
+            return (m_CurrentMarker == other.m_CurrentMarker &&
+                    m_EndBlockAddress == other.m_EndBlockAddress &&
+                    m_StartBlockAddress == other.m_StartBlockAddress);
+        }
+
+        bool operator!=(const FrameAllocator& other) noexcept
+        {
+            return !(*this == other);
+        }
 
     private:
         size_t m_MemoryBlockSize;

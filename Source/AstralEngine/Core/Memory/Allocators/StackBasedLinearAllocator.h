@@ -1,7 +1,7 @@
 /**
-* @file LinearAllocator.h
+* @file StackBasedLinearAllocator.h
 * @author Andrew Fagan
-* @date 1/29/25
+* @date 1/8/2025
 */
 
 #pragma once
@@ -22,19 +22,22 @@ namespace Core {
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing.
      * @thread_safety This class is NOT thread safe. */
-
-    class LinearAllocator {
+    template<size_t MemoryBlockSize>
+    class StackBasedLinearAllocator {
     public:
+        static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
+        static_assert(MemoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
 
-        explicit LinearAllocator(size_t memoryBlockSize) :
-                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
-                m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
-                m_CurrentMarker(m_StartBlockAddress)
+        StackBasedLinearAllocator() :
+            m_MemoryBlock(),
+            m_StartBlockAddress(&m_MemoryBlock[0]),
+            m_EndBlockAddress(m_StartBlockAddress + MemoryBlockSize),
+            m_CurrentMarker(m_StartBlockAddress)
         {}
 
-        ~LinearAllocator()
+        ~StackBasedLinearAllocator()
         {
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
+            Reset();
         }
 
 
@@ -75,23 +78,27 @@ namespace Core {
         }
 
 
-        bool operator==(const LinearAllocator& other) noexcept
+
+        bool operator==(const StackBasedLinearAllocator<MemoryBlockSize>& other) noexcept
         {
             return (m_CurrentMarker == other.m_CurrentMarker &&
                     m_EndBlockAddress == other.m_EndBlockAddress &&
                     m_StartBlockAddress == other.m_StartBlockAddress);
         }
 
-        bool operator!=(const LinearAllocator& other) noexcept
+        bool operator!=(const StackBasedLinearAllocator<MemoryBlockSize>& other) noexcept
         {
             return !(*this == other);
         }
 
     private:
 
+        alignas(std::max_align_t) unsigned char m_MemoryBlock[MemoryBlockSize];
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;
         unsigned char* m_CurrentMarker;
+
+
     };
 
 }
