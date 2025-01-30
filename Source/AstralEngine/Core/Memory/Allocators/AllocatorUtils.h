@@ -6,6 +6,16 @@
 
 #pragma once
 
+#include <cstdlib>
+
+#ifdef ASTRAL_PLATFORM_WINDOWS
+#define ALLOCATOR_UTILS_ALIGNED_ALLOC(alignment, size) _aligned_malloc(size, alignment)
+#define ALLOCATOR_UTILS_ALIGNED_FREE(pointer) _aligned_free(pointer)
+#else
+#define ALLOCATOR_UTILS_ALIGNED_ALLOC(alignment, size) std::aligned_alloc(alignment, size)
+#define ALLOCATOR_UTILS_ALIGNED_FREE(pointer) std::free(pointer)
+#endif
+
 namespace Core::AllocatorUtils {
 
     /**@brief Checks if a given alignment is a power of two.
@@ -46,7 +56,7 @@ namespace Core::AllocatorUtils {
     inline void* AllocMaxAlignedBlock(size_t originalBlockSize)
     {
         const size_t alignedBlockSize = RoundToNextAlignmentMultiple(originalBlockSize, alignof(max_align_t));
-        return std::aligned_alloc(alignof(std::max_align_t), alignedBlockSize);
+        return ALLOCATOR_UTILS_ALIGNED_ALLOC(alignof(std::max_align_t), alignedBlockSize);
     }
 
     /** @brief Frees a max aligned memory block that was allocated by AllocatorUtils::AllocMaxAlignedBlock.
@@ -54,7 +64,10 @@ namespace Core::AllocatorUtils {
      *  @note This function ensures the corresponding free function for std::aligned_alloc is called. */
     inline void FreeMaxAlignedBlock(void* blockPtr)
     {
-        std::free(blockPtr);
+        ALLOCATOR_UTILS_ALIGNED_FREE(blockPtr);
     }
 
 }
+
+#undef ALLOCATOR_UTILS_ALIGNED_ALLOC
+#undef ALLOCATOR_UTILS_ALIGNED_FREE

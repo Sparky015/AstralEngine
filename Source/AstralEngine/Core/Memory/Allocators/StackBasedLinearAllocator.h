@@ -78,6 +78,34 @@ namespace Core {
         }
 
 
+        StackBasedLinearAllocator(const StackBasedLinearAllocator& other)
+        {
+
+        }
+
+        StackBasedLinearAllocator& operator=(const StackBasedLinearAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        StackBasedLinearAllocator(StackBasedLinearAllocator&& other) noexcept
+        {
+
+        }
+
+        StackBasedLinearAllocator& operator=(StackBasedLinearAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
 
         bool operator==(const StackBasedLinearAllocator<MemoryBlockSize>& other) noexcept
         {

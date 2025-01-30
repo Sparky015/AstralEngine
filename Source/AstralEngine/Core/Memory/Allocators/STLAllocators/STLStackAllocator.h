@@ -140,6 +140,34 @@ namespace Core {
         };
 
 
+        STLStackAllocator(const STLStackAllocator& other)
+        {
+
+        }
+
+        STLStackAllocator& operator=(const STLStackAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        STLStackAllocator(STLStackAllocator&& other) noexcept
+        {
+
+        }
+
+        STLStackAllocator& operator=(STLStackAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
         template <typename U>
         bool operator==(const STLStackAllocator<U>& other) noexcept
         {

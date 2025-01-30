@@ -37,7 +37,6 @@ namespace Core {
             AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
         }
 
-
         /**@brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
@@ -72,6 +71,34 @@ namespace Core {
         size_t GetUsedBlockSize()
         {
             return m_CurrentMarker - m_StartBlockAddress;
+        }
+
+        LinearAllocator(const LinearAllocator& other)
+        {
+
+        }
+
+        LinearAllocator& operator=(const LinearAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        LinearAllocator(LinearAllocator&& other) noexcept
+        {
+
+        }
+
+        LinearAllocator& operator=(LinearAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
         }
 
 

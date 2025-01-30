@@ -23,9 +23,8 @@ namespace Core {
     public:
 
         explicit FrameAllocator(size_t memoryBlockSize) :
-            m_MemoryBlockSize(memoryBlockSize),
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(m_MemoryBlockSize)),
-            m_EndBlockAddress(m_StartBlockAddress + m_MemoryBlockSize),
+            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
+            m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
             m_CurrentMarker(m_StartBlockAddress)
         {
             ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
@@ -87,10 +86,56 @@ namespace Core {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
-        FrameAllocator(const FrameAllocator&) = delete;
-        FrameAllocator& operator=(const FrameAllocator&) = delete;
+        /**@brief Gets the amount of memory currently allocated out by the allocator. */
+        [[nodiscard]] size_t GetCapacity() const
+        {
+            return m_EndBlockAddress - m_StartBlockAddress;
+        }
 
+        FrameAllocator(const FrameAllocator& other) :
+            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
+            m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
+            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
+        {
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
+        }
 
+        FrameAllocator& operator=(const FrameAllocator& other)
+        {
+            if (this != &other)
+            {
+                AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
+                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
+                m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
+                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
+            }
+            return *this;
+        }
+
+        FrameAllocator(FrameAllocator&& other) noexcept :
+            m_StartBlockAddress(other.m_StartBlockAddress),
+            m_EndBlockAddress(other.m_EndBlockAddress),
+            m_CurrentMarker(other.m_CurrentMarker)
+        {
+            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
+        }
+
+        FrameAllocator& operator=(FrameAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+                m_StartBlockAddress = other.m_StartBlockAddress;
+                m_EndBlockAddress = other.m_EndBlockAddress;
+                m_CurrentMarker = other.m_CurrentMarker;
+                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
+            }
+            return *this;
+        }
 
         bool operator==(const FrameAllocator& other) noexcept
         {
@@ -105,11 +150,10 @@ namespace Core {
         }
 
     private:
-        size_t m_MemoryBlockSize;
+
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;
         unsigned char* m_CurrentMarker;
-
     };
 
 }

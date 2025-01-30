@@ -76,8 +76,42 @@ namespace Core {
             return m_ActiveBuffer->GetUsedBlockSize();
         }
 
-        DoubleBufferedAllocator(const DoubleBufferedAllocator&) = delete;
-        DoubleBufferedAllocator& operator=(const DoubleBufferedAllocator&) = delete;
+        [[nodiscard]] size_t GetSingleBufferCapacity() const { return m_ActiveBuffer->GetCapacity(); }
+
+        DoubleBufferedAllocator(const DoubleBufferedAllocator& other) :
+            m_Buffers{other.m_Buffers[0], other.m_Buffers[1]},
+            m_ActiveBuffer(other.m_ActiveBuffer)
+        {}
+
+        DoubleBufferedAllocator& operator=(const DoubleBufferedAllocator& other)
+        {
+            if (this != &other)
+            {
+                m_Buffers[0] = other.m_Buffers[0];
+                m_Buffers[1] = other.m_Buffers[1];
+                m_ActiveBuffer = other.m_ActiveBuffer;
+            }
+            return *this;
+        }
+
+        DoubleBufferedAllocator(DoubleBufferedAllocator&& other) noexcept :
+            m_Buffers{std::move(other.m_Buffers[0]), std::move(other.m_Buffers[1])},
+            m_ActiveBuffer(other.m_ActiveBuffer == &other.m_Buffers[0] ? &m_Buffers[0] : &m_Buffers[1])
+        {
+            other.m_ActiveBuffer = nullptr;
+        }
+
+        DoubleBufferedAllocator& operator=(DoubleBufferedAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+                m_ActiveBuffer = other.m_ActiveBuffer == &other.m_Buffers[0] ? &m_Buffers[0] : &m_Buffers[1];
+                m_Buffers[0] = std::move(other.m_Buffers[0]);
+                m_Buffers[1] = std::move(other.m_Buffers[1]);
+                other.m_ActiveBuffer = nullptr;
+            }
+            return *this;
+        }
 
         bool operator==(const DoubleBufferedAllocator& other) noexcept
         {

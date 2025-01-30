@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cstring>
 #include "AllocatorUtils.h"
 #include "Debug/Macros/Asserts.h"
 
@@ -21,7 +22,6 @@ namespace Core {
         PoolAllocator() :
             m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE)}
         {
-            std::memset(m_MemoryBlock, 0xCD, UNIFIED_MEMORY_BLOCK_SIZE);
 
             m_FreeListHead = &m_MemoryBlock[0];
             for (size_t i = 0; i < NumberOfBlocks - 1; i++)

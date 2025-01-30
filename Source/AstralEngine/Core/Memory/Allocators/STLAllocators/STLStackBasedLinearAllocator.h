@@ -99,6 +99,35 @@ namespace Core {
             using other = STLStackBasedLinearAllocator<U, memoryBlockSize>;
         };
 
+        STLStackBasedLinearAllocator(const STLStackBasedLinearAllocator& other)
+        {
+
+        }
+
+        STLStackBasedLinearAllocator& operator=(const STLStackBasedLinearAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        STLStackBasedLinearAllocator(STLStackBasedLinearAllocator&& other) noexcept
+        {
+
+        }
+
+        STLStackBasedLinearAllocator& operator=(STLStackBasedLinearAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+
         template <typename U>
         bool operator==(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
         {

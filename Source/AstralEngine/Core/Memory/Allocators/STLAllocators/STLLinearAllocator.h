@@ -97,6 +97,34 @@ namespace Core {
             using other = STLLinearAllocator<U>;
         };
 
+        STLLinearAllocator(const STLLinearAllocator& other)
+        {
+
+        }
+
+        STLLinearAllocator& operator=(const STLLinearAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        STLLinearAllocator(STLLinearAllocator&& other) noexcept
+        {
+
+        }
+
+        STLLinearAllocator& operator=(STLLinearAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
         template <typename U>
         bool operator==(const STLLinearAllocator<U>& other) noexcept
         {

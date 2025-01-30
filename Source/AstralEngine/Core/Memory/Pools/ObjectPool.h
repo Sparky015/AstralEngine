@@ -6,6 +6,7 @@
 
 #include "Debug/Macros/Asserts.h"
 #include <memory>
+#include <cstring>
 
 namespace Core {
 

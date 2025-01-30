@@ -118,6 +118,34 @@ namespace Core {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
+        StackAllocator(const StackAllocator& other)
+        {
+
+        }
+
+        StackAllocator& operator=(const StackAllocator& other)
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
+        StackAllocator(StackAllocator&& other) noexcept
+        {
+
+        }
+
+        StackAllocator& operator=(StackAllocator&& other) noexcept
+        {
+            if (this != &other)
+            {
+
+            }
+            return *this;
+        }
+
 
         bool operator==(const StackAllocator& other) noexcept
         {
@@ -136,9 +164,6 @@ namespace Core {
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;
         unsigned char* m_CurrentMarker;
-
-        friend bool operator==(const StackAllocator& a1, const StackAllocator& a2) noexcept;
-        friend bool operator!=(const StackAllocator& a1, const StackAllocator& a2) noexcept;
     };
 
 }

@@ -203,3 +203,42 @@ TEST_F(DoubleBufferedAllocatorTest, SwapBuffer_MaintainsBlockStateAfterSwap)
     EXPECT_EQ(marker2, allocator.GetMarker());
     EXPECT_EQ(*address2, 2222931);
 }
+
+/**@brief Tests if the move constructor properly transfers ownership of both buffers */
+TEST_F(DoubleBufferedAllocatorTest, moveConstructor_TransfersOwnershipCorrectly)
+{
+    // Setup some data in both buffers
+    [[maybe_unused]] char* buffer1Data = (char*)testAllocator.Allocate(521, alignof(char));
+    std::strcpy(buffer1Data, "First Allocation");
+    testAllocator.SwapBuffers();
+    [[maybe_unused]] char* buffer2Data = (char*)testAllocator.Allocate(128, alignof(char));
+    std::strcpy(buffer2Data, "Second Allocation");
+
+    // Create second allocator and move assign
+    Core::DoubleBufferedAllocator secondAllocator(std::move(testAllocator));
+
+    // Verify moved allocator has correct data
+    EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 128);
+    secondAllocator.SwapBuffers();
+    EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 521);
+}
+
+/**@brief Tests if the move assignment operator properly transfers ownership of both buffers */
+TEST_F(DoubleBufferedAllocatorTest, moveAssignment_TransfersOwnershipCorrectly)
+{
+    // Setup some data in both buffers
+    [[maybe_unused]] char* buffer1Data = (char*)testAllocator.Allocate(119, alignof(char));
+    std::strcpy(buffer1Data, "First Allocation");
+    testAllocator.SwapBuffers();
+    [[maybe_unused]] char* buffer2Data = (char*)testAllocator.Allocate(132, alignof(char));
+    std::strcpy(buffer2Data, "Second Allocation");
+
+    // Create second allocator and move assign
+    Core::DoubleBufferedAllocator secondAllocator(1024);
+    secondAllocator = std::move(testAllocator);
+
+    // Verify moved allocator has correct data
+    EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 132);
+    secondAllocator.SwapBuffers();
+    EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 119);
+}
