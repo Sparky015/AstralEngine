@@ -12,6 +12,7 @@
 #include <cstring>
 
 #include "Core/Memory/Allocators/AllocatorUtils.h"
+#include "Core/Memory/Allocators/StackAllocator.h"
 
 namespace Core {
 
@@ -31,15 +32,10 @@ namespace Core {
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
         explicit STLStackAllocator(size_type memoryBlock) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlock)),
-            m_EndBlockAddress(m_StartBlockAddress + memoryBlock),
-            m_CurrentMarker(m_StartBlockAddress)
+                m_StackAllocator(memoryBlock)
         {}
 
-        ~STLStackAllocator()
-        {
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-        }
+        ~STLStackAllocator() = default;
 
         struct AllocationHeader
         {
@@ -52,55 +48,19 @@ namespace Core {
         using Marker = unsigned char*;
 
         /**@brief Gets a marker to the top of the memory block */
-        [[nodiscard]] Marker GetMarker() const { return m_CurrentMarker; }
+        [[nodiscard]] Marker GetMarker() const { return m_StackAllocator.GetMarker(); }
 
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
-        void RollbackToMarker(const Marker marker)
+        void RollbackToMarker(Marker marker)
         {
-            AllocationHeader* allocationHeader = reinterpret_cast<AllocationHeader*>(marker - 1);
-
-            // Roll back the marker by the size the natural alignment offset
-            m_CurrentMarker = marker - allocationHeader->alignmentOffset;
+            m_StackAllocator.RollbackToMarker(marker);
         }
 
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, allocatedBytes, m_EndBlockAddress))
-            {
-                throw std::bad_alloc();
-            }
-
-            std::size_t space = m_EndBlockAddress - m_CurrentMarker;
-            void* alignedAddress = m_CurrentMarker;
-
-            // Aligns the address and will return nullptr if there is not enough space
-            if (!std::align(alignof(T), allocatedBytes, alignedAddress, space)) { throw std::bad_alloc(); }
-
-            if (static_cast<unsigned char*>(alignedAddress) == m_CurrentMarker)
-            {
-                // Address is already aligned. Push the address by the alignment of T to make room for allocation header.
-                alignedAddress = static_cast<unsigned char*>(alignedAddress) + alignof(T);
-
-                if (AllocatorUtils::DoesCauseOverflow(alignedAddress, allocatedBytes, m_EndBlockAddress))
-                {
-                    throw std::bad_alloc();
-                }
-            }
-
-            // Add allocation header for alignment amount
-            unsigned char* m_HeaderMarker = static_cast<unsigned char*>(alignedAddress) - 1;
-            uint8 alignmentOffset = static_cast<unsigned char*>(alignedAddress) - m_CurrentMarker;
-            AllocationHeader allocationHeader = AllocationHeader(alignmentOffset);
-            *reinterpret_cast<AllocationHeader*>(m_HeaderMarker) = allocationHeader;
-
-            // Update current marker
-            m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
-
-            TRACK_ALLOCATION(allocatedBytes);
-
-            return static_cast<pointer>(alignedAddress);
+            return (pointer)m_StackAllocator.Allocate(allocatedBytes, alignof(T));
         }
 
 
@@ -108,36 +68,25 @@ namespace Core {
          * @warning You can only Deallocate the previous allocation. This allocator follows a last in first out approach */
         void deallocate(pointer ptr, size_type numberOfElements)
         {
-            // Checking if this pointer is the last allocated pointer
-            size_t sizeOfAllocation = sizeof(T) * numberOfElements;
-            if (m_CurrentMarker - sizeOfAllocation != reinterpret_cast<unsigned char*>(ptr)) { throw std::runtime_error("Deallocations must follow a last in first out order!"); }
-
-            // Get the natural alignment offset size from the allocation header
-            unsigned char* headerMarker = reinterpret_cast<unsigned char*>(ptr) - 1;
-            AllocationHeader* allocationHeader = reinterpret_cast<AllocationHeader*>(headerMarker);
-
-            // Roll back the marker by the size of the allocation and the natural alignment offset
-            m_CurrentMarker -= sizeOfAllocation + allocationHeader->alignmentOffset;
-
-            TRACK_DEALLOCATION(sizeOfAllocation);
+            m_StackAllocator.Deallocate(ptr, numberOfElements * sizeof(T));
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            m_CurrentMarker = m_StartBlockAddress;
+            m_StackAllocator.Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         [[nodiscard]] size_t getUsedBlockSize() const
         {
-            return m_CurrentMarker - m_StartBlockAddress;
+            return m_StackAllocator.GetUsedBlockSize();
         }
 
         /**@brief Gets the memory capacity of the allocator. */
         [[nodiscard]] size_t getCapacity() const
         {
-            return m_EndBlockAddress - m_StartBlockAddress;
+            return m_StackAllocator.GetCapacity();
         }
 
         template <typename U>
@@ -148,45 +97,27 @@ namespace Core {
 
 
         STLStackAllocator(const STLStackAllocator& other) :
-                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity())),
-                m_EndBlockAddress(m_StartBlockAddress + other.getCapacity()),
-                m_CurrentMarker(m_StartBlockAddress + other.getUsedBlockSize())
-        {
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
-        }
+            m_StackAllocator(other.m_StackAllocator)
+        {}
 
         STLStackAllocator& operator=(const STLStackAllocator& other)
         {
             if (this != &other)
             {
-                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity());
-                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
-                m_EndBlockAddress = m_StartBlockAddress + other.getCapacity();
-                m_CurrentMarker = m_StartBlockAddress + other.getUsedBlockSize();
+                m_StackAllocator = other.m_StackAllocator;
             }
             return *this;
         }
 
         STLStackAllocator(STLStackAllocator&& other) noexcept :
-        m_StartBlockAddress(other.m_StartBlockAddress),
-        m_EndBlockAddress(other.m_EndBlockAddress),
-        m_CurrentMarker(other.m_CurrentMarker)
-        {
-            other.m_StartBlockAddress = nullptr;
-            other.m_EndBlockAddress = nullptr;
-            other.m_CurrentMarker = nullptr;
-        }
+            m_StackAllocator(std::move(other.m_StackAllocator))
+        {}
 
         STLStackAllocator& operator=(STLStackAllocator&& other) noexcept
         {
             if (this != &other)
             {
-                m_StartBlockAddress = other.m_StartBlockAddress;
-                m_EndBlockAddress = other.m_EndBlockAddress;
-                m_CurrentMarker = other.m_CurrentMarker;
-                other.m_StartBlockAddress = nullptr;
-                other.m_EndBlockAddress = nullptr;
-                other.m_CurrentMarker = nullptr;
+                m_StackAllocator = std::move(other.m_StackAllocator);
             }
             return *this;
         }
@@ -194,9 +125,7 @@ namespace Core {
         template <typename U>
         bool operator==(const STLStackAllocator<U>& other) noexcept
         {
-            return (m_CurrentMarker == other.m_CurrentMarker &&
-                    m_EndBlockAddress == other.m_EndBlockAddress &&
-                    m_StartBlockAddress == other.m_StartBlockAddress);
+            return (m_StackAllocator == other.m_StackAllocator);
         }
 
         template <typename U>
@@ -207,9 +136,7 @@ namespace Core {
 
     private:
 
-        unsigned char* m_StartBlockAddress;
-        unsigned char* m_EndBlockAddress;
-        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+        Core::StackAllocator m_StackAllocator;
     };
 
 }

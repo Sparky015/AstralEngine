@@ -13,6 +13,7 @@
 #include <new>
 
 #include "Core/Memory/Allocators/AllocatorUtils.h"
+#include "Core/Memory/Allocators/StackBasedLinearAllocator.h"
 
 
 namespace Core {
@@ -40,9 +41,7 @@ namespace Core {
 
 
         STLStackBasedLinearAllocator() = default;
-
-        STLStackBasedLinearAllocator(size_type) noexcept : STLStackBasedLinearAllocator() {}
-
+        explicit STLStackBasedLinearAllocator(size_type) noexcept : STLStackBasedLinearAllocator() {}
         ~STLStackBasedLinearAllocator()
         {
             reset();
@@ -53,23 +52,7 @@ namespace Core {
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, allocatedBytes, m_EndBlockAddress))
-            {
-                throw std::bad_alloc();
-            }
-
-
-            std::size_t space = m_EndBlockAddress - m_CurrentMarker;
-            void* alignedAddress = m_CurrentMarker;
-            if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
-            {
-                void* returnPointer = alignedAddress;
-                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
-                TRACK_ALLOCATION(allocatedBytes);
-                return static_cast<pointer>(returnPointer);
-            }
-
-            throw std::bad_alloc();
+            return (pointer)m_StackBasedLinearAllocator.Allocate(allocatedBytes, alignof(T));
         }
 
 
@@ -82,14 +65,19 @@ namespace Core {
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
-            m_CurrentMarker = m_StartBlockAddress;
+            m_StackBasedLinearAllocator.Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         size_t getUsedBlockSize()
         {
-            return m_CurrentMarker - m_StartBlockAddress;
+            return m_StackBasedLinearAllocator.GetUsedBlockSize();
+        }
+
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t getCapacity() const
+        {
+            return m_StackBasedLinearAllocator.GetCapacity();
         }
 
         // Rebind struct
@@ -99,30 +87,28 @@ namespace Core {
             using other = STLStackBasedLinearAllocator<U, memoryBlockSize>;
         };
 
-        STLStackBasedLinearAllocator(const STLStackBasedLinearAllocator& other)
-        {
-
-        }
+        STLStackBasedLinearAllocator(const STLStackBasedLinearAllocator& other) :
+            m_StackBasedLinearAllocator(other.m_StackBasedLinearAllocator)
+        {}
 
         STLStackBasedLinearAllocator& operator=(const STLStackBasedLinearAllocator& other)
         {
             if (this != &other)
             {
-
+                m_StackBasedLinearAllocator = other.m_StackBasedLinearAllocator;
             }
             return *this;
         }
 
-        STLStackBasedLinearAllocator(STLStackBasedLinearAllocator&& other) noexcept
-        {
-
-        }
+        STLStackBasedLinearAllocator(STLStackBasedLinearAllocator&& other) noexcept :
+            m_StackBasedLinearAllocator(std::move(other.m_StackBasedLinearAllocator))
+        {}
 
         STLStackBasedLinearAllocator& operator=(STLStackBasedLinearAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                m_StackBasedLinearAllocator = std::move(other.m_StackBasedLinearAllocator);
             }
             return *this;
         }
@@ -131,9 +117,7 @@ namespace Core {
         template <typename U>
         bool operator==(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
         {
-            return (m_CurrentMarker == other.m_CurrentMarker &&
-                    m_EndBlockAddress == other.m_EndBlockAddress &&
-                    m_StartBlockAddress == other.m_StartBlockAddress);
+            return (m_StackBasedLinearAllocator == other.m_StackBasedLinearAllocator);
         }
 
         template <typename U>
@@ -143,14 +127,8 @@ namespace Core {
         }
 
     private:
-
-        alignas(std::max_align_t) unsigned char m_MemoryBlock[memoryBlockSize] = {};
-        unsigned char* m_StartBlockAddress = m_MemoryBlock;
-        unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+        Core::StackBasedLinearAllocator<memoryBlockSize> m_StackBasedLinearAllocator;
 
     };
-
-
 
 }

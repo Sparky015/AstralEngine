@@ -128,3 +128,63 @@ TEST_F(STLStackBasedLinearAllocatorTest, allocate_RespectsTypeAlignment)
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
 }
 
+/**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
+TEST_F(STLStackBasedLinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
+{
+    char* buffer = (char*)testAllocator.allocate(126);
+    std::memcpy(buffer, "This is a test!", 15);
+
+    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+}
+
+
+/**@brief Tests if copy assignment operator clones state and creates independent allocator */
+TEST_F(STLStackBasedLinearAllocatorTest, CopyAssignmentOperator_ClonesState)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(531);
+
+    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>();
+    testAllocator2 = testAllocator;
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+}
+
+/**@brief Tests if move constructor transfers ownership and invalidates source */
+TEST_F(STLStackBasedLinearAllocatorTest, MoveConstructor_TransfersOwnership)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(731);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>(std::move(testAllocator));
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+}
+
+/**@brief Tests if move assignment operator transfers ownership */
+TEST_F(STLStackBasedLinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
+{
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.allocate(221);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+
+    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>();
+    testAllocator2 = std::move(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+}

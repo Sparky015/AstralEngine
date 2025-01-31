@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Memory/Allocators/AllocatorUtils.h"
+#include "Core/Memory/Allocators/LinearAllocator.h"
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include <cstddef>
 #include <cstring>
@@ -26,17 +27,12 @@ namespace Core {
     {
     public:
 
-        STLLinearAllocator(size_t memoryBlockSize) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
-            m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
-            m_CurrentMarker(m_StartBlockAddress)
+        explicit STLLinearAllocator(size_t memoryBlockSize) :
+            m_LinearAllocator(memoryBlockSize)
         {}
 
+        ~STLLinearAllocator() = default;
 
-        ~STLLinearAllocator()
-        {
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-        }
 
         using value_type = T;
         using pointer = T*;
@@ -51,23 +47,7 @@ namespace Core {
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, allocatedBytes, m_EndBlockAddress))
-            {
-                throw std::bad_alloc();
-            }
-
-
-            std::size_t space = m_EndBlockAddress - m_CurrentMarker;
-            void* alignedAddress = m_CurrentMarker;
-            if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
-            {
-                void* returnPointer = alignedAddress;
-                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
-                TRACK_ALLOCATION(allocatedBytes);
-                return static_cast<pointer>(returnPointer);
-            }
-
-            throw std::bad_alloc();
+            return (pointer)m_LinearAllocator.Allocate(allocatedBytes, alignof(T));
         }
 
 
@@ -80,20 +60,19 @@ namespace Core {
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
-            m_CurrentMarker = m_StartBlockAddress;
+            m_LinearAllocator.Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         [[nodiscard]] size_t getUsedBlockSize() const
         {
-            return m_CurrentMarker - m_StartBlockAddress;
+            return m_LinearAllocator.GetUsedBlockSize();
         }
 
         /**@brief Gets the memory capacity of the allocator. */
         [[nodiscard]] size_t getCapacity() const
         {
-            return m_EndBlockAddress - m_StartBlockAddress;
+            return m_LinearAllocator.GetCapacity();
         }
 
         // Rebind struct
@@ -104,45 +83,27 @@ namespace Core {
         };
 
         STLLinearAllocator(const STLLinearAllocator& other) :
-                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity())),
-                m_EndBlockAddress(m_StartBlockAddress + other.getCapacity()),
-                m_CurrentMarker(m_StartBlockAddress + other.getUsedBlockSize())
-        {
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
-        }
+            m_LinearAllocator(other.m_LinearAllocator)
+        {}
 
         STLLinearAllocator& operator=(const STLLinearAllocator& other)
         {
             if (this != &other)
             {
-                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity());
-                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
-                m_EndBlockAddress = m_StartBlockAddress + other.getCapacity();
-                m_CurrentMarker = m_StartBlockAddress + other.getUsedBlockSize();
+                m_LinearAllocator = other.m_LinearAllocator;
             }
             return *this;
         }
 
         STLLinearAllocator(STLLinearAllocator&& other) noexcept :
-        m_StartBlockAddress(other.m_StartBlockAddress),
-        m_EndBlockAddress(other.m_EndBlockAddress),
-        m_CurrentMarker(other.m_CurrentMarker)
-        {
-            other.m_StartBlockAddress = nullptr;
-            other.m_EndBlockAddress = nullptr;
-            other.m_CurrentMarker = nullptr;
-        }
+                m_LinearAllocator(std::move(other.m_LinearAllocator))
+        {}
 
         STLLinearAllocator& operator=(STLLinearAllocator&& other) noexcept
         {
             if (this != &other)
             {
-                m_StartBlockAddress = other.m_StartBlockAddress;
-                m_EndBlockAddress = other.m_EndBlockAddress;
-                m_CurrentMarker = other.m_CurrentMarker;
-                other.m_StartBlockAddress = nullptr;
-                other.m_EndBlockAddress = nullptr;
-                other.m_CurrentMarker = nullptr;
+                m_LinearAllocator = std::move(other.m_LinearAllocator);
             }
             return *this;
         }
@@ -150,9 +111,7 @@ namespace Core {
         template <typename U>
         bool operator==(const STLLinearAllocator<U>& other) noexcept
         {
-            return (m_CurrentMarker == other.m_CurrentMarker &&
-                    m_EndBlockAddress == other.m_EndBlockAddress &&
-                    m_StartBlockAddress == other.m_StartBlockAddress);
+            return (m_LinearAllocator == other.m_LinearAllocator);
         }
 
         template <typename U>
@@ -161,12 +120,9 @@ namespace Core {
             return !(*this == other);
         }
 
-
     private:
 
-        unsigned char* m_StartBlockAddress;
-        unsigned char* m_EndBlockAddress;
-        unsigned char* m_CurrentMarker;
+        Core::LinearAllocator m_LinearAllocator;
     };
 
 }
