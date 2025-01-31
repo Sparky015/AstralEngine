@@ -118,30 +118,53 @@ namespace Core {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
-        StackAllocator(const StackAllocator& other)
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t GetCapacity() const
         {
+            return m_EndBlockAddress - m_StartBlockAddress;
+        }
 
+
+        StackAllocator(const StackAllocator& other) :
+            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
+            m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
+            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
+        {
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
         }
 
         StackAllocator& operator=(const StackAllocator& other)
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
+                m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
+                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
             }
             return *this;
         }
 
-        StackAllocator(StackAllocator&& other) noexcept
+        StackAllocator(StackAllocator&& other) noexcept :
+            m_StartBlockAddress(other.m_StartBlockAddress),
+            m_EndBlockAddress(other.m_EndBlockAddress),
+            m_CurrentMarker(other.m_CurrentMarker)
         {
-
+            other.m_StartBlockAddress = nullptr;
+            other.m_StartBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
         }
 
         StackAllocator& operator=(StackAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = other.m_StartBlockAddress;
+                m_EndBlockAddress = other.m_EndBlockAddress;
+                m_CurrentMarker = other.m_CurrentMarker;
+                other.m_StartBlockAddress = nullptr;
+                other.m_StartBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
             }
             return *this;
         }
@@ -167,3 +190,5 @@ namespace Core {
     };
 
 }
+
+
