@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdlib>
+#include "Debug/Macros/Loggers.h"
 
 #ifdef ASTRAL_PLATFORM_WINDOWS
 #define ALLOCATOR_UTILS_ALIGNED_ALLOC(alignment, size) _aligned_malloc(size, alignment)
@@ -65,6 +66,22 @@ namespace Core::AllocatorUtils {
     inline void FreeMaxAlignedBlock(void* blockPtr)
     {
         ALLOCATOR_UTILS_ALIGNED_FREE(blockPtr);
+    }
+
+    /** @brief Resizes an allocator's memory block to a bigger size.
+     *  @param memoryBlockPtr Pointer to the allocator's memory block.
+     *  @param memoryBlockSize The current size of the allocator's memory block
+     *  @param resizeMultiplier The amount the original memory block size is multiplied by to get the new memory block's size.
+     *  @return A pointer to the new allocated block that is resized by the given. */
+    inline void* ResizeMemoryBlock(void* memoryBlockPtr, size_t memoryBlockSize, float resizeMultiplier = 2.0f)
+    {
+        const size_t newBlockSize = memoryBlockSize * resizeMultiplier;
+        void* newBlockPtr = AllocMaxAlignedBlock(newBlockSize);
+        std::memcpy(newBlockPtr, memoryBlockPtr, memoryBlockSize);
+        FreeMaxAlignedBlock(memoryBlockPtr);
+
+        WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newBlockSize << " bytes)");
+        return newBlockPtr;
     }
 
 }
