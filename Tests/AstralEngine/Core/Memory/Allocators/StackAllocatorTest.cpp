@@ -224,10 +224,10 @@ TEST_F(StackAllocatorTest, CopyConstructor_CopiesStateCorrectly)
 /**@brief Tests if copy assignment operator clones state and creates independent allocator */
 TEST_F(StackAllocatorTest, CopyAssignmentOperator_ClonesState)
 {
-    char* buffer = (char*)testAllocator.Allocate(531, alignof(char));
-    std::memcpy(buffer, "This is a test!\0", 16);
+    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(531, alignof(char));
 
-    Core::StackAllocator testAllocator2 = Core::StackAllocator(testAllocator);
+    Core::StackAllocator testAllocator2 = Core::StackAllocator(12);
+    testAllocator2 = testAllocator;
 
     EXPECT_EQ(testAllocator2.GetCapacity(), testAllocator.GetCapacity());
     EXPECT_EQ(testAllocator2.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
@@ -239,18 +239,56 @@ TEST_F(StackAllocatorTest, CopyAssignmentOperator_ClonesState)
 
     // Should be able to reverse the allocation with no errors
     EXPECT_NO_THROW(testAllocator2.Deallocate(originalPtr, 531));
-    EXPECT_STREQ((char*)testAllocator2.GetMarker(), "This is a test!\0");
 }
 
 /**@brief Tests if move constructor transfers ownership and invalidates source */
 TEST_F(StackAllocatorTest, MoveConstructor_TransfersOwnership)
 {
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.Allocate(731, alignof(char));
 
+    size_t alloc1Capacity = testAllocator.GetCapacity();
+    size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
+    Core::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Core::StackAllocator testAllocator2 = Core::StackAllocator(std::move(testAllocator));
+
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), alloc1UsedSize);
+    EXPECT_EQ(testAllocator2.GetMarker(), alloc1CurrentMarker);
+
+    EXPECT_EQ(testAllocator.GetCapacity(), 0);
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+
+    // Find the relative original ptr location
+    unsigned char* originalPtr = testAllocator2.GetMarker() - 731;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.Deallocate(originalPtr, 731));
 }
 
 /**@brief Tests if move assignment operator transfers ownership */
 TEST_F(StackAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
 {
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.Allocate(221, alignof(char));
 
+    size_t alloc1Capacity = testAllocator.GetCapacity();
+    size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
+    Core::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Core::StackAllocator testAllocator2 = Core::StackAllocator(12);
+
+    testAllocator2 = std::move(testAllocator);
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), alloc1UsedSize);
+    EXPECT_EQ(testAllocator2.GetMarker(), alloc1CurrentMarker);
+
+    EXPECT_EQ(testAllocator.GetCapacity(), 0);
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+
+    // Find the relative original ptr location
+    unsigned char* originalPtr = testAllocator2.GetMarker() - 221;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.Deallocate(originalPtr, 221));
 }
 

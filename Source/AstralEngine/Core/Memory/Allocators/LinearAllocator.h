@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <memory>
 #include <new>
+#include <cstring>
 
 
 namespace Core {
@@ -68,35 +69,57 @@ namespace Core {
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        size_t GetUsedBlockSize()
+        [[nodiscard]] size_t GetUsedBlockSize() const
         {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
-        LinearAllocator(const LinearAllocator& other)
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t GetCapacity() const
         {
+            return m_EndBlockAddress - m_StartBlockAddress;
+        }
 
+        LinearAllocator(const LinearAllocator& other) :
+                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
+                m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
+                m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
+        {
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
         }
 
         LinearAllocator& operator=(const LinearAllocator& other)
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
+                m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
+                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
             }
             return *this;
         }
 
-        LinearAllocator(LinearAllocator&& other) noexcept
+        LinearAllocator(LinearAllocator&& other) noexcept :
+        m_StartBlockAddress(other.m_StartBlockAddress),
+        m_EndBlockAddress(other.m_EndBlockAddress),
+        m_CurrentMarker(other.m_CurrentMarker)
         {
-
+            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
         }
 
         LinearAllocator& operator=(LinearAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = other.m_StartBlockAddress;
+                m_EndBlockAddress = other.m_EndBlockAddress;
+                m_CurrentMarker = other.m_CurrentMarker;
+                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
             }
             return *this;
         }

@@ -130,3 +130,63 @@ TEST_F(LinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr3) % alignof(float), 0);
 }
 
+/**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
+TEST_F(LinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(126, alignof(char));
+
+    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(testAllocator);
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), testAllocator.GetCapacity());
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
+}
+
+
+/**@brief Tests if copy assignment operator clones state and creates independent allocator */
+TEST_F(LinearAllocatorTest, CopyAssignmentOperator_ClonesState)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(531, alignof(char));
+
+    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(12);
+    testAllocator2 = testAllocator;
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), testAllocator.GetCapacity());
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
+
+}
+
+/**@brief Tests if move constructor transfers ownership and invalidates source */
+TEST_F(LinearAllocatorTest, MoveConstructor_TransfersOwnership)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(731, alignof(char));
+
+    size_t alloc1Capacity = testAllocator.GetCapacity();
+    size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
+
+    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(std::move(testAllocator));
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.GetCapacity(), 0);
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+}
+
+/**@brief Tests if move assignment operator transfers ownership */
+TEST_F(LinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
+{
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.Allocate(221, alignof(char));
+
+    size_t alloc1Capacity = testAllocator.GetCapacity();
+    size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
+
+    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(12);
+    testAllocator2 = std::move(testAllocator);
+
+    EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.GetCapacity(), 0);
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+
+}

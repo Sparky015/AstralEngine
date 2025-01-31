@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <memory>
 #include <new>
+#include <cstring>
 
 
 namespace Core {
@@ -72,36 +73,61 @@ namespace Core {
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        size_t GetUsedBlockSize()
+        [[nodiscard]] size_t GetUsedBlockSize() const
         {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
-
-        StackBasedLinearAllocator(const StackBasedLinearAllocator& other)
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t GetCapacity() const
         {
+            return m_EndBlockAddress - m_StartBlockAddress;
+        }
 
+        StackBasedLinearAllocator(const StackBasedLinearAllocator& other) :
+            m_MemoryBlock(),
+            m_StartBlockAddress(&m_MemoryBlock[0]),
+            m_EndBlockAddress(m_StartBlockAddress + MemoryBlockSize),
+            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
+        {
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
         }
 
         StackBasedLinearAllocator& operator=(const StackBasedLinearAllocator& other)
         {
             if (this != &other)
             {
-
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
+                m_StartBlockAddress = &m_MemoryBlock[0];
+                m_EndBlockAddress = m_StartBlockAddress + MemoryBlockSize;
+                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
             }
             return *this;
         }
 
-        StackBasedLinearAllocator(StackBasedLinearAllocator&& other) noexcept
+        StackBasedLinearAllocator(StackBasedLinearAllocator&& other) noexcept :
+            m_MemoryBlock(),
+            m_StartBlockAddress(&m_MemoryBlock[0]),
+            m_EndBlockAddress(m_StartBlockAddress + MemoryBlockSize),
+            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
         {
-
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
+            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
         }
 
         StackBasedLinearAllocator& operator=(StackBasedLinearAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
+                m_StartBlockAddress = &m_MemoryBlock[0];
+                m_EndBlockAddress = m_StartBlockAddress + MemoryBlockSize;
+                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
+                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
             }
             return *this;
         }

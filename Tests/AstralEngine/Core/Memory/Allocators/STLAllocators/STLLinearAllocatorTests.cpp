@@ -128,3 +128,63 @@ TEST_F(STLLinearAllocatorTest, allocate_RespectsTypeAlignment)
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
 }
 
+/**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
+TEST_F(STLLinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
+{
+    char* buffer = (char*)testAllocator.allocate(126);
+    std::memcpy(buffer, "This is a test!", 15);
+
+    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+}
+
+
+/**@brief Tests if copy assignment operator clones state and creates independent allocator */
+TEST_F(STLLinearAllocatorTest, CopyAssignmentOperator_ClonesState)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(531);
+
+    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(12);
+    testAllocator2 = testAllocator;
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+}
+
+/**@brief Tests if move constructor transfers ownership and invalidates source */
+TEST_F(STLLinearAllocatorTest, MoveConstructor_TransfersOwnership)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(731);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(std::move(testAllocator));
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+}
+
+/**@brief Tests if move assignment operator transfers ownership */
+TEST_F(STLLinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
+{
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.allocate(221);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+
+    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(12);
+    testAllocator2 = std::move(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+}

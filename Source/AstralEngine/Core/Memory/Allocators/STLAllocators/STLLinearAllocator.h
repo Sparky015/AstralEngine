@@ -85,9 +85,15 @@ namespace Core {
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        size_t getUsedBlockSize()
+        [[nodiscard]] size_t getUsedBlockSize() const
         {
             return m_CurrentMarker - m_StartBlockAddress;
+        }
+
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t getCapacity() const
+        {
+            return m_EndBlockAddress - m_StartBlockAddress;
         }
 
         // Rebind struct
@@ -97,30 +103,46 @@ namespace Core {
             using other = STLLinearAllocator<U>;
         };
 
-        STLLinearAllocator(const STLLinearAllocator& other)
+        STLLinearAllocator(const STLLinearAllocator& other) :
+                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity())),
+                m_EndBlockAddress(m_StartBlockAddress + other.getCapacity()),
+                m_CurrentMarker(m_StartBlockAddress + other.getUsedBlockSize())
         {
-
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
         }
 
         STLLinearAllocator& operator=(const STLLinearAllocator& other)
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity());
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
+                m_EndBlockAddress = m_StartBlockAddress + other.getCapacity();
+                m_CurrentMarker = m_StartBlockAddress + other.getUsedBlockSize();
             }
             return *this;
         }
 
-        STLLinearAllocator(STLLinearAllocator&& other) noexcept
+        STLLinearAllocator(STLLinearAllocator&& other) noexcept :
+        m_StartBlockAddress(other.m_StartBlockAddress),
+        m_EndBlockAddress(other.m_EndBlockAddress),
+        m_CurrentMarker(other.m_CurrentMarker)
         {
-
+            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
         }
 
         STLLinearAllocator& operator=(STLLinearAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = other.m_StartBlockAddress;
+                m_EndBlockAddress = other.m_EndBlockAddress;
+                m_CurrentMarker = other.m_CurrentMarker;
+                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
             }
             return *this;
         }

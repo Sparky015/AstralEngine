@@ -9,6 +9,7 @@
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include <memory>
+#include <cstring>
 
 #include "Core/Memory/Allocators/AllocatorUtils.h"
 
@@ -133,6 +134,12 @@ namespace Core {
             return m_CurrentMarker - m_StartBlockAddress;
         }
 
+        /**@brief Gets the memory capacity of the allocator. */
+        [[nodiscard]] size_t getCapacity() const
+        {
+            return m_EndBlockAddress - m_StartBlockAddress;
+        }
+
         template <typename U>
         struct rebind
         {
@@ -140,30 +147,46 @@ namespace Core {
         };
 
 
-        STLStackAllocator(const STLStackAllocator& other)
+        STLStackAllocator(const STLStackAllocator& other) :
+                m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity())),
+                m_EndBlockAddress(m_StartBlockAddress + other.getCapacity()),
+                m_CurrentMarker(m_StartBlockAddress + other.getUsedBlockSize())
         {
-
+            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
         }
 
         STLStackAllocator& operator=(const STLStackAllocator& other)
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.getCapacity());
+                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.getCapacity());
+                m_EndBlockAddress = m_StartBlockAddress + other.getCapacity();
+                m_CurrentMarker = m_StartBlockAddress + other.getUsedBlockSize();
             }
             return *this;
         }
 
-        STLStackAllocator(STLStackAllocator&& other) noexcept
+        STLStackAllocator(STLStackAllocator&& other) noexcept :
+        m_StartBlockAddress(other.m_StartBlockAddress),
+        m_EndBlockAddress(other.m_EndBlockAddress),
+        m_CurrentMarker(other.m_CurrentMarker)
         {
-
+            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
+            other.m_CurrentMarker = nullptr;
         }
 
         STLStackAllocator& operator=(STLStackAllocator&& other) noexcept
         {
             if (this != &other)
             {
-
+                m_StartBlockAddress = other.m_StartBlockAddress;
+                m_EndBlockAddress = other.m_EndBlockAddress;
+                m_CurrentMarker = other.m_CurrentMarker;
+                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
+                other.m_CurrentMarker = nullptr;
             }
             return *this;
         }

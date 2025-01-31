@@ -142,3 +142,94 @@ TEST_F(STLStackAllocatorTest, allocate_RespectsTypeAlignment)
     AlignedStruct* ptr2 = alignedAllocator.allocate(3);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr2) % 16, 0);
 }
+
+/**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
+TEST_F(STLStackAllocatorTest, CopyConstructor_CopiesStateCorrectly)
+{
+    char* buffer = (char*)testAllocator.allocate(126);
+    std::memcpy(buffer, "This is a test!", 15);
+
+    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+    EXPECT_NE(testAllocator2.GetMarker(), testAllocator.GetMarker());
+
+    // Find the relative original ptr location
+    char* originalPtr = (char*)testAllocator2.GetMarker() - 126;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.deallocate(originalPtr, 126));
+}
+
+
+/**@brief Tests if copy assignment operator clones state and creates independent allocator */
+TEST_F(STLStackAllocatorTest, CopyAssignmentOperator_ClonesState)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(531);
+
+    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(12);
+    testAllocator2 = testAllocator;
+
+    EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
+
+    EXPECT_NE(testAllocator2.GetMarker(), testAllocator.GetMarker());
+
+    // Find the relative original ptr location
+    char* originalPtr = (char*)testAllocator2.GetMarker() - 531;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.deallocate(originalPtr, 531));
+}
+
+/**@brief Tests if move constructor transfers ownership and invalidates source */
+TEST_F(STLStackAllocatorTest, MoveConstructor_TransfersOwnership)
+{
+    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(731);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+    Core::STLStackAllocator<char>::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(std::move(testAllocator));
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+    EXPECT_EQ(testAllocator2.GetMarker(), alloc1CurrentMarker);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+
+    // Find the relative original ptr location
+    char* originalPtr = (char*)testAllocator2.GetMarker() - 731;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.deallocate(originalPtr, 731));
+}
+
+/**@brief Tests if move assignment operator transfers ownership */
+TEST_F(STLStackAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
+{
+    [[maybe_unused]]  char* buffer = (char*)testAllocator.allocate(221);
+
+    size_t alloc1Capacity = testAllocator.getCapacity();
+    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+    Core::STLStackAllocator<char>::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(12);
+
+    testAllocator2 = std::move(testAllocator);
+
+    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
+    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+    EXPECT_EQ(testAllocator2.GetMarker(), alloc1CurrentMarker);
+
+    EXPECT_EQ(testAllocator.getCapacity(), 0);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+
+    // Find the relative original ptr location
+    char* originalPtr = (char*)testAllocator2.GetMarker() - 221;
+
+    // Should be able to reverse the allocation with no errors
+    EXPECT_NO_THROW(testAllocator2.deallocate(originalPtr, 221));
+}

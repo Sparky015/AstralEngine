@@ -124,7 +124,6 @@ namespace Core {
             return m_EndBlockAddress - m_StartBlockAddress;
         }
 
-
         StackAllocator(const StackAllocator& other) :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
             m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
@@ -151,7 +150,7 @@ namespace Core {
             m_CurrentMarker(other.m_CurrentMarker)
         {
             other.m_StartBlockAddress = nullptr;
-            other.m_StartBlockAddress = nullptr;
+            other.m_EndBlockAddress = nullptr;
             other.m_CurrentMarker = nullptr;
         }
 
@@ -163,7 +162,7 @@ namespace Core {
                 m_EndBlockAddress = other.m_EndBlockAddress;
                 m_CurrentMarker = other.m_CurrentMarker;
                 other.m_StartBlockAddress = nullptr;
-                other.m_StartBlockAddress = nullptr;
+                other.m_EndBlockAddress = nullptr;
                 other.m_CurrentMarker = nullptr;
             }
             return *this;
