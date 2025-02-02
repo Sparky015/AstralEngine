@@ -190,3 +190,32 @@ TEST_F(LinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
 
 }
+
+
+/**@brief Tests if the allocator buffer will be resized when it overflows. */
+TEST_F(LinearAllocatorTest, Allocate_ResizesMemoryBufferWhenFull)
+{
+    constexpr size_t initialBlockSize = 64; // very small to trigger resize
+    Core::LinearAllocator allocator(initialBlockSize);
+
+    size_t initialCapacity = allocator.GetCapacity();
+    EXPECT_EQ(initialCapacity, initialBlockSize);
+
+    void* block1 = allocator.Allocate(56, 8);
+    EXPECT_NE(block1, nullptr);
+
+
+    size_t usedBeforeResize = allocator.GetUsedBlockSize();
+    EXPECT_LE(usedBeforeResize, initialCapacity)
+                        << "Used size should not exceed the initial capacity.";
+
+    void* block2 = nullptr;
+    EXPECT_NO_THROW(block2 = allocator.Allocate(16, 8));
+    EXPECT_NE(block2, nullptr);
+
+    size_t newCapacity = allocator.GetCapacity();
+    EXPECT_GT(newCapacity, initialCapacity)
+                        << "Expected the allocator to resize and increase capacity when allocation overflow occurs.";
+
+    EXPECT_EQ(allocator.GetUsedBlockSize(), usedBeforeResize + 16);
+}

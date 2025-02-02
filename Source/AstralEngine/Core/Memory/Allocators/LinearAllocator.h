@@ -11,9 +11,9 @@
 #include "Core/Memory/Tracking/AllocationTracker.h"
 #include "Debug/Macros/Asserts.h"
 #include <cstddef>
+#include <cstring>
 #include <memory>
 #include <new>
-#include <cstring>
 
 
 namespace Core {
@@ -138,6 +138,22 @@ namespace Core {
         }
 
     private:
+
+        /** @brief Attempts to resize the internal buffer of the allocator.
+         *  @throw std::bad_alloc Throws when resize allocation failed to allocate a new block. */
+        inline void ResizeInternalMemoryBlock()
+        {
+            size_t currentUsedSize = GetUsedBlockSize();
+            void* newMemoryBlock = nullptr;
+            size_t newMemoryBufferSize = 0;
+
+            AllocatorUtils::ResizeMemoryBlock(m_StartBlockAddress, GetCapacity(), newMemoryBlock, newMemoryBufferSize);
+            if (!newMemoryBlock) { throw std::bad_alloc(); }
+
+            m_StartBlockAddress = (unsigned char*)newMemoryBlock;
+            m_CurrentMarker = m_StartBlockAddress + currentUsedSize;
+            m_EndBlockAddress = m_StartBlockAddress + newMemoryBufferSize;
+        }
 
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;
