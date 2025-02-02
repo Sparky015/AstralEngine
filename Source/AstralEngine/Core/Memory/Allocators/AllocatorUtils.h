@@ -14,9 +14,9 @@
 
 
 #ifdef ASTRAL_DEBUG_BUILD
-#define ALLOCATOR_UTILS_SET_MEMORY_REGION(startAddress, length, setType) SetMemoryRegion(startAddress, length, setType)
+#define ALLOCATOR_UTILS_SET_MEMORY_PATTERN(startAddress, length, setType) SetMemoryPattern(startAddress, length, setType)
 #else
-#define ALLOCATOR_UTILS_SET_MEMORY_REGION(startAddress, length, setType)
+#define ALLOCATOR_UTILS_SET_MEMORY_PATTERN(startAddress, length, setType)
 #endif
 
 namespace Core::AllocatorUtils {
@@ -28,10 +28,10 @@ namespace Core::AllocatorUtils {
         FreedMemory = 0xDD,
     };
 
-    inline void SetMemoryRegion(void* startAddress, size_t length, AllocatorMemorySetType setType)
+    inline void SetMemoryPattern(void* startAddress, size_t length, AllocatorMemorySetType setType)
     {
         std::memset(startAddress, setType, length);
-        LOG("Function called! -------------");
+        LOG("SetMemoryPattern Function called!");
     }
 
     /**@brief Checks if a given alignment is a power of two.
@@ -113,7 +113,7 @@ namespace Core::AllocatorUtils {
         const uint8 alignmentOffset = (unsigned char*)alignedAddress - (unsigned char*)allocatedAddress;
         *(m_HeaderMarker) = alignmentOffset;
 
-        ALLOCATOR_UTILS_SET_MEMORY_REGION(alignedAddress, size, AllocatorMemorySetType::AllocatedMemory);
+        ALLOCATOR_UTILS_SET_MEMORY_PATTERN(alignedAddress, size, AllocatorMemorySetType::AllocatedMemory);
 
         return alignedAddress;
     }
