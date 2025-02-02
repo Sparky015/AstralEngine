@@ -124,6 +124,14 @@ namespace Core {
             return m_EndBlockAddress - m_StartBlockAddress;
         }
 
+        /**@brief Doubles the size of the internal buffer of the allocator.
+         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+        void ResizeBuffer()
+        {
+            if (GetUsedBlockSize() != 0) { return; }
+            ResizeInternalMemoryBlock();
+        }
+
         StackAllocator(const StackAllocator& other) :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
             m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
@@ -182,6 +190,22 @@ namespace Core {
         }
 
     private:
+
+        /** @brief Attempts to resize the internal buffer of the allocator.
+         *  @throw std::bad_alloc Throws when resize allocation failed to allocate a new block. */
+        inline void ResizeInternalMemoryBlock()
+        {
+            size_t currentUsedSize = GetUsedBlockSize();
+            void* newMemoryBlock = nullptr;
+            size_t newMemoryBufferSize = 0;
+
+            AllocatorUtils::ResizeMemoryBlock(m_StartBlockAddress, GetCapacity(), newMemoryBlock, newMemoryBufferSize);
+            if (!newMemoryBlock) { throw std::bad_alloc(); }
+
+            m_StartBlockAddress = (unsigned char*)newMemoryBlock;
+            m_CurrentMarker = m_StartBlockAddress + currentUsedSize;
+            m_EndBlockAddress = m_StartBlockAddress + newMemoryBufferSize;
+        }
 
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;

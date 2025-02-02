@@ -289,3 +289,16 @@ TEST_F(FrameAllocatorTest, moveAssignment_TransfersOwnershipCorrectly)
     EXPECT_EQ(testAllocator.GetCapacity(), 0);
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
 }
+
+/** @brief Tests if the method resizes the memory block by doubling the capacity of the allocator. */
+TEST_F(FrameAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
+{
+    size_t currentCapacity = testAllocator.GetCapacity();
+    size_t currentUsedSize = testAllocator.GetUsedBlockSize();
+
+    EXPECT_EQ(currentUsedSize, 0);
+    testAllocator.ResizeBuffer();
+
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+    EXPECT_EQ(testAllocator.GetCapacity(), currentCapacity * 2);
+}

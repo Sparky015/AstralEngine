@@ -60,7 +60,6 @@ namespace Core::AllocatorUtils {
     {
         [[unlikely]] if (size == 0) { return nullptr; }
 
-        ASSERT(alignment < 256, "Alignment is too big. This function supports up to 255 for the alignment.");
         ASSERT(IsAlignmentPowerOfTwo(alignment), "Alignment must be a power of two.")
 
         // Giving ourselves enough space to perform an alignment and for an allocator header to track the offset

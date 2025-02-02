@@ -76,7 +76,18 @@ namespace Core {
             return m_ActiveBuffer->GetUsedBlockSize();
         }
 
-        [[nodiscard]] size_t GetSingleBufferCapacity() const { return m_ActiveBuffer->GetCapacity(); }
+        [[nodiscard]] size_t GetActiveBufferCapacity() const
+        {
+            return m_ActiveBuffer->GetCapacity();
+        }
+
+        /**@brief Doubles the size of the active internal buffer of the allocator.
+          * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+        void ResizeActiveBuffer()
+        {
+            if (GetUsedBlockSize() != 0) { return; }
+            m_ActiveBuffer->ResizeBuffer();
+        }
 
         DoubleBufferedAllocator(const DoubleBufferedAllocator& other) :
             m_Buffers{other.m_Buffers[0], other.m_Buffers[1]},

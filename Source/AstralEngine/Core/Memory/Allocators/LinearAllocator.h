@@ -80,6 +80,14 @@ namespace Core {
             return m_EndBlockAddress - m_StartBlockAddress;
         }
 
+        /**@brief Doubles the size of the internal buffer of the allocator.
+         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+        void ResizeBuffer()
+        {
+            if (GetUsedBlockSize() != 0) { return; }
+            ResizeInternalMemoryBlock();
+        }
+
         LinearAllocator(const LinearAllocator& other) :
                 m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
                 m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),

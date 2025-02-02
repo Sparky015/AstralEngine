@@ -292,3 +292,15 @@ TEST_F(StackAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
     EXPECT_NO_THROW(testAllocator2.Deallocate(originalPtr, 221));
 }
 
+/** @brief Tests if the method resizes the memory block by doubling the capacity of the allocator. */
+TEST_F(StackAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
+{
+    size_t currentCapacity = testAllocator.GetCapacity();
+    size_t currentUsedSize = testAllocator.GetUsedBlockSize();
+
+    EXPECT_EQ(currentUsedSize, 0);
+    testAllocator.ResizeBuffer();
+
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+    EXPECT_EQ(testAllocator.GetCapacity(), currentCapacity * 2);
+}

@@ -242,3 +242,16 @@ TEST_F(DoubleBufferedAllocatorTest, moveAssignment_TransfersOwnershipCorrectly)
     secondAllocator.SwapBuffers();
     EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 119);
 }
+
+/** @brief Tests if the method resizes the memory block by doubling the capacity of the allocator. */
+TEST_F(DoubleBufferedAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
+{
+    size_t currentCapacity = testAllocator.GetActiveBufferCapacity();
+    size_t currentUsedSize = testAllocator.GetUsedBlockSize();
+
+    EXPECT_EQ(currentUsedSize, 0);
+    testAllocator.ResizeActiveBuffer();
+
+    EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
+    EXPECT_EQ(testAllocator.GetActiveBufferCapacity(), currentCapacity * 2);
+}
