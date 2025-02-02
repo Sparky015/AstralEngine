@@ -17,6 +17,7 @@ set(TEST_FILES
         Core/Memory/Pools/ObjectPoolTest.cpp
         Core/Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
         Core/Memory/Allocators/LinearAllocatorTest.cpp
+        Core/Memory/Allocators/AllocatorUtilsTest.cpp
 )
 
 
