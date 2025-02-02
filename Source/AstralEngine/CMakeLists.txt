@@ -1,18 +1,3 @@
-
-
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    add_definitions(-DDEBUG_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    add_definitions(-DRELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    add_definitions(-DMINIMUM_SIZE_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
-    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
-endif()
-
-
 add_library(AstralEngine
         Core/CoreMacroDefinitions.h
         pch.h
@@ -211,6 +196,19 @@ target_precompile_headers(AstralEngine PRIVATE "pch.h")
 
 
 # Defining Macros
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
+endif()
+
 target_compile_definitions(AstralEngine PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(AstralEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
@@ -218,7 +216,7 @@ if (APPLE)
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
 endif ()
-target_compile_definitions(AstralEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
+target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
