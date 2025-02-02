@@ -32,7 +32,7 @@ namespace Core {
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
         explicit STLStackAllocator(size_type memoryBlock) :
-                m_StackAllocator(memoryBlock)
+                m_StackAllocator(std::make_shared<Core::StackAllocator>(memoryBlock))
         {}
 
         ~STLStackAllocator() = default;
@@ -48,19 +48,19 @@ namespace Core {
         using Marker = unsigned char*;
 
         /**@brief Gets a marker to the top of the memory block */
-        [[nodiscard]] Marker GetMarker() const { return m_StackAllocator.GetMarker(); }
+        [[nodiscard]] Marker GetMarker() const { return m_StackAllocator->GetMarker(); }
 
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
         void RollbackToMarker(Marker marker)
         {
-            m_StackAllocator.RollbackToMarker(marker);
+            m_StackAllocator->RollbackToMarker(marker);
         }
 
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            return (pointer)m_StackAllocator.Allocate(allocatedBytes, alignof(T));
+            return (pointer)m_StackAllocator->Allocate(allocatedBytes, alignof(T));
         }
 
 
@@ -68,25 +68,25 @@ namespace Core {
          * @warning You can only Deallocate the previous allocation. This allocator follows a last in first out approach */
         void deallocate(pointer ptr, size_type numberOfElements)
         {
-            m_StackAllocator.Deallocate(ptr, numberOfElements * sizeof(T));
+            m_StackAllocator->Deallocate(ptr, numberOfElements * sizeof(T));
         }
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            m_StackAllocator.Reset();
+            m_StackAllocator->Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         [[nodiscard]] size_t getUsedBlockSize() const
         {
-            return m_StackAllocator.GetUsedBlockSize();
+            return m_StackAllocator->GetUsedBlockSize();
         }
 
         /**@brief Gets the memory capacity of the allocator. */
         [[nodiscard]] size_t getCapacity() const
         {
-            return m_StackAllocator.GetCapacity();
+            return m_StackAllocator->GetCapacity();
         }
 
         template <typename U>
@@ -109,15 +109,17 @@ namespace Core {
             return *this;
         }
 
-        STLStackAllocator(STLStackAllocator&& other) noexcept :
-            m_StackAllocator(std::move(other.m_StackAllocator))
+        template <typename U>
+        STLStackAllocator(const STLStackAllocator<U>& other) :
+                m_StackAllocator(other.m_StackAllocator)
         {}
 
-        STLStackAllocator& operator=(STLStackAllocator&& other) noexcept
+        template <typename U>
+        STLStackAllocator& operator=(const STLStackAllocator<U>& other)
         {
             if (this != &other)
             {
-                m_StackAllocator = std::move(other.m_StackAllocator);
+                m_StackAllocator = other.m_StackAllocator;
             }
             return *this;
         }
@@ -135,8 +137,10 @@ namespace Core {
         }
 
     private:
+        template <typename U>
+        friend class STLStackAllocator;
 
-        Core::StackAllocator m_StackAllocator;
+        std::shared_ptr<Core::StackAllocator> m_StackAllocator;
     };
 
 }

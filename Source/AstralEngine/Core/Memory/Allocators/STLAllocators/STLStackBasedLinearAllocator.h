@@ -24,15 +24,15 @@ namespace Core {
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing.
      * @thread_safety This class is NOT thread safe. */
-    template <typename T, size_t memoryBlockSize>
+    template <typename ElementType, size_t MemoryBlockSize>
     class STLStackBasedLinearAllocator
     {
     public:
         static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
-        static_assert(memoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
+        static_assert(MemoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
 
-        using value_type = T;
-        using pointer = T*;
+        using value_type = ElementType;
+        using pointer = ElementType*;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
         using propagate_on_container_move_assignment = std::true_type;
@@ -40,7 +40,10 @@ namespace Core {
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
 
-        STLStackBasedLinearAllocator() = default;
+        STLStackBasedLinearAllocator() :
+            m_StackBasedLinearAllocator(std::make_shared<Core::StackBasedLinearAllocator<MemoryBlockSize>>())
+        {}
+
         explicit STLStackBasedLinearAllocator(size_type) noexcept : STLStackBasedLinearAllocator() {}
         ~STLStackBasedLinearAllocator()
         {
@@ -51,8 +54,8 @@ namespace Core {
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
-            const size_t allocatedBytes = numberOfElements * sizeof(T);
-            return (pointer)m_StackBasedLinearAllocator.Allocate(allocatedBytes, alignof(T));
+            const size_t allocatedBytes = numberOfElements * sizeof(ElementType);
+            return (pointer)m_StackBasedLinearAllocator->Allocate(allocatedBytes, alignof(ElementType));
         }
 
 
@@ -65,26 +68,26 @@ namespace Core {
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            m_StackBasedLinearAllocator.Reset();
+            m_StackBasedLinearAllocator->Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         size_t getUsedBlockSize()
         {
-            return m_StackBasedLinearAllocator.GetUsedBlockSize();
+            return m_StackBasedLinearAllocator->GetUsedBlockSize();
         }
 
         /**@brief Gets the memory capacity of the allocator. */
         [[nodiscard]] size_t getCapacity() const
         {
-            return m_StackBasedLinearAllocator.GetCapacity();
+            return m_StackBasedLinearAllocator->GetCapacity();
         }
 
         // Rebind struct
-        template <typename U>
+        template <typename OtherElementType>
         struct rebind
         {
-            using other = STLStackBasedLinearAllocator<U, memoryBlockSize>;
+            using other = STLStackBasedLinearAllocator<OtherElementType, MemoryBlockSize>;
         };
 
         STLStackBasedLinearAllocator(const STLStackBasedLinearAllocator& other) :
@@ -100,34 +103,38 @@ namespace Core {
             return *this;
         }
 
-        STLStackBasedLinearAllocator(STLStackBasedLinearAllocator&& other) noexcept :
-            m_StackBasedLinearAllocator(std::move(other.m_StackBasedLinearAllocator))
+        template <typename OtherElementType>
+        STLStackBasedLinearAllocator(const STLStackBasedLinearAllocator<OtherElementType, MemoryBlockSize>& other) :
+                m_StackBasedLinearAllocator(other.m_StackBasedLinearAllocator)
         {}
 
-        STLStackBasedLinearAllocator& operator=(STLStackBasedLinearAllocator&& other) noexcept
+        template <typename OtherElementType>
+        STLStackBasedLinearAllocator& operator=(const STLStackBasedLinearAllocator<OtherElementType, MemoryBlockSize>& other)
         {
             if (this != &other)
             {
-                m_StackBasedLinearAllocator = std::move(other.m_StackBasedLinearAllocator);
+                m_StackBasedLinearAllocator = other.m_StackBasedLinearAllocator;
             }
             return *this;
         }
 
-
-        template <typename U>
-        bool operator==(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
+        template <typename OtherElementType>
+        bool operator==(const STLStackBasedLinearAllocator<OtherElementType, MemoryBlockSize>& other) noexcept
         {
             return (m_StackBasedLinearAllocator == other.m_StackBasedLinearAllocator);
         }
 
-        template <typename U>
-        bool operator!=(const STLStackBasedLinearAllocator<U, memoryBlockSize>& other) noexcept
+        template <typename OtherElementType>
+        bool operator!=(const STLStackBasedLinearAllocator<OtherElementType, MemoryBlockSize>& other) noexcept
         {
             return !(*this == other);
         }
 
     private:
-        Core::StackBasedLinearAllocator<memoryBlockSize> m_StackBasedLinearAllocator;
+        template <typename OtherElementType, size_t OtherMemoryBlockSize>
+        friend class STLStackBasedLinearAllocator;
+
+        std::shared_ptr<Core::StackBasedLinearAllocator<MemoryBlockSize>> m_StackBasedLinearAllocator;
 
     };
 

@@ -28,7 +28,7 @@ namespace Core {
     public:
 
         explicit STLLinearAllocator(size_t memoryBlockSize) :
-            m_LinearAllocator(memoryBlockSize)
+            m_LinearAllocator(std::make_shared<Core::LinearAllocator>(memoryBlockSize))
         {}
 
         ~STLLinearAllocator() = default;
@@ -38,7 +38,6 @@ namespace Core {
         using pointer = T*;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
-        using propagate_on_container_move_assignment = std::true_type;
         using propagate_on_container_copy_assignment = std::true_type;
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
@@ -46,8 +45,9 @@ namespace Core {
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
+            [[unlikely]] if (m_LinearAllocator == nullptr) { return nullptr; }
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            return (pointer)m_LinearAllocator.Allocate(allocatedBytes, alignof(T));
+            return (pointer)m_LinearAllocator->Allocate(allocatedBytes, alignof(T));
         }
 
 
@@ -60,19 +60,22 @@ namespace Core {
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
         void reset()
         {
-            m_LinearAllocator.Reset();
+            [[unlikely]] if (m_LinearAllocator == nullptr) { return; }
+            m_LinearAllocator->Reset();
         }
 
         /**@brief Gets the amount of memory currently allocated out by the allocator. */
         [[nodiscard]] size_t getUsedBlockSize() const
         {
-            return m_LinearAllocator.GetUsedBlockSize();
+            [[unlikely]] if (m_LinearAllocator == nullptr) { return 0; }
+            return m_LinearAllocator->GetUsedBlockSize();
         }
 
         /**@brief Gets the memory capacity of the allocator. */
         [[nodiscard]] size_t getCapacity() const
         {
-            return m_LinearAllocator.GetCapacity();
+            [[unlikely]] if (m_LinearAllocator == nullptr) { return 0; }
+            return m_LinearAllocator->GetCapacity();
         }
 
         // Rebind struct
@@ -95,15 +98,17 @@ namespace Core {
             return *this;
         }
 
-        STLLinearAllocator(STLLinearAllocator&& other) noexcept :
-                m_LinearAllocator(std::move(other.m_LinearAllocator))
+        template <typename U>
+        STLLinearAllocator(const STLLinearAllocator<U>& other) :
+                m_LinearAllocator(other.m_LinearAllocator)
         {}
 
-        STLLinearAllocator& operator=(STLLinearAllocator&& other) noexcept
+        template <typename U>
+        STLLinearAllocator& operator=(const STLLinearAllocator<U>& other)
         {
             if (this != &other)
             {
-                m_LinearAllocator = std::move(other.m_LinearAllocator);
+                m_LinearAllocator = other.m_LinearAllocator;
             }
             return *this;
         }
@@ -121,8 +126,10 @@ namespace Core {
         }
 
     private:
+        template <typename U>
+        friend class STLLinearAllocator;
 
-        Core::LinearAllocator m_LinearAllocator;
+        std::shared_ptr<Core::LinearAllocator> m_LinearAllocator;
     };
 
 }

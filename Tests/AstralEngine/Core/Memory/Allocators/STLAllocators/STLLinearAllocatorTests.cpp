@@ -155,36 +155,42 @@ TEST_F(STLLinearAllocatorTest, CopyAssignmentOperator_ClonesState)
 
 }
 
-/**@brief Tests if move constructor transfers ownership and invalidates source */
-TEST_F(STLLinearAllocatorTest, MoveConstructor_TransfersOwnership)
+/**@brief Tests if rebind-shared allocators maintain the same underlying state across copies. */
+TEST_F(STLLinearAllocatorTest, rebind_SharesStateBetweenInstances)
 {
-    [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(731);
+    // Allocate some memory using the original testAllocator
+    // We'll allocate 100 chars (bytes) to ensure the allocator's used size increases
+    char* initialAllocation = testAllocator.allocate(100);
+    std::memset(initialAllocation, 1, 100); // Fill with some data just to show it's allocated
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 100);
 
-    size_t alloc1Capacity = testAllocator.getCapacity();
-    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
-    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(std::move(testAllocator));
+    // Create a rebind-based allocator (switching from char to int, for example) using the same underlying memory
+    Core::STLLinearAllocator<char>::rebind<int>::other rebindAllocator{testAllocator};
 
-    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
-    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
+    // Allocate memory using the rebind-based allocator
+    // This allocation should increase the used block size of both allocators since they share the same memory
+    [[maybe_unused]] int* reboundAllocation = rebindAllocator.allocate(5);
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 100 + 5 * sizeof(int))
+                        << "Used block size should account for additional int memory allocated by rebind";
 
-    EXPECT_EQ(testAllocator.getCapacity(), 0);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
-}
+    // Verify that both allocators now report the same used block size
+    EXPECT_EQ(rebindAllocator.getUsedBlockSize(), testAllocator.getUsedBlockSize())
+                        << "The rebind allocator and original allocator should share the same used memory";
 
-/**@brief Tests if move assignment operator transfers ownership */
-TEST_F(STLLinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
-{
-    [[maybe_unused]]  char* buffer = (char*)testAllocator.allocate(221);
+    // Allocate more memory using the original allocator
+    char* secondAllocation = testAllocator.allocate(20);
+    std::memset(secondAllocation, 2, 20); // Fill new allocation with different data
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), (100 + 5 * sizeof(int) + 20))
+                        << "Used block size should account for the total memory allocated so far";
 
-    size_t alloc1Capacity = testAllocator.getCapacity();
-    size_t alloc1UsedSize = testAllocator.getUsedBlockSize();
+    // The rebind-based allocator should also see the updated used block size
+    EXPECT_EQ(rebindAllocator.getUsedBlockSize(), testAllocator.getUsedBlockSize())
+                        << "Rebind allocator should reflect the same used size after further allocations by the original allocator";
 
-    Core::STLLinearAllocator<char> testAllocator2 = Core::STLLinearAllocator<char>(12);
-    testAllocator2 = std::move(testAllocator);
-
-    EXPECT_EQ(testAllocator2.getCapacity(), alloc1Capacity);
-    EXPECT_EQ(testAllocator2.getUsedBlockSize(), alloc1UsedSize);
-
-    EXPECT_EQ(testAllocator.getCapacity(), 0);
-    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
+    // Reset using the rebind-based allocator. This should reset the underlying memory block both allocators share.
+    rebindAllocator.reset();
+    EXPECT_EQ(testAllocator.getUsedBlockSize(), 0)
+                        << "Both allocators should show 0 used block size after the reset on one of them";
+    EXPECT_EQ(rebindAllocator.getUsedBlockSize(), 0)
+                        << "Rebind allocator should also show a used block size of 0 after the reset";
 }
