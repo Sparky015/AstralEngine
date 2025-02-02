@@ -6,13 +6,33 @@
 
 #pragma once
 
-//#include "Debug/Macros/Loggers.h"
-#include <cstdlib>
-
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/Macros/Asserts.h"
+#include "Debug/Macros/Loggers.h"
+
+#include <cstdlib>
+
+
+#ifdef ASTRAL_DEBUG_BUILD
+#define ALLOCATOR_UTILS_SET_MEMORY_REGION(startAddress, length, setType) SetMemoryRegion(startAddress, length, setType)
+#else
+#define ALLOCATOR_UTILS_SET_MEMORY_REGION(startAddress, length, setType)
+#endif
 
 namespace Core::AllocatorUtils {
+
+    enum AllocatorMemorySetType : uint8
+    {
+        AlignedOffsetFence = 0xBD,
+        AllocatedMemory = 0xCD,
+        FreedMemory = 0xDD,
+    };
+
+    inline void SetMemoryRegion(void* startAddress, size_t length, AllocatorMemorySetType setType)
+    {
+        std::memset(startAddress, setType, length);
+        LOG("Function called! -------------");
+    }
 
     /**@brief Checks if a given alignment is a power of two.
      * @param alignment The alignment being checked
@@ -93,6 +113,8 @@ namespace Core::AllocatorUtils {
         const uint8 alignmentOffset = (unsigned char*)alignedAddress - (unsigned char*)allocatedAddress;
         *(m_HeaderMarker) = alignmentOffset;
 
+        ALLOCATOR_UTILS_SET_MEMORY_REGION(alignedAddress, size, AllocatorMemorySetType::AllocatedMemory);
+
         return alignedAddress;
     }
 
@@ -148,7 +170,7 @@ namespace Core::AllocatorUtils {
         if (!outNewMemoryBufferPointer) { return; }
         FreeMaxAlignedBlock(memoryBlockPtr);
 
-//        WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newBlockSize << " bytes)");
+        WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newMemoryBufferSize << " bytes)");
     }
 
 }
