@@ -5,8 +5,8 @@
 #pragma once
 
 #include "Debug/Macros/Asserts.h"
-#include <memory>
 #include <cstring>
+#include <memory>
 
 namespace Core {
 
