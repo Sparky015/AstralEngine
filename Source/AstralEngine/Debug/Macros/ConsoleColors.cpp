@@ -12,7 +12,7 @@ namespace Debug::Macros {
 
     std::string_view SetColor(ConsoleOutputColors color)
     {
-        #ifdef PLATFORM_MACOS
+        #ifdef ASTRAL_PLATFORM_MACOS
             switch (color)
             {
                 case ConsoleOutputColors::DEFAULT: return "\033[0m";
@@ -26,7 +26,7 @@ namespace Debug::Macros {
                     std::cout << "\n" << "[Color not defined!]";
                     return "";
             }
-        #elif PLATFORM_WINDOWS
+        #elif ASTRAL_PLATFORM_WINDOWS
 
             static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
