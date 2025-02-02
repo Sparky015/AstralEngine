@@ -24,19 +24,19 @@ using uint64 = uint64_t;
 /** Defines for each build config */
 
 /** Debug build with logging and symbols. */
-#ifdef DEBUG_BUILD
+#ifdef ASTRAL_DEBUG_BUILD
 
 #endif
 
 
 /** Release build that can be used for profiling performance issues. */
-#ifdef RELEASE_WITH_DEBUG_INFO_BUILD
+#ifdef ASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
 #define TURN_OFF_DEBUG_MACROS
 #endif
 
 
 /** Final release build with compiler optimizations. */
-#ifdef RELEASE_BUILD
+#ifdef ASTRAL_RELEASE_BUILD
 #define TURN_OFF_DEBUG_MENU
 #define TURN_OFF_DEBUG_MACROS
 #define TURN_OFF_PROFILER_MACRO
@@ -45,7 +45,7 @@ using uint64 = uint64_t;
 
 
 /** Release build with a smaller executable size with some compiler optimizations. */
-#ifdef MINIMUM_SIZE_RELEASE_BUILD
+#ifdef ASTRAL_MINIMUM_SIZE_RELEASE_BUILD
 #define TURN_OFF_DEBUG_MENU
 #define TURN_OFF_DEBUG_MACROS
 #define TURN_OFF_PROFILER_MACRO
