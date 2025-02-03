@@ -39,6 +39,7 @@ namespace Core {
         ~StackBasedLinearAllocator()
         {
             Reset();
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity(), AllocatorUtils::FreedMemory);
         }
 
 
@@ -58,6 +59,9 @@ namespace Core {
             // Aligns the address and will return nullptr if there is not enough space
             if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
 
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, (unsigned char*)alignedAddress - m_CurrentMarker, AllocatorUtils::AlignedOffsetFence);
+            AllocatorUtils::SetMemoryRegionBoundary(alignedAddress, size, AllocatorUtils::AllocatedMemory);
+
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
@@ -69,6 +73,7 @@ namespace Core {
         void Reset()
         {
             TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
+            AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetCapacity(), AllocatorUtils::FreedMemory);
             m_CurrentMarker = m_StartBlockAddress;
         }
 
@@ -91,6 +96,8 @@ namespace Core {
             m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
         {
             std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
+            AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetUsedBlockSize(), AllocatorUtils::AllocatedMemory);
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), AllocatorUtils::FreedMemory);
         }
 
         StackBasedLinearAllocator& operator=(const StackBasedLinearAllocator& other)
@@ -101,6 +108,8 @@ namespace Core {
                 m_StartBlockAddress = &m_MemoryBlock[0];
                 m_EndBlockAddress = m_StartBlockAddress + MemoryBlockSize;
                 m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
+                AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetUsedBlockSize(), AllocatorUtils::AllocatedMemory);
+                AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), AllocatorUtils::FreedMemory);
             }
             return *this;
         }

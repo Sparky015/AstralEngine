@@ -36,6 +36,7 @@ namespace Core {
         ~LinearAllocator()
         {
             AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity(), AllocatorUtils::FreedMemory);
         }
 
         /**@brief Allocates a memory block of the given size with the given required alignment.
@@ -54,6 +55,9 @@ namespace Core {
             // Aligns the address and will return nullptr if there is not enough space
             if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
 
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, (unsigned char*)alignedAddress - m_CurrentMarker, AllocatorUtils::AlignedOffsetFence);
+            AllocatorUtils::SetMemoryRegionBoundary(alignedAddress, size, AllocatorUtils::AllocatedMemory);
+
             // Update current marker
             m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
 
@@ -65,6 +69,7 @@ namespace Core {
         void Reset()
         {
             TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
+            AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetCapacity(), AllocatorUtils::FreedMemory);
             m_CurrentMarker = m_StartBlockAddress;
         }
 
@@ -94,6 +99,8 @@ namespace Core {
                 m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
         {
             std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
+            AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetUsedBlockSize(), AllocatorUtils::AllocatedMemory);
+            AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), AllocatorUtils::FreedMemory);
         }
 
         LinearAllocator& operator=(const LinearAllocator& other)
@@ -104,6 +111,8 @@ namespace Core {
                 std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
                 m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
                 m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
+                AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetUsedBlockSize(), AllocatorUtils::AllocatedMemory);
+                AllocatorUtils::SetMemoryRegionBoundary(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), AllocatorUtils::FreedMemory);
             }
             return *this;
         }
@@ -147,11 +156,13 @@ namespace Core {
 
     private:
 
-        /** @brief Attempts to resize the internal buffer of the allocator.
+        /** @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
+         *         allocator is empty.
          *  @throw std::bad_alloc Throws when resize allocation failed to allocate a new block. */
         inline void ResizeInternalMemoryBlock()
         {
-            size_t currentUsedSize = GetUsedBlockSize();
+            [[unlikely]] if (GetUsedBlockSize() != 0) { return; }
+
             void* newMemoryBlock = nullptr;
             size_t newMemoryBufferSize = 0;
 
@@ -159,8 +170,10 @@ namespace Core {
             if (!newMemoryBlock) { throw std::bad_alloc(); }
 
             m_StartBlockAddress = (unsigned char*)newMemoryBlock;
-            m_CurrentMarker = m_StartBlockAddress + currentUsedSize;
+            m_CurrentMarker = m_StartBlockAddress;
             m_EndBlockAddress = m_StartBlockAddress + newMemoryBufferSize;
+
+            AllocatorUtils::SetMemoryRegionBoundary(m_StartBlockAddress, GetCapacity(), AllocatorUtils::FreedMemory);
         }
 
         unsigned char* m_StartBlockAddress;
