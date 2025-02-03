@@ -8,30 +8,51 @@
 
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/Macros/Asserts.h"
+#include "Debug/Macros/Error.h"
 #include "Debug/Macros/Loggers.h"
 
 #include <cstdlib>
 
+#if __has_feature(address_sanitizer)
+#define ASTRAL_ASAN_AVAILABLE
+#endif
 
-#ifdef ASTRAL_DEBUG_BUILD
-#define ALLOCATOR_UTILS_SET_MEMORY_PATTERN(startAddress, length, setType) SetMemoryPattern(startAddress, length, setType)
-#else
-#define ALLOCATOR_UTILS_SET_MEMORY_PATTERN(startAddress, length, setType)
+#ifdef ASTRAL_ASAN_AVAILABLE
+#include <sanitizer/asan_interface.h>
 #endif
 
 namespace Core::AllocatorUtils {
 
-    enum AllocatorMemorySetType : uint8
+    /** @brief  */
+    enum MemoryBoundaryType : uint8
     {
         AlignedOffsetFence = 0xBD,
         AllocatedMemory = 0xCD,
         FreedMemory = 0xDD,
     };
 
-    inline void SetMemoryPattern(void* startAddress, size_t length, AllocatorMemorySetType setType)
+    /** @brief  */
+    inline void SetMemoryRegionBoundary(void* startAddress, size_t length, MemoryBoundaryType setType)
     {
-        std::memset(startAddress, setType, length);
-        LOG("SetMemoryPattern Function called!");
+#ifdef ASTRAL_DEBUG_BUILD
+    #ifdef ASTRAL_ASAN_AVAILABLE
+          switch (setType)
+          {
+              case AlignedOffsetFence:
+                  ASAN_POISON_MEMORY_REGION(startAddress, length);
+                  break;
+              case AllocatedMemory:
+                  ASAN_UNPOISON_MEMORY_REGION(startAddress, length);
+                  break;
+              case FreedMemory:
+                  ASAN_POISON_MEMORY_REGION(startAddress, length);
+                  break;
+              default: ERROR("Undefined MemoryBoundaryType value was passed to SetMemoryRegionBoundary!")
+          }
+    #else
+            std::memset(startAddress, setType, length);
+    #endif
+#endif
     }
 
     /**@brief Checks if a given alignment is a power of two.
@@ -39,7 +60,7 @@ namespace Core::AllocatorUtils {
      * @return True if the alignment is a power of two, and false otherwise.
      * @warning Alignments should not be zero. Passing in zero as an argument
      *          with return the wrong answer. Do not pass in zero.
-     *  @thread_safety This function is not thread safe. */
+     * @thread_safety This function is not thread safe. */
     [[nodiscard]] constexpr bool IsAlignmentPowerOfTwo(const size_t alignment) noexcept
     {
         [[unlikely]] if (alignment == 0) { return false; }
@@ -51,7 +72,7 @@ namespace Core::AllocatorUtils {
      * @param numberOfBytes The number of bytes that will be allocated
      * @param endAddress The end address of the allocator memory block
      * @return True if allocating the given number of bytes will overflow the allocator memory block, and false otherwise.
-     *  @thread_safety This function is not thread safe. */
+     * @thread_safety This function is not thread safe. */
     [[nodiscard]] constexpr bool DoesCauseOverflow(void* currentAddress, const size_t numberOfBytes, void* endAddress) noexcept
     {
         return (static_cast<unsigned char*>(currentAddress) + numberOfBytes) > static_cast<unsigned char*>(endAddress);
@@ -63,7 +84,7 @@ namespace Core::AllocatorUtils {
      *                          Expected to be not zero. Can't be negative because of size_t.
      * @param alignment The alignment that the memory block will be aligned to
      * @return A block size that is the next multiple of the alignment. Returns 0 if given alignment is 0.
-     *  @thread_safety This function is not thread safe. */
+     * @thread_safety This function is not thread safe. */
     constexpr size_t RoundToNextAlignmentMultiple(size_t originalBlockSize, size_t alignment)
     {
         [[unlikely]] if (alignment == 0) { return 0; }
@@ -113,7 +134,15 @@ namespace Core::AllocatorUtils {
         const uint8 alignmentOffset = (unsigned char*)alignedAddress - (unsigned char*)allocatedAddress;
         *(m_HeaderMarker) = alignmentOffset;
 
-        ALLOCATOR_UTILS_SET_MEMORY_PATTERN(alignedAddress, size, AllocatorMemorySetType::AllocatedMemory);
+        SetMemoryRegionBoundary(allocatedAddress, alignmentOffset - 1, AlignedOffsetFence);
+        SetMemoryRegionBoundary(alignedAddress, size, MemoryBoundaryType::AllocatedMemory);
+
+        // Memory Layout:
+        // [malloc'd block start]
+        // [...padding for alignment...]
+        // [1 byte header (alignment offset)]
+        // [user accessible memory]
+        // [malloc'd block end]
 
         return alignedAddress;
     }
@@ -128,10 +157,17 @@ namespace Core::AllocatorUtils {
     {
         [[unlikely]] if (pointer == nullptr) { return; }
 
+        // Unpoisoning region if asan is used
+        SetMemoryRegionBoundary(static_cast<unsigned char*>(pointer) - 1, 1, AllocatedMemory);
+
         // Get the natural alignment offset size from the allocation header
         unsigned char* headerMarker = static_cast<unsigned char*>(pointer) - 1;
         uint8 alignmentOffset = *headerMarker;
 
+        SetMemoryRegionBoundary(static_cast<unsigned char*>(pointer) - alignmentOffset, alignmentOffset - 1, FreedMemory);
+
+        // ASAN will automatically start monitoring for use after frees and other stuff when the block is freed by std::free.
+        // No further action is needed.
         std::free((unsigned char*)pointer - alignmentOffset);
     }
 
@@ -149,13 +185,14 @@ namespace Core::AllocatorUtils {
 
     /** @brief Frees a max aligned memory block that was allocated by AllocatorUtils::AllocMaxAlignedBlock.
      *  @param blockPtr The pointer to the block being freed.
-     *  @note This function ensures the corresponding free function for std::aligned_alloc is called. */
+     *  @note This function ensures the corresponding free function for std::aligned_alloc is called.
+     *  @thread_safety This function is not thread safe. */
     inline void FreeMaxAlignedBlock(void* blockPtr)
     {
         FreeAlignedAlloc(blockPtr);
     }
 
-    /** @brief Resizes an allocator's memory block to a bigger size.
+    /** @brief Resizes an allocator's memory block to a bigger size. This frees the old pointer only if resize allocation succeeds.
      *  @param memoryBlockPtr Pointer to the allocator's memory block.
      *  @param memoryBlockSize The current size of the allocator's memory block
      *  @param resizeMultiplier The amount the original memory block size is multiplied by to get the new memory block's size.
@@ -169,6 +206,7 @@ namespace Core::AllocatorUtils {
         outNewMemoryBufferPointer = AllocMaxAlignedBlock(newMemoryBufferSize);
         if (!outNewMemoryBufferPointer) { return; }
         FreeMaxAlignedBlock(memoryBlockPtr);
+        SetMemoryRegionBoundary(memoryBlockPtr, memoryBlockSize, FreedMemory);
 
         WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newMemoryBufferSize << " bytes)");
     }
