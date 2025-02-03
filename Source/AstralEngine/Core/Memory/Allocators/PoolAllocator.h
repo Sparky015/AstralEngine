@@ -14,27 +14,29 @@ namespace Core {
 
     /**@brief Allocator that gives memory out in fixed size blocks.
      * @thread_safety This class is NOT thread safe. */
-    template<size_t BlockSize, size_t NumberOfBlocks>
     class PoolAllocator
     {
     public:
 
-        PoolAllocator() :
-            m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE)}
+        PoolAllocator(size_t blockSize, size_t numberOfBlocks) :
+                m_NumberOfBlocks(numberOfBlocks),
+                m_BlockSize(blockSize),
+                m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(GetTotalSize())}
         {
 
             m_FreeListHead = &m_MemoryBlock[0];
-            for (size_t i = 0; i < NumberOfBlocks - 1; i++)
+            for (size_t i = 0; i < numberOfBlocks - 1; i++)
             {
                 // The next free element's address is stored in the memory space of the previous free element
-                *reinterpret_cast<void**>(&m_MemoryBlock[BlockSize * i]) = &m_MemoryBlock[BlockSize * (i + 1)];
+                *reinterpret_cast<void**>(&m_MemoryBlock[blockSize * i]) = &m_MemoryBlock[blockSize * (i + 1)];
             }
-            *reinterpret_cast<void**>(&m_MemoryBlock[BlockSize * (NumberOfBlocks - 1)]) = nullptr;
+            *reinterpret_cast<void**>(&m_MemoryBlock[blockSize * (numberOfBlocks - 1)]) = nullptr;
         }
 
         ~PoolAllocator()
         {
             AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
+            AllocatorUtils::SetMemoryRegionBoundary(m_MemoryBlock, GetTotalSize(), AllocatorUtils::FreedMemory);
         }
 
         /**@brief Allocates a memory block from the pool and returns a pointer to it.
@@ -61,7 +63,7 @@ namespace Core {
         {
             [[unlikely]] if (!elementPtr) return;
             ASSERT(!IsPointerFree(elementPtr), "Double free of memory block pointer has occurred!")
-            ASSERT(elementPtr >= &m_MemoryBlock[0] && elementPtr <= &m_MemoryBlock[UNIFIED_MEMORY_BLOCK_SIZE - 1], "Pointer does not fall within this pool's memory block.")
+            ASSERT(elementPtr >= &m_MemoryBlock[0] && elementPtr <= &m_MemoryBlock[GetTotalSize() - 1], "Pointer does not fall within this pool's memory block.")
 
             // Pushing pointer onto the free list
             void* nextPointer = m_FreeListHead; // Can be nullptr
@@ -73,12 +75,17 @@ namespace Core {
         [[nodiscard]] constexpr bool CanAllocateMoreBlocks() const noexcept { return m_FreeListHead != nullptr; }
 
         /**@brief Gets the number of blocks this pool allocator can allocate. */
-        [[nodiscard]] constexpr size_t GetNumberOfBlocks() const noexcept { return NumberOfBlocks; }
+        [[nodiscard]] constexpr size_t GetNumberOfBlocks() const noexcept { return m_NumberOfBlocks; }
 
         /**@brief Gets the size of the memory block this pool allocator allocates. */
-        [[nodiscard]] constexpr size_t GetSizeOfBlocks() const noexcept { return BlockSize; }
+        [[nodiscard]] constexpr size_t GetSizeOfBlocks() const noexcept { return m_BlockSize; }
+
+        /**@brief Gets the number of bytes this allocator can allocate out. */
+        [[nodiscard]] constexpr size_t GetTotalSize() const noexcept { return m_NumberOfBlocks * m_BlockSize; }
 
         PoolAllocator(PoolAllocator&& other) noexcept :
+            m_NumberOfBlocks(other.m_NumberOfBlocks),
+            m_BlockSize(other.m_BlockSize),
             m_MemoryBlock(other.m_MemoryBlock),
             m_FreeListHead(other.m_FreeListHead)
         {
@@ -100,10 +107,12 @@ namespace Core {
         }
 
         PoolAllocator(const PoolAllocator& other) :
-        m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE)},
+            m_NumberOfBlocks(other.m_NumberOfBlocks),
+            m_BlockSize(other.m_BlockSize),
+            m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(GetTotalSize())},
             m_FreeListHead(other.m_FreeListHead)
         {
-            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, UNIFIED_MEMORY_BLOCK_SIZE);
+            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, m_NumberOfBlocks * m_BlockSize);
         }
 
         PoolAllocator& operator=(const PoolAllocator& other)
@@ -111,7 +120,7 @@ namespace Core {
             if (this != &other)
             {
                 AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
-                m_MemoryBlock = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(UNIFIED_MEMORY_BLOCK_SIZE);
+                m_MemoryBlock = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(GetTotalSize());
                 m_FreeListHead = other.m_FreeListHead;
             }
             return *this;
@@ -147,7 +156,8 @@ namespace Core {
             return false;
         }
 
-        constexpr static size_t UNIFIED_MEMORY_BLOCK_SIZE = BlockSize * NumberOfBlocks;
+        const size_t m_NumberOfBlocks;
+        const size_t m_BlockSize;
         unsigned char* m_MemoryBlock;
         void* m_FreeListHead; // Points to the first free element address
     };
