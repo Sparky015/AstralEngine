@@ -14,8 +14,11 @@
 #include "Debug/Macros/Loggers.h"
 
 
-// TODO: Add more portable version of this
-#if __has_feature(address_sanitizer)
+#if defined(__has_feature)
+    #if __has_feature(address_sanitizer)
+    #define ASTRAL_ASAN_AVAILABLE
+    #endif
+#elif defined(__SANITIZE_ADDRESS__)
 #define ASTRAL_ASAN_AVAILABLE
 #endif
 

@@ -222,9 +222,8 @@ if (APPLE)
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
 endif ()
+
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
-
-

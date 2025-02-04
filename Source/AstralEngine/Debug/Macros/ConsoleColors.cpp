@@ -4,7 +4,7 @@
 
 #include "ConsoleColors.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef ASTRAL_PLATFORM_WINDOWS
     #include <windows.h>
 #endif
 
