@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
 #include "Debug/Macros/Asserts.h"
 #include <cstring>
 #include <memory>
@@ -22,14 +22,10 @@ namespace Core {
     class DoubleBufferedAllocator
     {
     public:
-        explicit DoubleBufferedAllocator(size_t memoryBlockSize) :
-              m_Buffers{FrameAllocator(memoryBlockSize), FrameAllocator(memoryBlockSize)},
-              m_ActiveBuffer(&m_Buffers[0])
-        {
-            ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
-        }
 
+        explicit DoubleBufferedAllocator(size_t memoryBlockSize);
         ~DoubleBufferedAllocator() = default;
+
 
         using Marker = unsigned char*;
 
@@ -37,103 +33,42 @@ namespace Core {
         [[nodiscard]] Marker GetMarker() const { return m_ActiveBuffer->GetMarker(); }
 
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
-        void RollbackToMarker(const Marker marker)
-        {
-            m_ActiveBuffer->RollbackToMarker(marker);
-        }
+        void RollbackToMarker(const Marker marker) { m_ActiveBuffer->RollbackToMarker(marker); }
 
         /**@brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
-         * @return A pointer to the allocated block
-         * @throw std::bad_alloc When there is not enough memory to complete an allocation */
-        void* Allocate(size_t size, uint16 alignment)
-        {
-            return m_ActiveBuffer->Allocate(size, alignment);
-        }
+         * @return A pointer to the allocated block or nullptr if the allocation failed. */
+        void* Allocate(size_t size, uint16 alignment) { return m_ActiveBuffer->Allocate(size, alignment); }
 
-        void SwapBuffers()
-        {
-            if (m_ActiveBuffer == &m_Buffers[0])
-            {
-                m_ActiveBuffer = &m_Buffers[1];
-            }
-            else
-            {
-                m_ActiveBuffer = &m_Buffers[0];
-            }
-        }
+        /** @brief Swaps the active buffer from the current buffer to the other buffer. */
+        void SwapBuffers();
 
         /**@brief Resets ALL memory in the active buffer. Only the active buffer memory gets deallocated. */
-        void ClearCurrentBuffer()
-        {
-            m_ActiveBuffer->Reset();
-        }
+        void ClearCurrentBuffer() { m_ActiveBuffer->Reset(); }
 
-        /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        [[nodiscard]] size_t GetUsedBlockSize() const
-        {
-            return m_ActiveBuffer->GetUsedBlockSize();
-        }
+        /**@brief Gets the amount of memory currently allocated out by the active buffer.
+         * @return The number of bytes currently allocated by the active buffer. */
+        [[nodiscard]] size_t GetUsedBlockSize() const { return m_ActiveBuffer->GetUsedBlockSize(); }
 
-        [[nodiscard]] size_t GetActiveBufferCapacity() const
-        {
-            return m_ActiveBuffer->GetCapacity();
-        }
+        /**@brief Gets the memory capacity of the active buffer.
+         * @return The max number of bytes the active buffer can allocate. */
+        [[nodiscard]] size_t GetActiveBufferCapacity() const { return m_ActiveBuffer->GetCapacity(); }
 
         /**@brief Doubles the size of the active internal buffer of the allocator.
-          * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
-        void ResizeActiveBuffer()
-        {
-            if (GetUsedBlockSize() != 0) { return; }
-            m_ActiveBuffer->ResizeBuffer();
-        }
+         * @return True if the resize operation succeeded and false if the operation failed.
+         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+        [[nodiscard]] bool ResizeActiveBuffer();
 
-        DoubleBufferedAllocator(const DoubleBufferedAllocator& other) :
-            m_Buffers{other.m_Buffers[0], other.m_Buffers[1]},
-            m_ActiveBuffer(other.m_ActiveBuffer)
-        {}
 
-        DoubleBufferedAllocator& operator=(const DoubleBufferedAllocator& other)
-        {
-            if (this != &other)
-            {
-                m_Buffers[0] = other.m_Buffers[0];
-                m_Buffers[1] = other.m_Buffers[1];
-                m_ActiveBuffer = other.m_ActiveBuffer;
-            }
-            return *this;
-        }
+        DoubleBufferedAllocator(const DoubleBufferedAllocator& other);
+        DoubleBufferedAllocator& operator=(const DoubleBufferedAllocator& other);
+        DoubleBufferedAllocator(DoubleBufferedAllocator&& other) noexcept;
+        DoubleBufferedAllocator& operator=(DoubleBufferedAllocator&& other) noexcept;
 
-        DoubleBufferedAllocator(DoubleBufferedAllocator&& other) noexcept :
-            m_Buffers{std::move(other.m_Buffers[0]), std::move(other.m_Buffers[1])},
-            m_ActiveBuffer(other.m_ActiveBuffer == &other.m_Buffers[0] ? &m_Buffers[0] : &m_Buffers[1])
-        {
-            other.m_ActiveBuffer = nullptr;
-        }
+        bool operator==(const DoubleBufferedAllocator& other) noexcept;
+        bool operator!=(const DoubleBufferedAllocator& other) noexcept;
 
-        DoubleBufferedAllocator& operator=(DoubleBufferedAllocator&& other) noexcept
-        {
-            if (this != &other)
-            {
-                m_ActiveBuffer = other.m_ActiveBuffer == &other.m_Buffers[0] ? &m_Buffers[0] : &m_Buffers[1];
-                m_Buffers[0] = std::move(other.m_Buffers[0]);
-                m_Buffers[1] = std::move(other.m_Buffers[1]);
-                other.m_ActiveBuffer = nullptr;
-            }
-            return *this;
-        }
-
-        bool operator==(const DoubleBufferedAllocator& other) noexcept
-        {
-            return (&m_Buffers[0] == &other.m_Buffers[0] &&
-                    m_ActiveBuffer == other.m_ActiveBuffer);
-        }
-
-        bool operator!=(const DoubleBufferedAllocator& other) noexcept
-        {
-            return !(*this == other);
-        }
 
     private:
         FrameAllocator m_Buffers[2];

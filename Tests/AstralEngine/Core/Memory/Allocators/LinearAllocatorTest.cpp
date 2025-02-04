@@ -43,21 +43,21 @@ TEST_F(LinearAllocatorTest, allocate_ReturnsUseableAddresses)
 TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
     Core::LinearAllocator testAllocator = Core::LinearAllocator(2056);
-    EXPECT_THROW(testAllocator.Allocate(3000, alignof(char)), std::bad_alloc);
-    EXPECT_THROW(testAllocator.Allocate(2057, alignof(char)), std::bad_alloc);
-    EXPECT_NO_THROW(testAllocator.Allocate(2056, alignof(char)));
+    EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
+    EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
+    EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
     Core::LinearAllocator testAllocator = Core::LinearAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
-    EXPECT_THROW(testAllocator.Allocate(250, alignof(char)), std::bad_alloc); // Total Allocation: 2350 -> TOO BIG
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr);    // Total: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr);    // Total: 2100
+    EXPECT_EQ(testAllocator.Allocate(250, alignof(char)), nullptr);    // Total: 2350 -> TOO BIG
 }
 
 
@@ -65,21 +65,21 @@ TEST_F(LinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 TEST_F(LinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
     Core::LinearAllocator testAllocator = Core::LinearAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(250, alignof(char))); // Total Allocation: 250
+    EXPECT_NE(testAllocator.Allocate(250, alignof(char)), nullptr); // Total Allocation: 250
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 
@@ -88,19 +88,19 @@ TEST_F(LinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurre
 {
     Core::LinearAllocator testAllocator = Core::LinearAllocator(2056);
 
-    testAllocator.Allocate(5, alignof(char));
+    (void)testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 );
-    testAllocator.Allocate(27, alignof(char));
+    (void)testAllocator.Allocate(27, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 + 27 );
-    testAllocator.Allocate(57, alignof(char));
+    (void)testAllocator.Allocate(57, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 + 27 + 57 );
-    testAllocator.Reset();
+    (void)testAllocator.Reset();
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
-    testAllocator.Allocate(812, alignof(char));
+    (void)testAllocator.Allocate(812, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 812);
-    testAllocator.Allocate(11, alignof(char));
+    (void)testAllocator.Allocate(11, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 812 + 11);
-    testAllocator.Allocate(71, alignof(char));
+    (void)testAllocator.Allocate(71, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 812 + 11 + 71);
 }
 
@@ -133,7 +133,7 @@ TEST_F(LinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
 /**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
 TEST_F(LinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
 {
-    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(126, alignof(char));
+    [[maybe_unused]] char* buffer = (char*) testAllocator.Allocate(126, alignof(char));
 
     Core::LinearAllocator testAllocator2 = Core::LinearAllocator(testAllocator);
 
@@ -145,7 +145,7 @@ TEST_F(LinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
 /**@brief Tests if copy assignment operator clones state and creates independent allocator */
 TEST_F(LinearAllocatorTest, CopyAssignmentOperator_ClonesState)
 {
-    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(531, alignof(char));
+    [[maybe_unused]] char* buffer = (char*) testAllocator.Allocate(531, alignof(char));
 
     Core::LinearAllocator testAllocator2 = Core::LinearAllocator(12);
     testAllocator2 = testAllocator;
@@ -158,7 +158,7 @@ TEST_F(LinearAllocatorTest, CopyAssignmentOperator_ClonesState)
 /**@brief Tests if move constructor transfers ownership and invalidates source */
 TEST_F(LinearAllocatorTest, MoveConstructor_TransfersOwnership)
 {
-    [[maybe_unused]] char* buffer = (char*)testAllocator.Allocate(731, alignof(char));
+    [[maybe_unused]] char* buffer = (char*) testAllocator.Allocate(731, alignof(char));
 
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
@@ -175,7 +175,7 @@ TEST_F(LinearAllocatorTest, MoveConstructor_TransfersOwnership)
 /**@brief Tests if move assignment operator transfers ownership */
 TEST_F(LinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
 {
-    [[maybe_unused]]  char* buffer = (char*)testAllocator.Allocate(221, alignof(char));
+    [[maybe_unused]]  char* buffer = (char*) testAllocator.Allocate(221, alignof(char));
 
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
@@ -198,7 +198,7 @@ TEST_F(LinearAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
     size_t currentUsedSize = testAllocator.GetUsedBlockSize();
 
     EXPECT_EQ(currentUsedSize, 0);
-    testAllocator.ResizeBuffer();
+    EXPECT_TRUE(testAllocator.ResizeBuffer());
 
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
     EXPECT_EQ(testAllocator.GetCapacity(), currentCapacity * 2);

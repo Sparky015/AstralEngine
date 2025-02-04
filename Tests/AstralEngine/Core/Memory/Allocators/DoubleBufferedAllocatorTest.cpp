@@ -45,21 +45,21 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_ReturnsUseableAddresses)
 TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 {
     Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2056);
-    EXPECT_THROW(testAllocator.Allocate(3000, alignof(char)), std::bad_alloc);
-    EXPECT_THROW(testAllocator.Allocate(2057, alignof(char)), std::bad_alloc);
-    EXPECT_NO_THROW(testAllocator.Allocate(2056, alignof(char)));
-    }
+    EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
+    EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
+    EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
+}
 
-    /**@brief Tests if the allocator throws an error if the allocation size is too big */
-    TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
-    {
+/**@brief Tests if the allocator throws an error if the allocation size is too big */
+TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
+{
     Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
-    EXPECT_THROW(testAllocator.Allocate(250, alignof(char)), std::bad_alloc); // Total Allocation: 2350 -> TOO BIG
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr);    // Total: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr);    // Total: 2100
+    EXPECT_EQ(testAllocator.Allocate(250, alignof(char)), nullptr);    // Total: 2350 -> TOO BIG
 }
 
 /**@brief Tests if the natural alignment is applied when different alignment requirements request allocations */
@@ -95,21 +95,21 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 TEST_F(DoubleBufferedAllocatorTest, ClearCurrentBuffer_CorrectlyResetsAllocatorMemoryBlock)
 {
     Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.ClearCurrentBuffer(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.ClearCurrentBuffer(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(250, alignof(char))); // Total Allocation: 250
+    EXPECT_NE(testAllocator.Allocate(250, alignof(char)), nullptr); // Total Allocation: 250
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 
@@ -250,7 +250,7 @@ TEST_F(DoubleBufferedAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectS
     size_t currentUsedSize = testAllocator.GetUsedBlockSize();
 
     EXPECT_EQ(currentUsedSize, 0);
-    testAllocator.ResizeActiveBuffer();
+    EXPECT_TRUE(testAllocator.ResizeActiveBuffer());
 
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
     EXPECT_EQ(testAllocator.GetActiveBufferCapacity(), currentCapacity * 2);

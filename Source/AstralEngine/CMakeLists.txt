@@ -14,7 +14,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Core/Memory/Tracking/AllocationTracker.h
+        Core/Memory/Tracking/GlobalAllocationTracker.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -119,7 +119,7 @@ add_library(AstralEngine
         Debug/ImGui/Components/SystemInfoComponents.h
         Core/Memory/Tracking/MemoryMetricsManager.cpp
         Core/Memory/Tracking/MemoryMetricsManager.h
-        Core/Memory/Tracking/AllocationTracker.cpp
+        Core/Memory/Tracking/GlobalAllocationTracker.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/Tracking/PointerAllocationSizeMap.h
@@ -142,6 +142,12 @@ add_library(AstralEngine
         Core/Memory/Allocators/AllocatorUtils.h
         Core/Memory/Allocators/LinearAllocator.h
         Core/Memory/Allocators/STLAllocators/STLLinearAllocator.h
+        Core/Memory/Allocators/AllocatorUtils.cpp
+        Core/Memory/Allocators/LinearAllocation.cpp
+        Core/Memory/Allocators/StackAllocator.cpp
+        Core/Memory/Allocators/FrameAllocator.cpp
+        Core/Memory/Allocators/DoubleBufferedAllocator.cpp
+        Core/Memory/Allocators/PoolAllocator.cpp
 
 )
 

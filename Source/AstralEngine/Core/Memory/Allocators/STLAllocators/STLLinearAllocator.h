@@ -8,7 +8,7 @@
 
 #include "Core/Memory/Allocators/AllocatorUtils.h"
 #include "Core/Memory/Allocators/LinearAllocator.h"
-#include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>
@@ -47,7 +47,14 @@ namespace Core {
         {
             [[unlikely]] if (m_LinearAllocator == nullptr) { return nullptr; }
             const size_t allocatedBytes = numberOfElements * sizeof(T);
-            return (pointer)m_LinearAllocator->Allocate(allocatedBytes, alignof(T));
+
+            void* returnPointer = m_LinearAllocator->Allocate(allocatedBytes, alignof(T));
+            if (!returnPointer)
+            {
+                throw std::bad_alloc(); // Pointer was nullptr so throw bad_alloc for STL only
+            };
+
+            return (pointer)returnPointer;
         }
 
 

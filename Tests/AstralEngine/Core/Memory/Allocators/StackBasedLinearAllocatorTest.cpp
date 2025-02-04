@@ -42,44 +42,44 @@ TEST_F(StackBasedLinearAllocatorTest, allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::StackBasedLinearAllocator<2056> testAllocator;
-    EXPECT_THROW(testAllocator.Allocate(3000, alignof(char)), std::bad_alloc);
-    EXPECT_THROW(testAllocator.Allocate(2057, alignof(char)), std::bad_alloc);
-    EXPECT_NO_THROW(testAllocator.Allocate(2056, alignof(char)));
+    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2056>();
+    EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
+    EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
+    EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::StackBasedLinearAllocator<2200> testAllocator;
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
-    EXPECT_THROW(testAllocator.Allocate(250, alignof(char)), std::bad_alloc); // Total Allocation: 2350 -> TOO BIG
+    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2200>();
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr);    // Total: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr);    // Total: 2100
+    EXPECT_EQ(testAllocator.Allocate(250, alignof(char)), nullptr);    // Total: 2350 -> TOO BIG
 }
 
 
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(StackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::StackBasedLinearAllocator<2200> testAllocator;
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2200>();
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(250, alignof(char))); // Total Allocation: 250
+    EXPECT_NE(testAllocator.Allocate(250, alignof(char)), nullptr); // Total Allocation: 250
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 

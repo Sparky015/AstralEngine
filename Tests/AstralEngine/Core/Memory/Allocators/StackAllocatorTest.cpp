@@ -15,7 +15,7 @@ public:
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
-TEST_F(StackAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
+TEST_F(StackAllocatorTest, Allocate_AllocatesCorrectAmountOfSpace)
 {
     const char* allocatedAddress = (const char*) testAllocator.Allocate(5, alignof(char));
     const char* allocatedAddress2 = (const char*) testAllocator.Allocate(27, alignof(char));
@@ -29,7 +29,7 @@ TEST_F(StackAllocatorTest, allocate_AllocatesCorrectAmountOfSpace)
 }
 
 /**@brief Tests if the allocator returns addresses that can be read from and written to */
-TEST_F(StackAllocatorTest, allocate_ReturnsUseableAddresses)
+TEST_F(StackAllocatorTest, Allocate_ReturnsUseableAddresses)
 {
     char* allocatedAddress = (char*) testAllocator.Allocate(5, alignof(char)); // allocates 5 chars
     std::strcpy(allocatedAddress, "abcd\0");
@@ -41,52 +41,52 @@ TEST_F(StackAllocatorTest, allocate_ReturnsUseableAddresses)
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(StackAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
+TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 {
     Core::StackAllocator testAllocator = Core::StackAllocator(2056);
-    EXPECT_THROW(testAllocator.Allocate(3000, alignof(char)), std::bad_alloc);
-    EXPECT_THROW(testAllocator.Allocate(2056, alignof(char)), std::bad_alloc); // Size will be 2027 with allocation header
-    EXPECT_NO_THROW(testAllocator.Allocate(2055, alignof(char)));
+    EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
+    EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
+    EXPECT_NE(testAllocator.Allocate(2055, alignof(char)), nullptr); // Minus one of mem block size for allocation header
 }
 
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
-TEST_F(StackAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
+TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
     Core::StackAllocator testAllocator = Core::StackAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
-    EXPECT_THROW(testAllocator.Allocate(250, alignof(char)), std::bad_alloc); // Total Allocation: 2350 -> TOO BIG
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr);    // Total: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr);    // Total: 2100
+    EXPECT_EQ(testAllocator.Allocate(250, alignof(char)), nullptr);    // Total: 2350 -> TOO BIG
 }
 
 
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
-TEST_F(StackAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
+TEST_F(StackAllocatorTest, Reset_CorrectlyResetsAllocatorMemoryBlock)
 {
     Core::StackAllocator testAllocator = Core::StackAllocator(2200);
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(300, alignof(char))); // Total Allocation: 300
-    EXPECT_NO_THROW(testAllocator.Allocate(400, alignof(char))); // Total Allocation: 700
-    EXPECT_NO_THROW(testAllocator.Allocate(200, alignof(char))); // Total Allocation: 900
-    EXPECT_NO_THROW(testAllocator.Allocate(700, alignof(char))); // Total Allocation: 1600
-    EXPECT_NO_THROW(testAllocator.Allocate(500, alignof(char))); // Total Allocation: 2100
+    EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
+    EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
+    EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
+    EXPECT_NE(testAllocator.Allocate(700, alignof(char)), nullptr); // Total Allocation: 1600
+    EXPECT_NE(testAllocator.Allocate(500, alignof(char)), nullptr); // Total Allocation: 2100
     testAllocator.Reset(); // Total Allocation: 0
 
-    EXPECT_NO_THROW(testAllocator.Allocate(250, alignof(char))); // Total Allocation: 250
+    EXPECT_NE(testAllocator.Allocate(250, alignof(char)), nullptr); // Total Allocation: 250
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250 + 1);
 }
 
 
 /**@brief Tests if the Deallocate method frees the previous allocation that was made */
-TEST_F(StackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
+TEST_F(StackAllocatorTest, Deallocate_ReleasesPreviousAllocationMemory)
 {
     char* memoryAddress = (char*) testAllocator.Allocate(500, alignof(char));
     testAllocator.Deallocate(memoryAddress, 500);
@@ -113,7 +113,7 @@ TEST_F(StackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
 }
 
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
-TEST_F(StackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
+TEST_F(StackAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::StackAllocator testAllocator = Core::StackAllocator(2056);
 
@@ -134,7 +134,7 @@ TEST_F(StackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurren
 }
 
 /**@brief Tests if the natural alignment is applied to allocations */
-TEST_F(StackAllocatorTest, allocate_RespectsTypeAlignment)
+TEST_F(StackAllocatorTest, Allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
     Core::StackAllocator alignedAllocator = Core::StackAllocator(128);
@@ -146,7 +146,7 @@ TEST_F(StackAllocatorTest, allocate_RespectsTypeAlignment)
 }
 
 /**@brief Tests if the natural alignment is applied when different alignment requirements request allocations */
-TEST_F(StackAllocatorTest, allocate_RespectsMultipleTypesAlignment)
+TEST_F(StackAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
     Core::StackAllocator alignedAllocator = Core::StackAllocator(500);
@@ -299,7 +299,7 @@ TEST_F(StackAllocatorTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
     size_t currentUsedSize = testAllocator.GetUsedBlockSize();
 
     EXPECT_EQ(currentUsedSize, 0);
-    testAllocator.ResizeBuffer();
+    EXPECT_TRUE(testAllocator.ResizeBuffer());
 
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
     EXPECT_EQ(testAllocator.GetCapacity(), currentCapacity * 2);

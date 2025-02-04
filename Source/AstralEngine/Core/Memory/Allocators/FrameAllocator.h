@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
 #include "Debug/Macros/Asserts.h"
 #include <memory>
 
@@ -22,18 +22,9 @@ namespace Core {
     {
     public:
 
-        explicit FrameAllocator(size_t memoryBlockSize) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),
-            m_EndBlockAddress(m_StartBlockAddress + memoryBlockSize),
-            m_CurrentMarker(m_StartBlockAddress)
-        {
-            ASSERT(memoryBlockSize > 0, "The memory block size must be greater than 0");
-        }
+        explicit FrameAllocator(size_t memoryBlockSize);
+        ~FrameAllocator();
 
-        ~FrameAllocator()
-        {
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-        }
 
         using Marker = unsigned char*;
 
@@ -41,139 +32,45 @@ namespace Core {
         [[nodiscard]] Marker GetMarker() const { return m_CurrentMarker; }
 
         /**@brief Rolls the stack back to the passed marker. Deallocates memory that was allocated after the marker. */
-        void RollbackToMarker(const Marker marker)
-        {
-            ASSERT(marker >= m_StartBlockAddress && marker <= m_EndBlockAddress, "Passed marker does not fall within this allocators memory block.")
-            ASSERT(marker <= m_CurrentMarker, "Can not rollback to marker that is already past the top of the stack.")
-            TRACK_DEALLOCATION(m_CurrentMarker - marker);
-            m_CurrentMarker = marker;
-        }
+        void RollbackToMarker(const Marker marker);
 
         /**@brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
-         * @return A pointer to the allocated block
-         * @throw std::bad_alloc When there is not enough memory to complete an allocation */
-        void* Allocate(size_t size, uint16 alignment)
-        {
-            ASSERT(AllocatorUtils::IsAlignmentPowerOfTwo(alignment), "Given alignment is not a power of two!")
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { throw std::bad_alloc(); }
-
-            std::size_t space = m_EndBlockAddress - m_CurrentMarker;
-            void* alignedAddress = m_CurrentMarker;
-
-            // Aligns the address. Will return nullptr if there is not enough space triggering a bad_alloc exception
-            if (!std::align(alignment, size, alignedAddress, space)) { throw std::bad_alloc(); }
-
-            // No allocation headers to track alignment offsets are needed due to rollback markers not requiring them.
-
-            // Update current marker
-            m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + size;
-
-            TRACK_ALLOCATION(size);
-            return alignedAddress;
-        }
+         * @return A pointer to the allocated block or nullptr if the allocation failed. */
+        void* Allocate(size_t size, uint16 alignment);
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void Reset()
-        {
-            m_CurrentMarker = m_StartBlockAddress;
-        }
+        void Reset();
 
-        /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        [[nodiscard]] size_t GetUsedBlockSize() const
-        {
-            return m_CurrentMarker - m_StartBlockAddress;
-        }
+        /**@brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated. */
+        [[nodiscard]] size_t GetUsedBlockSize() const;
 
-        /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        [[nodiscard]] size_t GetCapacity() const
-        {
-            return m_EndBlockAddress - m_StartBlockAddress;
-        }
+        /**@brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate. */
+        [[nodiscard]] size_t GetCapacity() const;
 
         /**@brief Doubles the size of the internal buffer of the allocator.
+         * @return True if the resize operation succeeded and false if the operation failed.
          * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
-        void ResizeBuffer()
-        {
-            if (GetUsedBlockSize() != 0) { return; }
-            ResizeInternalMemoryBlock();
-        }
+        [[nodiscard]] bool ResizeBuffer();
 
-        FrameAllocator(const FrameAllocator& other) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
-            m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
-            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
-        {
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-        }
 
-        FrameAllocator& operator=(const FrameAllocator& other)
-        {
-            if (this != &other)
-            {
-                AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-                m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
-                m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
-                m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
-                std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-            }
-            return *this;
-        }
+        FrameAllocator(const FrameAllocator& other);
+        FrameAllocator& operator=(const FrameAllocator& other);
+        FrameAllocator(FrameAllocator&& other) noexcept;
+        FrameAllocator& operator=(FrameAllocator&& other) noexcept;
 
-        FrameAllocator(FrameAllocator&& other) noexcept :
-            m_StartBlockAddress(other.m_StartBlockAddress),
-            m_EndBlockAddress(other.m_EndBlockAddress),
-            m_CurrentMarker(other.m_CurrentMarker)
-        {
-            other.m_StartBlockAddress = nullptr;
-            other.m_EndBlockAddress = nullptr;
-            other.m_CurrentMarker = nullptr;
-        }
+        bool operator==(const FrameAllocator& other) noexcept;
+        bool operator!=(const FrameAllocator& other) noexcept;
 
-        FrameAllocator& operator=(FrameAllocator&& other) noexcept
-        {
-            if (this != &other)
-            {
-                m_StartBlockAddress = other.m_StartBlockAddress;
-                m_EndBlockAddress = other.m_EndBlockAddress;
-                m_CurrentMarker = other.m_CurrentMarker;
-                other.m_StartBlockAddress = nullptr;
-                other.m_EndBlockAddress = nullptr;
-                other.m_CurrentMarker = nullptr;
-            }
-            return *this;
-        }
-
-        bool operator==(const FrameAllocator& other) noexcept
-        {
-            return (m_CurrentMarker == other.m_CurrentMarker &&
-                    m_EndBlockAddress == other.m_EndBlockAddress &&
-                    m_StartBlockAddress == other.m_StartBlockAddress);
-        }
-
-        bool operator!=(const FrameAllocator& other) noexcept
-        {
-            return !(*this == other);
-        }
 
     private:
 
         /** @brief Attempts to resize the internal buffer of the allocator.
-         *  @throw std::bad_alloc Throws when resize allocation failed to allocate a new block. */
-        inline void ResizeInternalMemoryBlock()
-        {
-            size_t currentUsedSize = GetUsedBlockSize();
-            void* newMemoryBlock = nullptr;
-            size_t newMemoryBufferSize = 0;
-
-            AllocatorUtils::ResizeMemoryBlock(m_StartBlockAddress, GetCapacity(), newMemoryBlock, newMemoryBufferSize);
-            if (!newMemoryBlock) { throw std::bad_alloc(); }
-
-            m_StartBlockAddress = (unsigned char*)newMemoryBlock;
-            m_CurrentMarker = m_StartBlockAddress + currentUsedSize;
-            m_EndBlockAddress = m_StartBlockAddress + newMemoryBufferSize;
-        }
+         *  @return True if the resize operation succeeded and false if the operation failed. */
+        inline bool ResizeInternalMemoryBlock();
 
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;

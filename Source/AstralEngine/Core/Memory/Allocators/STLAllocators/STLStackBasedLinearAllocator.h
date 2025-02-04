@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Core/Memory/Tracking/AllocationTracker.h"
+#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>
@@ -54,8 +54,16 @@ namespace Core {
         /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
         pointer allocate(size_type numberOfElements, const void* hint = nullptr)
         {
+            [[unlikely]] if (m_StackBasedLinearAllocator == nullptr) { return nullptr; }
             const size_t allocatedBytes = numberOfElements * sizeof(ElementType);
-            return (pointer)m_StackBasedLinearAllocator->Allocate(allocatedBytes, alignof(ElementType));
+
+            void* returnPointer = m_StackBasedLinearAllocator->Allocate(allocatedBytes, alignof(ElementType));
+            if (!returnPointer)
+            {
+                throw std::bad_alloc(); // Pointer was nullptr so throw bad_alloc for STL only
+            };
+
+            return (pointer)returnPointer;
         }
 
 

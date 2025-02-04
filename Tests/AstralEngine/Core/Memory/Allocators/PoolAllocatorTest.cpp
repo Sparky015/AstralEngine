@@ -13,7 +13,7 @@ class PoolAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int NUMBER_OF_BLOCKS = 10;
-    Core::PoolAllocator<1024, NUMBER_OF_BLOCKS> testAllocator;
+    Core::PoolAllocator testAllocator{1024, NUMBER_OF_BLOCKS};
 };
 
 
@@ -159,4 +159,26 @@ TEST_F(PoolAllocatorTest, Free_OrderDoesNotMatter)
     // Attempting another allocation should fail, as all slots are in use again.
     void* nullBlock = testAllocator.Allocate();
     ASSERT_EQ(nullBlock, nullptr) << "No more blocks should be available after re-allocating the freed blocks.";
+}
+
+TEST_F(PoolAllocatorTest, MoveConstructorTest)
+{
+    Core::PoolAllocator original(64, 4);
+    void* ptr = original.Allocate();
+    Core::PoolAllocator moved(std::move(original));
+    EXPECT_EQ(original.GetNumberOfBlocks(), moved.GetNumberOfBlocks());
+    EXPECT_EQ(original.GetIndividualBlockSize(), moved.GetIndividualBlockSize());
+    EXPECT_TRUE(moved.CanAllocateMoreBlocks() != original.CanAllocateMoreBlocks());
+}
+
+
+TEST_F(PoolAllocatorTest, MoveAssignmentTest)
+{
+    Core::PoolAllocator allocator1(64, 4);
+    Core::PoolAllocator allocator2(128, 2);
+    void* lhsPtr = allocator1.Allocate();
+    allocator2 = std::move(allocator1);
+    EXPECT_EQ(allocator2.GetNumberOfBlocks(), 4);
+    EXPECT_EQ(allocator2.GetIndividualBlockSize(), 64);
+    EXPECT_FALSE(allocator2 == allocator1);
 }

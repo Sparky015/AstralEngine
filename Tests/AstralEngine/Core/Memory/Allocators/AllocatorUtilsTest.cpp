@@ -107,7 +107,7 @@ TEST_F(AllocatorUtilsTest, ResizeMemoryBlock_CorrectlyResizesToCorrectSize)
 
     void* newBlockPtr = nullptr;
     size_t newBlockSize = 0;
-    Core::AllocatorUtils::ResizeMemoryBlock(initialBlockPtr, originalBlockSize, newBlockPtr, newBlockSize);
+    EXPECT_TRUE(Core::AllocatorUtils::ResizeMemoryBlock(initialBlockPtr, originalBlockSize, newBlockPtr, newBlockSize));
 
     EXPECT_NE(nullptr, newBlockPtr) << "Resized block pointer should not be null.";
     EXPECT_EQ(originalBlockSize * 2, newBlockSize) << "Resized block should be twice the original size.";
