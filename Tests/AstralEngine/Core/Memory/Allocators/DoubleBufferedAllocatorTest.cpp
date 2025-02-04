@@ -205,7 +205,7 @@ TEST_F(DoubleBufferedAllocatorTest, SwapBuffer_MaintainsBlockStateAfterSwap)
 }
 
 /**@brief Tests if the move constructor properly transfers ownership of both buffers */
-TEST_F(DoubleBufferedAllocatorTest, moveConstructor_TransfersOwnershipCorrectly)
+TEST_F(DoubleBufferedAllocatorTest, MoveConstructor_TransfersOwnershipCorrectly)
 {
     // Setup some data in both buffers
     [[maybe_unused]] char* buffer1Data = (char*)testAllocator.Allocate(521, alignof(char));
@@ -224,7 +224,7 @@ TEST_F(DoubleBufferedAllocatorTest, moveConstructor_TransfersOwnershipCorrectly)
 }
 
 /**@brief Tests if the move assignment operator properly transfers ownership of both buffers */
-TEST_F(DoubleBufferedAllocatorTest, moveAssignment_TransfersOwnershipCorrectly)
+TEST_F(DoubleBufferedAllocatorTest, MoveAssignment_TransfersOwnershipCorrectly)
 {
     // Setup some data in both buffers
     [[maybe_unused]] char* buffer1Data = (char*)testAllocator.Allocate(119, alignof(char));

@@ -13,7 +13,8 @@
 namespace Core {
 
     /**@brief Allocator that gives memory out in fixed size blocks.
-     * @thread_safety This class is NOT thread safe. */
+     * @thread_safety This class is NOT thread safe.
+     * @note Copying is not allowed with this allocator. */
     class PoolAllocator
     {
     public:
@@ -62,8 +63,8 @@ namespace Core {
          * @return True if the pointer is free and ready to be allocated, false otherwise. */
         bool IsPointerFree(const void* blockPointer) const;
 
-        const size_t m_NumberOfBlocks;
-        const size_t m_BlockSize;
+        size_t m_NumberOfBlocks;
+        size_t m_BlockSize;
         unsigned char* m_MemoryBlock;
         void* m_FreeListHead; // Points to the first free element address
     };

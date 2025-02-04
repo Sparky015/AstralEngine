@@ -174,55 +174,6 @@ TEST_F(FrameAllocatorTest, RollbackToMarker_RollsBackToTheCorrectSpot)
     EXPECT_EQ(bottomMarker, allocator.GetMarker());
 }
 
-/**@brief Tests if the copy constructor creates a deep copy of the allocator */
-TEST_F(FrameAllocatorTest, CopyConstructor_CreatesPerfectCopy)
-{
-    // Setup original allocator with some data
-    char* memoryAddress1 = (char*)testAllocator.Allocate(100, alignof(char));
-    std::strcpy(memoryAddress1, "Test Data 1");
-    char* memoryAddress2 = (char*)testAllocator.Allocate(100, alignof(char));
-    std::strcpy(memoryAddress2, "Test Data 2");
-
-    // Create copy
-    Core::FrameAllocator copiedAllocator(testAllocator);
-
-    // Verify same capacity
-    EXPECT_EQ(copiedAllocator.GetCapacity(), testAllocator.GetCapacity());
-
-    // Verify same used size
-    EXPECT_EQ(copiedAllocator.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
-
-    // Verify copied data is identical but at different addresses
-    char* copiedAddress1 = (char*)copiedAllocator.GetMarker() - testAllocator.GetUsedBlockSize();
-    EXPECT_STREQ(memoryAddress1, "Test Data 1");
-    EXPECT_STREQ(copiedAddress1, "Test Data 1");
-    EXPECT_NE(memoryAddress1, copiedAddress1);
-}
-
-/**@brief Tests if the copy assignment operator creates a deep copy of the allocator */
-TEST_F(FrameAllocatorTest, CopyAssignment_CreatesPerfectCopy)
-{
-    // Setup original allocator with some data
-    char* memoryAddress1 = (char*)testAllocator.Allocate(100, alignof(char));
-    std::strcpy(memoryAddress1, "Test Data 1");
-
-    // Create second allocator and assign
-    Core::FrameAllocator secondAllocator(1024);
-    secondAllocator = testAllocator;
-
-    // Verify same capacity
-    EXPECT_EQ(secondAllocator.GetCapacity(), testAllocator.GetCapacity());
-
-    // Verify same used size
-    EXPECT_EQ(secondAllocator.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
-
-    // Verify copied data is identical but at different addresses
-    char* copiedAddress1 = (char*)secondAllocator.GetMarker() - testAllocator.GetUsedBlockSize();
-    EXPECT_STREQ(memoryAddress1, "Test Data 1");
-    EXPECT_STREQ(copiedAddress1, "Test Data 1");
-    EXPECT_NE(memoryAddress1, copiedAddress1);
-}
-
 /**@brief Tests if the move constructor properly transfers ownership */
 TEST_F(FrameAllocatorTest, MoveConstructor_TransfersOwnershipCorrectly)
 {

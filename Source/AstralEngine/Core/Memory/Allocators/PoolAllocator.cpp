@@ -88,9 +88,10 @@ namespace Core {
     {
         if (this != &other)
         {
-            AllocatorUtils::FreeMaxAlignedBlock(m_MemoryBlock);
             m_MemoryBlock = other.m_MemoryBlock;
             m_FreeListHead = other.m_FreeListHead;
+            m_BlockSize = other.m_BlockSize;
+            m_NumberOfBlocks = other.m_NumberOfBlocks;
             other.m_MemoryBlock = nullptr;
             other.m_FreeListHead = nullptr;
         }

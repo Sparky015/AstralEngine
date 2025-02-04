@@ -36,24 +36,6 @@ namespace Core {
     }
 
 
-    DoubleBufferedAllocator& DoubleBufferedAllocator::operator=(const DoubleBufferedAllocator& other)
-    {
-        if (this != &other)
-        {
-            m_Buffers[0] = other.m_Buffers[0];
-            m_Buffers[1] = other.m_Buffers[1];
-            m_ActiveBuffer = other.m_ActiveBuffer;
-        }
-        return *this;
-    }
-
-
-    DoubleBufferedAllocator::DoubleBufferedAllocator(const DoubleBufferedAllocator& other) :
-            m_Buffers{other.m_Buffers[0], other.m_Buffers[1]},
-            m_ActiveBuffer(other.m_ActiveBuffer)
-    {}
-
-
     DoubleBufferedAllocator::DoubleBufferedAllocator(DoubleBufferedAllocator&& other) noexcept :
             m_Buffers{std::move(other.m_Buffers[0]), std::move(other.m_Buffers[1])},
             m_ActiveBuffer(other.m_ActiveBuffer == &other.m_Buffers[0] ? &m_Buffers[0] : &m_Buffers[1])

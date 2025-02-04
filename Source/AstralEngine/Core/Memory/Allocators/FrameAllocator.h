@@ -17,7 +17,8 @@ namespace Core {
 
     /**@brief An allocator that can be used to allocate during a frame. Do not store or cache any pointers from this allocator.
      *        It will be deallocated after the frame has ended.
-     * @thread_safety This class is NOT thread safe. */
+     * @thread_safety This class is NOT thread safe.
+     * @note Copying is not allowed with this allocator. */
     class FrameAllocator
     {
     public:
@@ -57,8 +58,13 @@ namespace Core {
         [[nodiscard]] bool ResizeBuffer();
 
 
-        FrameAllocator(const FrameAllocator& other);
-        FrameAllocator& operator=(const FrameAllocator& other);
+        // Deleting copy constructor and operator because the copied data in use won't be able to be freed.
+        // The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        // Because the new allocator's memory is a freshly allocated, no one has the pointers to the new allocators's memory
+        // for the data in use, so they can't be freed.
+        FrameAllocator(const FrameAllocator& other) = delete;
+        FrameAllocator& operator=(const FrameAllocator& other) = delete;
+
         FrameAllocator(FrameAllocator&& other) noexcept;
         FrameAllocator& operator=(FrameAllocator&& other) noexcept;
 

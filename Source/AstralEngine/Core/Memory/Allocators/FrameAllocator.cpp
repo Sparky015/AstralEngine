@@ -88,57 +88,6 @@ namespace Core {
     }
 
 
-    FrameAllocator::FrameAllocator(const FrameAllocator& other) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
-            m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
-            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
-    {
-        ASSERT(m_StartBlockAddress, "Allocation failed!");
-
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-        std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-        AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-    }
-
-
-    FrameAllocator& FrameAllocator::operator=(const FrameAllocator& other)
-    {
-        if (this != &other)
-        {
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-
-            AllocatorUtils::FreeMaxAlignedBlock(m_StartBlockAddress);
-            m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
-            ASSERT(m_StartBlockAddress, "Allocation failed!");
-
-            m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
-            m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-
-
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-            AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-        }
-        return *this;
-    }
-
-
     FrameAllocator::FrameAllocator(FrameAllocator&& other) noexcept :
             m_StartBlockAddress(other.m_StartBlockAddress),
             m_EndBlockAddress(other.m_EndBlockAddress),

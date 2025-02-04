@@ -17,7 +17,8 @@ namespace Core {
 
     /**@brief Stack-like allocator that allocates memory in a last in first out order. This means that the user can
      *        deallocate only the most recent unfreed memory allocation.
-     * @thread_safety This class is NOT thread safe. */
+     * @thread_safety This class is NOT thread safe.
+     * @note Copying is not allowed with this allocator. */
     class StackAllocator
     {
     public:
@@ -61,8 +62,13 @@ namespace Core {
         [[nodiscard]] bool ResizeBuffer();
 
 
-        StackAllocator(const StackAllocator& other);
-        StackAllocator& operator=(const StackAllocator& other);
+        // Deleting copy constructor and operator because the copied data in use won't be able to be freed.
+        // The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        // Because the new allocator's memory is a freshly allocated, no one has the pointers to the new allocators's memory
+        // for the data in use, so they can't be freed.
+        StackAllocator(const StackAllocator& other) = delete;
+        StackAllocator& operator=(const StackAllocator& other) = delete;
+
         StackAllocator(StackAllocator&& other) noexcept;
         StackAllocator& operator=(StackAllocator&& other) noexcept;
 
