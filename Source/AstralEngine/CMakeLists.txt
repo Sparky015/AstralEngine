@@ -148,6 +148,8 @@ add_library(AstralEngine
         Core/Memory/Allocators/FrameAllocator.cpp
         Core/Memory/Allocators/DoubleBufferedAllocator.cpp
         Core/Memory/Allocators/PoolAllocator.cpp
+        Core/Memory/Allocators/RingAllocator.cpp
+        Core/Memory/Allocators/RingAllocator.h
 
 )
 
