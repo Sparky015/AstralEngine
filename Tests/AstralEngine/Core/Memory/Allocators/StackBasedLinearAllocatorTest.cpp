@@ -83,7 +83,7 @@ TEST_F(StackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 
-/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(StackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::StackBasedLinearAllocator<2056> testAllocator;

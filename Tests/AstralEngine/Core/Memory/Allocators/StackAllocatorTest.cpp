@@ -112,7 +112,7 @@ TEST_F(StackAllocatorTest, Deallocate_ReleasesPreviousAllocationMemory)
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 0);
 }
 
-/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(StackAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::StackAllocator testAllocator = Core::StackAllocator(2056);

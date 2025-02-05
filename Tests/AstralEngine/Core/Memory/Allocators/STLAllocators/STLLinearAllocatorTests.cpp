@@ -98,7 +98,7 @@ TEST_F(STLLinearAllocatorTest, deallocate_DoesNothing)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 1600);
 }
 
-/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::STLLinearAllocator<char> testAllocator = Core::STLLinearAllocator<char>(2056);

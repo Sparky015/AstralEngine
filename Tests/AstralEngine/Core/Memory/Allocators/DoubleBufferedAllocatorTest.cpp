@@ -113,7 +113,7 @@ TEST_F(DoubleBufferedAllocatorTest, ClearCurrentBuffer_CorrectlyResetsAllocatorM
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 
-/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(DoubleBufferedAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2056);

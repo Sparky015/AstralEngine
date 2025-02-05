@@ -87,7 +87,7 @@ TEST_F(FrameAllocatorTest, Reset_CorrectlyResetsAllocatorMemoryBlock)
 }
 
 
-/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(FrameAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::FrameAllocator testAllocator = Core::FrameAllocator(2056);
