@@ -75,6 +75,7 @@ namespace Core {
          * @param elementPtr The pointer to the element being freed. */
         void Release(ElementType* elementPtr)
         {
+            [[unlikely]] if (!elementPtr) { return; }
             ASSERT(elementPtr >= &m_Data[0] && elementPtr <= &m_Data[NumberOfElements - 1], "Pointer does not fall within this allocators memory block.")
             PushFreePointer(elementPtr);
         }
