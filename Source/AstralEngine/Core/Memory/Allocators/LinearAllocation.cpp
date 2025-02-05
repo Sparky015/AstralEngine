@@ -40,7 +40,7 @@ namespace Core {
         if (!std::align(alignment, size, alignedAddress, space)) { return nullptr; }
 
         AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, (unsigned char*) alignedAddress - m_CurrentMarker,
-                                              ASANRegionPermission::AccessRestricted); // For allocation header
+                                              ASANRegionPermission::AccessRestricted); // For alignment padding
         AllocatorUtils::SetMemoryRegionAccess(alignedAddress, size, ASANRegionPermission::AccessGranted);
 
         // Update current marker
@@ -58,7 +58,6 @@ namespace Core {
 
     void LinearAllocator::Reset()
     {
-        TRACK_DEALLOCATION(m_CurrentMarker - m_StartBlockAddress);
         AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetCapacity(), ASANRegionPermission::AccessRestricted);
         m_CurrentMarker = m_StartBlockAddress;
     }
@@ -68,57 +67,6 @@ namespace Core {
     {
         if (GetUsedBlockSize() != 0) { return false; }
         return ResizeInternalMemoryBlock();
-    }
-
-
-    LinearAllocator::LinearAllocator(const LinearAllocator& other) :
-            m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity())),
-            m_EndBlockAddress(m_StartBlockAddress + other.GetCapacity()),
-            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
-    {
-        ASSERT(m_StartBlockAddress, "Allocation failed!");
-
-        // Set permissions for the memcpy. Assures that both are not poisoned regions.
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-        std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-        AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-    }
-
-
-    LinearAllocator& LinearAllocator::operator=(const LinearAllocator& other)
-    {
-        if (this != &other)
-        {
-            // Set permissions for the memcpy. Assures that both are not poisoned regions.
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-            AllocatorUtils::FreeAlignedAlloc(m_StartBlockAddress);
-            m_StartBlockAddress = (unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(other.GetCapacity());
-            ASSERT(m_StartBlockAddress, "Allocation failed!");
-
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, other.GetCapacity());
-            m_EndBlockAddress = m_StartBlockAddress + other.GetCapacity();
-            m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
-
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-            AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-        }
-        return *this;
     }
 
 

@@ -83,7 +83,7 @@ TEST_F(LinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 250);
 }
 
-/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(LinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::LinearAllocator testAllocator = Core::LinearAllocator(2056);
@@ -128,31 +128,6 @@ TEST_F(LinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
 
     float* ptr3 = (float*) alignedAllocator.Allocate(sizeof(float), alignof(float));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr3) % alignof(float), 0);
-}
-
-/**@brief Tests if the copy constructor creates a fully independent allocator with matching state */
-TEST_F(LinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
-{
-    [[maybe_unused]] char* buffer = (char*) testAllocator.Allocate(126, alignof(char));
-
-    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(testAllocator);
-
-    EXPECT_EQ(testAllocator2.GetCapacity(), testAllocator.GetCapacity());
-    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
-}
-
-
-/**@brief Tests if copy assignment operator clones state and creates independent allocator */
-TEST_F(LinearAllocatorTest, CopyAssignmentOperator_ClonesState)
-{
-    [[maybe_unused]] char* buffer = (char*) testAllocator.Allocate(531, alignof(char));
-
-    Core::LinearAllocator testAllocator2 = Core::LinearAllocator(12);
-    testAllocator2 = testAllocator;
-
-    EXPECT_EQ(testAllocator2.GetCapacity(), testAllocator.GetCapacity());
-    EXPECT_EQ(testAllocator2.GetUsedBlockSize(), testAllocator.GetUsedBlockSize());
-
 }
 
 /**@brief Tests if move constructor transfers ownership and invalidates source */

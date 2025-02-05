@@ -49,8 +49,13 @@ namespace Core {
         [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
 
 
-        StackBasedLinearAllocator(const StackBasedLinearAllocator& other);
-        StackBasedLinearAllocator& operator=(const StackBasedLinearAllocator& other);
+        // Deleting copy constructor and operator because the copied data in use won't be able to be accessed.
+        // The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        // Because the new allocator's memory is a freshly allocated, no one has the pointers to the new allocator's memory
+        // for the data in use, so they won't be accessed. At that point, just make a regular instance.
+        StackBasedLinearAllocator(const StackBasedLinearAllocator& other) = delete;
+        StackBasedLinearAllocator& operator=(const StackBasedLinearAllocator& other) = delete;
+
         StackBasedLinearAllocator(StackBasedLinearAllocator&& other) noexcept;
         StackBasedLinearAllocator& operator=(StackBasedLinearAllocator&& other) noexcept;
 

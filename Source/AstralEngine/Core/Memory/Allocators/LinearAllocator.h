@@ -52,8 +52,13 @@ namespace Core {
         [[nodiscard]] bool ResizeBuffer();
 
 
-        LinearAllocator(const LinearAllocator& other);
-        LinearAllocator& operator=(const LinearAllocator& other);
+        // Deleting copy constructor and operator because the copied data in use won't be able to be accessed.
+        // The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        // Because the new allocator's memory is a freshly allocated, no one has the pointers to the new allocator's memory
+        // for the data in use, so they won't be accessed. At that point, just make a regular instance.
+        LinearAllocator(const LinearAllocator& other) = delete;
+        LinearAllocator& operator=(const LinearAllocator& other) = delete;
+
         LinearAllocator(LinearAllocator&& other) noexcept;
         LinearAllocator& operator=(LinearAllocator&& other) noexcept;
 

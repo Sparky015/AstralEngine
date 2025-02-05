@@ -110,7 +110,7 @@ TEST_F(STLStackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 0);
 }
 
-/**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
+/**@brief Tests if the IsEmpty method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLStackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
     Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(2056);

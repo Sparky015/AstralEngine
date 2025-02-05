@@ -55,62 +55,12 @@ namespace Core {
     }
 
 
-    template<size_t MemoryBlockSize>
-    StackBasedLinearAllocator<MemoryBlockSize>::StackBasedLinearAllocator(const StackBasedLinearAllocator& other) :
-            m_MemoryBlock(),
-            m_StartBlockAddress(&m_MemoryBlock[0]),
-            m_EndBlockAddress(m_StartBlockAddress + MemoryBlockSize),
-            m_CurrentMarker(m_StartBlockAddress + other.GetUsedBlockSize())
-    {
-        // Set permissions for the memcpy. Assures that both are not poisoned regions.
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-        std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
-
-        AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-        AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessGranted);
-        AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                              ASANRegionPermission::AccessRestricted);
-    }
-
 
     template<size_t MemoryBlockSize>
     void StackBasedLinearAllocator<MemoryBlockSize>::Reset()
     {
         AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, MemoryBlockSize, ASANRegionPermission::AccessRestricted);
         m_CurrentMarker = m_StartBlockAddress;
-    }
-
-
-    template<size_t MemoryBlockSize>
-    StackBasedLinearAllocator<MemoryBlockSize>& StackBasedLinearAllocator<MemoryBlockSize>::operator=(const StackBasedLinearAllocator& other)
-    {
-        if (this != &other)
-        {
-            // Set permissions for the memcpy. Assures that both are not poisoned regions.
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, other.GetCapacity(), ASANRegionPermission::AccessGranted);
-
-            std::memcpy(m_StartBlockAddress, other.m_StartBlockAddress, MemoryBlockSize);
-            m_StartBlockAddress = &m_MemoryBlock[0];
-            m_EndBlockAddress = m_StartBlockAddress + MemoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + other.GetUsedBlockSize();
-
-            AllocatorUtils::SetMemoryRegionAccess(other.m_StartBlockAddress, other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(other.m_CurrentMarker, other.GetCapacity() - other.GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-            AllocatorUtils::SetMemoryRegionAccess(m_StartBlockAddress, GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessGranted);
-            AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(),
-                                                  ASANRegionPermission::AccessRestricted);
-        }
-        return *this;
     }
 
 
