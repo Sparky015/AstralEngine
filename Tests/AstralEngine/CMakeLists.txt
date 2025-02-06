@@ -7,6 +7,7 @@ set(TEST_FILES
         ExampleTest.cpp
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
+
         Core/Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
         Core/Memory/Allocators/STLAllocators/STLStackBasedLinearAllocatorTests.cpp
         Core/Memory/Allocators/StackBasedLinearAllocatorTest.cpp
@@ -19,6 +20,9 @@ set(TEST_FILES
         Core/Memory/Allocators/LinearAllocatorTest.cpp
         Core/Memory/Allocators/AllocatorUtilsTest.cpp
         Core/Memory/Allocators/RingAllocatorTest.cpp
+
+        Renderer/OrthographicCamera.cpp
+
 )
 
 

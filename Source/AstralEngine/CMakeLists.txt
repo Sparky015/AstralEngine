@@ -132,6 +132,7 @@ add_library(AstralEngine
         Core/Time/DeltaTime.h
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
+
         Core/Memory/Allocators/StackAllocator.h
         Core/Memory/Allocators/STLAllocators/STLStackAllocator.h
         Core/Memory/Allocators/STLAllocators/STLStackBasedLinearAllocator.h
@@ -150,6 +151,10 @@ add_library(AstralEngine
         Core/Memory/Allocators/PoolAllocator.cpp
         Core/Memory/Allocators/RingAllocator.cpp
         Core/Memory/Allocators/RingAllocator.h
+
+        Renderer/Cameras/OrthographicCamera.cpp
+        Renderer/Cameras/OrthographicCamera.h
+
 
 )
 
