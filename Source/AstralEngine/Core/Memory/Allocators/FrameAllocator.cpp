@@ -31,6 +31,7 @@ namespace Core {
         ASSERT(marker >= m_StartBlockAddress && marker <= m_EndBlockAddress, "Passed marker does not fall within this allocators memory block.")
         ASSERT(marker <= m_CurrentMarker, "Can not rollback to marker that is already past the top of the stack.")
         m_CurrentMarker = marker;
+        AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), ASANRegionPermission::AccessRestricted);
     }
 
 

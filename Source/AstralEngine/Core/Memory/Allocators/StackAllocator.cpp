@@ -31,6 +31,7 @@ namespace Core {
         ASSERT(marker >= m_StartBlockAddress && marker <= m_EndBlockAddress, "Passed marker does not fall within this allocators memory block.")
         ASSERT(marker <= m_CurrentMarker, "Can not rollback to marker that is already past the top of the stack.")
         m_CurrentMarker = marker;
+        AllocatorUtils::SetMemoryRegionAccess(m_CurrentMarker, GetCapacity() - GetUsedBlockSize(), ASANRegionPermission::AccessRestricted);
     }
 
 
@@ -79,6 +80,8 @@ namespace Core {
 
     void StackAllocator::Deallocate(void* ptr, size_t sizeOfAllocatedBlock)
     {
+        [[unlikely]] if (ptr == nullptr || sizeOfAllocatedBlock == 0) { return; }
+
         // Checking if this pointer is the last allocated pointer
         ASSERT(m_CurrentMarker - sizeOfAllocatedBlock == static_cast<unsigned char*>(ptr), "Deallocations must follow a last in first out order!")
 
