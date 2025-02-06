@@ -1,18 +1,3 @@
-
-
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    add_definitions(-DDEBUG_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    add_definitions(-DRELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    add_definitions(-DMINIMUM_SIZE_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
-    add_definitions(-DRELEASE_WITH_DEBUG_INFO_BUILD)
-endif()
-
-
 add_library(AstralEngine
         Core/CoreMacroDefinitions.h
         pch.h
@@ -29,7 +14,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Core/Memory/Tracking/AllocationTracker.h
+        Core/Memory/Tracking/GlobalAllocationTracker.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -134,21 +119,42 @@ add_library(AstralEngine
         Debug/ImGui/Components/SystemInfoComponents.h
         Core/Memory/Tracking/MemoryMetricsManager.cpp
         Core/Memory/Tracking/MemoryMetricsManager.h
-        Core/Memory/Tracking/AllocationTracker.cpp
+        Core/Memory/Tracking/GlobalAllocationTracker.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/Tracking/PointerAllocationSizeMap.h
         Core/Memory/Tracking/PointerAllocationSizeMap.cpp
         Core/Memory/Allocators/NoTrackingAllocator.h
-        Core/Memory/Allocators/LinearAllocator.h
+        Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
         Core/Time/DeltaTime.cpp
         Core/Time/DeltaTime.h
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
+
+        Core/Memory/Allocators/StackAllocator.h
+        Core/Memory/Allocators/STLAllocators/STLStackAllocator.h
+        Core/Memory/Allocators/STLAllocators/STLStackBasedLinearAllocator.h
+        Core/Memory/Allocators/FrameAllocator.h
+        Core/Memory/Allocators/DoubleBufferedAllocator.h
+        Core/Memory/Allocators/PoolAllocator.h
+        Core/Memory/Pools/ObjectPool.h
+        Core/Memory/Allocators/AllocatorUtils.h
+        Core/Memory/Allocators/LinearAllocator.h
+        Core/Memory/Allocators/STLAllocators/STLLinearAllocator.h
+        Core/Memory/Allocators/AllocatorUtils.cpp
+        Core/Memory/Allocators/LinearAllocation.cpp
+        Core/Memory/Allocators/StackAllocator.cpp
+        Core/Memory/Allocators/FrameAllocator.cpp
+        Core/Memory/Allocators/DoubleBufferedAllocator.cpp
+        Core/Memory/Allocators/PoolAllocator.cpp
+        Core/Memory/Allocators/RingAllocator.cpp
+        Core/Memory/Allocators/RingAllocator.h
+
         Renderer/Cameras/OrthographicCamera.cpp
         Renderer/Cameras/OrthographicCamera.h
+
 
 )
 
@@ -203,16 +209,28 @@ target_precompile_headers(AstralEngine PRIVATE "pch.h")
 
 
 # Defining Macros
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
+endif()
+
 target_compile_definitions(AstralEngine PRIVATE -DGLFW_INCLUDE_NONE)
 target_compile_definitions(AstralEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
-    target_compile_definitions(AstralEngine PRIVATE -DPLATFORM_MACOS)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
 elseif (WIN32)
-    target_compile_definitions(AstralEngine PRIVATE -DPLATFORM_WINDOWS)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
 endif ()
-target_compile_definitions(AstralEngine PRIVATE -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
+
+target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
-
-

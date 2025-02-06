@@ -1,11 +1,15 @@
 /**
 * @file LinearAllocator.h
 * @author Andrew Fagan
-* @date 1/8/2025
+* @date 1/29/25
 */
 
 #pragma once
 
+#include "AllocatorUtils.h"
+#include "Core/CoreMacroDefinitions.h"
+#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
+#include "Debug/Macros/Asserts.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>
@@ -14,151 +18,64 @@
 
 namespace Core {
 
-    /**@brief A stack-based linear allocator. Max allocation size is 5.28 KB due to being on the stack.
-     *        Deallocate method does nothing. Reset method deallocates the whole memory block.
-     * @warning You have to use the reset method to deallocate memory. It deallocates all memory being used.
-     *          It's all or nothing. */
-    template <typename T, size_t memoryBlockSize>
-    class StackLinearAllocator
-    {
+    /**@brief A heap-based linear allocator. Deallocate method does nothing. Reset method deallocates the whole memory block.
+     * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
+     *          It's all or nothing.
+     * @thread_safety This class is NOT thread safe. */
+    class LinearAllocator {
     public:
-        static constexpr size_t MAX_STACK_ALLOCATION_SIZE = 5280; // 5.28 KB
-        static_assert(memoryBlockSize <= MAX_STACK_ALLOCATION_SIZE, "Memory block size for stack is too big!");
 
-        using value_type = T;
-        using pointer = T*;
-        using size_type = std::size_t;
-        using difference_type = std::ptrdiff_t;
-        using propagate_on_container_move_assignment = std::true_type;
-        using propagate_on_container_copy_assignment = std::true_type;
-        using is_always_equal = std::false_type; // This NEEDS to be false for stateful allocators!!!
+        explicit LinearAllocator(size_t memoryBlockSize);
+        ~LinearAllocator();
 
-
-        /**@brief Allocates memory for n instances of the type of allocator. Hint is completely ignored. */
-        pointer allocate(size_type n, const void* hint = nullptr)
-        {
-            const size_t allocatedBytes = n * sizeof(T);
-            if (m_CurrentMarker + allocatedBytes > m_EndBlockAddress)
-            {
-                throw std::bad_alloc();
-            }
-
-
-            std::size_t space = m_EndBlockAddress - m_CurrentMarker;
-            void* alignedAddress = m_CurrentMarker;
-            if (std::align(alignof(T), allocatedBytes, alignedAddress, space))
-            {
-                void* returnPointer = alignedAddress;
-                m_CurrentMarker = static_cast<unsigned char*>(alignedAddress) + allocatedBytes;
-                return static_cast<pointer>(returnPointer);
-            }
-
-            throw std::bad_alloc();
-        }
-
-
-        /**@brief This does nothing. Use reset method to deallocate memory. */
-        void deallocate(pointer ptr, size_type n)
-        {
-            // Does nothing. Only resets memory on call to reset()
-        }
+        /**@brief Allocates a memory block of the given size with the given required alignment.
+         * @param size Size of the requested allocated block
+         * @param alignment The alignment requirement for the allocation
+         * @param outAllocatedPointer An output parameter that is populated with a pointer to allocated block.
+         * @return A pointer to the allocated block if successful and nullptr if the allocation failed.*/
+        [[nodiscard]] void* Allocate(size_t size, uint16 alignment);
 
         /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void reset()
-        {
-            memset(m_MemoryBlock, 0, memoryBlockSize);
-            m_CurrentMarker = m_StartBlockAddress;
-        }
+        void Reset();
 
-        /**@brief Gets the amount of memory currently allocated out by the allocator. */
-        size_t getUsedBlockSize()
-        {
-            return m_CurrentMarker - m_StartBlockAddress;
-        }
+        /**@brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated. */
+        [[nodiscard]] size_t GetUsedBlockSize() const { return m_CurrentMarker - m_StartBlockAddress; }
 
-        // Rebind struct
-        template <typename U>
-        struct rebind
-        {
-            using other = StackLinearAllocator<U, memoryBlockSize>;
-        };
+        /**@brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate. */
+        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
 
-        StackLinearAllocator() noexcept = default;
-        StackLinearAllocator(size_type) noexcept : StackLinearAllocator() {}
-        ~StackLinearAllocator() { reset(); }
+        /**@brief Doubles the size of the internal buffer of the allocator.
+         * @return True if the resize operation succeeded and false if the allocation failed or if the allocator was not empty.
+         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+        [[nodiscard]] bool ResizeBuffer();
 
 
-        constexpr StackLinearAllocator(const StackLinearAllocator& other) noexcept
-        {
-            memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-        };
+        // Deleting copy constructor and operator because the copied data in use won't be able to be accessed.
+        // The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        // Because the new allocator's memory is a freshly allocated, no one has the pointers to the new allocator's memory
+        // for the data in use, so they won't be accessed. At that point, just make a regular instance.
+        LinearAllocator(const LinearAllocator& other) = delete;
+        LinearAllocator& operator=(const LinearAllocator& other) = delete;
 
+        LinearAllocator(LinearAllocator&& other) noexcept;
+        LinearAllocator& operator=(LinearAllocator&& other) noexcept;
 
-        StackLinearAllocator& operator=(const StackLinearAllocator& other) noexcept
-        {
-            if (this != &other)
-            {
-                memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-                m_StartBlockAddress = m_MemoryBlock;
-                m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-                m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            }
-
-            return *this;
-        }
-
-        StackLinearAllocator(StackLinearAllocator&& other) noexcept
-        {
-            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            other.m_CurrentMarker = other.m_StartBlockAddress;
-        };
-
-
-        StackLinearAllocator& operator=(StackLinearAllocator&& other) noexcept
-        {
-            std::memcpy(m_MemoryBlock, other.m_MemoryBlock, memoryBlockSize);
-            m_StartBlockAddress = m_MemoryBlock;
-            m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-            m_CurrentMarker = m_StartBlockAddress + (other.m_CurrentMarker - other.m_StartBlockAddress);
-            other.m_CurrentMarker = other.m_StartBlockAddress;
-            return *this;
-        };
-
+        bool operator==(const LinearAllocator& other) noexcept;
+        bool operator!=(const LinearAllocator& other) noexcept;
 
     private:
 
-        alignas(std::max_align_t) unsigned char m_MemoryBlock[memoryBlockSize] = {};
-        unsigned char* m_StartBlockAddress = m_MemoryBlock;
-        unsigned char* m_EndBlockAddress = m_StartBlockAddress + memoryBlockSize;
-        unsigned char* m_CurrentMarker = m_StartBlockAddress;
+        /** @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
+         *         allocator is empty.
+         *  @return True if the resize allocation succeeds and false if it fails.
+         *  @remark Function will exit early and maintain current allocator capacity if the resize allocation fails.  */
+        [[nodiscard]] bool ResizeInternalMemoryBlock();
 
-        template<typename T1, typename T2, size_t S>
-        friend bool operator==(const StackLinearAllocator<T1, S>& a1, const StackLinearAllocator<T2, S>& a2) noexcept;
-
-        template<typename T1, typename T2, size_t S>
-        friend bool operator!=(const StackLinearAllocator<T1, S>& a1, const StackLinearAllocator<T2, S>& a2) noexcept;
+        unsigned char* m_StartBlockAddress;
+        unsigned char* m_EndBlockAddress;
+        unsigned char* m_CurrentMarker;
     };
-
-
-    template <typename T, typename U, size_t memoryBlockSize>
-    bool operator==(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
-    {
-        return (a1.m_CurrentMarker == a2.m_CurrentMarker &&
-            &a1.m_MemoryBlock == &a2.m_MemoryBlock &&
-            a1.m_EndBlockAddress == a2.m_EndBlockAddress &&
-            a1.m_StartBlockAddress == a2.m_StartBlockAddress);
-    }
-
-    template <typename T, typename U, size_t memoryBlockSize>
-    bool operator!=(const StackLinearAllocator<T, memoryBlockSize>& a1, const StackLinearAllocator<U, memoryBlockSize>& a2) noexcept
-    {
-        return !(a1 == a2);
-    }
 
 }

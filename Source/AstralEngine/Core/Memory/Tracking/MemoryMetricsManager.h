@@ -42,12 +42,19 @@ namespace Core {
         /**@brief Updates allocation metrics with allocation data
          * @param allocatedPointer The pointer that was allocated memory. Function does nothing if nullptr.
          * @param allocationSize The size of the memory block allocated to allocatedPointer. */
-        void Allocate(void* allocatedPointer, size_t allocationSize);
+        void TrackAllocation(void* allocatedPointer, size_t allocationSize);
+
+        /**@brief Updates allocation metrics with allocation data
+         * @param allocationSize The size of the memory block */
+        void TrackAllocation(size_t allocationSize);
 
         /**@brief Updates free metrics and tracked data for given pointer
          * @param pointerToBeFreed The pointer that is about to be freed. Must be called before the pointer
          * is freed and not after. Function does nothing if nullptr. */
-        void Free(void* pointerToBeFreed);
+        void TrackDeallocation(void* pointerToBeFreed);
+
+        /**@brief Updates free metrics and tracked data for given pointer */
+        void TrackDeallocation(size_t deallocationSize);
 
         /**@brief Initializes the MemoryMetricsManager. Call before using MemoryMetricsManager */
         void Init();

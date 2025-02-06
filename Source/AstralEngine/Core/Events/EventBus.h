@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "pch.h"
+#include "Core/CoreMacroDefinitions.h"
+#include <functional>
 
 namespace Core {
 

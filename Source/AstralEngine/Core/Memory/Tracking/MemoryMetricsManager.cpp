@@ -6,7 +6,7 @@
 
 namespace Core {
 
-    void MemoryMetricsManager::Allocate(void* allocatedPointer, size_t allocationSize)
+    void MemoryMetricsManager::TrackAllocation(void* allocatedPointer, size_t allocationSize)
     {
         std::lock_guard lock(m_Mutex);
 
@@ -21,7 +21,18 @@ namespace Core {
         m_FrameAllocationData.AllocatedBytes += allocationSize;
     }
 
-    void MemoryMetricsManager::Free(void* pointerToBeFreed)
+    void MemoryMetricsManager::TrackAllocation(size_t allocationSize)
+    {
+        std::lock_guard lock(m_Mutex);
+
+        m_TotalAllocatedBytes += allocationSize;
+        m_TotalNumberOfAllocations++;
+
+        m_FrameAllocationData.NumberOfAllocations++;
+        m_FrameAllocationData.AllocatedBytes += allocationSize;
+    }
+
+    void MemoryMetricsManager::TrackDeallocation(void* pointerToBeFreed)
     {
         std::lock_guard lock(m_Mutex);
 
@@ -38,6 +49,15 @@ namespace Core {
         m_PointerAllocationSizeMap.FreePointer(pointerToBeFreed);
     }
 
+    void MemoryMetricsManager::TrackDeallocation(size_t deallocationSize)
+    {
+        m_TotalFreedBytes += deallocationSize;
+        m_TotalNumberOfFrees++;
+
+        m_FrameAllocationData.NumberOfFrees++;
+        m_FrameAllocationData.FreedBytes += deallocationSize;
+    }
+
     void MemoryMetricsManager::Init()
     {
         m_NewFrameEventListener.StartListening();
@@ -47,5 +67,8 @@ namespace Core {
     {
         m_NewFrameEventListener.StopListening();
     }
+
+
+
 
 }

@@ -4,6 +4,11 @@
 
 #pragma once
 
+#include "Core/Memory/Tracking/MemoryMetricsManager.h"
+
+#define TRACK_ALLOCATION(size) Core::MemoryMetricsManager::Get().TrackAllocation(size)
+#define TRACK_DEALLOCATION(size) Core::MemoryMetricsManager::Get().TrackDeallocation(size)
+
 /**@brief Redefines the new operator to track memory usages and allocations
  * @throws bad_alloc if std::malloc returns nullptr */
 void* operator new(std::size_t size);

@@ -9,7 +9,8 @@
 namespace Core {
 
     /**@class NoTrackingAllocator
-     * @brief Allocator that bypasses allocation metrics tracking. Uses std::malloc and std::free. */
+     * @brief Allocator that bypasses allocation metrics tracking. Uses std::malloc and std::free.
+     * @thread_safety This class is thread safe. */
     template <typename T>
     class NoTrackingAllocator {
     public:
@@ -52,7 +53,6 @@ namespace Core {
         template <typename U>
         NoTrackingAllocator(const NoTrackingAllocator<U>&) noexcept {};
         NoTrackingAllocator(const NoTrackingAllocator&) noexcept = default;
-
     };
 
     // Equality operators for allocators
