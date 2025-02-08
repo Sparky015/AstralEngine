@@ -1,6 +1,4 @@
-add_library(AstralEngine)
-
-target_sources(AstralEngine PUBLIC
+add_library(AstralEngine
         Core/CoreMacroDefinitions.h
         pch.h
         pch.cpp
@@ -124,7 +122,6 @@ target_sources(AstralEngine PUBLIC
         Core/Memory/Tracking/GlobalAllocationTracker.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
-        Core/Memory/Tracking/GlobalAllocationStorage.cpp
         Core/Memory/Allocators/NoTrackingAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
@@ -158,9 +155,19 @@ target_sources(AstralEngine PUBLIC
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
 
+        Core/Memory/Tracking/GlobalAllocationStorage.h
+        Core/Memory/Tracking/GlobalAllocationStorage.cpp
+
+        Core/Memory/Tracking/test.cpp
+        Core/Memory/Tracking/test2.cpp
+
+)
+
+target_sources(AstralEngine
         PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES
         Core/Memory/Tracking/MemoryTracker.ixx
-        Core/Memory/Tracking/GlobalAllocationStorage.ixx
+        Core/Memory/Tracking/test.ixx
+        Core/Memory/Tracking/test2.ixx
 
 )
 

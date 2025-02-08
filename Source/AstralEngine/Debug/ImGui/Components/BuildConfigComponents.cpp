@@ -32,9 +32,10 @@ void Debug::CompilerInfoComponents()
 #if __GLIBCXX__
     ImGui::Text("Standard Library: GNU libstdc++ %d", __GLIBCXX__);
 #elif _LIBCPP_VERSION
-    ImGui::Text("Standard Library: LLVM libc++ %d.%d.%d", _LIBCPP_VERSION / 1000, (_LIBCPP_VERSION % 1000) / 10, (_LIBCPP_VERSION % 10));
+    ImGui::Text("Standard Library: LLVM libc++ %d.%d.%d", _LIBCPP_VERSION / 1000, (_'
+        LIBCPP_VERSION % 1000) / 10, (_LIBCPP_VERSION % 10));
 #elif _MSC_VER
-    ImGui::Text("Standard Library: Microsoft STL %d",  _MSVC_STL_VERSION);
+    ImGui::Text("Standard Library: Microsoft STL %d",  _MSC_VER);
 #else
     ImGui::Text("Standard Library: Unknown");
 #endif

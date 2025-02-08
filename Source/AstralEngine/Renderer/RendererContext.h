@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include <__fwd/string_view.h>
+#include <string_view>
 
 namespace Graphics {
 

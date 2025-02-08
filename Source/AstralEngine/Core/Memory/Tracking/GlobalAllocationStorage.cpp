@@ -4,8 +4,7 @@
 * @date 1/7/2025
 */
 
-
-module Astral.MemoryTracker:GlobalAllocationStorage;
+#include "GlobalAllocationStorage.h"
 
 namespace Core {
 

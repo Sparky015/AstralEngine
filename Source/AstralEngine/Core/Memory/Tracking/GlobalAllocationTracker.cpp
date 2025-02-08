@@ -9,9 +9,11 @@
 
 #include "MemoryMetricsManager.h"
 
+import Astral.Test;
 
 void* operator new(std::size_t size)
 {
+    Core::Test2::gg();
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
     Core::MemoryMetricsManager::Get().TrackAllocation(pointer, size);
