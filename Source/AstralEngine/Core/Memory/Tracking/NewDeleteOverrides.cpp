@@ -2,18 +2,18 @@
 // Created by Andrew Fagan on 1/7/25.
 //
 
-#include "GlobalAllocationTracker.h"
+#include "NewDeleteOverrides.h"
 
 #include <cstdlib> // for std::malloc and std::free
 #include <iostream>
 
-#include "MemoryMetricsManager.h"
+#include "MemoryMetrics.h"
 
 void* operator new(std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryMetricsManager::Get().TrackAllocation(pointer, size);
+    Core::MemoryMetrics::Get().TrackAllocation(pointer, size);
     return pointer;
 }
 
@@ -22,20 +22,20 @@ void* operator new[](std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryMetricsManager::Get().TrackAllocation(pointer, size);
+    Core::MemoryMetrics::Get().TrackAllocation(pointer, size);
     return pointer;
 }
 
 
 void operator delete(void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().TrackDeallocation(pointer);
+    Core::MemoryMetrics::Get().TrackDeallocation(pointer);
     std::free(pointer);
 }
 
 
 void operator delete[](void* pointer) noexcept
 {
-    Core::MemoryMetricsManager::Get().TrackDeallocation(pointer);
+    Core::MemoryMetrics::Get().TrackDeallocation(pointer);
     std::free(pointer);
 }

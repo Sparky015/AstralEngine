@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
+#include "Core/Memory/Tracking/NewDeleteOverrides.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>

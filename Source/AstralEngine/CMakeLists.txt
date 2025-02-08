@@ -14,7 +14,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Core/Memory/Tracking/GlobalAllocationTracker.h
+        Core/Memory/Tracking/NewDeleteOverrides.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -117,9 +117,9 @@ add_library(AstralEngine
         Debug/ImGui/Components/InputStateComponents.h
         Debug/ImGui/Components/SystemInfoComponents.cpp
         Debug/ImGui/Components/SystemInfoComponents.h
-        Core/Memory/Tracking/MemoryMetricsManager.cpp
-        Core/Memory/Tracking/MemoryMetricsManager.h
-        Core/Memory/Tracking/GlobalAllocationTracker.cpp
+        Core/Memory/Tracking/MemoryMetrics.cpp
+        Core/Memory/Tracking/MemoryMetrics.h
+        Core/Memory/Tracking/NewDeleteOverrides.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/Allocators/NoTrackingAllocator.h
@@ -157,6 +157,12 @@ add_library(AstralEngine
 
         Core/Memory/Tracking/GlobalAllocationStorage.h
         Core/Memory/Tracking/GlobalAllocationStorage.cpp
+        Core/Memory/Tracking/MemoryTracker.cpp
+        Core/Memory/Tracking/MemoryTracker.h
+        Core/Memory/Tracking/TrackingSceneManager.cpp
+        Core/Memory/Tracking/TrackingSceneManager.h
+        Core/Memory/Tracking/SceneMetricsExporter.cpp
+        Core/Memory/Tracking/SceneMetricsExporter.h
 )
 
 

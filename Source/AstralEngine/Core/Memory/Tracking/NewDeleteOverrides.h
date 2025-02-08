@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/Memory/Tracking/MemoryMetricsManager.h"
+#include "Core/Memory/Tracking/MemoryMetrics.h"
 
 #define TRACK_ALLOCATION(size) Core::MemoryMetricsManager::Get().TrackAllocation(size)
 #define TRACK_DEALLOCATION(size) Core::MemoryMetricsManager::Get().TrackDeallocation(size)

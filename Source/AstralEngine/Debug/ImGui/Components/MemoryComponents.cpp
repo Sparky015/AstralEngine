@@ -6,7 +6,7 @@
 
 #include <imgui.h>
 
-#include "Core/Memory/Tracking/MemoryMetricsManager.h"
+#include "Core/Memory/Tracking/MemoryMetrics.h"
 
 namespace Debug {
 
@@ -51,26 +51,26 @@ namespace Debug {
 
     void GlobalTotalAllocationsAndFrees()
     {
-        const Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
+        const Core::MemoryMetrics& memoryMetricsManager = Core::MemoryMetrics::Get();
         ImGui::Text("Total Allocated Bytes: %llu", memoryMetricsManager.GetTotalAllocatedBytes());
         ImGui::Text("Total Freed Bytes: %llu", memoryMetricsManager.GetTotalFreedBytes());
     }
 
     void GlobalMemoryUsage()
     {
-        const Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
+        const Core::MemoryMetrics& memoryMetricsManager = Core::MemoryMetrics::Get();
         ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()).data());
     }
 
     void UnfreedMemoryFromCurrentFrame()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetricsManager::Get().GetFrameAllocationData();
+        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetrics::Get().GetFrameAllocationData();
         ImGui::Text("Unfreed memory from current frame: %u bytes", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes));
     }
 
     void AllocationsAndFreesForCurrentFrame()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetricsManager::Get().GetFrameAllocationData();
+        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetrics::Get().GetFrameAllocationData();
         ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
         ImGui::Text("Frees in current frame: %u", frameAllocationData.NumberOfFrees);
     }

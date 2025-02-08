@@ -26,19 +26,25 @@ namespace Core {
     };
 
 
-    /**@class MemoryMetricsManager
+    /**@class MemoryMetrics
      * @brief Tracks global allocations and frees and provides getters for memory usage stats.
      * @note This class is a singleton. This class is thread safe. */
-    class MemoryMetricsManager
+    class MemoryMetrics
     {
     public:
 
         /**@brief Gets the singleton instance of MemoryMetricsManager */
-        inline static MemoryMetricsManager& Get()
+        inline static MemoryMetrics& Get()
         {
-            static MemoryMetricsManager instance = MemoryMetricsManager();
+            static MemoryMetrics instance = MemoryMetrics();
             return instance;
         }
+
+        /**@brief Initializes the MemoryMetricsManager. Call before using MemoryMetricsManager */
+        void Init();
+
+        /**@brief Shuts down the MemoryMetricsManager. Call when done using MemoryMetricsManager */
+        void Shutdown();
 
         /**@brief Updates allocation metrics with allocation data
          * @param allocatedPointer The pointer that was allocated memory. Function does nothing if nullptr.
@@ -57,11 +63,7 @@ namespace Core {
         /**@brief Updates free metrics and tracked data for given pointer */
         void TrackDeallocation(size_t deallocationSize);
 
-        /**@brief Initializes the MemoryMetricsManager. Call before using MemoryMetricsManager */
-        void Init();
 
-        /**@brief Shuts down the MemoryMetricsManager. Call when done using MemoryMetricsManager */
-        void Shutdown();
 
         /**@brief Retrieves the total allocated bytes over the course of the program */
         [[nodiscard]] uint64 GetTotalAllocatedBytes() const { return m_TotalAllocatedBytes; }
@@ -81,18 +83,18 @@ namespace Core {
         /**@brief Retrieves memory usage metrics for the previous frame */
         [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_FrameAllocationData; }
 
-        MemoryMetricsManager(const MemoryMetricsManager&) = delete;
-        MemoryMetricsManager& operator=(const MemoryMetricsManager&) = delete;
-        MemoryMetricsManager(MemoryMetricsManager&&) = delete;
-        MemoryMetricsManager& operator=(MemoryMetricsManager&&) = delete;
+        MemoryMetrics(const MemoryMetrics&) = delete;
+        MemoryMetrics& operator=(const MemoryMetrics&) = delete;
+        MemoryMetrics(MemoryMetrics&&) = delete;
+        MemoryMetrics& operator=(MemoryMetrics&&) = delete;
 
     private:
-        MemoryMetricsManager() = default;
-        ~MemoryMetricsManager() = default;
+        MemoryMetrics() = default;
+        ~MemoryMetrics() = default;
 
         std::recursive_mutex m_Mutex{};
 
-        GlobalAllocationStorage m_PointerAllocationSizeMap{};
+        GlobalAllocationStorage m_GlobalAllocationStorage{};
 
         uint64 m_TotalAllocatedBytes{};
         uint64 m_TotalFreedBytes{};

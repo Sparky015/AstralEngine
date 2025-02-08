@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
+#include "Core/Memory/Tracking/NewDeleteOverrides.h"
 #include <memory>
 #include <cstring>
 
