@@ -5,6 +5,7 @@
 #include "OpenGLTexture.h"
 
 #include "std_image.h"
+#include "Debug/Macros/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 

@@ -5,6 +5,9 @@
 #include "ConsoleLogFile.h"
 
 #include <filesystem>
+#include <sstream>
+
+#include "Debug/Macros/Loggers.h"
 
 namespace Debug {
 

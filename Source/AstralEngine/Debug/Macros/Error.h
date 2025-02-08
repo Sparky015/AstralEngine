@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <sstream>
 
 #ifndef TURN_OFF_DEBUG_MACROS
 

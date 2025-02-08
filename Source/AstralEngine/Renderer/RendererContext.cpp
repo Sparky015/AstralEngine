@@ -8,6 +8,7 @@
 
 #include "Platform/OpenGL/OpenGLRenderingContext.h"
 #include "RendererAPI.h"
+#include "Debug/Macros/Error.h"
 
 namespace Graphics {
 

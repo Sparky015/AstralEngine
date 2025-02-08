@@ -6,7 +6,7 @@
 
 
 #include "Core/Events/EventListener.h"
-#include "PointerAllocationSizeMap.h"
+import Astral.MemoryTracker:GlobalAllocationStorage;
 #include "Renderer/RendererEvents.h"
 #include <mutex>
 
@@ -91,7 +91,7 @@ namespace Core {
 
         std::recursive_mutex m_Mutex{};
 
-        PointerAllocationSizeMap m_PointerAllocationSizeMap{};
+        GlobalAllocationStorage m_PointerAllocationSizeMap{};
 
         uint64 m_TotalAllocatedBytes{};
         uint64 m_TotalFreedBytes{};

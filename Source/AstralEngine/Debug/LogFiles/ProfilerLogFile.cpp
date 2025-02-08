@@ -6,6 +6,8 @@
 
 #include <filesystem>
 
+#include "Debug/Macros/Loggers.h"
+
 namespace Debug {
 
     bool ProfilerLogFile::m_IsLogFileOpen = false;

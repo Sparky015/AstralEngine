@@ -4,6 +4,7 @@
 
 #include "VertexBuffer.h"
 
+#include "Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h"
 #include "Renderer/RendererAPI.h"
 

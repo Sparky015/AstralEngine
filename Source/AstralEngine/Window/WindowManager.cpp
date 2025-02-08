@@ -4,6 +4,8 @@
 
 #include "WindowManager.h"
 
+#include "Debug/Macros/Loggers.h"
+
 namespace Window{
 
     WindowManager& g_WindowManager = WindowManager::Get();

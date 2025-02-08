@@ -1,22 +1,22 @@
 /**
-* @file PointerAllocationSizeMap.cpp
+* @file GlobalAllocationStorage.cpp
 * @author Andrew Fagan
 * @date 1/7/2025
 */
 
-#include "PointerAllocationSizeMap.h"
+
+module Astral.MemoryTracker:GlobalAllocationStorage;
 
 namespace Core {
 
-
-    void PointerAllocationSizeMap::AddPointer(const void* pointer, const size_t size)
+    void GlobalAllocationStorage::AddPointer(const void* pointer, const size_t size)
     {
         if (!pointer) { return; }
         m_Storage[pointer] = size;
     }
 
 
-    void PointerAllocationSizeMap::FreePointer(const void* pointer)
+    void GlobalAllocationStorage::FreePointer(const void* pointer)
     {
         if (!pointer) { return; }
 
@@ -26,7 +26,7 @@ namespace Core {
     }
 
 
-    size_t PointerAllocationSizeMap::GetPointerSize(const void* pointer)
+    size_t GlobalAllocationStorage::GetPointerSize(const void* pointer)
     {
         if (!pointer) { return 0; }
 

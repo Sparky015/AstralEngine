@@ -4,6 +4,8 @@
 
 #include "BufferLayout.h"
 
+#include "Debug/Macros/Error.h"
+
 namespace Graphics {
 
     BufferLayout::BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes) : m_Attributes(bufferAttributes) {}

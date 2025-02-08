@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include "Core/CoreMacroDefinitions.h"
+#include "Core/Math/Math.h"
 #include "Renderer/RendererContext.h"
+
+
 
 namespace Window {
 

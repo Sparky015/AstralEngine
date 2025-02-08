@@ -124,8 +124,7 @@ target_sources(AstralEngine PUBLIC
         Core/Memory/Tracking/GlobalAllocationTracker.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
-        Core/Memory/Tracking/PointerAllocationSizeMap.h
-        Core/Memory/Tracking/PointerAllocationSizeMap.cpp
+        Core/Memory/Tracking/GlobalAllocationStorage.cpp
         Core/Memory/Allocators/NoTrackingAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
@@ -158,10 +157,11 @@ target_sources(AstralEngine PUBLIC
         Renderer/Cameras/OrthographicCamera.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
-        Core/Memory/Tracking/MemoryTracker.cpp
 
         PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES
         Core/Memory/Tracking/MemoryTracker.ixx
+        Core/Memory/Tracking/GlobalAllocationStorage.ixx
+
 )
 
 
@@ -182,6 +182,7 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
+target_link_libraries(AstralEngine PRIVATE -lc++)
 
 add_dependencies(AstralEngine
         ImGui
@@ -211,7 +212,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 
 
 # Precompiled Header
-target_precompile_headers(AstralEngine PUBLIC "pch.h")
+#target_precompile_headers(AstralEngine PUBLIC "pch.h")
 
 
 

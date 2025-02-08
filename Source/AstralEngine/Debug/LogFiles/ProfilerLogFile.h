@@ -6,6 +6,8 @@
 
 #include <fstream>
 
+#include "Core/CoreMacroDefinitions.h"
+
 namespace Debug {
 
     struct ProfileResult

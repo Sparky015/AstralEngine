@@ -4,6 +4,7 @@
 
 #include "IndexBuffer.h"
 
+#include "Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h"
 #include "Renderer/RendererAPI.h"
 

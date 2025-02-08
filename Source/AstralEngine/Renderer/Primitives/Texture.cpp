@@ -4,6 +4,7 @@
 
 #include "Texture.h"
 
+#include "Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h"
 #include "Renderer/RendererAPI.h"
 

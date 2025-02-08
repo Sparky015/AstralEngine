@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 namespace Core {
 
     /**@class NoTrackingAllocator

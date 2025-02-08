@@ -1,22 +1,25 @@
 /**
-* @file PointerAllocationSizeMap.h
+* @file GlobalAllocationStorage.ixx
 * @author Andrew Fagan
 * @date 1/7/2025
 */
 
-#pragma once
+module;
 
 #include "Core/Memory/Allocators/NoTrackingAllocator.h"
+#include <unordered_map>
+
+export module Astral.MemoryTracker:GlobalAllocationStorage;
 
 namespace Core {
 
-    /**@class PointerAllocationSizeMap
+    /**@class GlobalAllocationStorage
      * @brief Stores the size of memory blocks allocated to pointers */
-    class PointerAllocationSizeMap
+    export class GlobalAllocationStorage
     {
     public:
-        PointerAllocationSizeMap() = default;
-        ~PointerAllocationSizeMap() = default;
+        GlobalAllocationStorage() = default;
+        ~GlobalAllocationStorage() = default;
 
         /**@brief Stores a mapping of the pointer to the allocation size of the pointer */
         void AddPointer(const void* pointer, size_t size);

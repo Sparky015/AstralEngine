@@ -3,6 +3,9 @@
 //
 
 #pragma once
+#include <string>
+
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Graphics {
 

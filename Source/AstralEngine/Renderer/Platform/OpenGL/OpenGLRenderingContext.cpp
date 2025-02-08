@@ -6,6 +6,9 @@
 
 #include <glad/glad.h>
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Macros/Error.h"
+
 namespace Graphics {
 
     OpenGLRenderingContext::OpenGLRenderingContext(GLFWwindow* window) :
