@@ -14,7 +14,7 @@
 #define LOG(message) { std::ostringstream ss; ss << message; Debug::Macros::macro_LOG(ss); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE_NAME__, __LINE__); }
+#define WARN(message) { std::ostringstream ss;  ss << message; Debug::Macros::macro_WARN(ss, __FILE__, __LINE__); }
 
 
 #else

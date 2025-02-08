@@ -1,4 +1,6 @@
-add_library(AstralEngine
+add_library(AstralEngine)
+
+target_sources(AstralEngine PUBLIC
         Core/CoreMacroDefinitions.h
         pch.h
         pch.cpp
@@ -156,8 +158,10 @@ add_library(AstralEngine
         Renderer/Cameras/OrthographicCamera.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
+        Core/Memory/Tracking/MemoryTracker.cpp
 
-
+        PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        Core/Memory/Tracking/MemoryTracker.ixx
 )
 
 
@@ -202,11 +206,12 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/std_image")
 
 
 
 # Precompiled Header
-target_precompile_headers(AstralEngine PRIVATE "pch.h")
+target_precompile_headers(AstralEngine PUBLIC "pch.h")
 
 
 
@@ -224,8 +229,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
 endif()
 
-target_compile_definitions(AstralEngine PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(AstralEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+target_compile_definitions(AstralEngine PUBLIC -DGLFW_INCLUDE_NONE)
+target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
 elseif (WIN32)

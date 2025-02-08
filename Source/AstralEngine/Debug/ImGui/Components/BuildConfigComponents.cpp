@@ -19,7 +19,7 @@ void Debug::CompilerInfoComponents()
 #elif __GNUC__
     ImGui::Text("Compiler: GNU GCC %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 #elif _MSC_VER
-    ImGui::Text("Compiler: MSVC %d", _MSC_VER);
+    ImGui::Text("Compiler: MSVC %d.%d", _MSC_VER / 100, _MSC_VER % 100);
 #elif __INTEL_COMPILER
     ImGui::Text("Compiler: Intel %d", __INTEL_COMPILER);
 #elif __BORLANDC__
@@ -34,7 +34,7 @@ void Debug::CompilerInfoComponents()
 #elif _LIBCPP_VERSION
     ImGui::Text("Standard Library: LLVM libc++ %d.%d.%d", _LIBCPP_VERSION / 1000, (_LIBCPP_VERSION % 1000) / 10, (_LIBCPP_VERSION % 10));
 #elif _MSC_VER
-    ImGui::Text("Standard Library: Microsoft STL %s", _MSC_VER);
+    ImGui::Text("Standard Library: Microsoft STL %d",  _MSVC_STL_VERSION);
 #else
     ImGui::Text("Standard Library: Unknown");
 #endif

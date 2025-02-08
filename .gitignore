@@ -12,6 +12,7 @@ Documentation/Docs.html
 
 CMakeFiles
 .vs
+out
 
 ConsoleLogs
 Logs
