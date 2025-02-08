@@ -35,6 +35,7 @@ namespace Core {
             if (!m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RemoveListener(&m_Callback);
+            m_IsListening = false;
         };
 
     private:
