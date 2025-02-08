@@ -38,7 +38,5 @@ add_dependencies(ChessTests Chess)
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Source/Chess)
 
-target_compile_options(ChessTests PRIVATE -Wno-unused-result)
-
 include(GoogleTest)
 gtest_discover_tests(ChessTests)

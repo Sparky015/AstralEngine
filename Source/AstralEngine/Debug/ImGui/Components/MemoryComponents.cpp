@@ -5,8 +5,9 @@
 #include "MemoryComponents.h"
 
 #include <imgui.h>
+#include <string_view>
 
-#include "Core/Memory/Tracking/MemoryMetrics.h"
+#include "Core/Memory/Tracking/MemoryTracker.h"
 
 namespace Debug {
 
@@ -49,28 +50,30 @@ namespace Debug {
         return numberOfBytesString;
     }
 
-    void GlobalTotalAllocationsAndFrees()
-    {
-        const Core::MemoryMetrics& memoryMetricsManager = Core::MemoryMetrics::Get();
-        ImGui::Text("Total Allocated Bytes: %llu", memoryMetricsManager.GetTotalAllocatedBytes());
-        ImGui::Text("Total Freed Bytes: %llu", memoryMetricsManager.GetTotalFreedBytes());
-    }
 
     void GlobalMemoryUsage()
     {
-        const Core::MemoryMetrics& memoryMetricsManager = Core::MemoryMetrics::Get();
-        ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()).data());
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetTotalMemoryUsage()).data());
     }
+
+
+    void PeakMemoryUsage()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Peak Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetPeakMemoryUsage()).data());
+    }
+
 
     void UnfreedMemoryFromCurrentFrame()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetrics::Get().GetFrameAllocationData();
+        const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
         ImGui::Text("Unfreed memory from current frame: %u bytes", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes));
     }
 
     void AllocationsAndFreesForCurrentFrame()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetrics::Get().GetFrameAllocationData();
+        const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
         ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
         ImGui::Text("Frees in current frame: %u", frameAllocationData.NumberOfFrees);
     }

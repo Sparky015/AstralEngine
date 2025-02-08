@@ -98,8 +98,8 @@ namespace Debug{
 
             if (ImGui::TreeNode("Memory"))
             {
+                PeakMemoryUsage();
                 GlobalMemoryUsage();
-                GlobalTotalAllocationsAndFrees();
 
                 ImGui::Spacing();
                 AllocationsAndFreesForCurrentFrame();

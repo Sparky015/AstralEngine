@@ -6,8 +6,8 @@
 
 namespace Debug {
 
-    void GlobalTotalAllocationsAndFrees();
     void GlobalMemoryUsage();
+    void PeakMemoryUsage();
     void UnfreedMemoryFromCurrentFrame();
     void AllocationsAndFreesForCurrentFrame();
 

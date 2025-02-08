@@ -11,8 +11,7 @@
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
-
-#include "Memory/Tracking/MemoryMetrics.h"
+#include "Memory/Tracking/MemoryTracker.h"
 
 
 Engine* Engine::m_Instance = nullptr;
@@ -26,7 +25,7 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
-    Core::MemoryMetrics::Get().Init();
+    Core::MemoryTracker::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
@@ -52,7 +51,7 @@ Engine::~Engine()
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 
-    Core::MemoryMetrics::Get().Shutdown();
+    Core::MemoryTracker::Get().Shutdown();
 }
 
 
