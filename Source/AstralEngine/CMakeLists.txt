@@ -157,18 +157,6 @@ add_library(AstralEngine
 
         Core/Memory/Tracking/GlobalAllocationStorage.h
         Core/Memory/Tracking/GlobalAllocationStorage.cpp
-
-        Core/Memory/Tracking/test.cpp
-        Core/Memory/Tracking/test2.cpp
-
-)
-
-target_sources(AstralEngine
-        PUBLIC FILE_SET cxx_modules TYPE CXX_MODULES FILES
-        Core/Memory/Tracking/MemoryTracker.ixx
-        Core/Memory/Tracking/test.ixx
-        Core/Memory/Tracking/test2.ixx
-
 )
 
 
