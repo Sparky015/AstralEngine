@@ -40,7 +40,7 @@ namespace Core {
     }
 
 
-    void MemoryTracker::AddAllocation(void* pointer, size_t size) //, MemoryRegions region, AllocatorType allocatorType)
+    void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
     {
         std::lock_guard lock(m_Mutex);
         m_GlobalAllocationStorage.AddPointer(pointer, size);

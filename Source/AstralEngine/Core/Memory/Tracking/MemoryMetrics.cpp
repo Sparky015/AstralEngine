@@ -6,24 +6,21 @@
 
 namespace Core {
 
-    void MemoryMetrics::TrackAllocation(size_t allocationSize)
+    void MemoryMetrics::TrackAllocation(const AllocationData& allocationInfo)
     {
-        m_TotalMemoryUsage += allocationSize;
+        m_TotalMemoryUsage += allocationInfo.size;
         m_PeakMemoryUsage = std::max(m_PeakMemoryUsage, m_TotalMemoryUsage);
         m_TotalActiveAllocations++;
 
         m_FrameAllocationData.NumberOfAllocations++;
-        m_FrameAllocationData.AllocatedBytes += allocationSize;
+        m_FrameAllocationData.AllocatedBytes += allocationInfo.size;
     }
 
 
-    void MemoryMetrics::TrackDeallocation(size_t deallocationSize)
+    void MemoryMetrics::TrackDeallocation(const AllocationData& allocationInfo)
     {
-        m_TotalMemoryUsage -= deallocationSize;
+        m_TotalMemoryUsage -= allocationInfo.size;
         m_TotalActiveAllocations--;
-
-        m_FrameAllocationData.NumberOfFrees++;
-        m_FrameAllocationData.FreedBytes += deallocationSize;
     }
 
 

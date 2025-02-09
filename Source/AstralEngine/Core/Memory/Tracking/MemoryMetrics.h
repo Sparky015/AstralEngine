@@ -9,6 +9,7 @@
 #include "Renderer/RendererEvents.h"
 
 #include "GlobalAllocationStorage.h"
+#include "MemoryTracker.h"
 
 
 namespace Core {
@@ -19,9 +20,7 @@ namespace Core {
     struct FrameAllocationData
     {
         uint32 AllocatedBytes{};
-        uint32 FreedBytes{};
         uint32 NumberOfAllocations{};
-        uint32 NumberOfFrees{};
     };
 
 
@@ -34,42 +33,81 @@ namespace Core {
         MemoryMetrics() = default;
         ~MemoryMetrics() = default;
 
-        /**@brief Initializes the MemoryMetrics. Call before using MemoryMetrics */
+        /**@brief Initializes necessary components for MemoryMetrics. Call before using MemoryMetrics */
         void Init();
 
-        /**@brief Shuts down the MemoryMetrics. Call when done using MemoryMetrics */
+        /**@brief Shuts down necessary components for MemoryMetrics. Call when done using MemoryMetrics */
         void Shutdown();
 
-        /**@brief Updates memory metrics relating to allocations with the allocationSize
-         * @param allocationSize The size of the memory block being allocated */
-        void TrackAllocation(size_t allocationSize);
+        /**@brief Marks a new allocation and adds the allocation data to the memory metrics
+         * @param allocationData The detail information of the allocation being added. */
+        void TrackAllocation(const AllocationData& allocationData);
 
-        /**@brief Updates memory metrics relating to deallocations with the deallocationSize
-         * @param deallocationSize The size of the memory block being deallocated
-         * is freed and not after. Function does nothing if nullptr. */
-        void TrackDeallocation(size_t deallocationSize);
-
-        /**@brief Retrieves the total allocated bytes over the course of the program
-         * @return The total memory usage of the program */
-        [[nodiscard]] uint64 GetTotalMemoryUsage() const { return m_TotalMemoryUsage; }
+        /**@brief Marks a new deallocation and removes the allocation data from the memory metrics
+         * @param allocationData The detailed information of the allocation being removed. */
+        void TrackDeallocation(const AllocationData& allocationData);
 
         /**@brief Retrieves the peak allocated bytes over the course of the program
          * @return The peak memory usage of the program */
         [[nodiscard]] uint64 GetPeakMemoryUsage() const { return m_PeakMemoryUsage; }
 
+        /**@brief Retrieves the total allocated bytes over the course of the program
+         * @return The total memory usage of the program */
+        [[nodiscard]] uint64 GetTotalMemoryUsage() const { return m_TotalMemoryUsage; }
+
+        /**@brief Retrieves the current active allocations (Number of allocations that were allocated but not freed yet)
+         * @return The current active allocation count */
+        [[nodiscard]] uint64 GetTotalActiveAllocations() const { return m_TotalActiveAllocations; }
+
         /**@brief Retrieves memory usage metrics for the current frame
          * @return The memory usage metrics of the current frame */
         [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_FrameAllocationData; }
 
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetAllocatorTypeUsage(AllocatorType allocatorType) const;
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetMemoryRegionUsage(MemoryRegion memoryRegion) const;
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetThreadUsage(std::thread::id threadID) const;
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetAllocatorTypePeakUsage(AllocatorType allocatorType) const;
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const;
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetThreadPeakUsage(std::thread::id threadID) const;
+
+        // There is no need for moving or copying this class.
+        MemoryMetrics(const MemoryMetrics&) = delete;
+        MemoryMetrics& operator=(const MemoryMetrics&) = delete;
+        MemoryMetrics(MemoryMetrics&&) noexcept = delete;
+        MemoryMetrics& operator=(MemoryMetrics&&) noexcept = delete;
+
     private:
 
-        uint64 m_PeakMemoryUsage{};
-        uint64 m_TotalMemoryUsage{};
-        uint32 m_TotalActiveAllocations{};
+        uint64 m_PeakMemoryUsage;
+        uint64 m_TotalMemoryUsage;
+        uint32 m_TotalActiveAllocations;
 
+        std::unordered_map<const AllocatorType, size_t, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>> m_MemoryUsageByAllocator;
+        std::unordered_map<MemoryRegion, size_t, NoTrackingAllocator<std::pair<MemoryRegion, size_t>>> m_MemoryUsageByRegion;
+        std::unordered_map<std::thread::id, size_t, NoTrackingAllocator<std::pair<std::thread::id, size_t>>> m_MemoryUsageByThread;
 
-        FrameAllocationData m_FrameAllocationData{};
+        std::unordered_map<const AllocatorType, size_t, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>> m_PeakMemoryUsageByAllocator;
+        std::unordered_map<MemoryRegion, size_t, NoTrackingAllocator<std::pair<MemoryRegion, size_t>>> m_PeakMemoryUsageByRegion;
+        std::unordered_map<std::thread::id, size_t, NoTrackingAllocator<std::pair<std::thread::id, size_t>>> m_PeakMemoryUsageByThread;
 
+        FrameAllocationData m_FrameAllocationData;
         Core::EventListener<NewFrameEvent> m_NewFrameEventListener{[this](NewFrameEvent)
         {
             m_FrameAllocationData = FrameAllocationData();
