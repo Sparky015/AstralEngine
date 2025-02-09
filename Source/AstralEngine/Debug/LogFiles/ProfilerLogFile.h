@@ -15,6 +15,7 @@ namespace Debug {
         std::string_view Name;
         int64 StartTimeStamp;
         int64 EndTimeStamp;
+        size_t AllocationCount;
     };
 
 
