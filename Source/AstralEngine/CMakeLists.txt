@@ -163,6 +163,8 @@ add_library(AstralEngine
         Core/Memory/Tracking/TrackingSceneManager.h
         Core/Memory/Tracking/SceneMetricsExporter.cpp
         Core/Memory/Tracking/SceneMetricsExporter.h
+        Core/Memory/Tracking/SceneMetricsImporter.cpp
+        Core/Memory/Tracking/SceneMetricsImporter.h
 )
 
 
