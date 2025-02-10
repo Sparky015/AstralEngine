@@ -65,17 +65,10 @@ namespace Debug {
     }
 
 
-    void UnfreedMemoryFromCurrentFrame()
-    {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
-        ImGui::Text("Unfreed memory from current frame: %u bytes", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes));
-    }
-
-    void AllocationsAndFreesForCurrentFrame()
+    void AllocationsInCurrentFrame()
     {
         const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
         ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
-        ImGui::Text("Frees in current frame: %u", frameAllocationData.NumberOfFrees);
     }
 
 }

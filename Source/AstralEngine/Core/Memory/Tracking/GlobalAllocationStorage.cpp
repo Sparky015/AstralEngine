@@ -4,33 +4,53 @@
 * @date 1/7/2025
 */
 
+#include "Debug/Macros/Asserts.h"
 #include "GlobalAllocationStorage.h"
+
+#include <iostream>
 
 namespace Core {
 
-    void GlobalAllocationStorage::AddPointer(const void* pointer, const size_t size)
+    GlobalAllocationStorage::~GlobalAllocationStorage()
     {
-        if (!pointer) { return; }
-        m_Storage[pointer] = size;
+        // Output all the pointers still being stored as leaked.
+        std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
+        for (auto [pointer, allocationData] : m_Storage)
+        {
+            std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
+        }
+        std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
+
+    }
+
+    void GlobalAllocationStorage::AddPointer(const AllocationData& allocationData)
+    {
+        [[unlikely]] if (!allocationData.pointer) { return; }
+        m_Storage[allocationData.pointer] = allocationData;
+        m_NumberOfEntries++;
     }
 
 
-    void GlobalAllocationStorage::FreePointer(const void* pointer)
+    void GlobalAllocationStorage::FreePointer(void* pointer)
     {
-        if (!pointer) { return; }
+        [[unlikely]] if (!pointer) { return; }
+        [[unlikely]] if (!IsPointerStored(pointer)) { return; }
 
-        const auto it = m_Storage.find(pointer);
-        if (it == m_Storage.end()) { return; }
         m_Storage.erase(pointer);
+        m_NumberOfEntries--;
     }
 
 
-    size_t GlobalAllocationStorage::GetPointerSize(const void* pointer)
+    bool GlobalAllocationStorage::IsPointerStored(void* pointer) const
     {
-        if (!pointer) { return 0; }
+        return m_Storage.contains(pointer);
+    }
 
-        const auto it = m_Storage.find(pointer);
-        return it != m_Storage.end() ? it->second : 0;
+
+    const AllocationData& GlobalAllocationStorage::GetPointerData(const void* pointer) const
+    {
+        ASSERT(pointer, "Can't read the data of nullptr!");
+        return m_Storage.at(pointer);
     }
 
 }

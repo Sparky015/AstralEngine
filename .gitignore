@@ -2,17 +2,20 @@ cmake-build-debug
 cmake-build-default
 cmake-build-*
 
+CMakeFiles
+
 build
 build-*
+
+.vs
+.idea
+
+out
 
 **/.DS_Store
 
 Documentation/Doxygen
 Documentation/Docs.html
-
-CMakeFiles
-.vs
-out
 
 ConsoleLogs
 Logs

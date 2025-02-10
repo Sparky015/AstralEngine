@@ -20,18 +20,24 @@ namespace Core {
     bool SceneMetricsExporter::OpenExportFile(const char* sceneName)
     {
         auto now = std::chrono::system_clock::now();
-        m_File.open(std::format("MemoryProfile_{}_{}", sceneName, std::format("{%d-%m-%Y_%H-%M-%S}", now)), std::ios::out);
-        return m_File.is_open();
+
+        // std::time_t now_c = std::chrono::system_clock::to_time_t(now); // Convert to time_t
+        // // Format the time string using std::strftime (or std::format if you prefer)
+        // char buffer[20]; // Sufficient size for the format
+        // std::strftime(buffer, sizeof(buffer), "%d-%m-%Y_%H-%M-%S", std::localtime(&now_c));
+
+        // m_File.open(std::format("MemoryProfile_{}_{}", sceneName ), std::ios::out);
+        return false; //m_File.is_open();
     }
 
 
     void SceneMetricsExporter::CloseExportFile()
     {
-        if (m_File.is_open())
-        {
-            m_File.close();
-            // TODO: Check if close failed
-        }
+        // if (m_File.is_open())
+        // {
+        //     m_File.close();
+        //     // TODO: Check if close failed
+        // }
     }
 
     void SceneMetricsExporter::WriteMemoryMetrics(const MemoryMetrics& memoryMetrics)

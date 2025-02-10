@@ -5,6 +5,7 @@
 */
 #pragma once
 
+#include "AllocationData.h"
 #include "Core/Memory/Allocators/NoTrackingAllocator.h"
 #include <unordered_map>
 
@@ -16,15 +17,20 @@ namespace Core {
     {
     public:
         GlobalAllocationStorage() = default;
-        ~GlobalAllocationStorage() = default;
+        ~GlobalAllocationStorage();
 
         /**@brief Stores a mapping of the pointer to the allocation size of the pointer */
-        void AddPointer(const void* pointer, size_t size);
+        void AddPointer(const AllocationData& allocationData);
 
         /**@brief Removes the pointer's entry in the allocation size mapping
          * @param pointer The pointer that is being freed. Removes entry of pointer only if it was already being tracked.
          * Does nothing when given nullptr. */
-        void FreePointer(const void* pointer);
+        void FreePointer(void* pointer);
+
+        /**@brief Checks if a pointer has a allocation data entry in storage currently
+         * @param pointer The pointer being checked if it is in storage
+         * @return True if the pointer is in storage and false if the pointer is not in storage. */
+        bool IsPointerStored(void* pointer) const;
 
         /**@brief Gets the allocated memory block size given to a pointer
          * @param pointer The pointer to the allocated memory block.
@@ -32,11 +38,16 @@ namespace Core {
          * Returns 0 if
          * - pointer is nullptr.
          * - pointer was not previously registered with AddPointer method. */
-        size_t GetPointerSize(const void* pointer);
+        const AllocationData& GetPointerData(const void* pointer) const;
+
+        /**@brief Gets the number of allocation entries currently in storage
+         * @return The number of allocation entries currently in storage */
+        [[nodiscard]] size_t GetAllocationEntryCount() const { return m_NumberOfEntries; }
 
     private:
 
-        std::unordered_map<const void*, size_t, std::hash<const void*>, std::equal_to<const void*>, NoTrackingAllocator<std::pair<const void* const, size_t>>> m_Storage;
+        size_t m_NumberOfEntries{};
+        std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingAllocator<std::pair<const void* const, AllocationData>>> m_Storage;
     };
 
 }

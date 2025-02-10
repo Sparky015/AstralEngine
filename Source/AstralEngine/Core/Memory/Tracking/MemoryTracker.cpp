@@ -43,17 +43,22 @@ namespace Core {
     void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
     {
         std::lock_guard lock(m_Mutex);
-        m_GlobalAllocationStorage.AddPointer(pointer, size);
-        m_MemoryMetrics.TrackAllocation(size);
+
+        const AllocationData allocationData = {pointer, size, region, allocatorType, std::this_thread::get_id()};
+        m_GlobalAllocationStorage.AddPointer(allocationData);
+
+        m_MemoryMetrics.TrackAllocation(allocationData);
     }
 
 
     void MemoryTracker::RemoveAllocation(void* pointer)
     {
         std::lock_guard lock(m_Mutex);
-        size_t deallocationSize = m_GlobalAllocationStorage.GetPointerSize(pointer);
+
+        if (!m_GlobalAllocationStorage.IsPointerStored(pointer)) { return; }
+        const AllocationData& allocationData = m_GlobalAllocationStorage.GetPointerData(pointer);
+        m_MemoryMetrics.TrackDeallocation(allocationData);
         m_GlobalAllocationStorage.FreePointer(pointer);
-        m_MemoryMetrics.TrackDeallocation(deallocationSize);
     }
 
 }

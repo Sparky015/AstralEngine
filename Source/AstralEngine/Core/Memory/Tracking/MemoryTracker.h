@@ -54,7 +54,7 @@ namespace Core {
 
         /**@brief Gets the memory metrics of the engine
          * @return The memory metrics of the engine */
-        constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
+        [[nodiscard]] constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
 
 
         MemoryTracker(const MemoryTracker&) = delete;

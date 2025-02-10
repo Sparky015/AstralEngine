@@ -102,8 +102,7 @@ namespace Debug{
                 GlobalMemoryUsage();
 
                 ImGui::Spacing();
-                AllocationsAndFreesForCurrentFrame();
-                UnfreedMemoryFromCurrentFrame();
+                AllocationsInCurrentFrame();
 
                 ImGui::TreePop();
             }

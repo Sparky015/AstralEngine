@@ -27,7 +27,7 @@ namespace Core {
         void WriteMemoryMetrics(const MemoryMetrics& snapshot);
 
     private:
-        std::fstream m_File;
+        // std::fstream m_File;
         size_t m_NumberOfSnapshots;
     };
 

@@ -12,7 +12,7 @@
 
 namespace Core {
 
-    enum class MemoryRegion : uint8
+    enum MemoryRegion : uint8
     {
         RENDERER,
         WINDOW,
@@ -25,7 +25,7 @@ namespace Core {
         MEMORY_REGION_END
     };
 
-    enum class AllocatorType : uint8
+    enum AllocatorType : uint8
     {
         STACK,
         RING,

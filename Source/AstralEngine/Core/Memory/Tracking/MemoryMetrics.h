@@ -5,11 +5,10 @@
 #pragma once
 
 
+#include "AllocationData.h"
 #include "Core/Events/EventListener.h"
-#include "Renderer/RendererEvents.h"
-
 #include "GlobalAllocationStorage.h"
-#include "MemoryTracker.h"
+#include "Renderer/RendererEvents.h"
 
 
 namespace Core {
@@ -19,8 +18,9 @@ namespace Core {
      * Tracks number of allocations and frees as well as total allocated and freed bytes */
     struct FrameAllocationData
     {
-        uint32 AllocatedBytes{};
-        uint32 NumberOfAllocations{};
+        FrameAllocationData() : AllocatedBytes(0), NumberOfAllocations(0) {}
+        uint32 AllocatedBytes;
+        uint32 NumberOfAllocations;
     };
 
 
@@ -30,7 +30,7 @@ namespace Core {
     class MemoryMetrics
     {
     public:
-        MemoryMetrics() = default;
+        MemoryMetrics();
         ~MemoryMetrics() = default;
 
         /**@brief Initializes necessary components for MemoryMetrics. Call before using MemoryMetrics */
@@ -65,27 +65,59 @@ namespace Core {
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetAllocatorTypeUsage(AllocatorType allocatorType) const;
+        [[nodiscard]] size_t GetAllocatorTypeUsage(AllocatorType allocatorType) const
+        {
+            if (!m_MemoryUsageByAllocator.contains(allocatorType)) { return 0; }
+            return m_MemoryUsageByAllocator.at(allocatorType);
+        }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetMemoryRegionUsage(MemoryRegion memoryRegion) const;
+        [[nodiscard]] size_t GetMemoryRegionUsage(MemoryRegion memoryRegion) const
+        {
+            if (!m_MemoryUsageByRegion.contains(memoryRegion)) { return 0; }
+            return m_MemoryUsageByRegion.at(memoryRegion);
+        }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetThreadUsage(std::thread::id threadID) const;
+        [[nodiscard]] size_t GetThreadUsage(std::thread::id threadID) const
+        {
+            if (!m_MemoryUsageByThread.contains(threadID)) { return 0; }
+            return m_MemoryUsageByThread.at(threadID);
+        }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetAllocatorTypePeakUsage(AllocatorType allocatorType) const;
+        [[nodiscard]] size_t GetAllocatorTypePeakUsage(AllocatorType allocatorType) const
+        {
+            if (!m_PeakMemoryUsageByAllocator.contains(allocatorType)) { return 0; }
+            return m_PeakMemoryUsageByAllocator.at(allocatorType);
+        }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const;
+        [[nodiscard]] size_t GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const
+        {
+            if (!m_PeakMemoryUsageByRegion.contains(memoryRegion)) { return 0; }
+            return m_PeakMemoryUsageByRegion.at(memoryRegion);
+        }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetThreadPeakUsage(std::thread::id threadID) const;
+        [[nodiscard]] size_t GetThreadPeakUsage(std::thread::id threadID) const
+        {
+            if (!m_PeakMemoryUsageByThread.contains(threadID)) { return 0; }
+            return m_PeakMemoryUsageByThread.at(threadID);
+        }
+
+        /**@brief Retrieves memory usage metrics for the allocator type.
+         * @return The memory usage metrics of the allocator type */
+        [[nodiscard]] size_t GetThreadTotalAllocations(std::thread::id threadID) const
+        {
+            if (!m_TotalAllocationsByThread.contains(threadID)) { return 0; }
+            return m_TotalAllocationsByThread.at(threadID);
+        }
 
         // There is no need for moving or copying this class.
         MemoryMetrics(const MemoryMetrics&) = delete;
@@ -94,24 +126,35 @@ namespace Core {
         MemoryMetrics& operator=(MemoryMetrics&&) noexcept = delete;
 
     private:
+        // TODO: Switch from a hashmap to an array for memory regions and allocator types because the size is known
+        // and the enum values translate to indices easily
+        using AllocatorTypeMap = std::unordered_map<AllocatorType, size_t, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>>;
+        using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, size_t>>>;
+        using ThreadMap = std::unordered_map<std::thread::id, size_t, std::hash<std::thread::id>, std::equal_to<>, NoTrackingAllocator<std::pair<const std::thread::id, size_t>>>;
 
         uint64 m_PeakMemoryUsage;
         uint64 m_TotalMemoryUsage;
         uint32 m_TotalActiveAllocations;
+        size_t m_TotalAllocations;
 
-        std::unordered_map<const AllocatorType, size_t, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>> m_MemoryUsageByAllocator;
-        std::unordered_map<MemoryRegion, size_t, NoTrackingAllocator<std::pair<MemoryRegion, size_t>>> m_MemoryUsageByRegion;
-        std::unordered_map<std::thread::id, size_t, NoTrackingAllocator<std::pair<std::thread::id, size_t>>> m_MemoryUsageByThread;
+        AllocatorTypeMap m_MemoryUsageByAllocator;
+        MemoryRegionMap m_MemoryUsageByRegion;
+        ThreadMap m_MemoryUsageByThread;
 
-        std::unordered_map<const AllocatorType, size_t, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>> m_PeakMemoryUsageByAllocator;
-        std::unordered_map<MemoryRegion, size_t, NoTrackingAllocator<std::pair<MemoryRegion, size_t>>> m_PeakMemoryUsageByRegion;
-        std::unordered_map<std::thread::id, size_t, NoTrackingAllocator<std::pair<std::thread::id, size_t>>> m_PeakMemoryUsageByThread;
+        AllocatorTypeMap m_PeakMemoryUsageByAllocator;
+        MemoryRegionMap m_PeakMemoryUsageByRegion;
+        ThreadMap m_PeakMemoryUsageByThread;
+
+        AllocatorTypeMap m_ActiveAllocationsByAllocator;
+        MemoryRegionMap m_ActiveAllocationsByRegion;
+        ThreadMap m_ActiveAllocationsByThread;
+
+        AllocatorTypeMap m_TotalAllocationsByAllocator;
+        MemoryRegionMap m_TotalAllocationsByRegion;
+        ThreadMap m_TotalAllocationsByThread;
 
         FrameAllocationData m_FrameAllocationData;
-        Core::EventListener<NewFrameEvent> m_NewFrameEventListener{[this](NewFrameEvent)
-        {
-            m_FrameAllocationData = FrameAllocationData();
-        }};
+        Core::EventListener<NewFrameEvent> m_NewFrameEventListener;
     };
 
 }

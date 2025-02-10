@@ -190,7 +190,7 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
-#target_link_libraries(AstralEngine PRIVATE -lc++)
+target_link_libraries(AstralEngine PRIVATE -lc++)
 
 add_dependencies(AstralEngine
         ImGui
