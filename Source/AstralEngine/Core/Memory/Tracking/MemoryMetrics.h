@@ -8,8 +8,8 @@
 #include "Core/Events/EventListener.h"
 #include "Renderer/RendererEvents.h"
 
-#include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
+#include "MemoryTracker.h"
 
 
 namespace Core {

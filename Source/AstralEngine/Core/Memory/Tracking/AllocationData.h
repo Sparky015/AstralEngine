@@ -1,13 +1,14 @@
 /**
 * @file AllocationData.h
 * @author Andrew Fagan
-* @date 2/10/2025
+* @date 2/9/25
 */
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
 #include <thread>
+
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Core {
 

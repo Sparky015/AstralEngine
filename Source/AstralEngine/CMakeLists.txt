@@ -169,7 +169,6 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsStorage.h
         Core/Memory/Tracking/SceneMetricsGraphs.cpp
         Core/Memory/Tracking/SceneMetricsGraphs.h
-        Core/Memory/Tracking/AllocationData.cpp
         Core/Memory/Tracking/AllocationData.h
 )
 
