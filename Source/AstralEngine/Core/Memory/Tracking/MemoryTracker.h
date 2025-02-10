@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
 #include "TrackingSceneManager.h"
@@ -13,43 +14,6 @@
 #include <mutex>
 
 namespace Core {
-
-    enum class MemoryRegion : uint8
-    {
-        RENDERER,
-        WINDOW,
-        ASSETS,
-        ECS,
-        DEBUG,
-        CORE,
-        UNKNOWN,
-
-        MEMORY_REGION_END
-    };
-
-    enum class AllocatorType : uint8
-    {
-        STACK,
-        RING,
-        FRAME,
-        LINEAR,
-        POOL,
-        DOUBLE_BUFFERED,
-
-        ALIGNED_ALLOCATOR,
-        NEW_OPERATOR,
-
-        ALLOCATOR_TYPE_END
-    };
-
-    struct AllocationData
-    {
-        void* pointer;
-        size_t size;
-        MemoryRegion region;
-        AllocatorType allocatorType;
-        std::thread::id threadID;
-    };
 
     /**
      * @class MemoryTracker
@@ -107,7 +71,6 @@ namespace Core {
         GlobalAllocationStorage m_GlobalAllocationStorage;
         TrackingSceneManager m_TrackingSceneManager;
         MemoryMetrics m_MemoryMetrics;
-
     };
 
 }

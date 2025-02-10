@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "SceneMetricsStorage.h"
+
 #include <string_view>
 
 namespace Core {
@@ -18,6 +20,7 @@ namespace Core {
 
     private:
 
+        SceneMetricsStorage m_SceneMetricsStorage;
     };
 
 }
