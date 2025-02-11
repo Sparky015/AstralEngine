@@ -11,21 +11,24 @@
 
 namespace Core {
 
-    class TrackingSceneManager
+    class SceneMetricsAccumulator
     {
     public:
-        TrackingSceneManager() = default;
-        ~TrackingSceneManager() = default;
+        SceneMetricsAccumulator();
+        ~SceneMetricsAccumulator() = default;
 
         /**@brief Starts recording the memory metrics to a file.
-         * @param sceneName The name of the scene. */
-        void BeginScene(const char* sceneName);
+         * @param sceneName The name of the scene.
+         * @return True if the opening the export file succeeded and false if the file failed to open. */
+        [[nodiscard]] bool BeginScene(const char* sceneName);
 
-        /**@brief Stops recording the memory metrics to a file. */
+        /**@brief Stops recording the memory metrics to a file and close export file */
         void EndScene();
 
         /**@brief Takes the current state of the MemoryMetrics and exports to a file */
         void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
+
+        [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
 
 
     private:

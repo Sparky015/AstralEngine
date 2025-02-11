@@ -17,16 +17,48 @@ public:
 
 
 /**@brief  */
-TEST_F(GlobalAllocationStorageTest, AddPointer_)
+TEST_F(GlobalAllocationStorageTest, AddPointer_DoesNothingWhenPointerIsNullptr)
 {
+    Core::AllocationData allocationData1 = {nullptr, 4};
+    EXPECT_NO_THROW(m_Storage.AddPointer(allocationData1));
+    EXPECT_FALSE(m_Storage.IsPointerStored(nullptr));
+}
 
+/**@brief  */
+TEST_F(GlobalAllocationStorageTest, AddPointer_DoesNothingOnDoubleAdds)
+{
+    int a = 1;
+    Core::AllocationData allocationData1 = {&a, 4};
+    Core::AllocationData allocationData2 = {&a, 9};
+
+    m_Storage.AddPointer(allocationData1);
+    m_Storage.AddPointer(allocationData2);
+    EXPECT_EQ(m_Storage.GetPointerData(&a).size, 4);
+
+    m_Storage.FreePointer(allocationData1.pointer);
 }
 
 
 /**@brief  */
-TEST_F(GlobalAllocationStorageTest, FreePointer_)
+TEST_F(GlobalAllocationStorageTest, FreePointer_DoesNothingWhenGivenNullptr)
 {
+    int a = 1;
+    int b = 2;
+    Core::AllocationData allocationData1 = {&a, 4};
+    Core::AllocationData allocationData2 = {&b, 4};
 
+    m_Storage.AddPointer(allocationData1);
+    m_Storage.AddPointer(allocationData2);
+
+    size_t initialEntryCount = m_Storage.GetAllocationEntryCount();
+
+    EXPECT_NO_THROW(m_Storage.FreePointer(nullptr));
+    EXPECT_FALSE(m_Storage.IsPointerStored(nullptr));
+
+    EXPECT_EQ(initialEntryCount, m_Storage.GetAllocationEntryCount());
+
+    m_Storage.FreePointer(allocationData1.pointer);
+    m_Storage.FreePointer(allocationData2.pointer);
 }
 
 
@@ -49,8 +81,23 @@ TEST_F(GlobalAllocationStorageTest, IsPointerStored_ReturnsTrueWhenPointerIsStor
 }
 
 
-/**@brief  */
-TEST_F(GlobalAllocationStorageTest, GetPointerData_)
+/**@brief Tests if the  */
+TEST_F(GlobalAllocationStorageTest, GetPointerData_ThrowsIfPointerHasNoEntry)
 {
+    int a = 5;
+    int b = 10;
+    Core::AllocationData allocationData1 = {&a, 4};
+    Core::AllocationData allocationData2 = {&b, 4};
 
+    EXPECT_ANY_THROW(m_Storage.GetPointerData(allocationData1.pointer));
+    EXPECT_ANY_THROW(m_Storage.GetPointerData(allocationData2.pointer));
+
+    m_Storage.AddPointer(allocationData1);
+    m_Storage.AddPointer(allocationData2);
+
+    EXPECT_NO_THROW(m_Storage.GetPointerData(allocationData1.pointer));
+    EXPECT_NO_THROW(m_Storage.GetPointerData(allocationData2.pointer));
+
+    m_Storage.FreePointer(allocationData1.pointer);
+    m_Storage.FreePointer(allocationData2.pointer);
 }

@@ -28,18 +28,12 @@ namespace Debug {
             return m_Instance;
         }
 
-        ConsoleLogFile& operator<<(const std::ostringstream& ostream)
-        {
-            if (m_IsCurrentlyLogging)
-            {
-                GetFileStream() << ostream.str();
-            }
-            return *this;
-        }
+        ConsoleLogFile& operator<<(const std::ostringstream& ostream);
+
 
         /// Returns true if the log file is open
-        inline bool IsOpen() const { return m_IsLogFileOpen; }
-        inline bool IsLogging() const { return m_IsCurrentlyLogging; }
+        [[nodiscard]] inline bool IsOpen() const { return m_IsLogFileOpen; }
+        [[nodiscard]] inline bool IsLogging() const { return m_IsCurrentlyLogging; }
         inline void Enable() { m_IsCurrentlyLogging = true; }
         inline void Disable() { m_IsCurrentlyLogging = false; }
 

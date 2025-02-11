@@ -10,10 +10,10 @@ namespace Core {
         m_PeakMemoryUsage(0),
         m_TotalMemoryUsage(0),
         m_TotalActiveAllocations(0),
-        m_NewFrameEventListener({[this](NewFrameEvent)
+        m_NewFrameEventListener{[this](NewFrameEvent)
         {
             m_FrameAllocationData = FrameAllocationData();
-        }})
+        }}
     {
         // Initialize unordered_maps keys with all enum values
     }

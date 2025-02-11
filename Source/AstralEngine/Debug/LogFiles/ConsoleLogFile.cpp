@@ -73,13 +73,22 @@ namespace Debug {
         logFile.GetFileStream().close();
         if (logFile.GetFileStream().fail())
         {
-            WARN("DebugMacros.cpp: Log file failed to close!");
+            WARN("ConsoleLogFile.cpp: Log file failed to close!");
         }
         else
         {
             m_IsLogFileOpen = false;
         }
 #endif
+    }
+
+    ConsoleLogFile& ConsoleLogFile::operator<<(const std::ostringstream& ostream)
+    {
+        if (m_IsCurrentlyLogging)
+        {
+            GetFileStream() << ostream.str();
+        }
+        return *this;
     }
 
     ConsoleLogFile::ConsoleLogFile()
@@ -91,5 +100,7 @@ namespace Debug {
     {
 
     }
+
+
 
 } // Debug

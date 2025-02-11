@@ -19,12 +19,15 @@ namespace Core {
         GlobalAllocationStorage() = default;
         ~GlobalAllocationStorage();
 
-        /**@brief Stores a mapping of the pointer to the allocation size of the pointer */
+        /**@brief Stores a mapping of the pointer to the allocation size of the pointer
+         * @remark Does nothing when pointer is nullptr.
+         * @warning This method will do nothing if the pointer is already being stored.
+         * You can not update pointers with new information until it is freed from storage. */
         void AddPointer(const AllocationData& allocationData);
 
         /**@brief Removes the pointer's entry in the allocation size mapping
          * @param pointer The pointer that is being freed. Removes entry of pointer only if it was already being tracked.
-         * Does nothing when given nullptr. */
+         * Does nothing when given nullptr. Does nothing if pointer has no entry. */
         void FreePointer(void* pointer);
 
         /**@brief Checks if a pointer has a allocation data entry in storage currently
@@ -35,9 +38,7 @@ namespace Core {
         /**@brief Gets the allocated memory block size given to a pointer
          * @param pointer The pointer to the allocated memory block.
          * @return The size of the allocated memory block given to pointer.
-         * Returns 0 if
-         * - pointer is nullptr.
-         * - pointer was not previously registered with AddPointer method. */
+         * @throw std::out_of_range Throws when the pointer is not in the storage */
         const AllocationData& GetPointerData(const void* pointer) const;
 
         /**@brief Gets the number of allocation entries currently in storage

@@ -5,8 +5,9 @@
 */
 
 #include "AlignedAllocator.h"
-
 #include "AllocatorUtils.h"
+
+#include <memory>
 
 namespace Core {
 

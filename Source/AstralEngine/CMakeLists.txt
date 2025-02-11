@@ -159,8 +159,8 @@ add_library(AstralEngine
         Core/Memory/Tracking/GlobalAllocationStorage.cpp
         Core/Memory/Tracking/MemoryTracker.cpp
         Core/Memory/Tracking/MemoryTracker.h
-        Core/Memory/Tracking/TrackingSceneManager.cpp
-        Core/Memory/Tracking/TrackingSceneManager.h
+        Core/Memory/Tracking/SceneMetricsAccumulator.cpp
+        Core/Memory/Tracking/SceneMetricsAccumulator.h
         Core/Memory/Tracking/SceneMetricsExporter.cpp
         Core/Memory/Tracking/SceneMetricsExporter.h
         Core/Memory/Tracking/SceneMetricsImporter.cpp
@@ -190,7 +190,10 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
-target_link_libraries(AstralEngine PRIVATE -lc++)
+
+if (APPLE)
+    target_link_libraries(AstralEngine PRIVATE -lc++)
+endif ()
 
 add_dependencies(AstralEngine
         ImGui

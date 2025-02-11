@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include <algorithm>
 #include <functional>
 
 namespace Core {

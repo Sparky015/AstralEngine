@@ -17,15 +17,20 @@ namespace Core {
         std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
         for (auto [pointer, allocationData] : m_Storage)
         {
-            std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
+            if (allocationData.threadID == std::this_thread::get_id())
+            {
+                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
+            }
         }
         std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
 
     }
 
+
     void GlobalAllocationStorage::AddPointer(const AllocationData& allocationData)
     {
         [[unlikely]] if (!allocationData.pointer) { return; }
+        [[unlikely]] if (IsPointerStored(allocationData.pointer)) { return; }
         m_Storage[allocationData.pointer] = allocationData;
         m_NumberOfEntries++;
     }
@@ -49,7 +54,6 @@ namespace Core {
 
     const AllocationData& GlobalAllocationStorage::GetPointerData(const void* pointer) const
     {
-        ASSERT(pointer, "Can't read the data of nullptr!");
         return m_Storage.at(pointer);
     }
 

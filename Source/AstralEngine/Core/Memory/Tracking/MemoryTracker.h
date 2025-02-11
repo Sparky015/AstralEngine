@@ -9,7 +9,7 @@
 #include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
-#include "TrackingSceneManager.h"
+#include "SceneMetricsAccumulator.h"
 
 #include <mutex>
 
@@ -69,7 +69,7 @@ namespace Core {
         std::recursive_mutex m_Mutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
-        TrackingSceneManager m_TrackingSceneManager;
+        SceneMetricsAccumulator m_TrackingSceneManager;
         MemoryMetrics m_MemoryMetrics;
     };
 

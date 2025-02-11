@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <fstream>
 #include "MemoryMetrics.h"
+#include <fstream>
 
 namespace Core {
 
@@ -18,16 +18,18 @@ namespace Core {
         SceneMetricsExporter();
 
         /**@brief Opens a file for exporting scene memory metrics */
-        bool OpenExportFile(const char* sceneName);
+        void OpenExportFile(const char* sceneName);
 
         /**@brief Closes the file for exporting scene memory metrics */
         void CloseExportFile();
 
+        [[nodiscard]] bool IsExportFileOpen() const { return m_File.is_open(); }
+
         /**@brief Writes a snapshot of the memory metrics to the file */
-        void WriteMemoryMetrics(const MemoryMetrics& snapshot);
+        void WriteMemoryMetricsSnapshot(const MemoryMetrics& snapshot);
 
     private:
-        // std::fstream m_File;
+         std::fstream m_File;
         size_t m_NumberOfSnapshots;
     };
 
