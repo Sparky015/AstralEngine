@@ -29,7 +29,22 @@ namespace Core {
         void WriteMemoryMetricsSnapshot(const MemoryMetrics& snapshot);
 
     private:
-         std::fstream m_File;
+
+        /**@brief Starts recording the memory metrics to a file.
+         * @param sceneName The name of the scene.
+         * @return True if the opening the export file succeeded and false if the file failed to open. */
+        [[nodiscard]] bool BeginScene(const char* sceneName);
+
+        /**@brief Stops recording the memory metrics to a file and close export file */
+        void EndScene();
+
+        /**@brief Takes the current state of the MemoryMetrics and exports to a file */
+        void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
+
+        [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
+
+        bool m_IsSceneActive;
+        std::fstream m_File;
         size_t m_NumberOfSnapshots;
     };
 

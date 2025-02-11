@@ -6,6 +6,8 @@
 
 #include "MemoryTracker.h"
 
+#include "Debug/Macros/Loggers.h"
+
 namespace Core {
 
     MemoryTracker::MemoryTracker()
@@ -28,15 +30,18 @@ namespace Core {
         m_MemoryMetrics.Shutdown();
     }
 
-    void MemoryTracker::BeginScene() const
+    void MemoryTracker::BeginScene(const char* sceneName)
     {
-
+        std::lock_guard lock(m_Mutex);
+        bool successFlag = m_TrackingSceneManager.BeginScene(sceneName);
+        if (!successFlag) {LOG("Scene " << sceneName << " failed to start!")}
     }
 
 
-    void MemoryTracker::EndScene() const
+    void MemoryTracker::EndScene()
     {
-
+        std::lock_guard lock(m_Mutex);
+        m_TrackingSceneManager.EndScene();
     }
 
 

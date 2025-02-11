@@ -40,10 +40,10 @@ namespace Core {
         void Shutdown();
 
         /**@brief Begins a scene that records snapshots of the memory metrics to a file */
-        void BeginScene() const;
+        void BeginScene(const char* sceneName);
 
         /**@brief Ends the scene that records snapshots of the memory metrics to a file */
-        void EndScene() const;
+        void EndScene();
 
         /**@brief Adds an allocated pointer to tracking and updates the metrics */
         void AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType);

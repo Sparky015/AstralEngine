@@ -36,23 +36,23 @@ namespace Debug {
         /** Creates a folder to subdivide the logs by the month and year */
         std::stringstream monthAndYearFolderNameStream;
         monthAndYearFolderNameStream << currentTime->tm_year + 1900 << "-" << currentTime->tm_mon + 1;
-        filePathStream << monthAndYearFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
+        filePathStream << monthAndYearFolderNameStream.view() << '/';
+        std::filesystem::create_directories(filePathStream.view()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
 
         /** Creates another folder to subdivide the logs by the day in a month */
         std::stringstream dayFolderNameStream;
         dayFolderNameStream << "Day-" << currentTime->tm_mday;
         filePathStream << dayFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
+        std::filesystem::create_directories(filePathStream.view()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
 
         /** Name of the text file based on the time it was created. */
         std::stringstream hrMinSecTextFileNameStream;
         hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec << "-Console";
 
         /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
-        filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
+        filePathStream << hrMinSecTextFileNameStream.view() << ".txt";
 
-        GetFileStream().open(filePathStream.str(), std::ios::out);
+        GetFileStream().open(filePathStream.view(), std::ios::out);
         if (GetFileStream().fail())
         {
             WARN("Console log file failed to open!");

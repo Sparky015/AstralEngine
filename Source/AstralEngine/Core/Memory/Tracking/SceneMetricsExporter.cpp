@@ -6,38 +6,66 @@
 
 #include "SceneMetricsExporter.h"
 #include "Debug/Macros/Loggers.h"
-#include <format>
 #include <chrono>
+#include <filesystem>
 
-#include <iostream>
 namespace Core {
 
-    SceneMetricsExporter::SceneMetricsExporter() : m_NumberOfSnapshots(0)
-    {
-
-    }
+    SceneMetricsExporter::SceneMetricsExporter() : m_NumberOfSnapshots(0) {}
 
 
     void SceneMetricsExporter::OpenExportFile(const char* sceneName)
     {
-        constexpr int MAX_SCENE_NAME_LENGTH = 75;
+        constexpr int MAX_SCENE_NAME_LENGTH = 90;
         unsigned int sceneNameLength = std::strlen(sceneName);
         if (sceneNameLength > MAX_SCENE_NAME_LENGTH) { sceneNameLength = MAX_SCENE_NAME_LENGTH; }
 
         auto now = std::chrono::system_clock::now();
         std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-        char dateBuffer[20];
-        std::strftime(dateBuffer, sizeof(dateBuffer), "%d-%m-%Y_%H-%M-%S", std::localtime(&now_c));
+        std::tm localTime = *std::localtime(&now_c);
 
-        char fileNameBuffer[100];
+        char yearMonthBuffer[8];
+        char dayBuffer[7];
+        char timeBuffer[10];
+
+        std::strftime(yearMonthBuffer, sizeof(yearMonthBuffer), "%Y-%#m", &localTime);
+        std::strftime(dayBuffer, sizeof(dayBuffer), "Day-%#d", &localTime);
+        std::strftime(timeBuffer, sizeof(timeBuffer), "%H-%M-%S", &localTime);
+
+        constexpr std::string_view logFileDir = LOG_FILE_DIR;
+        char filePathBuffer[logFileDir.length() + 105];
+
+        std::memcpy(filePathBuffer, LOG_FILE_DIR, logFileDir.length());
+        filePathBuffer[logFileDir.length()] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        std::memcpy(filePathBuffer + logFileDir.length(), yearMonthBuffer, std::strlen(yearMonthBuffer));
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer)] = '/';
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + 1] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        std::memcpy(filePathBuffer + logFileDir.length() + std::strlen(yearMonthBuffer) + 1, dayBuffer, std::strlen(dayBuffer));
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + std::strlen(dayBuffer) + 1] = '/';
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + std::strlen(dayBuffer) + 2] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        char fileNameBuffer[150];
         const char* filePrefix = "MemoryProfile_";
+        const char* fileExtension = ".ASTLMemProfile";
 
-        strcpy_s(fileNameBuffer, filePrefix);
-        std::memcpy(fileNameBuffer + std::strlen(filePrefix), sceneName, sceneNameLength);
-        fileNameBuffer[std::strlen(filePrefix) + sceneNameLength] = '_';  // Add null terminator after memcpy
-        std::memcpy(fileNameBuffer + std::strlen(filePrefix) + sceneNameLength + 1, dateBuffer, 20);
+        memcpy(fileNameBuffer, filePrefix, strlen(filePrefix));
+        memcpy(fileNameBuffer + strlen(filePrefix), sceneName, sceneNameLength);
+        fileNameBuffer[strlen(filePrefix) + sceneNameLength] = '_';
+        memcpy(fileNameBuffer + strlen(filePrefix) + sceneNameLength + 1, timeBuffer, strlen(timeBuffer));
+        memcpy(fileNameBuffer + strlen(filePrefix) + sceneNameLength + strlen(timeBuffer), fileExtension, strlen(fileExtension));
+        fileNameBuffer[strlen(filePrefix) + sceneNameLength + std::strlen(timeBuffer) + strlen(fileExtension)] = '\0';
 
-        m_File.open(fileNameBuffer, std::ios::out);
+        const int pathLength = std::strlen(filePathBuffer);
+        std::memcpy(filePathBuffer + pathLength, fileNameBuffer, std::strlen(fileNameBuffer));
+        filePathBuffer[pathLength + std::strlen(fileNameBuffer)] = '\0';
+
+
+        m_File.open(filePathBuffer, std::ios::out);
     }
 
 
@@ -58,6 +86,41 @@ namespace Core {
     {
         // Write MessagePack code
         m_NumberOfSnapshots++;
+    }
+
+    SceneMetricsAccumulator::SceneMetricsAccumulator() : m_IsSceneActive(false) {}
+
+
+    bool SceneMetricsAccumulator::BeginScene(const char* sceneName)
+    {
+        [[unlikely]] if (m_IsSceneActive)
+        {
+            m_SceneMetricsExporter.CloseExportFile();
+            ERROR("Can't begin a new scene when a scene is already active!")
+        }
+        m_IsSceneActive = true;
+        m_SceneMetricsExporter.OpenExportFile(sceneName);
+        return m_SceneMetricsExporter.IsExportFileOpen();
+    }
+
+
+    void SceneMetricsAccumulator::EndScene()
+    {
+        [[likely]] if (m_IsSceneActive)
+        {
+            m_SceneMetricsExporter.CloseExportFile();
+        }
+
+        m_IsSceneActive = false;
+    }
+
+
+    void SceneMetricsAccumulator::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
+    {
+        if (m_IsSceneActive)
+        {
+            m_SceneMetricsExporter.WriteMemoryMetricsSnapshot(memoryMetrics);
+        }
     }
 
 }
