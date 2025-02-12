@@ -23,7 +23,7 @@ set(TEST_FILES
 
         Renderer/OrthographicCamera.cpp
         Core/Memory/Tracking/GlobalAllocationStorageTest.cpp
-        Core/Memory/Tracking/SceneMetricsAccumulatorTest.cpp
+        Core/Memory/Tracking/SceneMetricsExporterTest.cpp
 
 )
 

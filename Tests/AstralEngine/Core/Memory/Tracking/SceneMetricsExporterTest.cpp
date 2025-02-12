@@ -6,12 +6,12 @@
 
 #include <gtest/gtest.h>
 
-#include "Core/Memory/Tracking/SceneMetricsAccumulator.h"
+#include "Core/Memory/Tracking/SceneMetricsExporter.h"
 
 class SceneMetricsAccumulatorTest : public ::testing::Test
 {
 public:
-    Core::SceneMetricsAccumulator m_SceneMetricsAccumulator;
+    Core::SceneMetricsExporter m_SceneMetricsAccumulator;
 };
 
 TEST_F(SceneMetricsAccumulatorTest, BeginScene_SceneBecomesActive)

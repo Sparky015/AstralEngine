@@ -10,16 +10,6 @@
 
 namespace Core {
 
-    MemoryTracker::MemoryTracker()
-    {
-    }
-
-
-    MemoryTracker::~MemoryTracker()
-    {
-    }
-
-
     void MemoryTracker::Init()
     {
         m_MemoryMetrics.Init();
@@ -33,15 +23,15 @@ namespace Core {
     void MemoryTracker::BeginScene(const char* sceneName)
     {
         std::lock_guard lock(m_Mutex);
-        bool successFlag = m_TrackingSceneManager.BeginScene(sceneName);
-        if (!successFlag) {LOG("Scene " << sceneName << " failed to start!")}
+        bool successFlag = m_SceneMetricsExporter.BeginScene(sceneName);
+        if (!successFlag) { LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
     }
 
 
     void MemoryTracker::EndScene()
     {
         std::lock_guard lock(m_Mutex);
-        m_TrackingSceneManager.EndScene();
+        m_SceneMetricsExporter.EndScene();
     }
 
 
@@ -53,6 +43,8 @@ namespace Core {
         m_GlobalAllocationStorage.AddPointer(allocationData);
 
         m_MemoryMetrics.TrackAllocation(allocationData);
+
+        m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
     }
 
 
@@ -64,6 +56,8 @@ namespace Core {
         const AllocationData& allocationData = m_GlobalAllocationStorage.GetPointerData(pointer);
         m_MemoryMetrics.TrackDeallocation(allocationData);
         m_GlobalAllocationStorage.FreePointer(pointer);
+
+        m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
     }
 
 }

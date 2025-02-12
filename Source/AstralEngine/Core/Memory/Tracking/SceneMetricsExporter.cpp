@@ -5,13 +5,51 @@
 */
 
 #include "SceneMetricsExporter.h"
+#include "Debug/Macros/Error.h"
 #include "Debug/Macros/Loggers.h"
 #include <chrono>
 #include <filesystem>
 
 namespace Core {
 
-    SceneMetricsExporter::SceneMetricsExporter() : m_NumberOfSnapshots(0) {}
+    SceneMetricsExporter::SceneMetricsExporter() : m_NumberOfSnapshots(0), m_IsSceneActive(false) {}
+
+    bool SceneMetricsExporter::BeginScene(const char* sceneName)
+    {
+        [[unlikely]] if (m_IsSceneActive)
+        {
+            CloseExportFile();
+            ERROR("Can't begin a new scene when a scene is already active!")
+        }
+        m_IsSceneActive = true;
+        OpenExportFile(sceneName);
+        return IsExportFileOpen();
+    }
+
+
+    void SceneMetricsExporter::EndScene()
+    {
+        [[likely]] if (m_IsSceneActive)
+        {
+            // Pack the number of memory metrics snapshots in the file at the end
+            msgpack::pack(m_File, m_NumberOfSnapshots);
+
+            CloseExportFile();
+        }
+
+        m_NumberOfSnapshots = 0;
+        m_IsSceneActive = false;
+    }
+
+
+    void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
+    {
+        if (m_IsSceneActive)
+        {
+            m_NumberOfSnapshots++;
+            msgpack::pack(m_File, memoryMetrics);
+        }
+    }
 
 
     void SceneMetricsExporter::OpenExportFile(const char* sceneName)
@@ -65,7 +103,7 @@ namespace Core {
         filePathBuffer[pathLength + std::strlen(fileNameBuffer)] = '\0';
 
 
-        m_File.open(filePathBuffer, std::ios::out);
+        m_File.open(filePathBuffer, std::ios::out | std::ios::binary);
     }
 
 
@@ -80,47 +118,6 @@ namespace Core {
                  WARN("Memory profiling export file failed to close!")
              }
          }
-    }
-
-    void SceneMetricsExporter::WriteMemoryMetricsSnapshot(const MemoryMetrics& snapshot)
-    {
-        // Write MessagePack code
-        m_NumberOfSnapshots++;
-    }
-
-    SceneMetricsAccumulator::SceneMetricsAccumulator() : m_IsSceneActive(false) {}
-
-
-    bool SceneMetricsAccumulator::BeginScene(const char* sceneName)
-    {
-        [[unlikely]] if (m_IsSceneActive)
-        {
-            m_SceneMetricsExporter.CloseExportFile();
-            ERROR("Can't begin a new scene when a scene is already active!")
-        }
-        m_IsSceneActive = true;
-        m_SceneMetricsExporter.OpenExportFile(sceneName);
-        return m_SceneMetricsExporter.IsExportFileOpen();
-    }
-
-
-    void SceneMetricsAccumulator::EndScene()
-    {
-        [[likely]] if (m_IsSceneActive)
-        {
-            m_SceneMetricsExporter.CloseExportFile();
-        }
-
-        m_IsSceneActive = false;
-    }
-
-
-    void SceneMetricsAccumulator::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
-    {
-        if (m_IsSceneActive)
-        {
-            m_SceneMetricsExporter.WriteMemoryMetricsSnapshot(memoryMetrics);
-        }
     }
 
 }

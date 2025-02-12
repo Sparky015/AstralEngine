@@ -9,7 +9,7 @@
 #include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
-#include "SceneMetricsAccumulator.h"
+#include "SceneMetricsExporter.h"
 
 #include <mutex>
 
@@ -63,13 +63,13 @@ namespace Core {
         MemoryTracker& operator=(MemoryTracker&&) = delete;
 
     private:
-        MemoryTracker();
-        ~MemoryTracker();
+        MemoryTracker() = default;
+        ~MemoryTracker() = default;
 
         std::recursive_mutex m_Mutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
-        SceneMetricsAccumulator m_TrackingSceneManager;
+        SceneMetricsExporter m_SceneMetricsExporter;
         MemoryMetrics m_MemoryMetrics;
     };
 

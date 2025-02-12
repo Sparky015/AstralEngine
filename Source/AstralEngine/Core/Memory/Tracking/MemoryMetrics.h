@@ -9,7 +9,7 @@
 #include "Core/Events/EventListener.h"
 #include "GlobalAllocationStorage.h"
 #include "Renderer/RendererEvents.h"
-
+#include <msgpack.hpp>
 
 namespace Core {
 
@@ -21,6 +21,8 @@ namespace Core {
         FrameAllocationData() : AllocatedBytes(0), NumberOfAllocations(0) {}
         uint32 AllocatedBytes;
         uint32 NumberOfAllocations;
+
+        MSGPACK_DEFINE(AllocatedBytes, NumberOfAllocations);
     };
 
 
@@ -83,8 +85,8 @@ namespace Core {
          * @return The memory usage metrics of the allocator type */
         [[nodiscard]] size_t GetThreadUsage(std::thread::id threadID) const
         {
-            if (!m_MemoryUsageByThread.contains(threadID)) { return 0; }
-            return m_MemoryUsageByThread.at(threadID);
+            if (!m_MemoryUsageByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+            return m_MemoryUsageByThread.at(GetThreadIDHash(threadID));
         }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
@@ -107,16 +109,16 @@ namespace Core {
          * @return The memory usage metrics of the allocator type */
         [[nodiscard]] size_t GetThreadPeakUsage(std::thread::id threadID) const
         {
-            if (!m_PeakMemoryUsageByThread.contains(threadID)) { return 0; }
-            return m_PeakMemoryUsageByThread.at(threadID);
+            if (!m_PeakMemoryUsageByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+            return m_PeakMemoryUsageByThread.at(GetThreadIDHash(threadID));
         }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetThreadTotalAllocations(std::thread::id threadID) const
+        [[nodiscard]] size_t GetThreadTotalAllocations(const std::thread::id threadID) const
         {
-            if (!m_TotalAllocationsByThread.contains(threadID)) { return 0; }
-            return m_TotalAllocationsByThread.at(threadID);
+            if (!m_TotalAllocationsByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+            return m_TotalAllocationsByThread.at(GetThreadIDHash(threadID));
         }
 
         // There is no need for moving or copying this class.
@@ -130,7 +132,10 @@ namespace Core {
         // and the enum values translate to indices easily
         using AllocatorTypeMap = std::unordered_map<AllocatorType, size_t, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>>;
         using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, size_t>>>;
-        using ThreadMap = std::unordered_map<std::thread::id, size_t, std::hash<std::thread::id>, std::equal_to<>, NoTrackingAllocator<std::pair<const std::thread::id, size_t>>>;
+        using ThreadMap = std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<>, NoTrackingAllocator<std::pair<const size_t, size_t>>>;
+        // Underlying type of std::thread::id is size_t. Cast std::thread::id to size_t for serialization purposes
+
+        [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const { return std::hash<std::thread::id>{}(id); }
 
         uint64 m_PeakMemoryUsage;
         uint64 m_TotalMemoryUsage;
@@ -155,6 +160,13 @@ namespace Core {
 
         FrameAllocationData m_FrameAllocationData;
         Core::EventListener<NewFrameEvent> m_NewFrameEventListener;
+
+    public:
+        MSGPACK_DEFINE(m_PeakMemoryUsage, m_TotalMemoryUsage, m_TotalActiveAllocations, m_TotalAllocations,
+                       m_MemoryUsageByAllocator, m_MemoryUsageByRegion, m_MemoryUsageByThread,
+                       m_ActiveAllocationsByAllocator, m_ActiveAllocationsByRegion, m_ActiveAllocationsByThread,
+                       m_TotalAllocationsByAllocator, m_TotalAllocationsByRegion, m_TotalAllocationsByThread,
+                       m_FrameAllocationData);
     };
 
 }

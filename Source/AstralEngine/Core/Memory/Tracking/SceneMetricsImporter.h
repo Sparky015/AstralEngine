@@ -7,7 +7,10 @@
 #pragma once
 
 #include "SceneMetricsStorage.h"
+#include "MemoryMetrics.h"
 
+#include <filesystem>
+#include <fstream>
 #include <string_view>
 
 namespace Core {
@@ -16,11 +19,13 @@ namespace Core {
     {
     public:
 
-        bool ImportMetricsFile(std::string_view filePath);
+        bool ImportMemoryProfile(const std::filesystem::path& filePath);
 
     private:
 
+        std::ifstream m_File;
         SceneMetricsStorage m_SceneMetricsStorage;
+        MemoryMetrics m_TempMemoryMetrics;
     };
 
 }

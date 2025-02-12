@@ -8,6 +8,8 @@
 
 #include "MemoryMetrics.h"
 #include <fstream>
+#include <msgpack.hpp>
+
 
 namespace Core {
 
@@ -17,19 +19,6 @@ namespace Core {
     public:
         SceneMetricsExporter();
 
-        /**@brief Opens a file for exporting scene memory metrics */
-        void OpenExportFile(const char* sceneName);
-
-        /**@brief Closes the file for exporting scene memory metrics */
-        void CloseExportFile();
-
-        [[nodiscard]] bool IsExportFileOpen() const { return m_File.is_open(); }
-
-        /**@brief Writes a snapshot of the memory metrics to the file */
-        void WriteMemoryMetricsSnapshot(const MemoryMetrics& snapshot);
-
-    private:
-
         /**@brief Starts recording the memory metrics to a file.
          * @param sceneName The name of the scene.
          * @return True if the opening the export file succeeded and false if the file failed to open. */
@@ -38,10 +27,25 @@ namespace Core {
         /**@brief Stops recording the memory metrics to a file and close export file */
         void EndScene();
 
+        /**@brief Checks if a scene is currently active
+         * @return True if the scene is active and false if not */
+        [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
+
+        /**@brief Checks if the export file is open
+         * @return True if the export file is open and false if not */
+        [[nodiscard]] bool IsExportFileOpen() const { return m_File.is_open(); }
+
         /**@brief Takes the current state of the MemoryMetrics and exports to a file */
         void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
 
-        [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
+    private:
+
+        /**@brief Opens a file for exporting scene memory metrics
+         * @param sceneName The name of the scene (for labeling purposes) */
+        void OpenExportFile(const char* sceneName);
+
+        /**@brief Closes the file for exporting scene memory metrics */
+        void CloseExportFile();
 
         bool m_IsSceneActive;
         std::fstream m_File;

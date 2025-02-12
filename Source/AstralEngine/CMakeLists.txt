@@ -159,8 +159,6 @@ add_library(AstralEngine
         Core/Memory/Tracking/GlobalAllocationStorage.cpp
         Core/Memory/Tracking/MemoryTracker.cpp
         Core/Memory/Tracking/MemoryTracker.h
-        Core/Memory/Tracking/SceneMetricsAccumulator.cpp
-        Core/Memory/Tracking/SceneMetricsAccumulator.h
         Core/Memory/Tracking/SceneMetricsExporter.cpp
         Core/Memory/Tracking/SceneMetricsExporter.h
         Core/Memory/Tracking/SceneMetricsImporter.cpp
@@ -190,6 +188,7 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
+target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
 
 if (APPLE)
     target_link_libraries(AstralEngine PRIVATE -lc++)
@@ -201,6 +200,7 @@ add_dependencies(AstralEngine
         glm
         std_image
         cpuinfo
+        msgpack-cxx
 )
 
 if (APPLE)
@@ -219,6 +219,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/std_image")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 
 
 
