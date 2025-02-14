@@ -159,8 +159,6 @@ add_library(AstralEngine
         Core/Memory/Tracking/GlobalAllocationStorage.cpp
         Core/Memory/Tracking/MemoryTracker.cpp
         Core/Memory/Tracking/MemoryTracker.h
-        Core/Memory/Tracking/TrackingSceneManager.cpp
-        Core/Memory/Tracking/TrackingSceneManager.h
         Core/Memory/Tracking/SceneMetricsExporter.cpp
         Core/Memory/Tracking/SceneMetricsExporter.h
         Core/Memory/Tracking/SceneMetricsImporter.cpp
@@ -169,6 +167,7 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsStorage.h
         Core/Memory/Tracking/SceneMetricsGraphs.cpp
         Core/Memory/Tracking/SceneMetricsGraphs.h
+        Core/Memory/Tracking/AllocationData.h
 )
 
 
@@ -189,7 +188,11 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE std_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
-#target_link_libraries(AstralEngine PRIVATE -lc++)
+target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
+
+if (APPLE)
+    target_link_libraries(AstralEngine PRIVATE -lc++)
+endif ()
 
 add_dependencies(AstralEngine
         ImGui
@@ -197,6 +200,7 @@ add_dependencies(AstralEngine
         glm
         std_image
         cpuinfo
+        msgpack-cxx
 )
 
 if (APPLE)
@@ -215,6 +219,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/std_image")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 
 
 
@@ -246,6 +251,7 @@ elseif (WIN32)
 endif ()
 
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
-target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/")
+target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
-target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
+target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")

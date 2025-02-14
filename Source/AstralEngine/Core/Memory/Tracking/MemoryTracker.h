@@ -6,50 +6,14 @@
 
 #pragma once
 
+#include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
-#include "TrackingSceneManager.h"
+#include "SceneMetricsExporter.h"
 
 #include <mutex>
 
 namespace Core {
-
-    enum class MemoryRegion : uint8
-    {
-        RENDERER,
-        WINDOW,
-        ASSETS,
-        ECS,
-        DEBUG,
-        CORE,
-        UNKNOWN,
-
-        MEMORY_REGION_END
-    };
-
-    enum class AllocatorType : uint8
-    {
-        STACK,
-        RING,
-        FRAME,
-        LINEAR,
-        POOL,
-        DOUBLE_BUFFERED,
-
-        ALIGNED_ALLOCATOR,
-        NEW_OPERATOR,
-
-        ALLOCATOR_TYPE_END
-    };
-
-    struct AllocationData
-    {
-        void* pointer;
-        size_t size;
-        MemoryRegion region;
-        AllocatorType allocatorType;
-        std::thread::id threadID;
-    };
 
     /**
      * @class MemoryTracker
@@ -76,10 +40,10 @@ namespace Core {
         void Shutdown();
 
         /**@brief Begins a scene that records snapshots of the memory metrics to a file */
-        void BeginScene() const;
+        void BeginScene(const char* sceneName);
 
         /**@brief Ends the scene that records snapshots of the memory metrics to a file */
-        void EndScene() const;
+        void EndScene();
 
         /**@brief Adds an allocated pointer to tracking and updates the metrics */
         void AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType);
@@ -90,7 +54,7 @@ namespace Core {
 
         /**@brief Gets the memory metrics of the engine
          * @return The memory metrics of the engine */
-        constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
+        [[nodiscard]] constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
 
 
         MemoryTracker(const MemoryTracker&) = delete;
@@ -99,15 +63,14 @@ namespace Core {
         MemoryTracker& operator=(MemoryTracker&&) = delete;
 
     private:
-        MemoryTracker();
-        ~MemoryTracker();
+        MemoryTracker() = default;
+        ~MemoryTracker() = default;
 
         std::recursive_mutex m_Mutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
-        TrackingSceneManager m_TrackingSceneManager;
+        SceneMetricsExporter m_SceneMetricsExporter;
         MemoryMetrics m_MemoryMetrics;
-
     };
 
 }

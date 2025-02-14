@@ -4,23 +4,23 @@
 
 #include "ScopeProfiler.h"
 
+#include "Core/Memory/Tracking/MemoryTracker.h"
 #include "Debug/LogFiles/ProfilerLogFile.h"
 #include "pch.h"
-#include "Core/Memory/Tracking/MemoryTracker.h"
 
 namespace Debug::Macros {
 
     macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title) noexcept
         : m_title(title),
         m_StartTime(std::chrono::high_resolution_clock::now()),
-        m_StartAllocationCount(Core::MemoryTracker::Get().GetMemoryMetrics().GetThreadUsage(std::this_thread::get_id()))
+        m_StartAllocationCount(Core::MemoryTracker::Get().GetMemoryMetrics().GetThreadTotalAllocations(std::this_thread::get_id()))
     {}
 
 
     macro_SCOPE_PROFILER::~macro_SCOPE_PROFILER() noexcept
     {
         m_EndTime = std::chrono::high_resolution_clock::now();
-        m_EndAllocationCount = Core::MemoryTracker::Get().GetMemoryMetrics().GetThreadUsage(std::this_thread::get_id());
+        m_EndAllocationCount = Core::MemoryTracker::Get().GetMemoryMetrics().GetThreadTotalAllocations(std::this_thread::get_id());
 
         int64 startTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTime).time_since_epoch().count();
         int64 endTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_EndTime).time_since_epoch().count();

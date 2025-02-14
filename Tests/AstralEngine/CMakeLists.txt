@@ -22,6 +22,8 @@ set(TEST_FILES
         Core/Memory/Allocators/RingAllocatorTest.cpp
 
         Renderer/OrthographicCamera.cpp
+        Core/Memory/Tracking/GlobalAllocationStorageTest.cpp
+        Core/Memory/Tracking/SceneMetricsExporterTest.cpp
 
 )
 

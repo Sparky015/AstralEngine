@@ -98,12 +98,42 @@ namespace Debug{
 
             if (ImGui::TreeNode("Memory"))
             {
+                ImGui::Spacing();
+
                 PeakMemoryUsage();
                 GlobalMemoryUsage();
+                // GlobalActiveAllocations();
+                // GlobalTotalAllocationsMade();
+                AllocationsInCurrentFrame();
 
                 ImGui::Spacing();
-                AllocationsAndFreesForCurrentFrame();
-                UnfreedMemoryFromCurrentFrame();
+
+                // if (ImGui::TreeNode("Metrics by Allocator"))
+                // {
+                //     MemoryUsageByAllocator();
+                //     PeakMemoryUsageByAllocator();
+                //     TotalAllocationsMadeByAllocator();
+                //     ActiveAllocationsByAllocator();
+                //     ImGui::TreePop();
+                // }
+                //
+                // if (ImGui::TreeNode("Metrics by Region"))
+                // {
+                //     MemoryUsageByRegion();
+                //     PeakMemoryUsageByRegion();
+                //     TotalAllocationsMadeByRegion();
+                //     ActiveAllocationsByRegion();
+                //     ImGui::TreePop();
+                // }
+                //
+                // if (ImGui::TreeNode("Metrics by Thread"))
+                // {
+                //     MemoryUsageByThread();
+                //     PeakMemoryUsageByThread();
+                //     TotalAllocationsMadeByThread();
+                //     ActiveAllocationsByThread();
+                //     ImGui::TreePop();
+                // }
 
                 ImGui::TreePop();
             }

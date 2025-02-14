@@ -13,7 +13,7 @@ void* operator new(std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryTracker::Get().AddAllocation(pointer, size);
+    Core::MemoryTracker::Get().AddAllocation(pointer, size, Core::MemoryRegion::UNKNOWN, Core::AllocatorType::NEW_OPERATOR);
     return pointer;
 }
 
@@ -22,7 +22,7 @@ void* operator new[](std::size_t size)
 {
     void* pointer = std::malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Core::MemoryTracker::Get().AddAllocation(pointer, size);
+    Core::MemoryTracker::Get().AddAllocation(pointer, size, Core::MemoryRegion::UNKNOWN, Core::AllocatorType::NEW_OPERATOR);
     return pointer;
 }
 

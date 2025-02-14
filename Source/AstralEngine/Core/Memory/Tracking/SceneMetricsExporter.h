@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include <fstream>
 #include "MemoryMetrics.h"
+#include <fstream>
+#include <msgpack.hpp>
+
 
 namespace Core {
 
@@ -16,18 +18,45 @@ namespace Core {
     {
     public:
         SceneMetricsExporter();
+        ~SceneMetricsExporter() = default;
 
-        /**@brief Opens a file for exporting scene memory metrics */
-        bool OpenExportFile(const char* sceneName);
+        void InitExportFile();
+
+        /**@brief Starts recording the memory metrics to a file.
+         * @param sceneName The name of the scene.
+         * @return True if the opening the export file succeeded and false if the file failed to open. */
+        [[nodiscard]] bool BeginScene(const char* sceneName);
+
+        /**@brief Stops recording the memory metrics to a file and close export file */
+        void EndScene();
+
+        /**@brief Checks if a scene is currently active
+         * @return True if the scene is active and false if not */
+        [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
+
+        /**@brief Checks if the export file is open
+         * @return True if the export file is open and false if not */
+        [[nodiscard]] bool IsExportFileOpen() const { return GetExportFile().is_open(); }
+
+        /**@brief Takes the current state of the MemoryMetrics and exports to a file */
+        void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
+
+    private:
+
+        /**@brief Opens a file for exporting scene memory metrics
+         * @param sceneName The name of the scene (for labeling purposes) */
+        void OpenExportFile(const char* sceneName);
 
         /**@brief Closes the file for exporting scene memory metrics */
         void CloseExportFile();
 
-        /**@brief Writes a snapshot of the memory metrics to the file */
-        void WriteMemoryMetrics(const MemoryMetrics& snapshot);
+        [[nodiscard]] std::fstream& GetExportFile() const
+        {
+            static std::fstream fileStream;
+            return fileStream;
+        }
 
-    private:
-        std::fstream m_File;
+        bool m_IsSceneActive;
         size_t m_NumberOfSnapshots;
     };
 

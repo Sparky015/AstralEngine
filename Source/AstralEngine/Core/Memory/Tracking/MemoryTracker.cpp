@@ -6,54 +6,67 @@
 
 #include "MemoryTracker.h"
 
+#include "Debug/Macros/Loggers.h"
+
 namespace Core {
-
-    MemoryTracker::MemoryTracker()
-    {
-    }
-
-
-    MemoryTracker::~MemoryTracker()
-    {
-    }
-
 
     void MemoryTracker::Init()
     {
         m_MemoryMetrics.Init();
+        m_SceneMetricsExporter.InitExportFile();
     }
+
 
     void MemoryTracker::Shutdown()
     {
         m_MemoryMetrics.Shutdown();
     }
 
-    void MemoryTracker::BeginScene() const
-    {
 
+    void MemoryTracker::BeginScene(const char* sceneName)
+    {
+        std::lock_guard lock(m_Mutex);
+        bool successFlag = m_SceneMetricsExporter.BeginScene(sceneName);
+        if (!successFlag) { LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
     }
 
 
-    void MemoryTracker::EndScene() const
+    void MemoryTracker::EndScene()
     {
-
+        std::lock_guard lock(m_Mutex);
+        m_SceneMetricsExporter.EndScene();
     }
 
 
     void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
     {
         std::lock_guard lock(m_Mutex);
-        m_GlobalAllocationStorage.AddPointer(pointer, size);
-        m_MemoryMetrics.TrackAllocation(size);
+
+        const AllocationData allocationData = {pointer, size, region, allocatorType, std::this_thread::get_id()};
+        m_GlobalAllocationStorage.AddPointer(allocationData);
+
+        m_MemoryMetrics.TrackAllocation(allocationData);
+
+        if (m_SceneMetricsExporter.IsSceneActive())
+        {
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        }
     }
 
 
     void MemoryTracker::RemoveAllocation(void* pointer)
     {
         std::lock_guard lock(m_Mutex);
-        size_t deallocationSize = m_GlobalAllocationStorage.GetPointerSize(pointer);
+
+        if (!m_GlobalAllocationStorage.IsPointerStored(pointer)) { return; }
+        const AllocationData& allocationData = m_GlobalAllocationStorage.GetPointerData(pointer);
+        m_MemoryMetrics.TrackDeallocation(allocationData);
         m_GlobalAllocationStorage.FreePointer(pointer);
-        m_MemoryMetrics.TrackDeallocation(deallocationSize);
+
+        if (m_SceneMetricsExporter.IsSceneActive())
+        {
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        }
     }
 
 }
