@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include <thread>
-#include <msgpack.hpp>
 #include "Core/CoreMacroDefinitions.h"
+#include "Debug/Macros/Error.h"
+#include <msgpack.hpp>
+#include <thread>
 
 namespace Core {
 
@@ -25,6 +26,24 @@ namespace Core {
         MEMORY_REGION_END
     };
 
+
+    inline const char* MemoryRegionToString(MemoryRegion memoryRegion)
+    {
+        switch (memoryRegion)
+        {
+            case RENDERER: return "Renderer";
+            case WINDOW: return "Window";
+            case ASSETS: return "Assets";
+            case ECS: return "ECS";
+            case DEBUG: return "Debug";
+            case CORE: return "Core";
+            case UNKNOWN: return "Unknown Region";
+            case MEMORY_REGION_END: return "Enum Memory Region End Marker";
+            default: ERROR("Memory region value not valid!");
+        }
+    }
+
+
     enum AllocatorType : uint8
     {
         STACK,
@@ -40,6 +59,25 @@ namespace Core {
         ALLOCATOR_TYPE_END
     };
 
+
+    inline const char* AllocatorTypeToString(AllocatorType allocatorType)
+    {
+        switch (allocatorType)
+        {
+            case STACK: return "Stack Allocator";
+            case RING: return "Ring Allocator";
+            case FRAME: return "Frame Allocator";
+            case LINEAR: return "Linear Allocator";
+            case POOL: return "Pool Allocator";
+            case DOUBLE_BUFFERED: return "Double Buffered Allocator";
+            case ALIGNED_ALLOCATOR: return "Aligned Allocator";
+            case NEW_OPERATOR: return "New Operator";
+            case ALLOCATOR_TYPE_END: return "Enum Memory Region End Marker";
+            default: ERROR("Memory region value not valid!");
+        }
+    }
+
+
     struct AllocationData
     {
         void* pointer;
@@ -48,6 +86,9 @@ namespace Core {
         AllocatorType allocatorType;
         std::thread::id threadID;
     };
+
+
+
 
 }
 

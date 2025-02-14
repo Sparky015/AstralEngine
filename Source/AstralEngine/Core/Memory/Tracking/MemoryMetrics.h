@@ -113,29 +113,21 @@ namespace Core {
 
 
         [[nodiscard]] const AllocatorTypeMap& GetMemoryUsageByAllocatorIterable() const { return m_MemoryUsageByAllocator; }
-
         [[nodiscard]] const AllocatorTypeMap& GetPeakMemoryUsageByAllocatorIterable() const { return m_PeakMemoryUsageByAllocator; }
-
         [[nodiscard]] const AllocatorTypeMap& GetActiveAllocationsByAllocatorIterable() const { return m_ActiveAllocationsByAllocator; }
-
         [[nodiscard]] const AllocatorTypeMap& GetTotalAllocationsByAllocatorIterable() const { return m_TotalAllocationsByAllocator; }
 
         [[nodiscard]] const MemoryRegionMap& GetMemoryUsageByRegionIterable() const { return m_MemoryUsageByRegion; }
-
         [[nodiscard]] const MemoryRegionMap& GetPeakMemoryUsageByRegionIterable() const { return m_PeakMemoryUsageByRegion; }
-
         [[nodiscard]] const MemoryRegionMap& GetActiveAllocationsByRegionIterable() const { return m_ActiveAllocationsByRegion; }
-
         [[nodiscard]] const MemoryRegionMap& GetTotalAllocationsByRegionIterable() const { return m_TotalAllocationsByRegion; }
 
         [[nodiscard]] const ThreadMap& GetMemoryUsageByThreadIterable() const { return m_MemoryUsageByThread; }
-
         [[nodiscard]] const ThreadMap& GetPeakMemoryUsageByThreadIterable() const { return m_PeakMemoryUsageByThread; }
-
         [[nodiscard]] const ThreadMap& GetActiveAllocationsByThreadIterable() const { return m_ActiveAllocationsByThread; }
-
         [[nodiscard]] const ThreadMap& GetTotalAllocationsByThreadIterable() const { return m_TotalAllocationsByThread; }
 
+        [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const { return std::hash<std::thread::id>{}(id); }
 
         // There is no need for moving or copying this class.
         MemoryMetrics(const MemoryMetrics&) = delete;
@@ -149,7 +141,6 @@ namespace Core {
 
         // Underlying type of std::thread::id is size_t. Cast std::thread::id to size_t for serialization purposes
 
-        [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const { return std::hash<std::thread::id>{}(id); }
 
         uint64 m_PeakMemoryUsage;
         uint64 m_TotalMemoryUsage;

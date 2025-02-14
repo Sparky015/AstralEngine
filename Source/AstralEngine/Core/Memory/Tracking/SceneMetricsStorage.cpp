@@ -7,7 +7,8 @@
 
 namespace Core {
 
-    SceneMetricsStorage::SceneMetricsStorage()
+    SceneMetricsStorage::SceneMetricsStorage() :
+        m_NumberOfSnapshotsStored(0)
     {
 
     }
@@ -30,7 +31,7 @@ namespace Core {
 
         m_FrameAllocationDataStorageOverTime.reserve(m_NumberOfSnapshotsStored);
 
-        // TODO Change this to reserving the vector buffer and not map buffer
+        // TODO Change this to reserving space for the vector buffer and not map buffer
         // m_MemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);
         // m_PeakMemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);
         // m_ActiveAllocationsByAllocator.reserve(m_NumberOfSnapshotsStored);

@@ -18,6 +18,7 @@ namespace Core {
     {
     public:
         SceneMetricsExporter();
+        ~SceneMetricsExporter() = default;
 
         /**@brief Starts recording the memory metrics to a file.
          * @param sceneName The name of the scene.

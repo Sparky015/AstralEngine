@@ -9,11 +9,21 @@
 #include <msgpack.hpp>
 #include <iostream>
 
+#include "Debug/Macros/Loggers.h"
+
 bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path& filePath)
 {
-    if (!std::filesystem::exists(filePath)) { return false; }
+    if (!std::filesystem::exists(filePath))
+    {
+        LOG("Invalid filepath given")
+        return false;
+    }
     m_File.open(filePath, std::ios::binary);
-    if (!m_File.is_open()) { return false; }
+    if (!m_File.is_open())
+    {
+        LOG("Imported memory profile failed to open")
+        return false;
+    }
 
     // Read in and unpack the snapshots into the storage
     m_File.seekg(0, std::ios::end); // Get file size
@@ -42,6 +52,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         while(pac.next(oh))
         {
             std::cout << oh.get() << "\n\n";
+            // m_SceneMetricsStorage.AppendSnapshot();
         }
 
     }

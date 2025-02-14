@@ -137,8 +137,8 @@ namespace Core {
              std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
              std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
-             GetExportFile().clear();
              GetExportFile().close();
+             GetExportFile().clear();
 
              std::cout << "Stream state after close:" << std::endl;
              std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
@@ -146,7 +146,7 @@ namespace Core {
              std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
              std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
-             if (GetExportFile().fail())
+             if (GetExportFile().is_open())
              {
                  std::cout << "Memory profiling export file failed to close!";
              }

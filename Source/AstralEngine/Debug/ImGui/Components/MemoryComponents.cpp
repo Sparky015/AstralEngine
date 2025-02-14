@@ -65,10 +65,239 @@ namespace Debug {
     }
 
 
+    void GlobalTotalAllocationsMade()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Total Allocations Made: %llu", memoryMetrics.GetTotalAllocations());
+    }
+
+
+    void GlobalActiveAllocations()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Active Allocations: %llu", memoryMetrics.GetTotalActiveAllocations());
+    }
+
+
     void AllocationsInCurrentFrame()
     {
         const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
-        ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
+        ImGui::Text("Allocations in current frame: %llu", frameAllocationData.NumberOfAllocations);
+    }
+
+
+    void MemoryUsageByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Allocator"))
+        {
+            for (auto [allocatorType, size] : memoryMetrics.GetMemoryUsageByAllocatorIterable())
+            {
+                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Allocator"))
+        {
+            for (auto [allocatorType, size] : memoryMetrics.GetPeakMemoryUsageByAllocatorIterable())
+            {
+                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Allocator"))
+        {
+            for (auto [allocatorType, count] : memoryMetrics.GetTotalAllocationsByAllocatorIterable())
+            {
+                ImGui::Text("%s: %d", Core::AllocatorTypeToString(allocatorType), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Allocator"))
+        {
+            for (auto [allocatorType, count] : memoryMetrics.GetActiveAllocationsByAllocatorIterable())
+            {
+                ImGui::Text("%s: %d", Core::AllocatorTypeToString(allocatorType), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void MemoryUsageByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Region"))
+        {
+            for (auto [region, size] : memoryMetrics.GetMemoryUsageByRegionIterable())
+            {
+                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Region"))
+        {
+            for (auto [region, size] : memoryMetrics.GetPeakMemoryUsageByRegionIterable())
+            {
+                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Region"))
+        {
+            for (auto [region, count] : memoryMetrics.GetTotalAllocationsByRegionIterable())
+            {
+                ImGui::Text("%s: %llu", Core::MemoryRegionToString(region), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Region"))
+        {
+            for (auto [region, count] : memoryMetrics.GetActiveAllocationsByRegionIterable())
+            {
+                ImGui::Text("%s: %llu", Core::MemoryRegionToString(region), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void MemoryUsageByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Thread"))
+        {
+
+            for (auto [threadIDHash, size] : memoryMetrics.GetMemoryUsageByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %s", MemoryUnitLabelHelper(size).data());
+                }
+                else
+                {
+                    ImGui::Text("%llu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Thread"))
+        {
+
+            for (auto [threadIDHash, size] : memoryMetrics.GetPeakMemoryUsageByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %s", MemoryUnitLabelHelper(size).data());
+                }
+                else
+                {
+                    ImGui::Text("%llu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Thread"))
+        {
+
+            for (auto [threadIDHash, count] : memoryMetrics.GetTotalAllocationsByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %llu", count);
+                }
+                else
+                {
+                    ImGui::Text("%llu: %llu", threadIDHash, count);
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Thread"))
+        {
+
+            for (auto [threadIDHash, count] : memoryMetrics.GetActiveAllocationsByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %llu", count);
+                }
+                else
+                {
+                    ImGui::Text("%llu: %llu", threadIDHash, count);
+                }
+            }
+
+            ImGui::TreePop();
+        }
     }
 
 }

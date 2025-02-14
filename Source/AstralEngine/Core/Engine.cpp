@@ -41,7 +41,7 @@ Engine::Engine() :
     Core::MemoryTracker::Get().EndScene();
 
     Core::SceneMetricsImporter importer;
-    importer.ImportMemoryProfile(std::string(LOG_FILE_DIR) + "2025-2/Day-11/MemoryProfile_Engine_Init_21-34-4.ASTLMemProfile");
+    importer.ImportMemoryProfile(std::string(LOG_FILE_DIR) + "2025-#m/Day-#d/MemoryProfile_Engine_Init_11-31-2.ASTLMemProfile");
 
 }
 

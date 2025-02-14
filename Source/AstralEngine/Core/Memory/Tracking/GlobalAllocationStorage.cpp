@@ -19,10 +19,10 @@ namespace Core {
         {
             if (allocationData.threadID == std::this_thread::get_id())
             {
-                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
+                // std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
             }
         }
-        std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
+        // std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
 
     }
 
