@@ -33,7 +33,7 @@ namespace Core {
 
         /**@brief Checks if the export file is open
          * @return True if the export file is open and false if not */
-        [[nodiscard]] bool IsExportFileOpen() const { return m_File.is_open(); }
+        [[nodiscard]] bool IsExportFileOpen() const { return GetExportFile().is_open(); }
 
         /**@brief Takes the current state of the MemoryMetrics and exports to a file */
         void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
@@ -47,8 +47,13 @@ namespace Core {
         /**@brief Closes the file for exporting scene memory metrics */
         void CloseExportFile();
 
+        [[nodiscard]] std::fstream& GetExportFile() const
+        {
+            static std::fstream fileStream;
+            return fileStream;
+        }
+
         bool m_IsSceneActive;
-        std::fstream m_File;
         size_t m_NumberOfSnapshots;
     };
 

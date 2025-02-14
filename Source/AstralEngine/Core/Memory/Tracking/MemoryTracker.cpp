@@ -44,7 +44,10 @@ namespace Core {
 
         m_MemoryMetrics.TrackAllocation(allocationData);
 
-        m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        if (m_SceneMetricsExporter.IsSceneActive())
+        {
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        }
     }
 
 
@@ -57,7 +60,10 @@ namespace Core {
         m_MemoryMetrics.TrackDeallocation(allocationData);
         m_GlobalAllocationStorage.FreePointer(pointer);
 
-        m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        if (m_SceneMetricsExporter.IsSceneActive())
+        {
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+        }
     }
 
 }

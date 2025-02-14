@@ -19,6 +19,18 @@ namespace Core {
     }
 
 
+    void MemoryMetrics::Init()
+    {
+        m_NewFrameEventListener.StartListening();
+    }
+
+
+    void MemoryMetrics::Shutdown()
+    {
+        m_NewFrameEventListener.StopListening();
+    }
+
+
     void MemoryMetrics::TrackAllocation(const AllocationData& allocationInfo)
     {
         m_TotalMemoryUsage += allocationInfo.size;
@@ -75,16 +87,59 @@ namespace Core {
     }
 
 
-    void MemoryMetrics::Init()
+    size_t MemoryMetrics::GetAllocatorTypeUsage(AllocatorType allocatorType) const
     {
-        m_NewFrameEventListener.StartListening();
+        if (!m_MemoryUsageByAllocator.contains(allocatorType)) { return 0; }
+        return m_MemoryUsageByAllocator.at(allocatorType);
     }
 
 
-    void MemoryMetrics::Shutdown()
+    size_t MemoryMetrics::GetAllocatorTypePeakUsage(AllocatorType allocatorType) const
     {
-        m_NewFrameEventListener.StopListening();
+        if (!m_PeakMemoryUsageByAllocator.contains(allocatorType)) { return 0; }
+        return m_PeakMemoryUsageByAllocator.at(allocatorType);
     }
 
+
+    size_t MemoryMetrics::GetMemoryRegionUsage(MemoryRegion memoryRegion) const
+    {
+        if (!m_MemoryUsageByRegion.contains(memoryRegion)) { return 0; }
+        return m_MemoryUsageByRegion.at(memoryRegion);
+    }
+
+
+    size_t MemoryMetrics::GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const
+    {
+        if (!m_PeakMemoryUsageByRegion.contains(memoryRegion)) { return 0; }
+        return m_PeakMemoryUsageByRegion.at(memoryRegion);
+    }
+
+
+    size_t MemoryMetrics::GetThreadUsage(std::thread::id threadID) const
+    {
+        if (!m_MemoryUsageByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+        return m_MemoryUsageByThread.at(GetThreadIDHash(threadID));
+    }
+
+
+    size_t MemoryMetrics::GetThreadPeakUsage(std::thread::id threadID) const
+    {
+        if (!m_PeakMemoryUsageByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+        return m_PeakMemoryUsageByThread.at(GetThreadIDHash(threadID));
+    }
+
+
+    size_t MemoryMetrics::GetThreadActiveAllocations(const std::thread::id threadID) const
+    {
+        if (!m_ActiveAllocationsByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+        return m_ActiveAllocationsByThread.at(GetThreadIDHash(threadID));
+    }
+
+
+    size_t MemoryMetrics::GetThreadTotalAllocations(const std::thread::id threadID) const
+    {
+        if (!m_TotalAllocationsByThread.contains(GetThreadIDHash(threadID))) { return 0; }
+        return m_TotalAllocationsByThread.at(GetThreadIDHash(threadID));
+    }
 
 }

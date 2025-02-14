@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "SceneMetricsStorage.h"
 #include "MemoryMetrics.h"
+#include "SceneMetricsStorage.h"
 
 #include <filesystem>
 #include <fstream>

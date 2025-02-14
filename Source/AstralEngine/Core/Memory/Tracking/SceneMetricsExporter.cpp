@@ -9,10 +9,11 @@
 #include "Debug/Macros/Loggers.h"
 #include <chrono>
 #include <filesystem>
+#include <iostream>
 
 namespace Core {
 
-    SceneMetricsExporter::SceneMetricsExporter() : m_NumberOfSnapshots(0), m_IsSceneActive(false) {}
+    SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0) {}
 
     bool SceneMetricsExporter::BeginScene(const char* sceneName)
     {
@@ -21,8 +22,8 @@ namespace Core {
             CloseExportFile();
             ERROR("Can't begin a new scene when a scene is already active!")
         }
-        m_IsSceneActive = true;
         OpenExportFile(sceneName);
+        m_IsSceneActive = true;
         return IsExportFileOpen();
     }
 
@@ -32,7 +33,7 @@ namespace Core {
         [[likely]] if (m_IsSceneActive)
         {
             // Pack the number of memory metrics snapshots in the file at the end
-            msgpack::pack(m_File, m_NumberOfSnapshots);
+            msgpack::pack(GetExportFile(), m_NumberOfSnapshots);
 
             CloseExportFile();
         }
@@ -44,10 +45,16 @@ namespace Core {
 
     void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
     {
+        if (GetExportFile().fail())
+        {
+            std::cout << "Memory profiling export file is in a failed state!\n";
+            return;
+        }
+
         if (m_IsSceneActive)
         {
             m_NumberOfSnapshots++;
-            msgpack::pack(m_File, memoryMetrics);
+            msgpack::pack(GetExportFile(), memoryMetrics);
         }
     }
 
@@ -103,19 +110,45 @@ namespace Core {
         filePathBuffer[pathLength + std::strlen(fileNameBuffer)] = '\0';
 
 
-        m_File.open(filePathBuffer, std::ios::out | std::ios::binary);
+        std::cout << "Stream state before open:" << std::endl;
+        std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+        std::cout << "- good(): " << GetExportFile().good() << std::endl;
+        std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+        std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+        GetExportFile().open(filePathBuffer, std::ios::out | std::ios::binary);
+
+        std::cout << "Stream state after open:" << std::endl;
+        std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+        std::cout << "- good(): " << GetExportFile().good() << std::endl;
+        std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+        std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
     }
 
 
     void SceneMetricsExporter::CloseExportFile()
     {
-         if (m_File.is_open())
+         if (GetExportFile().is_open())
          {
-             m_File.close();
+             // Log the stream state after opening
+             std::cout << "Stream state before close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
-             if (m_File.fail())
+             GetExportFile().clear();
+             GetExportFile().close();
+
+             std::cout << "Stream state after close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+             if (GetExportFile().fail())
              {
-                 WARN("Memory profiling export file failed to close!")
+                 std::cout << "Memory profiling export file failed to close!";
              }
          }
     }
