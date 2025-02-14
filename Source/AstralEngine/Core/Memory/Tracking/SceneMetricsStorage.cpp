@@ -51,6 +51,7 @@ namespace Core {
 
     void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss) // MemoryMetric snapshot
     {
+        m_NumberOfSnapshotsStored++;
 
         m_PeakMemoryUsageOverTime.push_back(mmss.GetPeakMemoryUsage());
         m_TotalMemoryUsageOverTime.push_back(mmss.GetTotalMemoryUsage());
@@ -122,8 +123,7 @@ namespace Core {
             m_TotalAllocationsByThreadOverTime[threadId].push_back(value);
         }
 
-
-        std::vector<FrameAllocationData> m_FrameAllocationDataStorage;
+        m_FrameAllocationDataStorageOverTime.push_back(mmss.GetFrameAllocationData());
     }
 
 }

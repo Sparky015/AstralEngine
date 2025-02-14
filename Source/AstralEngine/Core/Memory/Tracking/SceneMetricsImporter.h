@@ -19,13 +19,16 @@ namespace Core {
     {
     public:
 
+
         bool ImportMemoryProfile(const std::filesystem::path& filePath);
+
+        /**@brief  */
+        [[nodiscard]] const SceneMetricsStorage& GetSceneMetrics() const { return m_SceneMetricsStorage; }
 
     private:
 
         std::ifstream m_File;
         SceneMetricsStorage m_SceneMetricsStorage;
-        MemoryMetrics m_TempMemoryMetrics;
     };
 
 }

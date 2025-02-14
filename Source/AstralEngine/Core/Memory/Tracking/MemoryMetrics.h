@@ -129,11 +129,11 @@ namespace Core {
 
         [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const { return std::hash<std::thread::id>{}(id); }
 
-        // There is no need for moving or copying this class.
+        // There is no need for copying this class.
         MemoryMetrics(const MemoryMetrics&) = delete;
         MemoryMetrics& operator=(const MemoryMetrics&) = delete;
-        MemoryMetrics(MemoryMetrics&&) noexcept = delete;
-        MemoryMetrics& operator=(MemoryMetrics&&) noexcept = delete;
+        MemoryMetrics(MemoryMetrics&&) noexcept = default;
+        MemoryMetrics& operator=(MemoryMetrics&&) noexcept = default;
 
     private:
         // TODO: Switch from a hashmap to an array for memory regions and allocator types because the size is known at compile time
