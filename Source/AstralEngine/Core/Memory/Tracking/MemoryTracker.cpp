@@ -13,12 +13,15 @@ namespace Core {
     void MemoryTracker::Init()
     {
         m_MemoryMetrics.Init();
+        m_SceneMetricsExporter.InitExportFile();
     }
+
 
     void MemoryTracker::Shutdown()
     {
         m_MemoryMetrics.Shutdown();
     }
+
 
     void MemoryTracker::BeginScene(const char* sceneName)
     {

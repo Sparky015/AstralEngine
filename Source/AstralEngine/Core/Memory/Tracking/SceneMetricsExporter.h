@@ -20,6 +20,8 @@ namespace Core {
         SceneMetricsExporter();
         ~SceneMetricsExporter() = default;
 
+        void InitExportFile();
+
         /**@brief Starts recording the memory metrics to a file.
          * @param sceneName The name of the scene.
          * @return True if the opening the export file succeeded and false if the file failed to open. */

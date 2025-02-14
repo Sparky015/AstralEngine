@@ -4,9 +4,9 @@
 * @date 2/8/25
 */
 
-#include "SceneMetricsExporter.h"
 #include "Debug/Macros/Error.h"
 #include "Debug/Macros/Loggers.h"
+#include "SceneMetricsExporter.h"
 #include <chrono>
 #include <filesystem>
 #include <iostream>
@@ -14,6 +14,15 @@
 namespace Core {
 
     SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0) {}
+
+    void SceneMetricsExporter::InitExportFile()
+    {
+        // Initializes the export file before any scenes start to prevent heap allocations being recorded as a
+        // part of a scope's allocations when opening the export file for the first time. (Reference to PROFILE_SCOPE macro)
+        // Basically, it avoids an allocation from being made on the first BeginScene() to avoid messing up
+        // the memory tracking metrics.
+        (void)GetExportFile();
+    }
 
     bool SceneMetricsExporter::BeginScene(const char* sceneName)
     {
