@@ -6,14 +6,9 @@
 
 #pragma once
 
-#include "SceneMetricsStorage.h"
-
-#include <string_view>
+#include "Core/Memory/Tracking/SceneMetricsStorage.h"
 
 namespace Core {
-
-    /**@brief  */
-    std::string_view SelectFile();
 
     /**@brief  */
     void ThreadUsageGraph(const SceneMetricsStorage& sceneMetricsStorage);
