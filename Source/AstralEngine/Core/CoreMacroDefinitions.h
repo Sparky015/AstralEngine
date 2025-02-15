@@ -5,6 +5,7 @@
 #pragma once
 
 /** Removing the _t from specific size types for ease of use. */
+#include <cstddef>
 #include <cstdint>
 
 using int8 = int8_t;

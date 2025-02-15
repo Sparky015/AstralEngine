@@ -9,6 +9,7 @@
 #include "Components/RendererComponents.h"
 #include "Components/SystemInfoComponents.h"
 #include "Components/WindowComponents.h"
+#include "Core/Memory/Tracking/ImGui/LoadFileComponent.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
 #include "imgui.h"
 
@@ -24,7 +25,7 @@
 #include "cpuinfo.h"
 
 
-namespace Debug{
+namespace Debug {
 
     ImGuiManager& g_ImGuiManager = ImGuiManager::Get();
 
@@ -105,6 +106,7 @@ namespace Debug{
                 // GlobalActiveAllocations();
                 // GlobalTotalAllocationsMade();
                 AllocationsInCurrentFrame();
+                Core::LoadMemoryProfileButtonComponent();
 
                 ImGui::Spacing();
 

@@ -82,8 +82,8 @@ namespace Core {
         char dayBuffer[7];
         char timeBuffer[10];
 
-        std::strftime(yearMonthBuffer, sizeof(yearMonthBuffer), "%Y-%#m", &localTime);
-        std::strftime(dayBuffer, sizeof(dayBuffer), "Day-%#d", &localTime);
+        std::strftime(yearMonthBuffer, sizeof(yearMonthBuffer), "%Y-%m", &localTime);
+        std::strftime(dayBuffer, sizeof(dayBuffer), "Day-%d", &localTime);
         std::strftime(timeBuffer, sizeof(timeBuffer), "%H-%M-%S", &localTime);
 
         constexpr std::string_view logFileDir = LOG_FILE_DIR;
@@ -140,20 +140,20 @@ namespace Core {
          if (GetExportFile().is_open())
          {
              // Log the stream state after opening
-             // std::cout << "Stream state before close:" << std::endl;
-             // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-             // std::cout << "- good(): " << GetExportFile().good() << std::endl;
-             // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-             // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+             std::cout << "Stream state before close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
              GetExportFile().close();
-             GetExportFile().clear();
+             // GetExportFile().clear();
 
-             // std::cout << "Stream state after close:" << std::endl;
-             // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-             // std::cout << "- good(): " << GetExportFile().good() << std::endl;
-             // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-             // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+             std::cout << "Stream state after close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
              if (GetExportFile().is_open())
              {

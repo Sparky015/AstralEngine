@@ -10,13 +10,14 @@
 #include <filesystem>
 
 #include "Core/Memory/Tracking/SceneMetricsImporter.h"
+#include "Debug/ImGui/ImGuiEvents.h"
 
 namespace Core {
 
     class MemoryDebugWindow
     {
     public:
-        explicit MemoryDebugWindow(const SceneMetricsStorage& sceneMetricsStorage);
+        MemoryDebugWindow();
         ~MemoryDebugWindow() = default;
 
         bool LoadMemoryProfile(const std::filesystem::path& path);
@@ -42,6 +43,9 @@ namespace Core {
         /**@brief Shows the graph of the data that the user selected. */
         void ShowSelectedGraphComponent();
 
+        void OnRenderImGuiEvent(RenderImGuiEvent& e);
+
+        EventListener<RenderImGuiEvent&> m_ImGuiRenderListener;
         SceneMetricsImporter m_SceneMetricsImporter;
     };
 

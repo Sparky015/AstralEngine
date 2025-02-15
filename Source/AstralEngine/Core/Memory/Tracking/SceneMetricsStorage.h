@@ -25,6 +25,8 @@ namespace Core {
 
         void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot);
 
+        [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
+
     private:
         using DataPointStorage = std::vector<size_t>;
 
