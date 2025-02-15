@@ -165,9 +165,13 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsImporter.h
         Core/Memory/Tracking/SceneMetricsStorage.cpp
         Core/Memory/Tracking/SceneMetricsStorage.h
-        Core/Memory/Tracking/SceneMetricsGraphs.cpp
-        Core/Memory/Tracking/SceneMetricsGraphs.h
+        "Core/Memory/Tracking/ImGui/SceneMetricsGraphs.cpp"
+        "Core/Memory/Tracking/ImGui/SceneMetricsGraphs.h"
         Core/Memory/Tracking/AllocationData.h
+        Core/Memory/Tracking/ImGui/MemoryDebugWindow.cpp
+        Core/Memory/Tracking/ImGui/MemoryDebugWindow.h
+        Core/Memory/Tracking/ImGui/LoadFileComponent.cpp
+        Core/Memory/Tracking/ImGui/LoadFileComponent.h
 )
 
 
