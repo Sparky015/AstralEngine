@@ -165,13 +165,15 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsImporter.h
         Core/Memory/Tracking/SceneMetricsStorage.cpp
         Core/Memory/Tracking/SceneMetricsStorage.h
-        "Core/Memory/Tracking/ImGui/SceneMetricsGraphs.cpp"
-        "Core/Memory/Tracking/ImGui/SceneMetricsGraphs.h"
+        Core/Memory/Tracking/ImGui/SceneMetricsGraphs.cpp
+        Core/Memory/Tracking/ImGui/SceneMetricsGraphs.h
         Core/Memory/Tracking/AllocationData.h
         Core/Memory/Tracking/ImGui/MemoryDebugWindow.cpp
         Core/Memory/Tracking/ImGui/MemoryDebugWindow.h
         Core/Memory/Tracking/ImGui/LoadFileComponent.cpp
         Core/Memory/Tracking/ImGui/LoadFileComponent.h
+        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
+        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
 )
 
 
@@ -190,7 +192,7 @@ endif ()
 target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
-target_link_libraries(AstralEngine PRIVATE std_image)
+target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
 
@@ -202,7 +204,7 @@ add_dependencies(AstralEngine
         ImGui
         GLAD
         glm
-        std_image
+        stb_image
         cpuinfo
         msgpack-cxx
 )
@@ -222,9 +224,11 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
-target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/std_image")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/stb_image")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImFileDialog/")
 
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
 
 # Precompiled Header
