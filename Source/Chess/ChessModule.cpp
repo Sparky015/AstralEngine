@@ -19,6 +19,7 @@ public:
 
     void Init() override
     {
+        PROFILE_SCOPE("MemorySceneMetricsImporter")
         TRACE("Initializing Application")
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
