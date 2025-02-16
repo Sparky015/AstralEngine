@@ -165,13 +165,13 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsImporter.h
         Core/Memory/Tracking/SceneMetricsStorage.cpp
         Core/Memory/Tracking/SceneMetricsStorage.h
-        Core/Memory/Tracking/ImGui/SceneMetricsGraphs.cpp
-        Core/Memory/Tracking/ImGui/SceneMetricsGraphs.h
+        Core/Memory/Tracking/Viewing/SceneMetricsGraphs.cpp
+        Core/Memory/Tracking/Viewing/SceneMetricsGraphs.h
         Core/Memory/Tracking/AllocationData.h
-        Core/Memory/Tracking/ImGui/MemoryDebugWindow.cpp
-        Core/Memory/Tracking/ImGui/MemoryDebugWindow.h
-        Core/Memory/Tracking/ImGui/LoadFileComponent.cpp
-        Core/Memory/Tracking/ImGui/LoadFileComponent.h
+        Core/Memory/Tracking/Viewing/MemoryDebugWindow.cpp
+        Core/Memory/Tracking/Viewing/MemoryDebugWindow.h
+        Core/Memory/Tracking/Viewing/LoadFileComponent.cpp
+        Core/Memory/Tracking/Viewing/LoadFileComponent.h
 
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
