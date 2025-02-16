@@ -172,8 +172,16 @@ add_library(AstralEngine
         Core/Memory/Tracking/ImGui/MemoryDebugWindow.h
         Core/Memory/Tracking/ImGui/LoadFileComponent.cpp
         Core/Memory/Tracking/ImGui/LoadFileComponent.h
+
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
+
+#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
+#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.cpp
+#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_internal.h
+#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_items.cpp
+#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_demo.cpp
+
 )
 
 
@@ -195,6 +203,7 @@ target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
+target_link_libraries(AstralEngine PRIVATE ImPlot)
 
 if (APPLE)
     target_link_libraries(AstralEngine PRIVATE -lc++)
@@ -207,6 +216,7 @@ add_dependencies(AstralEngine
         stb_image
         cpuinfo
         msgpack-cxx
+        ImPlot
 )
 
 if (APPLE)
