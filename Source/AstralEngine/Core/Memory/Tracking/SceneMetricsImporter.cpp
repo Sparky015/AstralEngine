@@ -27,7 +27,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         return false;
     }
 
-    m_File.open(filePath, std::ios::out | std::ios::binary);
+    m_File.open(filePath, std::ios::in | std::ios::binary);
     if (!m_File.is_open())
     {
         WARN("SceneMetricsImporter: Imported memory profile failed to open!")
@@ -35,7 +35,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         return false;
     }
 
-    constexpr uint8 offset = 90; // TODO: Take the file size into account here
+    constexpr uint8 offset = 30; // TODO: Take the file size into account here
     m_File.seekg(-1 * offset, std::ios::end);
     std::array<char, offset> snapshotCountBuffer{};
     m_File.read(snapshotCountBuffer.data(), sizeof(snapshotCountBuffer));
@@ -71,13 +71,15 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         return false;
     }
 
+    m_File.seekg(0, std::ios::beg);
+
 
     // Get size of file
     // Option 1
     // Read in and unpack the snapshots into the storage
     size_t file_size = std::filesystem::file_size(filePath);
     // m_File.seekg(0, std::ios::end); // Get file size
-    //  = m_File.tellg();
+    // size_t file_size = m_File.tellg();
     // m_File.seekg(0, std::ios::beg);
 
 
@@ -104,7 +106,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
 
         msgpack::object_handle objectHandle;
         MemoryMetrics snapshot;
-        for (size_t i = 0; i < m_SceneMetricsStorage.GetSnapshotCount(); i++)
+        for (size_t i = 0; i < m_SceneMetricsStorage.GetExpectedSnapshotCount(); i++)
         {
             unpacker.next(objectHandle);
 
@@ -112,7 +114,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
             {
                 {
                     PROFILE_SCOPE("Object Handle Conversion to Snapshot")
-                    LOG(objectHandle.get());
+                    // LOG(objectHandle.get());
                     snapshot = objectHandle.get().as<MemoryMetrics>();
                 }
                 {
@@ -122,10 +124,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
             }
             catch (std::bad_cast&)
             {
-                // Ignore the bad cast and move on
-                // (At least one bad cast will happen because the last object in the stream will
-                //  be the snapshot count)
-                WARN("")
+                WARN("SceneMetricsImporter: Object Handle failed cast to MemoryMetrics snapshot!")
             }
         }
 

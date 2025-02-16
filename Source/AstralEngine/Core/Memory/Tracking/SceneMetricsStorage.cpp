@@ -22,14 +22,14 @@ namespace Core {
 
     void SceneMetricsStorage::InitializeStorage(size_t numberOfSnapshots)
     {
-        m_NumberOfSnapshotsStored = numberOfSnapshots;
+        m_ExpectedSnapshotCount = numberOfSnapshots;
 
-        m_PeakMemoryUsageOverTime.reserve(m_NumberOfSnapshotsStored);
-        m_TotalMemoryUsageOverTime.reserve(m_NumberOfSnapshotsStored);
-        m_TotalAllocationsOverTime.reserve(m_NumberOfSnapshotsStored);
-        m_TotalActiveAllocationsOverTime.reserve(m_NumberOfSnapshotsStored);
+        m_PeakMemoryUsageOverTime.reserve(m_ExpectedSnapshotCount);
+        m_TotalMemoryUsageOverTime.reserve(m_ExpectedSnapshotCount);
+        m_TotalAllocationsOverTime.reserve(m_ExpectedSnapshotCount);
+        m_TotalActiveAllocationsOverTime.reserve(m_ExpectedSnapshotCount);
 
-        m_FrameAllocationDataStorageOverTime.reserve(m_NumberOfSnapshotsStored);
+        m_FrameAllocationDataStorageOverTime.reserve(m_ExpectedSnapshotCount);
 
         // TODO Change this to reserving space for the vector buffer and not map buffer
         // m_MemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);

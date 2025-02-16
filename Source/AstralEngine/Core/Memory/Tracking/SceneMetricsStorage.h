@@ -26,6 +26,7 @@ namespace Core {
         void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot);
 
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
+        [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }
 
     private:
         using DataPointStorage = std::vector<size_t>;
@@ -35,6 +36,7 @@ namespace Core {
         using ThreadStorageMap = std::unordered_map<size_t, DataPointStorage, std::hash<size_t>, std::equal_to<>, NoTrackingAllocator<std::pair<const size_t, DataPointStorage>>>;
 
         size_t m_NumberOfSnapshotsStored;
+        size_t m_ExpectedSnapshotCount;
 
         DataPointStorage m_PeakMemoryUsageOverTime;
         DataPointStorage m_TotalMemoryUsageOverTime;

@@ -43,9 +43,9 @@ namespace Core {
         /**@brief Shows the graph of the data that the user selected. */
         void ShowSelectedGraphComponent();
 
-        void OnRenderImGuiEvent(RenderImGuiEvent& e);
+        void OnRenderImGuiEvent(RenderImGuiEvent e);
 
-        EventListener<RenderImGuiEvent&> m_ImGuiRenderListener;
+        EventListener<RenderImGuiEvent> m_ImGuiRenderListener;
         SceneMetricsImporter m_SceneMetricsImporter;
     };
 

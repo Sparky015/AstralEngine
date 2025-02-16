@@ -12,7 +12,7 @@
 namespace Core {
 
     MemoryDebugWindow::MemoryDebugWindow() :
-        m_ImGuiRenderListener([this](RenderImGuiEvent& e){ OnRenderImGuiEvent(e); })
+        m_ImGuiRenderListener([this](RenderImGuiEvent e){ OnRenderImGuiEvent(e); })
     {
 
     }
@@ -73,7 +73,7 @@ namespace Core {
 
     }
 
-    void MemoryDebugWindow::OnRenderImGuiEvent(RenderImGuiEvent& e)
+    void MemoryDebugWindow::OnRenderImGuiEvent(RenderImGuiEvent e)
     {
         ShowMemoryDebugWindow();
     }
