@@ -10,7 +10,7 @@
 #include "imgui.h"
 
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "Core/Memory/Tracking/Viewing/MemoryDebugWindow.h"
+#include "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.h"
 
 namespace Core {
 

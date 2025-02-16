@@ -27,7 +27,10 @@ namespace Core {
         void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot);
 
 
-        const DataPointStorage& GetGlobalMemoryUsageOverTime() const { return m_TotalMemoryUsageOverTime; }
+        [[nodiscard]] const DataPointStorage& GetGlobalMemoryUsageOverTime() const { return m_TotalMemoryUsageOverTime; }
+        [[nodiscard]] const DataPointStorage& GetGlobalPeakMemoryUsageOverTime() const { return m_PeakMemoryUsageOverTime; }
+        [[nodiscard]] const DataPointStorage& GetGlobalTotalAllocationsOverTime() const { return m_TotalAllocationsOverTime; }
+        [[nodiscard]] const DataPointStorage& GetGlobalActiveAllocationsOverTime() const { return m_TotalActiveAllocationsOverTime; }
 
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
         [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }

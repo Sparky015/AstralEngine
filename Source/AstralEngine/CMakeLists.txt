@@ -165,18 +165,22 @@ add_library(AstralEngine
         Core/Memory/Tracking/SceneMetricsImporter.h
         Core/Memory/Tracking/SceneMetricsStorage.cpp
         Core/Memory/Tracking/SceneMetricsStorage.h
-        Core/Memory/Tracking/Viewing/SceneMetricsGraphs.cpp
-        Core/Memory/Tracking/Viewing/SceneMetricsGraphs.h
+        "Core/Memory/Tracking/Memory Debug Window/SceneMetricsGraphs.cpp"
+        "Core/Memory/Tracking/Memory Debug Window/SceneMetricsGraphs.h"
         Core/Memory/Tracking/AllocationData.h
-        Core/Memory/Tracking/Viewing/MemoryDebugWindow.cpp
-        Core/Memory/Tracking/Viewing/MemoryDebugWindow.h
-        Core/Memory/Tracking/Viewing/LoadFileComponent.cpp
-        Core/Memory/Tracking/Viewing/LoadFileComponent.h
+        "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.cpp"
+        "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.h"
+        "Core/Memory/Tracking/Memory Debug Window/LoadFileComponent.cpp"
+        "Core/Memory/Tracking/Memory Debug Window/LoadFileComponent.h"
 
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
+        "Core/Memory/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.cpp"
+        "Core/Memory/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
+        "Core/Memory/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.cpp"
+        "Core/Memory/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
 
-#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
+        #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
 #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.cpp
 #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_internal.h
 #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_items.cpp

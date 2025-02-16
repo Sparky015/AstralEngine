@@ -56,7 +56,7 @@ namespace Core {
         m_PeakMemoryUsageOverTime.push_back(mmss.GetPeakMemoryUsage());
         m_TotalMemoryUsageOverTime.push_back(mmss.GetTotalMemoryUsage());
         m_TotalActiveAllocationsOverTime.push_back(mmss.GetTotalActiveAllocations());
-        m_TotalAllocationsOverTime.push_back(mmss.GetTotalActiveAllocations());
+        m_TotalAllocationsOverTime.push_back(mmss.GetTotalAllocations());
 
 
         for (auto [allocatorType, value] : mmss.GetMemoryUsageByAllocatorIterable())

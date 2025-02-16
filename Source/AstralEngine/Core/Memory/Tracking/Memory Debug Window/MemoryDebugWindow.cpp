@@ -11,6 +11,8 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
+#include "Panels/GraphSelectorPanel.h"
+#include "Panels/MemoryGraphPanel.h"
 
 namespace Core {
 
@@ -44,7 +46,13 @@ namespace Core {
         }
 
         static bool showMemoryDebugWindow = true;
+
         ImPlot::ShowDemoWindow(&showMemoryDebugWindow);
+
+        if (showMemoryDebugWindow)
+        {
+
+        }
         ImGui::Begin("Memory Debug Window", &showMemoryDebugWindow);
 
         if (ImGui::BeginTabBar("Region"))
@@ -118,19 +126,8 @@ namespace Core {
             if (ImGui::BeginTabItem("Global"))
             {
                 // Settings tab content
-                static float someValue = 2.0f;
-                if (ImPlot::BeginPlot("Memory Usage"))
-                {
-                    const SceneMetricsStorage& storage = m_SceneMetricsImporter.GetSceneMetrics();
-                    ImPlot::SetupAxes("Allocation Number", "Memory Usage");
-                    int max = *std::max_element(storage.GetGlobalMemoryUsageOverTime().begin(), storage.GetGlobalMemoryUsageOverTime().end());
-                    ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, storage.GetSnapshotCount());
-                    ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, max);
-                    ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 0, storage.GetSnapshotCount());
-                    ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, 0, max);
-                    ImPlot::PlotLine("Memory Usage", (ImU64*)storage.GetGlobalMemoryUsageOverTime().data(), storage.GetSnapshotCount());
-                    ImPlot::EndPlot();
-                }
+                MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
 
                 ImGui::EndTabItem();
             }
