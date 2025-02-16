@@ -23,7 +23,7 @@ namespace Core {
         bool LoadMemoryProfile(const std::filesystem::path& path);
 
         /**@brief Updates the memory debug window with new input */
-        void ShowMemoryDebugWindow();
+        void ShowMemoryDebugWindow() const;
 
         /**@brief Shutdowns and closes the memory debug window. */
         void CloseMemoryDebugWindow();

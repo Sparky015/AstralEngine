@@ -12,6 +12,7 @@
 #include "Core/Memory/Tracking/ImGui/LoadFileComponent.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
 #include "imgui.h"
+#include "ImPlot/implot.h"
 
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
@@ -283,7 +284,10 @@ namespace Debug {
     void ImGuiManager::InitImGui() const
     {
         PROFILE_SCOPE("Initialize ImGui");
+
         ImGui::CreateContext();
+        ImPlot::CreateContext();
+
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
@@ -314,6 +318,8 @@ namespace Debug {
         PROFILE_SCOPE("ImGui Manager Shutdown");
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
+
+        ImPlot::DestroyContext();
         ImGui::DestroyContext();
     }
 

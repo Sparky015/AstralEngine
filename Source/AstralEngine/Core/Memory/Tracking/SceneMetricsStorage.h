@@ -21,16 +21,18 @@ namespace Core {
         SceneMetricsStorage();
         ~SceneMetricsStorage();
 
-        void InitializeStorage(size_t numberOfSnapshots);
+        using DataPointStorage = std::vector<size_t>;
 
+        void InitializeStorage(size_t numberOfSnapshots);
         void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot);
+
+
+        const DataPointStorage& GetGlobalMemoryUsageOverTime() const { return m_TotalMemoryUsageOverTime; }
 
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
         [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }
 
     private:
-        using DataPointStorage = std::vector<size_t>;
-
         using AllocatorTypeStorageMap = std::unordered_map<AllocatorType, DataPointStorage, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, DataPointStorage>>>;
         using MemoryRegionStorageMap = std::unordered_map<MemoryRegion, DataPointStorage, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, DataPointStorage>>>;
         using ThreadStorageMap = std::unordered_map<size_t, DataPointStorage, std::hash<size_t>, std::equal_to<>, NoTrackingAllocator<std::pair<const size_t, DataPointStorage>>>;
