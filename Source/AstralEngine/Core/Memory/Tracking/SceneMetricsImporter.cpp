@@ -146,3 +146,15 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
     m_HasFileLoaded = true;
     return true;
 }
+
+
+void Core::SceneMetricsImporter::CloseMemoryProfile()
+{
+    if (m_File.is_open())
+    {
+        m_File.close();
+    }
+    m_File.clear();
+
+    m_SceneMetricsStorage.ResetStorage();
+}

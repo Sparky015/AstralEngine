@@ -23,7 +23,7 @@ namespace Core {
         bool LoadMemoryProfile(const std::filesystem::path& path);
 
         /**@brief Updates the memory debug window with new input */
-        void ShowMemoryDebugWindow() const;
+        void ShowMemoryDebugWindow();
 
         /**@brief Shutdowns and closes the memory debug window. */
         void CloseMemoryDebugWindow();
@@ -47,6 +47,8 @@ namespace Core {
 
         EventListener<RenderImGuiEvent> m_ImGuiRenderListener;
         SceneMetricsImporter m_SceneMetricsImporter;
+
+        bool m_ShowDebugWindow;
     };
 
 }

@@ -19,7 +19,8 @@
 namespace Core {
 
     MemoryDebugWindow::MemoryDebugWindow() :
-        m_ImGuiRenderListener([this](RenderImGuiEvent e){ OnRenderImGuiEvent(e); })
+        m_ImGuiRenderListener([this](RenderImGuiEvent e){ OnRenderImGuiEvent(e); }),
+        m_ShowDebugWindow(false)
     {
 
     }
@@ -31,6 +32,7 @@ namespace Core {
         if (m_SceneMetricsImporter.HasFileLoaded())
         {
             m_ImGuiRenderListener.StartListening();
+            m_ShowDebugWindow = true;
         }
         else
         {
@@ -40,7 +42,7 @@ namespace Core {
     }
 
 
-    void MemoryDebugWindow::ShowMemoryDebugWindow() const
+    void MemoryDebugWindow::ShowMemoryDebugWindow()
     {
         if (!m_SceneMetricsImporter.HasFileLoaded())
         {
@@ -55,101 +57,105 @@ namespace Core {
             ImPlot::ShowDemoWindow(&showMemoryDebugWindow);
         }
 
-        ImGui::Begin("Memory Debug Window", &showMemoryDebugWindow);
 
-
-        if (ImGui::BeginTabBar("MemoryDataType"))
+        if (m_ShowDebugWindow)
         {
-            if (ImGui::BeginTabItem("Global"))
+            ImGui::Begin("Memory Debug Window", &m_ShowDebugWindow);
+
+
+            if (ImGui::BeginTabBar("MemoryDataType"))
             {
-                // Settings tab content
-                MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-                size_t* selectedDataPoint = GetSelectedDataPointAddress();
+                if (ImGui::BeginTabItem("Global"))
+                {
+                    // Settings tab content
+                    MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                    size_t* selectedDataPoint = GetSelectedDataPointAddress();
 
-                ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
-                ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
-                AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
+                    ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                    AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
 
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Allocator"))
-            {
-                // Tab 1 content goes here
-                ImGui::Text("This is tab 1");
-
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Region"))
-            {
-                // Tab 2 content goes here
-                ImGui::Text("Welcome to tab 2");
-
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Thread"))
-            {
-                ImGui::Columns(2, "MyColumns"); // Create 2 columns
-
-                float availableHeight = ImGui::GetContentRegionAvail().y;
-                float topHeight = availableHeight * 0.5f; // Adjust the split ratio as needed
-
-
-                // Left Column (Tree Node)
-                ImGui::BeginChild("LeftPane_Top", ImVec2(0, topHeight), true); // Create a child window for scrolling
-                if (ImGui::TreeNode("Tree Node")) {
-                    // Your tree node content here
-                    ImGui::Text("Item 1");
-                    ImGui::Text("Item 2");
-                    ImGui::Text("Item 3");
-                    ImGui::TreePop();
+                    ImGui::EndTabItem();
                 }
-                ImGui::EndChild();
 
-                ImGui::BeginChild("LeftPane_Bot", ImVec2(0, 0), true); // Create a child window for scrolling
-                if (ImGui::TreeNode("Tree Node 2")) {
-                    // Your tree node content here
-                    ImGui::Text("Item 4");
-                    ImGui::Text("Item 5");
-                    ImGui::Text("Item 6");
-                    ImGui::TreePop();
+                if (ImGui::BeginTabItem("Allocator"))
+                {
+                    // Tab 1 content goes here
+                    ImGui::Text("This is tab 1");
+
+                    ImGui::EndTabItem();
                 }
-                ImGui::EndChild();
+
+                if (ImGui::BeginTabItem("Region"))
+                {
+                    // Tab 2 content goes here
+                    ImGui::Text("Welcome to tab 2");
+
+                    ImGui::EndTabItem();
+                }
+
+                if (ImGui::BeginTabItem("Thread"))
+                {
+                    ImGui::Columns(2, "MyColumns"); // Create 2 columns
+
+                    float availableHeight = ImGui::GetContentRegionAvail().y;
+                    float topHeight = availableHeight * 0.5f; // Adjust the split ratio as needed
 
 
-                ImGui::NextColumn(); // Move to the next column
-
-                // Right Column (ImPlot Graph)
-                ImGui::BeginChild("RightPane", ImVec2(0, 0), true);
-                if (ImPlot::BeginPlot("My Plot")) {
-                    // Your ImPlot plotting code here
-                    double x[100], y[100];
-                    for (int i = 0; i < 100; ++i) {
-                        x[i] = i * 0.1;
-                        y[i] = sin(x[i]);
+                    // Left Column (Tree Node)
+                    ImGui::BeginChild("LeftPane_Top", ImVec2(0, topHeight), true); // Create a child window for scrolling
+                    if (ImGui::TreeNode("Tree Node")) {
+                        // Your tree node content here
+                        ImGui::Text("Item 1");
+                        ImGui::Text("Item 2");
+                        ImGui::Text("Item 3");
+                        ImGui::TreePop();
                     }
-                    ImPlot::PlotLine("sin(x)", x, y, 100);
-                    ImPlot::EndPlot();
-                }
-                ImGui::EndChild();
+                    ImGui::EndChild();
 
-                ImGui::Columns(1); // Reset to a single column
-                ImGui::EndTabItem();
+                    ImGui::BeginChild("LeftPane_Bot", ImVec2(0, 0), true); // Create a child window for scrolling
+                    if (ImGui::TreeNode("Tree Node 2")) {
+                        // Your tree node content here
+                        ImGui::Text("Item 4");
+                        ImGui::Text("Item 5");
+                        ImGui::Text("Item 6");
+                        ImGui::TreePop();
+                    }
+                    ImGui::EndChild();
+
+
+                    ImGui::NextColumn(); // Move to the next column
+
+                    // Right Column (ImPlot Graph)
+                    ImGui::BeginChild("RightPane", ImVec2(0, 0), true);
+                    if (ImPlot::BeginPlot("My Plot")) {
+                        // Your ImPlot plotting code here
+                        double x[100], y[100];
+                        for (int i = 0; i < 100; ++i) {
+                            x[i] = i * 0.1;
+                            y[i] = sin(x[i]);
+                        }
+                        ImPlot::PlotLine("sin(x)", x, y, 100);
+                        ImPlot::EndPlot();
+                    }
+                    ImGui::EndChild();
+
+                    ImGui::Columns(1); // Reset to a single column
+                    ImGui::EndTabItem();
+                }
+
+                ImGui::EndTabBar();
             }
 
-            ImGui::EndTabBar();
+            ImGui::End();
         }
-
-        ImGui::End();
-
 
     }
 
     void MemoryDebugWindow::CloseMemoryDebugWindow()
     {
-
+        m_SceneMetricsImporter.CloseMemoryProfile();
+        m_ShowDebugWindow = false;
     }
 
     void MemoryDebugWindow::OnRenderImGuiEvent(RenderImGuiEvent e)

@@ -129,4 +129,34 @@ namespace Core {
         m_AllocationTimes.push_back(allocationTime);
     }
 
+
+    void SceneMetricsStorage::ResetStorage()
+    {
+        m_NumberOfSnapshotsStored = 0;
+        m_ExpectedSnapshotCount = 0;
+
+        m_PeakMemoryUsageOverTime.clear();
+        m_TotalMemoryUsageOverTime.clear();
+        m_TotalActiveAllocationsOverTime.clear();
+        m_TotalAllocationsOverTime.clear();
+
+        m_MemoryUsageByAllocatorOverTime.clear();
+        m_PeakMemoryUsageByAllocatorOverTime.clear();
+        m_ActiveAllocationsByAllocatorOverTime.clear();
+        m_TotalAllocationsByAllocatorOverTime.clear();
+
+        m_MemoryUsageByRegionOverTime.clear();
+        m_PeakMemoryUsageByRegionOverTime.clear();
+        m_ActiveAllocationsByRegionOverTime.clear();
+        m_TotalAllocationsByRegionOverTime.clear();
+
+        m_MemoryUsageByThreadOverTime.clear();
+        m_PeakMemoryUsageByThreadOverTime.clear();
+        m_ActiveAllocationsByThreadOverTime.clear();
+        m_TotalAllocationsByThreadOverTime.clear();
+
+        m_FrameAllocationDataStorageOverTime.back();
+
+        m_AllocationTimes.clear();
+    }
 }

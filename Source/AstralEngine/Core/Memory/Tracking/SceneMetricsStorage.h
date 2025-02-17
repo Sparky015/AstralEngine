@@ -37,6 +37,8 @@ namespace Core {
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
         [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }
 
+        void ResetStorage();
+
     private:
         using AllocatorTypeStorageMap = std::unordered_map<AllocatorType, DataPointStorage, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, DataPointStorage>>>;
         using MemoryRegionStorageMap = std::unordered_map<MemoryRegion, DataPointStorage, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, DataPointStorage>>>;

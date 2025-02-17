@@ -26,6 +26,8 @@ namespace Core {
 
         [[nodiscard]] bool HasFileLoaded() const { return m_HasFileLoaded; }
 
+        void CloseMemoryProfile();
+
         /**@brief  */
         [[nodiscard]] const SceneMetricsStorage& GetSceneMetrics() const { return m_SceneMetricsStorage; }
 
