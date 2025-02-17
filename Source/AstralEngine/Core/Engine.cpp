@@ -40,13 +40,6 @@ Engine::Engine() :
     m_WindowClosedListener.StartListening();
     Core::MemoryTracker::Get().EndScene();
 
-    {
-        PROFILE_SCOPE("Test MemorySceneMetricsImporter")
-        Core::SceneMetricsImporter importer;
-        importer.ImportMemoryProfile(std::string(LOG_FILE_DIR) + "2025-#m/Day-#d/MemoryProfile_Engine_Init_11-31-2.ASTLMemProfile");
-    }
-
-
 }
 
 
