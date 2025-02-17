@@ -1,5 +1,5 @@
 /**
-* @file SceneMetricsGraphs.h
+* @file SceneMetricsGraphComponents.h
 * @author Andrew Fagan
 * @date 2/9/2025
 */

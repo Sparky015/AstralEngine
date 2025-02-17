@@ -11,6 +11,8 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
+#include "Panels/AllocationStacktracePanel.h"
+#include "Panels/DataPointInfoPanel.h"
 #include "Panels/GraphSelectorPanel.h"
 #include "Panels/MemoryGraphPanel.h"
 
@@ -47,17 +49,30 @@ namespace Core {
 
         static bool showMemoryDebugWindow = true;
 
-        ImPlot::ShowDemoWindow(&showMemoryDebugWindow);
-
         if (showMemoryDebugWindow)
         {
-
+            ImPlot::ShowDemoWindow(&showMemoryDebugWindow);
         }
+
         ImGui::Begin("Memory Debug Window", &showMemoryDebugWindow);
 
-        if (ImGui::BeginTabBar("Region"))
+
+        if (ImGui::BeginTabBar("MemoryDataType"))
         {
-            if (ImGui::BeginTabItem("Tab 1"))
+            if (ImGui::BeginTabItem("Global"))
+            {
+                // Settings tab content
+                MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                size_t* selectedDataPoint = GetSelectedDataPointAddress();
+
+                ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
+                ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Allocator"))
             {
                 // Tab 1 content goes here
                 ImGui::Text("This is tab 1");
@@ -65,7 +80,7 @@ namespace Core {
                 ImGui::EndTabItem();
             }
 
-            if (ImGui::BeginTabItem("Allocator"))
+            if (ImGui::BeginTabItem("Region"))
             {
                 // Tab 2 content goes here
                 ImGui::Text("Welcome to tab 2");
@@ -120,15 +135,6 @@ namespace Core {
                 ImGui::EndChild();
 
                 ImGui::Columns(1); // Reset to a single column
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Global"))
-            {
-                // Settings tab content
-                MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-                ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
-
                 ImGui::EndTabItem();
             }
 

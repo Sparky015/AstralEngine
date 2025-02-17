@@ -21,7 +21,7 @@ namespace Core {
 
         if (ImGui::Checkbox("Load Memory Profile File", &isOn))
         {
-            LOG("Test");
+
         }
 
         if (isOn)

@@ -6,7 +6,7 @@
 
 #include "MemoryGraphPanel.h"
 
-#include "../SceneMetricsGraphs.h"
+#include "../SceneMetricsGraphComponents.h"
 
 namespace Core {
 
