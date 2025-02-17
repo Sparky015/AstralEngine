@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../AstralEngine/Core/SystemManager.h"
-#include "PieceTracking.h"
+#include "Movement/PieceTracking.h"
 
 
 #include "../AstralEngine/Renderer/Primitives/IndexBuffer.h"

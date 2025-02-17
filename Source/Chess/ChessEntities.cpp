@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 12/11/24.
 //
 
-#include "GameState/ChessEntities.h"
+#include "ChessEntities.h"
 
 #include "../AstralEngine/ECS/ECSManager.h"
 #include "../AstralEngine/Renderer/Primitives/Texture.h"
