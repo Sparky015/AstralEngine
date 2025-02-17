@@ -11,9 +11,13 @@
 #include <filesystem>
 #include <iostream>
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
+
 namespace Core {
 
-    SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0) {}
+    SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0)
+    {
+    }
 
     void SceneMetricsExporter::InitExportFile()
     {
@@ -54,6 +58,7 @@ namespace Core {
 
     void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
     {
+        PROFILE_SCOPE("RecordMemoryMetrics")
         if (GetExportFile().fail())
         {
             std::cout << "Memory profiling export file is in a failed state!\n";

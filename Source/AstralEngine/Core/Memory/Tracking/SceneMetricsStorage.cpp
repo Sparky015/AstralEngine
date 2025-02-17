@@ -30,6 +30,7 @@ namespace Core {
         m_TotalActiveAllocationsOverTime.reserve(m_ExpectedSnapshotCount);
 
         m_FrameAllocationDataStorageOverTime.reserve(m_ExpectedSnapshotCount);
+        m_AllocationTimes.reserve(m_ExpectedSnapshotCount);
 
         // TODO Change this to reserving space for the vector buffer and not map buffer
         // m_MemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);
@@ -49,7 +50,7 @@ namespace Core {
     }
 
 
-    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss) // MemoryMetric snapshot
+    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const float allocationTime) // MemoryMetric snapshot
     {
         m_NumberOfSnapshotsStored++;
 
@@ -124,6 +125,8 @@ namespace Core {
         }
 
         m_FrameAllocationDataStorageOverTime.push_back(mmss.GetFrameAllocationData());
+
+        m_AllocationTimes.push_back(allocationTime);
     }
 
 }

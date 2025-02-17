@@ -119,7 +119,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
                 }
                 {
                     PROFILE_SCOPE("Appending snapshot to Storage")
-                    m_SceneMetricsStorage.AppendSnapshot(snapshot);
+                    m_SceneMetricsStorage.AppendSnapshot(snapshot, 0);
                 }
             }
             catch (std::bad_cast&)

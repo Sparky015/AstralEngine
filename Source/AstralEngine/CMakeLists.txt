@@ -183,6 +183,7 @@ add_library(AstralEngine
         "Core/Memory/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
         "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.cpp"
         "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
+        Core/Memory/Tracking/MemoryMetricsSnapshot.h
 
         #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
 #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.cpp

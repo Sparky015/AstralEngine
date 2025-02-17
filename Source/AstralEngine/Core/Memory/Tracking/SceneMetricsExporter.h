@@ -7,6 +7,7 @@
 #pragma once
 
 #include "MemoryMetrics.h"
+#include "MemoryMetricsSnapshot.h"
 #include <fstream>
 #include <msgpack.hpp>
 
@@ -55,6 +56,7 @@ namespace Core {
             static std::fstream fileStream;
             return fileStream;
         }
+
 
         bool m_IsSceneActive;
         size_t m_NumberOfSnapshots;
