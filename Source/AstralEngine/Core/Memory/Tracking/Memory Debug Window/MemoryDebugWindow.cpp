@@ -26,6 +26,7 @@ namespace Core {
 
     bool MemoryDebugWindow::LoadMemoryProfile(const std::filesystem::path& path)
     {
+        LOG("MemoryDebugWindow: Loading Memory Profile...")
         m_SceneMetricsImporter.ImportMemoryProfile(path);
         if (m_SceneMetricsImporter.HasFileLoaded())
         {
@@ -143,6 +144,11 @@ namespace Core {
 
         ImGui::End();
 
+
+    }
+
+    void MemoryDebugWindow::CloseMemoryDebugWindow()
+    {
 
     }
 

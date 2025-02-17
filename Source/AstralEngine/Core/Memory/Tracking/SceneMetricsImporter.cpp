@@ -35,6 +35,13 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         return false;
     }
 
+    size_t file_size = std::filesystem::file_size(filePath);
+    if (file_size > 200000000) // > 200 MBs
+    {
+        WARN("SceneMetricsImporter: Memory profile is too big! (>200MBs)");
+        return false;
+    }
+
     constexpr uint8 offset = 30; // TODO: Take the file size into account here
     m_File.seekg(-1 * offset, std::ios::end);
     std::array<char, offset> snapshotCountBuffer{};
@@ -77,7 +84,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
     // Get size of file
     // Option 1
     // Read in and unpack the snapshots into the storage
-    size_t file_size = std::filesystem::file_size(filePath);
+
     // m_File.seekg(0, std::ios::end); // Get file size
     // size_t file_size = m_File.tellg();
     // m_File.seekg(0, std::ios::beg);
@@ -109,6 +116,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         float allocationTime = 0.0f;
         for (size_t i = 0; i < m_SceneMetricsStorage.GetExpectedSnapshotCount(); i++)
         {
+            PROFILE_SCOPE("Looping through snapshots")
             try
             {
                 unpacker.next(objectHandle);

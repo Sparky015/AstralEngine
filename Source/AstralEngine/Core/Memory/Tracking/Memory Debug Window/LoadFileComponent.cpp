@@ -9,31 +9,39 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace Core {
 
     void LoadMemoryProfileButtonComponent()
     {
-        static bool isOn = false;
+        static bool showFileSelectMenu = false;
+        static bool doLoadFile = false;
         static std::string filePath;
 
-        if (ImGui::Checkbox("Load Memory Profile File", &isOn))
+        if (ImGui::Button("Load Memory Profile File"))
         {
-
+            showFileSelectMenu = true;
         }
 
-        if (isOn)
+        if (doLoadFile && !filePath.empty())
         {
-            isOn = SelectFile(filePath);
+            static MemoryDebugWindow memoryDebugWindow;
 
-            if (!isOn)
+            LOG(filePath);
+            memoryDebugWindow.CloseMemoryDebugWindow();
+            memoryDebugWindow.LoadMemoryProfile(filePath);
+
+            doLoadFile = false;
+        }
+        else if (showFileSelectMenu)
+        {
+            showFileSelectMenu = SelectFile(filePath);
+
+            if (!showFileSelectMenu)
             {
-                static MemoryDebugWindow memoryDebugWindow;
-                // Spawn Memory Debug Window
-                LOG(filePath);
-                memoryDebugWindow.LoadMemoryProfile(filePath);
+                doLoadFile = true;
             }
         }
 
