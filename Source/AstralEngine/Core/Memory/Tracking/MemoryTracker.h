@@ -42,6 +42,9 @@ namespace Core {
         /**@brief Begins a scene that records snapshots of the memory metrics to a file */
         void BeginScene(const char* sceneName);
 
+        /**@brief Tells whether a memory profiling scene is currently active or not. */
+        [[nodiscard]] bool IsSceneActive() const;
+
         /**@brief Ends the scene that records snapshots of the memory metrics to a file */
         void EndScene();
 
@@ -66,7 +69,7 @@ namespace Core {
         MemoryTracker() = default;
         ~MemoryTracker() = default;
 
-        std::recursive_mutex m_Mutex;
+        mutable std::recursive_mutex m_Mutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
         SceneMetricsExporter m_SceneMetricsExporter;

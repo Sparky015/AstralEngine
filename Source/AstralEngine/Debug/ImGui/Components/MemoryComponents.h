@@ -13,7 +13,6 @@ namespace Debug {
 
     void AllocationsInCurrentFrame();
 
-
     void MemoryUsageByAllocator();
     void PeakMemoryUsageByAllocator();
     void TotalAllocationsMadeByAllocator();
@@ -28,5 +27,7 @@ namespace Debug {
     void PeakMemoryUsageByThread();
     void TotalAllocationsMadeByThread();
     void ActiveAllocationsByThread();
+
+    void ManageMemoryProfilingScene();
 
 }

@@ -31,6 +31,13 @@ namespace Core {
     }
 
 
+    bool MemoryTracker::IsSceneActive() const
+    {
+        std::lock_guard lock(m_Mutex);
+        return m_SceneMetricsExporter.IsSceneActive();
+    }
+
+
     void MemoryTracker::EndScene()
     {
         std::lock_guard lock(m_Mutex);

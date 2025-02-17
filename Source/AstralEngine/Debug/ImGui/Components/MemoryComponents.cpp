@@ -300,6 +300,25 @@ namespace Debug {
         }
     }
 
+
+    void ManageMemoryProfilingScene()
+    {
+        Core::MemoryTracker& tracker = Core::MemoryTracker::Get();
+        bool isSceneActive = tracker.IsSceneActive();
+
+        ImGui::Checkbox("Enable Memory Profiling Scene", &isSceneActive);
+
+        if (isSceneActive == tracker.IsSceneActive()) { return; }
+        else if (isSceneActive)
+        {
+            tracker.BeginScene("DebugMenu");
+        }
+        else
+        {
+            tracker.EndScene();
+        }
+    }
+
 }
 
 

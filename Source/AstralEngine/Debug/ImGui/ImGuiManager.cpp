@@ -107,6 +107,7 @@ namespace Debug {
                 // GlobalActiveAllocations();
                 // GlobalTotalAllocationsMade();
                 AllocationsInCurrentFrame();
+                ManageMemoryProfilingScene();
                 Core::LoadMemoryProfileButtonComponent();
 
                 ImGui::Spacing();
