@@ -37,6 +37,7 @@ namespace Core {
         }
         OpenExportFile(sceneName);
         m_IsSceneActive = true;
+        m_SceneClock.Reset();
         return IsExportFileOpen();
     }
 
@@ -69,6 +70,7 @@ namespace Core {
         {
             m_NumberOfSnapshots++;
             msgpack::pack(GetExportFile(), memoryMetrics);
+            msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
         }
     }
 

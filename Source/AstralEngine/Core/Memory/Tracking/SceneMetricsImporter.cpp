@@ -105,22 +105,21 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         unpacker.buffer_consumed(buffer.size());
 
         msgpack::object_handle objectHandle;
-        MemoryMetrics snapshot;
+        MemoryMetrics tempMemoryMetrics;
+        float allocationTime = 0.0f;
         for (size_t i = 0; i < m_SceneMetricsStorage.GetExpectedSnapshotCount(); i++)
         {
-            unpacker.next(objectHandle);
-
             try
             {
-                {
-                    PROFILE_SCOPE("Object Handle Conversion to Snapshot")
-                    // LOG(objectHandle.get());
-                    snapshot = objectHandle.get().as<MemoryMetrics>();
-                }
-                {
-                    PROFILE_SCOPE("Appending snapshot to Storage")
-                    m_SceneMetricsStorage.AppendSnapshot(snapshot, 0);
-                }
+                unpacker.next(objectHandle);
+                // LOG(objectHandle.get());
+                tempMemoryMetrics = objectHandle.get().as<MemoryMetrics>();
+
+                unpacker.next(objectHandle);
+                allocationTime = objectHandle.get().as<size_t>();
+
+                m_SceneMetricsStorage.AppendSnapshot(tempMemoryMetrics, allocationTime);
+
             }
             catch (std::bad_cast&)
             {

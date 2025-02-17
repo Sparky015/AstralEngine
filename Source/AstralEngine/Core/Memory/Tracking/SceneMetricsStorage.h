@@ -24,13 +24,15 @@ namespace Core {
         using DataPointStorage = std::vector<size_t>;
 
         void InitializeStorage(size_t numberOfSnapshots);
-        void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot, float allocationTime);
+        void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot, size_t allocationTime);
 
 
         [[nodiscard]] const DataPointStorage& GetGlobalMemoryUsageOverTime() const { return m_TotalMemoryUsageOverTime; }
         [[nodiscard]] const DataPointStorage& GetGlobalPeakMemoryUsageOverTime() const { return m_PeakMemoryUsageOverTime; }
         [[nodiscard]] const DataPointStorage& GetGlobalTotalAllocationsOverTime() const { return m_TotalAllocationsOverTime; }
         [[nodiscard]] const DataPointStorage& GetGlobalActiveAllocationsOverTime() const { return m_TotalActiveAllocationsOverTime; }
+
+        [[nodiscard]] const DataPointStorage& GetAllocationTimes() const { return m_AllocationTimes; }
 
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
         [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }
@@ -65,7 +67,7 @@ namespace Core {
 
         std::vector<FrameAllocationData> m_FrameAllocationDataStorageOverTime;
 
-        std::vector<float> m_AllocationTimes;
+        DataPointStorage m_AllocationTimes;
 
         // TODO: rest of the data in vectors
     };

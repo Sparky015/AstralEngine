@@ -11,6 +11,8 @@
 #include <fstream>
 #include <msgpack.hpp>
 
+#include "Core/Time/Clock.h"
+
 
 namespace Core {
 
@@ -57,7 +59,7 @@ namespace Core {
             return fileStream;
         }
 
-
+        Clock m_SceneClock;
         bool m_IsSceneActive;
         size_t m_NumberOfSnapshots;
     };

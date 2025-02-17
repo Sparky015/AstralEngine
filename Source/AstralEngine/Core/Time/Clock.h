@@ -19,7 +19,16 @@ namespace Core {
         ~Clock() = default;
 
         /**@brief Returns the current stopwatch time in seconds. */
-        [[nodiscard]] float GetTime() const;
+        [[nodiscard]] float GetTimeSeconds() const;
+
+        /**@brief Returns the current stopwatch time in milliseconds. */
+        [[nodiscard]] size_t GetTimeMilliseconds() const;
+
+        /**@brief Returns the current stopwatch time in microseconds. */
+        [[nodiscard]] size_t GetTimeMicroseconds() const;
+
+        /**@brief Returns the current stopwatch time in nanoseconds. */
+        [[nodiscard]] size_t GetTimeNanoseconds() const;
 
         /**@brief Resets the stopwatch. */
         void Reset();

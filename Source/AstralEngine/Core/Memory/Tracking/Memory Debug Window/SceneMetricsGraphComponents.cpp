@@ -33,15 +33,21 @@ namespace Core {
     {
         if (ImPlot::BeginPlot("Global Memory Usage"))
         {
-            ImPlot::SetupAxes("Allocation Number", "Memory Usage");
+            ImPlot::SetupAxes("Time (microseconds)", "Memory Usage (bytes)");
+
+            const auto maxElementIt = std::ranges::max_element(storage.GetAllocationTimes());
+
+
+
+            double maxTime = maxElementIt == storage.GetAllocationTimes().end() ? 0 : *maxElementIt;
 
             GraphExtrema extrema = GetGraphExtrema(storage.GetGlobalMemoryUsageOverTime());
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, storage.GetSnapshotCount());
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, maxTime);
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, extrema.min, extrema.max * GRAPH_MAX_LIMIT_MULTIPLIER);
-            ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 0, storage.GetSnapshotCount());
+            ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 0, maxTime);
             ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, extrema.min, extrema.max * GRAPH_MAX_LIMIT_MULTIPLIER);
 
-            ImPlot::PlotLine("Memory Usage", (ImU64*)storage.GetGlobalMemoryUsageOverTime().data(), storage.GetSnapshotCount());
+            ImPlot::PlotLine("Memory Usage", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)storage.GetGlobalMemoryUsageOverTime().data(), storage.GetSnapshotCount());
             ImPlot::EndPlot();
         }
     }

@@ -50,7 +50,7 @@ namespace Core {
     }
 
 
-    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const float allocationTime) // MemoryMetric snapshot
+    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const size_t allocationTime) // MemoryMetric snapshot
     {
         m_NumberOfSnapshotsStored++;
 
