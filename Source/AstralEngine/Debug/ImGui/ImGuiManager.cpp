@@ -9,7 +9,7 @@
 #include "Components/RendererComponents.h"
 #include "Components/SystemInfoComponents.h"
 #include "Components/WindowComponents.h"
-#include "Core/Memory/Tracking/Memory Debug Window/LoadFileComponent.h"
+#include "Core/Memory/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
 #include "imgui.h"
 #include "ImPlot/implot.h"
