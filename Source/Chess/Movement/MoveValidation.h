@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "../Chessboard/Chessboard.h"
-#include "../MoveGeneration/BoardMoveList.h"
+#include "Chessboard/Chessboard.h"
+#include "MoveGeneration/BoardMoveList.h"
 
 namespace Game {
 

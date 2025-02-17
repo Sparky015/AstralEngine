@@ -5,7 +5,7 @@
 #pragma once
 
 #include "pch.h"
-#include "../../GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 #include "ChessPieceMoveList.h"
 #include "../../Chessboard/Chessboard.h"
 

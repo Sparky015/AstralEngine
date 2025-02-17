@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "ChessPieceTypes.h"
-#include "ECS/Entity.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Common/ChessPieceTypes.h"
+#include "../AstralEngine/ECS/Entity.h"
+#include "../AstralEngine/Renderer/Primitives/VertexArrayObject.h"
 
 class ChessEntities
 {

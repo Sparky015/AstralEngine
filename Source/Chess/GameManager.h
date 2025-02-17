@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "Core/SystemManager.h"
-#include "../PlayerInput/PieceTracking.h"
+#include "../AstralEngine/Core/SystemManager.h"
+#include "PieceTracking.h"
 
 
-#include "Renderer/Primitives/IndexBuffer.h"
-#include "Renderer/Primitives/VertexBuffer.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
-#include "Renderer/Primitives/Texture.h"
-#include "Renderer/Shaders/ShaderProgram.h"
+#include "../AstralEngine/Renderer/Primitives/IndexBuffer.h"
+#include "../AstralEngine/Renderer/Primitives/VertexBuffer.h"
+#include "../AstralEngine/Renderer/Primitives/VertexArrayObject.h"
+#include "../AstralEngine/Renderer/Primitives/Texture.h"
+#include "../AstralEngine/Renderer/Shaders/ShaderProgram.h"
 
 
 namespace Game {

@@ -9,7 +9,7 @@
 #include "Chessboard/ChessboardManager.h"
 #include "Core/Events/EventListener.h"
 #include "Debug/DebugManager.h"
-#include "GameFlow/GameManager.h"
+#include "GameManager.h"
 #include "Input/InputState.h"
 
 class ChessModule : public ApplicationModule
@@ -19,7 +19,7 @@ public:
 
     void Init() override
     {
-        PROFILE_SCOPE("MemorySceneMetricsImporter")
+        PROFILE_SCOPE("ChessModuleInit")
         TRACE("Initializing Application")
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
@@ -36,6 +36,7 @@ public:
 
     void Shutdown() override
     {
+        PROFILE_SCOPE("ChessModuleShutdown")
         TRACE("Shutting down Application")
         Debug::g_DebugManager.Shutdown();
         Game::g_BoardManager.Shutdown();

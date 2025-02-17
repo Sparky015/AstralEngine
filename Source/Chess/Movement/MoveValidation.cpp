@@ -5,7 +5,7 @@
 */
 #include "MoveValidation.h"
 
-#include "../MoveGeneration/BoardMoveList.h"
+#include "MoveGeneration/BoardMoveList.h"
 
 
 namespace Game {

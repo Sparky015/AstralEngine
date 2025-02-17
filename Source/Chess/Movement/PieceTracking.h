@@ -1,15 +1,15 @@
 /**
-* @file MouseInputs.h
+* @file PieceTracking.h
 * @author Andrew Fagan
 * @date 12/16/2024
 */
 
 #pragma once
 
-#include "../GameState/ChessPieceTypes.h"
-#include "../Chessboard/Chessboard.h"
-#include "../Chessboard/ChessboardManager.h"
-#include "ECS/Entity.h"
+#include "../AstralEngine/ECS/Entity.h"
+#include "Chessboard/Chessboard.h"
+#include "Chessboard/ChessboardManager.h"
+#include "Common/ChessPieceTypes.h"
 
 namespace Game {
 

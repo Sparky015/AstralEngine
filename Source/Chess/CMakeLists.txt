@@ -2,8 +2,8 @@
 add_library(Chess
         Chessboard/ChessBoard.cpp
         Chessboard/ChessBoard.h
-        GameState/ChessPieceTypes.h
-        GameState/ChessPieceTypes.cpp
+        Common/ChessPieceTypes.h
+        Common/ChessPieceTypes.cpp
         Chessboard/ChessBoardManager.cpp
         Chessboard/ChessBoardManager.h
         Chessboard/InternalChessBoardData.cpp
@@ -16,13 +16,13 @@ add_library(Chess
         MoveGeneration/PieceMoveLists/QueenMoveList.cpp
         MoveGeneration/PieceMoveLists/RookMoveList.cpp
         MoveGeneration/BoardMoveList.cpp
-        Utils/ChessConversions.h
-        Utils/ChessConversions.cpp
-        GameFlow/GameManager.h
-        GameFlow/GameManager.cpp
+        Common/ConversionHelpers.h
+        Common/ConversionHelpers.cpp
+        GameManager.h
+        GameManager.cpp
         ChessModule.cpp
-        GameState/ChessEntities.cpp
-        GameState/ChessEntities.h
+        ChessEntities.cpp
+        ChessEntities.h
         MoveGeneration/MoveListGenerationUtils.h
         MoveGeneration/BoardMoveList.h
         MoveGeneration/PieceMoveLists/RookMoveList.h
@@ -30,27 +30,27 @@ add_library(Chess
         MoveGeneration/PieceMoveLists/PawnMoveList.h
         MoveGeneration/PieceMoveLists/KnightMoveList.h
         MoveGeneration/PieceMoveLists/ChessPieceMoveList.h
-        GameLogic/MoveValidation.cpp
-        GameLogic/MoveValidation.h
+        Movement/MoveValidation.cpp
+        Movement/MoveValidation.h
         MoveGeneration/PieceMoveList.h
         MoveGeneration/PieceMoveList.cpp
-        ChessMove.h
-        PlayerInput/PieceTracking.cpp
-        PlayerInput/PieceTracking.h
+        Movement/ChessMove.h
+        Movement/PieceTracking.cpp
+        Movement/PieceTracking.h
         MoveGeneration/KingChecks.cpp
         MoveGeneration/KingChecks.h
-        GameState/SquareLocation.h
-        GameState/PieceColor.h
+        Common/SquareLocation.h
+        Common/PieceColor.h
         ChessBoard/FENParser.cpp
         ChessBoard/FENParser.h
         Debug/ImGuiComponents/ChessboardComponents.cpp
         Debug/ImGuiComponents/ChessboardComponents.h
         Chessboard/InternalChessBoardData.h
-        GameState/PieceType.h
-        GameState/PieceType.cpp
+        Common/PieceType.h
+        Common/PieceType.cpp
         Debug/DebugManager.cpp
         Debug/DebugManager.h
-        GameState/SquareLocation.cpp
+        Common/SquareLocation.cpp
 )
 
 add_executable(ChessExecutable ChessModule.cpp)

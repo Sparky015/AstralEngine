@@ -7,8 +7,8 @@
 #include "pch.h"
 
 #include "PieceColor.h"
-#include "SquareLocation.h"
 #include "PieceType.h"
+#include "SquareLocation.h"
 
 /**
  * @enum PieceID This tracks the index of each piece in the Board's piece arrays.

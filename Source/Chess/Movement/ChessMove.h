@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 
 namespace Game {
 

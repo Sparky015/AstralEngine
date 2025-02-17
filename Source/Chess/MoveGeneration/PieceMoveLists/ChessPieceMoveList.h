@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../../GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 #include "../../Chessboard/Chessboard.h"
 #include "../PieceMoveList.h"
 #include "MoveGeneration/MoveListGenerationUtils.h"

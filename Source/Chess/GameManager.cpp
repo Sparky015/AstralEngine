@@ -4,9 +4,9 @@
 
 #include "GameManager.h"
 
-#include "Renderer/RendererCommands.h"
-#include "ECS/Systems/RenderingSystem.h"
-#include "GameState/ChessEntities.h"
+#include "../AstralEngine/Renderer/RendererCommands.h"
+#include "../AstralEngine/ECS/Systems/RenderingSystem.h"
+#include "ChessEntities.h"
 #include "MoveGeneration/KingChecks.h"
 
 namespace Game {

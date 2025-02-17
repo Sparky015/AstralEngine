@@ -1,5 +1,5 @@
 /**
-* @file MouseInputs.cpp
+* @file PieceTracking.cpp
 * @author Andrew Fagan
 * @date 12/16/2024
 */
@@ -7,13 +7,13 @@
 #include "PieceTracking.h"
 
 #include "Chessboard/ChessboardManager.h"
-#include "ECS/ECS.h"
-#include "ECS/ECSManager.h"
-#include "GameLogic/MoveValidation.h"
-#include "GameState/ChessEntities.h"
-#include "Input/InputState.h"
+#include "../AstralEngine/ECS/ECS.h"
+#include "../AstralEngine/ECS/ECSManager.h"
+#include "MoveValidation.h"
+#include "ChessEntities.h"
+#include "../AstralEngine/Input/InputState.h"
 #include "MoveGeneration/KingChecks.h"
-#include "Utils/ChessConversions.h"
+#include "Common/ConversionHelpers.h"
 
 
 namespace Game {
