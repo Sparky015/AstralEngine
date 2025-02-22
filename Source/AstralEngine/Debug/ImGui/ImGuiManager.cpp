@@ -104,40 +104,40 @@ namespace Debug {
 
                 PeakMemoryUsage();
                 GlobalMemoryUsage();
-                // GlobalActiveAllocations();
-                // GlobalTotalAllocationsMade();
+                GlobalActiveAllocations();
+                GlobalTotalAllocationsMade();
                 AllocationsInCurrentFrame();
                 ManageMemoryProfilingScene();
                 Core::LoadMemoryProfileButtonComponent();
 
                 ImGui::Spacing();
 
-                // if (ImGui::TreeNode("Metrics by Allocator"))
-                // {
-                //     MemoryUsageByAllocator();
-                //     PeakMemoryUsageByAllocator();
-                //     TotalAllocationsMadeByAllocator();
-                //     ActiveAllocationsByAllocator();
-                //     ImGui::TreePop();
-                // }
-                //
-                // if (ImGui::TreeNode("Metrics by Region"))
-                // {
-                //     MemoryUsageByRegion();
-                //     PeakMemoryUsageByRegion();
-                //     TotalAllocationsMadeByRegion();
-                //     ActiveAllocationsByRegion();
-                //     ImGui::TreePop();
-                // }
-                //
-                // if (ImGui::TreeNode("Metrics by Thread"))
-                // {
-                //     MemoryUsageByThread();
-                //     PeakMemoryUsageByThread();
-                //     TotalAllocationsMadeByThread();
-                //     ActiveAllocationsByThread();
-                //     ImGui::TreePop();
-                // }
+                if (ImGui::TreeNode("Metrics by Allocator"))
+                {
+                    MemoryUsageByAllocator();
+                    PeakMemoryUsageByAllocator();
+                    TotalAllocationsMadeByAllocator();
+                    ActiveAllocationsByAllocator();
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Metrics by Region"))
+                {
+                    MemoryUsageByRegion();
+                    PeakMemoryUsageByRegion();
+                    TotalAllocationsMadeByRegion();
+                    ActiveAllocationsByRegion();
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Metrics by Thread"))
+                {
+                    MemoryUsageByThread();
+                    PeakMemoryUsageByThread();
+                    TotalAllocationsMadeByThread();
+                    ActiveAllocationsByThread();
+                    ImGui::TreePop();
+                }
 
                 ImGui::TreePop();
             }

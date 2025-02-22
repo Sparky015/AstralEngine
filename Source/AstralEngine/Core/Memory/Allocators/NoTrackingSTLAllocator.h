@@ -1,5 +1,5 @@
 /**
-* @file NoTrackingAllocator.h
+* @file NoTrackingSTLAllocator.h
 * @author Andrew Fagan
 * @date 1/7/2025
 */
@@ -7,14 +7,16 @@
 #pragma once
 
 #include <memory>
+#include "Core/Memory/Allocators/NoTrackingMalloc.h"
+
 
 namespace Core {
 
-    /**@class NoTrackingAllocator
+    /**@class NoTrackingSTLAllocator
      * @brief Allocator that bypasses allocation metrics tracking. Uses std::malloc and std::free.
      * @thread_safety This class is thread safe. */
     template <typename T>
-    class NoTrackingAllocator {
+    class NoTrackingSTLAllocator {
     public:
         using value_type = T;
         using pointer = T*;
@@ -29,7 +31,8 @@ namespace Core {
          * @throws bad_alloc if std::malloc returns nullptr */
         pointer allocate(size_type n, const void* hint = nullptr)
         {
-            void* ptr = std::malloc(n * sizeof(T));
+            void* ptr = ASTRAL_NO_TRACKING_MALLOC(n * sizeof(T));
+      //      void* ptr = std::malloc(n * sizeof(T));
             if (!ptr) throw std::bad_alloc();
             return static_cast<pointer>(ptr);
         }
@@ -38,30 +41,31 @@ namespace Core {
         /**@brief Deallocates memory using std::free */
         void deallocate(pointer ptr, size_type n)
         {
-            std::free(ptr);
+            ASTRAL_NO_TRACKING_FREE(ptr);
+//            std::free(ptr);
         }
 
         // Rebind struct
         template <typename U>
         struct rebind
         {
-            using other = NoTrackingAllocator<U>;
+            using other = NoTrackingSTLAllocator<U>;
         };
 
 
-        NoTrackingAllocator() noexcept = default;
-        ~NoTrackingAllocator() = default;
+        NoTrackingSTLAllocator() noexcept = default;
+        ~NoTrackingSTLAllocator() = default;
 
         template <typename U>
-        NoTrackingAllocator(const NoTrackingAllocator<U>&) noexcept {};
-        NoTrackingAllocator(const NoTrackingAllocator&) noexcept = default;
+        NoTrackingSTLAllocator(const NoTrackingSTLAllocator<U>&) noexcept {};
+        NoTrackingSTLAllocator(const NoTrackingSTLAllocator&) noexcept = default;
     };
 
     // Equality operators for allocators
     template <typename T, typename U>
-    bool operator==(const NoTrackingAllocator<T>&, const NoTrackingAllocator<U>&) { return true; }
+    bool operator==(const NoTrackingSTLAllocator<T>&, const NoTrackingSTLAllocator<U>&) { return true; }
 
     template <typename T, typename U>
-    bool operator!=(const NoTrackingAllocator<T>&, const NoTrackingAllocator<U>&) { return false; }
+    bool operator!=(const NoTrackingSTLAllocator<T>&, const NoTrackingSTLAllocator<U>&) { return false; }
 
 }

@@ -37,9 +37,9 @@ namespace Core {
         MemoryMetrics();
         ~MemoryMetrics() = default;
 
-        using AllocatorTypeMap = std::unordered_map<AllocatorType, size_t, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, size_t>>>;
-        using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, size_t>>>;
-        using ThreadMap = std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<>, NoTrackingAllocator<std::pair<const size_t, size_t>>>;
+        using AllocatorTypeMap = std::unordered_map<AllocatorType, size_t, std::hash<AllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const AllocatorType, size_t>>>;
+        using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryRegion, size_t>>>;
+        using ThreadMap = std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const size_t, size_t>>>;
 
         /**@brief Initializes necessary components for MemoryMetrics. Call before using MemoryMetrics */
         void Init();

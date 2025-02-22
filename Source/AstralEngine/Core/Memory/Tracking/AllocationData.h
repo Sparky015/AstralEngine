@@ -55,6 +55,7 @@ namespace Core {
 
         ALIGNED_ALLOCATOR,
         NEW_OPERATOR,
+        MALLOC,
 
         ALLOCATOR_TYPE_END
     };
@@ -72,6 +73,7 @@ namespace Core {
             case DOUBLE_BUFFERED: return "Double Buffered Allocator";
             case ALIGNED_ALLOCATOR: return "Aligned Allocator";
             case NEW_OPERATOR: return "New Operator";
+            case MALLOC: return "Malloc";
             case ALLOCATOR_TYPE_END: return "Enum Memory Region End Marker";
             default: ERROR("Memory region value not valid!");
         }

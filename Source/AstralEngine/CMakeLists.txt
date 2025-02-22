@@ -122,7 +122,7 @@ add_library(AstralEngine
         Core/Memory/Tracking/NewDeleteOverrides.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
-        Core/Memory/Allocators/NoTrackingAllocator.h
+        Core/Memory/Allocators/NoTrackingSTLAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
@@ -186,6 +186,7 @@ add_library(AstralEngine
         Core/Memory/Tracking/MemoryMetricsSnapshot.h
         "Core/Memory/Tracking/Memory Debug Window/Panels/GroupKeySelectorPanel.cpp"
         "Core/Memory/Tracking/Memory Debug Window/Panels/GroupKeySelectorPanel.h"
+        Core/Memory/Allocators/NoTrackingMalloc.h
 
         #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
 #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.cpp

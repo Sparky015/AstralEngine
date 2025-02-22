@@ -7,7 +7,7 @@
 #pragma once
 
 #include "AllocationData.h"
-#include "Core/Memory/Allocators/NoTrackingAllocator.h"
+#include "Core/Memory/Allocators/NoTrackingSTLAllocator.h"
 #include <vector>
 
 #include "MemoryMetrics.h"
@@ -40,9 +40,9 @@ namespace Core {
         void ResetStorage();
 
     private:
-        using AllocatorTypeStorageMap = std::unordered_map<AllocatorType, DataPointStorage, std::hash<AllocatorType>, std::equal_to<>, NoTrackingAllocator<std::pair<const AllocatorType, DataPointStorage>>>;
-        using MemoryRegionStorageMap = std::unordered_map<MemoryRegion, DataPointStorage, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingAllocator<std::pair<const MemoryRegion, DataPointStorage>>>;
-        using ThreadStorageMap = std::unordered_map<size_t, DataPointStorage, std::hash<size_t>, std::equal_to<>, NoTrackingAllocator<std::pair<const size_t, DataPointStorage>>>;
+        using AllocatorTypeStorageMap = std::unordered_map<AllocatorType, DataPointStorage, std::hash<AllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const AllocatorType, DataPointStorage>>>;
+        using MemoryRegionStorageMap = std::unordered_map<MemoryRegion, DataPointStorage, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryRegion, DataPointStorage>>>;
+        using ThreadStorageMap = std::unordered_map<size_t, DataPointStorage, std::hash<size_t>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const size_t, DataPointStorage>>>;
 
         size_t m_NumberOfSnapshotsStored;
         size_t m_ExpectedSnapshotCount;

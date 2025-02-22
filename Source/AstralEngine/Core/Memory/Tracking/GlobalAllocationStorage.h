@@ -6,7 +6,7 @@
 #pragma once
 
 #include "AllocationData.h"
-#include "Core/Memory/Allocators/NoTrackingAllocator.h"
+#include "Core/Memory/Allocators/NoTrackingSTLAllocator.h"
 #include <unordered_map>
 
 namespace Core {
@@ -48,7 +48,7 @@ namespace Core {
     private:
 
         size_t m_NumberOfEntries{};
-        std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingAllocator<std::pair<const void* const, AllocationData>>> m_Storage;
+        std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const void* const, AllocationData>>> m_Storage;
     };
 
 }

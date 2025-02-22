@@ -24,9 +24,13 @@ void operator delete(void* pointer) noexcept;
 void operator delete[](void* pointer) noexcept;
 
 
+// For malloc/free override
+extern "C"
+{
+    void* malloc(size_t size);
+    void free(void* ptr);
+    void* calloc(size_t num, size_t size);
+    void* realloc(void* ptr, size_t new_size);
+}
 
-// TODO: Write MemoryScopeProfiler that operators like the timer scope profiler
-//      on construction, save the current total memory allocated and total freed memory and total number of allocations.
-//      Then on destruction, mark the same things and measure the difference in data points.
-//      This will show how much memory was allocated and freed and how many allocations occurred.
 
