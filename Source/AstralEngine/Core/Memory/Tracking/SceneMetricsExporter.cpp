@@ -10,6 +10,9 @@
 #include <chrono>
 #include <filesystem>
 #include <iostream>
+#include <cpptrace/cpptrace.hpp>
+
+#include "MemoryTracker.h"
 
 
 namespace Core {
@@ -77,7 +80,12 @@ namespace Core {
             msgpack::pack(GetExportFile(), memoryMetrics);
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
+            Core::MemoryTracker::Get().DisableTracking();
+            msgpack::pack(GetExportFile(), cpptrace::stacktrace::current(3, 12).to_string());
+            Core::MemoryTracker::Get().EnableTracking();
+
         }
+
     }
 
 

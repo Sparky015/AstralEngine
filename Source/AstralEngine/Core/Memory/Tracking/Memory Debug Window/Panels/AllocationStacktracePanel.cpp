@@ -14,13 +14,13 @@ namespace Core {
     {
         ImGui::Begin("Allocation Stacktrace");
 
-        if (&dataPointAddress == nullptr)
+        if (dataPointAddress == std::numeric_limits<size_t>::max())
         {
             ImGui::Text("No Data Point Selected");
         }
         else
         {
-            ImGui::Text("Stacktrace Here");
+            ImGui::Text("%s", storage.GetStacktraceStorage()[dataPointAddress].c_str());
         }
 
         ImGui::End();

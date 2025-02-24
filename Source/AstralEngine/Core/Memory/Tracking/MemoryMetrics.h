@@ -57,19 +57,19 @@ namespace Core {
 
         /**@brief Retrieves the peak allocated bytes over the course of the program
          * @return The peak memory usage of the program */
-        [[nodiscard]] uint64 GetPeakMemoryUsage() const { return m_PeakMemoryUsage; }
+        [[nodiscard]] size_t GetPeakMemoryUsage() const { return m_PeakMemoryUsage; }
 
         /**@brief Retrieves the total allocated bytes over the course of the program
          * @return The total memory usage of the program */
-        [[nodiscard]] uint64 GetTotalMemoryUsage() const { return m_TotalMemoryUsage; }
+        [[nodiscard]] size_t GetTotalMemoryUsage() const { return m_TotalMemoryUsage; }
 
         /**@brief Retrieves the current active allocations (Number of allocations that were allocated but not freed yet)
          * @return The current active allocation count */
-        [[nodiscard]] uint64 GetTotalActiveAllocations() const { return m_TotalActiveAllocations; }
+        [[nodiscard]] size_t GetTotalActiveAllocations() const { return m_TotalActiveAllocations; }
 
         /**@brief Retrieves the current total allocations made
             * @return The current total allocation count */
-        [[nodiscard]] uint64 GetTotalAllocations() const { return m_TotalAllocations; }
+        [[nodiscard]] size_t GetTotalAllocations() const { return m_TotalAllocations; }
 
         /**@brief Retrieves memory usage metrics for the current frame
          * @return The memory usage metrics of the current frame */

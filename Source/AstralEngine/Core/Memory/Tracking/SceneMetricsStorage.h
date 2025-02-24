@@ -36,7 +36,7 @@ namespace Core {
         };
 
         void InitializeStorage(size_t numberOfSnapshots);
-        void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot, size_t allocationTime, const AllocationDataSerializeable& allocationData);
+        void AppendSnapshot(const MemoryMetrics& memoryMetricsSnapshot, size_t allocationTime, const AllocationDataSerializeable& allocationData, const std::string& stacktrace);
 
 
         [[nodiscard]] const DataPointStorage& GetGlobalMemoryUsageOverTime() const { return m_TotalMemoryUsageOverTime; }
@@ -78,6 +78,9 @@ namespace Core {
 
         [[nodiscard]] const std::vector<AllocationDataSerializeable>& GetAllocationDataOverTime() const { return m_AllocationDataStorage; }
 
+        [[nodiscard]] const std::vector<std::string>& GetStacktraceStorage() const { return m_Stacktraces; }
+
+
         [[nodiscard]] size_t GetSnapshotCount() const { return m_NumberOfSnapshotsStored; }
         [[nodiscard]] size_t GetExpectedSnapshotCount() const { return m_ExpectedSnapshotCount; }
 
@@ -111,6 +114,8 @@ namespace Core {
         std::vector<FrameAllocationData> m_FrameAllocationDataStorageOverTime;
 
         std::vector<AllocationDataSerializeable> m_AllocationDataStorage;
+
+        std::vector<std::string> m_Stacktraces;
 
         DataPointStorage m_AllocationTimes;
 

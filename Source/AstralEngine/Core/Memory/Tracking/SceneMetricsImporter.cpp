@@ -115,6 +115,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
         MemoryMetrics tempMemoryMetrics;
         AllocationDataSerializeable allocationData;
         float allocationTime = 0.0f;
+        std::string stacktrace;
         for (size_t i = 0; i < m_SceneMetricsStorage.GetExpectedSnapshotCount(); i++)
         {
             PROFILE_SCOPE("Looping through snapshots")
@@ -130,7 +131,10 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
                 unpacker.next(objectHandle);
                 allocationData = objectHandle.get().as<AllocationDataSerializeable>();
 
-                m_SceneMetricsStorage.AppendSnapshot(tempMemoryMetrics, allocationTime, allocationData);
+                unpacker.next(objectHandle);
+                stacktrace = objectHandle.get().as<std::string>();
+
+                m_SceneMetricsStorage.AppendSnapshot(tempMemoryMetrics, allocationTime, allocationData, stacktrace);
 
             }
             catch (std::bad_cast&)

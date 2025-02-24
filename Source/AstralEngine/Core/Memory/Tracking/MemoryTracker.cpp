@@ -12,6 +12,7 @@ namespace Core {
 
     void MemoryTracker::Init()
     {
+        m_IsTrackingEnabled = true;
         m_MemoryMetrics.Init();
         m_SceneMetricsExporter.InitExportFile();
     }
@@ -48,6 +49,8 @@ namespace Core {
     void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
     {
         std::lock_guard lock(m_Mutex);
+
+        if (!m_IsTrackingEnabled) { return; }
 
         const AllocationData allocationData = {pointer, size, region, allocatorType, std::this_thread::get_id()};
         m_GlobalAllocationStorage.AddPointer(allocationData);

@@ -33,6 +33,7 @@ namespace Core {
         m_FrameAllocationDataStorageOverTime.reserve(m_ExpectedSnapshotCount);
         m_AllocationTimes.reserve(m_ExpectedSnapshotCount);
         m_AllocationDataStorage.reserve(m_ExpectedSnapshotCount);
+        m_Stacktraces.reserve(m_ExpectedSnapshotCount);
 
         // TODO Change this to reserving space for the vector buffer and not map buffer
         // m_MemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);
@@ -52,7 +53,7 @@ namespace Core {
     }
 
 
-    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const size_t allocationTime, const AllocationDataSerializeable& allocationData) // MemoryMetric snapshot
+    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const size_t allocationTime, const AllocationDataSerializeable& allocationData, const std::string& stacktrace) // MemoryMetric snapshot
     {
         m_PeakMemoryUsageOverTime.push_back(mmss.GetPeakMemoryUsage());
         m_TotalMemoryUsageOverTime.push_back(mmss.GetTotalMemoryUsage());
@@ -189,6 +190,8 @@ namespace Core {
 
         m_AllocationDataStorage.push_back(allocationData);
 
+        m_Stacktraces.push_back(stacktrace);
+
         m_NumberOfSnapshotsStored++;
     }
 
@@ -218,8 +221,10 @@ namespace Core {
         m_ActiveAllocationsByThreadOverTime.clear();
         m_TotalAllocationsByThreadOverTime.clear();
 
-        m_FrameAllocationDataStorageOverTime.back();
+        m_FrameAllocationDataStorageOverTime.clear();
 
         m_AllocationTimes.clear();
+        m_AllocationDataStorage.clear();
+        m_Stacktraces.clear();
     }
 }

@@ -39,7 +39,6 @@ Engine::Engine() :
 
     m_WindowClosedListener.StartListening();
     Core::MemoryTracker::Get().EndScene();
-
 }
 
 

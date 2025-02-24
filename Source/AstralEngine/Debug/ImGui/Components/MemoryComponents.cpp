@@ -68,21 +68,21 @@ namespace Debug {
     void GlobalTotalAllocationsMade()
     {
         const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
-        ImGui::Text("Total Allocations Made: %llu", memoryMetrics.GetTotalAllocations());
+        ImGui::Text("Total Allocations Made: %zu", memoryMetrics.GetTotalAllocations());
     }
 
 
     void GlobalActiveAllocations()
     {
         const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
-        ImGui::Text("Active Allocations: %llu", memoryMetrics.GetTotalActiveAllocations());
+        ImGui::Text("Active Allocations: %zu", memoryMetrics.GetTotalActiveAllocations());
     }
 
 
     void AllocationsInCurrentFrame()
     {
         const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
-        ImGui::Text("Allocations in current frame: %llu", frameAllocationData.NumberOfAllocations);
+        ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
     }
 
 
@@ -124,7 +124,7 @@ namespace Debug {
         {
             for (auto [allocatorType, count] : memoryMetrics.GetTotalAllocationsByAllocatorIterable())
             {
-                ImGui::Text("%s: %d", Core::AllocatorTypeToString(allocatorType), count);
+                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
             }
             ImGui::TreePop();
         }
@@ -139,7 +139,7 @@ namespace Debug {
         {
             for (auto [allocatorType, count] : memoryMetrics.GetActiveAllocationsByAllocatorIterable())
             {
-                ImGui::Text("%s: %d", Core::AllocatorTypeToString(allocatorType), count);
+                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
             }
             ImGui::TreePop();
         }
@@ -184,7 +184,7 @@ namespace Debug {
         {
             for (auto [region, count] : memoryMetrics.GetTotalAllocationsByRegionIterable())
             {
-                ImGui::Text("%s: %llu", Core::MemoryRegionToString(region), count);
+                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
             }
             ImGui::TreePop();
         }
@@ -199,7 +199,7 @@ namespace Debug {
         {
             for (auto [region, count] : memoryMetrics.GetActiveAllocationsByRegionIterable())
             {
-                ImGui::Text("%s: %llu", Core::MemoryRegionToString(region), count);
+                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
             }
             ImGui::TreePop();
         }
@@ -221,7 +221,7 @@ namespace Debug {
                 }
                 else
                 {
-                    ImGui::Text("%llu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                    ImGui::Text("%zu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
                 }
             }
 
@@ -245,7 +245,7 @@ namespace Debug {
                 }
                 else
                 {
-                    ImGui::Text("%llu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                    ImGui::Text("%zu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
                 }
             }
 
@@ -265,11 +265,11 @@ namespace Debug {
             {
                 if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
                 {
-                    ImGui::Text("Main Thread: %llu", count);
+                    ImGui::Text("Main Thread: %zu", count);
                 }
                 else
                 {
-                    ImGui::Text("%llu: %llu", threadIDHash, count);
+                    ImGui::Text("%zu: %zu", threadIDHash, count);
                 }
             }
             ImGui::TreePop();
@@ -288,11 +288,11 @@ namespace Debug {
             {
                 if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
                 {
-                    ImGui::Text("Main Thread: %llu", count);
+                    ImGui::Text("Main Thread: %zu", count);
                 }
                 else
                 {
-                    ImGui::Text("%llu: %llu", threadIDHash, count);
+                    ImGui::Text("%zu: %zu", threadIDHash, count);
                 }
             }
 

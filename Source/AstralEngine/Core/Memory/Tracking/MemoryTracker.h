@@ -55,6 +55,11 @@ namespace Core {
          * @param pointer The pointer to the allocated block being freed */
         void RemoveAllocation(void* pointer);
 
+        void EnableTracking() { m_IsTrackingEnabled = true; }
+
+        void DisableTracking() { m_IsTrackingEnabled = false; }
+
+
         /**@brief Gets the memory metrics of the engine
          * @return The memory metrics of the engine */
         [[nodiscard]] constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
@@ -74,6 +79,8 @@ namespace Core {
         GlobalAllocationStorage m_GlobalAllocationStorage;
         SceneMetricsExporter m_SceneMetricsExporter;
         MemoryMetrics m_MemoryMetrics;
+
+        bool m_IsTrackingEnabled;
     };
 
 }

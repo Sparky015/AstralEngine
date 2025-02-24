@@ -188,12 +188,6 @@ add_library(AstralEngine
         "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
         Core/Memory/Allocators/NoTrackingMalloc.h
 
-        #        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.h
-#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot.cpp
-#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_internal.h
-#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_items.cpp
-#        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImPlot/implot_demo.cpp
-
 )
 
 
@@ -208,6 +202,7 @@ endif ()
 
 
 
+
 # Linking Libraries
 target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)
@@ -216,6 +211,9 @@ target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
 target_link_libraries(AstralEngine PRIVATE ImPlot)
+target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
+target_compile_definitions(AstralEngine PUBLIC -DCPPTRACE_STATIC_DEFINE)
+
 
 if (APPLE)
     target_link_libraries(AstralEngine PRIVATE -lc++)
@@ -229,6 +227,7 @@ add_dependencies(AstralEngine
         cpuinfo
         msgpack-cxx
         ImPlot
+        cpptrace::cpptrace
 )
 
 if (APPLE)
@@ -249,8 +248,10 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/stb_image")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImFileDialog/")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
+
 
 
 # Precompiled Header
