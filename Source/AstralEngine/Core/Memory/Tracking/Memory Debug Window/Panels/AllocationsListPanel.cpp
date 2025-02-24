@@ -33,12 +33,8 @@ namespace Core {
 
         ImGui::Text("Snapshot Count: %zu", storage.GetSnapshotCount());
 
-        // if (ImGui::BeginListBox("##", ImGui::GetContentRegionAvail()))
-        // {
-            ImGui::PushItemWidth(-1);
-            ImGui::ListBox("##", &item_current, AllocationDataArrayGetter, (void*)allocationData.data(), allocationData.size(), 30);
-        //     ImGui::EndListBox();
-        // }
+        ImGui::PushItemWidth(-1);
+        ImGui::ListBox("##List of Allocations", &item_current, AllocationDataArrayGetter, (void*)allocationData.data(), allocationData.size(), 30);
 
         ImGui::End();
 
