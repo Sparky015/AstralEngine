@@ -11,6 +11,7 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
+#include "Panels/AllocationsListPanel.h"
 #include "Panels/AllocationStacktracePanel.h"
 #include "Panels/DataPointInfoPanel.h"
 #include "Panels/GraphSelectorPanel.h"
@@ -69,9 +70,9 @@ namespace Core {
                 {
                     // Settings tab content
                     MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-                    size_t* selectedDataPoint = GetSelectedDataPointAddress();
+                    size_t selectedDataPoint = AllocationsListPanel(m_SceneMetricsImporter.GetSceneMetrics());
 
-                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), graphSelection);
+                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), MemoryMetricsDataScope::GLOBAL, graphSelection, selectedDataPoint);
                     ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
                     AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
 
@@ -80,21 +81,36 @@ namespace Core {
 
                 if (ImGui::BeginTabItem("Allocator"))
                 {
-                    // Tab 1 content goes here
-                    ImGui::Text("This is tab 1");
+                    MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                    size_t selectedDataPoint = AllocationsListPanel(m_SceneMetricsImporter.GetSceneMetrics());
+
+                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), MemoryMetricsDataScope::ALLOCATOR, graphSelection, selectedDataPoint);
+                    ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                    AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
 
                     ImGui::EndTabItem();
                 }
 
                 if (ImGui::BeginTabItem("Region"))
                 {
+                    MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                    size_t selectedDataPoint = AllocationsListPanel(m_SceneMetricsImporter.GetSceneMetrics());
 
+                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), MemoryMetricsDataScope::REGION, graphSelection, selectedDataPoint);
+                    ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                    AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
 
                     ImGui::EndTabItem();
                 }
 
                 if (ImGui::BeginTabItem("Thread"))
                 {
+                    MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
+                    size_t selectedDataPoint = AllocationsListPanel(m_SceneMetricsImporter.GetSceneMetrics());
+
+                    ShowMemoryGraphPanel(m_SceneMetricsImporter.GetSceneMetrics(), MemoryMetricsDataScope::THREAD, graphSelection, selectedDataPoint);
+                    ShowDataPointInfoPanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
+                    AllocationStackTracePanel(m_SceneMetricsImporter.GetSceneMetrics(), selectedDataPoint);
 
                     ImGui::EndTabItem();
                 }

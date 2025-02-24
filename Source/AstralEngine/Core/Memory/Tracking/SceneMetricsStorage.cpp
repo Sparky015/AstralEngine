@@ -8,7 +8,8 @@
 namespace Core {
 
     SceneMetricsStorage::SceneMetricsStorage() :
-        m_NumberOfSnapshotsStored(0)
+        m_NumberOfSnapshotsStored(0),
+        m_ExpectedSnapshotCount(0)
     {
 
     }
@@ -31,6 +32,7 @@ namespace Core {
 
         m_FrameAllocationDataStorageOverTime.reserve(m_ExpectedSnapshotCount);
         m_AllocationTimes.reserve(m_ExpectedSnapshotCount);
+        m_AllocationDataStorage.reserve(m_ExpectedSnapshotCount);
 
         // TODO Change this to reserving space for the vector buffer and not map buffer
         // m_MemoryUsageByAllocator.reserve(m_NumberOfSnapshotsStored);
@@ -50,10 +52,8 @@ namespace Core {
     }
 
 
-    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const size_t allocationTime) // MemoryMetric snapshot
+    void SceneMetricsStorage::AppendSnapshot(const MemoryMetrics& mmss, const size_t allocationTime, const AllocationDataSerializeable& allocationData) // MemoryMetric snapshot
     {
-        m_NumberOfSnapshotsStored++;
-
         m_PeakMemoryUsageOverTime.push_back(mmss.GetPeakMemoryUsage());
         m_TotalMemoryUsageOverTime.push_back(mmss.GetTotalMemoryUsage());
         m_TotalActiveAllocationsOverTime.push_back(mmss.GetTotalActiveAllocations());
@@ -62,21 +62,41 @@ namespace Core {
 
         for (auto [allocatorType, value] : mmss.GetMemoryUsageByAllocatorIterable())
         {
+            if (!m_MemoryUsageByAllocatorOverTime.contains(allocatorType))
+            {
+                m_MemoryUsageByAllocatorOverTime[allocatorType].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_MemoryUsageByAllocatorOverTime[allocatorType].push_back(value);
         }
 
         for (auto [allocatorType, value] : mmss.GetPeakMemoryUsageByAllocatorIterable())
         {
+            if (!m_PeakMemoryUsageByAllocatorOverTime.contains(allocatorType))
+            {
+                m_PeakMemoryUsageByAllocatorOverTime[allocatorType].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_PeakMemoryUsageByAllocatorOverTime[allocatorType].push_back(value);
         }
 
         for (auto [allocatorType, value] : mmss.GetActiveAllocationsByAllocatorIterable())
         {
+            if (!m_ActiveAllocationsByAllocatorOverTime.contains(allocatorType))
+            {
+                m_ActiveAllocationsByAllocatorOverTime[allocatorType].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_ActiveAllocationsByAllocatorOverTime[allocatorType].push_back(value);
         }
 
         for (auto [allocatorType, value] : mmss.GetTotalAllocationsByAllocatorIterable())
         {
+            if (!m_TotalAllocationsByAllocatorOverTime.contains(allocatorType))
+            {
+                m_TotalAllocationsByAllocatorOverTime[allocatorType].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_TotalAllocationsByAllocatorOverTime[allocatorType].push_back(value);
         }
 
@@ -84,49 +104,92 @@ namespace Core {
 
         for (auto [region, value] : mmss.GetMemoryUsageByRegionIterable())
         {
+            if (!m_MemoryUsageByRegionOverTime.contains(region))
+            {
+                m_MemoryUsageByRegionOverTime[region].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_MemoryUsageByRegionOverTime[region].push_back(value);
         }
 
         for (auto [region, value] : mmss.GetPeakMemoryUsageByRegionIterable())
         {
+            if (!m_PeakMemoryUsageByRegionOverTime.contains(region))
+            {
+                m_PeakMemoryUsageByRegionOverTime[region].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_PeakMemoryUsageByRegionOverTime[region].push_back(value);
         }
 
         for (auto [region, value] : mmss.GetActiveAllocationsByRegionIterable())
         {
+            if (!m_ActiveAllocationsByRegionOverTime.contains(region))
+            {
+                m_ActiveAllocationsByRegionOverTime[region].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_ActiveAllocationsByRegionOverTime[region].push_back(value);
         }
 
         for (auto [region, value] : mmss.GetTotalAllocationsByRegionIterable())
         {
+            if (!m_TotalAllocationsByRegionOverTime.contains(region))
+            {
+                m_TotalAllocationsByRegionOverTime[region].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_TotalAllocationsByRegionOverTime[region].push_back(value);
         }
 
 
-
         for (auto [threadId, value] : mmss.GetMemoryUsageByThreadIterable())
         {
+            if (!m_MemoryUsageByThreadOverTime.contains(threadId))
+            {
+                m_MemoryUsageByThreadOverTime[threadId].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_MemoryUsageByThreadOverTime[threadId].push_back(value);
         }
 
         for (auto [threadId, value] : mmss.GetPeakMemoryUsageByThreadIterable())
         {
+            if (!m_PeakMemoryUsageByThreadOverTime.contains(threadId))
+            {
+                m_PeakMemoryUsageByThreadOverTime[threadId].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_PeakMemoryUsageByThreadOverTime[threadId].push_back(value);
         }
 
         for (auto [threadId, value] : mmss.GetActiveAllocationsByThreadIterable())
         {
+            if (!m_ActiveAllocationsByThreadOverTime.contains(threadId))
+            {
+                m_ActiveAllocationsByThreadOverTime[threadId].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_ActiveAllocationsByThreadOverTime[threadId].push_back(value);
         }
 
         for (auto [threadId, value] : mmss.GetTotalAllocationsByThreadIterable())
         {
+            if (!m_TotalAllocationsByThreadOverTime.contains(threadId))
+            {
+                m_TotalAllocationsByThreadOverTime[threadId].resize(m_NumberOfSnapshotsStored);
+            }
+
             m_TotalAllocationsByThreadOverTime[threadId].push_back(value);
         }
 
         m_FrameAllocationDataStorageOverTime.push_back(mmss.GetFrameAllocationData());
 
         m_AllocationTimes.push_back(allocationTime);
+
+        m_AllocationDataStorage.push_back(allocationData);
+
+        m_NumberOfSnapshotsStored++;
     }
 
 

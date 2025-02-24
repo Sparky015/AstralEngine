@@ -168,6 +168,7 @@ namespace Core {
     public:
         MSGPACK_DEFINE(m_PeakMemoryUsage, m_TotalMemoryUsage, m_TotalActiveAllocations, m_TotalAllocations,
                        m_MemoryUsageByAllocator, m_MemoryUsageByRegion, m_MemoryUsageByThread,
+                       m_PeakMemoryUsageByAllocator, m_PeakMemoryUsageByRegion, m_PeakMemoryUsageByThread,
                        m_ActiveAllocationsByAllocator, m_ActiveAllocationsByRegion, m_ActiveAllocationsByThread,
                        m_TotalAllocationsByAllocator, m_TotalAllocationsByRegion, m_TotalAllocationsByThread,
                        m_FrameAllocationData);

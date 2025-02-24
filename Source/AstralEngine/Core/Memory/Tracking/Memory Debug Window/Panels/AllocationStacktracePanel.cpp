@@ -10,11 +10,11 @@
 
 namespace Core {
 
-    void AllocationStackTracePanel(const SceneMetricsStorage& storage, size_t* dataPointAddress)
+    void AllocationStackTracePanel(const SceneMetricsStorage& storage, size_t dataPointAddress)
     {
         ImGui::Begin("Allocation Stacktrace");
 
-        if (dataPointAddress == nullptr)
+        if (&dataPointAddress == nullptr)
         {
             ImGui::Text("No Data Point Selected");
         }

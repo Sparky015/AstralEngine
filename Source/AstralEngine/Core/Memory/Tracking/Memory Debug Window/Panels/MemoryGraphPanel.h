@@ -12,6 +12,15 @@
 
 namespace Core {
 
-    void ShowMemoryGraphPanel(const SceneMetricsStorage& storage, MemoryGraphSelection graphSelection);
+    enum class MemoryMetricsDataScope : uint8
+    {
+        GLOBAL,
+        ALLOCATOR,
+        REGION,
+        THREAD
+    };
+
+    void ShowMemoryGraphPanel(const SceneMetricsStorage& storage, MemoryMetricsDataScope metricsType, MemoryGraphSelection graphSelection, size_t
+                              selectedDataPointIndex);
 
 }

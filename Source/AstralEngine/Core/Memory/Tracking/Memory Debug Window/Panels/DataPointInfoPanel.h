@@ -14,6 +14,6 @@ namespace Core {
     size_t* GetSelectedDataPointAddress();
 
     /**@brief  */
-    void ShowDataPointInfoPanel(const SceneMetricsStorage& storage, size_t* selectedPointAddress);
+    void ShowDataPointInfoPanel(const SceneMetricsStorage& storage, size_t selectedPointIndex);
 
 }

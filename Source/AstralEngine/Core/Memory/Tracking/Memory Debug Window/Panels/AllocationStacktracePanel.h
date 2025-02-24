@@ -10,6 +10,6 @@
 
 namespace Core {
 
-    void AllocationStackTracePanel(const SceneMetricsStorage& storage, size_t* dataPointAddress);
+    void AllocationStackTracePanel(const SceneMetricsStorage& storage, size_t dataPointAddress);
 
 }

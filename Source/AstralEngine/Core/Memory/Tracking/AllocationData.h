@@ -89,6 +89,18 @@ namespace Core {
         std::thread::id threadID;
     };
 
+    struct AllocationDataSerializeable
+    {
+        uintptr_t pointer;
+        size_t size;
+        MemoryRegion region;
+        AllocatorType allocatorType;
+        size_t threadIDHash;
+
+        MSGPACK_DEFINE(pointer, size, region, allocatorType, threadIDHash)
+    };
+
+
 
 
 

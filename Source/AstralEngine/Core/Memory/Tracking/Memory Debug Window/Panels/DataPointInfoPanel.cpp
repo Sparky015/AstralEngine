@@ -15,17 +15,23 @@ namespace Core {
         return nullptr;
     }
 
-    void ShowDataPointInfoPanel(const SceneMetricsStorage& storage, size_t* selectedPointAddress)
+    void ShowDataPointInfoPanel(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
         ImGui::Begin("Data Point Info");
 
-        if (selectedPointAddress == nullptr)
+        if (selectedPointIndex == std::numeric_limits<size_t>::max())
         {
             ImGui::Text("No Data Point Selected");
         }
         else
         {
-            ImGui::Text("Point Data Here");
+            ImGui::Text("Allocation Data:");
+            ImGui::Spacing();
+            ImGui::Text("Address: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].pointer);
+            ImGui::Text("Size: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].size);
+            ImGui::Text("Region: %s", MemoryRegionToString(storage.GetAllocationDataOverTime()[selectedPointIndex].region));
+            ImGui::Text("Allocator: %s", AllocatorTypeToString(storage.GetAllocationDataOverTime()[selectedPointIndex].allocatorType));
+            ImGui::Text("Thread ID Hash: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].threadIDHash);
         }
 
         ImGui::End();

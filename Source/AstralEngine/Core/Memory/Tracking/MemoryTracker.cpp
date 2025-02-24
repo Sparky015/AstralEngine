@@ -56,7 +56,7 @@ namespace Core {
 
         if (m_SceneMetricsExporter.IsSceneActive())
         {
-            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics, allocationData);
         }
     }
 
@@ -68,12 +68,13 @@ namespace Core {
         if (!m_GlobalAllocationStorage.IsPointerStored(pointer)) { return; }
         const AllocationData& allocationData = m_GlobalAllocationStorage.GetPointerData(pointer);
         m_MemoryMetrics.TrackDeallocation(allocationData);
-        m_GlobalAllocationStorage.FreePointer(pointer);
 
         if (m_SceneMetricsExporter.IsSceneActive())
         {
-            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics);
+            m_SceneMetricsExporter.RecordMemoryMetrics(m_MemoryMetrics, allocationData);
         }
+
+        m_GlobalAllocationStorage.FreePointer(pointer);
     }
 
 }

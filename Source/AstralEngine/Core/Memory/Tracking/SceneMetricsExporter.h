@@ -42,7 +42,7 @@ namespace Core {
         [[nodiscard]] bool IsExportFileOpen() const { return GetExportFile().is_open(); }
 
         /**@brief Takes the current state of the MemoryMetrics and exports to a file */
-        void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics);
+        void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData);
 
     private:
 

@@ -30,18 +30,6 @@ namespace Core {
 
     private:
 
-        /**@brief Spawns a new ImGui window for the memory debugging info to be shown in. */
-        bool SpawnNewImGuiWindow();
-
-        /**@brief Shows the tabs at the top of the memory debug window that allows the user to select
-         *        how they want the data to be shown by */
-        void UsageBySelectorComponent();
-
-        /**@brief Allows the user to select which category of data to graph (ex. memory usage, active allocations, peak memory usage) */
-        void SelectDataCategoryComponent();
-
-        /**@brief Shows the graph of the data that the user selected. */
-        void ShowSelectedGraphComponent();
 
         void OnRenderImGuiEvent(RenderImGuiEvent e);
 

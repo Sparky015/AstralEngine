@@ -56,7 +56,7 @@ namespace Core {
     }
 
 
-    void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics)
+    void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData)
     {
         if (GetExportFile().fail())
         {
@@ -66,9 +66,17 @@ namespace Core {
 
         if (m_IsSceneActive)
         {
+            AllocationDataSerializeable allocationDataSerializable{};
+            allocationDataSerializable.pointer = (uintptr_t)allocationData.pointer;
+            allocationDataSerializable.region = allocationData.region;
+            allocationDataSerializable.size = allocationData.size;
+            allocationDataSerializable.allocatorType = allocationData.allocatorType;
+            allocationDataSerializable.threadIDHash = memoryMetrics.GetThreadIDHash(allocationData.threadID);
+
             m_NumberOfSnapshots++;
             msgpack::pack(GetExportFile(), memoryMetrics);
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
+            msgpack::pack(GetExportFile(), allocationDataSerializable);
         }
     }
 

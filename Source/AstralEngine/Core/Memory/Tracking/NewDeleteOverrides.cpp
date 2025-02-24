@@ -56,7 +56,8 @@ extern "C"
 
     void free(void* ptr)
     {
-        if (ptr) {
+        if (ptr)
+        {
             Core::MemoryTracker::Get().RemoveAllocation(ptr);
             ASTRAL_NO_TRACKING_FREE(ptr);
         }
@@ -75,7 +76,8 @@ extern "C"
     void* realloc(void* ptr, size_t new_size)
     {
         static auto real_realloc = (void*(*)(void*, size_t))dlsym(RTLD_NEXT, "realloc");
-        if (ptr) {
+        if (ptr)
+        {
             Core::MemoryTracker::Get().RemoveAllocation(ptr);
         }
         void* new_ptr = real_realloc(ptr, new_size);
