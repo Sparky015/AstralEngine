@@ -6,19 +6,28 @@
 
 #pragma once
 
+#ifdef ASTRAL_PLATFORM_WINDOWS
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 
 namespace Astral {
 
     inline void* RawMalloc(size_t size)
     {
-        static auto rawMalloc = (void*(*)(size_t))dlsym(RTLD_NEXT, "malloc");
+        #ifdef ASTRAL_PLATFORM_MACOS
+            static auto rawMalloc = (void*(*)(size_t))dlsym(RTLD_NEXT, "malloc");
+        #endif
+
         return rawMalloc(size);
     }
 
     inline void RawFree(void* ptr)
     {
-        static auto rawFree = (void(*)(void*))dlsym(RTLD_NEXT, "free");
+        #ifdef ASTRAL_PLATFORM_MACOS
+            static auto rawFree = (void(*)(void*))dlsym(RTLD_NEXT, "free");
+        #endif
         rawFree(ptr);
     }
 
