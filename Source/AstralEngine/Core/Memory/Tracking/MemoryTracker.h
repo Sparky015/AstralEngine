@@ -71,7 +71,7 @@ namespace Core {
         MemoryTracker& operator=(MemoryTracker&&) = delete;
 
     private:
-        MemoryTracker() = default;
+        MemoryTracker();
         ~MemoryTracker() = default;
 
         mutable std::recursive_mutex m_Mutex;
@@ -82,5 +82,6 @@ namespace Core {
 
         bool m_IsTrackingEnabled;
     };
+
 
 }

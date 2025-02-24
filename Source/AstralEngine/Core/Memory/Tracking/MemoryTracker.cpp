@@ -80,4 +80,10 @@ namespace Core {
         m_GlobalAllocationStorage.FreePointer(pointer);
     }
 
+
+    MemoryTracker::MemoryTracker() :
+        m_IsTrackingEnabled(true)
+    {
+    }
+
 }
