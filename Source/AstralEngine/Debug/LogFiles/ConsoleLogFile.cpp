@@ -27,7 +27,7 @@ namespace Debug {
         std::stringstream filePathStream;
 
         /** Root folder name for all the console logs. */
-        const std::string rootFolder = std::string(ROOT_DIR) + "/Logs";
+        const std::string rootFolder = std::string(ROOT_DIR) + "Logs";
         filePathStream << rootFolder << '/';
 
         /** create_directories will fail most of the time because the folders have already been made most of the time. */
@@ -52,7 +52,7 @@ namespace Debug {
         /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
         filePathStream << hrMinSecTextFileNameStream.view() << ".txt";
 
-        GetFileStream().open(filePathStream.view(), std::ios::out);
+        GetFileStream().open(filePathStream.str(), std::ios::out);
         if (GetFileStream().fail())
         {
             WARN("Console log file failed to open!");

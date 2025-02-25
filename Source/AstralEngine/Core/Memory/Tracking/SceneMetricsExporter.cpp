@@ -35,7 +35,7 @@ namespace Core {
         [[unlikely]] if (m_IsSceneActive)
         {
             CloseExportFile();
-            ERROR("Can't begin a new scene when a scene is already active!")
+            ASTRAL_ERROR("Can't begin a new scene when a scene is already active!")
         }
         OpenExportFile(sceneName);
         m_IsSceneActive = true;

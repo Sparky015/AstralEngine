@@ -31,7 +31,7 @@ namespace Core {
                 case MemoryGraphSelection::TOTAL_ALLOCATION_GRAPH:
                     GlobalTotalAllocationGraph(storage, selectedDataPointIndex);
                     break;
-                default: ERROR("MemoryGraphPanel: Invalid graph selection!");
+                default: ASTRAL_ERROR("MemoryGraphPanel: Invalid graph selection!");
             }
         }
         else if (metricsType == MemoryMetricsDataScope::ALLOCATOR)
@@ -50,7 +50,7 @@ namespace Core {
                 case MemoryGraphSelection::TOTAL_ALLOCATION_GRAPH:
                     AllocatorTotalAllocationsUsageGraph(storage, selectedDataPointIndex);
                     break;
-                default: ERROR("MemoryGraphPanel: Invalid graph selection!");
+                default: ASTRAL_ERROR("MemoryGraphPanel: Invalid graph selection!");
             }
         }
         else if (metricsType == MemoryMetricsDataScope::REGION)
@@ -69,7 +69,7 @@ namespace Core {
                 case MemoryGraphSelection::TOTAL_ALLOCATION_GRAPH:
                     RegionTotalAllocationsUsageGraph(storage, selectedDataPointIndex);
                     break;
-                default: ERROR("MemoryGraphPanel: Invalid graph selection!");
+                default: ASTRAL_ERROR("MemoryGraphPanel: Invalid graph selection!");
             }
         }
         else if (metricsType == MemoryMetricsDataScope::THREAD)
@@ -88,7 +88,7 @@ namespace Core {
                 case MemoryGraphSelection::TOTAL_ALLOCATION_GRAPH:
                     ThreadTotalAllocationsUsageGraph(storage, selectedDataPointIndex);
                     break;
-                default: ERROR("MemoryGraphPanel: Invalid graph selection!");
+                default: ASTRAL_ERROR("MemoryGraphPanel: Invalid graph selection!");
             }
         }
 

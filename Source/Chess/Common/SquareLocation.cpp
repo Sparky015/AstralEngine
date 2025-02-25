@@ -22,7 +22,7 @@ std::string SquareLocation::GetChessNotation() const
         case 6: columnLetter = 'F'; break;
         case 7: columnLetter = 'G'; break;
         case 8: columnLetter = 'H'; break;
-        default: ERROR("Invalid Switch Statement Input");
+        default: ASTRAL_ERROR("Invalid Switch Statement Input");
     }
 
     return columnLetter + std::to_string(row);

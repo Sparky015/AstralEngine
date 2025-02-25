@@ -103,7 +103,7 @@ namespace Game {
                 case PIECE_14: return m_BlackPiece14;
                 case PIECE_15: return m_BlackPiece15;
                 case PIECE_16: return m_BlackPiece16;
-                default: ERROR("Invalid PieceID");
+                default: ASTRAL_ERROR("Invalid PieceID");
             }
         }
         else
@@ -126,7 +126,7 @@ namespace Game {
                 case PIECE_14: return m_WhitePiece14;
                 case PIECE_15: return m_WhitePiece15;
                 case PIECE_16: return m_WhitePiece16;
-                default: ERROR("Invalid PieceID");
+                default: ASTRAL_ERROR("Invalid PieceID");
             }
         }
     }
@@ -155,7 +155,7 @@ namespace Game {
                 case PIECE_14: return m_BlackPiece14;
                 case PIECE_15: return m_BlackPiece15;
                 case PIECE_16: return m_BlackPiece16;
-                default: ERROR("Invalid PieceID");
+                default: ASTRAL_ERROR("Invalid PieceID");
             }
         }
         else
@@ -178,7 +178,7 @@ namespace Game {
                 case PIECE_14: return m_WhitePiece14;
                 case PIECE_15: return m_WhitePiece15;
                 case PIECE_16: return m_WhitePiece16;
-                default: ERROR("Invalid PieceID");
+                default: ASTRAL_ERROR("Invalid PieceID");
             }
         }
     }

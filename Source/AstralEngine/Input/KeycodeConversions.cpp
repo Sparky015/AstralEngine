@@ -138,7 +138,7 @@ namespace Input {
             case GLFW_KEY_F23:                     return KEY_F23;
             case GLFW_KEY_F24:                     return KEY_F24;
             case -1:                               return KEY_NONE;    // GLFW defaults to -1 when the key is unrecognized
-            default:                               ERROR("Invalid Keycode!");
+            default:                               ASTRAL_ERROR("Invalid Keycode!");
 
         }
     }

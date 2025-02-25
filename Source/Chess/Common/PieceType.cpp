@@ -23,7 +23,7 @@ std::string_view PieceType::ToStringView() const
         case ROOK: return "Rook";
         case QUEEN: return "Queen";
         case KING: return "King";
-        default: ERROR("Invalid Type: " << this->GetRawValue());
+        default: ASTRAL_ERROR("Invalid Type: " << this->GetRawValue());
     }
 }
 
@@ -39,7 +39,7 @@ char PieceType::ToCharacterSymbol() const
         case ROOK: return 'r';
         case QUEEN: return 'q';
         case KING: return 'k';
-        default: ERROR("Invalid Type: " << this->GetRawValue());
+        default: ASTRAL_ERROR("Invalid Type: " << this->GetRawValue());
     }
 }
 
@@ -56,6 +56,6 @@ PieceType PieceType::CreateFromCharacter(char symbol)
         case 'n': return KNIGHT;
         case 'k': return KING;
         case 'q': return QUEEN;
-        default: ERROR("Invalid Character: " << symbol);
+        default: ASTRAL_ERROR("Invalid Character: " << symbol);
     }
 }
