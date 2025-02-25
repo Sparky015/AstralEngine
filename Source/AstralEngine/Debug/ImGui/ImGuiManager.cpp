@@ -44,6 +44,7 @@ namespace Debug {
 
         InitImGui();
         cpuinfo_initialize();
+        ImGui::LoadIniSettingsFromDisk("imgui.ini");
 
         // m_UpdateListener.StartListening();
         m_RenderImGuiListener.StartListening();
