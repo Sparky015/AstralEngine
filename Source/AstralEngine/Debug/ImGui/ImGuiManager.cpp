@@ -9,10 +9,10 @@
 #include "Components/RendererComponents.h"
 #include "Components/SystemInfoComponents.h"
 #include "Components/WindowComponents.h"
-#include "Core/Memory/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
-#include "imgui.h"
+#include "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
 #include "ImPlot/implot.h"
+#include "imgui.h"
 
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
@@ -44,7 +44,10 @@ namespace Debug {
 
         InitImGui();
         cpuinfo_initialize();
-        ImGui::LoadIniSettingsFromDisk("imgui.ini");
+
+        ImGui::GetIO().IniFilename = "imgui-config.ini";
+        ImGui::LoadIniSettingsFromDisk("imgui-config.ini");
+
 
         // m_UpdateListener.StartListening();
         m_RenderImGuiListener.StartListening();

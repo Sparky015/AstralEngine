@@ -7,8 +7,6 @@
 #pragma once
 
 #include <memory>
-#include "Core/Memory/Allocators/NoTrackingMalloc.h"
-
 
 namespace Core {
 
@@ -31,8 +29,7 @@ namespace Core {
          * @throws bad_alloc if std::malloc returns nullptr */
         pointer allocate(size_type n, const void* hint = nullptr)
         {
-            void* ptr = ASTRAL_NO_TRACKING_MALLOC(n * sizeof(T));
-      //      void* ptr = std::malloc(n * sizeof(T));
+            void* ptr = malloc(n * sizeof(T));
             if (!ptr) throw std::bad_alloc();
             return static_cast<pointer>(ptr);
         }
@@ -41,8 +38,7 @@ namespace Core {
         /**@brief Deallocates memory using std::free */
         void deallocate(pointer ptr, size_type n)
         {
-            ASTRAL_NO_TRACKING_FREE(ptr);
-//            std::free(ptr);
+            free(ptr);
         }
 
         // Rebind struct

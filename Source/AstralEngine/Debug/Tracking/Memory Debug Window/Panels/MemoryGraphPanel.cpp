@@ -6,7 +6,7 @@
 
 #include "MemoryGraphPanel.h"
 
-#include "../Components/SceneMetricsGraphComponents.h"
+#include "Debug/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.h"
 
 namespace Core {
 

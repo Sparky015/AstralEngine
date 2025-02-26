@@ -10,7 +10,7 @@
 #include <chrono>
 #include <filesystem>
 #include <iostream>
-#include <cpptrace/cpptrace.hpp>
+#include "cpptrace/include/cpptrace/cpptrace.hpp"
 
 #include "MemoryTracker.h"
 

@@ -6,16 +6,16 @@
 
 #include "MemoryDebugWindow.h"
 
-#include <ImPlot/implot.h>
+#include "ImPlot/implot.h"
 
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
-#include "Panels/AllocationsListPanel.h"
-#include "Panels/AllocationStacktracePanel.h"
-#include "Panels/DataPointInfoPanel.h"
-#include "Panels/GraphSelectorPanel.h"
-#include "Panels/MemoryGraphPanel.h"
+#include "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
+#include "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
+#include "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
+#include "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
+#include "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
 
 namespace Core {
 

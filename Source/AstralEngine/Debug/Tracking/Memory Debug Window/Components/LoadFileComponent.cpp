@@ -9,7 +9,7 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 
-#include "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.h"
+#include "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace Core {

@@ -14,7 +14,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Core/Memory/Tracking/NewDeleteOverrides.h
+        Debug/Tracking/NewDeleteOverrides.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -117,9 +117,9 @@ add_library(AstralEngine
         Debug/ImGui/Components/InputStateComponents.h
         Debug/ImGui/Components/SystemInfoComponents.cpp
         Debug/ImGui/Components/SystemInfoComponents.h
-        Core/Memory/Tracking/MemoryMetrics.cpp
-        Core/Memory/Tracking/MemoryMetrics.h
-        Core/Memory/Tracking/NewDeleteOverrides.cpp
+        Debug/Tracking/MemoryMetrics.cpp
+        Debug/Tracking/MemoryMetrics.h
+        Debug/Tracking/NewDeleteOverrides.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
         Core/Memory/Allocators/NoTrackingSTLAllocator.h
@@ -155,38 +155,37 @@ add_library(AstralEngine
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
 
-        Core/Memory/Tracking/GlobalAllocationStorage.h
-        Core/Memory/Tracking/GlobalAllocationStorage.cpp
-        Core/Memory/Tracking/MemoryTracker.cpp
-        Core/Memory/Tracking/MemoryTracker.h
-        Core/Memory/Tracking/SceneMetricsExporter.cpp
-        Core/Memory/Tracking/SceneMetricsExporter.h
-        Core/Memory/Tracking/SceneMetricsImporter.cpp
-        Core/Memory/Tracking/SceneMetricsImporter.h
-        Core/Memory/Tracking/SceneMetricsStorage.cpp
-        Core/Memory/Tracking/SceneMetricsStorage.h
-        "Core/Memory/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.h"
-        Core/Memory/Tracking/AllocationData.h
-        "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/MemoryDebugWindow.h"
-        "Core/Memory/Tracking/Memory Debug Window/Components/LoadFileComponent.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
+        Debug/Tracking/GlobalAllocationStorage.h
+        Debug/Tracking/GlobalAllocationStorage.cpp
+        Debug/Tracking/MemoryTracker.cpp
+        Debug/Tracking/MemoryTracker.h
+        Debug/Tracking/SceneMetricsExporter.cpp
+        Debug/Tracking/SceneMetricsExporter.h
+        Debug/Tracking/SceneMetricsImporter.cpp
+        Debug/Tracking/SceneMetricsImporter.h
+        Debug/Tracking/SceneMetricsStorage.cpp
+        Debug/Tracking/SceneMetricsStorage.h
+        "Debug/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.cpp"
+        "Debug/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.h"
+        Debug/Tracking/AllocationData.h
+        "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.cpp"
+        "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.h"
+        "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.cpp"
+        "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
 
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
         ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
-        "Core/Memory/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
-        Core/Memory/Tracking/MemoryMetricsSnapshot.h
-        "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationsListPanel.cpp"
-        "Core/Memory/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
-        Core/Memory/Allocators/NoTrackingMalloc.h
+        "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.cpp"
+        "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
+        "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.cpp"
+        "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
+        "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.cpp"
+        "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
+        "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.cpp"
+        "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
+        Debug/Tracking/MemoryMetricsSnapshot.h
+        "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.cpp"
+        "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
 
 )
 
@@ -213,7 +212,6 @@ target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
 target_link_libraries(AstralEngine PRIVATE ImPlot)
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
 target_compile_definitions(AstralEngine PUBLIC -DCPPTRACE_STATIC_DEFINE)
-
 
 if (APPLE)
     target_link_libraries(AstralEngine PRIVATE -lc++)

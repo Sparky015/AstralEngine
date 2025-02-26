@@ -7,7 +7,7 @@
 #include <imgui.h>
 #include <string_view>
 
-#include "Core/Memory/Tracking/MemoryTracker.h"
+#include "Debug/Tracking/MemoryTracker.h"
 
 namespace Debug {
 
