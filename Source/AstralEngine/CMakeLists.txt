@@ -122,7 +122,7 @@ add_library(AstralEngine
         Debug/Tracking/NewDeleteOverrides.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
-        Core/Memory/Allocators/NoTrackingSTLAllocator.h
+        Debug/Tracking/NoTrackingSTLAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp

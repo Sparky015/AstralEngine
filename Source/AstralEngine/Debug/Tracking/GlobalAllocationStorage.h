@@ -6,7 +6,7 @@
 #pragma once
 
 #include "AllocationData.h"
-#include "Core/Memory/Allocators/NoTrackingSTLAllocator.h"
+#include "NoTrackingSTLAllocator.h"
 #include <unordered_map>
 
 namespace Core {
