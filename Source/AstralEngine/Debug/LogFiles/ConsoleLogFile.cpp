@@ -5,6 +5,9 @@
 #include "ConsoleLogFile.h"
 
 #include <filesystem>
+#include <sstream>
+
+#include "Debug/Macros/Loggers.h"
 
 namespace Debug {
 
@@ -24,7 +27,7 @@ namespace Debug {
         std::stringstream filePathStream;
 
         /** Root folder name for all the console logs. */
-        const std::string rootFolder = std::string(ROOT_DIR) + "/Logs";
+        const std::string rootFolder = std::string(ROOT_DIR) + "Logs";
         filePathStream << rootFolder << '/';
 
         /** create_directories will fail most of the time because the folders have already been made most of the time. */
@@ -33,21 +36,21 @@ namespace Debug {
         /** Creates a folder to subdivide the logs by the month and year */
         std::stringstream monthAndYearFolderNameStream;
         monthAndYearFolderNameStream << currentTime->tm_year + 1900 << "-" << currentTime->tm_mon + 1;
-        filePathStream << monthAndYearFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
+        filePathStream << monthAndYearFolderNameStream.view() << '/';
+        std::filesystem::create_directories(filePathStream.view()); // filePathStream = "ConsoleLog/[Year]-[Month]/"
 
         /** Creates another folder to subdivide the logs by the day in a month */
         std::stringstream dayFolderNameStream;
         dayFolderNameStream << "Day-" << currentTime->tm_mday;
         filePathStream << dayFolderNameStream.str() << '/';
-        std::filesystem::create_directories(filePathStream.str()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
+        std::filesystem::create_directories(filePathStream.view()); // filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/"
 
         /** Name of the text file based on the time it was created. */
         std::stringstream hrMinSecTextFileNameStream;
         hrMinSecTextFileNameStream << currentTime->tm_hour << "-" << currentTime->tm_min << "-" << currentTime->tm_sec << "-Console";
 
         /** filePathStream = "ConsoleLog/[Year]-[Month]/[Day]/[Hour]_[Minute]_[Second].txt" */
-        filePathStream << hrMinSecTextFileNameStream.str() << ".txt";
+        filePathStream << hrMinSecTextFileNameStream.view() << ".txt";
 
         GetFileStream().open(filePathStream.str(), std::ios::out);
         if (GetFileStream().fail())
@@ -70,13 +73,22 @@ namespace Debug {
         logFile.GetFileStream().close();
         if (logFile.GetFileStream().fail())
         {
-            WARN("DebugMacros.cpp: Log file failed to close!");
+            WARN("ConsoleLogFile.cpp: Log file failed to close!");
         }
         else
         {
             m_IsLogFileOpen = false;
         }
 #endif
+    }
+
+    ConsoleLogFile& ConsoleLogFile::operator<<(const std::ostringstream& ostream)
+    {
+        if (m_IsCurrentlyLogging)
+        {
+            GetFileStream() << ostream.str();
+        }
+        return *this;
     }
 
     ConsoleLogFile::ConsoleLogFile()
@@ -88,5 +100,7 @@ namespace Debug {
     {
 
     }
+
+
 
 } // Debug

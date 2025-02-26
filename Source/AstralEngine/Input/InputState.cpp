@@ -143,7 +143,7 @@ std::string InputState::GetKeyName(int keycode)
         case KEY_F22:               return "F22";
         case KEY_F23:               return "F23";
         case KEY_F24:               return "F24";
-        default:                    ERROR("Invalid keycode!");
+        default:                    ASTRAL_ERROR("Invalid keycode!");
     }
 }
 

@@ -4,6 +4,9 @@
 
 #include "WindowManager.h"
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Macros/Loggers.h"
+
 namespace Window{
 
     WindowManager& g_WindowManager = WindowManager::Get();
@@ -35,6 +38,7 @@ namespace Window{
 
     void WindowManager::Init()
     {
+        PROFILE_SCOPE("MemorySceneMetricsImporter")
         TRACE("Initializing Window Manager!")
 
         m_UpdateListener.StartListening();

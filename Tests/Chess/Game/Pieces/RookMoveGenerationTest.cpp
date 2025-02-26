@@ -7,7 +7,7 @@
 #include "../../../../Source/Chess/GameState/ChessPieceTypes.h"
 #include "Chessboard/Chessboard.h"
 #include "MoveGeneration/BoardMoveList.h"
-#include "Utils/ChessConversions.h"
+#include "../../../../Source/Chess/Common/ConversionHelpers.h"
 
 namespace Game {
 

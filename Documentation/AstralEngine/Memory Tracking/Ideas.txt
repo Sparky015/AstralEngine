@@ -1,0 +1,19 @@
+Desires for Memory Tracking
+- tracking allocations by each allocator
+- Tracking allocations by each system
+- Tracking allocations in a scope
+- Tracking current memory usage in a graph
+- Tracking allocations by thread
+- Tracking stack traces and the file and line where each allocation was made
+- tracking allocated pointers
+- Tracking the no tracked allocations separately
+- Tracking the size of each allocation
+- Track memory leaks kinda like how a garbage collector knows when an object should be freed
+- Tracking should be enabled on init and shutdown and toggled during engine loop
+- Track memory leaks for pointers not freed at program exit
+- Use ImGui to enable stack traces or to start recording a profiling
+- export into multiple types -> csv files, yaml files, json files, etc
+    - exporting a csv would allow for graphing with ImGui and Excel
+- Graphs for each data point measuring over time
+
+

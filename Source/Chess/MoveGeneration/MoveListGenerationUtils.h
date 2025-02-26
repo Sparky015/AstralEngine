@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "../GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 #include <cmath>
 
 

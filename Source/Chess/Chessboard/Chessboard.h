@@ -9,7 +9,7 @@
 #include "pch.h"
 
 #include "InternalChessboardData.h"
-#include "GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 
 namespace Game {
 

@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
+#include "Core/CoreMacroDefinitions.h"
+
 namespace Graphics {
 
     enum ShaderDataType

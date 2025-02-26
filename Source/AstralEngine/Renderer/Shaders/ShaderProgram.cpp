@@ -5,6 +5,7 @@
 */
 #include "ShaderProgram.h"
 
+#include "Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "Renderer/RendererAPI.h"
 
@@ -16,10 +17,10 @@ namespace Graphics {
         switch (RendererAPI::GetAPI())
         {
             case API::OpenGL: return new OpenGLShaderProgram(vertexShader, fragmentShader);
-            case API::Vulkan: ERROR("Vulkan is not supported yet!");
-            case API::DirectX12: ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ERROR("Metal is not supported yet!");
-            default: ERROR("Invalid Renderer API");
+            case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
         }
     }
 

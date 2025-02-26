@@ -1,10 +1,12 @@
 
-
-#       ### Google Test ###
 add_subdirectory(googletest-main)
 add_subdirectory(GLFW)
 add_subdirectory(ImGui)
 add_subdirectory(GLAD)
 add_subdirectory(glm)
-add_subdirectory(std_image)
+add_subdirectory(stb_image)
 add_subdirectory(cpuinfo)
+add_subdirectory(msgpack)
+add_subdirectory(ImGuiFileDialog)
+add_subdirectory(ImPlot)
+add_subdirectory(cpptrace)

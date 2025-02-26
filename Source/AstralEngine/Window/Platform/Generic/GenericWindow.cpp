@@ -24,7 +24,7 @@ namespace Window {
         {
             if (!glfwInit())
             {
-                ERROR("GLFW failed to initialize!");
+                ASTRAL_ERROR("GLFW failed to initialize!");
             }
         }
 
@@ -41,7 +41,7 @@ namespace Window {
         if (m_Window == nullptr)
         {
             glfwTerminate();
-            ERROR("GLFW failed to create the window!")
+            ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
         m_RenderContext.reset(Graphics::RendererContext::CreateRendererContext());
