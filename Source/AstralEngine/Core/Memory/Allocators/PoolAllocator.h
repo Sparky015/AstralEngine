@@ -7,7 +7,7 @@
 #pragma once
 
 #include "AllocatorUtils.h"
-#include "Debug/Macros/Asserts.h"
+#include "Debug/Utils/Public/Asserts.h"
 #include <cstring>
 
 namespace Core {

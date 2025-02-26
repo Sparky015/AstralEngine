@@ -5,7 +5,7 @@
 #include "ConsoleColors.h"
 
 #ifdef ASTRAL_PLATFORM_WINDOWS
-    #include <windows.h>
+    #include <Windows.h>
 #endif
 
 namespace Debug::Macros {

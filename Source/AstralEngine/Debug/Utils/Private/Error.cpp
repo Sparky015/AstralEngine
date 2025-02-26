@@ -2,9 +2,9 @@
 // Created by Andrew Fagan on 1/2/25.
 //
 
-#include "Error.h"
+#include "Debug/Utils/Public/Error.h"
 
-#include "../LogFiles/ConsoleLogFile.h"
+#include "Debug/LogFiles/ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
 namespace Debug::Macros {

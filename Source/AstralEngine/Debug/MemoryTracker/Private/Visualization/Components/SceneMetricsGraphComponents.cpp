@@ -5,7 +5,7 @@
 */
 #include "SceneMetricsGraphComponents.h"
 
-#include "Debug/Macros/Asserts.h"
+#include "Debug/Utils/Public/Asserts.h"
 #include "ImPlot/implot.h"
 
 namespace Core {

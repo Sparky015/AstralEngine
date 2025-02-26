@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Debug/Macros/Asserts.h"
+#include "Debug/Utils/Public/Asserts.h"
 #include <memory>
 
 #include "AllocatorUtils.h"

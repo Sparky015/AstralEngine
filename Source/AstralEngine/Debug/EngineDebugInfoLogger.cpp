@@ -4,8 +4,8 @@
 
 #include "EngineDebugInfoLogger.h"
 
-#include "Instrumentation/ScopeProfiler.h"
-#include "Macros/Loggers.h"
+#include "Debug/Instrumentation/Public/ScopeProfiler.h"
+#include "Debug/Utils/Public/Loggers.h"
 #include "Window/WindowManager.h"
 
 namespace Debug {

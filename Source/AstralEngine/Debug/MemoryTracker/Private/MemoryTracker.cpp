@@ -4,9 +4,9 @@
 * @date 2/8/25
 */
 
-#include "MemoryTracker.h"
+#include "Debug/MemoryTracker/Public/MemoryTracker.h"
 
-#include "Debug/Macros/Loggers.h"
+#include "Debug/Utils/Public/Loggers.h"
 
 namespace Core {
 

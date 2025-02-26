@@ -9,7 +9,7 @@
 
 #include "AllocatorUtils.h"
 #include "Core/CoreMacroDefinitions.h"
-#include "Debug/Macros/Asserts.h"
+#include "Debug/Utils/Public/Asserts.h"
 #include <memory>
 
 namespace Core {

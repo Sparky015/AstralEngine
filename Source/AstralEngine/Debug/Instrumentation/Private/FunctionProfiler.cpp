@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 1/5/25.
 //
 
-#include "FunctionProfiler.h"
+#include "Debug/Instrumentation/Public/FunctionProfiler.h"
 
 #include "Debug/LogFiles/ConsoleLogFile.h"
 

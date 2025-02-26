@@ -8,7 +8,7 @@
 
 #include "ImPlot/implot.h"
 
-#include "Debug/Macros/Loggers.h"
+#include "Debug/Utils/Public/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
 #include "Debug/Tracking/Private/Visualization/Panels/AllocationsListPanel.h"

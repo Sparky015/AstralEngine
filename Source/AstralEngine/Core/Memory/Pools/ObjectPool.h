@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Debug/Macros/Asserts.h"
+#include "AstralEngine/Debug/Utils/Public/Asserts.h"
 #include <cstring>
 #include <memory>
 

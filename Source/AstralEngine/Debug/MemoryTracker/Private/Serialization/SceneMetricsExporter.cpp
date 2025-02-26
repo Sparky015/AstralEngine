@@ -4,8 +4,8 @@
 * @date 2/8/25
 */
 
-#include "Debug/Macros/Error.h"
-#include "Debug/Macros/Loggers.h"
+#include "Debug/Utils/Public/Error.h"
+#include "Debug/Utils/Public/Loggers.h"
 #include "SceneMetricsExporter.h"
 #include <chrono>
 #include <filesystem>

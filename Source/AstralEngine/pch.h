@@ -26,7 +26,7 @@
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Math/Math.h"
 
-#include "Debug/Instrumentation/ScopeProfiler.h"
-#include "Debug/Macros/Asserts.h"
-#include "Debug/Macros/Error.h"
-#include "Debug/Macros/Loggers.h"
+#include "Debug/Instrumentation/Public/ScopeProfiler.h"
+#include "Debug/Utils/Public/Asserts.h"
+#include "Debug/Utils/Public/Error.h"
+#include "Debug/Utils/Public/Loggers.h"

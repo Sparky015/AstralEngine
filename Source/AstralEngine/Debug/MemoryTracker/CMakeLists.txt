@@ -1,7 +1,7 @@
 
 add_library(Astral_MemoryTracker
 
-        Public/MemoryTracker.cpp
+        Private/MemoryTracker.cpp
         Public/MemoryTracker.h
 
         Private/Visualization/Components/LoadFileComponent.cpp

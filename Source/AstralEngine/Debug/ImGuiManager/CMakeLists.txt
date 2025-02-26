@@ -7,7 +7,7 @@ add_library(Astral_ImGuiManager
         Private/ImGuiDependencies/imgui_impl_opengl3.h
 
         Public/ImGuiEvents.h
-        Public/ImGuiManager.cpp
+        Private/ImGuiManager.cpp
         Public/ImGuiManager.h
 )
 

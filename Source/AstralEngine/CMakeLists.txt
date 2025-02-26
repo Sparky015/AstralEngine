@@ -17,7 +17,7 @@ add_library(AstralEngine
         Debug/MemoryTracker/Private/NewDeleteOverrides.h
         Window/WindowEvents.h
         Debug/ImGuiManager/Public/ImGuiManager.h
-        Debug/ImGuiManager/Public/ImGuiManager.cpp
+        Debug/ImGuiManager/Private/ImGuiManager.cpp
         Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_glfw.cpp
         Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_opengl3.cpp
@@ -25,10 +25,10 @@ add_library(AstralEngine
         Debug/ImGuiManager/Public/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
-        Debug/LogFiles/ConsoleLogFile.cpp
-        Debug/LogFiles/ConsoleLogFile.h
-        Debug/LogFiles/ProfilerLogFile.cpp
-        Debug/LogFiles/ProfilerLogFile.h
+        Debug/Utils/Private/LogFiles/ConsoleLogFile.cpp
+        Debug/Utils/Private/LogFiles/ConsoleLogFile.h
+        Debug/Instrumentation/Private/ProfilerLogFile.cpp
+        Debug/Instrumentation/Private/ProfilerLogFile.h
         ECS/ECSManager.cpp
         ECS/ECSManager.h
         ECS/ECS.cpp
@@ -91,19 +91,19 @@ add_library(AstralEngine
         Input/KeycodeConversions.cpp
         ECS/Systems/RenderingSystem.cpp
         ECS/Systems/RenderingSystem.h
-        Debug/Instrumentation/ScopeProfiler.cpp
-        Debug/Instrumentation/ScopeProfiler.h
-        Debug/Macros/Asserts.cpp
-        Debug/Macros/Asserts.h
-        Debug/Macros/Loggers.cpp
-        Debug/Macros/Loggers.h
-        Debug/Macros/ConsoleColors.cpp
-        Debug/Macros/ConsoleColors.h
-        Debug/Macros/Error.cpp
-        Debug/Macros/Error.h
+        Debug/Instrumentation/Private/ScopeProfiler.cpp
+        Debug/Instrumentation/Public/ScopeProfiler.h
+        Debug/Utils/Private/Asserts.cpp
+        Debug/Utils/Public/Asserts.h
+        Debug/Utils/Private/Loggers.cpp
+        Debug/Utils/Public/Loggers.h
+        Debug/Utils/Private/ConsoleColors.cpp
+        Debug/Utils/Private/ConsoleColors.h
+        Debug/Utils/Private/Error.cpp
+        Debug/Utils/Public/Error.h
         ECS/ECSTypes.h
-        Debug/Instrumentation/FunctionProfiler.h
-        Debug/Instrumentation/FunctionProfiler.cpp
+        Debug/Instrumentation/Public/FunctionProfiler.h
+        Debug/Instrumentation/Private/FunctionProfiler.cpp
         Debug/ImGuiManager/Components/WindowComponents.cpp
         Debug/ImGuiManager/Components/WindowComponents.h
         Debug/ImGuiManager/Components/RendererComponents.cpp

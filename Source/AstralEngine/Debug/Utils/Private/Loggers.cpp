@@ -2,10 +2,10 @@
 // Created by Andrew Fagan on 1/2/25.
 //
 
-#include "Loggers.h"
+#include "Debug/Utils/Public/Loggers.h"
 
 
-#include "../LogFiles/ConsoleLogFile.h"
+#include "Debug/LogFiles/ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
 

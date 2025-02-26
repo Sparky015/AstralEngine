@@ -6,7 +6,7 @@
 
 #include "EventBus.h"
 
-#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Instrumentation/Public/ScopeProfiler.h"
 
 namespace Core {
 

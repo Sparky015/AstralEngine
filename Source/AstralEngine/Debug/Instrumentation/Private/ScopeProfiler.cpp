@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 1/2/25.
 //
 
-#include "ScopeProfiler.h"
+#include "Debug/Instrumentation/Public/ScopeProfiler.h"
 
 #include "Debug/LogFiles/ProfilerLogFile.h"
 #include "Debug/Tracking/Public/MemoryTracker.h"

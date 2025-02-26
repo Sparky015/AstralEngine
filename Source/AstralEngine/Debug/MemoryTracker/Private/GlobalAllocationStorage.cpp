@@ -4,7 +4,7 @@
 * @date 1/7/2025
 */
 
-#include "Debug/Macros/Asserts.h"
+#include "Debug/Utils/Public/Asserts.h"
 #include "GlobalAllocationStorage.h"
 
 #include <iostream>

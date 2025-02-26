@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 11/1/24.
 //
 
-#include "ImGuiManager.h"
+#include "Debug/ImGuiManager/Public/ImGuiManager.h"
 
 #include "Debug/ImGuiManager/Components/BuildConfigComponents.h"
 #include "Debug/ImGuiManager/Components/ECSComponents.h"
