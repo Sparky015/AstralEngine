@@ -22,7 +22,7 @@ namespace Graphics {
         int const status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         if (status != 1)
         {
-            ERROR("GLAD failed to load!");
+            ASTRAL_ERROR("GLAD failed to load!");
         }
     }
 

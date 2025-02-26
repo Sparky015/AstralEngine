@@ -57,7 +57,7 @@ namespace ECS {
         };
 
         // We did not find a empty slot since we did not return during the loop.
-        ERROR("Max amount of entities reached! Can't add any more!");
+        ASTRAL_ERROR("Max amount of entities reached! Can't add any more!");
     }
 
 

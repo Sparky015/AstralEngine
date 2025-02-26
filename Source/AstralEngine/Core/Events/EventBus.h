@@ -26,7 +26,14 @@ namespace Core {
         /**@brief Adds a listener to the callback list. */
         void AddListener(std::function<void(T)>* callback)
         {
-            m_Callbacks.push_back(callback);
+            if (m_IsEventBeingRaised)
+            {
+                m_TempCallbackBuffer.push_back(callback);
+            }
+            else
+            {
+                m_Callbacks.push_back(callback);
+            }
             IncrementListenerCount();
         }
 
@@ -34,6 +41,7 @@ namespace Core {
         /**@brief Removes a listener from the callback list. */
         void RemoveListener(std::function<void(T)>* callback)
         {
+            m_TempCallbackBuffer.erase(std::remove(m_TempCallbackBuffer.begin(), m_TempCallbackBuffer.end(), callback), m_TempCallbackBuffer.end());
             m_Callbacks.erase(std::remove(m_Callbacks.begin(), m_Callbacks.end(), callback), m_Callbacks.end());
             DecrementListenerCount();
         }
@@ -42,10 +50,25 @@ namespace Core {
         /**@brief Takes an event and propagates it to listeners. */
         void RaiseEvent(const T& event)
         {
+            m_IsEventBeingRaised = true;
+
             for (const std::function<void(T)>* callback : m_Callbacks)
             {
                 (*callback)(event);
             }
+
+            m_IsEventBeingRaised = false;
+
+            // Add the callbacks that were added during the event being raised.
+            // This avoids the callback vector being resized when a new listener
+            // is added during the event being raised. (If the vector resizes during calling
+            // of the callbacks, it will cause the current iterator to point to freed memory resulting in a
+            // crash)
+            for (std::function<void(T)>* callback : m_TempCallbackBuffer)
+            {
+                m_Callbacks.push_back(callback);
+            }
+            m_TempCallbackBuffer.clear();
         }
 
         /**@brief Increments the publisher count for event type */
@@ -72,6 +95,9 @@ namespace Core {
 
         uint16 m_NumberOfListeners{};
         uint16 m_NumberOfPublishers{};
+
+        bool m_IsEventBeingRaised{false};
+        std::vector<std::function<void(T)>*> m_TempCallbackBuffer;
 
         std::vector<std::function<void(T)>*> m_Callbacks;
 

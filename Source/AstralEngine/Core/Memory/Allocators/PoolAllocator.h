@@ -53,8 +53,8 @@ namespace Core {
         PoolAllocator(PoolAllocator&& other) noexcept;
         PoolAllocator& operator=(PoolAllocator&& other) noexcept;
 
-        bool operator==(const PoolAllocator& other) noexcept;
-        bool operator!=(const PoolAllocator& other) noexcept;
+        bool operator==(const PoolAllocator& other) const noexcept;
+        bool operator!=(const PoolAllocator& other) const noexcept;
 
     private:
 

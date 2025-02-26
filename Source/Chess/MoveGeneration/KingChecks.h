@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "pch.h"
-#include "../GameState/ChessPieceTypes.h"
+
 #include "BoardMoveList.h"
+#include "Common/ChessPieceTypes.h"
 
 
 namespace Game {

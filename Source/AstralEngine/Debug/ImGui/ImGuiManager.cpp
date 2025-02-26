@@ -10,6 +10,8 @@
 #include "Components/SystemInfoComponents.h"
 #include "Components/WindowComponents.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
+#include "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
+#include "ImPlot/implot.h"
 #include "imgui.h"
 
 
@@ -24,7 +26,7 @@
 #include "cpuinfo.h"
 
 
-namespace Debug{
+namespace Debug {
 
     ImGuiManager& g_ImGuiManager = ImGuiManager::Get();
 
@@ -42,6 +44,10 @@ namespace Debug{
 
         InitImGui();
         cpuinfo_initialize();
+
+        ImGui::GetIO().IniFilename = "imgui-config.ini";
+        ImGui::LoadIniSettingsFromDisk("imgui-config.ini");
+
 
         // m_UpdateListener.StartListening();
         m_RenderImGuiListener.StartListening();
@@ -102,38 +108,40 @@ namespace Debug{
 
                 PeakMemoryUsage();
                 GlobalMemoryUsage();
-                // GlobalActiveAllocations();
-                // GlobalTotalAllocationsMade();
+                GlobalActiveAllocations();
+                GlobalTotalAllocationsMade();
                 AllocationsInCurrentFrame();
+                ManageMemoryProfilingScene();
+                Core::LoadMemoryProfileButtonComponent();
 
                 ImGui::Spacing();
 
-                // if (ImGui::TreeNode("Metrics by Allocator"))
-                // {
-                //     MemoryUsageByAllocator();
-                //     PeakMemoryUsageByAllocator();
-                //     TotalAllocationsMadeByAllocator();
-                //     ActiveAllocationsByAllocator();
-                //     ImGui::TreePop();
-                // }
-                //
-                // if (ImGui::TreeNode("Metrics by Region"))
-                // {
-                //     MemoryUsageByRegion();
-                //     PeakMemoryUsageByRegion();
-                //     TotalAllocationsMadeByRegion();
-                //     ActiveAllocationsByRegion();
-                //     ImGui::TreePop();
-                // }
-                //
-                // if (ImGui::TreeNode("Metrics by Thread"))
-                // {
-                //     MemoryUsageByThread();
-                //     PeakMemoryUsageByThread();
-                //     TotalAllocationsMadeByThread();
-                //     ActiveAllocationsByThread();
-                //     ImGui::TreePop();
-                // }
+                if (ImGui::TreeNode("Metrics by Allocator"))
+                {
+                    MemoryUsageByAllocator();
+                    PeakMemoryUsageByAllocator();
+                    TotalAllocationsMadeByAllocator();
+                    ActiveAllocationsByAllocator();
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Metrics by Region"))
+                {
+                    MemoryUsageByRegion();
+                    PeakMemoryUsageByRegion();
+                    TotalAllocationsMadeByRegion();
+                    ActiveAllocationsByRegion();
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Metrics by Thread"))
+                {
+                    MemoryUsageByThread();
+                    PeakMemoryUsageByThread();
+                    TotalAllocationsMadeByThread();
+                    ActiveAllocationsByThread();
+                    ImGui::TreePop();
+                }
 
                 ImGui::TreePop();
             }
@@ -281,7 +289,10 @@ namespace Debug{
     void ImGuiManager::InitImGui() const
     {
         PROFILE_SCOPE("Initialize ImGui");
+
         ImGui::CreateContext();
+        ImPlot::CreateContext();
+
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
@@ -312,6 +323,8 @@ namespace Debug{
         PROFILE_SCOPE("ImGui Manager Shutdown");
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
+
+        ImPlot::DestroyContext();
         ImGui::DestroyContext();
     }
 
