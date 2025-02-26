@@ -28,7 +28,7 @@ public:
    static inline Engine& Get() { return *m_Instance; }
 
    /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
-   [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTime(); };
+   [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
 
 private:
     Core::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;

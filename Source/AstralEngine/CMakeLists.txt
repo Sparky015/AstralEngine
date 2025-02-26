@@ -14,7 +14,7 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Core/Memory/Tracking/GlobalAllocationTracker.h
+        Debug/Tracking/NewDeleteOverrides.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -117,14 +117,12 @@ add_library(AstralEngine
         Debug/ImGui/Components/InputStateComponents.h
         Debug/ImGui/Components/SystemInfoComponents.cpp
         Debug/ImGui/Components/SystemInfoComponents.h
-        Core/Memory/Tracking/MemoryMetricsManager.cpp
-        Core/Memory/Tracking/MemoryMetricsManager.h
-        Core/Memory/Tracking/GlobalAllocationTracker.cpp
+        Debug/Tracking/MemoryMetrics.cpp
+        Debug/Tracking/MemoryMetrics.h
+        Debug/Tracking/NewDeleteOverrides.cpp
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
-        Core/Memory/Tracking/PointerAllocationSizeMap.h
-        Core/Memory/Tracking/PointerAllocationSizeMap.cpp
-        Core/Memory/Allocators/NoTrackingAllocator.h
+        Core/Memory/Allocators/NoTrackingSTLAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
@@ -154,11 +152,44 @@ add_library(AstralEngine
 
         Renderer/Cameras/OrthographicCamera.cpp
         Renderer/Cameras/OrthographicCamera.h
+        Core/Memory/Allocators/AlignedAllocator.cpp
+        Core/Memory/Allocators/AlignedAllocator.h
 
+        Debug/Tracking/MemoryTracker.cpp
+        Debug/Tracking/MemoryTracker.h
 
+        Debug/Tracking/Visualization/Components/LoadFileComponent.cpp
+        Debug/Tracking/Visualization/Components/LoadFileComponent.h
+        Debug/Tracking/Visualization/Components/SceneMetricsGraphComponents.cpp
+        Debug/Tracking/Visualization/Components/SceneMetricsGraphComponents.h
+        Debug/Tracking/Visualization/Panels/AllocationsListPanel.cpp
+        Debug/Tracking/Visualization/Panels/AllocationsListPanel.h
+        Debug/Tracking/Visualization/Panels/AllocationStacktracePanel.cpp
+        Debug/Tracking/Visualization/Panels/AllocationStacktracePanel.h
+        Debug/Tracking/Visualization/Panels/DataPointInfoPanel.cpp
+        Debug/Tracking/Visualization/Panels/DataPointInfoPanel.h
+        Debug/Tracking/Visualization/Panels/GraphSelectorPanel.cpp
+        Debug/Tracking/Visualization/Panels/GraphSelectorPanel.h
+        Debug/Tracking/Visualization/Panels/MemoryGraphPanel.cpp
+        Debug/Tracking/Visualization/Panels/MemoryGraphPanel.h
+        Debug/Tracking/Visualization/MemoryDebugWindow.cpp
+        Debug/Tracking/Visualization/MemoryDebugWindow.h
+
+        Debug/Tracking/Serialization/SceneMetricsExporter.cpp
+        Debug/Tracking/Serialization/SceneMetricsExporter.h
+        Debug/Tracking/Serialization/SceneMetricsImporter.cpp
+        Debug/Tracking/Serialization/SceneMetricsImporter.h
+        Debug/Tracking/Serialization/SceneMetricsStorage.cpp
+        Debug/Tracking/Serialization/SceneMetricsStorage.h
+        Debug/Tracking/Serialization/MemoryMetricsSnapshot.h
+
+        Debug/Tracking/GlobalAllocationStorage.cpp
+        Debug/Tracking/GlobalAllocationStorage.h
+        Debug/Tracking/MemoryMetrics.cpp
+        Debug/Tracking/MemoryMetrics.h
+        Debug/Tracking/NewDeleteOverrides.cpp
+        Debug/Tracking/NewDeleteOverrides.h
 )
-
-
 
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
@@ -170,18 +201,29 @@ endif ()
 
 
 
+
 # Linking Libraries
 target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
-target_link_libraries(AstralEngine PRIVATE std_image)
+target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
+target_link_libraries(AstralEngine PRIVATE ImPlot)
+target_link_libraries(AstralEngine PRIVATE ImGuiFileDialog)
+target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
+target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
+
+
+
+if (APPLE)
+    target_link_libraries(AstralEngine PRIVATE -lc++)
+endif ()
 
 add_dependencies(AstralEngine
         ImGui
         GLAD
         glm
-        std_image
+        stb_image
         cpuinfo
 )
 
@@ -200,11 +242,17 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLAD")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/glm")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGui")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/stb_image")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImFileDialog/")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
+
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
 
 
 # Precompiled Header
-target_precompile_headers(AstralEngine PRIVATE "pch.h")
+#target_precompile_headers(AstralEngine PUBLIC "pch.h")
 
 
 
@@ -222,8 +270,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
 endif()
 
-target_compile_definitions(AstralEngine PRIVATE -DGLFW_INCLUDE_NONE)
-target_compile_definitions(AstralEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+target_compile_definitions(AstralEngine PUBLIC -DGLFW_INCLUDE_NONE)
+target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
 elseif (WIN32)
@@ -231,6 +279,7 @@ elseif (WIN32)
 endif ()
 
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
-target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/")
+target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
-target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")
+target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")

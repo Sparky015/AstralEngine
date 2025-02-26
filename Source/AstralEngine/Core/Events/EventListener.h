@@ -35,7 +35,13 @@ namespace Core {
             if (!m_IsListening) {return;}
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RemoveListener(&m_Callback);
-        };
+            m_IsListening = false;
+        }
+
+        EventListener(const EventListener&) = delete;
+        EventListener& operator=(const EventListener&) = delete;
+        EventListener(EventListener&&) = default;
+        EventListener& operator=(EventListener&&) = default;
 
     private:
         std::function<void(T)> m_Callback;

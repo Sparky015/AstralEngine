@@ -5,8 +5,9 @@
 #include "MemoryComponents.h"
 
 #include <imgui.h>
+#include <string_view>
 
-#include "Core/Memory/Tracking/MemoryMetricsManager.h"
+#include "Debug/Tracking/MemoryTracker.h"
 
 namespace Debug {
 
@@ -49,30 +50,273 @@ namespace Debug {
         return numberOfBytesString;
     }
 
-    void GlobalTotalAllocationsAndFrees()
-    {
-        const Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
-        ImGui::Text("Total Allocated Bytes: %llu", memoryMetricsManager.GetTotalAllocatedBytes());
-        ImGui::Text("Total Freed Bytes: %llu", memoryMetricsManager.GetTotalFreedBytes());
-    }
 
     void GlobalMemoryUsage()
     {
-        const Core::MemoryMetricsManager& memoryMetricsManager = Core::MemoryMetricsManager::Get();
-        ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetricsManager.GetTotalAllocatedBytes() - memoryMetricsManager.GetTotalFreedBytes()).data());
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetTotalMemoryUsage()).data());
     }
 
-    void UnfreedMemoryFromCurrentFrame()
+
+    void PeakMemoryUsage()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetricsManager::Get().GetFrameAllocationData();
-        ImGui::Text("Unfreed memory from current frame: %u bytes", (frameAllocationData.AllocatedBytes - frameAllocationData.FreedBytes));
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Peak Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetPeakMemoryUsage()).data());
     }
 
-    void AllocationsAndFreesForCurrentFrame()
+
+    void GlobalTotalAllocationsMade()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryMetricsManager::Get().GetFrameAllocationData();
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Total Allocations Made: %zu", memoryMetrics.GetTotalAllocations());
+    }
+
+
+    void GlobalActiveAllocations()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        ImGui::Text("Active Allocations: %zu", memoryMetrics.GetTotalActiveAllocations());
+    }
+
+
+    void AllocationsInCurrentFrame()
+    {
+        const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
         ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
-        ImGui::Text("Frees in current frame: %u", frameAllocationData.NumberOfFrees);
+    }
+
+
+    void MemoryUsageByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Allocator"))
+        {
+            for (auto [allocatorType, size] : memoryMetrics.GetMemoryUsageByAllocatorIterable())
+            {
+                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Allocator"))
+        {
+            for (auto [allocatorType, size] : memoryMetrics.GetPeakMemoryUsageByAllocatorIterable())
+            {
+                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Allocator"))
+        {
+            for (auto [allocatorType, count] : memoryMetrics.GetTotalAllocationsByAllocatorIterable())
+            {
+                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByAllocator()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Allocator"))
+        {
+            for (auto [allocatorType, count] : memoryMetrics.GetActiveAllocationsByAllocatorIterable())
+            {
+                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void MemoryUsageByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Region"))
+        {
+            for (auto [region, size] : memoryMetrics.GetMemoryUsageByRegionIterable())
+            {
+                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Region"))
+        {
+            for (auto [region, size] : memoryMetrics.GetPeakMemoryUsageByRegionIterable())
+            {
+                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Region"))
+        {
+            for (auto [region, count] : memoryMetrics.GetTotalAllocationsByRegionIterable())
+            {
+                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByRegion()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Region"))
+        {
+            for (auto [region, count] : memoryMetrics.GetActiveAllocationsByRegionIterable())
+            {
+                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void MemoryUsageByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Memory Usage by Thread"))
+        {
+
+            for (auto [threadIDHash, size] : memoryMetrics.GetMemoryUsageByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %s", MemoryUnitLabelHelper(size).data());
+                }
+                else
+                {
+                    ImGui::Text("%zu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void PeakMemoryUsageByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Peak Memory Usage by Thread"))
+        {
+
+            for (auto [threadIDHash, size] : memoryMetrics.GetPeakMemoryUsageByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %s", MemoryUnitLabelHelper(size).data());
+                }
+                else
+                {
+                    ImGui::Text("%zu: %s", threadIDHash, MemoryUnitLabelHelper(size).data());
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void TotalAllocationsMadeByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Total Allocations Made by Thread"))
+        {
+
+            for (auto [threadIDHash, count] : memoryMetrics.GetTotalAllocationsByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %zu", count);
+                }
+                else
+                {
+                    ImGui::Text("%zu: %zu", threadIDHash, count);
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ActiveAllocationsByThread()
+    {
+        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+
+        if (ImGui::TreeNode("Alive Allocations by Thread"))
+        {
+
+            for (auto [threadIDHash, count] : memoryMetrics.GetActiveAllocationsByThreadIterable())
+            {
+                if (memoryMetrics.GetThreadIDHash(std::this_thread::get_id()) == threadIDHash)
+                {
+                    ImGui::Text("Main Thread: %zu", count);
+                }
+                else
+                {
+                    ImGui::Text("%zu: %zu", threadIDHash, count);
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ManageMemoryProfilingScene()
+    {
+        Core::MemoryTracker& tracker = Core::MemoryTracker::Get();
+        bool isSceneActive = tracker.IsSceneActive();
+
+        ImGui::Checkbox("Enable Memory Profiling Scene", &isSceneActive);
+
+        if (isSceneActive == tracker.IsSceneActive()) { return; }
+        else if (isSceneActive)
+        {
+            tracker.BeginScene("DebugMenu");
+        }
+        else
+        {
+            tracker.EndScene();
+        }
     }
 
 }

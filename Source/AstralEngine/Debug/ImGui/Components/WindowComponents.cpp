@@ -6,6 +6,7 @@
 
 #include "Window/WindowManager.h"
 #include "imgui.h"
+#include "../../Macros/Loggers.h"
 
 namespace Debug {
 

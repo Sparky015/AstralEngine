@@ -99,14 +99,14 @@ namespace Core {
     }
 
 
-    bool PoolAllocator::operator==(const PoolAllocator& other) noexcept
+    bool PoolAllocator::operator==(const PoolAllocator& other) const noexcept
     {
         return (m_MemoryBlock == other.m_MemoryBlock &&
                 m_FreeListHead == other.m_FreeListHead);
     }
 
 
-    bool PoolAllocator::operator!=(const PoolAllocator& other) noexcept
+    bool PoolAllocator::operator!=(const PoolAllocator& other) const noexcept
     {
         return !(*this == other);
     }

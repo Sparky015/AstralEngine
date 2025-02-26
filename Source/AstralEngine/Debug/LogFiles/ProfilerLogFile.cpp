@@ -6,6 +6,8 @@
 
 #include <filesystem>
 
+#include "../Macros/Loggers.h"
+
 namespace Debug {
 
     bool ProfilerLogFile::m_IsLogFileOpen = false;
@@ -61,7 +63,11 @@ namespace Debug {
         << "\"ph\": \"X\","
         << "\"pid\": 0,"
         << "\"tid\": 0,"
-        << 	"\"ts\": " << profileResult.StartTimeStamp << " }";
+        << 	"\"ts\": " << profileResult.StartTimeStamp << ","
+        << "\"args\": {"
+            << "\"Allocation Count\": " << profileResult.AllocationCount
+            << "}"
+        << " }";
 
 //        fileStream.flush(); // Only use if the program is crashing.
 

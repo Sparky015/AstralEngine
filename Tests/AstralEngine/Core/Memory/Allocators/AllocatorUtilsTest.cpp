@@ -77,25 +77,25 @@ TEST_F(AllocatorUtilsTest, RoundToNextAlignmentMultiple_ReturnsZeroWhenAlignment
 /** @brief Tests if the power returned back from AlignedAlloc is correctly aligned to the given alignment */
 TEST_F(AllocatorUtilsTest, AlignedAlloc_ReturnedPointerIsCorrectlyAligned)
 {
-    void* pointer = Core::AllocatorUtils::AlignedAlloc(64, 4);
+    void* pointer = Core::AlignedAlloc(64, 4);
     EXPECT_EQ((std::uintptr_t)pointer % 4, 0);
-    Core::AllocatorUtils::FreeAlignedAlloc(pointer);
+    Core::FreeAlignedAlloc(pointer);
 
-    pointer = Core::AllocatorUtils::AlignedAlloc(63, 8);
+    pointer = Core::AlignedAlloc(63, 8);
     EXPECT_EQ((std::uintptr_t)pointer % 8, 0);
-    Core::AllocatorUtils::FreeAlignedAlloc(pointer);
+    Core::FreeAlignedAlloc(pointer);
 
-    pointer = Core::AllocatorUtils::AlignedAlloc(8, 16);
+    pointer = Core::AlignedAlloc(8, 16);
     EXPECT_EQ((std::uintptr_t)pointer % 16, 0);
-    Core::AllocatorUtils::FreeAlignedAlloc(pointer);
+    Core::FreeAlignedAlloc(pointer);
 
-    pointer = Core::AllocatorUtils::AlignedAlloc(1, 64);
+    pointer = Core::AlignedAlloc(1, 64);
     EXPECT_EQ((std::uintptr_t)pointer % 64, 0);
-    Core::AllocatorUtils::FreeAlignedAlloc(pointer);
+    Core::FreeAlignedAlloc(pointer);
 
-    pointer = Core::AllocatorUtils::AlignedAlloc(16, 16);
+    pointer = Core::AlignedAlloc(16, 16);
     EXPECT_EQ((std::uintptr_t)pointer % 16, 0);
-    Core::AllocatorUtils::FreeAlignedAlloc(pointer);
+    Core::FreeAlignedAlloc(pointer);
 }
 
 /** @brief Tests if the method resizes the memory block and if it resizes it to the right size. */

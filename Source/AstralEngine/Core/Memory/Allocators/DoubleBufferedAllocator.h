@@ -7,8 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
-#include "Debug/Macros/Asserts.h"
+#include "../../../Debug/Macros/Asserts.h"
 #include <cstring>
 #include <memory>
 

@@ -6,6 +6,8 @@
 
 #include <fstream>
 
+#include "../../Core/CoreMacroDefinitions.h"
+
 namespace Debug {
 
     struct ProfileResult
@@ -13,6 +15,7 @@ namespace Debug {
         std::string_view Name;
         int64 StartTimeStamp;
         int64 EndTimeStamp;
+        size_t AllocationCount;
     };
 
 

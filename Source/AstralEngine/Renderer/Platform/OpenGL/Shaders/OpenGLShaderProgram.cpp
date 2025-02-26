@@ -7,6 +7,9 @@
 #include "glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../../../../Debug/Macros/Asserts.h"
+#include "../../../../Debug/Macros/Loggers.h"
+
 
 namespace Graphics {
 

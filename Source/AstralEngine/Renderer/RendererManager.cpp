@@ -4,6 +4,9 @@
 
 #include "RendererManager.h"
 
+#include "../Debug/Instrumentation/ScopeProfiler.h"
+#include "../Debug/Macros/Loggers.h"
+
 namespace Graphics {
 
     RendererManager& g_RendererManager = RendererManager::Get();

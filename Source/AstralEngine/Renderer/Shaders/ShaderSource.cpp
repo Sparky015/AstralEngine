@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "../../Debug/Macros/Loggers.h"
+
 namespace Graphics {
 
 

@@ -23,8 +23,10 @@ namespace Debug::Macros {
         ~macro_SCOPE_PROFILER() noexcept;
     private:
         const char* m_title;
-        const std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
+        const std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_EndTime;
+        size_t m_StartAllocationCount;
+        size_t m_EndAllocationCount{};
     };
 
 }

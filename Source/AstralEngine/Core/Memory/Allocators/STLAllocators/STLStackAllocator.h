@@ -7,12 +7,8 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
-#include <memory>
-#include <cstring>
-
-#include "Core/Memory/Allocators/AllocatorUtils.h"
 #include "Core/Memory/Allocators/StackAllocator.h"
+#include <memory>
 
 namespace Core {
 

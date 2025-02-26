@@ -7,7 +7,7 @@
 #include "Chessboard.h"
 
 #include "FENParser.h"
-#include "Utils/ChessConversions.h"
+#include "../Common/ConversionHelpers.h"
 
 namespace Game {
 
@@ -248,7 +248,7 @@ namespace Game {
                 return static_cast<PieceID>(pieceID);
             }
         }
-        ERROR("No piece ID was found with that location");
+        ASTRAL_ERROR("No piece ID was found with that location");
     }
 
 
@@ -335,7 +335,7 @@ namespace Game {
 
         }
 
-        ERROR("King Piece ID not found!");
+        ASTRAL_ERROR("King Piece ID not found!");
     }
 
 }

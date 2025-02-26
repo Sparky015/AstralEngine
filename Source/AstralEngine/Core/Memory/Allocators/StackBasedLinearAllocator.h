@@ -8,8 +8,8 @@
 
 #include "AllocatorUtils.h"
 #include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/GlobalAllocationTracker.h"
-#include "Debug/Macros/Asserts.h"
+#include "Core/Memory/Tracking/NewDeleteOverrides.h"
+#include "../../../Debug/Macros/Asserts.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>

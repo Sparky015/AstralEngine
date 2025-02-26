@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-#include "pch.h"
+#include "../../pch.h"
 
 namespace Debug {
 
@@ -24,6 +24,7 @@ namespace Debug {
             const int numberOfIterations = 10000, bool suppressCout = true);
 
     private:
+
         /**@brief Suppresses output to cout when profiling a function */
         static inline void SetCoutStreamToNullStream() { std::cout.rdbuf(m_NullStream.rdbuf()); }
 
