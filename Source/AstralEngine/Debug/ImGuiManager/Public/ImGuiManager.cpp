@@ -4,13 +4,13 @@
 
 #include "ImGuiManager.h"
 
-#include "Components/BuildConfigComponents.h"
-#include "Components/ECSComponents.h"
-#include "Components/RendererComponents.h"
-#include "Components/SystemInfoComponents.h"
-#include "Components/WindowComponents.h"
+#include "Debug/ImGuiManager/Components/BuildConfigComponents.h"
+#include "Debug/ImGuiManager/Components/ECSComponents.h"
+#include "Debug/ImGuiManager/Components/RendererComponents.h"
+#include "Debug/ImGuiManager/Components/SystemInfoComponents.h"
+#include "Debug/ImGuiManager/Components/WindowComponents.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
-#include "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
+#include "Debug/Tracking/Visualization/Components/LoadFileComponent.h"
 #include "ImPlot/implot.h"
 #include "imgui.h"
 
@@ -18,7 +18,7 @@
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 
-#include "Components/MemoryComponents.h"
+#include "Debug/ImGuiManager/Components/MemoryComponents.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
 #include "Input/Keycodes.h"
 #include "Window/Platform/Generic/GenericWindow.h" // TEMP

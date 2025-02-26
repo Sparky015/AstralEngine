@@ -14,15 +14,15 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Debug/Tracking/NewDeleteOverrides.h
+        Debug/MemoryTracker/Private/NewDeleteOverrides.h
         Window/WindowEvents.h
-        Debug/ImGui/ImGuiManager.h
-        Debug/ImGui/ImGuiManager.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
-        Debug/ImGui/ImGuiEvents.h
+        Debug/ImGuiManager/Public/ImGuiManager.h
+        Debug/ImGuiManager/Public/ImGuiManager.cpp
+        Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_glfw.cpp
+        Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_glfw.h
+        Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_opengl3.cpp
+        Debug/ImGuiManager/Private/ImGuiDependencies/imgui_impl_opengl3.h
+        Debug/ImGuiManager/Public/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
         Debug/LogFiles/ConsoleLogFile.cpp
@@ -104,32 +104,32 @@ add_library(AstralEngine
         ECS/ECSTypes.h
         Debug/Instrumentation/FunctionProfiler.h
         Debug/Instrumentation/FunctionProfiler.cpp
-        Debug/ImGui/Components/WindowComponents.cpp
-        Debug/ImGui/Components/WindowComponents.h
-        Debug/ImGui/Components/RendererComponents.cpp
-        Debug/ImGui/Components/RendererComponents.h
+        Debug/ImGuiManager/Components/WindowComponents.cpp
+        Debug/ImGuiManager/Components/WindowComponents.h
+        Debug/ImGuiManager/Components/RendererComponents.cpp
+        Debug/ImGuiManager/Components/RendererComponents.h
         Renderer/RendererEvents.h
-        Debug/ImGui/Components/BuildConfigComponents.cpp
-        Debug/ImGui/Components/BuildConfigComponents.h
-        Debug/ImGui/Components/ECSComponents.cpp
-        Debug/ImGui/Components/ECSComponents.h
-        Debug/ImGui/Components/InputStateComponents.cpp
-        Debug/ImGui/Components/InputStateComponents.h
-        Debug/ImGui/Components/SystemInfoComponents.cpp
-        Debug/ImGui/Components/SystemInfoComponents.h
-        Debug/Tracking/MemoryMetrics.cpp
-        Debug/Tracking/MemoryMetrics.h
-        Debug/Tracking/NewDeleteOverrides.cpp
-        Debug/ImGui/Components/MemoryComponents.cpp
-        Debug/ImGui/Components/MemoryComponents.h
+        Debug/ImGuiManager/Components/BuildConfigComponents.cpp
+        Debug/ImGuiManager/Components/BuildConfigComponents.h
+        Debug/ImGuiManager/Components/ECSComponents.cpp
+        Debug/ImGuiManager/Components/ECSComponents.h
+        Debug/ImGuiManager/Components/InputStateComponents.cpp
+        Debug/ImGuiManager/Components/InputStateComponents.h
+        Debug/ImGuiManager/Components/SystemInfoComponents.cpp
+        Debug/ImGuiManager/Components/SystemInfoComponents.h
+        Debug/MemoryTracker/Private/MemoryMetrics.cpp
+        Debug/MemoryTracker/Private/MemoryMetrics.h
+        Debug/MemoryTracker/Private/NewDeleteOverrides.cpp
+        Debug/ImGuiManager/Components/MemoryComponents.cpp
+        Debug/ImGuiManager/Components/MemoryComponents.h
         Core/Memory/Allocators/NoTrackingSTLAllocator.h
         Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
         Core/Time/DeltaTime.cpp
         Core/Time/DeltaTime.h
-        Debug/ImGui/Components/EngineComponents.cpp
-        Debug/ImGui/Components/EngineComponents.h
+        Debug/ImGuiManager/Components/EngineComponents.cpp
+        Debug/ImGuiManager/Components/EngineComponents.h
 
         Core/Memory/Allocators/StackAllocator.h
         Core/Memory/Allocators/STLAllocators/STLStackAllocator.h
@@ -154,43 +154,12 @@ add_library(AstralEngine
         Renderer/Cameras/OrthographicCamera.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
-
-        Debug/Tracking/GlobalAllocationStorage.h
-        Debug/Tracking/GlobalAllocationStorage.cpp
-        Debug/Tracking/MemoryTracker.cpp
-        Debug/Tracking/MemoryTracker.h
-        Debug/Tracking/SceneMetricsExporter.cpp
-        Debug/Tracking/SceneMetricsExporter.h
-        Debug/Tracking/SceneMetricsImporter.cpp
-        Debug/Tracking/SceneMetricsImporter.h
-        Debug/Tracking/SceneMetricsStorage.cpp
-        Debug/Tracking/SceneMetricsStorage.h
-        "Debug/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.cpp"
-        "Debug/Tracking/Memory Debug Window/Components/SceneMetricsGraphComponents.h"
-        Debug/Tracking/AllocationData.h
-        "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.cpp"
-        "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.h"
-        "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.cpp"
-        "Debug/Tracking/Memory Debug Window/Components/LoadFileComponent.h"
-
-        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.h
-        ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImGuiFileDialog/ImGuiFileDialog.cpp
-        "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.cpp"
-        "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
-        "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.cpp"
-        "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
-        "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.cpp"
-        "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
-        "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.cpp"
-        "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
-        Debug/Tracking/MemoryMetricsSnapshot.h
-        "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.cpp"
-        "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
-
 )
 
+#add_subdirectory(Debug/MemoryTracker)
+add_subdirectory(Debug/ImGuiManager)
 
-
+#target_link_libraries(AstralEngine PRIVATE Astral_MemoryTracker)
 
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
@@ -208,10 +177,8 @@ target_link_libraries(AstralEngine PRIVATE GLAD)
 target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
-target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
-target_link_libraries(AstralEngine PRIVATE ImPlot)
-target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
-target_compile_definitions(AstralEngine PUBLIC -DCPPTRACE_STATIC_DEFINE)
+
+
 
 if (APPLE)
     target_link_libraries(AstralEngine PRIVATE -lc++)
@@ -223,9 +190,6 @@ add_dependencies(AstralEngine
         glm
         stb_image
         cpuinfo
-        msgpack-cxx
-        ImPlot
-        cpptrace::cpptrace
 )
 
 if (APPLE)

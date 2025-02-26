@@ -11,9 +11,9 @@
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
-#include "Debug/Tracking/MemoryTracker.h"
+#include "Debug/Tracking/Public/MemoryTracker.h"
 
-#include "Debug/Tracking/SceneMetricsImporter.h"
+#include "Debug/Tracking/Serialization/SceneMetricsImporter.h"
 
 Engine* Engine::m_Instance = nullptr;
 

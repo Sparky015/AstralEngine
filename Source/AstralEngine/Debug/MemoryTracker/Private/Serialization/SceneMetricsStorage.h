@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "AllocationData.h"
+#include "Debug/Tracking/Private/AllocationData.h"
 #include "Core/Memory/Allocators/NoTrackingSTLAllocator.h"
 #include <vector>
 
-#include "MemoryMetrics.h"
+#include "Debug/Tracking/Private/MemoryMetrics.h"
 
 
 namespace Core {

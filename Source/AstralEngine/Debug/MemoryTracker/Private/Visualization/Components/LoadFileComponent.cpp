@@ -9,10 +9,38 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 
-#include "Debug/Tracking/Memory Debug Window/MemoryDebugWindow.h"
+#include <filesystem>
+#include <string_view>
+
+#include "Visualization/MemoryDebugWindow.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace Core {
+
+
+    /**@brief Pulls up a window for the user to select a file
+     * @param outFilePath Populates the string with the file path of the file that was selected by the user. */
+    bool SelectFile(std::string& outFilePath)
+    {
+        IGFD::FileDialogConfig config;
+        config.path = LOG_FILE_DIR;
+        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".ASTLMemProfile", config);
+
+
+        if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+        {
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                outFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
+            }
+
+            ImGuiFileDialog::Instance()->Close();
+            return false;
+        }
+
+        return true;
+    }
+
 
     void LoadMemoryProfileButtonComponent()
     {
@@ -48,26 +76,7 @@ namespace Core {
     }
 
 
-    bool SelectFile(std::string& outFilePath)
-    {
-        IGFD::FileDialogConfig config;
-        config.path = LOG_FILE_DIR;
-        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".ASTLMemProfile", config);
 
-
-        if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
-        {
-            if (ImGuiFileDialog::Instance()->IsOk())
-            {
-                outFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            }
-
-            ImGuiFileDialog::Instance()->Close();
-            return false;
-        }
-
-        return true;
-    }
 
 }
 

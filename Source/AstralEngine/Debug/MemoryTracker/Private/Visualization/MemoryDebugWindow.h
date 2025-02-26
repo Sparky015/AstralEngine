@@ -6,10 +6,11 @@
 
 #pragma once
 
-#include "Debug/Tracking/SceneMetricsStorage.h"
+#include "Serialization/SceneMetricsStorage.h"
+#include "Serialization/SceneMetricsImporter.h"
+
 #include <filesystem>
 
-#include "Debug/Tracking/SceneMetricsImporter.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 
 namespace Core {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Debug/Tracking/SceneMetricsStorage.h"
+#include "Debug/Tracking/Serialization/SceneMetricsStorage.h"
 #include "GraphSelectorPanel.h"
 #include "imgui.h"
 

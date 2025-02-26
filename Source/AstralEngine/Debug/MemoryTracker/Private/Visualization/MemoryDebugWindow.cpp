@@ -11,11 +11,11 @@
 #include "Debug/Macros/Loggers.h"
 #include "imgui.h"
 #include "ImPlot/implot_internal.h"
-#include "Debug/Tracking/Memory Debug Window/Panels/AllocationsListPanel.h"
-#include "Debug/Tracking/Memory Debug Window/Panels/AllocationStacktracePanel.h"
-#include "Debug/Tracking/Memory Debug Window/Panels/DataPointInfoPanel.h"
-#include "Debug/Tracking/Memory Debug Window/Panels/GraphSelectorPanel.h"
-#include "Debug/Tracking/Memory Debug Window/Panels/MemoryGraphPanel.h"
+#include "Debug/Tracking/Private/Visualization/Panels/AllocationsListPanel.h"
+#include "Debug/Tracking/Private/Visualization/Panels/AllocationStacktracePanel.h"
+#include "Debug/Tracking/Private/Visualization/Panels/DataPointInfoPanel.h"
+#include "Debug/Tracking/Private/Visualization/Panels/GraphSelectorPanel.h"
+#include "Debug/Tracking/Private/Visualization/Panels/MemoryGraphPanel.h"
 
 namespace Core {
 

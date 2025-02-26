@@ -9,7 +9,7 @@
 #include "AllocationData.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
-#include "SceneMetricsExporter.h"
+#include "Serialization/SceneMetricsExporter.h"
 
 #include <mutex>
 

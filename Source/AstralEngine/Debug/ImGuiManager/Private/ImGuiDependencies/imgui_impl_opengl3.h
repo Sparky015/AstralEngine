@@ -28,7 +28,7 @@
 
 #pragma once
 #include "imgui.h"      // IMGUI_IMPL_API
-#include <glad/glad.h>
+#include "glad/glad.h"
 
 #ifndef IMGUI_DISABLE
 

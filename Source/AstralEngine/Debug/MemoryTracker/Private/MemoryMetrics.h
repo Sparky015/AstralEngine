@@ -7,7 +7,7 @@
 
 #include "AllocationData.h"
 #include "Core/Events/EventListener.h"
-#include "GlobalAllocationStorage.h"
+#include "Debug/Tracking/Private/GlobalAllocationStorage.h"
 #include "Renderer/RendererEvents.h"
 #include "msgpack.hpp"
 

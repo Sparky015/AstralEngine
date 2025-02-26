@@ -12,7 +12,7 @@
 #include <iostream>
 #include "cpptrace/include/cpptrace/cpptrace.hpp"
 
-#include "MemoryTracker.h"
+#include "Debug/Tracking/Public/MemoryTracker.h"
 
 
 namespace Core {

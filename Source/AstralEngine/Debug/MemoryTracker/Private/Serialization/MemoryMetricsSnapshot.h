@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "MemoryMetrics.h"
+#include "Debug/Tracking/Private/MemoryMetrics.h"
 
 namespace Core {
 

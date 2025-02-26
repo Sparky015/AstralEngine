@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "MemoryMetrics.h"
+#include "Debug/Tracking/Private/MemoryMetrics.h"
 #include "MemoryMetricsSnapshot.h"
 #include <fstream>
 #include "msgpack.hpp"
