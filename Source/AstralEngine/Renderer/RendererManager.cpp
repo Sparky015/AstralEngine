@@ -4,8 +4,8 @@
 
 #include "RendererManager.h"
 
-#include "Debug/Instrumentation/Public/ScopeProfiler.h"
-#include "Debug/Utils/Public/Loggers.h"
+#include "../Debug/Instrumentation/ScopeProfiler.h"
+#include "../Debug/Macros/Loggers.h"
 
 namespace Graphics {
 

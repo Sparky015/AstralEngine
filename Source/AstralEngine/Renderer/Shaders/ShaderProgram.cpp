@@ -5,7 +5,7 @@
 */
 #include "ShaderProgram.h"
 
-#include "Debug/Utils/Public/Error.h"
+#include "../../Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "Renderer/RendererAPI.h"
 

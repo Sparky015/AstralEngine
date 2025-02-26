@@ -4,7 +4,7 @@
 
 #include "VertexArrayObject.h"
 
-#include "Debug/Utils/Public/Error.h"
+#include "../../Debug/Macros/Error.h"
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
 #include "Renderer/RendererAPI.h"
 

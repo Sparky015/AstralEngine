@@ -4,7 +4,7 @@
 
 #include "OpenGLVertexArrayObject.h"
 
-#include "Debug/Utils/Public/Loggers.h"
+#include "../../../../Debug/Macros/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 

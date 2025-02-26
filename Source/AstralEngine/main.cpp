@@ -1,6 +1,6 @@
 #include "Core/Engine.h"
 #include "Debug/EngineDebugInfoLogger.h"
-#include "Debug/Utils/Public/Loggers.h"
+#include "Debug/Macros/Loggers.h"
 
 
 int main()

@@ -9,7 +9,7 @@
 #include "AllocatorUtils.h"
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Memory/Tracking/NewDeleteOverrides.h"
-#include "AstralEngine/Debug/Utils/Public/Asserts.h"
+#include "../../../Debug/Macros/Asserts.h"
 #include <cstddef>
 #include <cstring>
 #include <memory>
