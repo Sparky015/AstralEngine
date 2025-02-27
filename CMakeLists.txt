@@ -12,8 +12,8 @@ else ()
 endif()
 
 add_subdirectory(ThirdPartyLibraries)
-add_subdirectory(Source/AstralEngine)
-add_subdirectory(Source/Chess)
+add_subdirectory(AstralEngine)
+add_subdirectory(Samples/Chess)
 
-add_subdirectory(Tests)
+
 
