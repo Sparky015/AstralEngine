@@ -1,5 +1,5 @@
 
-add_library(Chess
+set(CHESS_SOURCE_FILES_RELATIVE
         Chessboard/Chessboard.cpp
         Chessboard/Chessboard.h
         Common/ChessPieceTypes.h
@@ -53,19 +53,25 @@ add_library(Chess
         Common/SquareLocation.cpp
 )
 
-add_executable(ChessExecutable ChessModule.cpp)
+set(CHESS_SOURCE_FILES "")
+foreach(file ${CHESS_SOURCE_FILES_RELATIVE})
+    list(APPEND CHESS_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
+endforeach()
 
-target_link_libraries(ChessExecutable PUBLIC Chess)
+set(CHESS_SOURCE_FILES ${CHESS_SOURCE_FILES} PARENT_SCOPE)
+
+add_executable(Chess
+        ${CHESS_SOURCE_FILES}
+        ChessModule.cpp)
+
 
 target_include_directories(Chess PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
 target_link_libraries(Chess PUBLIC AstralEngine)
-
 target_compile_definitions(Chess PUBLIC -DCHESS_ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Assets/")
 
+
 if (WIN32) #MacOS doesn't like this, so I will only do it for windows
-    set_target_properties(ChessExecutable PROPERTIES LINK_FLAGS "-static")
+    set_target_properties(Chess PROPERTIES LINK_FLAGS "-static")
 endif()
 
 add_dependencies(Chess AstralEngine)
-add_dependencies(ChessExecutable Chess)

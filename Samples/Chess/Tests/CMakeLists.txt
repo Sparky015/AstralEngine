@@ -26,17 +26,19 @@ set(TEST_FILES
 
 add_executable(ChessTests
         ${TEST_FILES}
+        ${CHESS_SOURCE_FILES}
 )
 
 target_link_libraries(ChessTests
         GTest::gtest_main
-        AstralEngine
-        Chess)
+        AstralEngine)
 
 add_dependencies(ChessTests Chess)
 
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
-target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Source/Chess)
+target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Samples/Chess/Source)
+target_compile_definitions(ChessTests PUBLIC -DCHESS_ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Assets/")
+
 
 include(GoogleTest)
 gtest_discover_tests(ChessTests)
