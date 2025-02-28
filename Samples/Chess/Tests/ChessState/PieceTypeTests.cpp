@@ -5,7 +5,7 @@
 */
 
 #include "gtest/gtest.h"
-#include "GameState/PieceType.h"
+#include "Common/PieceType.h"
 
 /**
  * @brief Test suite for the PieceType class

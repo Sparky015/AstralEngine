@@ -1,10 +1,11 @@
+
 //
 // Created by Andrew Fagan on 12/25/24.
 //
 
 #include <gtest/gtest.h>
 
-#include "GameState/SquareLocation.h"
+#include "Common/SquareLocation.h"
 
 class SquareLocationTest : public ::testing::Test
 {

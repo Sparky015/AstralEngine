@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../../Source/Chess/Common/ConversionHelpers.h"
+#include "Common/ConversionHelpers.h"
 
 namespace Game {
 

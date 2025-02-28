@@ -24,10 +24,10 @@ SET (VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION})
 LIST (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 SET (GNUCXX_STD_SUPPORT_VERSION "4.3")
 
-OPTION (MSGPACK_CXX11 "Using c++11 compiler" ON)
+OPTION (MSGPACK_CXX11 "Using c++11 compiler" OFF)
 OPTION (MSGPACK_CXX14 "Using c++14 compiler" OFF)
 OPTION (MSGPACK_CXX17 "Using c++17 compiler" OFF)
-OPTION (MSGPACK_CXX20 "Using c++20 compiler" OFF)
+OPTION (MSGPACK_CXX20 "Using c++20 compiler" ON)
 
 OPTION (MSGPACK_32BIT                   "32bit compile"                        OFF)
 OPTION (MSGPACK_USE_BOOST               "Use Boost libraried"                  OFF)

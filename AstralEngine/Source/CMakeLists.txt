@@ -150,8 +150,8 @@ add_library(AstralEngine
         Core/Memory/Allocators/RingAllocator.cpp
         Core/Memory/Allocators/RingAllocator.h
 
-        Renderer/Cameras/OrthographicCamera.cpp
-        Renderer/Cameras/OrthographicCamera.h
+        Renderer/Cameras/OrthographicCameraTest.cpp
+        Renderer/Cameras/OrthographicCameraTest.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
 
@@ -210,7 +210,7 @@ target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE ImPlot)
 target_link_libraries(AstralEngine PRIVATE ImGuiFileDialog)
-target_link_libraries(AstralEngine PRIVATE msgpack-cxx)
+target_link_libraries(AstralEngine PUBLIC msgpack-cxx)
 
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
 target_compile_definitions(AstralEngine PRIVATE -DCPPTRACE_STATIC_DEFINE)

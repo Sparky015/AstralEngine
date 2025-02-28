@@ -3,13 +3,13 @@
 * @author Andrew Fagan
 * @date 1/14/2025
 */
-#include "OrthographicCamera.h"
+#include "OrthographicCameraTest.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Graphics {
 
-    OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float near, float far)
+    OrthographicCameraTest::OrthographicCameraTest(float left, float right, float bottom, float top, float near, float far)
         : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, near, far)),
         m_ViewMatrix(1.0f),
         m_ProjectionViewMatrix(1.0f),
@@ -18,12 +18,12 @@ namespace Graphics {
         CalculateViewProjectionMatrix();
     }
 
-    const Mat4& OrthographicCamera::GetProjectionViewMatrix()
+    const Mat4& OrthographicCameraTest::GetProjectionViewMatrix()
     {
         return m_ProjectionViewMatrix;
     }
 
-    void OrthographicCamera::CalculateViewProjectionMatrix()
+    void OrthographicCameraTest::CalculateViewProjectionMatrix()
     {
         Mat4 transform = glm::translate(Mat4(1.0f), m_Position) * glm::rotate(Mat4(1.0f), glm::radians(m_Rotation), Vec3(0, 0, 1));
         m_ViewMatrix = glm::inverse(transform);

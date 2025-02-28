@@ -4,10 +4,10 @@
 
 #include <gtest/gtest.h>
 
-#include "../../../../Source/Chess/GameState/ChessPieceTypes.h"
+#include "Common/ChessPieceTypes.h"
 #include "Chessboard/Chessboard.h"
 #include "MoveGeneration/BoardMoveList.h"
-#include "../../../../Source/Chess/Common/ConversionHelpers.h"
+#include "Common/ConversionHelpers.h"
 
 namespace Game {
 

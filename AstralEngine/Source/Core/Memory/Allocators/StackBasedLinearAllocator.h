@@ -6,15 +6,10 @@
 
 #pragma once
 
-#include "AllocatorUtils.h"
-#include "Core/CoreMacroDefinitions.h"
-#include "Core/Memory/Tracking/NewDeleteOverrides.h"
-#include "../../../Debug/Macros/Asserts.h"
-#include <cstddef>
-#include <cstring>
-#include <memory>
-#include <new>
 
+#include "Core/CoreMacroDefinitions.h"
+#include "Debug/MemoryTracking/NewDeleteOverrides.h"
+#include <cstddef>
 
 namespace Core {
 

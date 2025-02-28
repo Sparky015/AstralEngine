@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "AllocatorUtils.h"
+
 namespace Core {
 
     template<size_t MemoryBlockSize>
