@@ -48,9 +48,9 @@ namespace Core {
 
     void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
     {
-        std::lock_guard lock(m_Mutex);
+        if (!IsTrackingEnabled()) { return; }
 
-        if (!m_IsTrackingEnabled) { return; }
+        std::lock_guard lock(m_Mutex);
 
         const AllocationData allocationData = {pointer, size, region, allocatorType, std::this_thread::get_id()};
         m_GlobalAllocationStorage.AddPointer(allocationData);
@@ -78,6 +78,24 @@ namespace Core {
         }
 
         m_GlobalAllocationStorage.FreePointer(pointer);
+    }
+
+
+    void MemoryTracker::EnableTracking()
+    {
+        m_IsTrackingEnabled = true;
+    }
+
+
+    void MemoryTracker::DisableTracking()
+    {
+        m_IsTrackingEnabled = false;
+    }
+
+
+    bool MemoryTracker::IsTrackingEnabled()
+    {
+        return m_IsTrackingEnabled;
     }
 
 

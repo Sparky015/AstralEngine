@@ -81,7 +81,7 @@ namespace Core {
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
             Core::MemoryTracker::Get().DisableTracking();
-            msgpack::pack(GetExportFile(), cpptrace::stacktrace::current(3, 12).to_string());
+            msgpack::pack(GetExportFile(), cpptrace::stacktrace::current(2, 12).to_string());
             Core::MemoryTracker::Get().EnableTracking();
 
         }

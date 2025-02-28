@@ -10,6 +10,7 @@ namespace Core {
         m_PeakMemoryUsage(0),
         m_TotalMemoryUsage(0),
         m_TotalActiveAllocations(0),
+        m_TotalAllocations(0),
         m_NewFrameEventListener{[this](NewFrameEvent)
         {
             m_FrameAllocationData = FrameAllocationData();
