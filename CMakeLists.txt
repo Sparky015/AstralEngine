@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(AstralEngine)
+project(Astral-Runtime)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,7 +12,8 @@ else ()
 endif()
 
 add_subdirectory(ThirdPartyLibraries)
-add_subdirectory(AstralEngine)
+add_subdirectory(Astral-Runtime)
+add_subdirectory(Astral-Editor)
 add_subdirectory(Samples/Chess)
 
 
