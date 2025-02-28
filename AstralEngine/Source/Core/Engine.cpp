@@ -6,12 +6,14 @@
 #include "Core/Engine.h"
 
 #include "ApplicationModule.h"
-#include "../Debug/ImGui/ImGuiManager.h"
-#include "../ECS/ECSManager.h"
-#include "../Input/InputManager.h"
-#include "../Renderer/RendererManager.h"
-#include "../Window/WindowManager.h"
-#include "../Debug/MemoryTracking/MemoryTracker.h"
+#include "Debug/ImGui/ImGuiManager.h"
+#include "ECS/ECSManager.h"
+#include "Input/InputManager.h"
+#include "Renderer/RendererManager.h"
+#include "Window/WindowManager.h"
+#include "Debug/MemoryTracking/MemoryTracker.h"
+#include "cpuinfo.h"
+
 
 #include "../Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
 
@@ -36,6 +38,8 @@ Engine::Engine() :
     ECS::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
+
+    cpuinfo_initialize();
 
     m_WindowClosedListener.StartListening();
     Core::MemoryTracker::Get().EndScene();

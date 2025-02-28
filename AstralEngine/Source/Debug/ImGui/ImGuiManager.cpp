@@ -11,8 +11,8 @@
 #include "Components/WindowComponents.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
 #include "Debug/MemoryTracking/Visualization/Components/LoadFileComponent.h"
-#include "../../../../ThirdPartyLibraries/ImPlot/implot.h"
-#include "../../../../ThirdPartyLibraries/ImGui/imgui.h"
+#include "ImPlot/implot.h"
+#include "imgui/imgui.h"
 
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
@@ -20,10 +20,9 @@
 
 #include "Components/MemoryComponents.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
-#include "../../Input/Keycodes.h"
-#include "../../Window/Platform/Generic/GenericWindow.h"
-#include "../../Window/WindowManager.h"
-#include "../../../../ThirdPartyLibraries/cpuinfo/include/cpuinfo.h"
+#include "Input/Keycodes.h"
+#include "Window/Platform/Generic/GenericWindow.h"
+#include "Window/WindowManager.h"
 
 
 namespace Debug {
@@ -43,7 +42,6 @@ namespace Debug {
         TRACE("Initializing Debug Manager!")
 
         InitImGui();
-        cpuinfo_initialize();
 
         ImGui::GetIO().IniFilename = "imgui-config.ini";
         ImGui::LoadIniSettingsFromDisk("imgui-config.ini");
