@@ -35,8 +35,6 @@ namespace Debug {
         LOG("Compiler: MSVC " << _MSC_VER);
         #elif __INTEL_COMPILER
             LOG("Compiler: Intel " << __INTEL_COMPILER);
-        #elif __BORLANDC__
-            LOG("Compiler: Borland C++ " << __BORLANDC__);
         #else
             LOG("Compiler: Unknown");
         #endif
