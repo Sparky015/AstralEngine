@@ -16,5 +16,4 @@ add_subdirectory(Astral-Runtime)
 add_subdirectory(Astral-Editor)
 add_subdirectory(Samples/Chess)
 
-
-
+add_subdirectory(Tests)

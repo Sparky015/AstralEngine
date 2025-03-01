@@ -6,10 +6,10 @@
 
 
 #include "AllocationData.h"
-#include "../../Core/Events/EventListener.h"
+#include "Core/Events/EventListener.h"
 #include "Debug/MemoryTracking/GlobalAllocationStorage.h"
-#include "../../Renderer/RendererEvents.h"
-#include "../../../../ThirdPartyLibraries/msgpack/include/msgpack.hpp"
+#include "Renderer/RendererEvents.h"
+#include "msgpack.hpp"
 
 namespace Core {
 

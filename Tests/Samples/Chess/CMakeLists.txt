@@ -36,7 +36,7 @@ target_link_libraries(ChessTests
 add_dependencies(ChessTests Chess)
 
 target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
-target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Samples/Chess/Source)
+target_include_directories(ChessTests PUBLIC ${CMAKE_SOURCE_DIR}/Samples/Chess/)
 target_compile_definitions(ChessTests PUBLIC -DCHESS_ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Assets/")
 
 
