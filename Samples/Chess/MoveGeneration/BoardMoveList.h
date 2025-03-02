@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Chessboard/Chessboard.h"
+#include "Chessboard/Chessboard.h"
 
 #include "PieceMoveLists/ChessPieceMoveList.h"
 

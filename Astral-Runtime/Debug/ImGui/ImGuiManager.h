@@ -4,9 +4,8 @@
 
 #pragma once
 
-#include "../../Core/SystemManager.h"
-
-#include "../../Window/WindowEvents.h"
+#include "Core/SystemManager.h"
+#include "Window/WindowEvents.h"
 
 namespace Debug{
 

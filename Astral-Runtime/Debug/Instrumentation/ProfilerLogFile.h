@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-#include "../../Core/CoreMacroDefinitions.h"
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Debug {
 

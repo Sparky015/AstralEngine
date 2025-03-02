@@ -7,7 +7,7 @@
 #include "pch.h"
 #include "Common/ChessPieceTypes.h"
 #include "ChessPieceMoveList.h"
-#include "../../Chessboard/Chessboard.h"
+#include "Chessboard/Chessboard.h"
 
 namespace Game {
 

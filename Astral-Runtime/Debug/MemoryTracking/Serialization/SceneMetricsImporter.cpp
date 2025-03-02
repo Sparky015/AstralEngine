@@ -6,11 +6,11 @@
 
 #include "SceneMetricsImporter.h"
 
-#include "../../Macros/Loggers.h"
+#include "Debug/Utilities/Loggers.h"
 #include <iostream>
 #include "msgpack.hpp"
 
-#include "../../Instrumentation/ScopeProfiler.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
 
 Core::SceneMetricsImporter::SceneMetricsImporter() : m_HasFileLoaded(false)
 {

@@ -15,7 +15,7 @@
 #include "cpuinfo.h"
 
 
-#include "../Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
 
 Engine* Engine::m_Instance = nullptr;
 

@@ -5,7 +5,7 @@
 #include "Loggers.h"
 
 
-#include "../LogFiles/ConsoleLogFile.h"
+#include "ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
 

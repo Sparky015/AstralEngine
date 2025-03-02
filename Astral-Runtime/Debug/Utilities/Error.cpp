@@ -4,7 +4,7 @@
 
 #include "Error.h"
 
-#include "../LogFiles/ConsoleLogFile.h"
+#include "ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
 namespace Debug::Macros {

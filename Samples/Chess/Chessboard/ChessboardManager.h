@@ -6,7 +6,7 @@
 
 #include "Core/SystemManager.h"
 #include "Chessboard.h"
-#include "../MoveGeneration/BoardMoveList.h"
+#include "MoveGeneration/BoardMoveList.h"
 #include "ECS/Entity.h"
 
 namespace Game{
