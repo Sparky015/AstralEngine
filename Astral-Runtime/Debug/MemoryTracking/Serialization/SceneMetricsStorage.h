@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Debug/MemoryTracking/AllocationData.h"
-#include "../NoTrackingSTLAllocator.h"
+#include "Debug/MemoryTracking/NoTrackingSTLAllocator.h"
 #include <vector>
 
 #include "Debug/MemoryTracking/MemoryMetrics.h"

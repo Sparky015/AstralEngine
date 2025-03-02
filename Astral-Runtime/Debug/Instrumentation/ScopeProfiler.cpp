@@ -4,9 +4,9 @@
 
 #include "ScopeProfiler.h"
 
-#include "Debug/LogFiles/ProfilerLogFile.h"
+#include "Debug/Instrumentation/ProfilerLogFile.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
-#include "../../pch.h"
+#include "pch.h"
 
 namespace Debug::Macros {
 

@@ -7,7 +7,7 @@
 #include "Chessboard.h"
 
 #include "FENParser.h"
-#include "../Common/ConversionHelpers.h"
+#include "Common/ConversionHelpers.h"
 
 namespace Game {
 

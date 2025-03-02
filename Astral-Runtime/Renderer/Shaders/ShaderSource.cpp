@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "../../Debug/Macros/Loggers.h"
+#include "Debug/Utilities/Loggers.h"
 
 namespace Graphics {
 
@@ -16,7 +16,7 @@ namespace Graphics {
     ShaderSource::ShaderSource() :
         m_ShaderType(NONE)
     {}
-
+    
     ShaderSource::ShaderSource(const std::string& filePath) : m_ShaderType(NONE)
     {
         ParseShader(filePath);

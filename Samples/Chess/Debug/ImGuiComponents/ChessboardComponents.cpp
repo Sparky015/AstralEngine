@@ -8,7 +8,7 @@
 #include <imgui.h>
 
 #include "Chessboard/ChessboardManager.h"
-#include "../../Common/ConversionHelpers.h"
+#include "Common/ConversionHelpers.h"
 
 void PieceMoveListTableComponent(const Game::Chessboard& chessboard, const Game::BoardMoveList& boardMoveList)
 {

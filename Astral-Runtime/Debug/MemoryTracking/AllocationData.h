@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
-#include "../Macros/Error.h"
+#include "Debug/Utilities/Error.h"
 #include "msgpack.hpp"
 #include <thread>
 

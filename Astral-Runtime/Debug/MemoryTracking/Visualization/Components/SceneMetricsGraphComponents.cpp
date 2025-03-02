@@ -5,7 +5,7 @@
 */
 #include "SceneMetricsGraphComponents.h"
 
-#include "../../../Macros/Asserts.h"
+#include "Debug/Utilities/Asserts.h"
 #include "ImPlot/implot.h"
 
 namespace Core {
@@ -15,7 +15,7 @@ namespace Core {
         size_t max;
         size_t min;
     };
-
+    
 
     GraphExtrema GetGraphExtrema(const SceneMetricsStorage::DataPointStorage& dataStorage)
     {

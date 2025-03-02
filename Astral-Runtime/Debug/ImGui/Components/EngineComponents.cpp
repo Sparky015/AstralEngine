@@ -6,7 +6,7 @@
 
 #include "EngineComponents.h"
 
-#include "../../../Core/Engine.h"
+#include "Core/Engine.h"
 #include "imgui.h"
 
 namespace Debug {

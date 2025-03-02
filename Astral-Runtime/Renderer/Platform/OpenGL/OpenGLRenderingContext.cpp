@@ -6,8 +6,8 @@
 
 #include <glad/glad.h>
 
-#include "../../../Debug/Instrumentation/ScopeProfiler.h"
-#include "../../../Debug/Macros/Error.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Utilities/Error.h"
 
 namespace Graphics {
 
