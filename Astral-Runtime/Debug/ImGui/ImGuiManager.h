@@ -17,11 +17,13 @@ namespace Debug{
 
         void Init() override;
         void Shutdown() override;
-        void Update() override;
         void RenderImGui() override;
 
-        static void ImGuiBeginFrame();
-        static void ImGuiEndFrame();
+        void BeginFrame();
+        void EndFrame();
+
+        void EnableViewportDockSpace() { m_ShowViewportDockSpace = true; }
+        void DisableViewportDockSpace() { m_ShowViewportDockSpace = false; }
 
         ImGuiManager(const ImGuiManager&) = delete;
         ImGuiManager& operator=(const ImGuiManager&) = delete;
@@ -38,7 +40,8 @@ namespace Debug{
         void OnKeyPress(KeyPressedEvent keyPressedEvent);
 
         static float m_Time;
-        bool m_ShowDebugMenu{false};
+        bool m_ShowDebugMenu{true};
+        bool m_ShowViewportDockSpace{false};
 
         Core::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };

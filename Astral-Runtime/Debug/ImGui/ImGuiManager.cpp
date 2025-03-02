@@ -47,7 +47,7 @@ namespace Debug {
         ImGui::LoadIniSettingsFromDisk("imgui-config.ini");
 
 
-        // m_UpdateListener.StartListening();
+
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
     }
@@ -59,26 +59,24 @@ namespace Debug {
         TRACE("Shutting down Debug Manager!")
         m_KeyPressedListener.StopListening();
         m_RenderImGuiListener.StopListening();
-        // m_UpdateListener.StopListening();
+
         ShutdownImGui();
-    }
-
-
-    void ImGuiManager::Update()
-    {
-        PROFILE_SCOPE("ImGui Manager Update");
     }
 
 
     void ImGuiManager::RenderImGui()
     {
         PROFILE_SCOPE("Render Debug Menu ImGui");
+
         static bool showDemoWindow = true;
-        ImGui::ShowDemoWindow(&showDemoWindow);
+        if (showDemoWindow)
+        {
+            ImGui::ShowDemoWindow(&showDemoWindow);
+        }
+
         if (m_ShowDebugMenu)
         {
             ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
-
 
             if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -202,7 +200,7 @@ namespace Debug {
 
 
     float ImGuiManager::m_Time = 0.0f;
-    void ImGuiManager::ImGuiBeginFrame()
+    void ImGuiManager::BeginFrame()
     {
         PROFILE_SCOPE("ImGui Begin Frame");
         ImGuiIO& io = ImGui::GetIO();
@@ -214,11 +212,14 @@ namespace Debug {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+        if (m_ShowViewportDockSpace)
+        {
+            ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+        }
     }
 
 
-    void ImGuiManager::ImGuiEndFrame()
+    void ImGuiManager::EndFrame()
     {
         PROFILE_SCOPE("ImGui End Frame");
         ImGuiIO& io = ImGui::GetIO();

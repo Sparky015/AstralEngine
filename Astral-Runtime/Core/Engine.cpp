@@ -79,9 +79,9 @@ void Engine::Run()
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
         m_ApplicationModule->Update(m_DeltaTime);
 
-        Debug::ImGuiManager::ImGuiBeginFrame();
+        Debug::ImGuiManager::Get().BeginFrame();
         m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
-        Debug::ImGuiManager::ImGuiEndFrame();
+        Debug::ImGuiManager::Get().EndFrame();
 
         Window::g_WindowManager.SwapBuffers();
     }

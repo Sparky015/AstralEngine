@@ -6,7 +6,7 @@
 
 #include "Editor.h"
 
-#include "imgui.h"
+#include "Debug/ImGui/ImGuiManager.h"
 #include "SceneGraphPanel.h"
 #include "ViewportPanel.h"
 
@@ -23,6 +23,7 @@ namespace Astral {
 
     void Editor::Init()
     {
+        Debug::ImGuiManager::Get().EnableViewportDockSpace();
         m_RenderImGuiListener.StartListening();
     }
 
@@ -35,8 +36,10 @@ namespace Astral {
 
     void Editor::UpdateEditorUI()
     {
+
         ViewportPanel();
         SceneGraphPanel();
+
     }
 
 }
