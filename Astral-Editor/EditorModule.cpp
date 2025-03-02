@@ -5,34 +5,44 @@
 */
 
 #include "Astral.h"
+#include "Editor.h"
+#include "ViewportPanel.h"
 
 #include "Input/InputState.h"
 
-class EditorModule : public ApplicationModule
-{
-public:
-    ~EditorModule() override = default;
+namespace Astral {
 
-    void Init() override
+    class EditorModule : public ApplicationModule
     {
-        PROFILE_SCOPE("EditorModuleInit")
-        TRACE("Initializing Editor")
-    }
+    public:
+        ~EditorModule() override = default;
 
-    void Update(const Core::DeltaTime& deltaTime) override
-    {
-        if (InputState::IsKeyDown(Keycode::KEY_F))
+        void Init() override
         {
-            LOG("Delta Time: " << deltaTime.GetSeconds());
+            PROFILE_SCOPE("EditorModuleInit")
+            TRACE("Initializing Editor")
+
+            m_Editor.Init();
         }
-    }
 
-    void Shutdown() override
-    {
-        PROFILE_SCOPE("EditorModuleShutdown")
-        TRACE("Shutting down Editor")
-    }
+        void Update(const Core::DeltaTime& deltaTime) override
+        {
 
-};
+        }
 
-IMPLEMENT_APPLICATION_MODULE(EditorModule);
+        void Shutdown() override
+        {
+            PROFILE_SCOPE("EditorModuleShutdown")
+            TRACE("Shutting down Editor")
+
+            m_Editor.Shutdown();
+        }
+
+    private:
+
+        Editor m_Editor;
+    };
+
+}
+
+IMPLEMENT_APPLICATION_MODULE(Astral::EditorModule);

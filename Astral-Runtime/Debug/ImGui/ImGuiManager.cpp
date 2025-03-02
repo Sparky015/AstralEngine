@@ -73,7 +73,6 @@ namespace Debug {
     void ImGuiManager::RenderImGui()
     {
         PROFILE_SCOPE("Render Debug Menu ImGui");
-
         static bool showDemoWindow = true;
         ImGui::ShowDemoWindow(&showDemoWindow);
         if (m_ShowDebugMenu)
@@ -109,9 +108,8 @@ namespace Debug {
                 GlobalActiveAllocations();
                 GlobalTotalAllocationsMade();
                 AllocationsInCurrentFrame();
-                ManageMemoryProfilingScene();
-                Core::LoadMemoryProfileButtonComponent();
 
+                ImGui::Spacing();
                 ImGui::Spacing();
 
                 if (ImGui::TreeNode("Metrics by Allocator"))
@@ -140,6 +138,12 @@ namespace Debug {
                     ActiveAllocationsByThread();
                     ImGui::TreePop();
                 }
+
+                ImGui::Spacing();
+                ImGui::Spacing();
+
+                ManageMemoryProfilingScene();
+                Core::LoadMemoryProfileButtonComponent();
 
                 ImGui::TreePop();
             }
@@ -192,50 +196,6 @@ namespace Debug {
                 ImGui::TreePop();
             }
 
-
-//            if (ImGui::TreeNode("Piece Locations"))
-//            {
-//                if (ImGui::BeginTable("Piece Table", 8, flags, ImVec2(200, 130)))
-//                {
-//                    Game::Board& board = Game::g_BoardManager.GetBoard();
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%c", board.GetCharacterOfPiece(square));
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-//
-//            if (ImGui::TreeNode("Board Location IDs"))
-//            {
-//                if (ImGui::BeginTable("BoardLocationIDs", 8, flags, ImVec2(200, 130)))
-//                {
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%d", square);
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-//
-//            if (ImGui::TreeNode("Board Locations (In Chess Notation)"))
-//            {
-//                if (ImGui::BeginTable("BoardLocationChessNotation", 8, flags, ImVec2(200, 130)))
-//                {
-//                    for (uint8 square = Game::A8; square != Game::H1 + 1; square++)
-//                    {
-//                        ImGui::TableNextColumn();
-//                        ImGui::Text("%s", Game::ConvertIntToChessNotation(square).c_str());
-//                    }
-//                    ImGui::EndTable();
-//                }
-//                ImGui::TreePop();
-//            }
-
             ImGui::End();
         }
     }
@@ -253,6 +213,8 @@ namespace Debug {
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
     }
 
 
@@ -277,6 +239,7 @@ namespace Debug {
     {
         TRACE("Constructing Debug System!")
     }
+
 
     ImGuiManager::~ImGuiManager()
     {
@@ -325,6 +288,7 @@ namespace Debug {
         ImPlot::DestroyContext();
         ImGui::DestroyContext();
     }
+
 
     void ImGuiManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
