@@ -5,20 +5,23 @@
 Lazily adding them would save memory for unused components, but registering at compile time
 would save time at the runtime because then we don't have to do an allocation on the first use
 of a component. But at the same time, the components are usually first used when making a scene
-in the editor. 
+in the editor. Given that we have an editor, I don't think any new typed components will be added 
+into the ECS at runtime. Of course all component types will need to be defined at compile time for
+the editor too, but there shouldn't be a need to introduce a new type at runtime because
+it would have already been handled already with the editor and, additionally, the editor will require
+a compile time definition too.
 
 #### -- How will the ECS handle loading scenes with already defined data for the components?
  
 I think we can just move the deserialized ECS into the actual ECS when the scene is loading and that
 will contain all the data.
 
-Given that we have an editor, I don't think any new typed components will be added into the ECS
-at runtime.
+
 
 #### -- Ok so considering that, why would I want to register types at runtime?
 
 It might be easier to iterate and add and remove new types of components easier without having to register
-and unregister components. But to be honest, that's not too much to do and you shouldn't be adding and removing
+and unregister components. But to be honest, that's not too much to do, and you shouldn't be adding and removing
 new component types that often. Another thing might be that if you can register the types during runtime,
 you are paying exactly how much you are using in terms of memory. But at the same time, the user still decides
 which types to register and which to not register with a macro. Anything that can be done at runtime can also 
