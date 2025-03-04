@@ -30,7 +30,7 @@ namespace Window {
         int GetHeight() override;
         Vec2 GetFramebufferScale() override;
 
-        Graphics::RendererContext & GetRendererContext() override;
+        Graphics::RenderingContext & GetRendererContext() override;
         void* GetNativeWindow() override;
 
     private:

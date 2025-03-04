@@ -12,7 +12,7 @@
 #include "Renderer/Renderer.h"
 
 
-namespace Sozin {
+namespace Astral {
 
     void RenderingSystem::RenderEntities(Graphics::ShaderProgram* shader)
     {

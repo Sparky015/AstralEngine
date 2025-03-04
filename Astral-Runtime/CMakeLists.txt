@@ -39,48 +39,48 @@ add_library(AstralEngine
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
-        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.cpp
-        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLShaderProgram.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
-        Renderer/Primitives/VertexBuffer.cpp
-        Renderer/Primitives/VertexBuffer.h
-        Renderer/Primitives/IndexBuffer.cpp
-        Renderer/Primitives/IndexBuffer.h
+        Renderer/AbstractionLayer/Primitives/VertexBuffer.cpp
+        Renderer/AbstractionLayer/Primitives/VertexBuffer.h
+        Renderer/AbstractionLayer/Primitives/IndexBuffer.cpp
+        Renderer/AbstractionLayer/Primitives/IndexBuffer.h
         Renderer/Renderer.cpp
         Renderer/Renderer.h
-        Renderer/Platform/OpenGL/OpenGLRenderingContext.h
-        Renderer/Platform/OpenGL/OpenGLRenderingContext.cpp
-        Renderer/RendererContext.h
-        Renderer/RendererContext.cpp
+        Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.h
+        Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.cpp
+        Renderer/RenderingContext/RenderingContext.h
+        Renderer/RenderingContext/RenderingContext.cpp
         Window/Window.cpp
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
         Window/Platform/Generic/GenericWindow.h
-        Renderer/Primitives/VertexArrayObject.cpp
-        Renderer/Primitives/VertexArrayObject.h
-        Renderer/Primitives/Texture.cpp
-        Renderer/Primitives/Texture.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLTexture.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h
-        Renderer/Primitives/BufferLayout.cpp
-        Renderer/Primitives/BufferLayout.h
+        Renderer/AbstractionLayer/Primitives/VertexArrayObject.cpp
+        Renderer/AbstractionLayer/Primitives/VertexArrayObject.h
+        Renderer/AbstractionLayer/Primitives/Texture.cpp
+        Renderer/AbstractionLayer/Primitives/Texture.h
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLTexture.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLTexture.h
+        Renderer/AbstractionLayer/Primitives/BufferLayout.cpp
+        Renderer/AbstractionLayer/Primitives/BufferLayout.h
         Core/Math/Math.h
-        Renderer/Shaders/ShaderProgram.cpp
-        Renderer/Shaders/ShaderProgram.h
+        Renderer/AbstractionLayer/Primitives/ShaderProgram.cpp
+        Renderer/AbstractionLayer/Primitives/ShaderProgram.h
         Renderer/RendererCommands.cpp
         Renderer/RendererCommands.h
-        Renderer/RendererAPI.cpp
-        Renderer/RendererAPI.h
-        Renderer/Platform/OpenGL/OpenGLRendererAPI.cpp
-        Renderer/Platform/OpenGL/OpenGLRendererAPI.h
-        Renderer/Platform/OpenGL/OpenGLErrorTracking.h
+        Renderer/AbstractionLayer/RendererAPI.cpp
+        Renderer/AbstractionLayer/RendererAPI.h
+        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.cpp
+        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.h
+        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
         Astral.h

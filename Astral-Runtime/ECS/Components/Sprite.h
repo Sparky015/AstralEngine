@@ -6,9 +6,9 @@
 
 #include "pch.h"
 
-#include "Renderer/Primitives/Texture.h"
+#include "Renderer/AbstractionLayer/Primitives/Texture.h"
 
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
 
 struct SpriteComponent
 {

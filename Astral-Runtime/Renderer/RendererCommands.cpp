@@ -4,8 +4,8 @@
 
 #include "RendererCommands.h"
 
-#include "Renderer/Platform/OpenGL/OpenGLRendererAPI.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "AbstractionLayer/Primitives/VertexArrayObject.h"
 
 
 namespace Graphics {

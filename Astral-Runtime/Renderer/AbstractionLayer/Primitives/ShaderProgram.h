@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "ShaderSource.h"
-#include "Core/Math/Math.h"
+#include "../../Shaders/ShaderSource.h"
+#include "../../../Core/Math/Math.h"
 
 namespace Graphics {
 

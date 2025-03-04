@@ -9,7 +9,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#include "Renderer/RendererContext.h"
+#include "Renderer/RenderingContext/RenderingContext.h"
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
 #include "imgui.h"
@@ -65,7 +65,7 @@ namespace Debug {
 
     void SystemGPUNameComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Graphics::RenderingContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName().data());
     }
 
@@ -76,7 +76,7 @@ namespace Debug {
 
     void SystemGPUVendorComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Graphics::RenderingContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().data());
     }
 

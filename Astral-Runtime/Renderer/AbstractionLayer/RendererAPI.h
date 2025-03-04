@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/Events/EventListener.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 
 namespace Graphics {

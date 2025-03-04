@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/RendererContext.h"
+#include "Renderer/RenderingContext/RenderingContext.h"
 #include <GLFW/glfw3.h>
 
 namespace Graphics {
@@ -13,7 +13,7 @@ namespace Graphics {
     * This sets up the rendering context for when OpenGL is used. It defines functions that are overridden from
     * RendererContext and also needs a window from the window solution to set the context to.
     */
-    class OpenGLRenderingContext : public RendererContext
+    class OpenGLRenderingContext : public RenderingContext
     {
     public:
         explicit OpenGLRenderingContext(GLFWwindow* window);

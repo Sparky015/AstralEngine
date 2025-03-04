@@ -5,8 +5,8 @@
 #include "IndexBuffer.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h"
-#include "Renderer/RendererAPI.h"
+#include "Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h"
+#include "Renderer/AbstractionLayer/RendererAPI.h"
 
 namespace Graphics {
 

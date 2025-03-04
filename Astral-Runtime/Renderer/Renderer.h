@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "Renderer/Primitives/IndexBuffer.h"
-#include "Renderer/Primitives/VertexBuffer.h"
+#include "Renderer/AbstractionLayer/Primitives/IndexBuffer.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexBuffer.h"
 
-#include "Renderer/Primitives/VertexArrayObject.h"
-#include "Renderer/Shaders/ShaderProgram.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
+#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 
 namespace Graphics {

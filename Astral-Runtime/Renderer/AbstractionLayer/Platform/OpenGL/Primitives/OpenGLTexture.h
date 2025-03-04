@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/Primitives/Texture.h"
+#include "Renderer/AbstractionLayer/Primitives/Texture.h"
 
 namespace Graphics {
 

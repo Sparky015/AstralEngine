@@ -11,10 +11,10 @@ namespace Graphics {
      * RendererContext is an interface to which each Rendering API will override and provide their own way to create
      * their rendering context.
      */
-    class RendererContext
+    class RenderingContext
     {
     public:
-        virtual ~RendererContext() = default;
+        virtual ~RenderingContext() = default;
 
         virtual void Init() = 0;
         virtual void Shutdown() = 0;
@@ -23,7 +23,7 @@ namespace Graphics {
         virtual std::string_view GetGPUVendor() = 0;
         virtual std::string_view GetGraphicsProcessorName() = 0;
 
-        static RendererContext* CreateRendererContext();
+        static RenderingContext* CreateRendererContext();
     };
 
 }

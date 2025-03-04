@@ -2,17 +2,17 @@
 // Created by Andrew Fagan on 11/29/24.
 //
 
-#include "RendererContext.h"
+#include "RenderingContext.h"
 
 #include "Window/WindowManager.h"
 
 #include "Platform/OpenGL/OpenGLRenderingContext.h"
-#include "RendererAPI.h"
+#include "Renderer/AbstractionLayer/RendererAPI.h"
 #include "Debug/Utilities/Error.h"
 
 namespace Graphics {
 
-    RendererContext* RendererContext::CreateRendererContext()
+    RenderingContext* RenderingContext::CreateRendererContext()
     {
         Window::Window& window = Window::g_WindowManager.GetWindow();
         void* nativeWindow = window.GetNativeWindow();

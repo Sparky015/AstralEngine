@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/Primitives/IndexBuffer.h"
+#include "Renderer/AbstractionLayer/Primitives/IndexBuffer.h"
 
 namespace Graphics {
 

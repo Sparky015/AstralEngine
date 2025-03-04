@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "Renderer/Shaders/ShaderSource.h"
+#include "../../../../Shaders/ShaderSource.h"
 
-#include "Renderer/Shaders/ShaderProgram.h"
+#include "../../../Primitives/ShaderProgram.h"
 
 namespace Graphics {
 

@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Renderer/Shaders/ShaderProgram.h"
+#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
 
-namespace Sozin {
+namespace Astral {
 
     class RenderingSystem
     {

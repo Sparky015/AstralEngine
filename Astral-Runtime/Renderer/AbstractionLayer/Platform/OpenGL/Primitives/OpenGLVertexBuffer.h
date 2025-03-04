@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/Primitives/VertexBuffer.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexBuffer.h"
 
 namespace Graphics {
 

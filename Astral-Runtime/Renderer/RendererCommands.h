@@ -5,9 +5,9 @@
 #pragma once
 
 
-#include "Renderer/Primitives/VertexArrayObject.h"
-#include "Renderer/Shaders/ShaderProgram.h"
-#include "RendererAPI.h"
+#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
+#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
+#include "AbstractionLayer/RendererAPI.h"
 
 namespace Graphics {
 

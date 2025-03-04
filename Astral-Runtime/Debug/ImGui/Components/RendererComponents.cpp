@@ -31,7 +31,7 @@ namespace Debug {
 
     void RendererAPIComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Graphics::RenderingContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 

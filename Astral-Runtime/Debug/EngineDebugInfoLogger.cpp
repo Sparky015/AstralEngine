@@ -54,7 +54,7 @@ namespace Debug {
 
         /** Outputs the libraries used depending on the platform. */
         Window::Window& window = Window::g_WindowManager.GetWindow();
-        Graphics::RendererContext& rendererContext = window.GetRendererContext();
+        Graphics::RenderingContext& rendererContext = window.GetRendererContext();
 
         LOG("Window: " << window.GetVersion());
         LOG("Rendering API: " << rendererContext.GetRenderingAPI());
