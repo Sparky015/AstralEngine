@@ -150,8 +150,8 @@ add_library(AstralEngine
         Core/Memory/Allocators/RingAllocator.cpp
         Core/Memory/Allocators/RingAllocator.h
 
-        Renderer/Cameras/OrthographicCameraTest.cpp
-        Renderer/Cameras/OrthographicCameraTest.h
+        Renderer/Cameras/OrthographicCamera.cpp
+        Renderer/Cameras/OrthographicCamera.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
 

@@ -9,14 +9,14 @@
 
 #include "Renderer/Primitives/VertexArrayObject.h"
 #include "Renderer/Shaders/ShaderProgram.h"
-#include "Renderer/Cameras/OrthographicCameraTest.h"
+#include "Renderer/Cameras/OrthographicCamera.h"
 
 namespace Graphics {
 
     class Renderer
     {
     public:
-        static void BeginScene(const OrthographicCameraTest& orthographicCamera);
+        static void BeginScene(const OrthographicCamera& orthographicCamera);
         static void EndScene();
 
         static void Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform);

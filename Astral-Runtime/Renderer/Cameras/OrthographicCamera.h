@@ -10,12 +10,12 @@
 
 namespace Graphics {
 
-    /**@class OrthographicCameraTest
+    /**@class OrthographicCamera
      * @brief An orthographic camera to use in scenes. */
-    class OrthographicCameraTest
+    class OrthographicCamera
     {
     public:
-        OrthographicCameraTest(float left, float right, float bottom, float top, float near = -1, float far = 1);
+        OrthographicCamera(float left, float right, float bottom, float top, float near = -1, float far = 1);
 
         /**@brief Gets the ProjectionView matrix. The matrix is calculated on each call. */
         const Mat4& GetProjectionViewMatrix();

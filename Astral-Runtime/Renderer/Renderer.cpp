@@ -8,7 +8,7 @@
 
 namespace Graphics {
 
-    void Renderer::BeginScene(const OrthographicCameraTest& orthographicCamera)
+    void Renderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
 
     }
