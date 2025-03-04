@@ -9,7 +9,7 @@ add_library(AstralEngine
         Input/InputManager.h
         Core/Engine.h
         Core/Engine.cpp
-        Core/SystemEvents.h
+        Core/EngineLoopEvents.h
         Core/SystemManager.h
         Core/SystemManager.cpp
         Window/WindowManager.cpp
@@ -108,7 +108,6 @@ add_library(AstralEngine
         Debug/ImGui/Components/WindowComponents.h
         Debug/ImGui/Components/RendererComponents.cpp
         Debug/ImGui/Components/RendererComponents.h
-        Renderer/RendererEvents.h
         Debug/ImGui/Components/BuildConfigComponents.cpp
         Debug/ImGui/Components/BuildConfigComponents.h
         Debug/ImGui/Components/ECSComponents.cpp
@@ -150,8 +149,8 @@ add_library(AstralEngine
         Core/Memory/Allocators/RingAllocator.cpp
         Core/Memory/Allocators/RingAllocator.h
 
-        Renderer/Cameras/OrthographicCameraTest.cpp
-        Renderer/Cameras/OrthographicCameraTest.h
+        Renderer/Cameras/OrthographicCamera.cpp
+        Renderer/Cameras/OrthographicCamera.h
         Core/Memory/Allocators/AlignedAllocator.cpp
         Core/Memory/Allocators/AlignedAllocator.h
 

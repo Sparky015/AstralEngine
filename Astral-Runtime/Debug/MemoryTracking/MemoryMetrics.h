@@ -8,7 +8,7 @@
 #include "AllocationData.h"
 #include "Core/Events/EventListener.h"
 #include "Debug/MemoryTracking/GlobalAllocationStorage.h"
-#include "Renderer/RendererEvents.h"
+#include "Core/EngineLoopEvents.h"
 #include "msgpack.hpp"
 
 namespace Core {

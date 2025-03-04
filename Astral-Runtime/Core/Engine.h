@@ -12,8 +12,7 @@
 #include "Time/Clock.h"
 #include "Time/DeltaTime.h"
 #include "Debug/ImGui/ImGuiEvents.h"
-#include "Renderer/RendererEvents.h"
-#include "SystemEvents.h"
+#include "EngineLoopEvents.h"
 #include "Window/WindowEvents.h"
 
 
