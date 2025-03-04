@@ -8,7 +8,7 @@
 
 #include "Core/Events/EventListener.h"
 #include "Renderer/Primitives/VertexArrayObject.h"
-#include "Renderer/RendererEvents.h"
+#include "Core/EngineLoopEvents.h"
 
 namespace Graphics {
 
