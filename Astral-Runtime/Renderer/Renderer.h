@@ -4,12 +4,13 @@
 
 #pragma once
 
-#include "Renderer/AbstractionLayer/Primitives/IndexBuffer.h"
-#include "Renderer/AbstractionLayer/Primitives/VertexBuffer.h"
+#include "Renderer/RHI/Primitives/IndexBuffer.h"
+#include "Renderer/RHI/Primitives/VertexBuffer.h"
 
-#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
-#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Primitives/ShaderProgram.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
+#include "RHI/RendererAPI.h"
 
 namespace Graphics {
 
@@ -21,8 +22,8 @@ namespace Graphics {
 
         static void Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform);
 
-        static void GetDrawCallsPerFrame();
-    private:
+        static uint32 GetDrawCallsPerFrame();
+        static API GetRendererAPIBackend();
 
     };
 

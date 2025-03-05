@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Primitives/ShaderProgram.h"
 
 namespace Astral {
 

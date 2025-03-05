@@ -26,7 +26,7 @@ namespace Debug {
 
     void DrawCallsPerFrameComponent()
     {
-        ImGui::Text("Draw Calls/Frame: %d", Graphics::RendererCommand::GetNumberOfDrawCallsPerFrame());
+        ImGui::Text("Draw Calls/Frame: %d", Graphics::Renderer::GetDrawCallsPerFrame());
     }
 
     void RendererAPIComponent()

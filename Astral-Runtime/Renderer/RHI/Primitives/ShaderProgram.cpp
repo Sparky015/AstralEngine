@@ -6,8 +6,8 @@
 #include "ShaderProgram.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLShaderProgram.h"
-#include "Renderer/AbstractionLayer/RendererAPI.h"
+#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {
 

@@ -8,7 +8,7 @@
 
 #include "Debug/Utilities/Loggers.h"
 #include "glad/glad.h"
-#include "Renderer/AbstractionLayer/Platform/OpenGL/OpenGLErrorTracking.h"
+#include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
 namespace Graphics {

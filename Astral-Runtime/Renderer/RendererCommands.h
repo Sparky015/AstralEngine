@@ -5,9 +5,10 @@
 #pragma once
 
 
-#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
-#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
-#include "AbstractionLayer/RendererAPI.h"
+#include "Renderer.h"
+#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Primitives/ShaderProgram.h"
+#include "RHI/RendererAPI.h"
 
 namespace Graphics {
 
@@ -19,9 +20,10 @@ namespace Graphics {
         static void DrawElements(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform);
         static void SetBlending(bool enable);
 
-        static uint32 GetNumberOfDrawCallsPerFrame();
 
     private:
+        friend Renderer;
+        static RendererAPI* GetRendererAPIBackend() { return s_RendererAPI; }
         static RendererAPI* s_RendererAPI;
     };
 

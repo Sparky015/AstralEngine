@@ -1,20 +1,20 @@
 //
-// Created by Andrew Fagan on 11/30/24.
+// Created by Andrew Fagan on 11/29/24.
 //
 
-#include "Texture.h"
+#include "VertexBuffer.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLTexture.h"
-#include "Renderer/AbstractionLayer/RendererAPI.h"
+#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {
 
-    Texture* Texture::CreateTexture(const std::string& filePath)
+    VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
     {
         switch (RendererAPI::GetAPI())
         {
-            case API::OpenGL: return new OpenGLTexture(filePath);
+            case API::OpenGL: return new OpenGLVertexBuffer(vertices, size, bufferLayout);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");

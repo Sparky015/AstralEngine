@@ -4,11 +4,11 @@
 
 #include "RenderingContext.h"
 
-#include "Window/WindowManager.h"
-
-#include "Platform/OpenGL/OpenGLRenderingContext.h"
-#include "Renderer/AbstractionLayer/RendererAPI.h"
 #include "Debug/Utilities/Error.h"
+#include "Platform/OpenGL/OpenGLRenderingContext.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Platform/Vulkan/VulkanRenderingContext.h"
+#include "Window/WindowManager.h"
 
 namespace Graphics {
 
@@ -20,10 +20,11 @@ namespace Graphics {
         switch (RendererAPI::GetAPI())
         {
             case API::OpenGL: return new OpenGLRenderingContext((GLFWwindow*)nativeWindow);
-            case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
+            case API::Vulkan: return new VulkanRenderingContext((GLFWwindow*)nativeWindow);
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::None: ASTRAL_ERROR("No Rendering API was set!");
+            default: ASTRAL_ERROR("Invalid Rendering API");
         }
     }
 

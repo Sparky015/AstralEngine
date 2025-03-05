@@ -28,13 +28,13 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
-    Core::MemoryTracker::Get().Init();
+    // Core::MemoryTracker::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Core::MemoryTracker::Get().BeginScene("Engine_Init");
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
-    Debug::g_ImGuiManager.Init();
+    // Debug::g_ImGuiManager.Init();
     ECS::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
@@ -42,7 +42,7 @@ Engine::Engine() :
     cpuinfo_initialize();
 
     m_WindowClosedListener.StartListening();
-    Core::MemoryTracker::Get().EndScene();
+    // Core::MemoryTracker::Get().EndScene();
 }
 
 
@@ -54,7 +54,7 @@ Engine::~Engine()
     m_ApplicationModule->Shutdown();
     Graphics::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
-    Debug::g_ImGuiManager.Shutdown();
+    // Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 
@@ -79,9 +79,9 @@ void Engine::Run()
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
         m_ApplicationModule->Update(m_DeltaTime);
 
-        Debug::ImGuiManager::Get().BeginFrame();
-        m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
-        Debug::ImGuiManager::Get().EndFrame();
+        // Debug::ImGuiManager::Get().BeginFrame();
+        // m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
+        // Debug::ImGuiManager::Get().EndFrame();
 
         Window::g_WindowManager.SwapBuffers();
     }

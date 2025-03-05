@@ -39,20 +39,20 @@ add_library(AstralEngine
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLShaderProgram.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLShaderProgram.h
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.cpp
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
-        Renderer/AbstractionLayer/Primitives/VertexBuffer.cpp
-        Renderer/AbstractionLayer/Primitives/VertexBuffer.h
-        Renderer/AbstractionLayer/Primitives/IndexBuffer.cpp
-        Renderer/AbstractionLayer/Primitives/IndexBuffer.h
+        Renderer/RHI/Primitives/VertexBuffer.cpp
+        Renderer/RHI/Primitives/VertexBuffer.h
+        Renderer/RHI/Primitives/IndexBuffer.cpp
+        Renderer/RHI/Primitives/IndexBuffer.h
         Renderer/Renderer.cpp
         Renderer/Renderer.h
         Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.h
@@ -63,24 +63,24 @@ add_library(AstralEngine
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
         Window/Platform/Generic/GenericWindow.h
-        Renderer/AbstractionLayer/Primitives/VertexArrayObject.cpp
-        Renderer/AbstractionLayer/Primitives/VertexArrayObject.h
-        Renderer/AbstractionLayer/Primitives/Texture.cpp
-        Renderer/AbstractionLayer/Primitives/Texture.h
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLTexture.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLTexture.h
-        Renderer/AbstractionLayer/Primitives/BufferLayout.cpp
-        Renderer/AbstractionLayer/Primitives/BufferLayout.h
+        Renderer/RHI/Primitives/VertexArrayObject.cpp
+        Renderer/RHI/Primitives/VertexArrayObject.h
+        Renderer/RHI/Primitives/Texture.cpp
+        Renderer/RHI/Primitives/Texture.h
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLTexture.cpp
+        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLTexture.h
+        Renderer/RHI/Primitives/BufferLayout.cpp
+        Renderer/RHI/Primitives/BufferLayout.h
         Core/Math/Math.h
-        Renderer/AbstractionLayer/Primitives/ShaderProgram.cpp
-        Renderer/AbstractionLayer/Primitives/ShaderProgram.h
+        Renderer/RHI/Primitives/ShaderProgram.cpp
+        Renderer/RHI/Primitives/ShaderProgram.h
         Renderer/RendererCommands.cpp
         Renderer/RendererCommands.h
-        Renderer/AbstractionLayer/RendererAPI.cpp
-        Renderer/AbstractionLayer/RendererAPI.h
-        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.cpp
-        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.h
-        Renderer/AbstractionLayer/Platform/OpenGL/OpenGLErrorTracking.h
+        Renderer/RHI/RendererAPI.cpp
+        Renderer/RHI/RendererAPI.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererAPI.cpp
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererAPI.h
+        Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
         Astral.h
@@ -188,6 +188,8 @@ add_library(AstralEngine
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
         Debug/MemoryTracking/NewDeleteOverrides.h
+        Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.cpp
+        Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.h
 )
 
 
@@ -233,6 +235,15 @@ elseif (WIN32)
     target_link_libraries(AstralEngine PRIVATE glfw3)
 endif ()
 
+target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
+target_link_libraries(AstralEngine PUBLIC
+        vulkan-1
+        SPIRV-Toolsd
+        SPIRV-Tools-diffd
+        SPIRV-Tools-optd
+        glslangd
+        glslang-default-resource-limitsd
+)
 
 
 # Include Directories
@@ -249,6 +260,8 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
+
+target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 
 
 
@@ -273,10 +286,28 @@ endif()
 
 target_compile_definitions(AstralEngine PUBLIC -DGLFW_INCLUDE_NONE)
 target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
+elseif (LINUX)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
 endif ()
 
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
@@ -284,3 +315,4 @@ target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/"
 target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")
+

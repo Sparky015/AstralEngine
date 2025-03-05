@@ -5,8 +5,8 @@
 #include "VertexArrayObject.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/AbstractionLayer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
-#include "Renderer/AbstractionLayer/RendererAPI.h"
+#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {
 

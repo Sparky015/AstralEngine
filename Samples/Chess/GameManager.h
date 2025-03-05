@@ -8,11 +8,11 @@
 #include "Movement/PieceTracking.h"
 
 
-#include "Renderer/AbstractionLayer/Primitives/IndexBuffer.h"
-#include "Renderer/AbstractionLayer/Primitives/VertexBuffer.h"
-#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
-#include "Renderer/AbstractionLayer/Primitives/Texture.h"
-#include "Renderer/AbstractionLayer/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Primitives/IndexBuffer.h"
+#include "Renderer/RHI/Primitives/VertexBuffer.h"
+#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Primitives/Texture.h"
+#include "Renderer/RHI/Primitives/ShaderProgram.h"
 
 
 namespace Game {

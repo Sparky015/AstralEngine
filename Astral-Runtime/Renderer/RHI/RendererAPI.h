@@ -7,13 +7,13 @@
 #pragma once
 
 #include "Core/Events/EventListener.h"
-#include "Renderer/AbstractionLayer/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Primitives/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 
 namespace Graphics {
 
     enum class API : uint8 {
-        OpenGL = 0, Vulkan, DirectX12, Metal
+        None = 0, OpenGL, Vulkan, DirectX12, Metal
     };
 
     class RendererAPI {

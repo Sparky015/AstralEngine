@@ -36,7 +36,7 @@ namespace Window {
 
 
         /** Creating the GLFW window */
-        m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Chess", nullptr, nullptr);
+        m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Astral Engine", nullptr, nullptr);
 
         if (m_Window == nullptr)
         {

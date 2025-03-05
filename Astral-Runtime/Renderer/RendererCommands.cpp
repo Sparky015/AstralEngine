@@ -4,8 +4,8 @@
 
 #include "RendererCommands.h"
 
-#include "AbstractionLayer/Platform/OpenGL/OpenGLRendererAPI.h"
-#include "AbstractionLayer/Primitives/VertexArrayObject.h"
+#include "RHI/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "RHI/Primitives/VertexArrayObject.h"
 
 
 namespace Graphics {
@@ -37,8 +37,4 @@ namespace Graphics {
         s_RendererAPI->SetBlending(enable);
     }
 
-    uint32 RendererCommand::GetNumberOfDrawCallsPerFrame()
-    {
-        return s_RendererAPI->GetNumberOfDrawCalls();
-    }
 }

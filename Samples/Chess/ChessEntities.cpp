@@ -5,7 +5,7 @@
 #include "ChessEntities.h"
 
 #include "ECS/ECSManager.h"
-#include "Renderer/AbstractionLayer/Primitives/Texture.h"
+#include "Renderer/RHI/Primitives/Texture.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
 

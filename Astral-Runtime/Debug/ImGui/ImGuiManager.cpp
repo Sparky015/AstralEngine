@@ -15,12 +15,22 @@
 #include "imgui/imgui.h"
 
 
-#include "ImGuiDependencies/imgui_impl_glfw.h"
+#ifdef ASTRAL_OPENGL_AVAILABLE
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
+#endif
+#ifdef ASTRAL_VULKAN_AVAILABLE
+    #include "ImGuiDependencies/imgui_impl_vulkan.h"
+#endif
+
+#include "ImGuiDependencies/imgui_impl_glfw.h"
+
+
+
 
 #include "Components/MemoryComponents.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
 #include "Input/Keycodes.h"
+#include "Renderer/Renderer.h"
 #include "Window/Platform/Generic/GenericWindow.h"
 #include "Window/WindowManager.h"
 
@@ -275,8 +285,17 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
-        ImGui_ImplOpenGL3_Init("#version 410");
+        if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::OpenGL)
+        {
+            ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
+            ImGui_ImplOpenGL3_Init("#version 410");
+        }
+        else if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::Vulkan)
+        {
+            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
+            // ImGui_ImplVulkan_Init();
+        }
+
     }
 
 
