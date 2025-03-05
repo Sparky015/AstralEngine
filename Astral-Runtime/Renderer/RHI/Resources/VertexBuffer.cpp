@@ -5,7 +5,7 @@
 #include "VertexBuffer.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h"
+#include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {

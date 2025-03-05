@@ -5,7 +5,7 @@
 #include "RendererCommands.h"
 
 #include "RHI/Platform/OpenGL/OpenGLRendererAPI.h"
-#include "RHI/Primitives/VertexArrayObject.h"
+#include "RHI/Resources/VertexArrayObject.h"
 
 
 namespace Graphics {

@@ -5,7 +5,7 @@
 #include "VertexArrayObject.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
+#include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {

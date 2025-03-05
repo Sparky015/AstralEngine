@@ -6,7 +6,7 @@
 
 #include "../../../../Shaders/ShaderSource.h"
 
-#include "../../../Primitives/ShaderProgram.h"
+#include "../../../Resources/ShaderProgram.h"
 
 namespace Graphics {
 

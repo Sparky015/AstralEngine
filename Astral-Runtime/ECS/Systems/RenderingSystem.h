@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Renderer/RHI/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Resources/ShaderProgram.h"
 
 namespace Astral {
 

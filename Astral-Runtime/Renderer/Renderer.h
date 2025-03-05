@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "Renderer/RHI/Primitives/IndexBuffer.h"
-#include "Renderer/RHI/Primitives/VertexBuffer.h"
+#include "Renderer/RHI/Resources/IndexBuffer.h"
+#include "Renderer/RHI/Resources/VertexBuffer.h"
 
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
-#include "Renderer/RHI/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/ShaderProgram.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 #include "RHI/RendererAPI.h"
 

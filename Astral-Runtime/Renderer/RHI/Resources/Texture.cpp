@@ -1,22 +1,20 @@
-/**
-* @file ShaderProgram.cpp
-* @author Andrew Fagan
-* @date 12/4/2024
-*/
-#include "ShaderProgram.h"
+//
+// Created by Andrew Fagan on 11/30/24.
+//
+
+#include "Texture.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.h"
+#include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {
 
-    ShaderProgram* ShaderProgram::CreateShaderProgram(const ShaderSource &vertexShader,
-                                                      const ShaderSource &fragmentShader)
+    Texture* Texture::CreateTexture(const std::string& filePath)
     {
         switch (RendererAPI::GetAPI())
         {
-            case API::OpenGL: return new OpenGLShaderProgram(vertexShader, fragmentShader);
+            case API::OpenGL: return new OpenGLTexture(filePath);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
@@ -24,4 +22,4 @@ namespace Graphics {
         }
     }
 
-}
+} // Renderer

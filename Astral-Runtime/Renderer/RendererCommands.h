@@ -6,8 +6,8 @@
 
 
 #include "Renderer.h"
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
-#include "Renderer/RHI/Primitives/ShaderProgram.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/ShaderProgram.h"
 #include "RHI/RendererAPI.h"
 
 namespace Graphics {

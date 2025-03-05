@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/RHI/Primitives/VertexBuffer.h"
+#include "Renderer/RHI/Resources/VertexBuffer.h"
 
 namespace Graphics {
 

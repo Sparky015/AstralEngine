@@ -1,20 +1,20 @@
 //
-// Created by Andrew Fagan on 11/30/24.
+// Created by Andrew Fagan on 11/29/24.
 //
 
-#include "Texture.h"
+#include "IndexBuffer.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Renderer/RHI/Platform/OpenGL/Primitives/OpenGLTexture.h"
+#include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 namespace Graphics {
 
-    Texture* Texture::CreateTexture(const std::string& filePath)
+    IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {
         switch (RendererAPI::GetAPI())
         {
-            case API::OpenGL: return new OpenGLTexture(filePath);
+            case API::OpenGL: return new OpenGLIndexBuffer(indices, count);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");

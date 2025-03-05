@@ -6,9 +6,9 @@
 
 #include "pch.h"
 
-#include "Renderer/RHI/Primitives/Texture.h"
+#include "Renderer/RHI/Resources/Texture.h"
 
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 struct SpriteComponent
 {

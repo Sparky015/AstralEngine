@@ -39,20 +39,20 @@ add_library(AstralEngine
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.cpp
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLShaderProgram.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
-        Renderer/RHI/Primitives/VertexBuffer.cpp
-        Renderer/RHI/Primitives/VertexBuffer.h
-        Renderer/RHI/Primitives/IndexBuffer.cpp
-        Renderer/RHI/Primitives/IndexBuffer.h
+        Renderer/RHI/Resources/VertexBuffer.cpp
+        Renderer/RHI/Resources/VertexBuffer.h
+        Renderer/RHI/Resources/IndexBuffer.cpp
+        Renderer/RHI/Resources/IndexBuffer.h
         Renderer/Renderer.cpp
         Renderer/Renderer.h
         Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.h
@@ -63,17 +63,17 @@ add_library(AstralEngine
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
         Window/Platform/Generic/GenericWindow.h
-        Renderer/RHI/Primitives/VertexArrayObject.cpp
-        Renderer/RHI/Primitives/VertexArrayObject.h
-        Renderer/RHI/Primitives/Texture.cpp
-        Renderer/RHI/Primitives/Texture.h
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLTexture.cpp
-        Renderer/RHI/Platform/OpenGL/Primitives/OpenGLTexture.h
-        Renderer/RHI/Primitives/BufferLayout.cpp
-        Renderer/RHI/Primitives/BufferLayout.h
+        Renderer/RHI/Resources/VertexArrayObject.cpp
+        Renderer/RHI/Resources/VertexArrayObject.h
+        Renderer/RHI/Resources/Texture.cpp
+        Renderer/RHI/Resources/Texture.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h
+        Renderer/RHI/Resources/BufferLayout.cpp
+        Renderer/RHI/Resources/BufferLayout.h
         Core/Math/Math.h
-        Renderer/RHI/Primitives/ShaderProgram.cpp
-        Renderer/RHI/Primitives/ShaderProgram.h
+        Renderer/RHI/Resources/ShaderProgram.cpp
+        Renderer/RHI/Resources/ShaderProgram.h
         Renderer/RendererCommands.cpp
         Renderer/RendererCommands.h
         Renderer/RHI/RendererAPI.cpp

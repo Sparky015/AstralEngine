@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/Events/EventListener.h"
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 
 namespace Graphics {

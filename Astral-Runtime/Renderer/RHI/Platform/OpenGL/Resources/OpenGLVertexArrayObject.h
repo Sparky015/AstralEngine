@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 namespace Graphics {
 

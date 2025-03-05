@@ -6,7 +6,7 @@
 
 #include "Common/ChessPieceTypes.h"
 #include "ECS/Entity.h"
-#include "Renderer/RHI/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 class ChessEntities
 {
