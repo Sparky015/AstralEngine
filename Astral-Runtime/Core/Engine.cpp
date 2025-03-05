@@ -29,12 +29,12 @@ Engine::Engine() :
     m_Instance = this;
 
     // Core::MemoryTracker::Get().Init();
+    // Core::MemoryTracker::Get().BeginScene("Engine_Init");
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
-    Core::MemoryTracker::Get().BeginScene("Engine_Init");
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
-    // Debug::g_ImGuiManager.Init();
+    Debug::g_ImGuiManager.Init();
     ECS::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();

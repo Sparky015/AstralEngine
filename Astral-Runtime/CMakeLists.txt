@@ -235,15 +235,33 @@ elseif (WIN32)
     target_link_libraries(AstralEngine PRIVATE glfw3)
 endif ()
 
-target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
-target_link_libraries(AstralEngine PUBLIC
-        vulkan-1
-        SPIRV-Toolsd
-        SPIRV-Tools-diffd
-        SPIRV-Tools-optd
-        glslangd
-        glslang-default-resource-limitsd
-)
+
+
+#                         ######   VULKAN SET UP   ######
+
+if (WIN32)
+    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
+    target_link_libraries(AstralEngine PUBLIC
+            vulkan-1
+            SPIRV-Toolsd
+            SPIRV-Tools-diffd
+            SPIRV-Tools-optd
+            glslangd
+            glslang-default-resource-limitsd
+    )
+elseif (APPLE)
+    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
+    target_link_libraries(AstralEngine PUBLIC
+            vulkan.1
+            SPIRV-Tools
+            SPIRV-Tools-diff
+            SPIRV-Tools-opt
+            glslang
+            glslang-default-resource-limits
+    )
+endif()
+
+
 
 
 # Include Directories
@@ -261,8 +279,9 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
-target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
+message(STATUS "Vulkan SDK Path: $ENV{VULKAN_SDK}")
 
+target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 
 
 # Precompiled Header
@@ -290,7 +309,7 @@ target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
 
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
@@ -306,7 +325,7 @@ elseif (LINUX)
 
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 endif ()
 
