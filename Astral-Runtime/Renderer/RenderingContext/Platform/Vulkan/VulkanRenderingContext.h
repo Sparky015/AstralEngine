@@ -7,7 +7,10 @@
 #pragma once
 
 #include "Renderer/RenderingContext/RenderingContext.h"
+
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 namespace Graphics {
 
@@ -19,6 +22,7 @@ namespace Graphics {
     {
     public:
         explicit VulkanRenderingContext(GLFWwindow* window);
+
         void Init() override;
         void Shutdown() override;
 
@@ -27,6 +31,25 @@ namespace Graphics {
         std::string_view GetRenderingAPI() override;
 
     private:
+
+        void CreateInstance();
+        void DestroyInstance();
+
+        void CreateDebugMessageCallback();
+        void DestroyDebugMessageCallback();
+
+        void CreateWindowSurface();
+        void DestroyWindowSurface();
+
+        static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+                VkDebugUtilsMessageSeverityFlagBitsEXT severity,
+                VkDebugUtilsMessageTypeFlagsEXT type,
+                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                void* pUserData);
+
+        VkInstance m_Instance;
+        VkDebugUtilsMessengerEXT m_DebugMessenger;
+        VkSurfaceKHR m_WindowSurface;
         GLFWwindow* m_Window;
     };
 

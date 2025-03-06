@@ -7,6 +7,7 @@
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
 #include "Input/KeycodeConversions.h"
+#include "Renderer/Renderer.h"
 
 namespace Window {
 
@@ -28,9 +29,17 @@ namespace Window {
             }
         }
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::OpenGL)
+        {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        }
+        else if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::Vulkan)
+        {
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        }
+
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
