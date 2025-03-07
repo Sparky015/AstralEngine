@@ -190,6 +190,8 @@ add_library(AstralEngine
         Debug/MemoryTracking/NewDeleteOverrides.h
         Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.cpp
         Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.h
+        Renderer/RenderingContext/Platform/Vulkan/VulkanPhysicalDevices.cpp
+        Renderer/RenderingContext/Platform/Vulkan/VulkanPhysicalDevices.h
 )
 
 

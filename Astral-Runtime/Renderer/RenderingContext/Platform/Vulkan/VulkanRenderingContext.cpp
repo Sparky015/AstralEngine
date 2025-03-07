@@ -35,6 +35,7 @@ namespace Graphics {
         CreateInstance();
         CreateDebugMessageCallback();
         CreateWindowSurface();
+        m_PhysicalDevices.Init(m_Instance, m_WindowSurface);
     }
 
 
