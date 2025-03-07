@@ -6,6 +6,7 @@
 
 #include "VulkanRenderingContext.h"
 
+#include <array>
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 
@@ -36,6 +37,7 @@ namespace Graphics {
         CreateDebugMessageCallback();
         CreateWindowSurface();
         m_PhysicalDevices.Init(m_Instance, m_WindowSurface);
+        m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
     }
 
 
@@ -51,19 +53,24 @@ namespace Graphics {
 
     std::string_view VulkanRenderingContext::GetGraphicsProcessorName()
     {
-        return "";
+        return m_PhysicalDevices.SelectedDevice().deviceProperties.deviceName;
     }
 
 
     std::string_view VulkanRenderingContext::GetGPUVendor()
     {
-        return "";
+        return "";//m_PhysicalDevices.SelectedDevice().deviceProperties.vendorID;
     }
 
 
     std::string_view VulkanRenderingContext::GetRenderingAPI()
     {
-        return "";
+        static uint32 vulkanAPIVersion = m_PhysicalDevices.SelectedDevice().deviceProperties.apiVersion;
+        static char buffer[39] = "Vulkan ";
+        snprintf(buffer + 7, sizeof(buffer) - 7, "%d.%d.%d", VK_API_VERSION_MAJOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_MINOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_PATCH(vulkanAPIVersion));
+        return buffer;
     }
 
 

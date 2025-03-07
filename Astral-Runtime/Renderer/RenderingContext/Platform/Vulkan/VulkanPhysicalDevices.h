@@ -21,6 +21,7 @@ namespace Graphics {
         std::vector<VkBool32> supportsPresent;
         std::vector<VkSurfaceFormatKHR> surfaceFormats;
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
+        VkPhysicalDeviceMemoryProperties memoryProperties;
         std::vector<VkPresentModeKHR> presentModes;
     };
 
@@ -38,7 +39,7 @@ namespace Graphics {
 
     private:
         std::vector<VulkanPhysicalDevice> m_Devices;
-        int m_DeviceIndex;
+        int m_SelectedDeviceIndex;
 
     };
 

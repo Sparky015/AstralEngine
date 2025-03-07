@@ -293,7 +293,7 @@ namespace Debug {
         else if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::Vulkan)
         {
             ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
-            // ImGui_ImplVulkan_Init();
+            ImGui_ImplVulkan_Init();
         }
 
     }
