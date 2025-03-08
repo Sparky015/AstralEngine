@@ -7,7 +7,7 @@
 #include <imgui.h>
 
 #include "ECS/ECS.h"
-#include "ECS/ECSManager.h"
+#include "ECS/Old/ECSManager.h"
 
 void Debug::EntityCountComponent()
 {
