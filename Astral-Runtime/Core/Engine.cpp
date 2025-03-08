@@ -7,7 +7,7 @@
 
 #include "ApplicationModule.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
+#include "ECS/Old/ECSManager.h"
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"

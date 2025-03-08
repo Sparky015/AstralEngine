@@ -5,7 +5,7 @@
 */
 #include "RenderingSystem.h"
 
-#include "ECS/ECSManager.h"
+#include "ECS/Old/ECSManager.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"

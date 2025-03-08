@@ -4,8 +4,19 @@
 
 #include "Entity.h"
 
-namespace ECS {
+namespace Astral {
 
-    Entity::Entity(EntityPoolSize id) : m_ID(id) {}
+    void Entity::Delete()
+    {
+
+    }
+
+    bool Entity::IsAlive()
+    {
+        return false;
+    }
+
 
 }
+
+

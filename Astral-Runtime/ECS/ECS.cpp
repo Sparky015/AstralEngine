@@ -1,73 +1,43 @@
-//
-// Created by Andrew Fagan on 11/27/24.
-//
+/**
+* @file ECS.cpp
+* @author Andrew Fagan
+* @date 3/8/2025
+*/
 
 #include "ECS.h"
 
+namespace Astral {
 
-namespace ECS {
-
-    Entity ECS::AddEntity()
+    void ECS::Init()
     {
-        ASSERT(m_EntityCounter != MAX_ENTITIES, "Max amount of entities reached! Can't add any more!");
 
-        // Find the next empty slot
-        EntityPoolSize index = FindNextInactiveIndex();
-
-        // Create new entity at the open slot and set it to active
-        Entity entity = Entity(index);
-        m_ActiveEntities[index] = true;
-        m_EntityCounter++;
-
-        return entity;
     }
 
 
-    void ECS::RemoveEntity(Entity entity)
+    void ECS::Shutdown()
     {
-        m_EntityCounter--;
 
-        // Setting the entity slot to not being used
-        EntityPoolSize entityID = entity.GetID();
-        m_ActiveEntities[entityID] = false;
-
-        // Sets all the possible components of an entity to not being used.
-        RemoveComponent<TransformComponent>(entity);
-        RemoveComponent<SpriteComponent>(entity);
     }
 
 
-    bool ECS::IsEntityUsed(const EntityPoolSize entityID)
+    Entity ECS::CreateEntity()
     {
-        return m_ActiveEntities[entityID];
+        static Entity e;
+        return e; // TEMP
     }
 
 
-    EntityPoolSize ECS::GetCurrentEntityCount() const
+    void ECS::DeleteEntity(Entity entity)
     {
-        return m_ActiveEntities.count();
-    }
 
-    EntityPoolSize ECS::FindNextInactiveIndex()
-    {
-        // Iterate through the bitfield and find the first slot that isn't being used
-        for (EntityPoolSize i = 0; i < MAX_ENTITIES; i++)
-        {
-            if (m_ActiveEntities[i] == false) { return i; }
-        };
-
-        // We did not find a empty slot since we did not return during the loop.
-        ASTRAL_ERROR("Max amount of entities reached! Can't add any more!");
     }
 
 
-    ECS::ECS() : m_EntityCounter(0)
-    // m_Components(std::make_tuple(std::array<TransformComponent, MAX_ENTITIES>(), std::array<SpriteComponent, MAX_ENTITIES>()))
+    bool ECS::IsEntityAlive(Entity entity)
     {
-        // Initialize component arrays for each component type
-        m_ComponentsNew[typeid(TransformComponent)] = ComponentDisplay<TransformComponent>();
-        m_ComponentsNew[typeid(SpriteComponent)] = ComponentDisplay<SpriteComponent>();
-        // Add other component types as needed
+        return false;
     }
 
 }
+
+
