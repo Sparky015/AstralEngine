@@ -57,7 +57,7 @@ namespace Astral {
 
     private:
 
-        ComponentPoolSet m_ComponentPoolSet;
+        ComponentPoolSet<int, double> m_ComponentPoolSet;
     };
 
 }
