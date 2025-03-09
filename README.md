@@ -201,4 +201,5 @@ Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
 #### Tested Compiler Versions:
 
 MacOS: AppleClang 16.0.0, Clang 19.1.7
+Windows: MSVC 19.43
 
