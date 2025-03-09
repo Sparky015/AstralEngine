@@ -68,7 +68,7 @@ namespace Debug {
     {
         PROFILE_SCOPE("Render Debug Menu ImGui");
 
-        static bool showDemoWindow = true;
+        static bool showDemoWindow = false;
         if (showDemoWindow)
         {
             ImGui::ShowDemoWindow(&showDemoWindow);

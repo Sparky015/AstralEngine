@@ -12,7 +12,7 @@
 #define ASTRAL_ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Debug::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
 
 #else
-#define ERROR(errorMessage)
+#define ASTRAL_ERROR(errorMessage)
 #endif
 
 
