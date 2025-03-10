@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['m_5fnewframelistener_0',['m_NewFrameListener',['../d8/daa/class_graphics_1_1_renderer_a_p_i.html#aa047d31d6691bfd7fb95c2ec4f4e36e5',1,'Graphics::RendererAPI']]],
+  ['m_5fnumberofdrawcalls_1',['m_NumberOfDrawCalls',['../d8/daa/class_graphics_1_1_renderer_a_p_i.html#a02c4c44b747d83d5e0a6e7d88428ff7e',1,'Graphics::RendererAPI']]],
+  ['m_5frendercontext_2',['m_RenderContext',['../dc/d71/class_window_1_1_window.html#a6d8b0e1ad76e74bbe81adc35d0a79504',1,'Window::Window']]],
+  ['m_5frenderimguilistener_3',['m_RenderImGuiListener',['../d6/d8f/class_system_manager.html#a75c8dc1b4946e9ab136438eeb1dea247',1,'SystemManager']]],
+  ['m_5fupdatelistener_4',['m_UpdateListener',['../d6/d8f/class_system_manager.html#a08dc398df744b4de8d1e21d1e2bc5d6c',1,'SystemManager']]],
+  ['max_5fentities_5',['MAX_ENTITIES',['../d3/dae/namespace_e_c_s.html#aa4d61491f7832a3a500a6f6de4f5198d',1,'ECS']]],
+  ['max_5fstack_5fallocation_5fsize_6',['MAX_STACK_ALLOCATION_SIZE',['../dd/dbb/class_core_1_1_linear_allocator.html#acf017f91d4cd3d24f487473c6deb922b',1,'Core::LinearAllocator::MAX_STACK_ALLOCATION_SIZE'],['../d6/d61/class_core_1_1_s_t_l_linear_allocator.html#a64e19d3ddb1b92c9d8721c62d801972d',1,'Core::STLLinearAllocator::MAX_STACK_ALLOCATION_SIZE']]],
+  ['mousecursors_7',['MouseCursors',['../d5/d6e/struct_im_gui___impl_glfw___data.html#ad7072d22c235f2e6d53e1a5a0e54cc0c',1,'ImGui_ImplGlfw_Data']]],
+  ['mousewindow_8',['MouseWindow',['../d5/d6e/struct_im_gui___impl_glfw___data.html#a0cd83054e5f18b548ad7030e56e44fa7',1,'ImGui_ImplGlfw_Data']]],
+  ['mousexposition_9',['MouseXPosition',['../d0/d95/struct_mouse_cursor_state.html#ac8befe2676836be2477d0f70c4ff2143',1,'MouseCursorState']]],
+  ['mouseyposition_10',['MouseYPosition',['../d0/d95/struct_mouse_cursor_state.html#a712d15021329a762e00bc67c8f74445d',1,'MouseCursorState']]],
+  ['movepiecetestcases_11',['movePieceTestCases',['../d4/db5/_chessboard___piece_movement_8cpp.html#a43adf798921114d17721407f6715fdbd',1,'Chessboard_PieceMovement.cpp']]],
+  ['movetype_12',['moveType',['../da/dc0/struct_game_1_1_chess_move.html#a68293b082928ec3443f4787d14e07dd5',1,'Game::ChessMove']]],
+  ['movingpiececolor_13',['movingPieceColor',['../da/dc0/struct_game_1_1_chess_move.html#aecf66d4614a548582d8d854a70d71bf9',1,'Game::ChessMove']]],
+  ['movingpieceid_14',['MovingPieceID',['../d1/d27/struct_game_1_1_previous_move_data.html#ad27cf08abaf8e40aa1c26881fe358082',1,'Game::PreviousMoveData']]],
+  ['movingpieceid_15',['movingPieceID',['../da/dc0/struct_game_1_1_chess_move.html#a7cbf35076e05e09340264e3a414cf74a',1,'Game::ChessMove']]],
+  ['movingpiecetype_16',['MovingPieceType',['../d1/d27/struct_game_1_1_previous_move_data.html#a070b46202b6c525e63b548b53e1fdb0d',1,'Game::PreviousMoveData']]]
+];
