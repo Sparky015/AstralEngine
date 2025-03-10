@@ -90,7 +90,7 @@ Astral uses CMake for the build system.
 
 Requirements include:
 - git
-- CMake (ver 3.28+)
+- CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
 - A supported C++20 compiler
 - 64-bit CPU
 
@@ -170,6 +170,15 @@ Requirements include:
 - msgpack: For serialization and deserialization
 - stb_image: For loading image files
 - cpptrace: For generating stacktraces (temporary, waiting for C++23 stacktraces to be implemented)
+
+
+###
+### Documentation
+
+-----
+
+Documentation can be found [here](Documentation/docs.html).
+
 
 ###
 ### Current C++ Version (C++20)
