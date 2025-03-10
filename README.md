@@ -13,7 +13,7 @@ In the future, Astral Engine will become a 3D engine targeting big nature-focuse
 is a lot of stuff to do to get there.
 
 ###
-### Noteable Features
+### Notable Features
 
 ----
 
@@ -54,12 +54,12 @@ implementing a new ECS with sparse sets.
 * Renderer
 
 I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
-supports hardcoded data which ends up being quads. I am also working on setting on Vulkan for 
+supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
 use later on (I am currently using OpenGL 4.1)
 
 * Shaders and Materials
 
-I am working on designing and then implemented an extendable material system for shaders, 
+I am working on designing and then implementing an extendable material system for shaders, 
 so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the
 client/user executable 
 
@@ -83,8 +83,8 @@ client/user executable
 
 -----
 
-Supported Compilers: MSVC, Clang, 
-Supported Platforms: Windows, macOS    (Linux coming in the future)
+Supported Compilers: MSVC, AppleClang, and Clang
+Supported Platforms: Windows and macOS    (Linux coming in the future)
 
 Astral uses CMake for the build system.
 
