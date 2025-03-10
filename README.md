@@ -177,7 +177,7 @@ Requirements include:
 
 -----
 
-Documentation can be found [here](Documentation/docs.html).
+Documentation can be found [here](Documentation/Docs.html).
 
 
 ###
