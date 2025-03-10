@@ -190,7 +190,7 @@ all the major compilers. Also, std::unreachable would be useful.
 
 #### Tested IDEs:
 
-macOS: CLion  
+macOS: CLion and Xcode
 Windows: CLion and Visual Studio   
 
 #### Hardware used for Testing: 

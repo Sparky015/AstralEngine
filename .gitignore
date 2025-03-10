@@ -9,6 +9,7 @@ build-*
 
 .vs
 .idea
+.xcodeproj
 vcs.xml
 
 out
