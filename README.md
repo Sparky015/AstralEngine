@@ -83,7 +83,7 @@ client/user executable
 
 -----
 
-Supported Compilers: MSVC, Clang, GCC  
+Supported Compilers: MSVC, Clang, 
 Supported Platforms: Windows, macOS    (Linux coming in the future)
 
 Astral uses CMake for the build system.
