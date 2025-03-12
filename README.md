@@ -191,12 +191,12 @@ all the major compilers. Also, std::unreachable would be useful.
 
 #### Tested IDEs:
 
-macOS: CLion and Xcode
+macOS: CLion and Xcode     
 Windows: CLion and Visual Studio   
 
 #### Hardware used for Testing: 
 
-macOS is tested using a MacBook M1 Pro   
+macOS is tested using a MacBook M1 Pro       
 Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
 
 #### Tested Compiler Versions:
