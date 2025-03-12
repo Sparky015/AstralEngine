@@ -173,14 +173,6 @@ Requirements include:
 
 
 ###
-### Documentation
-
------
-
-Documentation can be found [here](Documentation/Docs.html).
-
-
-###
 ### Current C++ Version (C++20)
 
 -----
