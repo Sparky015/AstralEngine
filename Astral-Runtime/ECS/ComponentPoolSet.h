@@ -23,7 +23,10 @@ namespace Astral {
         ComponentPool<ComponentType>& GetComponentPool();
 
     private:
-        std::tuple<ComponentPool<ComponentTypes>...> componentPoolSet;
+
+        std::tuple<ComponentPool<ComponentTypes>...> m_ComponentPoolSet;
     };
 
 }
+
+#include "ComponentPoolSet_Impl.h"

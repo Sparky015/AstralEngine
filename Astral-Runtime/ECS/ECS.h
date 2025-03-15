@@ -6,19 +6,28 @@
 
 #pragma once
 
+#include <bitset>
+
 #include "Entity.h"
 
 #include <vector>
 
 #include "ComponentPoolSet.h"
+#include "Components/Sprite.h"
+#include "Components/Transform.h"
 
 namespace Astral {
+
+    constexpr uint32 MAX_ENTITIES = 255;
 
     class ECS
     {
     public:
         template <typename ComponentType>
         using ComponentView = std::vector<ComponentType>;
+
+        ECS();
+        ~ECS() = default;
 
         /**@brief Initializes the ECS and its component pools */
         void Init();
@@ -31,9 +40,16 @@ namespace Astral {
 
         /**@brief Deletes an entity from the ECS */
         void DeleteEntity(Entity entity);
+        void DeleteEntity(EntityID entityID);
 
         /**@brief Checks if an entity is alive and in the ECS */
         bool IsEntityAlive(Entity entity);
+
+        /**@brief Checks if an entity is alive and in the ECS */
+        bool IsEntityAlive(EntityID entityID);
+
+        /**@brief Gets the number of entities that are alive. */
+        uint32 GetNumberOfActiveEntities();
 
         template <typename ComponentType>
         void SetEntityComponent(Entity entity, const ComponentType& component);
@@ -57,8 +73,22 @@ namespace Astral {
 
     private:
 
-        ComponentPoolSet<int, double> m_ComponentPoolSet;
+        EntityID GetNextInactiveEntity();
+
+        uint32 m_NumberOfActiveEntities;
+        std::vector<bool> m_ActiveEntities;
+
+        /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,
+        /// add it here.
+        ComponentPoolSet<TransformComponent, SpriteComponent> m_ComponentPoolSet;
+
     };
+
+
+    inline uint32 ECS::GetNumberOfActiveEntities()
+    {
+        return m_NumberOfActiveEntities;
+    }
 
 }
 

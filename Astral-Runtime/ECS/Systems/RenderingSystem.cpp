@@ -5,27 +5,32 @@
 */
 #include "RenderingSystem.h"
 
-#include "ECS/Old/ECSManager.h"
+#include "../ECSManager.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "ECS/Components/Sprite.h"
+#include "ECS/Components/Transform.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
 #include "Renderer/Renderer.h"
 
 
-namespace Sozin {
+namespace Astral {
 
     void RenderingSystem::RenderEntities(Graphics::ShaderProgram* shader)
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
-        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
+        ECS& ecs = g_ECSManager.GetECS();
 
-        ECS::ECS::ComponentDisplay<SpriteComponent> spriteDisplay = ecs.GetComponentDisplay<SpriteComponent>();
-        ECS::ECS::ComponentDisplay<TransformComponent> transformDisplay = ecs.GetComponentDisplay<TransformComponent>();
+        ECS::ComponentView<SpriteComponent> spriteDisplay = ecs.GetView<SpriteComponent>();
+        ECS::ComponentView<TransformComponent> transformDisplay = ecs.GetView<TransformComponent>();
 
-        for (ECS::EntityPoolSize entityID = 0; entityID < ECS::MAX_ENTITIES; entityID++)
+        // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
+        for (EntityID entityID = 0; entityID < spriteDisplay.size(); entityID++)
         {
-            if (!ecs.IsEntityUsed(entityID)) { continue; }
-            if (!spriteDisplay[entityID].isUsed) { continue; }
+            Entity e = Entity(entityID);
+            if (!ecs.IsEntityAlive(entityID)) { continue; }
+            if (!ecs.HasComponent<SpriteComponent>(e)) { continue; }
             if (!transformDisplay[entityID].isUsed) { continue; }
 
             TransformComponent transformComponent = transformDisplay[entityID];

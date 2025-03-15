@@ -4,16 +4,20 @@
 
 #include "Entity.h"
 
+#include "ECSManager.h"
+
 namespace Astral {
 
-    void Entity::Delete()
+    void Entity::Delete() const
     {
-
+        ECS& ecs = g_ECSManager.GetECS();
+        ecs.DeleteEntity(m_ID);
     }
 
-    bool Entity::IsAlive()
+    bool Entity::IsAlive() const
     {
-        return false;
+        ECS& ecs = g_ECSManager.GetECS();
+        return ecs.IsEntityAlive(m_ID);
     }
 
 

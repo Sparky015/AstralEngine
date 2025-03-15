@@ -4,9 +4,10 @@
 
 #include "ECSManager.h"
 
-#include "Systems/RenderingSystem.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Debug/Utilities/Loggers.h"
 
-namespace ECS {
+namespace Astral {
 
     ECSManager& g_ECSManager = ECSManager::Get();
 
@@ -16,31 +17,28 @@ namespace ECS {
         return ecsManager;
     }
 
+
     void ECSManager::Init()
     {
         PROFILE_SCOPE("ECS Manager Initialization");
         TRACE("Initializing ECS Manager!")
-        // m_UpdateListener.StartListening();
-
+        m_ECS.Init();
     }
+
 
     void ECSManager::Shutdown()
     {
         PROFILE_SCOPE("ECS Manager Shutdown");
         TRACE("Shutting down ECS Manager!")
-        // m_UpdateListener.StopListening();
+        m_ECS.Shutdown();
     }
 
-    void ECSManager::Update()
-    {
-        PROFILE_SCOPE("ECS Manager Update");
-        // Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get());
-    }
 
     ECSManager::ECSManager()
     {
         TRACE("Constructing ECS Manager!")
     }
+
 
     ECSManager::~ECSManager()
     {

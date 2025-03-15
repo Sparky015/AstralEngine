@@ -7,7 +7,7 @@
 #include "Core/SystemManager.h"
 #include "ECS.h"
 
-namespace ECS {
+namespace Astral {
 
     class ECSManager : public SystemManager
     {
@@ -15,7 +15,6 @@ namespace ECS {
         static ECSManager& Get();
         void Init() override;
         void Shutdown() override;
-        void Update() override;
 
         inline ECS& GetECS() { return m_ECS; }
 
@@ -23,6 +22,7 @@ namespace ECS {
         ECSManager& operator=(const ECSManager&) = delete;
         ECSManager(ECSManager&&) = delete;
         ECSManager& operator=(ECSManager&&) = delete;
+
     private:
         ECSManager();
         ~ECSManager() override;

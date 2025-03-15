@@ -12,8 +12,8 @@
 #include <bitset>
 #include <typeindex>
 
-#include "ECS/Old/Components/Sprite.h" // TEMP
-#include "ECS/Old/Components/Transform.h" // TEMP
+#include "ECS/Components/Sprite.h" // TEMP
+#include "ECS/Components/Transform.h" // TEMP
 
 
 namespace ECS {
