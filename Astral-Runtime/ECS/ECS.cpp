@@ -6,6 +6,8 @@
 
 #include "ECS.h"
 
+#include "Entity.h"
+
 namespace Astral {
 
     ECS::ECS() : m_NumberOfActiveEntities(0)
@@ -15,8 +17,8 @@ namespace Astral {
 
     void ECS::Init()
     {
-        m_ActiveEntities.reserve(64);
-
+        m_ActiveEntities.resize(64);
+        // TODO make helper function that resizes component pool vectors to given number x
     }
 
 
@@ -29,6 +31,12 @@ namespace Astral {
     Entity ECS::CreateEntity()
     {
         EntityID newEntityID = GetNextInactiveEntity();
+
+        // TODO: Resize component pool vectors and entity vector on new entities
+        if (m_ActiveEntities.size() - 1 >= newEntityID)
+        {
+            m_ActiveEntities.push_back(true);
+        }
         m_ActiveEntities[newEntityID] = true;
         m_NumberOfActiveEntities++;
         return Entity(newEntityID);
@@ -60,6 +68,10 @@ namespace Astral {
         return m_ActiveEntities[entityID];
     }
 
+    uint32 ECS::GetNumberOfActiveEntities()
+    {
+        return m_NumberOfActiveEntities;
+    }
 
     EntityID ECS::GetNextInactiveEntity()
     {
@@ -70,7 +82,7 @@ namespace Astral {
         };
 
         // We did not find a empty slot since we did not return during the loop.
-        return std::numeric_limits<EntityID>::max();
+        return NULL_ENTITY;
     }
 
 }

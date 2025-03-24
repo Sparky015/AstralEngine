@@ -18,6 +18,14 @@ namespace Astral {
     {
         std::vector<ComponentType> componentData;
         std::vector<bool> entityRegistry; // Should behave like dynamic bitset because this is a vector specialization
+
+        void ResizePool(size_t size)
+        {
+            if (size < componentData.size()) { return; }
+
+            componentData.resize(size);
+            entityRegistry.resize(size);
+        }
     };
 
 }

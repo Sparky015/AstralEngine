@@ -22,6 +22,12 @@ namespace Astral {
         template <typename ComponentType>
         ComponentPool<ComponentType>& GetComponentPool();
 
+        /**@brief Resizes the component pools to the given size number. Does nothing if the current pool size is greater than
+         *        or equal to the given size.
+         * @param size The size to resize the component pool to
+         */
+        void ResizeComponentPool(size_t size);
+
     private:
 
         std::tuple<ComponentPool<ComponentTypes>...> m_ComponentPoolSet;

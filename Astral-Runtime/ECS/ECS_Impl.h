@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Entity.h"
+
 namespace Astral {
 
     template<typename ComponentType>

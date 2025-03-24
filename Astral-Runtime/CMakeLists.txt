@@ -193,8 +193,6 @@ add_library(AstralEngine
         ECS/ECS.h
         Core/FixedIntegerTypes.h
         ECS/Entity.h
-        ECS/Entity.cpp
-        ECS/Entity_Impl.h
         ECS/ECSErrorHandling.h
         ECS/ECS_Impl.h
         ECS/ComponentPool.h

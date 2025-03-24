@@ -78,13 +78,15 @@ namespace Game {
     {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
+        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+
         TransformComponent transformComponent = TransformComponent();
-        Astral::ECS_Result result = m_TrackedPiece.PieceEntity.GetComponent(transformComponent);
+        Astral::ECS_Result result = ecs.GetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = InputState::MousePositionX();
         transformComponent.y = InputState::MousePositionY();
-        m_TrackedPiece.PieceEntity.SetComponent<TransformComponent>(transformComponent);
+        ecs.SetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 
@@ -93,15 +95,17 @@ namespace Game {
         SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
 
+        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+
         TransformComponent transformComponent;
-        Astral::ECS_Result result = m_TrackedPiece.PieceEntity.GetComponent(transformComponent);
+        Astral::ECS_Result result = ecs.GetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = pieceCoordinates.x;
         transformComponent.y = pieceCoordinates.y;
 
         // Update the transform component of the piece with the new transform
-        m_TrackedPiece.PieceEntity.SetComponent(transformComponent);
+        ecs.SetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 
@@ -133,7 +137,8 @@ namespace Game {
             if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
             {
                 // Delete entity of taken piece
-                ChessEntities::GetEntity(attemptedMoveLocation).Delete();
+                Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+                ecs.DeleteEntity(ChessEntities::GetEntity(attemptedMoveLocation));
 
                 chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);
 

@@ -6,15 +6,14 @@
 
 #pragma once
 
-#include <bitset>
-
 #include "Entity.h"
-
-#include <vector>
-
 #include "ComponentPoolSet.h"
 #include "Components/Sprite.h"
 #include "Components/Transform.h"
+#include "ECSErrorHandling.h"
+
+#include <vector>
+
 
 namespace Astral {
 
@@ -75,6 +74,7 @@ namespace Astral {
 
         EntityID GetNextInactiveEntity();
 
+
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_ActiveEntities;
 
@@ -83,12 +83,6 @@ namespace Astral {
         ComponentPoolSet<TransformComponent, SpriteComponent> m_ComponentPoolSet;
 
     };
-
-
-    inline uint32 ECS::GetNumberOfActiveEntities()
-    {
-        return m_NumberOfActiveEntities;
-    }
 
 }
 

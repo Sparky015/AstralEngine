@@ -16,7 +16,7 @@ namespace Astral {
         void Init() override;
         void Shutdown() override;
 
-        inline ECS& GetECS() { return m_ECS; }
+        ECS& GetECS() { return m_ECS; }
 
         ECSManager(const ECSManager&) = delete;
         ECSManager& operator=(const ECSManager&) = delete;

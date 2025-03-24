@@ -4,6 +4,7 @@
 
 #include "ECSManager.h"
 
+#include "ECS.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 
@@ -22,7 +23,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("ECS Manager Initialization");
         TRACE("Initializing ECS Manager!")
-        m_ECS.Init();
+        GetECS().Init();
     }
 
 
@@ -30,7 +31,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("ECS Manager Shutdown");
         TRACE("Shutting down ECS Manager!")
-        m_ECS.Shutdown();
+        GetECS().Shutdown();
     }
 
 
