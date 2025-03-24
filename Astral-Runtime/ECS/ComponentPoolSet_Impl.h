@@ -19,12 +19,9 @@ namespace Astral {
     void ComponentPoolSet<ComponentTypes...>::ResizeComponentPool(size_t size)
     {
         std::apply(
-        [size](const auto&... args)
+        [size](auto&... args)
         {
-            (void)std::initializer_list<int>
-            {
-                (args.ResizePool(size))...
-            };
+            (void)(args.ResizePool(size), ...);
         },
         m_ComponentPoolSet);
     }

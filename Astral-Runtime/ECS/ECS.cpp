@@ -17,8 +17,8 @@ namespace Astral {
 
     void ECS::Init()
     {
-        m_ActiveEntities.resize(64);
-        // TODO make helper function that resizes component pool vectors to given number x
+        m_ActiveEntities.reserve(64);
+        m_ComponentPoolSet.ResizeComponentPool(64);
     }
 
 
@@ -30,14 +30,19 @@ namespace Astral {
 
     Entity ECS::CreateEntity()
     {
+        if (m_NumberOfActiveEntities == m_ActiveEntities.size())
+        {
+            // Resize all the component pools
+            const size_t size = m_ActiveEntities.size();
+            m_ActiveEntities.resize(2 * size, false);
+            m_ComponentPoolSet.ResizeComponentPool(2 * size);
+        }
+
         EntityID newEntityID = GetNextInactiveEntity();
 
-        // TODO: Resize component pool vectors and entity vector on new entities
-        if (m_ActiveEntities.size() - 1 >= newEntityID)
-        {
-            m_ActiveEntities.push_back(true);
-        }
+        // This should not go out of bounds due to the resizing above if m_ActiveEntities is at max capacity.
         m_ActiveEntities[newEntityID] = true;
+
         m_NumberOfActiveEntities++;
         return Entity(newEntityID);
     }
@@ -47,6 +52,7 @@ namespace Astral {
     {
         m_NumberOfActiveEntities--;
         m_ActiveEntities[entity.GetID()] = false;
+        m_FreeEntities.push(entity.GetID());
     }
 
 
@@ -75,14 +81,14 @@ namespace Astral {
 
     EntityID ECS::GetNextInactiveEntity()
     {
-        // Iterate through the bitfield and find the first slot that isn't being used
-        for (EntityID i = 0; i < MAX_ENTITIES; i++)
+        if (!m_FreeEntities.empty())
         {
-            if (m_ActiveEntities[i] == false) { return i; }
-        };
+            EntityID selectedEntityID = m_FreeEntities.top();
+            m_FreeEntities.pop();
+            return selectedEntityID;
+        }
 
-        // We did not find a empty slot since we did not return during the loop.
-        return NULL_ENTITY;
+        return m_ActiveEntities[m_NumberOfActiveEntities];
     }
 
 }

@@ -74,9 +74,9 @@ namespace Astral {
 
         EntityID GetNextInactiveEntity();
 
-
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_ActiveEntities;
+        std::stack<EntityID, std::vector<EntityID>> m_FreeEntities;
 
         /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,
         /// add it here.
