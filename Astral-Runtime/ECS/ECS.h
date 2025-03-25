@@ -73,7 +73,7 @@ namespace Astral {
         /**@brief Gets a view of the components of the requested type that can be iterated over.
          * @return An iterable ComponentView of the requested type. */
         template <typename ComponentType>
-        ComponentView<ComponentType>& GetView();
+        ComponentView<ComponentType>& GetView(); // TODO: Return an iterator of the view instead of actual view
 
     private:
 
