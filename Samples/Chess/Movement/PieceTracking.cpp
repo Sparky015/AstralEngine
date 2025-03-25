@@ -81,12 +81,12 @@ namespace Game {
         Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
 
         TransformComponent transformComponent = TransformComponent();
-        Astral::ECS_Result result = ecs.GetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = InputState::MousePositionX();
         transformComponent.y = InputState::MousePositionY();
-        ecs.SetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 
@@ -98,14 +98,14 @@ namespace Game {
         Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
 
         TransformComponent transformComponent;
-        Astral::ECS_Result result = ecs.GetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = pieceCoordinates.x;
         transformComponent.y = pieceCoordinates.y;
 
         // Update the transform component of the piece with the new transform
-        ecs.SetEntityComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 

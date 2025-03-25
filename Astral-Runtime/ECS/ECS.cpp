@@ -17,7 +17,7 @@ namespace Astral {
 
     void ECS::Init()
     {
-        m_ActiveEntities.reserve(64);
+        m_ActiveEntities.resize(64);
         m_ComponentPoolSet.ResizeComponentPool(64);
     }
 
@@ -53,13 +53,13 @@ namespace Astral {
         m_NumberOfActiveEntities--;
         m_ActiveEntities[entity.GetID()] = false;
         m_FreeEntities.push(entity.GetID());
+        m_ComponentPoolSet.ResetEntityUsedComponentFlags(entity);
     }
 
 
     void ECS::DeleteEntity(EntityID entityID)
     {
-        m_NumberOfActiveEntities--;
-        m_ActiveEntities[entityID] = false;
+       DeleteEntity(Entity(entityID));
     }
 
 
@@ -88,7 +88,13 @@ namespace Astral {
             return selectedEntityID;
         }
 
-        return m_ActiveEntities[m_NumberOfActiveEntities];
+        return m_NumberOfActiveEntities; // This is the entity ID
+    }
+
+
+    void ECS::ResetEntityUsedComponentFlags()
+    {
+
     }
 
 }

@@ -15,13 +15,24 @@ namespace Astral {
         return std::get<ComponentPool<ComponentType>>(m_ComponentPoolSet);
     }
 
-    template<typename ... ComponentTypes>
+    template<typename... ComponentTypes>
     void ComponentPoolSet<ComponentTypes...>::ResizeComponentPool(size_t size)
     {
         std::apply(
         [size](auto&... args)
         {
             (void)(args.ResizePool(size), ...);
+        },
+        m_ComponentPoolSet);
+    }
+
+    template<typename... ComponentTypes>
+    void ComponentPoolSet<ComponentTypes...>::ResetEntityUsedComponentFlags(Entity entity)
+    {
+        std::apply(
+        [entity](auto&... args)
+        {
+            (void)( ([&args, entity]() { args.entityRegistry[entity.GetID()] = false; })(), ... );
         },
         m_ComponentPoolSet);
     }

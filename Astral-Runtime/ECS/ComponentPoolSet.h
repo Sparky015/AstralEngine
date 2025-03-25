@@ -28,6 +28,10 @@ namespace Astral {
          */
         void ResizeComponentPool(size_t size);
 
+        /**@brief Resets all the components of the given entity to be inactive (not used).
+         * @param entity The entity to reset all the components on. */
+        void ResetEntityUsedComponentFlags(Entity entity);
+
     private:
 
         std::tuple<ComponentPool<ComponentTypes>...> m_ComponentPoolSet;

@@ -17,7 +17,7 @@
 
 namespace Astral {
 
-    constexpr uint32 MAX_ENTITIES = 255;
+    constexpr EntityID MAX_ENTITIES = 255;
 
     class ECS
     {
@@ -51,14 +51,19 @@ namespace Astral {
         uint32 GetNumberOfActiveEntities();
 
         template <typename ComponentType>
-        void SetEntityComponent(Entity entity, const ComponentType& component);
+        void AddComponent(Entity entity, const ComponentType& component);
 
-        /**@brief Retrieves the requested component of the entity.
+        /**@brief Retrieves the requested component of an entity.
          * @param outComponent Populates with the requested component's data
          * @return ECS_SUCCESS if entity has the component and can return it or ECS_COMPONENT_NOT_PRESENT if the
          *         entity does not have the component. */
         template <typename ComponentType>
-        [[nodiscard]] ECS_Result GetEntityComponent(Entity entity, ComponentType& outComponent);
+        [[nodiscard]] ECS_Result GetComponent(Entity entity, ComponentType& outComponent);
+
+        /**@brief Removes the given component from the entity. Does nothing if the entity does not have the given component.
+         * @param entity The entity handle to remove the component from. */
+        template <typename ComponentType>
+        void RemoveComponent(Entity entity);
 
         /**@brief Checks if an entity has the requested component.
          * @return True if the entity has the component and false otherwise. */
@@ -73,6 +78,7 @@ namespace Astral {
     private:
 
         EntityID GetNextInactiveEntity();
+        void ResetEntityUsedComponentFlags();
 
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_ActiveEntities;
