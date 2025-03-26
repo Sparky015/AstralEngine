@@ -11,16 +11,32 @@
 
 #include "ComponentPool.h"
 
-#define ASTRAL_ECS_REGISTER_COMPONENT_TYPE(componentType) // TODO: do something with it
-
 namespace Astral {
 
-    /**@struct ComponentPoolSet
+    /**@class ComponentPoolSet
      * @brief Holds all the component pools in the ECS */
-    struct ComponentPoolSet
+    template <typename... ComponentTypes>
+    class ComponentPoolSet
     {
-        // int and unsigned int are placeholders for real component types
-        std::tuple<ComponentPool<int>, ComponentPool<unsigned int>> componentPoolSet;
+    public:
+        template <typename ComponentType>
+        ComponentPool<ComponentType>& GetComponentPool();
+
+        /**@brief Resizes the component pools to the given size number. Does nothing if the current pool size is greater than
+         *        or equal to the given size.
+         * @param size The size to resize the component pool to
+         */
+        void ResizeComponentPool(size_t size);
+
+        /**@brief Resets all the components of the given entity to be inactive (not used).
+         * @param entity The entity to reset all the components on. */
+        void ResetEntityUsedComponentFlags(Entity entity);
+
+    private:
+
+        std::tuple<ComponentPool<ComponentTypes>...> m_ComponentPoolSet;
     };
 
 }
+
+#include "ComponentPoolSet_Impl.h"

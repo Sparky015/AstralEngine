@@ -29,14 +29,10 @@ add_library(AstralEngine
         "Debug/Utilities/ConsoleLogFile.h"
         "Debug/Instrumentation/ProfilerLogFile.cpp"
         "Debug/Instrumentation/ProfilerLogFile.h"
-        ECS/Old/ECSManager.cpp
-        ECS/Old/ECSManager.h
-        ECS/Old/ECS.cpp
-        ECS/Old/ECS.h
-        ECS/Old/Entity.cpp
-        ECS/Old/Entity.h
-        ECS/Old/Components/Transform.h
-        ECS/Old/Components/Sprite.h
+        ECS/ECSManager.cpp
+        ECS/ECSManager.h
+        ECS/Components/Transform.h
+        ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
@@ -89,8 +85,8 @@ add_library(AstralEngine
         Input/Keycodes.h
         Input/KeycodeConversions.h
         Input/KeycodeConversions.cpp
-        ECS/Old/Systems/RenderingSystem.cpp
-        ECS/Old/Systems/RenderingSystem.h
+        ECS/Systems/RenderingSystem.cpp
+        ECS/Systems/RenderingSystem.h
         Debug/Instrumentation/ScopeProfiler.cpp
         Debug/Instrumentation/ScopeProfiler.h
         Debug/Utilities/Asserts.cpp
@@ -101,7 +97,6 @@ add_library(AstralEngine
         Debug/Utilities/ConsoleColors.h
         Debug/Utilities/Error.cpp
         Debug/Utilities/Error.h
-        ECS/Old/ECSTypes.h
         Debug/Instrumentation/FunctionProfiler.h
         Debug/Instrumentation/FunctionProfiler.cpp
         Debug/ImGui/Components/WindowComponents.cpp
@@ -193,12 +188,13 @@ add_library(AstralEngine
         ECS/ECS.h
         Core/FixedIntegerTypes.h
         ECS/Entity.h
-        ECS/Entity.cpp
-        ECS/Entity_Impl.h
         ECS/ECSErrorHandling.h
         ECS/ECS_Impl.h
         ECS/ComponentPool.h
         ECS/ComponentPoolSet.h
+        ECS/ComponentPoolSet_Impl.h
+
+
 )
 
 

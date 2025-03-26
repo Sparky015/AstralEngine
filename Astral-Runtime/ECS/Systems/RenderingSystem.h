@@ -8,7 +8,7 @@
 
 #include "Renderer/Shaders/ShaderProgram.h"
 
-namespace Sozin {
+namespace Astral {
 
     class RenderingSystem
     {
