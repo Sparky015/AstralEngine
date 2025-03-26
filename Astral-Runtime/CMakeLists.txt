@@ -31,10 +31,6 @@ add_library(AstralEngine
         "Debug/Instrumentation/ProfilerLogFile.h"
         ECS/ECSManager.cpp
         ECS/ECSManager.h
-        ECS/Old/ECS.cpp
-        ECS/Old/ECS.h
-        ECS/Old/Entity.cpp
-        ECS/Old/Entity.h
         ECS/Components/Transform.h
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
@@ -101,7 +97,6 @@ add_library(AstralEngine
         Debug/Utilities/ConsoleColors.h
         Debug/Utilities/Error.cpp
         Debug/Utilities/Error.h
-        ECS/Old/ECSTypes.h
         Debug/Instrumentation/FunctionProfiler.h
         Debug/Instrumentation/FunctionProfiler.cpp
         Debug/ImGui/Components/WindowComponents.cpp
