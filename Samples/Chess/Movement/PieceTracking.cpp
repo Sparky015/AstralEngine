@@ -77,12 +77,16 @@ namespace Game {
     void PieceTracking::AlignTrackedPieceWithMouse() const
     {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
-        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
-        TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(m_TrackedPiece.PieceEntity);
+
+        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+
+        TransformComponent transformComponent = TransformComponent();
+        Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = InputState::MousePositionX();
         transformComponent.y = InputState::MousePositionY();
-        ecs.AddComponent<TransformComponent>(m_TrackedPiece.PieceEntity, TransformComponent(transformComponent));
+        ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 
@@ -90,14 +94,18 @@ namespace Game {
     {
         SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
-        ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
-        TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(m_TrackedPiece.PieceEntity);
+        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+
+        TransformComponent transformComponent;
+        Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
+        ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
+
         transformComponent.x = pieceCoordinates.x;
         transformComponent.y = pieceCoordinates.y;
 
         // Update the transform component of the piece with the new transform
-        ecs.AddComponent<TransformComponent>(m_TrackedPiece.PieceEntity, TransformComponent(transformComponent));
+        ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
 
@@ -129,8 +137,8 @@ namespace Game {
             if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
             {
                 // Delete entity of taken piece
-                ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
-                ecs.RemoveEntity(ChessEntities::GetEntity(attemptedMoveLocation));
+                Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+                ecs.DeleteEntity(ChessEntities::GetEntity(attemptedMoveLocation));
 
                 chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);
 

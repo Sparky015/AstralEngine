@@ -4,21 +4,24 @@
 
 #pragma once
 
-#include "ECSTypes.h"
+#include "Core/FixedIntegerTypes.h"
 
-namespace ECS {
+namespace Astral {
+
+    using EntityID = uint32;
+    static constexpr EntityID NULL_ENTITY = 0;
 
     class Entity
     {
     public:
         Entity() = default;
-        explicit Entity(EntityPoolSize id);
+        explicit Entity(EntityID id) : m_ID(id) {}
 
-        [[nodiscard]] inline EntityPoolSize GetID() const {return m_ID;}
+        [[nodiscard]] EntityID GetID() const { return m_ID; }
 
-        constexpr operator EntityPoolSize() const { return m_ID; }
     private:
-        EntityPoolSize m_ID{};
+
+        EntityID m_ID{NULL_ENTITY};
     };
 
 }

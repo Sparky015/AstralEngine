@@ -31,10 +31,6 @@ add_library(AstralEngine
         "Debug/Instrumentation/ProfilerLogFile.h"
         ECS/ECSManager.cpp
         ECS/ECSManager.h
-        ECS/ECS.cpp
-        ECS/ECS.h
-        ECS/Entity.cpp
-        ECS/Entity.h
         ECS/Components/Transform.h
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
@@ -101,7 +97,6 @@ add_library(AstralEngine
         Debug/Utilities/ConsoleColors.h
         Debug/Utilities/Error.cpp
         Debug/Utilities/Error.h
-        ECS/ECSTypes.h
         Debug/Instrumentation/FunctionProfiler.h
         Debug/Instrumentation/FunctionProfiler.cpp
         Debug/ImGui/Components/WindowComponents.cpp
@@ -122,7 +117,6 @@ add_library(AstralEngine
         Debug/ImGui/Components/MemoryComponents.cpp
         Debug/ImGui/Components/MemoryComponents.h
         Debug/MemoryTracking/NoTrackingSTLAllocator.h
-        Core/Memory/Allocators/StackBasedLinearAllocator.h
         Core/Time/Clock.h
         Core/Time/Clock.cpp
         Core/Time/DeltaTime.cpp
@@ -130,6 +124,8 @@ add_library(AstralEngine
         Debug/ImGui/Components/EngineComponents.cpp
         Debug/ImGui/Components/EngineComponents.h
 
+        Core/Memory/Allocators/StackBasedLinearAllocator.h
+        Core/Memory/Allocators/StackBasedLinearAllocator_impl.h
         Core/Memory/Allocators/StackAllocator.h
         Core/Memory/Allocators/STLAllocators/STLStackAllocator.h
         Core/Memory/Allocators/STLAllocators/STLStackBasedLinearAllocator.h
@@ -188,6 +184,17 @@ add_library(AstralEngine
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
         Debug/MemoryTracking/NewDeleteOverrides.h
+        ECS/ECS.cpp
+        ECS/ECS.h
+        Core/FixedIntegerTypes.h
+        ECS/Entity.h
+        ECS/ECSErrorHandling.h
+        ECS/ECS_Impl.h
+        ECS/ComponentPool.h
+        ECS/ComponentPoolSet.h
+        ECS/ComponentPoolSet_Impl.h
+
+
 )
 
 

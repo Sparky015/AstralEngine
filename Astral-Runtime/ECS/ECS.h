@@ -1,97 +1,96 @@
-//
-// Created by Andrew Fagan on 11/27/24.
-//
+/**
+* @file ECS.h
+* @author Andrew Fagan
+* @date 3/8/2025
+*/
 
 #pragma once
 
-#include "pch.h"
+#include "Entity.h"
+#include "ComponentPoolSet.h"
+#include "Components/Sprite.h"
+#include "Components/Transform.h"
+#include "ECSErrorHandling.h"
 
-#include "ECS/Entity.h"
-#include "ECSTypes.h"
-#include <any>
-#include <bitset>
-#include <typeindex>
+namespace Astral {
 
-#include "ECS/Components/Sprite.h" // TEMP
-#include "ECS/Components/Transform.h" // TEMP
-
-
-namespace ECS {
-
-    constexpr EntityPoolSize MAX_ENTITIES = 255;
+    constexpr EntityID MAX_ENTITIES = 255;
 
     class ECS
     {
     public:
-
+        template <typename ComponentType>
+        using ComponentView = std::vector<ComponentType>;
 
         ECS();
-        Entity AddEntity();
-        void RemoveEntity(Entity entity);
-        bool IsEntityUsed(const EntityPoolSize entityID);
+        ~ECS() = default;
 
+        /**@brief Initializes the ECS and its component pools */
+        void Init();
 
-        template<class ComponentType>
-        void AddComponent(Entity entity, const ComponentType& component)
-        {
-            GetComponent<ComponentType>(entity) = component;
-            GetComponent<ComponentType>(entity).isUsed = true;
-        };
+        /**@brief Shuts down the ECS */
+        void Shutdown();
 
+        /**@brief Creates an entity in the ECS and returns its instance */
+        Entity CreateEntity();
 
-        template<class ComponentType>
-        void UpdateComponent(Entity entity, const ComponentType& component)
-        {
-            GetComponent<ComponentType>(entity) = component;
-        };
+        /**@brief Deletes an entity from the ECS */
+        void DeleteEntity(Entity entity);
+        void DeleteEntity(EntityID entityID);
 
+        /**@brief Checks if an entity is alive and in the ECS */
+        bool IsEntityAlive(Entity entity);
 
-        template<class ComponentType>
-        void RemoveComponent(Entity entity)
-        {
-            std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity].isUsed = false;
+        /**@brief Checks if an entity is alive and in the ECS */
+        bool IsEntityAlive(EntityID entityID);
 
-            // std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()].isUsed = false;
-        };
+        /**@brief Gets the number of entities that are alive. */
+        uint32 GetNumberOfActiveEntities();
 
+        /**@brief Adds a component to an entity
+         * @param entity The entity to add a component to
+         * @param component The component being added to the entity */
+        template <typename ComponentType>
+        void AddComponent(Entity entity, const ComponentType& component);
 
-        template<class ComponentType>
-        ComponentType& GetComponent(Entity entity)
-        {
-            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity];
-            // return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components)[entity.GetID()];
-        }
+        /**@brief Retrieves the requested component of an entity.
+         * @param outComponent Populates with the requested component's data
+         * @return ECS_SUCCESS if entity has the component and can return it or ECS_COMPONENT_NOT_PRESENT if the
+         *         entity does not have the component. */
+        template <typename ComponentType>
+        [[nodiscard]] ECS_Result GetComponent(Entity entity, ComponentType& outComponent);
 
+        /**@brief Removes the given component from the entity. Does nothing if the entity does not have the given component.
+         * @param entity The entity handle to remove the component from. */
+        template <typename ComponentType>
+        void RemoveComponent(Entity entity);
 
-        template<class ComponentType>
-        using ComponentDisplay = std::array<ComponentType, MAX_ENTITIES>;
+        /**@brief Checks if an entity has the requested component.
+         * @return True if the entity has the component and false otherwise. */
+        template <typename ComponentType>
+        bool HasComponent(Entity entity);
 
-        template<class ComponentType>
-        const std::array<ComponentType, MAX_ENTITIES>& GetComponentDisplay()
-        {
-            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)]);
-            // return std::get<std::array<ComponentType, MAX_ENTITIES>>(m_Components);
-        }
-
-
-        template<class ComponentType>
-        bool IsComponentUsed(const Entity entity, ComponentType component)
-        {
-            return std::any_cast<ComponentDisplay<ComponentType>&>(m_ComponentsNew[typeid(ComponentType)])[entity].isUsed;
-            // return GetComponent<ComponentType>(entity).isUsed;
-        }
-
-        EntityPoolSize GetCurrentEntityCount() const;
+        /**@brief Gets a view of the components of the requested type that can be iterated over.
+         * @return An iterable ComponentView of the requested type. */
+        template <typename ComponentType>
+        ComponentView<ComponentType>& GetView(); // TODO: Return an iterator of the view instead of actual view
 
     private:
-        EntityPoolSize FindNextInactiveIndex();
-        EntityPoolSize m_EntityCounter;
-        std::bitset<MAX_ENTITIES> m_ActiveEntities;
 
-        // Container for components
-        // std::tuple<std::array<TransformComponent, MAX_ENTITIES>, std::array<SpriteComponent, MAX_ENTITIES>> m_Components;
+        /**@brief Gets the next unused entity ID
+         * @return The next unused entity ID */
+        EntityID GetNextInactiveEntity();
 
-        std::unordered_map<std::type_index, std::any> m_ComponentsNew;
+        uint32 m_NumberOfActiveEntities;
+        std::vector<bool> m_ActiveEntities;
+        std::stack<EntityID, std::vector<EntityID>> m_FreeEntities;
+
+        /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,
+        /// add it here.
+        ComponentPoolSet<TransformComponent, SpriteComponent> m_ComponentPoolSet;
+
     };
 
 }
+
+#include "ECS_Impl.h"

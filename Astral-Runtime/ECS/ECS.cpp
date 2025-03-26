@@ -1,73 +1,100 @@
-//
-// Created by Andrew Fagan on 11/27/24.
-//
+/**
+* @file ECS.cpp
+* @author Andrew Fagan
+* @date 3/8/2025
+*/
 
 #include "ECS.h"
 
+#include "Entity.h"
 
-namespace ECS {
+namespace Astral {
 
-    Entity ECS::AddEntity()
+    ECS::ECS() : m_NumberOfActiveEntities(0)
     {
-        ASSERT(m_EntityCounter != MAX_ENTITIES, "Max amount of entities reached! Can't add any more!");
 
-        // Find the next empty slot
-        EntityPoolSize index = FindNextInactiveIndex();
-
-        // Create new entity at the open slot and set it to active
-        Entity entity = Entity(index);
-        m_ActiveEntities[index] = true;
-        m_EntityCounter++;
-
-        return entity;
     }
 
 
-    void ECS::RemoveEntity(Entity entity)
+    void ECS::Init()
     {
-        m_EntityCounter--;
-
-        // Setting the entity slot to not being used
-        EntityPoolSize entityID = entity.GetID();
-        m_ActiveEntities[entityID] = false;
-
-        // Sets all the possible components of an entity to not being used.
-        RemoveComponent<TransformComponent>(entity);
-        RemoveComponent<SpriteComponent>(entity);
+        constexpr size_t INITIAL_ENTITY_COUNT = 64;
+        m_ActiveEntities.resize(INITIAL_ENTITY_COUNT);
+        m_ComponentPoolSet.ResizeComponentPool(INITIAL_ENTITY_COUNT);
     }
 
 
-    bool ECS::IsEntityUsed(const EntityPoolSize entityID)
+    void ECS::Shutdown()
+    {
+
+    }
+
+
+    Entity ECS::CreateEntity()
+    {
+        if (m_NumberOfActiveEntities == m_ActiveEntities.size())
+        {
+            // Resize all the component pools
+            const size_t size = m_ActiveEntities.size();
+            m_ActiveEntities.resize(2 * size, false);
+            m_ComponentPoolSet.ResizeComponentPool(2 * size);
+        }
+
+        EntityID newEntityID = GetNextInactiveEntity();
+
+        // This should not go out of bounds due to the resizing above if m_ActiveEntities is at max capacity.
+        m_ActiveEntities[newEntityID] = true;
+
+        m_NumberOfActiveEntities++;
+        return Entity(newEntityID);
+    }
+
+
+    void ECS::DeleteEntity(Entity entity)
+    {
+        m_NumberOfActiveEntities--;
+        m_ActiveEntities[entity.GetID()] = false;
+        m_FreeEntities.push(entity.GetID());
+        m_ComponentPoolSet.ResetEntityUsedComponentFlags(entity);
+    }
+
+
+    void ECS::DeleteEntity(EntityID entityID)
+    {
+       DeleteEntity(Entity(entityID));
+    }
+
+
+    bool ECS::IsEntityAlive(Entity entity)
+    {
+        return m_ActiveEntities[entity.GetID()];
+    }
+
+
+    bool ECS::IsEntityAlive(EntityID entityID)
     {
         return m_ActiveEntities[entityID];
     }
 
 
-    EntityPoolSize ECS::GetCurrentEntityCount() const
+    uint32 ECS::GetNumberOfActiveEntities()
     {
-        return m_ActiveEntities.count();
+        return m_NumberOfActiveEntities;
     }
 
-    EntityPoolSize ECS::FindNextInactiveIndex()
+
+    EntityID ECS::GetNextInactiveEntity()
     {
-        // Iterate through the bitfield and find the first slot that isn't being used
-        for (EntityPoolSize i = 0; i < MAX_ENTITIES; i++)
+        if (!m_FreeEntities.empty())
         {
-            if (m_ActiveEntities[i] == false) { return i; }
-        };
+            EntityID selectedEntityID = m_FreeEntities.top();
+            m_FreeEntities.pop();
+            return selectedEntityID;
+        }
 
-        // We did not find a empty slot since we did not return during the loop.
-        ASTRAL_ERROR("Max amount of entities reached! Can't add any more!");
-    }
-
-
-    ECS::ECS() : m_EntityCounter(0)
-    // m_Components(std::make_tuple(std::array<TransformComponent, MAX_ENTITIES>(), std::array<SpriteComponent, MAX_ENTITIES>()))
-    {
-        // Initialize component arrays for each component type
-        m_ComponentsNew[typeid(TransformComponent)] = ComponentDisplay<TransformComponent>();
-        m_ComponentsNew[typeid(SpriteComponent)] = ComponentDisplay<SpriteComponent>();
-        // Add other component types as needed
+        return m_NumberOfActiveEntities; // This is the entity ID
     }
 
 }
+
+

@@ -7,7 +7,7 @@
 
 #include "ApplicationModule.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
+#include "../ECS/ECSManager.h"
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
@@ -35,7 +35,7 @@ Engine::Engine() :
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
-    ECS::g_ECSManager.Init();
+    Astral::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
@@ -53,7 +53,7 @@ Engine::~Engine()
 
     m_ApplicationModule->Shutdown();
     Graphics::g_RendererManager.Shutdown();
-    ECS::g_ECSManager.Shutdown();
+    Astral::g_ECSManager.Shutdown();
     Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
