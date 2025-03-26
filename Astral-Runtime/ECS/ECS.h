@@ -12,9 +12,6 @@
 #include "Components/Transform.h"
 #include "ECSErrorHandling.h"
 
-#include <vector>
-
-
 namespace Astral {
 
     constexpr EntityID MAX_ENTITIES = 255;
@@ -50,6 +47,9 @@ namespace Astral {
         /**@brief Gets the number of entities that are alive. */
         uint32 GetNumberOfActiveEntities();
 
+        /**@brief Adds a component to an entity
+         * @param entity The entity to add a component to
+         * @param component The component being added to the entity */
         template <typename ComponentType>
         void AddComponent(Entity entity, const ComponentType& component);
 
@@ -77,8 +77,9 @@ namespace Astral {
 
     private:
 
+        /**@brief Gets the next unused entity ID
+         * @return The next unused entity ID */
         EntityID GetNextInactiveEntity();
-        void ResetEntityUsedComponentFlags();
 
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_ActiveEntities;

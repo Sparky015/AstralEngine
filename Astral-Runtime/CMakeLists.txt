@@ -198,7 +198,7 @@ add_library(AstralEngine
         ECS/ComponentPool.h
         ECS/ComponentPoolSet.h
         ECS/ComponentPoolSet_Impl.h
-        
+
 
 )
 

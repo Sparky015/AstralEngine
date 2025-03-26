@@ -23,7 +23,7 @@ namespace Astral {
         ECS& ecs = g_ECSManager.GetECS();
 
         ECS::ComponentView<SpriteComponent> spriteDisplay = ecs.GetView<SpriteComponent>();
-        ECS::ComponentView<TransformComponent> transformDisplay = ecs.GetView<TransformComponent>();
+        ECS:: ComponentView<TransformComponent> transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         for (EntityID entityID = 0; entityID < spriteDisplay.size(); entityID++)

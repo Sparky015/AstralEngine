@@ -15,10 +15,12 @@ namespace Astral {
 
     }
 
+
     void ECS::Init()
     {
-        m_ActiveEntities.resize(64);
-        m_ComponentPoolSet.ResizeComponentPool(64);
+        constexpr size_t INITIAL_ENTITY_COUNT = 64;
+        m_ActiveEntities.resize(INITIAL_ENTITY_COUNT);
+        m_ComponentPoolSet.ResizeComponentPool(INITIAL_ENTITY_COUNT);
     }
 
 
@@ -74,10 +76,12 @@ namespace Astral {
         return m_ActiveEntities[entityID];
     }
 
+
     uint32 ECS::GetNumberOfActiveEntities()
     {
         return m_NumberOfActiveEntities;
     }
+
 
     EntityID ECS::GetNextInactiveEntity()
     {
@@ -89,12 +93,6 @@ namespace Astral {
         }
 
         return m_NumberOfActiveEntities; // This is the entity ID
-    }
-
-
-    void ECS::ResetEntityUsedComponentFlags()
-    {
-
     }
 
 }
