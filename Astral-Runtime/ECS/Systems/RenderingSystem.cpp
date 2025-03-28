@@ -22,8 +22,8 @@ namespace Astral {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS& ecs = g_ECSManager.GetECS();
 
-        ECS::ComponentView<SpriteComponent> spriteDisplay = ecs.GetView<SpriteComponent>();
-        ECS:: ComponentView<TransformComponent> transformDisplay = ecs.GetView<TransformComponent>();
+        const ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
+        const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         for (EntityID entityID = 0; entityID < spriteDisplay.size(); entityID++)
@@ -33,8 +33,8 @@ namespace Astral {
             if (!ecs.HasComponent<SpriteComponent>(e)) { continue; }
             if (!transformDisplay[entityID].isUsed) { continue; }
 
-            TransformComponent transformComponent = transformDisplay[entityID];
-            SpriteComponent spriteComponent = spriteDisplay[entityID];
+            const TransformComponent& transformComponent = transformDisplay[entityID];
+            const SpriteComponent& spriteComponent = spriteDisplay[entityID];
 
             Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));

@@ -10,6 +10,7 @@
 #include "Core/Events/EventListener.h"
 #include "Debug/DebugManager.h"
 #include "GameManager.h"
+#include "Debug/ImGui/ImGuiManager.h"
 #include "Input/InputState.h"
 
 class ChessModule : public ApplicationModule
@@ -24,6 +25,7 @@ public:
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
         Debug::g_DebugManager.Init();
+        Debug::g_ImGuiManager.LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
     }
 
     void Update(const Core::DeltaTime& deltaTime) override
