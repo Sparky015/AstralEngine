@@ -43,11 +43,6 @@ namespace Debug {
 
         InitImGui();
 
-        // ImGui::GetIO().IniFilename = "imgui-config.ini";
-
-
-
-
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
     }

@@ -12,6 +12,7 @@
 #include "GameManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Input/InputState.h"
+#include "Window/WindowManager.h"
 
 class ChessModule : public ApplicationModule
 {
@@ -26,6 +27,8 @@ public:
         Game::g_GameManager.Init();
         Debug::g_DebugManager.Init();
         Debug::g_ImGuiManager.LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
+        Window::g_WindowManager.GetWindow().SetWindowName("Chess");
+        Window::g_WindowManager.GetWindow().SetWindowDimensions(800, 800);
     }
 
     void Update(const Core::DeltaTime& deltaTime) override
