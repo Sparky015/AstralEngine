@@ -1,4 +1,4 @@
-
+#### ECS Research and Planning
 
 #### -- Should I register types at compile time or lazily add them when the user uses them at runtime?
 
