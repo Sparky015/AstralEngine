@@ -15,8 +15,8 @@ GUID is truly unique. I need to have a process that can turn a filepath into a G
 be able to retrieve asset data either with the filepath or the GUID. I was going to just hash the filepath and then add 
 the GUID to a hashmap (key: GUID, value: filepath) to mark as used. Then, if another filepath hashes to a GUID already used, I can add 1 until I get a 
 GUID that is not used. Then, if the user tries to retrieve an asset using the filepath, I can hash the filepath and then
-check the hashmap to see if that GUID has the same filepath as the one the user inputted. If It's not, then keep adding one
-until the file path does match. There should a very small amount of hashing collisions any ways so it should still be O(1) 
+check the hashmap to see if that GUID has the same filepath as the one the user inputted. If it's not, then keep adding one
+until the file path does match. There should a very small amount of hashing collisions anyway so it should still be O(1) 
 with a good hashing function.
 
 How will I store differently typed resources? (Texture vs Mesh vs Script, etc.)
