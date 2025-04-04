@@ -40,7 +40,7 @@ What is the latency/overhead requirements?
 
 - For loading asset data, I expect there to be some latency as loading an asset can take some time, but very little 
 overhead from the asset manager itself.
-  - For accessing asset data, there should minimal overhead in getting the raw data from an asset handle.
+- For accessing asset data, there should minimal overhead in getting the raw data from an asset handle.
 
 Will this be handled differently in different builds (Debug vs Release vs Dist)?
 
@@ -49,7 +49,7 @@ Will this be handled differently in different builds (Debug vs Release vs Dist)?
 What are the inputs and the outputs?
 
 - The inputs into the asset manager will be the file path to the asset being loaded.
-  - The output from the asset manager will be a handle to the asset that can be used to access the raw data of the asset/resource.
+- The output from the asset manager will be a handle to the asset that can be used to access the raw data of the asset/resource.
 
 Value:
 
@@ -69,7 +69,7 @@ Cost:
 
 What is the cost of solving the problem?
 - Predicted development time cost: ~2 weeks
-  - Maintenance cost: Minimal but each new resource will need to inherit from the Asset class and define overrides.
+- Maintenance cost: Minimal but each new resource will need to inherit from the Asset class and define overrides.
 
 Platform:
 
