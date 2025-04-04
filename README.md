@@ -46,10 +46,10 @@ I am working to build up an editor that I can compose new game scenes with
 and allow for saving scenes and switching to different scenes without using a
 different executable.
 
-* Entity-Component-System (ECS)
+* Asset Manager
 
-I am working to make my current ECS implementation more extendable and performant. I am 
-implementing a new ECS with sparse sets.
+I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
+and memory efficiency.
 
 * Renderer
 
