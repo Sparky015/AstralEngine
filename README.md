@@ -32,10 +32,9 @@ A list of the custom allocators follows:
 Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
 ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
 
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+
 Future allocators to be written: Slab Allocator
-
-You can find more detailed information about this [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
-
 
 ###
 ### Work-In-Progress Features
