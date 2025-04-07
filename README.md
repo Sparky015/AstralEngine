@@ -34,6 +34,8 @@ ring allocator/buffer, and stack-based linear allocator (plus an object pool cla
 
 Future allocators to be written: Slab Allocator
 
+You can find more detailed information about this [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+
 
 ###
 ### Work-In-Progress Features

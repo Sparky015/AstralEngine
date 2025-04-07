@@ -30,7 +30,6 @@ namespace Core {
         /**@brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
-         * @param outAllocatedPointer An output parameter that is populated with a pointer to allocated block.
          * @return A pointer to the allocated block if successful and nullptr if the allocation failed.*/
         [[nodiscard]] void* Allocate(size_t size, uint16 alignment);
 
