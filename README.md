@@ -9,23 +9,18 @@ It is continuously being updated and improved as I can get to more things.
 
 Project Lifetime: Late October 2024 - Present
 
-In the future, Astral Engine will become a 3D engine targeting big nature-focused open world environments, but there 
-is a lot of stuff to do to get there.
+In the future, Astral Engine will become a 3D engine targeting big open world environments with focus on particles
+and the environment, but there is a lot of stuff to do to get there.
 
 ###
 ### Notable Features
 
 ----
 
-- Memory Profiling Tool Suite
+###
+#### Custom Allocators
 
-This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
-and scope-based allocation profiling tool
-
-
-- Custom Allocators
-
-This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance 
+This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
 when the situation allows for it.
 
 A list of the custom allocators follows:
@@ -35,6 +30,25 @@ ring allocator/buffer, and stack-based linear allocator (plus an object pool cla
 You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
 
 Future allocators to be written: Slab Allocator
+
+- Note that I am still polishing this feature, but it is functionally done.
+
+###
+#### Memory Profiling Tool Suite
+
+This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
+and scope-based allocation profiling tool
+
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
+
+- Note that I am still polishing this feature, but it is functionally done.
+
+###
+#### Visual Scope Profiler
+
+This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
+took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
+trace tool to view visually.
 
 ###
 ### Work-In-Progress Features
