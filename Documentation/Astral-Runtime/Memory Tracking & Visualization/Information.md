@@ -109,7 +109,10 @@ from to only the allocations in the selected graph.
 
 #### Scope-Based Allocation Tracking
 
-
+As a part of the memory profiling tool, Astral Engine also provides a scope profiler that allows the user to see how many
+allocations are made in any given scope in addition to how long the scope took to execute. The output is written to a file and can be viewed by Chrome's trace tool or
+Perfetto's trace tool. An example image is shown earlier in the file under the following section:
+Brief Descriptions the Parts of the Memory Tracking System -> Scope Profiler.
 
 #### Thread Safety
 
@@ -133,11 +136,20 @@ requirements are not as strict because it is not apart of the real time engine.
 
 #### Memory Profile File Format
 
+During a profiling scene, the memory metrics, after each allocation is made, gets written to a file. The file extension
+is .ASTLMemProfile. Each write (called a snapshot) is in the following format: The memory metrics instance data, the time of allocation 
+(microseconds since the start of the scene), the allocation data struct (data like region, allocation size, thread ID, etc.),
+and, lastly, the a string that holds the stacktrace of the allocation. At the footer of the file, there is size_t that
+contains the number of snapshots that the file holds. There is no header with data.
+
+Another thing to note is that the library msgpack is used to serialize the data and handles the actual format of the data
+inside the file. The above was the order that the data will appear in.
 
 
 #### Error Handling Strategy
 
-
+The memory tracker does not throw and return any error codes. However, msgpack will throw exceptions when a cast fails or
+another error occurs, so the memory tracker catches anything that is thrown from msgpack.
 
 ###
 #### References Used:
