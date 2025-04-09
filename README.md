@@ -41,7 +41,7 @@ and scope-based allocation profiling tool
 
 You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
 
-- Note that I am still polishing this feature, but it is functionally done.
+- Note that I am still polishing and optimizing this feature, but it is functionally done.
 
 ###
 #### Visual Scope Profiler

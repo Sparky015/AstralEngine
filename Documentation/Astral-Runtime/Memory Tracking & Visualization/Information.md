@@ -56,7 +56,7 @@ later.
 
 Example Image of the Scope Profiler Trace Output (Using Perfetto)
 ![MemoryDebugWindowImage](Pictures/ScopeProfilerTraceOutput.png)
-
+- Note the number of allocations made in the scope in the bottom right under "Arguments"
 
 
 ### Usage
@@ -74,7 +74,6 @@ memoryTracker.RemoveAllocation(pointer); // Removes the allocation from the memo
 
 #### Example Image of the Memory Debug Window
 ![MemoryDebugWindowImage](Pictures/MemoryDebugWindowScreenshot.png)
-
 
 ###
 ### Design Process and Considerations
