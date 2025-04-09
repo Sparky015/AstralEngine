@@ -80,7 +80,7 @@ namespace Core {
             msgpack::pack(GetExportFile(), memoryMetrics);
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
-            Core::MemoryTracker::Get().DisableTracking();
+            Core::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
             msgpack::pack(GetExportFile(), cpptrace::stacktrace::current(2, 12).to_string());
             Core::MemoryTracker::Get().EnableTracking();
 
