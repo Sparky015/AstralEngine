@@ -9,7 +9,7 @@ It is continuously being updated and improved as I can get to more things.
 
 Project Lifetime: Late October 2024 - Present
 
-In the future, Astral Engine will become a 3D engine targeting big open world environments with focus on particles
+In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
 
 ###
@@ -57,14 +57,15 @@ trace tool to view visually.
 
 * Entity-Component-System (ECS) (70% done)
 
-I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
-and memory efficiency.
+I am working to make my current ECS implementation more extendable and performant. I am 
+implementing a new ECS with sparse sets.
 
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 * Asset Manager (40% done)
 
-I am working on writing an asset manager that can simply cache raw asset data for now.
+I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
+and memory efficiency.
 
 * Scene System (Early In-Progress)
 
@@ -124,6 +125,9 @@ Supported Compilers: MSVC, AppleClang, and Clang
 Supported Platforms: Windows and macOS    (Linux coming in the future)
 
 Astral uses CMake for the build system.
+
+In addition to the methods below, you can also use an IDE that supports building with CMake like CLion or Visual Studio. Before running the project,
+make sure to switch the target to your desired target that you want to run.
 
 Requirements include:
 - git
