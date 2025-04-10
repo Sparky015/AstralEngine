@@ -55,28 +55,48 @@ trace tool to view visually.
 
 ----
 
-* Editor
+* Editor (Early In-Progress)
 
 I am working to build up an editor that I can compose new game scenes with
 and allow for saving scenes and switching to different scenes without using a
 different executable.
 
-* Entity-Component-System (ECS)
+* Entity-Component-System (ECS) (70% done)
 
 I am working to make my current ECS implementation more extendable and performant. I am 
 implementing a new ECS with sparse sets.
 
-* Renderer
+* Renderer (Early In-Progress)
 
 I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
 supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
 use later on (I am currently using OpenGL 4.1)
 
-* Shaders and Materials
+* Asset Manager (40% done)
 
-I am working on designing and then implementing an extendable material system for shaders, 
+I am working on writing an asset manager that can simply cache raw asset data for now.
+
+* Scene System (Early In-Progress)
+
+I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am
+integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.
+
+* Shaders and Materials (Early In-Progress)
+
+I am working on designing an extendable material system for shaders, 
 so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the
-client/user executable 
+client/user code.
+
+
+###
+### Screenshot of Current Engine State
+
+---
+
+
+![CurrentEngineState](Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png)
+This picture contains the Chess sample project as well as the engine debug menu. Note that the chess sample
+project is not completely finished and that there is no checks or castling.
 
 ###
 ### Roadmap
@@ -166,7 +186,9 @@ Requirements include:
 - main --> The branch for releases   (no actual releases have happened yet)
 - development -> All work is done in this branch or a branch based from it
 - feature-X -> Branches for feature work to be done on
-- experimental-X -> Branches for to explore the potential and limits of a new feature idea 
+- experimental-X -> Branches for to explore the potential and limits of a new feature idea
+  - experimental-vulkan -> Branch where the vulkan renderer is being explored and written and refactors to the renderer
+                           structure.
 
 
 ###
