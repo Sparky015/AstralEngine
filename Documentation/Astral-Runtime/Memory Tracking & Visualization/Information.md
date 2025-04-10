@@ -74,6 +74,12 @@ memoryTracker.RemoveAllocation(pointer); // Removes the allocation from the memo
 
 #### Example Image of the Memory Debug Window
 ![MemoryDebugWindowImage](Pictures/MemoryDebugWindowScreenshot.png)
+This shows the visualizer tool that graphs the memory profiling scene data.
+
+
+#### Example Image of the Engine Debug Menu, Memory Subsection
+![EngineDebugMenuMemorySubsection](Pictures/DebugMenuMemorySection.png)
+This shows the real time memory usage metrics of the engine.
 
 ###
 ### Design Process and Considerations
@@ -130,8 +136,10 @@ button instead of having to hard code a limited scene recording due to bad perfo
 
 #### Offline Tool
 
-Treated as offline tool even though it is currently accessed through engine runtime. This means that the performance
-requirements are not as strict because it is not apart of the real time engine.
+The visualizer which loads and graphs the memory profiling data is treated as offline tool even though it is currently 
+accessed through engine runtime. This means that the performance requirements are not as strict because it is not a 
+part of the real time engine. However, there is a real time component to the memory tracking tool as the real time 
+memory metrics can be found in the engine's debug menu under the memory subsection.
 
 
 #### Memory Profile File Format
