@@ -9,7 +9,7 @@ It is continuously being updated and improved as I can get to more things.
 
 Project Lifetime: Late October 2024 - Present
 
-In the future, Astral Engine will become a 3D engine targeting big open world environments with focus on particles
+In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
 
 ###
