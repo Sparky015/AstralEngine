@@ -124,6 +124,8 @@ Supported Platforms: Windows and macOS    (Linux coming in the future)
 
 Astral uses CMake for the build system.
 
+In additional to the methods below, you can also use an IDE that supports building with CMake like CLion or Visual Studio.
+
 Requirements include:
 - git
 - CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
