@@ -68,6 +68,7 @@ add_executable(Chess
 target_include_directories(Chess PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Chess PUBLIC AstralEngine)
 target_compile_definitions(Chess PUBLIC -DCHESS_ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Assets/")
+target_compile_definitions(Chess PUBLIC -DCHESS_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 
 
 if (WIN32) #MacOS doesn't like this, so I will only do it for windows

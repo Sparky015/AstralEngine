@@ -43,11 +43,6 @@ namespace Debug {
 
         InitImGui();
 
-        ImGui::GetIO().IniFilename = "imgui-config.ini";
-        ImGui::LoadIniSettingsFromDisk("imgui-config.ini");
-
-
-
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
     }
@@ -233,6 +228,12 @@ namespace Debug {
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backupCurrentContext);
         }
+    }
+
+
+    void ImGuiManager::LoadImGuiConfigFile(const std::string_view& filePath)
+    {
+        ImGui::LoadIniSettingsFromDisk(filePath.data());
     }
 
 

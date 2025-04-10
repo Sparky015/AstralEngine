@@ -22,12 +22,12 @@ namespace Game {
 
     struct TrackedPiece
     {
-        TrackedPiece(PieceID pieceID, PieceColor pieceColor, ECS::Entity pieceEntity)
+        TrackedPiece(PieceID pieceID, PieceColor pieceColor, Astral::Entity pieceEntity)
             : PieceID(pieceID), PieceColor(pieceColor), PieceEntity(pieceEntity) {}
 
         PieceID PieceID;
         PieceColor PieceColor;
-        ECS::Entity PieceEntity;
+        Astral::Entity PieceEntity;
     };
 
 
@@ -50,7 +50,7 @@ namespace Game {
         [[nodiscard]] bool IsSquareEmpty(const Chessboard& chessBoard, SquareLocation squareLocation) const;
         [[nodiscard]] bool IsPieceTurn(const Chessboard& chessBoard, SquareLocation pieceLocation) const;
 
-        TrackedPiece m_TrackedPiece {TrackedPiece((PieceID)255, PieceColor::BLACK, ECS::Entity())};
+        TrackedPiece m_TrackedPiece {TrackedPiece((PieceID)255, PieceColor::BLACK, Astral::Entity())};
         PieceTrackingState m_PieceTrackingState {PieceTrackingState::STANDBY};
     };
 

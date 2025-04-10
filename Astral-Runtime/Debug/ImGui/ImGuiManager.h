@@ -24,6 +24,7 @@ namespace Debug{
 
         void EnableViewportDockSpace() { m_ShowViewportDockSpace = true; }
         void DisableViewportDockSpace() { m_ShowViewportDockSpace = false; }
+        void LoadImGuiConfigFile(const std::string_view& filePath);
 
         ImGuiManager(const ImGuiManager&) = delete;
         ImGuiManager& operator=(const ImGuiManager&) = delete;

@@ -36,7 +36,7 @@ namespace Window {
 
 
         /** Creating the GLFW window */
-        m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Chess", nullptr, nullptr);
+        m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, m_WindowName.data(), nullptr, nullptr);
 
         if (m_Window == nullptr)
         {
@@ -184,11 +184,24 @@ namespace Window {
         return height;
     }
 
+
     Vec2 GenericWindow::GetFramebufferScale()
     {
         int width, height;
         glfwGetFramebufferSize(m_Window, &width, &height);
         return Vec2(width / m_WindowWidth, height / m_WindowHeight);
+    }
+
+
+    void GenericWindow::SetWindowName(std::string_view windowName)
+    {
+        glfwSetWindowTitle(m_Window, windowName.data());
+    }
+
+
+    void GenericWindow::SetWindowDimensions(int width, int height)
+    {
+        glfwSetWindowSize(m_Window, width, height);
     }
 
 } // Window

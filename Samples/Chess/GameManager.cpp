@@ -35,7 +35,7 @@ namespace Game {
         PROFILE_SCOPE("GameManager::Update")
         RendererCommand::Clear();
         m_PieceTracker.UpdatePieceTracking();
-        Sozin::RenderingSystem::RenderEntities(m_ShaderProgram.get()); // TODO: Refactor shader program to a component
+        Astral::RenderingSystem::RenderEntities(m_ShaderProgram.get()); // TODO: Refactor shader program to a component
     }
 
 

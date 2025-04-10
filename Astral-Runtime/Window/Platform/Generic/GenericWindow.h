@@ -30,6 +30,9 @@ namespace Window {
         int GetHeight() override;
         Vec2 GetFramebufferScale() override;
 
+        void SetWindowName(std::string_view windowName) override;
+        void SetWindowDimensions(int width, int height) override;
+
         Graphics::RendererContext & GetRendererContext() override;
         void* GetNativeWindow() override;
 
@@ -38,9 +41,6 @@ namespace Window {
 
         static bool m_IsGLFWInitialized;
         GLFWwindow* m_Window;
-        int m_WindowWidth = 800;
-        int m_WindowHeight = 800;
-        uint8 m_Vsync = 1;
     };
 
 } // Window

@@ -35,6 +35,9 @@ namespace Window {
         virtual int GetHeight() = 0;
         virtual Vec2 GetFramebufferScale() = 0;
 
+        virtual void SetWindowName(std::string_view windowName) = 0;
+        virtual void SetWindowDimensions(int width, int height) = 0;
+
         virtual void* GetNativeWindow() = 0;
         virtual Graphics::RendererContext& GetRendererContext() = 0;
         virtual std::string_view GetVersion() = 0;
@@ -44,6 +47,11 @@ namespace Window {
     protected:
         static WindowAPI s_WindowAPI;
         std::unique_ptr<Graphics::RendererContext> m_RenderContext;
+
+        int m_WindowWidth = 1080; // Default dimensions if user does not set them
+        int m_WindowHeight = 720;
+        std::string_view m_WindowName = "Astral Engine"; // Default name if name is not set
+        uint8 m_Vsync = 1;
     };
 
 } // Window

@@ -7,7 +7,7 @@
 
 #include "ApplicationModule.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
+#include "../ECS/ECSManager.h"
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
@@ -31,18 +31,17 @@ Engine::Engine() :
     Core::MemoryTracker::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
-    Core::MemoryTracker::Get().BeginScene("Engine_Init");
+
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
-    ECS::g_ECSManager.Init();
+    Astral::g_ECSManager.Init();
     Graphics::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
 
     m_WindowClosedListener.StartListening();
-    Core::MemoryTracker::Get().EndScene();
 }
 
 
@@ -53,7 +52,7 @@ Engine::~Engine()
 
     m_ApplicationModule->Shutdown();
     Graphics::g_RendererManager.Shutdown();
-    ECS::g_ECSManager.Shutdown();
+    Astral::g_ECSManager.Shutdown();
     Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();

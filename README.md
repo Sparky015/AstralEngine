@@ -9,59 +9,95 @@ It is continuously being updated and improved as I can get to more things.
 
 Project Lifetime: Late October 2024 - Present
 
-In the future, Astral Engine will become a 3D engine targeting big nature-focused open world environments, but there 
-is a lot of stuff to do to get there.
+In the future, Astral Engine will become a 3D engine targeting big open world environments with focus on particles
+and the environment, but there is a lot of stuff to do to get there.
 
 ###
 ### Notable Features
 
 ----
 
-- Memory Profiling Tool Suite
+###
+#### Custom Allocators
 
-This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
-and scope-based allocation profiling tool
-
-
-- Custom Allocators
-
-This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance 
+This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
 when the situation allows for it.
 
 A list of the custom allocators follows:
 Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
 ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
 
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+
 Future allocators to be written: Slab Allocator
 
+- Note that I am still polishing this feature, but it is functionally done.
+
+###
+#### Memory Profiling Tool Suite
+
+This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
+and scope-based allocation profiling tool
+
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
+
+- Note that I am still polishing and optimizing this feature, but it is functionally done.
+
+###
+#### Visual Scope Profiler
+
+This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
+took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
+trace tool to view visually.
 
 ###
 ### Work-In-Progress Features
 
 ----
 
-* Editor
+* Editor (Early In-Progress)
 
 I am working to build up an editor that I can compose new game scenes with
 and allow for saving scenes and switching to different scenes without using a
 different executable.
 
-* Asset Manager
+* Entity-Component-System (ECS) (70% done)
+
 
 I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
 and memory efficiency.
 
-* Renderer
+* Renderer (Early In-Progress)
 
 I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
 supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
 use later on (I am currently using OpenGL 4.1)
 
-* Shaders and Materials
+* Asset Manager (40% done)
 
-I am working on designing and then implementing an extendable material system for shaders, 
+I am working on writing an asset manager that can simply cache raw asset data for now.
+
+* Scene System (Early In-Progress)
+
+I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am
+integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.
+
+* Shaders and Materials (Early In-Progress)
+
+I am working on designing an extendable material system for shaders, 
 so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the
-client/user executable 
+client/user code.
+
+
+###
+### Screenshot of Current Engine State
+
+---
+
+
+![CurrentEngineState](Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png)
+This picture contains the Chess sample project as well as the engine debug menu. Note that the chess sample
+project is not completely finished and that there is no checks or castling.
 
 ###
 ### Roadmap
@@ -151,7 +187,9 @@ Requirements include:
 - main --> The branch for releases   (no actual releases have happened yet)
 - development -> All work is done in this branch or a branch based from it
 - feature-X -> Branches for feature work to be done on
-- experimental-X -> Branches for to explore the potential and limits of a new feature idea 
+- experimental-X -> Branches for to explore the potential and limits of a new feature idea
+  - experimental-vulkan -> Branch where the vulkan renderer is being explored and written and refactors to the renderer
+                           structure.
 
 
 ###
