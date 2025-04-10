@@ -55,23 +55,12 @@ trace tool to view visually.
 
 ----
 
-* Editor (Early In-Progress)
-
-I am working to build up an editor that I can compose new game scenes with
-and allow for saving scenes and switching to different scenes without using a
-different executable.
-
 * Entity-Component-System (ECS) (70% done)
-
 
 I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
 and memory efficiency.
 
-* Renderer (Early In-Progress)
-
-I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
-supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
-use later on (I am currently using OpenGL 4.1)
+View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 * Asset Manager (40% done)
 
@@ -81,6 +70,18 @@ I am working on writing an asset manager that can simply cache raw asset data fo
 
 I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am
 integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.
+
+* Editor (Early In-Progress)
+
+I am working to build up an editor that I can compose new game scenes with
+and allow for saving scenes and switching to different scenes without using a
+different executable.
+
+* Renderer (Early In-Progress)
+
+I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
+supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
+use later on (I am currently using OpenGL 4.1)
 
 * Shaders and Materials (Early In-Progress)
 
