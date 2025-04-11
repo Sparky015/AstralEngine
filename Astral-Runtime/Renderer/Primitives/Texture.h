@@ -3,7 +3,9 @@
 //
 
 #pragma once
+
 #include <string>
+#include "Asset/Asset.h"
 
 namespace Graphics {
 
@@ -11,6 +13,7 @@ namespace Graphics {
     {
     public:
         virtual ~Texture() = default;
+
         virtual void Bind(unsigned int slot = 0) = 0;
         virtual void Unbind() = 0;
         virtual int GetWidth() = 0;

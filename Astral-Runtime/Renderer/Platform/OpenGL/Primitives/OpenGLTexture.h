@@ -16,8 +16,8 @@ namespace Graphics {
 
         void Bind(unsigned int slot) override;
         void Unbind() override;
-        inline int GetWidth() override { return m_Width; };
-        inline int GetHeight() override { return m_Height; };
+        int GetWidth() override { return m_Width; }
+        int GetHeight() override { return m_Height; }
 
     private:
         unsigned int m_RendererID;
