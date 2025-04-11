@@ -7,7 +7,7 @@
 #include "Renderer/RendererContext.h"
 #include <GLFW/glfw3.h>
 
-namespace Graphics {
+namespace Astral {
 
     /*
     * This sets up the rendering context for when OpenGL is used. It defines functions that are overridden from

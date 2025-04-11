@@ -14,7 +14,7 @@ namespace Astral {
 
     AssetErrorCode TextureAsset::LoadData(std::filesystem::path filePath)
     {
-        m_Texture = Graphics::Texture::CreateTexture(filePath);
+        m_Texture = Texture::CreateTexture(filePath);
 
         if (m_Texture == nullptr) { return AssetErrorCode::FAILED_TO_LOAD_RESOURCE; }
 

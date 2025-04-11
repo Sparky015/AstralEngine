@@ -10,7 +10,7 @@
 #include "Renderer/Primitives/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 
-namespace Graphics {
+namespace Astral {
 
     enum class API : uint8 {
         OpenGL = 0, Vulkan, DirectX12, Metal

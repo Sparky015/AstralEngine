@@ -6,7 +6,7 @@
 
 #include "Renderer/Primitives/IndexBuffer.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLIndexBuffer : public IndexBuffer
     {

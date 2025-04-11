@@ -6,7 +6,7 @@
 
 #include "BufferLayout.h"
 
-namespace Graphics {
+namespace Astral {
 
     class VertexBuffer
     {

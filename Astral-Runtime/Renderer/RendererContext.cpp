@@ -10,7 +10,7 @@
 #include "RendererAPI.h"
 #include "Debug/Utilities/Error.h"
 
-namespace Graphics {
+namespace Astral {
 
     RendererContext* RendererContext::CreateRendererContext()
     {

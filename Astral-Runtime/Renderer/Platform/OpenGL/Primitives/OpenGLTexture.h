@@ -6,7 +6,7 @@
 
 #include "Renderer/Primitives/Texture.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLTexture : public Texture
     {

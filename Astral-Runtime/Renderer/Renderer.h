@@ -11,7 +11,7 @@
 #include "Renderer/Shaders/ShaderProgram.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 
-namespace Graphics {
+namespace Astral {
 
     class Renderer
     {

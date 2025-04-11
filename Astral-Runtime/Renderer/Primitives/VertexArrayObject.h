@@ -7,7 +7,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-namespace Graphics {
+namespace Astral {
 
     class VertexArrayObject
     {

@@ -7,21 +7,21 @@
 
 #include "glad/glad.h"
 
-namespace Graphics {
+namespace Astral {
 
-    void Graphics::OpenGLRendererAPI::Clear()
+    void Astral::OpenGLRendererAPI::Clear()
     {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
 
-    void Graphics::OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a)
+    void Astral::OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a)
     {
         glClearColor(r, g, b, a);
     }
 
 
-    void Graphics::OpenGLRendererAPI::DrawElements(Graphics::VertexArrayObject* vertexArrayObject)
+    void Astral::OpenGLRendererAPI::DrawElements(Astral::VertexArrayObject* vertexArrayObject)
     {
         m_NumberOfDrawCalls++;
         vertexArrayObject->Bind();

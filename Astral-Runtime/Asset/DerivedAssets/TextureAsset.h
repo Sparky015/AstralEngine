@@ -24,7 +24,7 @@ namespace Astral {
 
     private:
 
-        Graphics::Texture* m_Texture{nullptr};
+        Texture* m_Texture{nullptr};
     };
 
 }

@@ -9,7 +9,7 @@
 #include "ShaderSource.h"
 #include "Core/Math/Math.h"
 
-namespace Graphics {
+namespace Astral {
 
     class ShaderProgram
     {

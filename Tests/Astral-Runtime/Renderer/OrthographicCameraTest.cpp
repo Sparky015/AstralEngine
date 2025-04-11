@@ -8,7 +8,7 @@
 
 #include "Renderer/Cameras/OrthographicCamera.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OrthographicCameraTests : public ::testing::Test
     {

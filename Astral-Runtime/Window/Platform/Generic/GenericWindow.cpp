@@ -44,7 +44,7 @@ namespace Window {
             ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(Graphics::RendererContext::CreateRendererContext());
+        m_RenderContext.reset(Astral::RendererContext::CreateRendererContext());
         m_RenderContext->Init();
 
         SetGLFWCallbacks();
@@ -93,7 +93,7 @@ namespace Window {
     }
 
 
-    Graphics::RendererContext& GenericWindow::GetRendererContext()
+    Astral::RendererContext& GenericWindow::GetRendererContext()
     {
         ASSERT(m_RenderContext, "Renderer context has not been created!");
         return *m_RenderContext;
