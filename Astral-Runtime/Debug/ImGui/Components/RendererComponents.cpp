@@ -26,12 +26,12 @@ namespace Debug {
 
     void DrawCallsPerFrameComponent()
     {
-        ImGui::Text("Draw Calls/Frame: %d", Graphics::RendererCommand::GetNumberOfDrawCallsPerFrame());
+        ImGui::Text("Draw Calls/Frame: %d", Astral::RendererCommand::GetNumberOfDrawCallsPerFrame());
     }
 
     void RendererAPIComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 

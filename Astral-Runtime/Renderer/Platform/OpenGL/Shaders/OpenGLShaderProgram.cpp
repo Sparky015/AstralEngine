@@ -11,7 +11,7 @@
 #include "Debug/Utilities/Loggers.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     OpenGLShaderProgram::OpenGLShaderProgram() : m_ShaderProgramID(0) {}
 

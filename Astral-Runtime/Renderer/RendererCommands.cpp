@@ -8,7 +8,7 @@
 #include "Renderer/Primitives/VertexArrayObject.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     RendererAPI* RendererCommand::s_RendererAPI = new OpenGLRendererAPI();
 

@@ -17,7 +17,7 @@
 
 namespace Game {
 
-    using namespace Graphics;
+    using namespace Astral;
 
     class GameManager : public SystemManager
     {

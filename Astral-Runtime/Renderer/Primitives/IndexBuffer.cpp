@@ -8,7 +8,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {

@@ -7,7 +7,7 @@
 
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Graphics {
+namespace Astral {
 
     enum ShaderType : uint8
     {

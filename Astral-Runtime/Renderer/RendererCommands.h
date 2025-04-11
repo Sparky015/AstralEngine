@@ -9,7 +9,7 @@
 #include "Renderer/Shaders/ShaderProgram.h"
 #include "RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     class RendererCommand
     {

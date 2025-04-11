@@ -8,7 +8,7 @@
 #include <string>
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Graphics {
+namespace Astral {
 
     enum ShaderDataType
     {

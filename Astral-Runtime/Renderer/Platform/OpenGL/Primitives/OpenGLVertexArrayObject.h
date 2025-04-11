@@ -6,7 +6,7 @@
 
 #include "Renderer/Primitives/VertexArrayObject.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLVertexArrayObject : public VertexArrayObject
     {

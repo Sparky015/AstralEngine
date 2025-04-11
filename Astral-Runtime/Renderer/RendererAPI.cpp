@@ -5,7 +5,7 @@
 */
 #include "RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     API RendererAPI::s_RendererAPI = API::OpenGL;
 

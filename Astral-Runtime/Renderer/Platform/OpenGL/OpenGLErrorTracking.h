@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Graphics {
+namespace Astral {
 
 #define GLCheckError() while (GLenum error = glGetError()) { WARN("[OpenGL] Error Code: " << error); }
 

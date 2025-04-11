@@ -6,7 +6,7 @@
 
 #include "Debug/Utilities/Error.h"
 
-namespace Graphics {
+namespace Astral {
 
     BufferLayout::BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes) : m_Attributes(bufferAttributes) {}
 

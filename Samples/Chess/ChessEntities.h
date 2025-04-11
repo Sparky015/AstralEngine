@@ -11,7 +11,7 @@
 class ChessEntities
 {
 public:
-    static void InitEntities(Graphics::VertexArrayObject* vertexArrayObject);
+    static void InitEntities(Astral::VertexArrayObject* vertexArrayObject);
     static void DestroyEntities();
     static Astral::Entity GetEntity(SquareLocation location);
 

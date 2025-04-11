@@ -7,7 +7,7 @@
 #include <string>
 #include "Asset/Asset.h"
 
-namespace Graphics {
+namespace Astral {
 
     class Texture
     {

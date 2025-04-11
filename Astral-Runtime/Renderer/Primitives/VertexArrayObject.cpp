@@ -8,7 +8,7 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     VertexArrayObject* VertexArrayObject::CreateVertexArrayObject()
     {
