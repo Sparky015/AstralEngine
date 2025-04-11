@@ -195,13 +195,10 @@ add_library(AstralEngine
         ECS/ComponentPoolSet_Impl.h
         Asset/AssetRegistry.h
         Asset/Asset.h
-        Asset/Asset.cpp
         Asset/AssetRegistry.cpp
-        Asset/DerivedAssets/TextureAsset.h
-        Asset/DerivedAssets/TextureAsset.cpp
         Asset/AssetErrorCodes.h
-
-
+        Asset/AssetRegistry_Impl.h
+        Asset/AssetRegistryStats.h
 )
 
 

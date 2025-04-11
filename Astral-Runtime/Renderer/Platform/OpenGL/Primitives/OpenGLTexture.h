@@ -11,8 +11,10 @@ namespace Astral {
     class OpenGLTexture : public Texture
     {
     public:
-        explicit OpenGLTexture(const std::string& filePath);
+        OpenGLTexture();
         ~OpenGLTexture() override;
+
+        AssetErrorCode LoadData(std::filesystem::path filePath) override;
 
         void Bind(unsigned int slot) override;
         void Unbind() override;

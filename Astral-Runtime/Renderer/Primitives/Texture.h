@@ -9,17 +9,20 @@
 
 namespace Astral {
 
-    class Texture
+    class Texture : public Asset
     {
     public:
-        virtual ~Texture() = default;
+        ~Texture() override = default;
+
+        AssetErrorCode LoadData(std::filesystem::path filePath) override = 0;
+        AssetType GetAssetType() override { return AssetType::Texture; }
 
         virtual void Bind(unsigned int slot = 0) = 0;
         virtual void Unbind() = 0;
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
 
-        static Texture* CreateTexture(const std::string& filePath);
+        static Texture* CreateTexture();
     };
 
 } // Renderer
