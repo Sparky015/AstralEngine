@@ -22,7 +22,7 @@ namespace Astral {
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
 
-        static Texture* CreateTexture();
+        static Texture* Create();
     };
 
 } // Renderer

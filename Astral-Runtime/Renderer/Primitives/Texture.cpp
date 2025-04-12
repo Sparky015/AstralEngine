@@ -10,7 +10,7 @@
 
 namespace Astral {
 
-    Texture* Texture::CreateTexture()
+    Texture* Texture::Create()
     {
         switch (RendererAPI::GetAPI())
         {

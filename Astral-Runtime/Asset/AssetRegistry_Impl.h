@@ -15,7 +15,7 @@ namespace Astral {
     AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         // Load the asset from disk
-        Asset* asset = Texture::CreateTexture(); // TEMP
+        Asset* asset = AssetType::Create();
         ASSERT(asset, "Created asset failed to allocate memory!")
 
         AssetErrorCode errorCode = asset->LoadData(m_AssetDirectoryPath.string() + filePath.string());
