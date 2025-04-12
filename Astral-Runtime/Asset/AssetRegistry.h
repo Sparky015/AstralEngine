@@ -21,7 +21,6 @@ namespace Astral {
     class AssetRegistry
     {
      public:
-        static AssetRegistry& Get();
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>

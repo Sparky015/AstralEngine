@@ -6,6 +6,7 @@
 
 #include "ECS/ECSManager.h"
 #include "Renderer/Primitives/Texture.h"
+#include "Asset/AssetRegistry.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
 #include "ECS/Components/Sprite.h"
