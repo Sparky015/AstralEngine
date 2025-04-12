@@ -48,8 +48,8 @@ namespace Window {
         static WindowAPI s_WindowAPI;
         std::unique_ptr<Graphics::RendererContext> m_RenderContext;
 
-        int m_WindowWidth = 1080; // Default dimensions if user does not set them
-        int m_WindowHeight = 720;
+        int m_WindowWidth = 800; // Default dimensions if user does not set them
+        int m_WindowHeight = 800;
         std::string_view m_WindowName = "Astral Engine"; // Default name if name is not set
         uint8 m_Vsync = 1;
     };
