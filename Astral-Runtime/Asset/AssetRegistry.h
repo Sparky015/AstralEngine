@@ -33,7 +33,6 @@ namespace Astral {
         void UnloadAsset(AssetID assetID);
         void UnloadAsset(const std::filesystem::path& filePath);
 
-
         void SetAssetDirectoryPath(const std::filesystem::path& filePath) { m_AssetDirectoryPath = filePath; }
         AssetID GetAssetIDFromFilePath(const std::filesystem::path& filePath);
         [[nodiscard]] const AssetRegistryStats& GetAssetRegistryStats() const { return m_RegistryStats; }

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "pch.h"
+#include "Asset/AssetRegistry.h"
 
 #include "Renderer/Primitives/Texture.h"
 
@@ -12,9 +13,9 @@
 
 struct SpriteComponent
 {
-    SpriteComponent() : texture(nullptr), vertexArrayObject(nullptr), isUsed(false) {}
-    explicit SpriteComponent(Astral::Texture* texture, Astral::VertexArrayObject* vertexArrayObject) : texture(texture), vertexArrayObject(vertexArrayObject), isUsed(true) {}
-    Astral::Texture* texture;
+    SpriteComponent() : textureAssetID(Astral::NullAssetID), vertexArrayObject(nullptr), isUsed(false) {}
+    explicit SpriteComponent(Astral::AssetID textureAssetID, Astral::VertexArrayObject* vertexArrayObject) : textureAssetID(textureAssetID), vertexArrayObject(vertexArrayObject), isUsed(true) {}
+    Astral::AssetID textureAssetID;
     Astral::VertexArrayObject* vertexArrayObject;
     bool isUsed;
 };

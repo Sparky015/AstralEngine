@@ -5,6 +5,8 @@
 */
 
 #pragma once
+#include "Debug/Utilities/Asserts.h"
+#include "Renderer/Primitives/Texture.h"
 
 namespace Astral {
 
@@ -13,7 +15,8 @@ namespace Astral {
     AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         // Load the asset from disk
-        Asset* asset = new AssetType();
+        Asset* asset = Texture::CreateTexture(); // TEMP
+        ASSERT(asset, "Created asset failed to allocate memory!")
 
         AssetErrorCode errorCode = asset->LoadData(m_AssetDirectoryPath.string() + filePath.string());
 
@@ -37,9 +40,11 @@ namespace Astral {
         m_RegistryStats.NumberOfLoadedAssets++;
 
         // Now add the asset to storage
-        m_FilePathToAssetID.emplace(filePath, assetID);
-        m_AssetIDToFilePath.emplace(assetID, filePath);
-        m_AssetIDToAsset.emplace(assetID, asset);
+        m_FilePathToAssetID[filePath] = assetID;
+        m_AssetIDToFilePath[assetID] = filePath;
+        m_AssetIDToAsset[assetID] = asset;
+
+        return assetID;
     }
 
     template <typename AssetType>
@@ -47,7 +52,7 @@ namespace Astral {
     AssetType* AssetRegistry::GetAsset(AssetID assetID)
     {
         if (!m_AssetIDToAsset.contains(assetID)) { return nullptr; }
-        return m_AssetIDToAsset.at(assetID);
+        return (AssetType*)m_AssetIDToAsset.at(assetID);
     }
 
 }

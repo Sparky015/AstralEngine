@@ -199,6 +199,8 @@ add_library(AstralEngine
         Asset/AssetErrorCodes.h
         Asset/AssetRegistry_Impl.h
         Asset/AssetRegistryStats.h
+        Asset/AssetManager.h
+        Asset/AssetManager.cpp
 )
 
 

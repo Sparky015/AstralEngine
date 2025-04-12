@@ -5,3 +5,15 @@
 */
 
 #include "AssetManager.h"
+
+namespace Astral {
+
+    AssetManager& g_AssetManager = AssetManager::Get();
+
+    AssetManager& AssetManager::Get()
+    {
+        static AssetManager instance;
+        return instance;
+    }
+
+}
