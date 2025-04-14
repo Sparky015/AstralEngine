@@ -15,20 +15,14 @@ namespace Astral {
     AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         // Load the asset from disk
-        Asset* asset = AssetType::Create();
-        ASSERT(asset, "Created asset failed to allocate memory!")
+        Asset* asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
 
-        AssetErrorCode errorCode = asset->LoadData(m_AssetDirectoryPath.string() + filePath.string());
-
-        // Handle any errors
-        if (errorCode == AssetErrorCode::FAILED_TO_LOAD_RESOURCE) [[unlikely]]
+        if (!asset)
         {
-            WARN("An asset failed to load! File name: " << filePath.filename())
-        }
-        if (errorCode != AssetErrorCode::SUCCESS) [[unlikely]]
-        {
+            WARN("An asset failed to load! File name: " << m_AssetDirectoryPath.string() + filePath.string())
             return NullAssetID;
         }
+
 
         // Check if the asset is already loaded first, if it is, return the current AssetID
         if (m_FilePathToAssetID.contains(filePath)) { return m_FilePathToAssetID.at(filePath); }

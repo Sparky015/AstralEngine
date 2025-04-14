@@ -11,15 +11,14 @@ namespace Astral {
     class OpenGLTexture : public Texture
     {
     public:
-        OpenGLTexture();
+        explicit OpenGLTexture(const std::filesystem::path& filePath);
         ~OpenGLTexture() override;
-
-        AssetErrorCode LoadData(std::filesystem::path filePath) override;
 
         void Bind(unsigned int slot) override;
         void Unbind() override;
         int GetWidth() override { return m_Width; }
         int GetHeight() override { return m_Height; }
+        bool IsValid() override { return m_IsValid && m_RendererID != 0; }
 
     private:
         unsigned int m_RendererID;
@@ -28,6 +27,7 @@ namespace Astral {
         int m_Width;
         int m_Height;
         int m_BPP; // bits per pixel
+        bool m_IsValid;
     };
 
 } // Renderer

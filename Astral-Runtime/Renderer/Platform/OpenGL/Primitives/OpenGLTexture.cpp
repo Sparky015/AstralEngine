@@ -12,14 +12,7 @@
 
 namespace Astral {
 
-    OpenGLTexture::OpenGLTexture() : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0) {}
-
-    OpenGLTexture::~OpenGLTexture()
-    {
-        glDeleteTextures(1, &m_RendererID);
-    }
-
-    AssetErrorCode OpenGLTexture::LoadData(std::filesystem::path filePath)
+    OpenGLTexture::OpenGLTexture(const std::filesystem::path& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
     {
         stbi_set_flip_vertically_on_load(1);
         m_ImageBuffer = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
@@ -27,7 +20,7 @@ namespace Astral {
         if (!m_ImageBuffer)
         {
             WARN("Texture failed to load! Filepath: " << filePath.filename());
-            return AssetErrorCode::FAILED_TO_LOAD_RESOURCE;
+            m_IsValid = false;
         }
 
         glGenTextures(1, &m_RendererID);
@@ -44,7 +37,12 @@ namespace Astral {
         stbi_image_free(m_ImageBuffer);
         GLCheckError();
 
-        return AssetErrorCode::SUCCESS;
+        m_IsValid = true;
+    }
+
+    OpenGLTexture::~OpenGLTexture()
+    {
+        glDeleteTextures(1, &m_RendererID);
     }
 
 

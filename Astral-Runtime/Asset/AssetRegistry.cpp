@@ -6,6 +6,9 @@
 
 #include "AssetRegistry.h"
 
+#include "Debug/Utilities/Error.h"
+#include "Loaders/TextureLoader.h"
+
 namespace Astral {
 
     void AssetRegistry::UnloadAsset(AssetID assetID)
@@ -35,6 +38,15 @@ namespace Astral {
 
         // Note that the Asset stored is a shared pointer / ref, so it will be deallocated when the last reference of it
         // goes out of scope.
+    }
+
+    Asset* AssetRegistry::LoadAsset(AssetType assetType, const std::filesystem::path& filePath)
+    {
+        switch (assetType)
+        {
+            case AssetType::Texture: return TextureLoader::LoadAsset(filePath);
+            default: ASTRAL_ERROR("Invalid asset type value given!");
+        }
     }
 
 

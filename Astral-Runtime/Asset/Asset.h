@@ -23,7 +23,6 @@ namespace Astral {
     public:
         virtual ~Asset() = default;
 
-        virtual AssetErrorCode LoadData(std::filesystem::path filePath) = 0;
         virtual AssetType GetAssetType() = 0; // For debug and editor purposes
     };
 

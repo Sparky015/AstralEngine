@@ -201,6 +201,8 @@ add_library(AstralEngine
         Asset/AssetRegistryStats.h
         Asset/AssetManager.h
         Asset/AssetManager.cpp
+        Asset/Loaders/TextureLoader.h
+        Asset/Loaders/TextureLoader.cpp
 )
 
 
