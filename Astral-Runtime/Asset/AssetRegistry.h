@@ -49,6 +49,7 @@ namespace Astral {
         std::unordered_map<std::filesystem::path, AssetID> m_FilePathToAssetID;
         std::unordered_map<AssetID, std::filesystem::path> m_AssetIDToFilePath;
         std::unordered_map<AssetID, Asset*> m_AssetIDToAsset;
+
         AssetRegistryStats m_RegistryStats{};
     };
 

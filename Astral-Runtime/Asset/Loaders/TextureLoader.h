@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include "Asset/Asset.h"
 
 namespace Astral::TextureLoader {

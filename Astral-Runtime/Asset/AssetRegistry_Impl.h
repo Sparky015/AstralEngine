@@ -32,6 +32,7 @@ namespace Astral {
 
         m_RegistryStats.NumberOfLoadsMade++;
         m_RegistryStats.NumberOfLoadedAssets++;
+        m_RegistryStats.LoadedAssetsByType[AssetType::GetStaticAssetType()] += 1;
 
         // Now add the asset to storage
         m_FilePathToAssetID[filePath] = assetID;

@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include <filesystem>
-
 #include "Core/FixedIntegerTypes.h"
 #include "AssetErrorCodes.h"
+#include "Debug/Utilities/Error.h"
 
 namespace Astral {
 
@@ -25,5 +24,14 @@ namespace Astral {
 
         virtual AssetType GetAssetType() = 0; // For debug and editor purposes
     };
+
+    inline const char* AssetTypeToString(AssetType assetType)
+    {
+        switch (assetType)
+        {
+            case AssetType::Texture: return "Texture";
+            default: ASTRAL_ERROR("Invalid asset type value given!");
+        }
+    }
 
 }

@@ -8,6 +8,7 @@
 
 #include "imgui.h"
 #include "Asset/AssetManager.h"
+#include "Asset/Asset.h"
 
 namespace Debug {
 
@@ -31,5 +32,18 @@ namespace Debug {
         ImGui::Text("Total Unloads Made: %llu", registryStats.NumberOfUnloadsMade);
     }
 
+    void ShowNumberOfAssetsLoadedByType()
+    {
+        const Astral::AssetRegistryStats& registryStats =  Astral::g_AssetManager.GetRegistry().GetAssetRegistryStats();
+
+        if (ImGui::TreeNode("Number of Loaded Assets By Type"))
+        {
+            for (auto [assetType, numberOfLoadedAssets] : registryStats.LoadedAssetsByType)
+            {
+                ImGui::Text("%s: %u", Astral::AssetTypeToString(assetType), numberOfLoadedAssets);
+            }
+            ImGui::TreePop();
+        }
+    }
 }
 

@@ -92,6 +92,8 @@ namespace Debug {
                 ShowNumberOfAssetsLoaded();
                 ShowTotalNumberOfAssetsLoaded();
                 ShowTotalNumberOfAssetsUnloaded();
+                ShowNumberOfAssetsLoadedByType();
+                ImGui::Spacing();
                 ImGui::TreePop();
             }
 

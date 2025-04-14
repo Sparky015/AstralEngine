@@ -6,7 +6,10 @@
 
 #pragma once
 
+
 #include "Core/FixedIntegerTypes.h"
+#include "Asset.h"
+#include <unordered_map>
 
 namespace Astral {
 
@@ -15,6 +18,7 @@ namespace Astral {
         uint32 NumberOfLoadedAssets;
         uint64 NumberOfLoadsMade;
         uint64 NumberOfUnloadsMade;
+        std::unordered_map<AssetType, uint32> LoadedAssetsByType;
     };
 
 }

@@ -32,6 +32,9 @@ namespace Astral {
         m_RegistryStats.NumberOfUnloadsMade++;
         m_RegistryStats.NumberOfLoadedAssets--;
 
+        AssetType type = m_AssetIDToAsset[assetID]->GetAssetType();
+        m_RegistryStats.LoadedAssetsByType[type] -= 1;
+
         m_FilePathToAssetID.erase(assetFilePath);
         m_AssetIDToFilePath.erase(assetID);
         m_AssetIDToAsset.erase(assetID);

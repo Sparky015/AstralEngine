@@ -11,5 +11,6 @@ namespace Debug {
     void ShowNumberOfAssetsLoaded();
     void ShowTotalNumberOfAssetsLoaded();
     void ShowTotalNumberOfAssetsUnloaded();
+    void ShowNumberOfAssetsLoadedByType();
 
 }
