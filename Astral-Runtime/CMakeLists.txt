@@ -203,6 +203,8 @@ add_library(AstralEngine
         Asset/AssetManager.cpp
         Asset/Loaders/TextureLoader.h
         Asset/Loaders/TextureLoader.cpp
+        Debug/ImGui/Components/AssetStatsComponents.h
+        Debug/ImGui/Components/AssetStatsComponents.cpp
 )
 
 

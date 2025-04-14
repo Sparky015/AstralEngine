@@ -13,7 +13,7 @@ namespace Astral {
     Asset* TextureLoader::LoadAsset(const std::filesystem::path& filePath)
     {
         Texture* texture = Texture::CreateTexture(filePath);
-        if (!texture) { return texture; } // Return nullptr if an error occured
+        if (!texture) { return nullptr; } // Return nullptr if an error occured
 
         if (!texture->IsValid())
         {
