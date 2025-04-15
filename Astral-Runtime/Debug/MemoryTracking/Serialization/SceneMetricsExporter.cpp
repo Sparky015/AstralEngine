@@ -10,6 +10,8 @@
 #include <chrono>
 #include <filesystem>
 #include <iostream>
+#include <cpptrace/formatting.hpp>
+
 #include "cpptrace/include/cpptrace/cpptrace.hpp"
 
 #include "Debug/MemoryTracking/MemoryTracker.h"
@@ -61,6 +63,7 @@ namespace Core {
 
     void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData)
     {
+
         if (GetExportFile().fail())
         {
             std::cout << "Memory profiling export file is in a failed state!\n";
@@ -81,7 +84,12 @@ namespace Core {
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
             Core::MemoryTracker::Get().DisableTracking();
-            msgpack::pack(GetExportFile(), cpptrace::stacktrace::current(2, 12).to_string());
+            static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
+                .addresses(cpptrace::formatter::address_mode::none)
+                .snippets(false)
+                .colors(cpptrace::formatter::color_mode::none)
+                .paths(cpptrace::formatter::path_mode::basename);
+            msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2, 15)));
             Core::MemoryTracker::Get().EnableTracking();
 
         }
