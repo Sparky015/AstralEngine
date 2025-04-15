@@ -193,6 +193,24 @@ add_library(AstralEngine
         ECS/ComponentPool.h
         ECS/ComponentPoolSet.h
         ECS/ComponentPoolSet_Impl.h
+        Asset/AssetRegistry.h
+        Asset/Asset.h
+        Asset/AssetRegistry.cpp
+        Asset/AssetErrorCodes.h
+        Asset/AssetRegistry_Impl.h
+        Asset/AssetRegistryStats.h
+        Asset/AssetManager.h
+        Asset/AssetManager.cpp
+        Asset/Loaders/TextureLoader.h
+        Asset/Loaders/TextureLoader.cpp
+        Debug/ImGui/Components/AssetStatsComponents.h
+        Debug/ImGui/Components/AssetStatsComponents.cpp
+        Debug/MemoryTracking/GenericRegionAllocator.cpp
+        Debug/MemoryTracking/GenericRegionAllocator.h
+        Debug/MemoryTracking/MallocFreeOverrides.h
+        Debug/MemoryTracking/MallocFreeOverrides.cpp
+        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
+        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
 
 
 )

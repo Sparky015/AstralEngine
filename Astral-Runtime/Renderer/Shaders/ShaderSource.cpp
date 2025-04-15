@@ -10,7 +10,7 @@
 
 #include "Debug/Utilities/Loggers.h"
 
-namespace Graphics {
+namespace Astral {
 
 
     ShaderSource::ShaderSource() :

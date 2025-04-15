@@ -4,6 +4,7 @@
 
 #include "ImGuiManager.h"
 
+#include "Components/AssetStatsComponents.h"
 #include "Components/BuildConfigComponents.h"
 #include "Components/ECSComponents.h"
 #include "Components/RendererComponents.h"
@@ -85,6 +86,17 @@ namespace Debug {
                 ImGui::Spacing();
                 ImGui::TreePop();
             }
+
+            if (ImGui::TreeNode("Assets"))
+            {
+                ShowNumberOfAssetsLoaded();
+                ShowTotalNumberOfAssetsLoaded();
+                ShowTotalNumberOfAssetsUnloaded();
+                ShowNumberOfAssetsLoadedByType();
+                ImGui::Spacing();
+                ImGui::TreePop();
+            }
+
 
             if (ImGui::TreeNode("ECS"))
             {

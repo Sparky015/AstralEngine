@@ -4,19 +4,29 @@
 
 #include "OpenGLTexture.h"
 
+
 #include "stb_image.h"
+
+#include "Debug/MemoryTracking/MallocFreeOverrides.h"
 #include "Debug/Utilities/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Graphics {
 
-    OpenGLTexture::OpenGLTexture(const std::string& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
+
+namespace Astral {
+
+    OpenGLTexture::OpenGLTexture(const std::filesystem::path& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
     {
         stbi_set_flip_vertically_on_load(1);
         m_ImageBuffer = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
-        if (!m_ImageBuffer) { WARN("Texture failed to load!"); return;}
+
+        if (!m_ImageBuffer)
+        {
+            WARN("Texture failed to load! Filepath: " << filePath.filename());
+            m_IsValid = false;
+        }
 
         glGenTextures(1, &m_RendererID);
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
@@ -31,8 +41,9 @@ namespace Graphics {
 
         stbi_image_free(m_ImageBuffer);
         GLCheckError();
-    }
 
+        m_IsValid = true;
+    }
 
     OpenGLTexture::~OpenGLTexture()
     {

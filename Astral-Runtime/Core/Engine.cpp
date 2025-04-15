@@ -7,7 +7,7 @@
 
 #include "ApplicationModule.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "../ECS/ECSManager.h"
+#include "ECS/ECSManager.h"
 #include "Input/InputManager.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
@@ -31,17 +31,18 @@ Engine::Engine() :
     Core::MemoryTracker::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
-
+    // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
     Astral::g_ECSManager.Init();
-    Graphics::g_RendererManager.Init();
+    Astral::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
 
     m_WindowClosedListener.StartListening();
+
 }
 
 
@@ -51,12 +52,14 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
-    Graphics::g_RendererManager.Shutdown();
+    Astral::g_RendererManager.Shutdown();
     Astral::g_ECSManager.Shutdown();
     Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 
+
+    // Core::MemoryTracker::Get().EndScene();
     Core::MemoryTracker::Get().Shutdown();
 }
 
@@ -66,6 +69,8 @@ void Engine::Run()
     PROFILE_SCOPE("Engine Runtime");
 
     Core::DeltaTime m_DeltaTime;
+
+    static int FramesToRun = 40;
 
     while (m_IsLoopRunning)
     {
@@ -83,5 +88,7 @@ void Engine::Run()
         Debug::ImGuiManager::Get().EndFrame();
 
         Window::g_WindowManager.SwapBuffers();
+
+        // FramesToRun--;
     }
 }

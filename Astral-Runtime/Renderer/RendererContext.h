@@ -5,7 +5,7 @@
 #pragma once
 #include <string_view>
 
-namespace Graphics {
+namespace Astral {
 
     /**
      * RendererContext is an interface to which each Rendering API will override and provide their own way to create

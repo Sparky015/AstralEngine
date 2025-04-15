@@ -7,7 +7,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 
-namespace Graphics {
+namespace Astral {
 
     RendererManager& g_RendererManager = RendererManager::Get();
 

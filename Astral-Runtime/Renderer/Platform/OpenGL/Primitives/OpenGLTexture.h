@@ -6,18 +6,19 @@
 
 #include "Renderer/Primitives/Texture.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLTexture : public Texture
     {
     public:
-        explicit OpenGLTexture(const std::string& filePath);
+        explicit OpenGLTexture(const std::filesystem::path& filePath);
         ~OpenGLTexture() override;
 
         void Bind(unsigned int slot) override;
         void Unbind() override;
-        inline int GetWidth() override { return m_Width; };
-        inline int GetHeight() override { return m_Height; };
+        int GetWidth() override { return m_Width; }
+        int GetHeight() override { return m_Height; }
+        bool IsValid() override { return m_IsValid && m_RendererID != 0; }
 
     private:
         unsigned int m_RendererID;
@@ -26,6 +27,7 @@ namespace Graphics {
         int m_Width;
         int m_Height;
         int m_BPP; // bits per pixel
+        bool m_IsValid;
     };
 
 } // Renderer

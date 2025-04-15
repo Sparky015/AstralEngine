@@ -9,7 +9,7 @@
 #include "Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     ShaderProgram* ShaderProgram::CreateShaderProgram(const ShaderSource &vertexShader,
                                                       const ShaderSource &fragmentShader)

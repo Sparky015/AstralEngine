@@ -36,11 +36,11 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
     }
 
     size_t file_size = std::filesystem::file_size(filePath);
-    if (file_size > 200000000) // > 200 MBs
-    {
-        WARN("SceneMetricsImporter: Memory profile is too big! (>200MBs)");
-        return false;
-    }
+    // if (file_size > 200000000) // > 200 MBs
+    // {
+    //     WARN("SceneMetricsImporter: Memory profile is too big! (>200MBs)");
+    //     return false;
+    // }
 
     constexpr uint8 offset = 30; // TODO: Take the file size into account here
     m_File.seekg(-1 * offset, std::ios::end);

@@ -6,6 +6,7 @@
 
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
+#include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
 #include "Input/KeycodeConversions.h"
 
 namespace Window {
@@ -19,6 +20,14 @@ namespace Window {
     void GenericWindow::Init()
     {
         /** Initializing GLFW */
+
+        GLFWallocator allocator;
+        allocator.allocate = Astral::WindowTrackingMalloc;
+        allocator.reallocate = Astral::WindowTrackingRealloc;
+        allocator.deallocate = Astral::WindowTrackingFree;
+        allocator.user = NULL;
+
+        glfwInitAllocator(&allocator);
 
         if (!m_IsGLFWInitialized)
         {
@@ -44,7 +53,7 @@ namespace Window {
             ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(Graphics::RendererContext::CreateRendererContext());
+        m_RenderContext.reset(Astral::RendererContext::CreateRendererContext());
         m_RenderContext->Init();
 
         SetGLFWCallbacks();
@@ -93,7 +102,7 @@ namespace Window {
     }
 
 
-    Graphics::RendererContext& GenericWindow::GetRendererContext()
+    Astral::RendererContext& GenericWindow::GetRendererContext()
     {
         ASSERT(m_RenderContext, "Renderer context has not been created!");
         return *m_RenderContext;

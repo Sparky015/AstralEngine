@@ -9,6 +9,8 @@
 #include "Debug/MemoryTracking/MemoryMetrics.h"
 #include "MemoryMetricsSnapshot.h"
 #include <fstream>
+#include <cpptrace/formatting.hpp>
+
 #include "msgpack.hpp"
 
 #include "Core/Time/Clock.h"

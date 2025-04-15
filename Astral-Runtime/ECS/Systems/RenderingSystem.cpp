@@ -6,6 +6,7 @@
 #include "RenderingSystem.h"
 
 #include "../ECSManager.h"
+#include "Asset/AssetManager.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
@@ -17,7 +18,7 @@
 
 namespace Astral {
 
-    void RenderingSystem::RenderEntities(Graphics::ShaderProgram* shader)
+    void RenderingSystem::RenderEntities(Astral::ShaderProgram* shader)
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS& ecs = g_ECSManager.GetECS();
@@ -39,8 +40,8 @@ namespace Astral {
             Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
-            spriteComponent.texture->Bind(0);
-            Graphics::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
+            g_AssetManager.GetRegistry().GetAsset<Texture>(spriteComponent.textureAssetID)->Bind(0);
+            Astral::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
         }
     }
 

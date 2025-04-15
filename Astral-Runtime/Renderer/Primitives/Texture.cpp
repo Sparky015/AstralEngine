@@ -8,9 +8,9 @@
 #include "Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h"
 #include "Renderer/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
-    Texture* Texture::CreateTexture(const std::string& filePath)
+    Texture* Texture::CreateTexture(const std::filesystem::path& filePath)
     {
         switch (RendererAPI::GetAPI())
         {

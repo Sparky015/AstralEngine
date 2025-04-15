@@ -7,7 +7,7 @@
 #include "Core/SystemManager.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     class RendererManager : public SystemManager
     {

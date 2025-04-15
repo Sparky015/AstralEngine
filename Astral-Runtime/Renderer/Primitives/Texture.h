@@ -3,20 +3,27 @@
 //
 
 #pragma once
-#include <string>
 
-namespace Graphics {
+#include <filesystem>
+#include "Asset/Asset.h"
 
-    class Texture
+namespace Astral {
+
+    class Texture : public Asset
     {
     public:
-        virtual ~Texture() = default;
+        ~Texture() override = default;
+
+        static AssetType GetStaticAssetType() { return AssetType::Texture; }
+        AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
+
         virtual void Bind(unsigned int slot = 0) = 0;
         virtual void Unbind() = 0;
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
+        virtual bool IsValid() = 0;
 
-        static Texture* CreateTexture(const std::string& filePath);
+        static Texture* CreateTexture(const std::filesystem::path& filePath);
     };
 
 } // Renderer

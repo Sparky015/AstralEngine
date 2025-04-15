@@ -7,7 +7,7 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace Graphics {
+namespace Astral {
 
     OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float near, float far)
         : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, near, far)),

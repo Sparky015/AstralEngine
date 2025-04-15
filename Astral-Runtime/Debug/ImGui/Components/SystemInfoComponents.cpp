@@ -65,7 +65,7 @@ namespace Debug {
 
     void SystemGPUNameComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName().data());
     }
 
@@ -76,7 +76,7 @@ namespace Debug {
 
     void SystemGPUVendorComponent()
     {
-        Graphics::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
         ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().data());
     }
 

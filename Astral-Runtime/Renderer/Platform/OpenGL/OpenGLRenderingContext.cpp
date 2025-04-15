@@ -9,7 +9,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Error.h"
 
-namespace Graphics {
+namespace Astral {
 
     OpenGLRenderingContext::OpenGLRenderingContext(GLFWwindow* window) :
         m_Window(window)

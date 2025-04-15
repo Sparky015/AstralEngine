@@ -6,7 +6,7 @@
 
 #include "Renderer/RendererCommands.h"
 
-namespace Graphics {
+namespace Astral {
 
     void Renderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
