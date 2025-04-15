@@ -5,26 +5,24 @@
 */
 
 #include "Debug/Utilities/Asserts.h"
-#include "Debug/Utilities/Loggers.h"
 #include "GlobalAllocationStorage.h"
 
-
 #include <iostream>
-
 
 namespace Core {
 
     GlobalAllocationStorage::~GlobalAllocationStorage()
     {
         // Output all the pointers still being stored as leaked.
-        std::cout << "Number of leaked pointers: " << m_NumberOfEntries;
+        std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
         for (auto [pointer, allocationData] : m_Storage)
         {
             if (allocationData.threadID == std::this_thread::get_id())
             {
-                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size;
+                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
             }
         }
+        // std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
 
     }
 
