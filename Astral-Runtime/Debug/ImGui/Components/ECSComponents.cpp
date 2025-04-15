@@ -6,10 +6,10 @@
 
 #include <imgui.h>
 
-#include "ECS/ECS.h"
-#include "../../../ECS/ECSManager.h"
+#include "ECS/ECSManager.h"
+#include "Core/Engine.h"
 
 void Debug::EntityCountComponent()
 {
-    ImGui::Text("Current Number Of Entities: %d", Astral::g_ECSManager.GetECS().GetNumberOfActiveEntities());
+    ImGui::Text("Current Number Of Entities: %d", Engine::Get().GetECSManager().GetECS().GetNumberOfActiveEntities());
 }

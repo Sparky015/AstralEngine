@@ -14,6 +14,7 @@
 #include "Input/InputState.h"
 #include "MoveGeneration/KingChecks.h"
 #include "Common/ConversionHelpers.h"
+#include "Core/Engine.h"
 
 
 namespace Game {
@@ -78,7 +79,7 @@ namespace Game {
     {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
-        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+        Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
         TransformComponent transformComponent = TransformComponent();
         Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
@@ -95,7 +96,7 @@ namespace Game {
         SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
 
-        Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+        Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
         TransformComponent transformComponent;
         Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
@@ -137,7 +138,7 @@ namespace Game {
             if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
             {
                 // Delete entity of taken piece
-                Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+                Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
                 ecs.DeleteEntity(ChessEntities::GetEntity(attemptedMoveLocation));
 
                 chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);

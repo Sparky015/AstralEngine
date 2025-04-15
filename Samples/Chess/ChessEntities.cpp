@@ -9,6 +9,7 @@
 #include "Asset/AssetManager.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
+#include "Core/Engine.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
 
@@ -52,7 +53,7 @@ Astral::Entity ChessEntities::m_ChessBoard;
 
 void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 {
-    Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+    Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
     m_ChessBoard = ecs.CreateEntity();
 
@@ -187,7 +188,7 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 
 void ChessEntities::DestroyEntities()
 {
-    Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+    Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
     ecs.DeleteEntity(m_ChessBoard);
 

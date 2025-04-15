@@ -10,6 +10,7 @@
 #include "Core/Events/EventListener.h"
 #include "Debug/DebugManager.h"
 #include "GameManager.h"
+#include "Core/Engine.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Input/InputState.h"
 #include "Window/WindowManager.h"
@@ -27,8 +28,8 @@ public:
         Game::g_GameManager.Init();
         Debug::g_DebugManager.Init();
         Debug::g_ImGuiManager.LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
-        Window::g_WindowManager.GetWindow().SetWindowName("Chess");
-        Window::g_WindowManager.GetWindow().SetWindowDimensions(800, 800);
+        Engine::Get().GetWindowManager().GetWindow().SetWindowName("Chess");
+        Engine::Get().GetWindowManager().GetWindow().SetWindowDimensions(800, 800);
     }
 
     void Update(const Core::DeltaTime& deltaTime) override

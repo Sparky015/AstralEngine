@@ -32,10 +32,10 @@ Engine::Engine() :
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
-    Window::g_WindowManager.Init();
+    m_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
-    Astral::g_ECSManager.Init();
+    m_ECSManager.Init();
     Astral::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
@@ -53,10 +53,10 @@ Engine::~Engine()
 
     m_ApplicationModule->Shutdown();
     Astral::g_RendererManager.Shutdown();
-    Astral::g_ECSManager.Shutdown();
+    m_ECSManager.Shutdown();
     Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
-    Window::g_WindowManager.Shutdown();
+    m_WindowManager.Shutdown();
 
 
     // Core::MemoryTracker::Get().EndScene();
@@ -87,7 +87,7 @@ void Engine::Run()
         m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
         Debug::ImGuiManager::Get().EndFrame();
 
-        Window::g_WindowManager.SwapBuffers();
+        m_WindowManager.SwapBuffers();
 
         // FramesToRun--;
     }

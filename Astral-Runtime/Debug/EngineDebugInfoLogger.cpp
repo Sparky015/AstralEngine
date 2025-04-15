@@ -4,6 +4,7 @@
 
 #include "EngineDebugInfoLogger.h"
 
+#include "Core/Engine.h"
 #include "Instrumentation/ScopeProfiler.h"
 #include "Utilities/Loggers.h"
 #include "Window/WindowManager.h"
@@ -53,7 +54,7 @@ namespace Debug {
         #endif
 
         /** Outputs the libraries used depending on the platform. */
-        Window::Window& window = Window::g_WindowManager.GetWindow();
+        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
         Astral::RendererContext& rendererContext = window.GetRendererContext();
 
         LOG("Window: " << window.GetVersion());

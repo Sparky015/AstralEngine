@@ -13,7 +13,9 @@
 #include "Time/DeltaTime.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "EngineLoopEvents.h"
+#include "ECS/ECSManager.h"
 #include "Window/WindowEvents.h"
+#include "Window/WindowManager.h"
 
 
 class Engine
@@ -25,6 +27,9 @@ public:
     void Run();
 
    static inline Engine& Get() { return *m_Instance; }
+
+    Window::WindowManager& GetWindowManager() { return m_WindowManager; }
+    Astral::ECSManager& GetECSManager() { return m_ECSManager; }
 
    /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
    [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
@@ -39,4 +44,7 @@ private:
     Application::ApplicationModule* m_ApplicationModule;
     bool m_IsLoopRunning;
     Core::Clock m_Clock;
+
+    Window::WindowManager m_WindowManager;
+    Astral::ECSManager m_ECSManager;
 };

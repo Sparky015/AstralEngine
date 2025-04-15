@@ -9,8 +9,6 @@
 
 namespace Window{
 
-    WindowManager& g_WindowManager = WindowManager::Get();
-
     void WindowManager::Update()
     {
         m_Window->Update();

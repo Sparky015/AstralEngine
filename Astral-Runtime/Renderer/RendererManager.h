@@ -12,6 +12,9 @@ namespace Astral {
     class RendererManager : public SystemManager
     {
     public:
+        RendererManager();
+        ~RendererManager() override;
+
         static RendererManager& Get();
         void Init() override;
         void Update() override;
@@ -23,8 +26,7 @@ namespace Astral {
         RendererManager& operator=(RendererManager&&) = delete;
 
     private:
-        RendererManager();
-        ~RendererManager() override;
+
     };
 
     extern RendererManager& g_RendererManager;

@@ -6,29 +6,30 @@
 
 #include "Window/WindowManager.h"
 #include "imgui.h"
+#include "Core/Engine.h"
 #include "Debug/Utilities/Loggers.h"
 
 namespace Debug {
 
     void WindowDimensionsComponent()
     {
-        Window::WindowManager& windowManager = Window::g_WindowManager;
+        Window::WindowManager& windowManager = Engine::Get().GetWindowManager();
         ImGui::Text("Window Dimensions: %d px x %d px", windowManager.GetWidth(), windowManager.GetHeight());
     }
 
     void WindowVsyncStateComponent()
     {
-        ImGui::Text("Vsync: %s", Window::g_WindowManager.GetWindow().GetVsyncSetting() == 1 ? "On" : "Off");
+        ImGui::Text("Vsync: %s", Engine::Get().GetWindowManager().GetWindow().GetVsyncSetting() == 1 ? "On" : "Off");
     }
 
     void WindowAPIInfoComponent()
     {
-        ImGui::Text("Window API: %s", Window::g_WindowManager.GetWindow().GetVersion().data());
+        ImGui::Text("Window API: %s", Engine::Get().GetWindowManager().GetWindow().GetVersion().data());
     }
 
     void VsyncToggleComponent()
     {
-        Window::Window& window = Window::g_WindowManager.GetWindow();
+        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
         static bool isVsyncEnabled = true;
         if (ImGui::Checkbox("VSync", &isVsyncEnabled))
         {
@@ -48,7 +49,7 @@ namespace Debug {
 
     void WindowFramebufferScaleComponent()
     {
-        Vec2 framebufferScale = Window::g_WindowManager.GetWindow().GetFramebufferScale();
+        Vec2 framebufferScale = Engine::Get().GetWindowManager().GetWindow().GetFramebufferScale();
         ImGui::Text("Window Framebuffer Scale: %.2f x %.2f", framebufferScale.x, framebufferScale.y);
     }
 

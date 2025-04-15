@@ -8,13 +8,14 @@
 
 #include "Platform/OpenGL/OpenGLRenderingContext.h"
 #include "RendererAPI.h"
+#include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 
 namespace Astral {
 
     RendererContext* RendererContext::CreateRendererContext()
     {
-        Window::Window& window = Window::g_WindowManager.GetWindow();
+        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
         void* nativeWindow = window.GetNativeWindow();
 
         switch (RendererAPI::GetAPI())

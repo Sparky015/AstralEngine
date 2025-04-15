@@ -43,5 +43,4 @@ namespace Window {
 
     };
 
-    extern WindowManager& g_WindowManager;
 }
