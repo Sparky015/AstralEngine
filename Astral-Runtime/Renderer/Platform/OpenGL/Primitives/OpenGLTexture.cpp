@@ -4,10 +4,15 @@
 
 #include "OpenGLTexture.h"
 
+
 #include "stb_image.h"
+
+#include "Debug/MemoryTracking/MallocFreeOverrides.h"
 #include "Debug/Utilities/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/Platform/OpenGL/OpenGLErrorTracking.h"
+
+
 
 
 namespace Astral {

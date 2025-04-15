@@ -31,7 +31,7 @@ Engine::Engine() :
     Core::MemoryTracker::Get().Init();
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
-
+    Core::MemoryTracker::Get().BeginScene("Engine_Init");
     Window::g_WindowManager.Init();
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
@@ -42,6 +42,8 @@ Engine::Engine() :
     cpuinfo_initialize();
 
     m_WindowClosedListener.StartListening();
+
+    Core::MemoryTracker::Get().EndScene();
 }
 
 

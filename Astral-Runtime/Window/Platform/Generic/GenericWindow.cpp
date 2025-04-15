@@ -6,6 +6,7 @@
 
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
+#include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
 #include "Input/KeycodeConversions.h"
 
 namespace Window {
@@ -19,6 +20,14 @@ namespace Window {
     void GenericWindow::Init()
     {
         /** Initializing GLFW */
+
+        GLFWallocator allocator;
+        allocator.allocate = Astral::WindowTrackingMalloc;
+        allocator.reallocate = Astral::WindowTrackingRealloc;
+        allocator.deallocate = Astral::WindowTrackingFree;
+        allocator.user = NULL;
+
+        glfwInitAllocator(&allocator);
 
         if (!m_IsGLFWInitialized)
         {

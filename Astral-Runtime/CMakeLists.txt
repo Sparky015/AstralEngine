@@ -205,6 +205,14 @@ add_library(AstralEngine
         Asset/Loaders/TextureLoader.cpp
         Debug/ImGui/Components/AssetStatsComponents.h
         Debug/ImGui/Components/AssetStatsComponents.cpp
+        Debug/MemoryTracking/GenericRegionAllocator.cpp
+        Debug/MemoryTracking/GenericRegionAllocator.h
+        Debug/MemoryTracking/MallocFreeOverrides.h
+        Debug/MemoryTracking/MallocFreeOverrides.cpp
+        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
+        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
+
+
 )
 
 
