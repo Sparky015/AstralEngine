@@ -25,10 +25,10 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
-        "Debug/Utilities/ConsoleLogFile.cpp"
-        "Debug/Utilities/ConsoleLogFile.h"
-        "Debug/Instrumentation/ProfilerLogFile.cpp"
-        "Debug/Instrumentation/ProfilerLogFile.h"
+        Debug/Utilities/ConsoleLogFile.cpp
+        Debug/Utilities/ConsoleLogFile.h
+        Debug/Instrumentation/ProfilerLogFile.cpp
+        Debug/Instrumentation/ProfilerLogFile.h
         ECS/ECSManager.cpp
         ECS/ECSManager.h
         ECS/Components/Transform.h

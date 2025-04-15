@@ -83,13 +83,15 @@ namespace Core {
             msgpack::pack(GetExportFile(), memoryMetrics);
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
-            Core::MemoryTracker::Get().DisableTracking();
+
+            Core::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
             static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
                 .addresses(cpptrace::formatter::address_mode::none)
                 .snippets(false)
                 .colors(cpptrace::formatter::color_mode::none)
                 .paths(cpptrace::formatter::path_mode::full);
             msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2)));
+
             Core::MemoryTracker::Get().EnableTracking();
 
         }
