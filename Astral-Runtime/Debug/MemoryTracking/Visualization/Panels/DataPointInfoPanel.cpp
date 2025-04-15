@@ -27,11 +27,12 @@ namespace Core {
         {
             ImGui::Text("Allocation Data:");
             ImGui::Spacing();
-            ImGui::Text("Address: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].pointer);
+            ImGui::Text("Address: %lx", storage.GetAllocationDataOverTime()[selectedPointIndex].pointer);
             ImGui::Text("Size: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].size);
             ImGui::Text("Region: %s", MemoryRegionToString(storage.GetAllocationDataOverTime()[selectedPointIndex].region));
             ImGui::Text("Allocator: %s", AllocatorTypeToString(storage.GetAllocationDataOverTime()[selectedPointIndex].allocatorType));
             ImGui::Text("Thread ID Hash: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].threadIDHash);
+            ImGui::Text("Time point (microseconds): %zu", storage.GetAllocationTimes()[selectedPointIndex]);
         }
 
         ImGui::End();

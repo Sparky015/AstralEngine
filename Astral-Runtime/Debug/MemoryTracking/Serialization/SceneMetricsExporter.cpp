@@ -88,8 +88,8 @@ namespace Core {
                 .addresses(cpptrace::formatter::address_mode::none)
                 .snippets(false)
                 .colors(cpptrace::formatter::color_mode::none)
-                .paths(cpptrace::formatter::path_mode::basename);
-            msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2, 15)));
+                .paths(cpptrace::formatter::path_mode::full);
+            msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2)));
             Core::MemoryTracker::Get().EnableTracking();
 
         }

@@ -14,7 +14,7 @@ namespace Core {
     {
         static char buffer[200];
         AllocationDataSerializeable* items = (AllocationDataSerializeable*)data;
-        snprintf(buffer, sizeof(buffer), "0x%zu | Size: %zu bytes", items[idx].pointer, items[idx].size);
+        snprintf(buffer, sizeof(buffer), "0x%lx | Size: %zu bytes", items[idx].pointer, items[idx].size);
         return buffer;
     }
 

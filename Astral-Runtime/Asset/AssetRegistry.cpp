@@ -11,6 +11,11 @@
 
 namespace Astral {
 
+    AssetRegistry::~AssetRegistry()
+    {
+
+    }
+
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
         if (!m_AssetIDToFilePath.contains(assetID)) { return; }

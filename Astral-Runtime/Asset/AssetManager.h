@@ -18,6 +18,7 @@ namespace Astral {
         ~AssetManager() = default;
 
         static AssetManager& Get();
+
         void Init() override {}
         void Shutdown() override {}
 

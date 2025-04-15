@@ -22,6 +22,9 @@ namespace Astral {
     {
      public:
 
+        AssetRegistry() = default;
+        ~AssetRegistry();
+
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
         AssetID CreateAsset(const std::filesystem::path& filePath);

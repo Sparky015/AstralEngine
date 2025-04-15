@@ -13,6 +13,8 @@ namespace Window {
     class WindowManager : public SystemManager
     {
     public:
+        explicit WindowManager();
+        ~WindowManager() override;
 
         static WindowManager& Get();
 
@@ -33,8 +35,6 @@ namespace Window {
         WindowManager& operator=(const WindowManager&) = delete;
 
     private:
-        WindowManager();
-        ~WindowManager() override;
 
         std::unique_ptr<Window> m_Window;
 
