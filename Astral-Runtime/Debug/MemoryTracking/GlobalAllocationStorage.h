@@ -16,8 +16,8 @@ namespace Core {
     class GlobalAllocationStorage
     {
     public:
-        GlobalAllocationStorage() = default;
-        ~GlobalAllocationStorage();
+        GlobalAllocationStorage();
+        ~GlobalAllocationStorage() = default;
 
         /**@brief Stores a mapping of the pointer to the allocation size of the pointer
          * @remark Does nothing when pointer is nullptr.
@@ -45,10 +45,21 @@ namespace Core {
          * @return The number of allocation entries currently in storage */
         [[nodiscard]] size_t GetAllocationEntryCount() const { return m_NumberOfEntries; }
 
+        using AllocationStorage = std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const void* const, AllocationData>>>;
+
+        static AllocationStorage& GetStorage()
+        {
+            static NoTrackingSTLAllocator<AllocationStorage> allocator;
+            static AllocationStorage* storage = new (allocator.allocate(1)) AllocationStorage();
+
+            return *storage;
+        }
+
+        static void PrintLeakedPointers();
+
     private:
 
         size_t m_NumberOfEntries{};
-        std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const void* const, AllocationData>>> m_Storage;
     };
 
 }

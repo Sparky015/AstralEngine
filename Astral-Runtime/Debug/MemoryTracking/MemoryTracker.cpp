@@ -21,6 +21,7 @@ namespace Core {
     void MemoryTracker::Shutdown()
     {
         m_MemoryMetrics.Shutdown();
+        m_IsTrackingEnabled = false;
     }
 
 

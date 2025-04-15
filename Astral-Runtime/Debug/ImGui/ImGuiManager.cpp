@@ -29,8 +29,6 @@
 
 namespace Debug {
 
-    ImGuiManager& g_ImGuiManager = ImGuiManager::Get();
-
     ImGuiManager& ImGuiManager::Get()
     {
         static ImGuiManager m_Instance = ImGuiManager();

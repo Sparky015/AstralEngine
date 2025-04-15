@@ -13,6 +13,7 @@
 #include "Time/DeltaTime.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "EngineLoopEvents.h"
+#include "Debug/ImGui/ImGuiManager.h"
 #include "ECS/ECSManager.h"
 #include "Window/WindowEvents.h"
 #include "Window/WindowManager.h"
@@ -30,6 +31,7 @@ public:
 
     Window::WindowManager& GetWindowManager() { return m_WindowManager; }
     Astral::ECSManager& GetECSManager() { return m_ECSManager; }
+    Debug::ImGuiManager& GetImGuiManager() { return m_ImGuiManager; }
 
    /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
    [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
@@ -47,4 +49,5 @@ private:
 
     Window::WindowManager m_WindowManager;
     Astral::ECSManager m_ECSManager;
+    Debug::ImGuiManager m_ImGuiManager;
 };

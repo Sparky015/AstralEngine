@@ -34,9 +34,8 @@ Engine::Engine() :
     // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
     m_WindowManager.Init();
     IO::g_IOManager.Init();
-    Debug::g_ImGuiManager.Init();
+    m_ImGuiManager.Init();
     m_ECSManager.Init();
-    Astral::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
@@ -52,9 +51,8 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
-    Astral::g_RendererManager.Shutdown();
     m_ECSManager.Shutdown();
-    Debug::g_ImGuiManager.Shutdown();
+    m_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
     m_WindowManager.Shutdown();
 

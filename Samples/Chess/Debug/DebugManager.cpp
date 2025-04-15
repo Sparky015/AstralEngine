@@ -14,7 +14,6 @@ namespace Debug {
 
     DebugManager& g_DebugManager = DebugManager::Get();
 
-
     DebugManager& DebugManager::Get()
     {
         static DebugManager m_Instance = DebugManager();

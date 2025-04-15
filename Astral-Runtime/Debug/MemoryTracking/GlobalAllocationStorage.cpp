@@ -9,29 +9,20 @@
 
 #include <iostream>
 
+#include "MemoryTracker.h"
+
 namespace Core {
 
-    GlobalAllocationStorage::~GlobalAllocationStorage()
+    GlobalAllocationStorage::GlobalAllocationStorage()
     {
-        // Output all the pointers still being stored as leaked.
-        std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
-        for (auto [pointer, allocationData] : m_Storage)
-        {
-            if (allocationData.threadID == std::this_thread::get_id())
-            {
-                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
-            }
-        }
-        // std::cout << "Number of leaked pointers: " << m_NumberOfEntries << "\n";
-
+        std::atexit(GlobalAllocationStorage::PrintLeakedPointers);
     }
-
 
     void GlobalAllocationStorage::AddPointer(const AllocationData& allocationData)
     {
         [[unlikely]] if (!allocationData.pointer) { return; }
         [[unlikely]] if (IsPointerStored(allocationData.pointer)) { return; }
-        m_Storage[allocationData.pointer] = allocationData;
+        GetStorage()[allocationData.pointer] = allocationData;
         m_NumberOfEntries++;
     }
 
@@ -41,20 +32,34 @@ namespace Core {
         [[unlikely]] if (!pointer) { return; }
         [[unlikely]] if (!IsPointerStored(pointer)) { return; }
 
-        m_Storage.erase(pointer);
+        GetStorage().erase(pointer);
         m_NumberOfEntries--;
     }
 
 
     bool GlobalAllocationStorage::IsPointerStored(void* pointer) const
     {
-        return m_Storage.contains(pointer);
+        return GetStorage().contains(pointer);
     }
 
 
     const AllocationData& GlobalAllocationStorage::GetPointerData(const void* pointer) const
     {
-        return m_Storage.at(pointer);
+        return GetStorage().at(pointer);
+    }
+
+
+    void GlobalAllocationStorage::PrintLeakedPointers()
+    {
+        std::cout << "Number of leaked pointers: " << GlobalAllocationStorage::GetStorage().size() << "\n";
+        for (auto [pointer, allocationData] : GlobalAllocationStorage::GetStorage())
+        {
+            if (allocationData.threadID == std::this_thread::get_id())
+            {
+                std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << "\n";
+            }
+        }
+
     }
 
 }
