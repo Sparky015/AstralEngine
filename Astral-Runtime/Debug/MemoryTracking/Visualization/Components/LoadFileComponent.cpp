@@ -13,39 +13,38 @@
 #include <string_view>
 
 #include "Debug/MemoryTracking/Visualization/MemoryDebugWindow.h"
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "nfd.hpp"
 
 namespace Core {
 
 
     /**@brief Pulls up a window for the user to select a file
      * @param outFilePath Populates the string with the file path of the file that was selected by the user. */
-    bool SelectFile(std::string& outFilePath)
+    void SelectFile(std::string& outFilePath)
     {
-        IGFD::FileDialogConfig config;
-        config.path = LOG_FILE_DIR;
-        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".ASTLMemProfile", config);
+        nfdu8char_t* outPath;
+        nfdu8filteritem_t filters[1] = { { "Astral Memory Profile", "ASTLMemProfile" } };
+        nfdopendialogu8args_t args = {0};
+        args.filterList = filters;
+        args.filterCount = 1;
 
+        nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
 
-        if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+        if (result == NFD_OKAY)
         {
-            if (ImGuiFileDialog::Instance()->IsOk())
-            {
-                outFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            }
-
-            ImGuiFileDialog::Instance()->Close();
-            return false;
+            outFilePath = std::string(outPath);
+            NFD_FreePathU8(outPath);
         }
-
-        return true;
+        else if (result == NFD_CANCEL)
+        {
+            outFilePath = "";
+        }
     }
 
 
     void LoadMemoryProfileButtonComponent()
     {
         static bool showFileSelectMenu = false;
-        static bool doLoadFile = false;
         static std::string filePath;
 
         if (ImGui::Button("Load Memory Profile File"))
@@ -53,30 +52,22 @@ namespace Core {
             showFileSelectMenu = true;
         }
 
-        if (doLoadFile && !filePath.empty())
+        if (showFileSelectMenu)
         {
-            static MemoryDebugWindow memoryDebugWindow;
+            SelectFile(filePath);
 
-            LOG(filePath);
-            memoryDebugWindow.CloseMemoryDebugWindow();
-            memoryDebugWindow.LoadMemoryProfile(filePath);
-
-            doLoadFile = false;
-        }
-        else if (showFileSelectMenu)
-        {
-            showFileSelectMenu = SelectFile(filePath);
-
-            if (!showFileSelectMenu)
+            if (!filePath.empty())
             {
-                doLoadFile = true;
+                static MemoryDebugWindow memoryDebugWindow;
+
+                LOG(filePath);
+                memoryDebugWindow.CloseMemoryDebugWindow();
+                memoryDebugWindow.LoadMemoryProfile(filePath);
             }
+
+            showFileSelectMenu = false;
         }
-
     }
-
-
-
 
 }
 

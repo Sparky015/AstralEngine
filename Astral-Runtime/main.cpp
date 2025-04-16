@@ -2,17 +2,18 @@
 #include "Debug/EngineDebugInfoLogger.h"
 #include "Debug/Utilities/Loggers.h"
 #include "Core/Memory/Allocators/STLAllocators/STLLinearAllocator.h"
+#include "Debug/MemoryTracking/MemoryTracker.h"
+
+#include "nfd.hpp"
 
 int main()
 {
     LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
 
+    NFD_Init();
 
-    using CustomVector = std::vector<int, Core::STLLinearAllocator<int>>;
-    Core::STLLinearAllocator<int> allocator = Core::STLLinearAllocator<int>(200);
-    CustomVector intVector{allocator};
-
-    intVector.reserve(3); // Use as normal
+    Core::MemoryTracker::Get().Init();
+    // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
 
     {
         Engine engine = Engine();
@@ -20,6 +21,9 @@ int main()
         engine.Run();
     }
 
+    NFD_Quit();
+
     LOG("\n---   Exiting main() ---     (static and global object destruction below)\n");
+    // Core::MemoryTracker::Get().EndScene();
     return 0;
 }

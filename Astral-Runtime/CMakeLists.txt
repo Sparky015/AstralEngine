@@ -233,7 +233,7 @@ target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE ImPlot)
-target_link_libraries(AstralEngine PRIVATE ImGuiFileDialog)
+target_link_libraries(AstralEngine PRIVATE nfd)
 target_link_libraries(AstralEngine PUBLIC msgpack-cxx)
 
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
@@ -272,6 +272,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImFileDialog/")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/nativefiledialog-extended/src/include")
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 

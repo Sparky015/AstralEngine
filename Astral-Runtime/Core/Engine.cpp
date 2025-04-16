@@ -28,10 +28,8 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
-    Core::MemoryTracker::Get().Init();
-
     // This is the order that systems are called in for the SubSystemUpdateEvent
-    // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
+
     m_WindowManager.Init();
     IO::g_IOManager.Init();
     m_ImGuiManager.Init();
@@ -57,7 +55,6 @@ Engine::~Engine()
     m_WindowManager.Shutdown();
 
 
-    // Core::MemoryTracker::Get().EndScene();
     Core::MemoryTracker::Get().Shutdown();
 }
 
@@ -68,9 +65,9 @@ void Engine::Run()
 
     Core::DeltaTime m_DeltaTime;
 
-    static int FramesToRun = 40;
+    static int FramesToRun = 10;
 
-    while (m_IsLoopRunning)
+    while (m_IsLoopRunning /*&& FramesToRun > 0*/)
     {
         PROFILE_SCOPE("Frame");
 
