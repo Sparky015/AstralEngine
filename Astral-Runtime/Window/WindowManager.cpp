@@ -7,7 +7,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 
-namespace Window{
+namespace Astral{
 
     void WindowManager::Update()
     {

@@ -8,7 +8,7 @@
 
 #include "Window.h"
 
-namespace Window {
+namespace Astral {
 
     class WindowManager : public SystemManager
     {

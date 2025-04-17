@@ -15,7 +15,7 @@ namespace Astral {
 
     RendererContext* RendererContext::CreateRendererContext()
     {
-        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
+        Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();
         void* nativeWindow = window.GetNativeWindow();
 
         switch (RendererAPI::GetAPI())

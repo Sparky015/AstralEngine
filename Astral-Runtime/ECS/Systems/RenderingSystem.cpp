@@ -48,7 +48,7 @@ namespace Astral {
 
 
     Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale) {
-        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
+        Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();
         Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
 
         Vec3 normalizedPosition = Vec3(1.0f);

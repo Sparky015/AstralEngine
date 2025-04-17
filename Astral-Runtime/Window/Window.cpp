@@ -6,7 +6,7 @@
 
 #include "Window/Platform/Generic/GenericWindow.h"
 
-namespace Window {
+namespace Astral {
 
     WindowAPI Window::s_WindowAPI = WindowAPI::GLFW;
 

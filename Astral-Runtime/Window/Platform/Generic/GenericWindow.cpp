@@ -9,7 +9,7 @@
 #include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
 #include "Input/KeycodeConversions.h"
 
-namespace Window {
+namespace Astral {
 
     bool GenericWindow::m_IsGLFWInitialized = false;
 

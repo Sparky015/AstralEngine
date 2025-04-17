@@ -17,7 +17,7 @@
 #include "Window/WindowEvents.h"
 
 
-namespace Window { class WindowManager; }
+namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Debug { class ImGuiManager; }
 
@@ -33,7 +33,7 @@ namespace Astral {
 
        static inline Engine& Get() { return *m_Instance; }
 
-        Window::WindowManager& GetWindowManager() { return *m_WindowManager; }
+        WindowManager& GetWindowManager() { return *m_WindowManager; }
         ECSManager& GetECSManager() { return *m_ECSManager; }
         Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
 
@@ -51,8 +51,8 @@ namespace Astral {
         bool m_IsLoopRunning;
         Core::Clock m_Clock;
 
-        ScopedPtr<Window::WindowManager> m_WindowManager;
-        ScopedPtr<Astral::ECSManager> m_ECSManager;
+        ScopedPtr<WindowManager> m_WindowManager;
+        ScopedPtr<ECSManager> m_ECSManager;
         ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
     };
 

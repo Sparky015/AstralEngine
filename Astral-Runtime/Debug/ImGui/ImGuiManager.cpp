@@ -270,7 +270,7 @@ namespace Debug {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Window::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
+        Astral::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
         io.DisplaySize = ImVec2((float)windowManager.GetWidth(), (float)windowManager.GetHeight());
         io.DisplayFramebufferScale = ImVec2(1,1);
 

@@ -13,7 +13,7 @@ namespace Debug {
 
     void WindowDimensionsComponent()
     {
-        Window::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
+        Astral::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
         ImGui::Text("Window Dimensions: %d px x %d px", windowManager.GetWidth(), windowManager.GetHeight());
     }
 
@@ -29,7 +29,7 @@ namespace Debug {
 
     void VsyncToggleComponent()
     {
-        Window::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
+        Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
         static bool isVsyncEnabled = true;
         if (ImGui::Checkbox("VSync", &isVsyncEnabled))
         {
