@@ -9,7 +9,6 @@
 #include "Debug/ImGui/ImGuiManager.h"
 #include "ECS/ECSManager.h"
 #include "Input/InputManager.h"
-#include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
 #include "cpuinfo.h"

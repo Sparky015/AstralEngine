@@ -33,8 +33,6 @@ add_library(AstralEngine
         ECS/ECSManager.h
         ECS/Components/Transform.h
         ECS/Components/Sprite.h
-        Renderer/RendererManager.cpp
-        Renderer/RendererManager.h
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
