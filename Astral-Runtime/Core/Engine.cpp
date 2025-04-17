@@ -6,23 +6,27 @@
 #include "Engine.h"
 
 #include "ApplicationModule.h"
-#include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
-#include "Input/InputManager.h"
-#include "Window/WindowManager.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
 #include "cpuinfo.h"
+#include "nfd.hpp"
+
+#include "Events/EventListener.h"
+#include "Events/EventPublisher.h"
+#include "Debug/ImGui/ImGuiEvents.h"
+#include "EngineLoopEvents.h"
+#include "Window/WindowEvents.h"
 
 #include "Window/WindowManager.h"
 #include "ECS/ECSManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
+#include "Input/InputManager.h"
+
 
 namespace Astral {
 
     Engine* Engine::m_Instance = nullptr;
 
     Engine::Engine() :
-        m_WindowClosedListener(Core::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){this->m_IsLoopRunning = false;}}),
         m_ApplicationModule(Application::CreateApplicationModule()),
         m_IsLoopRunning(true),
 
@@ -43,23 +47,22 @@ namespace Astral {
         m_ApplicationModule->Init();
 
         cpuinfo_initialize();
-
-        m_WindowClosedListener.StartListening();
-
+        NFD_Init();
     }
 
 
     Engine::~Engine()
     {
         PROFILE_SCOPE("Engine Shutdown");
-        m_WindowClosedListener.StopListening();
+
+        NFD_Quit();
+        cpuinfo_deinitialize();
 
         m_ApplicationModule->Shutdown();
         m_ECSManager->Shutdown();
         m_ImGuiManager->Shutdown();
         IO::g_IOManager.Shutdown();
         m_WindowManager->Shutdown();
-
 
         Core::MemoryTracker::Get().Shutdown();
     }
@@ -70,24 +73,36 @@ namespace Astral {
         PROFILE_SCOPE("Engine Runtime");
 
         Core::DeltaTime m_DeltaTime;
+        Core::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
+        Core::EventPublisher<NewFrameEvent> newFramePublisher;
+        Core::EventPublisher<RenderImGuiEvent> renderImGuiPublisher;
+        Core::EventListener<WindowClosedEvent> windowClosedListener{
+            Core::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){ this->m_IsLoopRunning = false; }}
+        };
+        windowClosedListener.StartListening();
 
+
+                                  /****  Engine Loop  ****/
         while (m_IsLoopRunning)
         {
             PROFILE_SCOPE("Frame");
 
             m_DeltaTime.UpdateDeltaTime();
 
-            m_NewFramePublisher.PublishEvent( NewFrameEvent() );
+            newFramePublisher.PublishEvent( NewFrameEvent() );
 
-            m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+            subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
             m_ApplicationModule->Update(m_DeltaTime);
 
             Debug::ImGuiManager::Get().BeginFrame();
-            m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
+            renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             Debug::ImGuiManager::Get().EndFrame();
 
             m_WindowManager->SwapBuffers();
         }
+
+
+        windowClosedListener.StopListening();
     }
 
 }

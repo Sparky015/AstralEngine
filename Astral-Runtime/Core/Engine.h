@@ -7,16 +7,10 @@
 #pragma once
 
 #include "ApplicationModule.h"
-#include "Events/EventListener.h"
-#include "Events/EventPublisher.h"
 #include "SmartPointers.h"
 #include "Time/Clock.h"
 
-#include "Debug/ImGui/ImGuiEvents.h"
-#include "EngineLoopEvents.h"
-#include "Window/WindowEvents.h"
-
-
+// Forward declare the subsystem managers to avoid including large portions of the engine in the header
 namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Debug { class ImGuiManager; }
@@ -41,12 +35,8 @@ namespace Astral {
        [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
 
     private:
-        Core::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
-        Core::EventPublisher<NewFrameEvent> m_NewFramePublisher;
-        Core::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
-        Core::EventListener<WindowClosedEvent> m_WindowClosedListener;
-
         static Engine* m_Instance;
+
         Application::ApplicationModule* m_ApplicationModule;
         bool m_IsLoopRunning;
         Core::Clock m_Clock;
