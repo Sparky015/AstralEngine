@@ -34,7 +34,7 @@ namespace Astral {
        static inline Engine& Get() { return *m_Instance; }
 
         Window::WindowManager& GetWindowManager() { return *m_WindowManager; }
-        Astral::ECSManager& GetECSManager() { return *m_ECSManager; }
+        ECSManager& GetECSManager() { return *m_ECSManager; }
         Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
 
        /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
@@ -51,9 +51,9 @@ namespace Astral {
         bool m_IsLoopRunning;
         Core::Clock m_Clock;
 
-        Astral::ScopedPtr<Window::WindowManager> m_WindowManager;
-        Astral::ScopedPtr<Astral::ECSManager> m_ECSManager;
-        Astral::ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
+        ScopedPtr<Window::WindowManager> m_WindowManager;
+        ScopedPtr<Astral::ECSManager> m_ECSManager;
+        ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
     };
 
 }

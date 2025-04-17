@@ -26,9 +26,9 @@ namespace Astral {
         m_ApplicationModule(Application::CreateApplicationModule()),
         m_IsLoopRunning(true),
 
-        m_WindowManager(Astral::CreateScopedPtr<Window::WindowManager>()),
-        m_ECSManager(Astral::CreateScopedPtr<Astral::ECSManager>()),
-        m_ImGuiManager(Astral::CreateScopedPtr<Debug::ImGuiManager>())
+        m_WindowManager(CreateScopedPtr<Window::WindowManager>()),
+        m_ECSManager(CreateScopedPtr<Astral::ECSManager>()),
+        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>())
     {
         PROFILE_SCOPE("Engine Initialization");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
