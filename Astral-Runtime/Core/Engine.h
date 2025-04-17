@@ -10,10 +10,13 @@
 #include "SmartPointers.h"
 #include "Time/Clock.h"
 
+
+
 // Forward declare the subsystem managers to avoid including large portions of the engine in the header
 namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Debug { class ImGuiManager; }
+namespace IO { class InputManager; }
 
 namespace Astral {
 
@@ -44,6 +47,7 @@ namespace Astral {
         ScopedPtr<WindowManager> m_WindowManager;
         ScopedPtr<ECSManager> m_ECSManager;
         ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
+        ScopedPtr<IO::InputManager> m_InputManager;
     };
 
 }

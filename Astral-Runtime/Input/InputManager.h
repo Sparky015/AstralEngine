@@ -13,6 +13,9 @@ namespace IO {
     class InputManager : public SystemManager
     {
     public:
+        InputManager();
+        ~InputManager() override;
+
         static InputManager& Get();
 
         void Init() override;
@@ -24,13 +27,10 @@ namespace IO {
         InputManager& operator=(const InputManager&) = delete;
         InputManager(InputManager&&) = delete;
         InputManager& operator=(InputManager&&) = delete;
+
     private:
-        InputManager();
-        ~InputManager() override;
 
         InputState m_InputState;
     };
-
-    extern InputManager& g_IOManager;
 
 }
