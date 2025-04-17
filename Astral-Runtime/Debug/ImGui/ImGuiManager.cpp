@@ -270,7 +270,7 @@ namespace Debug {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Window::WindowManager& windowManager = Engine::Get().GetWindowManager();
+        Window::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
         io.DisplaySize = ImVec2((float)windowManager.GetWidth(), (float)windowManager.GetHeight());
         io.DisplayFramebufferScale = ImVec2(1,1);
 
@@ -287,7 +287,7 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Astral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 

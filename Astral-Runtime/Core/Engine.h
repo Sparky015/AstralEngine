@@ -9,45 +9,51 @@
 #include "ApplicationModule.h"
 #include "Events/EventListener.h"
 #include "Events/EventPublisher.h"
+#include "SmartPointers.h"
 #include "Time/Clock.h"
-#include "Time/DeltaTime.h"
+
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "EngineLoopEvents.h"
-#include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
 #include "Window/WindowEvents.h"
-#include "Window/WindowManager.h"
 
 
-class Engine
-{
-public:
-    Engine();
-    ~Engine();
+namespace Window { class WindowManager; }
+namespace Astral { class ECSManager; }
+namespace Debug { class ImGuiManager; }
 
-    void Run();
+namespace Astral {
 
-   static inline Engine& Get() { return *m_Instance; }
+    class Engine
+    {
+    public:
+        Engine();
+        ~Engine();
 
-    Window::WindowManager& GetWindowManager() { return m_WindowManager; }
-    Astral::ECSManager& GetECSManager() { return m_ECSManager; }
-    Debug::ImGuiManager& GetImGuiManager() { return m_ImGuiManager; }
+        void Run();
 
-   /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
-   [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
+       static inline Engine& Get() { return *m_Instance; }
 
-private:
-    Core::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
-    Core::EventPublisher<NewFrameEvent> m_NewFramePublisher;
-    Core::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
-    Core::EventListener<WindowClosedEvent> m_WindowClosedListener;
+        Window::WindowManager& GetWindowManager() { return *m_WindowManager; }
+        Astral::ECSManager& GetECSManager() { return *m_ECSManager; }
+        Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
 
-    static Engine* m_Instance;
-    Application::ApplicationModule* m_ApplicationModule;
-    bool m_IsLoopRunning;
-    Core::Clock m_Clock;
+       /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
+       [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
 
-    Window::WindowManager m_WindowManager;
-    Astral::ECSManager m_ECSManager;
-    Debug::ImGuiManager m_ImGuiManager;
-};
+    private:
+        Core::EventPublisher<SubSystemUpdateEvent> m_SubSystemUpdatePublisher;
+        Core::EventPublisher<NewFrameEvent> m_NewFramePublisher;
+        Core::EventPublisher<RenderImGuiEvent> m_RenderImGuiPublisher;
+        Core::EventListener<WindowClosedEvent> m_WindowClosedListener;
+
+        static Engine* m_Instance;
+        Application::ApplicationModule* m_ApplicationModule;
+        bool m_IsLoopRunning;
+        Core::Clock m_Clock;
+
+        Astral::ScopedPtr<Window::WindowManager> m_WindowManager;
+        Astral::ScopedPtr<Astral::ECSManager> m_ECSManager;
+        Astral::ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
+    };
+
+}

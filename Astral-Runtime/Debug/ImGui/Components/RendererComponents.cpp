@@ -32,7 +32,7 @@ namespace Debug {
 
     void RendererAPIComponent()
     {
-        Astral::RendererContext& rendererContext = Engine::Get().GetWindowManager().GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Astral::Engine::Get().GetWindowManager().GetWindow().GetRendererContext();
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 

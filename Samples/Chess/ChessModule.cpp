@@ -27,9 +27,9 @@ public:
         Game::g_BoardManager.Init();
         Game::g_GameManager.Init();
         Debug::g_DebugManager.Init();
-        Engine::Get().GetImGuiManager().LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
-        Engine::Get().GetWindowManager().GetWindow().SetWindowName("Chess");
-        Engine::Get().GetWindowManager().GetWindow().SetWindowDimensions(800, 800);
+        Astral::Engine::Get().GetImGuiManager().LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
+        Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowName("Chess");
+        Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowDimensions(800, 800);
     }
 
     void Update(const Core::DeltaTime& deltaTime) override

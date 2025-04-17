@@ -11,5 +11,5 @@
 
 void Debug::EntityCountComponent()
 {
-    ImGui::Text("Current Number Of Entities: %d", Engine::Get().GetECSManager().GetECS().GetNumberOfActiveEntities());
+    ImGui::Text("Current Number Of Entities: %d", Astral::Engine::Get().GetECSManager().GetECS().GetNumberOfActiveEntities());
 }

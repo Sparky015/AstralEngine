@@ -54,7 +54,7 @@ namespace Debug {
         #endif
 
         /** Outputs the libraries used depending on the platform. */
-        Window::Window& window = Engine::Get().GetWindowManager().GetWindow();
+        Window::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
         Astral::RendererContext& rendererContext = window.GetRendererContext();
 
         LOG("Window: " << window.GetVersion());

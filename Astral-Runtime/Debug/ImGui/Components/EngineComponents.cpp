@@ -13,7 +13,7 @@ namespace Debug {
 
     void EngineTimeComponent()
     {
-        ImGui::Text("Engine Running Time: %.3f seconds", Engine::Get().GetTimeSinceInitialization());
+        ImGui::Text("Engine Running Time: %.3f seconds", Astral::Engine::Get().GetTimeSinceInitialization());
     }
 
 }

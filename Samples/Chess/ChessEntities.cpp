@@ -53,7 +53,7 @@ Astral::Entity ChessEntities::m_ChessBoard;
 
 void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 {
-    Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
     m_ChessBoard = ecs.CreateEntity();
 
@@ -188,7 +188,7 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 
 void ChessEntities::DestroyEntities()
 {
-    Astral::ECS& ecs = Engine::Get().GetECSManager().GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
     ecs.DeleteEntity(m_ChessBoard);
 

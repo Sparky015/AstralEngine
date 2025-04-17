@@ -16,7 +16,7 @@ int main()
     // Core::MemoryTracker::Get().BeginScene("Engine_Lifetime");
 
     {
-        Engine engine = Engine();
+        Astral::Engine engine = Astral::Engine();
         Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
         engine.Run();
     }
