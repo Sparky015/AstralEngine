@@ -48,7 +48,7 @@ namespace Astral {
         // goes out of scope.
     }
 
-    Asset* AssetRegistry::LoadAsset(AssetType assetType, const std::filesystem::path& filePath)
+    Ref<Asset> AssetRegistry::LoadAsset(AssetType assetType, const std::filesystem::path& filePath)
     {
         switch (assetType)
         {

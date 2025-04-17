@@ -12,6 +12,7 @@
 #include "Asset.h"
 #include "AssetRegistryStats.h"
 #include "Debug/Utilities/Loggers.h"
+#include "Core/SmartPointers.h"
 
 namespace Astral {
 
@@ -31,12 +32,12 @@ namespace Astral {
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
-        AssetType* GetAsset(AssetID assetID);
+        Ref<AssetType> GetAsset(AssetID assetID);
 
         void UnloadAsset(AssetID assetID);
         void UnloadAsset(const std::filesystem::path& filePath);
 
-        Asset* LoadAsset(AssetType assetType, const std::filesystem::path& filePath);
+        Ref<Asset> LoadAsset(AssetType assetType, const std::filesystem::path& filePath);
 
         void SetAssetDirectoryPath(const std::filesystem::path& filePath) { m_AssetDirectoryPath = filePath; }
         AssetID GetAssetIDFromFilePath(const std::filesystem::path& filePath);
@@ -51,7 +52,7 @@ namespace Astral {
 
         std::unordered_map<std::filesystem::path, AssetID> m_FilePathToAssetID;
         std::unordered_map<AssetID, std::filesystem::path> m_AssetIDToFilePath;
-        std::unordered_map<AssetID, Asset*> m_AssetIDToAsset;
+        std::unordered_map<AssetID, Ref<Asset>> m_AssetIDToAsset;
 
         AssetRegistryStats m_RegistryStats{};
     };

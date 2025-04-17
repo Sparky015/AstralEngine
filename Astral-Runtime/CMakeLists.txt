@@ -211,6 +211,7 @@ add_library(AstralEngine
         Debug/MemoryTracking/MallocFreeOverrides.cpp
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
+        Core/SmartPointers.h
 
 
 )

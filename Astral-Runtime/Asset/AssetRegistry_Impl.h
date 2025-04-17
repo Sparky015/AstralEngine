@@ -15,7 +15,7 @@ namespace Astral {
     AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         // Load the asset from disk
-        Asset* asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
+        Ref<Asset> asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
 
         if (!asset)
         {
@@ -44,10 +44,11 @@ namespace Astral {
 
     template <typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
-    AssetType* AssetRegistry::GetAsset(AssetID assetID)
+    Ref<AssetType> AssetRegistry::GetAsset(AssetID assetID)
     {
         if (!m_AssetIDToAsset.contains(assetID)) { return nullptr; }
-        return (AssetType*)m_AssetIDToAsset.at(assetID);
+        Ref<AssetType> test = std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));
+        return test;
     }
 
 }
