@@ -43,6 +43,8 @@ namespace Debug {
 
         InitImGui();
 
+        LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
+
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
     }
