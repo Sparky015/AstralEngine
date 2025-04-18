@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Time/DeltaTime.h"
+#include "Core/SmartPointers.h"
 
 namespace Application {
 
@@ -20,7 +21,7 @@ namespace Application {
         virtual void Shutdown() {};
     };
 
-    extern ApplicationModule* CreateApplicationModule();
+    extern Astral::ScopedPtr<Application::ApplicationModule> CreateApplicationModule();
 
-    #define IMPLEMENT_APPLICATION_MODULE(DerivedApplicationModule) Application::ApplicationModule* Application::CreateApplicationModule() { return new DerivedApplicationModule(); }
+    #define IMPLEMENT_APPLICATION_MODULE(DerivedApplicationModule) Astral::ScopedPtr<Application::ApplicationModule> Application::CreateApplicationModule() { return Astral::CreateScopedPtr<DerivedApplicationModule>(); }
 }

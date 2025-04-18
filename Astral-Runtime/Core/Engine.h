@@ -38,9 +38,9 @@ namespace Astral {
        [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
 
     private:
-        static Engine* m_Instance;
+        static Engine* m_Instance; // Pointer is from the stack
 
-        Application::ApplicationModule* m_ApplicationModule;
+        ScopedPtr<Application::ApplicationModule> m_ApplicationModule;
         bool m_IsLoopRunning;
         Core::Clock m_Clock;
 
