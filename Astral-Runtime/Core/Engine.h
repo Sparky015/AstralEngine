@@ -16,7 +16,6 @@
 namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Debug { class ImGuiManager; }
-namespace IO { class InputManager; }
 
 namespace Astral {
 
@@ -47,7 +46,6 @@ namespace Astral {
         ScopedPtr<WindowManager> m_WindowManager;
         ScopedPtr<ECSManager> m_ECSManager;
         ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
-        ScopedPtr<IO::InputManager> m_InputManager;
     };
 
 }

@@ -34,7 +34,7 @@ public:
 
     void Update(const Core::DeltaTime& deltaTime) override
     {
-        if (InputState::IsKeyDown(Keycode::KEY_F))
+        if (Astral::InputState::IsKeyDown(Keycode::KEY_F))
         {
             LOG("Delta Time: " << deltaTime.GetSeconds());
         }

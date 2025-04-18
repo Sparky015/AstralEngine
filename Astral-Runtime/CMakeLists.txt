@@ -5,8 +5,6 @@ add_library(AstralEngine
         Core/Events/EventBus.h
         Core/Events/EventListener.h
         Core/Events/EventPublisher.h
-        Input/InputManager.cpp
-        Input/InputManager.h
         Core/Engine.h
         Core/Engine.cpp
         Core/EngineLoopEvents.h

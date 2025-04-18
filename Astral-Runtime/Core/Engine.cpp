@@ -19,7 +19,7 @@
 #include "Window/WindowManager.h"
 #include "ECS/ECSManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "Input/InputManager.h"
+#include "Input/InputState.h"
 
 
 namespace Astral {
@@ -32,8 +32,7 @@ namespace Astral {
 
         m_WindowManager(CreateScopedPtr<WindowManager>()),
         m_ECSManager(CreateScopedPtr<ECSManager>()),
-        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>()),
-        m_InputManager(CreateScopedPtr<IO::InputManager>())
+        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>())
     {
         PROFILE_SCOPE("Engine Initialization");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
@@ -41,7 +40,7 @@ namespace Astral {
 
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
-        m_InputManager->Init();
+        InputState::Init();
         m_ImGuiManager->Init();
         m_ECSManager->Init();
         m_ApplicationModule->Init();
@@ -61,7 +60,7 @@ namespace Astral {
         m_ApplicationModule->Shutdown();
         m_ECSManager->Shutdown();
         m_ImGuiManager->Shutdown();
-        m_InputManager->Shutdown();
+        InputState::Shutdown();
         m_WindowManager->Shutdown();
 
         Core::MemoryTracker::Get().Shutdown();

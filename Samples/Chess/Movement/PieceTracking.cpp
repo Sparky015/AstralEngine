@@ -21,7 +21,7 @@ namespace Game {
 
     void PieceTracking::UpdatePieceTracking()
     {
-        if (InputState::IsKeyDown(Keycode::KEY_LEFT_CLICK))
+        if (Astral::InputState::IsKeyDown(Keycode::KEY_LEFT_CLICK))
         {
             if (m_PieceTrackingState == PieceTrackingState::STANDBY)
             {
@@ -40,7 +40,7 @@ namespace Game {
     void PieceTracking::StartTrackingPiece()
     {
         const Chessboard& chessBoard = g_BoardManager.GetBoard();
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
 
         if (IsSquareEmpty(chessBoard, mouseSquareLocation)) { return; }
         if (!IsPieceTurn(chessBoard, mouseSquareLocation)) { return; }
@@ -62,7 +62,7 @@ namespace Game {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
         // The square that the mouse is over
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
         Chessboard& chessBoard = g_BoardManager.GetBoard();
 
         AttemptMove(chessBoard, mouseSquareLocation);
@@ -85,8 +85,8 @@ namespace Game {
         Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
-        transformComponent.x = InputState::MousePositionX();
-        transformComponent.y = InputState::MousePositionY();
+        transformComponent.x = Astral::InputState::MousePositionX();
+        transformComponent.y = Astral::InputState::MousePositionY();
         ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
