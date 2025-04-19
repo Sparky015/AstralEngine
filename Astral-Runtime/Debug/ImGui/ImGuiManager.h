@@ -12,9 +12,6 @@ namespace Debug{
     class ImGuiManager : public SystemManager
     {
     public:
-
-        static ImGuiManager& Get();
-
         ImGuiManager();
         ~ImGuiManager() override;
 

@@ -29,13 +29,6 @@
 
 namespace Debug {
 
-    ImGuiManager& ImGuiManager::Get()
-    {
-        static ImGuiManager m_Instance = ImGuiManager();
-        return m_Instance;
-    }
-
-
     void ImGuiManager::Init()
     {
         PROFILE_SCOPE("ImGui Manager Initialization");

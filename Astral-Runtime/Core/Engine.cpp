@@ -93,9 +93,9 @@ namespace Astral {
             subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
             m_ApplicationModule->Update(m_DeltaTime);
 
-            Debug::ImGuiManager::Get().BeginFrame();
+            m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
-            Debug::ImGuiManager::Get().EndFrame();
+            m_ImGuiManager->EndFrame();
 
             m_WindowManager->SwapBuffers();
         }
