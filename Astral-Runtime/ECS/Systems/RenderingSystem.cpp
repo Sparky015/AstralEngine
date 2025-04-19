@@ -7,6 +7,7 @@
 
 #include "../ECSManager.h"
 #include "Asset/AssetManager.h"
+#include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
@@ -21,7 +22,7 @@ namespace Astral {
     void RenderingSystem::RenderEntities(Astral::ShaderProgram* shader)
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
-        ECS& ecs = g_ECSManager.GetECS();
+        ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
         const ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
@@ -47,7 +48,7 @@ namespace Astral {
 
 
     Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale) {
-        Window::Window& window = Window::g_WindowManager.GetWindow();
+        Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();
         Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
 
         Vec3 normalizedPosition = Vec3(1.0f);

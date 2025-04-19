@@ -47,8 +47,10 @@ namespace Core {
 
     private:
 
+        using AllocationStorage = std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const void* const, AllocationData>>>;
+
+        AllocationStorage m_Storage;
         size_t m_NumberOfEntries{};
-        std::unordered_map<const void*, AllocationData, std::hash<const void*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const void* const, AllocationData>>> m_Storage;
     };
 
 }

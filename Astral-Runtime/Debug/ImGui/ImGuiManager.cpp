@@ -20,6 +20,7 @@
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 
 #include "Components/MemoryComponents.h"
+#include "Core/Engine.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
 #include "Input/Keycodes.h"
 #include "Window/Platform/Generic/GenericWindow.h"
@@ -28,21 +29,14 @@
 
 namespace Debug {
 
-    ImGuiManager& g_ImGuiManager = ImGuiManager::Get();
-
-    ImGuiManager& ImGuiManager::Get()
-    {
-        static ImGuiManager m_Instance = ImGuiManager();
-        return m_Instance;
-    }
-
-
     void ImGuiManager::Init()
     {
         PROFILE_SCOPE("ImGui Manager Initialization");
         TRACE("Initializing Debug Manager!")
 
         InitImGui();
+
+        LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
 
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
@@ -271,7 +265,7 @@ namespace Debug {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Window::WindowManager& windowManager = Window::g_WindowManager;
+        Astral::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
         io.DisplaySize = ImVec2((float)windowManager.GetWidth(), (float)windowManager.GetHeight());
         io.DisplayFramebufferScale = ImVec2(1,1);
 
@@ -288,7 +282,7 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Astral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 

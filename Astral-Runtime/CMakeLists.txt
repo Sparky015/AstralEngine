@@ -5,8 +5,6 @@ add_library(AstralEngine
         Core/Events/EventBus.h
         Core/Events/EventListener.h
         Core/Events/EventPublisher.h
-        Input/InputManager.cpp
-        Input/InputManager.h
         Core/Engine.h
         Core/Engine.cpp
         Core/EngineLoopEvents.h
@@ -33,8 +31,6 @@ add_library(AstralEngine
         ECS/ECSManager.h
         ECS/Components/Transform.h
         ECS/Components/Sprite.h
-        Renderer/RendererManager.cpp
-        Renderer/RendererManager.h
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
         Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
@@ -211,6 +207,7 @@ add_library(AstralEngine
         Debug/MemoryTracking/MallocFreeOverrides.cpp
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
+        Core/SmartPointers.h
 
 
 )
@@ -233,7 +230,7 @@ target_link_libraries(AstralEngine PRIVATE glm)
 target_link_libraries(AstralEngine PRIVATE stb_image)
 target_link_libraries(AstralEngine PRIVATE cpuinfo)
 target_link_libraries(AstralEngine PRIVATE ImPlot)
-target_link_libraries(AstralEngine PRIVATE ImGuiFileDialog)
+target_link_libraries(AstralEngine PRIVATE nfd)
 target_link_libraries(AstralEngine PUBLIC msgpack-cxx)
 
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
@@ -272,6 +269,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/ImFileDialog/")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/nativefiledialog-extended/src/include")
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
@@ -307,5 +305,6 @@ endif ()
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
+target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RUNTIME_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")

@@ -11,28 +11,25 @@
 
 namespace Debug {
 
-    class DebugManager : public SystemManager
+    class ChessDebugManager : public SystemManager
     {
     public:
-
-        static DebugManager& Get();
+        ChessDebugManager() = default;
+        ~ChessDebugManager() override = default;
 
         void Init() override;
         void Shutdown() override;
         void RenderImGui() override;
 
 
-        DebugManager(const DebugManager&) = delete;
-        DebugManager& operator=(const DebugManager&) = delete;
-        DebugManager(DebugManager&&) = delete;
-        DebugManager& operator=(DebugManager&&) = delete;
+        ChessDebugManager(const ChessDebugManager&) = delete;
+        ChessDebugManager& operator=(const ChessDebugManager&) = delete;
+        ChessDebugManager(ChessDebugManager&&) = delete;
+        ChessDebugManager& operator=(ChessDebugManager&&) = delete;
 
     private:
-        DebugManager() = default;
-        ~DebugManager() override = default;
+
 
     };
-
-    extern DebugManager& g_DebugManager;
 
 }

@@ -6,18 +6,19 @@
 
 #include "TextureLoader.h"
 
+#include "Core/SmartPointers.h"
 #include "Renderer/Primitives/Texture.h"
 
 namespace Astral {
 
-    Asset* TextureLoader::LoadAsset(const std::filesystem::path& filePath)
+    Ref<Asset> TextureLoader::LoadAsset(const std::filesystem::path& filePath)
     {
-        Texture* texture = Texture::CreateTexture(filePath);
+        Ref<Texture> texture = Texture::CreateTexture(filePath);
         if (!texture) { return nullptr; } // Return nullptr if an error occured
 
         if (!texture->IsValid())
         {
-            delete(texture);
+            texture.reset(); // Free the pointer
             return nullptr;
         }
 

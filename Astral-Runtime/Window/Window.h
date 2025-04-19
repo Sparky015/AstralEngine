@@ -12,7 +12,7 @@
 
 
 
-namespace Window {
+namespace Astral {
 
     enum class WindowAPI
     {

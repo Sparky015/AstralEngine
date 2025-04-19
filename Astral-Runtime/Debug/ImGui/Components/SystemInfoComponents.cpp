@@ -13,6 +13,7 @@
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
 #include "imgui.h"
+#include "Core/Engine.h"
 
 namespace Debug {
 
@@ -65,7 +66,7 @@ namespace Debug {
 
     void SystemGPUNameComponent()
     {
-        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Astral::Engine::Get().GetWindowManager().GetWindow().GetRendererContext();
         ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName().data());
     }
 
@@ -76,7 +77,7 @@ namespace Debug {
 
     void SystemGPUVendorComponent()
     {
-        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Astral::Engine::Get().GetWindowManager().GetWindow().GetRendererContext();
         ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().data());
     }
 

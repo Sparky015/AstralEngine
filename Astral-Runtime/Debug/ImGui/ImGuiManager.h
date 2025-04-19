@@ -12,8 +12,8 @@ namespace Debug{
     class ImGuiManager : public SystemManager
     {
     public:
-
-        static ImGuiManager& Get();
+        ImGuiManager();
+        ~ImGuiManager() override;
 
         void Init() override;
         void Shutdown() override;
@@ -32,8 +32,7 @@ namespace Debug{
         ImGuiManager& operator=(ImGuiManager&&) = delete;
 
     private:
-        ImGuiManager();
-        ~ImGuiManager() override;
+
 
         void InitImGui() const;
         void ShutdownImGui() const;
@@ -46,7 +45,5 @@ namespace Debug{
 
         Core::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
-
-    extern ImGuiManager& g_ImGuiManager;
 
 }

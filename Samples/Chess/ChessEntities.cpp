@@ -4,11 +4,14 @@
 
 #include "ChessEntities.h"
 
+#include <ChessModule.h>
+
 #include "ECS/ECSManager.h"
 #include "Renderer/Primitives/Texture.h"
 #include "Asset/AssetManager.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
+#include "Core/Engine.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
 
@@ -52,7 +55,7 @@ Astral::Entity ChessEntities::m_ChessBoard;
 
 void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 {
-    Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
     m_ChessBoard = ecs.CreateEntity();
 
@@ -187,7 +190,7 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 
 void ChessEntities::DestroyEntities()
 {
-    Astral::ECS& ecs = Astral::g_ECSManager.GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
     ecs.DeleteEntity(m_ChessBoard);
 
@@ -229,7 +232,8 @@ void ChessEntities::DestroyEntities()
 
 Astral::Entity ChessEntities::GetEntity(SquareLocation location)
 {
-    Game::Chessboard& board = Game::g_BoardManager.GetBoard();
+    Game::Chessboard& board = ChessModule::Get().GetBoardManager().GetBoard();
+
     if (board.GetSquareType(location) == PieceType::NONE)
     {
         return m_WhiteKing;

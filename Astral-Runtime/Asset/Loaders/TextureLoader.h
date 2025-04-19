@@ -9,9 +9,10 @@
 #include <filesystem>
 
 #include "Asset/Asset.h"
+#include "Core/SmartPointers.h"
 
 namespace Astral::TextureLoader {
 
-    Asset* LoadAsset(const std::filesystem::path& filePath);
+    Ref<Asset> LoadAsset(const std::filesystem::path& filePath);
 
 }

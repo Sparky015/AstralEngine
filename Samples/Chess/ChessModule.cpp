@@ -4,49 +4,46 @@
 * @date 12/5/2024
 */
 
-#include "Astral.h"
+#include "ChessModule.h"
 
-#include "Chessboard/ChessboardManager.h"
-#include "Core/Events/EventListener.h"
-#include "Debug/DebugManager.h"
-#include "GameManager.h"
-#include "Debug/ImGui/ImGuiManager.h"
-#include "Input/InputState.h"
-#include "Window/WindowManager.h"
+ChessModule* ChessModule::m_Instance = nullptr;
 
-class ChessModule : public ApplicationModule
+ChessModule::ChessModule()
 {
-public:
-    ~ChessModule() override = default;
+    ASSERT(m_Instance == nullptr, "ChessModule was already constructed! Only construct one ChessModule");
+    ChessModule::m_Instance = this;
+}
 
-    void Init() override
-    {
-        PROFILE_SCOPE("ChessModuleInit")
-        TRACE("Initializing Application")
-        Game::g_BoardManager.Init();
-        Game::g_GameManager.Init();
-        Debug::g_DebugManager.Init();
-        Debug::g_ImGuiManager.LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
-        Window::g_WindowManager.GetWindow().SetWindowName("Chess");
-        Window::g_WindowManager.GetWindow().SetWindowDimensions(800, 800);
-    }
+void ChessModule::Init()
+{
+    PROFILE_SCOPE("ChessModuleInit")
+    TRACE("Initializing Application")
+    m_BoardManager.Init();
+    m_GameManager.Init();
+    m_DebugManager.Init();
+    Astral::Engine::Get().GetImGuiManager().LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
+    Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowName("Chess");
+    Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowDimensions(800, 800);
+}
 
-    void Update(const Core::DeltaTime& deltaTime) override
+void ChessModule::Update(const Core::DeltaTime& deltaTime)
+{
+    if (Astral::InputState::IsKeyDown(Keycode::KEY_F))
     {
-        if (InputState::IsKeyDown(Keycode::KEY_F))
-        {
-            LOG("Delta Time: " << deltaTime.GetSeconds());
-        }
+        LOG("Delta Time: " << deltaTime.GetSeconds());
     }
+}
 
-    void Shutdown() override
-    {
-        PROFILE_SCOPE("ChessModuleShutdown")
-        TRACE("Shutting down Application")
-        Debug::g_DebugManager.Shutdown();
-        Game::g_BoardManager.Shutdown();
-        Game::g_GameManager.Shutdown();
-    }
-};
+void ChessModule::Shutdown()
+{
+    PROFILE_SCOPE("ChessModuleShutdown")
+    TRACE("Shutting down Application")
+    m_DebugManager.Shutdown();
+    m_BoardManager.Shutdown();
+    m_GameManager.Shutdown();
+}
+
 
 IMPLEMENT_APPLICATION_MODULE(ChessModule);
+
+

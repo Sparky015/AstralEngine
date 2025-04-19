@@ -10,8 +10,6 @@
 
 namespace Astral {
 
-    ECSManager& g_ECSManager = ECSManager::Get();
-
     ECSManager& ECSManager::Get()
     {
         static ECSManager ecsManager;

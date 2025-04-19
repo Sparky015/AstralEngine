@@ -11,7 +11,7 @@
 #include "GLFW/glfw3.h"
 
 
-namespace Window {
+namespace Astral {
 
     class GenericWindow : public Window
     {

@@ -8,16 +8,6 @@
 namespace Game
 {
 
-    ChessboardManager& g_BoardManager = ChessboardManager::Get();
-
-
-    ChessboardManager& ChessboardManager::Get()
-    {
-        static ChessboardManager m_Instance = ChessboardManager();
-        return m_Instance;
-    }
-
-
     void ChessboardManager::Init()
     {
         PROFILE_SCOPE("Chessboard Manager Initialization");

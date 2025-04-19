@@ -6,11 +6,10 @@
 
 #include "Astral.h"
 #include "Editor.h"
-#include "ViewportPanel.h"
-#include "Debug/ImGui/ImGuiManager.h"
-
 #include "Input/InputState.h"
+#include "Core/Engine.h"
 #include "Window/WindowManager.h"
+#include "Debug/ImGui/ImGuiManager.h"
 
 namespace Astral {
 
@@ -23,9 +22,13 @@ namespace Astral {
         {
             PROFILE_SCOPE("EditorModuleInit")
             TRACE("Initializing Editor")
-            Debug::g_ImGuiManager.LoadImGuiConfigFile(std::string(ASTRAL_EDITOR_SOURCE_DIR) + "imgui-editor-config.ini");
-            Window::g_WindowManager.GetWindow().SetWindowName("Astral Editor");
-            Window::g_WindowManager.GetWindow().SetWindowDimensions(1080, 720);
+
+            Debug::ImGuiManager& imguiManager = Astral::Engine::Get().GetImGuiManager();
+            imguiManager.LoadImGuiConfigFile(std::string(ASTRAL_EDITOR_SOURCE_DIR) + "imgui-editor-config.ini");
+
+            Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
+            window.SetWindowName("Astral Editor");
+            window.SetWindowDimensions(1080, 720);
             m_Editor.Init();
         }
 

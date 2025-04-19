@@ -5,7 +5,10 @@
 #pragma once
 
 #include <filesystem>
+
 #include "Asset/Asset.h"
+#include "Core/SmartPointers.h"
+
 
 namespace Astral {
 
@@ -23,7 +26,7 @@ namespace Astral {
         virtual int GetHeight() = 0;
         virtual bool IsValid() = 0;
 
-        static Texture* CreateTexture(const std::filesystem::path& filePath);
+        static Ref<Texture> CreateTexture(const std::filesystem::path& filePath);
     };
 
 } // Renderer

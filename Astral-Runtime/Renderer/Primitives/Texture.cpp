@@ -10,11 +10,11 @@
 
 namespace Astral {
 
-    Texture* Texture::CreateTexture(const std::filesystem::path& filePath)
+    Ref<Texture> Texture::CreateTexture(const std::filesystem::path& filePath)
     {
         switch (RendererAPI::GetAPI())
         {
-            case API::OpenGL: return new OpenGLTexture(filePath);
+            case API::OpenGL: return CreateRef<OpenGLTexture>(filePath);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");

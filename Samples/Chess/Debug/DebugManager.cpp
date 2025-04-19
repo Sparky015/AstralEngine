@@ -5,39 +5,33 @@
 #include "DebugManager.h"
 
 #include "Debug/ImGuiComponents/ChessboardComponents.h"
+#include "Chessboard/ChessboardManager.h"
+#include "ChessModule.h"
 
 #include <imgui.h>
 
-#include "Chessboard/ChessboardManager.h"
 
 namespace Debug {
 
-    DebugManager& g_DebugManager = DebugManager::Get();
-
-
-    DebugManager& DebugManager::Get()
-    {
-        static DebugManager m_Instance = DebugManager();
-        return m_Instance;
-    }
-
-
-    void DebugManager::Init()
+    void ChessDebugManager::Init()
     {
         m_RenderImGuiListener.StartListening();
     }
 
-    void DebugManager::Shutdown()
+
+    void ChessDebugManager::Shutdown()
     {
         m_RenderImGuiListener.StopListening();
     }
 
 
-    void DebugManager::RenderImGui()
+    void ChessDebugManager::RenderImGui()
     {
         ImGui::Begin("Chess Debug Menu");
 
-        PieceMoveListTableComponent(Game::g_BoardManager.GetBoard(), Game::g_BoardManager.GetMoveList());
+        Game::ChessboardManager& boardManager = ChessModule::Get().GetBoardManager();
+
+        PieceMoveListTableComponent(boardManager.GetBoard(), boardManager.GetMoveList());
 
         ImGui::End();
     }

@@ -12,6 +12,9 @@ namespace Astral {
     class ECSManager : public SystemManager
     {
     public:
+        ECSManager();
+        ~ECSManager() override;
+
         static ECSManager& Get();
         void Init() override;
         void Shutdown() override;
@@ -24,12 +27,8 @@ namespace Astral {
         ECSManager& operator=(ECSManager&&) = delete;
 
     private:
-        ECSManager();
-        ~ECSManager() override;
 
         ECS m_ECS;
     };
-
-    extern ECSManager& g_ECSManager;
 
 } // ECS

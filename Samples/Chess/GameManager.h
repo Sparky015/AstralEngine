@@ -22,7 +22,9 @@ namespace Game {
     class GameManager : public SystemManager
     {
     public:
-        static GameManager& Get();
+        GameManager();
+        ~GameManager() override;
+
         void Init() override;
         void Update() override;
         void Shutdown() override;
@@ -32,20 +34,16 @@ namespace Game {
         GameManager(GameManager&&) = delete;
         GameManager& operator=(GameManager&&) = delete;
     private:
-        GameManager();
-        ~GameManager() override;
+
 
         void InitializeRenderingComponents();
 
         std::unique_ptr<IndexBuffer> m_IndexBuffer;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
-        std::unique_ptr<Texture> m_Texture;
         std::unique_ptr<ShaderProgram> m_ShaderProgram;
 
         PieceTracking m_PieceTracker;
     };
-
-    extern GameManager& g_GameManager;
 
 }

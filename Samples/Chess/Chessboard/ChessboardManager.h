@@ -15,7 +15,9 @@ namespace Game{
     class ChessboardManager : public SystemManager
     {
     public:
-        static ChessboardManager& Get();
+        ChessboardManager();
+        ~ChessboardManager() override;
+
         void Init() override;
         void Shutdown() override;
         void Update() override;
@@ -28,8 +30,7 @@ namespace Game{
         ChessboardManager(ChessboardManager&&) = delete;
         ChessboardManager& operator=(ChessboardManager&&) = delete;
     private:
-        ChessboardManager();
-        ~ChessboardManager() override;
+
 
         void InitBoardEntities() const;
         void DestroyBoardEntities() const;
@@ -38,5 +39,4 @@ namespace Game{
         BoardMoveList m_MoveList;
     };
 
-    extern ChessboardManager& g_BoardManager;
 }

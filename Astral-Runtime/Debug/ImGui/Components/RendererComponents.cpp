@@ -6,6 +6,7 @@
 
 #include <imgui.h>
 
+#include "Core/Engine.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RendererCommands.h"
 #include "Window/WindowManager.h"
@@ -31,7 +32,7 @@ namespace Debug {
 
     void RendererAPIComponent()
     {
-        Astral::RendererContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RendererContext& rendererContext = Astral::Engine::Get().GetWindowManager().GetWindow().GetRendererContext();
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 
