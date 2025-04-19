@@ -11,15 +11,6 @@
 
 namespace Game {
 
-    GameManager& g_GameManager = GameManager::Get();
-
-    GameManager& GameManager::Get()
-    {
-        static GameManager s_GameManager;
-        return s_GameManager;
-    }
-
-
     void GameManager::Init()
     {
         TRACE("GameManager::Init");
@@ -48,7 +39,6 @@ namespace Game {
         m_IndexBuffer.reset(nullptr);
         m_VertexBuffer.reset(nullptr);
         m_VAO.reset(nullptr);
-        m_Texture.reset(nullptr);
     }
 
 

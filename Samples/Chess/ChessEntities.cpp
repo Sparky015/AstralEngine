@@ -4,6 +4,8 @@
 
 #include "ChessEntities.h"
 
+#include <ChessModule.h>
+
 #include "ECS/ECSManager.h"
 #include "Renderer/Primitives/Texture.h"
 #include "Asset/AssetManager.h"
@@ -230,7 +232,8 @@ void ChessEntities::DestroyEntities()
 
 Astral::Entity ChessEntities::GetEntity(SquareLocation location)
 {
-    Game::Chessboard& board = Game::g_BoardManager.GetBoard();
+    Game::Chessboard& board = ChessModule::Get().GetBoardManager().GetBoard();
+
     if (board.GetSquareType(location) == PieceType::NONE)
     {
         return m_WhiteKing;

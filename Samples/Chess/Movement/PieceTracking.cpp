@@ -6,6 +6,8 @@
 
 #include "PieceTracking.h"
 
+#include <ChessModule.h>
+
 #include "Chessboard/ChessboardManager.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSManager.h"
@@ -39,7 +41,7 @@ namespace Game {
 
     void PieceTracking::StartTrackingPiece()
     {
-        const Chessboard& chessBoard = g_BoardManager.GetBoard();
+        const Chessboard& chessBoard = ChessModule::Get().GetBoardManager().GetBoard();
         SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
 
         if (IsSquareEmpty(chessBoard, mouseSquareLocation)) { return; }
@@ -63,7 +65,7 @@ namespace Game {
 
         // The square that the mouse is over
         SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
-        Chessboard& chessBoard = g_BoardManager.GetBoard();
+        Chessboard& chessBoard = ChessModule::Get().GetBoardManager().GetBoard();
 
         AttemptMove(chessBoard, mouseSquareLocation);
 
@@ -112,22 +114,24 @@ namespace Game {
 
     void PieceTracking::AttemptMove(Chessboard& chessBoard, SquareLocation attemptedMoveLocation) const
     {
+        Game::ChessboardManager& boardManager = ChessModule::Get().GetBoardManager();
+
         if (IsRegularMove(chessBoard, attemptedMoveLocation))
         {
             // Move the piece to the square the mouse was released over
             ChessMove chessMove = ChessMove(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, attemptedMoveLocation, MoveType::REGULAR);
 
-            if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
+            if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), chessMove))
             {
                 chessBoard.MovePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, attemptedMoveLocation);
 
                 // Updating piece move lists after take move
-                BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
+                BoardMoveList& boardMoveList = boardManager.GetMoveList();
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor().Opposite());
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor());
 
-                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
-                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
+                IsKingInCheck(boardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
+                IsKingInCheck(boardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
             }
         }
         else if (IsTakeMove(chessBoard, attemptedMoveLocation))
@@ -135,7 +139,7 @@ namespace Game {
             // Perform take with piece to the square the mouse was released over
             ChessMove chessMove = ChessMove(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, attemptedMoveLocation, MoveType::TAKE);
 
-            if (IsMoveValid(g_BoardManager.GetBoard(), g_BoardManager.GetMoveList(), chessMove))
+            if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), chessMove))
             {
                 // Delete entity of taken piece
                 Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
@@ -144,12 +148,12 @@ namespace Game {
                 chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);
 
                 // Updating piece move lists after take move
-                BoardMoveList& boardMoveList = g_BoardManager.GetMoveList();
+                BoardMoveList& boardMoveList = boardManager.GetMoveList();
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor().Opposite());
                 boardMoveList.UpdateMoveList(chessBoard, chessBoard.GetActiveColor());
 
-                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
-                IsKingInCheck(g_BoardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
+                IsKingInCheck(boardManager.GetBoard(), boardMoveList, PieceColor::WHITE);
+                IsKingInCheck(boardManager.GetBoard(), boardMoveList, PieceColor::BLACK);
             }
         }
     }
