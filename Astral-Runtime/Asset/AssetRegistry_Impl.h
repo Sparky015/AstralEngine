@@ -47,8 +47,7 @@ namespace Astral {
     Ref<AssetType> AssetRegistry::GetAsset(AssetID assetID)
     {
         if (!m_AssetIDToAsset.contains(assetID)) { return nullptr; }
-        Ref<AssetType> test = std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));
-        return test;
+        return std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));
     }
 
 }
