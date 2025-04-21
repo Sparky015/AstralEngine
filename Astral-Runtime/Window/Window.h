@@ -4,13 +4,11 @@
 
 #pragma once
 
-#include <memory>
-
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Math/Math.h"
 #include "Renderer/RendererContext.h"
 
-
+#include <memory>
 
 namespace Astral {
 
@@ -39,17 +37,17 @@ namespace Astral {
         virtual void SetWindowDimensions(int width, int height) = 0;
 
         virtual void* GetNativeWindow() = 0;
-        virtual Astral::RendererContext& GetRendererContext() = 0;
+        virtual RendererContext& GetRendererContext() = 0;
         virtual std::string_view GetVersion() = 0;
 
-        static Window* CreateWindow();
+        static Window* ConstructWindow();
 
     protected:
         static WindowAPI s_WindowAPI;
-        std::unique_ptr<Astral::RendererContext> m_RenderContext;
+        std::unique_ptr<RendererContext> m_RenderContext;
 
-        int m_WindowWidth = 1080; // Default dimensions if user does not set them
-        int m_WindowHeight = 720;
+        int m_WindowWidth = 800; // Default dimensions if user does not set them
+        int m_WindowHeight = 800;
         std::string_view m_WindowName = "Astral Engine"; // Default name if name is not set
         uint8 m_Vsync = 1;
     };

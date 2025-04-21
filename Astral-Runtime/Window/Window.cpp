@@ -4,13 +4,14 @@
 
 #include "Window.h"
 
+#include "Debug/Utilities/Error.h"
 #include "Window/Platform/Generic/GenericWindow.h"
 
 namespace Astral {
 
     WindowAPI Window::s_WindowAPI = WindowAPI::GLFW;
 
-    Window* Window::CreateWindow()
+    Window* Window::ConstructWindow()
     {
         switch (s_WindowAPI)
         {
