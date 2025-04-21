@@ -7,7 +7,11 @@
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
 #include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
+#include "Debug/Utilities/Asserts.h"
 #include "Input/KeycodeConversions.h"
+
+#include "GLFW/glfw3.h"
+
 
 namespace Astral {
 
@@ -22,9 +26,9 @@ namespace Astral {
         /** Initializing GLFW */
 
         GLFWallocator allocator;
-        allocator.allocate = Astral::WindowTrackingMalloc;
-        allocator.reallocate = Astral::WindowTrackingRealloc;
-        allocator.deallocate = Astral::WindowTrackingFree;
+        allocator.allocate = WindowTrackingMalloc;
+        allocator.reallocate = WindowTrackingRealloc;
+        allocator.deallocate = WindowTrackingFree;
         allocator.user = NULL;
 
         glfwInitAllocator(&allocator);
@@ -53,7 +57,7 @@ namespace Astral {
             ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(Astral::RendererContext::CreateRendererContext());
+        m_RenderContext.reset(RendererContext::CreateRendererContext());
         m_RenderContext->Init();
 
         SetGLFWCallbacks();

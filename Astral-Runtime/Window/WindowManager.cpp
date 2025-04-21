@@ -41,7 +41,7 @@ namespace Astral{
 
         m_UpdateListener.StartListening();
 
-        m_Window.reset( Window::CreateWindow());
+        m_Window.reset( Window::ConstructWindow());
         m_Window->Init();
     }
 

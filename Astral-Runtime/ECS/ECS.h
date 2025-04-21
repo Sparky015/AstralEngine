@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <stack>
+
 #include "Entity.h"
 #include "ComponentPoolSet.h"
 #include "Components/Sprite.h"

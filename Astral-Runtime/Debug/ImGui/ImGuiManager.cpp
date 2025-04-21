@@ -22,8 +22,8 @@
 #include "Components/MemoryComponents.h"
 #include "Core/Engine.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
+#include "GLFW/glfw3.h"
 #include "Input/Keycodes.h"
-#include "Window/Platform/Generic/GenericWindow.h"
 #include "Window/WindowManager.h"
 
 

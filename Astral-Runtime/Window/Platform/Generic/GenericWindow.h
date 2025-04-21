@@ -6,10 +6,8 @@
 
 #include "Window/Window.h"
 
-#include "pch.h"
 
-#include "GLFW/glfw3.h"
-
+struct GLFWwindow; // Forward declaring, so I don't have to include GLFW in the header
 
 namespace Astral {
 
