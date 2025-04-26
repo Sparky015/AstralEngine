@@ -103,3 +103,8 @@ What data values are common? Outliers?
 - I don't there are any obvious common data values. Each asset will only be loaded in one, which means the data in 
 the asset manager will be unique and the reads of the asset data will depend on how the user is using the assets.
 
+
+Possible Future Features:
+1. Hot Reload Files/Assets
+2. Async Asset Loading (Separate thread for loading)
+3. UUIDs for asset IDs
