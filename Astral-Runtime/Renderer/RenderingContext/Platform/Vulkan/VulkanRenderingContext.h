@@ -49,6 +49,12 @@ namespace Graphics {
         void CreateSwapchain();
         void DestroySwapchain();
 
+        void CreateCommandBufferPool();
+        void DestroyCommandBufferPool();
+
+        void CreateCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers);
+        void FreeCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers);
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
                 VkDebugUtilsMessageSeverityFlagBitsEXT severity,
                 VkDebugUtilsMessageTypeFlagsEXT type,
@@ -57,14 +63,20 @@ namespace Graphics {
 
         VkInstance m_Instance;
         VkDebugUtilsMessengerEXT m_DebugMessenger;
+
         VkSurfaceKHR m_WindowSurface;
         VulkanPhysicalDevices m_PhysicalDevices;
         GLFWwindow* m_Window;
         uint32 m_QueueFamilyIndex;
         VkDevice m_Device;
+
         VkSwapchainKHR m_Swapchain;
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
+
+        VkCommandPool m_CommandPool;
+        uint32 m_NumberOfSwapchainImages;
+        std::vector<VkCommandBuffer> m_CommandBuffers;
     };
 
 }

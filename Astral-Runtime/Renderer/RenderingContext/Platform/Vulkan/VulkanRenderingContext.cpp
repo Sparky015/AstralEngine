@@ -25,8 +25,12 @@ namespace Graphics {
         m_WindowSurface(VK_NULL_HANDLE),
         m_Window(window),
         m_QueueFamilyIndex(-1), // Wraps around to max uint32 to start with an invalid index
-        m_Device(VK_NULL_HANDLE)
-    {}
+        m_Device(VK_NULL_HANDLE),
+        m_Swapchain(VK_NULL_HANDLE),
+        m_CommandPool(VK_NULL_HANDLE),
+        m_NumberOfSwapchainImages(0)
+    {
+    }
 
 
     void VulkanRenderingContext::Init()
@@ -42,6 +46,9 @@ namespace Graphics {
         m_QueueFamilyIndex = m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
         CreateDevice();
         CreateSwapchain();
+
+        m_CommandBuffers.resize(m_NumberOfSwapchainImages);
+        CreateCommandBuffers(m_CommandBuffers.size(), m_CommandBuffers.data());
     }
 
 
@@ -317,7 +324,7 @@ namespace Graphics {
     {
         const VkSurfaceCapabilitiesKHR surfaceCapabilities = m_PhysicalDevices.SelectedDevice().surfaceCapabilities;
 
-        uint32 numSwapChainImages = ChooseNumSwapchainImages(surfaceCapabilities);
+        m_NumberOfSwapchainImages = ChooseNumSwapchainImages(surfaceCapabilities);
 
 
         const std::vector<VkPresentModeKHR>& presentModes = m_PhysicalDevices.SelectedDevice().presentModes;
@@ -330,7 +337,7 @@ namespace Graphics {
             .pNext = nullptr,
             .flags = 0,
             .surface = m_WindowSurface,
-            .minImageCount = numSwapChainImages,
+            .minImageCount = m_NumberOfSwapchainImages,
             .imageFormat = surfaceFormat.format,
             .imageColorSpace = surfaceFormat.colorSpace,
             .imageExtent = surfaceCapabilities.currentExtent,
@@ -378,6 +385,50 @@ namespace Graphics {
         }
 
         vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
+    }
+
+
+    void VulkanRenderingContext::CreateCommandBufferPool()
+    {
+        VkCommandPoolCreateInfo commandPoolCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .queueFamilyIndex = m_QueueFamilyIndex
+        };
+
+        VkResult result = vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool);
+        ASSERT(result == VK_SUCCESS, "Vulkan command pool failed to create!");
+    }
+
+
+    void VulkanRenderingContext::DestroyCommandBufferPool()
+    {
+        vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+    }
+
+
+    void VulkanRenderingContext::CreateCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers)
+    {
+        VkCommandBufferAllocateInfo commandBufferAllocate = {
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+            .pNext = nullptr,
+            .commandPool = m_CommandPool,
+            .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+            .commandBufferCount = count,
+        };
+
+        VkResult result = vkAllocateCommandBuffers(m_Device, &commandBufferAllocate, commandBuffers);
+        ASSERT(result == VK_SUCCESS, "Vulkan command buffer(s) failed to allocate!");
+    }
+
+
+    void VulkanRenderingContext::FreeCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers)
+    {
+        for (uint32 i = 0; i < count; i++)
+        {
+            vkFreeCommandBuffers(m_Device, m_CommandPool, count, commandBuffers);
+        }
     }
 
 
