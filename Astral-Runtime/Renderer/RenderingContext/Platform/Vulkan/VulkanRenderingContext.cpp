@@ -46,7 +46,9 @@ namespace Graphics {
         m_QueueFamilyIndex = m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
         CreateDevice();
         CreateSwapchain();
+        CreateCommandBufferPool();
 
+        // TEMP
         m_CommandBuffers.resize(m_NumberOfSwapchainImages);
         CreateCommandBuffers(m_CommandBuffers.size(), m_CommandBuffers.data());
     }
@@ -56,6 +58,7 @@ namespace Graphics {
     {
         PROFILE_SCOPE("Vulkan Rendering Context Shutdown");
 
+        DestroyCommandBufferPool();
         DestroySwapchain();
         DestroyDevice();
         DestroyWindowSurface();
