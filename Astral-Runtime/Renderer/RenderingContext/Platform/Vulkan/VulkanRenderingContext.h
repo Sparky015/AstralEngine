@@ -46,6 +46,9 @@ namespace Graphics {
         void CreateDevice();
         void DestroyDevice();
 
+        void CreateSwapchain();
+        void DestroySwapchain();
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
                 VkDebugUtilsMessageSeverityFlagBitsEXT severity,
                 VkDebugUtilsMessageTypeFlagsEXT type,
@@ -59,6 +62,9 @@ namespace Graphics {
         GLFWwindow* m_Window;
         uint32 m_QueueFamilyIndex;
         VkDevice m_Device;
+        VkSwapchainKHR m_Swapchain;
+        std::vector<VkImage> m_Images;
+        std::vector<VkImageView> m_ImageViews;
     };
 
 }

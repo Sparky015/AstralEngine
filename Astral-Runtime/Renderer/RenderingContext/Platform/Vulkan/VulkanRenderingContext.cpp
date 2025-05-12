@@ -41,6 +41,7 @@ namespace Graphics {
         m_PhysicalDevices.Init(m_Instance, m_WindowSurface);
         m_QueueFamilyIndex = m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
         CreateDevice();
+        CreateSwapchain();
     }
 
 
@@ -48,6 +49,7 @@ namespace Graphics {
     {
         PROFILE_SCOPE("Vulkan Rendering Context Shutdown");
 
+        DestroySwapchain();
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
@@ -234,6 +236,148 @@ namespace Graphics {
     void VulkanRenderingContext::DestroyDevice()
     {
         vkDestroyDevice(m_Device, nullptr);
+    }
+
+
+    uint32 ChooseNumSwapchainImages(const VkSurfaceCapabilitiesKHR& capabilities)
+    {
+        uint32 requestedNumberOfImage = capabilities.minImageCount + 1;
+        uint32 finalNumberOfImages = 0;
+
+        if (capabilities.maxImageCount > 0 && requestedNumberOfImage > capabilities.maxImageCount)
+            { finalNumberOfImages = capabilities.maxImageCount; }
+        else
+            { finalNumberOfImages = requestedNumberOfImage; }
+
+        return finalNumberOfImages;
+    }
+
+
+    VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes)
+    {
+        for (const VkPresentModeKHR& mode : presentModes)
+        {
+            if (mode == VK_PRESENT_MODE_MAILBOX_KHR)
+            {
+                return mode;
+            }
+        }
+
+        return VK_PRESENT_MODE_FIFO_KHR; // Always supported
+    }
+
+
+    VkSurfaceFormatKHR ChooseSurfaceFormatAndColorSpace(const std::vector<VkSurfaceFormatKHR>& availableFormats)
+    {
+        for (const VkSurfaceFormatKHR& availableFormat : availableFormats)
+        {
+            if (availableFormat.format == VK_FORMAT_B8G8R8_SRGB &&
+                availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+                {
+                    return availableFormat;
+                }
+        }
+
+        return availableFormats[0];
+    }
+
+    VkImageView CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags,
+                                VkImageViewType viewType, uint32 layerCount, uint32 mipLevels)
+    {
+        VkImageViewCreateInfo viewInfo = {
+            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .image = image,
+            .viewType = viewType,
+            .format = format,
+            .components = {
+                .r = VK_COMPONENT_SWIZZLE_IDENTITY,
+                .g = VK_COMPONENT_SWIZZLE_IDENTITY,
+                .b = VK_COMPONENT_SWIZZLE_IDENTITY,
+                .a = VK_COMPONENT_SWIZZLE_IDENTITY
+            },
+            .subresourceRange = {
+                .aspectMask = aspectFlags,
+                .baseMipLevel = 0,
+                .levelCount = mipLevels,
+                .baseArrayLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
+        VkImageView imageView;
+        VkResult result = vkCreateImageView(device, &viewInfo, nullptr, &imageView);
+        ASSERT(result == VK_SUCCESS, "Vulkan failed to create image view!");
+        return imageView;
+    }
+
+
+    void VulkanRenderingContext::CreateSwapchain()
+    {
+        const VkSurfaceCapabilitiesKHR surfaceCapabilities = m_PhysicalDevices.SelectedDevice().surfaceCapabilities;
+
+        uint32 numSwapChainImages = ChooseNumSwapchainImages(surfaceCapabilities);
+
+
+        const std::vector<VkPresentModeKHR>& presentModes = m_PhysicalDevices.SelectedDevice().presentModes;
+
+        VkPresentModeKHR presentMode = ChoosePresentMode(presentModes);
+        VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormatAndColorSpace(m_PhysicalDevices.SelectedDevice().surfaceFormats);
+
+        VkSwapchainCreateInfoKHR swapChainCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+            .pNext = nullptr,
+            .flags = 0,
+            .surface = m_WindowSurface,
+            .minImageCount = numSwapChainImages,
+            .imageFormat = surfaceFormat.format,
+            .imageColorSpace = surfaceFormat.colorSpace,
+            .imageExtent = surfaceCapabilities.currentExtent,
+            .imageArrayLayers = 1,
+            .imageUsage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT),
+            .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+            .queueFamilyIndexCount = 1,
+            .pQueueFamilyIndices = &m_QueueFamilyIndex,
+            .preTransform = surfaceCapabilities.currentTransform,
+            .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+            .presentMode = presentMode,
+            .clipped = VK_TRUE
+        };
+
+        VkResult result = vkCreateSwapchainKHR(m_Device, &swapChainCreateInfo, nullptr, &m_Swapchain);
+        ASSERT(result == VK_SUCCESS, "Vulkan swapchain failed to create!");
+
+        uint32 numberOfSwapchainImages = 0;
+        result = vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &numberOfSwapchainImages, nullptr);
+        ASSERT(result == VK_SUCCESS, "Vulkan swapchain failed to get number of images!");
+
+        m_Images.resize(numberOfSwapchainImages);
+        m_ImageViews.resize(numberOfSwapchainImages);
+
+        result = vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &numberOfSwapchainImages, m_Images.data());
+        ASSERT(result == VK_SUCCESS, "Vulkan swapchain failed to get images!");
+
+        int32 layerCount = 1;
+        int mipLevels = 1;
+
+        for (uint32 i = 0; i < numberOfSwapchainImages; i++)
+        {
+            m_ImageViews[i] = CreateImageView(m_Device, m_Images[i], surfaceFormat.format,
+                            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_VIEW_TYPE_2D, layerCount, mipLevels);
+        }
+
+    }
+
+
+    void VulkanRenderingContext::DestroySwapchain()
+    {
+        for (const VkImageView& imageView : m_ImageViews)
+        {
+            vkDestroyImageView(m_Device, imageView, nullptr);
+        }
+
+        vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
     }
 
 
