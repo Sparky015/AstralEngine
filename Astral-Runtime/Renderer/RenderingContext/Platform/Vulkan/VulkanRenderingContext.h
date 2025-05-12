@@ -43,6 +43,9 @@ namespace Graphics {
         void CreateWindowSurface();
         void DestroyWindowSurface();
 
+        void CreateDevice();
+        void DestroyDevice();
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
                 VkDebugUtilsMessageSeverityFlagBitsEXT severity,
                 VkDebugUtilsMessageTypeFlagsEXT type,
@@ -54,6 +57,8 @@ namespace Graphics {
         VkSurfaceKHR m_WindowSurface;
         VulkanPhysicalDevices m_PhysicalDevices;
         GLFWwindow* m_Window;
+        uint32 m_QueueFamilyIndex;
+        VkDevice m_Device;
     };
 
 }

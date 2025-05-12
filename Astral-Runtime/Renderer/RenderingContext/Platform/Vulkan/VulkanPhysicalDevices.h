@@ -23,6 +23,7 @@ namespace Graphics {
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
         VkPhysicalDeviceMemoryProperties memoryProperties;
         std::vector<VkPresentModeKHR> presentModes;
+        VkPhysicalDeviceFeatures features;
     };
 
     class VulkanPhysicalDevices

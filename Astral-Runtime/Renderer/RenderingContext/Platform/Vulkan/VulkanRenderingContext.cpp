@@ -23,7 +23,9 @@ namespace Graphics {
         m_Instance(VK_NULL_HANDLE),
         m_DebugMessenger(VK_NULL_HANDLE),
         m_WindowSurface(VK_NULL_HANDLE),
-        m_Window(window)
+        m_Window(window),
+        m_QueueFamilyIndex(-1), // Wraps around to max uint32 to start with an invalid index
+        m_Device(VK_NULL_HANDLE)
     {}
 
 
@@ -37,7 +39,8 @@ namespace Graphics {
         CreateDebugMessageCallback();
         CreateWindowSurface();
         m_PhysicalDevices.Init(m_Instance, m_WindowSurface);
-        m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
+        m_QueueFamilyIndex = m_PhysicalDevices.SelectDevice(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT, true);
+        CreateDevice();
     }
 
 
@@ -45,6 +48,7 @@ namespace Graphics {
     {
         PROFILE_SCOPE("Vulkan Rendering Context Shutdown");
 
+        DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
         DestroyInstance();
@@ -176,6 +180,60 @@ namespace Graphics {
         ASSERT(vkDestroySurfaceKHR, "Vulkan failed to find address of function 'vkDestroySurfaceKHR'")
 
         vkDestroySurfaceKHR(m_Instance, m_WindowSurface, nullptr);
+    }
+
+
+    void VulkanRenderingContext::CreateDevice()
+    {
+        float priorities[] = { 1.0f };
+
+        VkDeviceQueueCreateInfo info = {
+            .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .queueFamilyIndex = m_QueueFamilyIndex,
+            .queueCount = 1,
+            .pQueuePriorities = &priorities[0]
+        };
+
+        std::vector<const char*> devExts = {
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME
+        };
+
+        VkPhysicalDeviceFeatures deviceFeatures = { 0 };
+
+        if (m_PhysicalDevices.SelectedDevice().features.geometryShader == VK_FALSE)
+            { LOG("Vulkan: Geometry Shader is not supported!") }
+        else
+            { deviceFeatures.geometryShader = VK_TRUE; }
+
+        if (m_PhysicalDevices.SelectedDevice().features.tessellationShader == VK_FALSE)
+            { LOG("Vulkan: Tessellation Shader is not supported!") }
+        else
+            { deviceFeatures.tessellationShader = VK_TRUE; }
+
+        VkDeviceCreateInfo deviceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .queueCreateInfoCount = 1,
+            .pQueueCreateInfos = &info,
+            .enabledLayerCount = 0,
+            .ppEnabledLayerNames = nullptr,
+            .enabledExtensionCount = (uint32)devExts.size(),
+            .ppEnabledExtensionNames = devExts.data(),
+            .pEnabledFeatures = &deviceFeatures
+        };
+
+        VkResult result = vkCreateDevice(m_PhysicalDevices.SelectedDevice().physicalDevice, &deviceCreateInfo, nullptr, &m_Device);
+        ASSERT(result == VK_SUCCESS, "Vulkan device failed on creation!");
+    }
+
+
+    void VulkanRenderingContext::DestroyDevice()
+    {
+        vkDestroyDevice(m_Device, nullptr);
     }
 
 

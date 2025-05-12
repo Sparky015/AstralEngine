@@ -108,6 +108,8 @@ namespace Graphics {
                 LOG(j << ": flags " << m_Devices[i].memoryProperties.memoryTypes[j].propertyFlags
                       << ": heap " << m_Devices[i].memoryProperties.memoryTypes[j].heapIndex)
             }
+
+            vkGetPhysicalDeviceFeatures(m_Devices[i].physicalDevice, &m_Devices[i].features);
         }
     }
 
