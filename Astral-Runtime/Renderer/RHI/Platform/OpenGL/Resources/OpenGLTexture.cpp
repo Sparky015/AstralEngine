@@ -10,7 +10,7 @@
 #include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     OpenGLTexture::OpenGLTexture(const std::string& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
     {

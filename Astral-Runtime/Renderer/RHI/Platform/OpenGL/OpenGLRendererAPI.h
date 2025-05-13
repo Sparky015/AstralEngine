@@ -8,7 +8,7 @@
 
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLRendererAPI : public RendererAPI
     {

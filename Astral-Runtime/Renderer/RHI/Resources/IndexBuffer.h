@@ -3,9 +3,10 @@
 //
 
 #pragma once
+
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Graphics {
+namespace Astral {
 
     class IndexBuffer
     {
@@ -19,4 +20,4 @@ namespace Graphics {
         static IndexBuffer* CreateIndexBuffer(uint32* data, uint32 count);
     };
 
-} // Renderer
+}

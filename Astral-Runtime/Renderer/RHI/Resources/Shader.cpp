@@ -3,15 +3,15 @@
 * @author Andrew Fagan
 * @date 12/4/2024
 */
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
-    ShaderProgram* ShaderProgram::CreateShaderProgram(const ShaderSource &vertexShader,
+    Shader* Shader::CreateShaderProgram(const ShaderSource &vertexShader,
                                                       const ShaderSource &fragmentShader)
     {
         switch (RendererAPI::GetAPI())

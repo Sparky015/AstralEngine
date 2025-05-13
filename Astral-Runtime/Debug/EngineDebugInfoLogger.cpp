@@ -6,6 +6,7 @@
 
 #include "Instrumentation/ScopeProfiler.h"
 #include "Utilities/Loggers.h"
+#include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 
 namespace Debug {
@@ -56,7 +57,7 @@ namespace Debug {
 
         /** Outputs the libraries used depending on the platform. */
         Window::Window& window = Window::g_WindowManager.GetWindow();
-        Graphics::RenderingContext& rendererContext = window.GetRendererContext();
+        Astral::RenderingContext& rendererContext = Astral::g_RendererManager.GetContext();
 
         LOG("Window: " << window.GetVersion());
         LOG("Rendering API: " << rendererContext.GetRenderingAPI());

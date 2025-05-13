@@ -4,7 +4,7 @@
 
 #include "GameManager.h"
 
-#include "Renderer/RendererCommands.h"
+#include "../../Astral-Runtime/Renderer/RHI/RendererCommands.h"
 #include "ECS/Systems/RenderingSystem.h"
 #include "ChessEntities.h"
 #include "MoveGeneration/KingChecks.h"
@@ -76,7 +76,7 @@ namespace Game {
         };
 
 
-        m_ShaderProgram.reset(ShaderProgram::CreateShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
+        m_ShaderProgram.reset(Shader::CreateShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
                 , ShaderSource(std::string(SHADER_DIR) + "basic.frag")));
         m_ShaderProgram->Bind();
 

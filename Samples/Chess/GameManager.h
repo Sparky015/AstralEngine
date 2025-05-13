@@ -12,12 +12,12 @@
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 #include "Renderer/RHI/Resources/VertexArrayObject.h"
 #include "Renderer/RHI/Resources/Texture.h"
-#include "Renderer/RHI/Resources/ShaderProgram.h"
+#include "Renderer/RHI/Resources/Shader.h"
 
 
 namespace Game {
 
-    using namespace Graphics;
+    using namespace Astral;
 
     class GameManager : public SystemManager
     {
@@ -41,7 +41,7 @@ namespace Game {
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArrayObject> m_VAO;
         std::unique_ptr<Texture> m_Texture;
-        std::unique_ptr<ShaderProgram> m_ShaderProgram;
+        std::unique_ptr<Shader> m_ShaderProgram;
 
         PieceTracking m_PieceTracker;
     };

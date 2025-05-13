@@ -8,7 +8,7 @@
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     Texture* Texture::CreateTexture(const std::string& filePath)
     {

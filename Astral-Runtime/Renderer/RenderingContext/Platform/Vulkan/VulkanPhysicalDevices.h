@@ -11,7 +11,7 @@
 
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Graphics {
+namespace Astral {
 
     struct VulkanPhysicalDevice
     {

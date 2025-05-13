@@ -10,7 +10,7 @@
 #include "Platform/Vulkan/VulkanRenderingContext.h"
 #include "Window/WindowManager.h"
 
-namespace Graphics {
+namespace Astral {
 
     RenderingContext* RenderingContext::CreateRendererContext()
     {

@@ -6,7 +6,7 @@
 
 #include "Renderer/RHI/Resources/Texture.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLTexture : public Texture
     {

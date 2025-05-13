@@ -7,8 +7,7 @@
 #include <imgui.h>
 
 #include "Renderer/Renderer.h"
-#include "Renderer/RendererCommands.h"
-#include "Window/WindowManager.h"
+#include "Renderer/RendererManager.h"
 
 namespace Debug {
 
@@ -26,12 +25,12 @@ namespace Debug {
 
     void DrawCallsPerFrameComponent()
     {
-        ImGui::Text("Draw Calls/Frame: %d", Graphics::Renderer::GetDrawCallsPerFrame());
+        ImGui::Text("Draw Calls/Frame: %d", Astral::Renderer::GetDrawCallsPerFrame());
     }
 
     void RendererAPIComponent()
     {
-        Graphics::RenderingContext& rendererContext = Window::g_WindowManager.GetWindow().GetRendererContext();
+        Astral::RenderingContext& rendererContext = Astral::g_RendererManager.GetContext();
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 

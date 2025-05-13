@@ -36,14 +36,12 @@ namespace Window {
         virtual Vec2 GetFramebufferScale() = 0;
 
         virtual void* GetNativeWindow() = 0;
-        virtual Graphics::RenderingContext& GetRendererContext() = 0;
         virtual std::string_view GetVersion() = 0;
 
         static Window* CreateWindow();
 
     protected:
         static WindowAPI s_WindowAPI;
-        std::unique_ptr<Graphics::RenderingContext> m_RenderContext;
     };
 
 } // Window

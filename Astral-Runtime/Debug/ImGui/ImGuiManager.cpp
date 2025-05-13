@@ -285,12 +285,12 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::OpenGL)
+        if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::OpenGL)
         {
             ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
             ImGui_ImplOpenGL3_Init("#version 410");
         }
-        else if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::Vulkan)
+        else if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
             // ImGui_ImplVulkan_Init();

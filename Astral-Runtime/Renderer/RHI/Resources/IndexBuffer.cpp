@@ -8,7 +8,7 @@
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {
@@ -22,4 +22,4 @@ namespace Graphics {
         }
     }
 
-} // Renderer
+}

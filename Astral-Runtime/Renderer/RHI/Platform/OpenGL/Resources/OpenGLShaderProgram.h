@@ -6,12 +6,12 @@
 
 #include "../../../../Shaders/ShaderSource.h"
 
-#include "../../../Resources/ShaderProgram.h"
+#include "../../../Resources/Shader.h"
 
-namespace Graphics {
+namespace Astral {
 
     /** Takes two shaders and creates a program from them. */
-class OpenGLShaderProgram : public ShaderProgram
+class OpenGLShaderProgram : public Shader
     {
     public:
         OpenGLShaderProgram();

@@ -17,7 +17,7 @@
 #include "Debug/Utilities/Loggers.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     VulkanRenderingContext::VulkanRenderingContext(GLFWwindow* window) :
         m_Instance(VK_NULL_HANDLE),

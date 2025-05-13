@@ -4,9 +4,9 @@
 
 #include "Renderer.h"
 
-#include "Renderer/RendererCommands.h"
+#include "RHI/RendererCommands.h"
 
-namespace Graphics {
+namespace Astral {
 
     void Renderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
@@ -18,7 +18,7 @@ namespace Graphics {
 
     }
 
-    void Renderer::Submit(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform)
+    void Renderer::Submit(Shader& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform)
     {
         RendererCommand::DrawElements(shaderProgram, vertexArrayBuffer, transform);
     }

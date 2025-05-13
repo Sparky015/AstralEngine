@@ -5,9 +5,10 @@
 #pragma once
 
 #include "Core/SystemManager.h"
+#include "RenderingContext/RenderingContext.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     class RendererManager : public SystemManager
     {
@@ -22,9 +23,13 @@ namespace Graphics {
         RendererManager(RendererManager&&) = delete;
         RendererManager& operator=(RendererManager&&) = delete;
 
+        RenderingContext& GetContext();
+
     private:
         RendererManager();
         ~RendererManager() override;
+
+        std::unique_ptr<Astral::RenderingContext> m_RenderContext;
     };
 
     extern RendererManager& g_RendererManager;

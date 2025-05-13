@@ -8,7 +8,7 @@
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Graphics {
+namespace Astral {
 
     VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
     {

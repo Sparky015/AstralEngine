@@ -10,7 +10,7 @@
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Loggers.h"
 
-namespace Graphics {
+namespace Astral {
 
     VulkanPhysicalDevices::VulkanPhysicalDevices() : m_SelectedDeviceIndex(-1) {}
 

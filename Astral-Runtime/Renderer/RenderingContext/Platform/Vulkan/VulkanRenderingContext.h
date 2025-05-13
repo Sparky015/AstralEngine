@@ -14,7 +14,7 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 
-namespace Graphics {
+namespace Astral {
 
     /*
     * This sets up the rendering context for when Vulkan is used. It defines functions that are overridden from

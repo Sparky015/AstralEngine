@@ -72,10 +72,10 @@ add_library(AstralEngine
         Renderer/RHI/Resources/BufferLayout.cpp
         Renderer/RHI/Resources/BufferLayout.h
         Core/Math/Math.h
-        Renderer/RHI/Resources/ShaderProgram.cpp
-        Renderer/RHI/Resources/ShaderProgram.h
-        Renderer/RendererCommands.cpp
-        Renderer/RendererCommands.h
+        Renderer/RHI/Resources/Shader.cpp
+        Renderer/RHI/Resources/Shader.h
+        Renderer/RHI/RendererCommands.cpp
+        Renderer/RHI/RendererCommands.h
         Renderer/RHI/RendererAPI.cpp
         Renderer/RHI/RendererAPI.h
         Renderer/RHI/Platform/OpenGL/OpenGLRendererAPI.cpp

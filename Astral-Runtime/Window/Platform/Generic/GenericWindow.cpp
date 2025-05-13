@@ -29,13 +29,13 @@ namespace Window {
             }
         }
 
-        if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::OpenGL)
+        if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::OpenGL)
         {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
-        else if (Graphics::Renderer::GetRendererAPIBackend() == Graphics::API::Vulkan)
+        else if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         }
@@ -53,9 +53,6 @@ namespace Window {
             ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(Graphics::RenderingContext::CreateRendererContext());
-        m_RenderContext->Init();
-
         SetGLFWCallbacks();
     }
 
@@ -70,7 +67,6 @@ namespace Window {
     void GenericWindow::Shutdown()
     {
         PROFILE_SCOPE("GenericWindow::Shutdown")
-        m_RenderContext->Shutdown();
         glfwTerminate();
     }
 
@@ -99,13 +95,6 @@ namespace Window {
     {
         glfwSwapInterval(0);
         m_Vsync = 0;
-    }
-
-
-    Graphics::RenderingContext& GenericWindow::GetRendererContext()
-    {
-        ASSERT(m_RenderContext, "Renderer context has not been created!");
-        return *m_RenderContext;
     }
 
 

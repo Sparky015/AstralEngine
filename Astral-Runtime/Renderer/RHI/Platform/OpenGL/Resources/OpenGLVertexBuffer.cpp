@@ -11,7 +11,7 @@
 #include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
     {

@@ -6,7 +6,7 @@
 
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLVertexBuffer : public VertexBuffer
     {

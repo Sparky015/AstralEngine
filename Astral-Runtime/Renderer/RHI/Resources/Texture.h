@@ -5,7 +5,7 @@
 #pragma once
 #include <string>
 
-namespace Graphics {
+namespace Astral {
 
     class Texture
     {

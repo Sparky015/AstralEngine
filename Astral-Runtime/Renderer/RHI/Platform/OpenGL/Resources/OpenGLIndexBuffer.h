@@ -6,7 +6,7 @@
 
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 
-namespace Graphics {
+namespace Astral {
 
     class OpenGLIndexBuffer : public IndexBuffer
     {

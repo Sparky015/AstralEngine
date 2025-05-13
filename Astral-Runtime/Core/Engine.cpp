@@ -36,7 +36,7 @@ Engine::Engine() :
     IO::g_IOManager.Init();
     Debug::g_ImGuiManager.Init();
     ECS::g_ECSManager.Init();
-    Graphics::g_RendererManager.Init();
+    Astral::g_RendererManager.Init();
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
@@ -52,7 +52,7 @@ Engine::~Engine()
     m_WindowClosedListener.StopListening();
 
     m_ApplicationModule->Shutdown();
-    Graphics::g_RendererManager.Shutdown();
+    Astral::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     // Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();

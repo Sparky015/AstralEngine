@@ -9,12 +9,12 @@
 #include "../../Shaders/ShaderSource.h"
 #include "../../../Core/Math/Math.h"
 
-namespace Graphics {
+namespace Astral {
 
-    class ShaderProgram
+    class Shader
     {
     public:
-        virtual ~ShaderProgram() = default;
+        virtual ~Shader() = default;
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
@@ -38,7 +38,7 @@ namespace Graphics {
         virtual void SetUniform(const std::string& uniformName, Vec4 vec4) const = 0;
         virtual void SetUniform(const std::string& uniformName, Vec3 vec3) const = 0;
 
-        static ShaderProgram* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
+        static Shader* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
 
     private:
         virtual uint32 CompileShader(uint32 shaderType, const std::string& shaderSource) = 0;

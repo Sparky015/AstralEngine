@@ -4,11 +4,11 @@
 
 #include "RendererCommands.h"
 
-#include "RHI/Platform/OpenGL/OpenGLRendererAPI.h"
-#include "RHI/Resources/VertexArrayObject.h"
+#include "Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Resources/VertexArrayObject.h"
 
 
-namespace Graphics {
+namespace Astral {
 
     RendererAPI* RendererCommand::s_RendererAPI = new OpenGLRendererAPI();
 
@@ -24,7 +24,7 @@ namespace Graphics {
     }
 
 
-    void RendererCommand::DrawElements(ShaderProgram& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
+    void RendererCommand::DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
     {
         shaderProgram.SetUniform("u_Transform", transform);
         shaderProgram.Bind();

@@ -7,7 +7,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 
-namespace Graphics {
+namespace Astral {
 
     RendererManager& g_RendererManager = RendererManager::Get();
 
@@ -21,9 +21,10 @@ namespace Graphics {
     void RendererManager::Init()
     {
         PROFILE_SCOPE("Renderer Manager Initialization");
-
         TRACE("Initializing Renderer Manager!");
-        // m_UpdateListener.StartListening();
+        m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
+        m_RenderContext->Init();
+        m_UpdateListener.StartListening();
     }
 
 
@@ -36,11 +37,16 @@ namespace Graphics {
     void RendererManager::Shutdown()
     {
         PROFILE_SCOPE("Renderer Manager Shutdown");
-
         TRACE("Shutting down Renderer Manager!")
-        // m_UpdateListener.StopListening();
+        m_RenderContext->Shutdown();
+        m_UpdateListener.StopListening();
     }
 
+
+    RenderingContext& RendererManager::GetContext()
+    {
+        return *m_RenderContext;
+    }
 
     RendererManager::RendererManager()
     {
