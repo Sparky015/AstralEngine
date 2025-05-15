@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include "CommandBuffer.h"
+#include "RenderTarget.h"
+
 namespace Astral {
 
     class CommandQueue
@@ -13,8 +16,11 @@ namespace Astral {
     public:
         virtual ~CommandQueue() = default;
 
-
-        static CommandQueue* CreateCommandQueue();
+        virtual void SubmitAsync(CommandBufferHandle commandBuffer) = 0;
+        virtual void SubmitSync(CommandBufferHandle commandBuffer) = 0;
+        virtual void Present(RenderTargetHandle renderTarget) = 0;
     };
+
+    using CommandQueueHandle = GraphicsRef<CommandQueue>;
 
 }

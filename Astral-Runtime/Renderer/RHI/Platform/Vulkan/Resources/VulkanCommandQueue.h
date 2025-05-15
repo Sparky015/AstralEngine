@@ -11,25 +11,43 @@
 
 #include <vulkan/vulkan_core.h>
 
+
+
 namespace Astral {
+
+    struct VulkanCommandQueueDesc
+    {
+        VkDevice Device;
+        VkSwapchainKHR Swapchain;
+        uint32 QueueFamilyIndex;
+        uint32 QueueIndex;
+    };
 
     class VulkanCommandQueue : public CommandQueue
     {
     public:
-        explicit VulkanCommandQueue(VkDevice device, uint32 m_QueueFamilyIndex, uint32 m_QueueIndex);
+        explicit VulkanCommandQueue(const VulkanCommandQueueDesc& desc);
         ~VulkanCommandQueue() override;
+
+        void SubmitAsync(CommandBufferHandle commandBuffer) override;
+        void SubmitSync(CommandBufferHandle commandBuffer) override;
+        void Present(RenderTargetHandle renderTarget) override;
 
     private:
 
         void GetQueue();
+
         void CreateSemaphores();
+        void DestroySemaphores();
 
         VkDevice m_Device;
+        VkSwapchainKHR m_Swapchain;
         uint32 m_QueueFamilyIndex;
         uint32 m_QueueIndex;
+
         VkQueue m_Queue;
-        VkSemaphore m_RenderCompleteSemaphore;
-        VkSemaphore m_PresentCompleteSemaphore;
+        VkSemaphore m_WaitSemaphore;
+        VkSemaphore m_SignalSemaphore;
     };
 
 }

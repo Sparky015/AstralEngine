@@ -16,7 +16,6 @@
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
 
-
 namespace Astral {
 
     VulkanRenderingContext::VulkanRenderingContext(GLFWwindow* window) :
@@ -44,7 +43,6 @@ namespace Astral {
         m_QueueFamilyIndex = m_PhysicalDevices.SelectedQueueFamily();
 
         CreateDevice();
-        m_Swapchain = m_Device->CreateSwapchain();
     }
 
 
@@ -52,7 +50,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("Vulkan Rendering Context Shutdown");
 
-        delete m_Swapchain;
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
@@ -190,13 +187,19 @@ namespace Astral {
 
     void VulkanRenderingContext::CreateDevice()
     {
-        m_Device = new VulkanDevice(m_PhysicalDevices.SelectedDevice(), m_QueueFamilyIndex, m_WindowSurface);
+        VulkanDeviceDesc desc = {
+            .PhysicalDevice = m_PhysicalDevices.SelectedDevice(),
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .WindowSurface = m_WindowSurface
+        };
+
+        m_Device = CreateGraphicsOwnedPtr<VulkanDevice>(desc);
     }
 
 
     void VulkanRenderingContext::DestroyDevice()
     {
-        delete m_Device;
+        m_Device.reset();
     }
 
 
@@ -242,7 +245,6 @@ namespace Astral {
         {
             LOG("     " << pCallbackData->pObjects[i].objectHandle);
         }
-
 
         return VK_FALSE;
     }

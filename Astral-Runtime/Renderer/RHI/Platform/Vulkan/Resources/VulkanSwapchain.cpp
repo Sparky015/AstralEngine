@@ -6,41 +6,59 @@
 
 #include "VulkanSwapchain.h"
 
-#include <utility>
-
+#include "VulkanRenderTarget.h"
 #include "Debug/Utilities/Asserts.h"
 
 namespace Astral {
 
     VulkanSwapchain::VulkanSwapchain(const VulkanSwapchainDesc& vulkanSwapchainDesc) :
-        m_Device((VkDevice)vulkanSwapchainDesc.Device.GetNativeHandle()),
-        m_SelectedPhysicalDevice(std::move(vulkanSwapchainDesc.PhysicalDevice)),
+        m_Device(vulkanSwapchainDesc.Device),
+        m_SelectedPhysicalDevice(vulkanSwapchainDesc.PhysicalDevice),
         m_WindowSurface(vulkanSwapchainDesc.WindowSurface),
         m_QueueFamilyIndex(vulkanSwapchainDesc.QueueFamilyIndex),
+        m_NumberOfSwapchainImages(vulkanSwapchainDesc.NumberOfSwapchainImages),
         m_Swapchain(VK_NULL_HANDLE),
-        m_NumberOfSwapchainImages(-1) // Starts in invalid state
+        m_Images(),
+        m_ImageViews(),
+        m_RenderCompleteSemaphores(),
+        m_PresentCompleteSemaphores(),
+        m_CurrentRenderSemaphoreIndex(0),
+        m_CurrentPresentSemaphoreIndex(0)
     {
         CreateSwapchain();
-        CreateSemaphores(vulkanSwapchainDesc.Device);
+        CreateSemaphores();
     }
 
 
     VulkanSwapchain::~VulkanSwapchain()
     {
+        DestroySemaphores();
         DestroySwapchain();
     }
 
 
-    uint32 VulkanSwapchain::AcquireNextImage()
+    GraphicsRef<RenderTarget> VulkanSwapchain::AcquireNextImage()
     {
         uint32 imageIndex;
-        VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_SelectedPhysicalDevice.presentCompleteSemaphore, VK_NULL_HANDLE, &imageIndex);
+        VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_PresentCompleteSemaphores[m_CurrentRenderSemaphoreIndex], VK_NULL_HANDLE, &imageIndex);
+        ASSERT(result == VK_SUCCESS, "Failed to acquire swapchain image!");
+        m_CurrentRenderSemaphoreIndex++;
+        if (m_CurrentRenderSemaphoreIndex == m_NumberOfSwapchainImages) { m_CurrentRenderSemaphoreIndex = 0; }
+
+        VulkanRenderTargetDesc renderTargetDesc = {
+            .Image = m_Images[imageIndex],
+            .ImageView = m_ImageViews[imageIndex],
+            .ImageIndex = imageIndex,
+        };
+
+        return CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc);
     }
+
 
 
     uint32 VulkanSwapchain::ChooseNumSwapchainImages(const VkSurfaceCapabilitiesKHR& capabilities)
     {
-        uint32 requestedNumberOfImage = capabilities.minImageCount + 1;
+        uint32 requestedNumberOfImage = (m_NumberOfSwapchainImages < capabilities.minImageCount) ? capabilities.minImageCount : m_NumberOfSwapchainImages;
         uint32 finalNumberOfImages = 0;
 
         if (capabilities.maxImageCount > 0 && requestedNumberOfImage > capabilities.maxImageCount)
@@ -181,9 +199,34 @@ namespace Astral {
     }
 
 
-    void VulkanSwapchain::CreateSemaphores(Device& device)
+    void VulkanSwapchain::CreateSemaphores()
     {
+        VkSemaphoreCreateInfo semaphoreCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+        };
 
+        m_PresentCompleteSemaphores.resize(m_NumberOfSwapchainImages);
+        m_RenderCompleteSemaphores.resize(m_NumberOfSwapchainImages);
+
+        for (int i = 0; i < m_NumberOfSwapchainImages; i++)
+        {
+            VkResult result = vkCreateSemaphore(m_Device, &semaphoreCreateInfo, nullptr, &m_RenderCompleteSemaphores[i]);
+            ASSERT(result == VK_SUCCESS, "Semaphore failed to create!");
+            result = vkCreateSemaphore(m_Device, &semaphoreCreateInfo, nullptr, &m_PresentCompleteSemaphores[i]);
+            ASSERT(result == VK_SUCCESS, "Semaphore failed to create!");
+        }
+    }
+
+
+    void VulkanSwapchain::DestroySemaphores()
+    {
+        for (int i = 0; i < m_PresentCompleteSemaphores.size(); i++)
+        {
+            vkDestroySemaphore(m_Device, m_PresentCompleteSemaphores[i], nullptr);
+            vkDestroySemaphore(m_Device, m_RenderCompleteSemaphores[i], nullptr);
+        }
     }
 
 }

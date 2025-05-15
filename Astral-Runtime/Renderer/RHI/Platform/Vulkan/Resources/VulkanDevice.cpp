@@ -17,52 +17,69 @@
 
 namespace Astral {
 
-    VulkanDevice::VulkanDevice(VulkanPhysicalDevice physicalDevice, uint32 queueFamilyIndex, VkSurfaceKHR windowSurface) :
-            m_PhysicalDevice(std::move(physicalDevice)),
+    VulkanDevice::VulkanDevice(const VulkanDeviceDesc& desc) :
+            m_PhysicalDevice(std::move(desc.PhysicalDevice)),
             m_Device(VK_NULL_HANDLE),
-            m_QueueFamilyIndex(queueFamilyIndex),
-            m_WindowSurface(windowSurface),
-            m_CommandPool(VK_NULL_HANDLE)
+            m_QueueFamilyIndex(desc.QueueFamilyIndex),
+            m_WindowSurface(desc.WindowSurface),
+            m_CommandPool(VK_NULL_HANDLE),
+            m_Swapchain(nullptr)
     {
         CreateDevice();
         CreateCommandPool();
+        m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
 
     VulkanDevice::~VulkanDevice()
     {
+        DestroySwapchain();
         DestroyMemoryPool();
         DestroyDevice();
     }
 
 
-    Swapchain* VulkanDevice::CreateSwapchain()
+    GraphicsOwnedPtr<Swapchain> VulkanDevice::CreateSwapchain(uint32 numberOfImages)
     {
-        return new VulkanSwapchain(*this, m_PhysicalDevice, m_WindowSurface, m_QueueFamilyIndex);
-    }
-
-
-    CommandBuffer* VulkanDevice::AllocateCommandBuffer()
-    {
-        VkCommandBuffer commandBuffer;
-        VkCommandBufferAllocateInfo commandBufferAllocate = {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .commandPool = m_CommandPool,
-            .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-            .commandBufferCount = 1,
+        VulkanSwapchainDesc vulkanSwapchainDesc = {
+            .Device = m_Device,
+            .PhysicalDevice = m_PhysicalDevice,
+            .WindowSurface = m_WindowSurface,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .NumberOfSwapchainImages = numberOfImages,
         };
 
-        VkResult result = vkAllocateCommandBuffers(m_Device, &commandBufferAllocate, &commandBuffer);
-        ASSERT(result == VK_SUCCESS, "Vulkan command buffer(s) failed to allocate!");
-
-        return new VulkanCommandBuffer(m_Device, m_CommandPool, commandBuffer);
+        return CreateGraphicsOwnedPtr<VulkanSwapchain>(vulkanSwapchainDesc);
     }
 
 
-    CommandQueue* VulkanDevice::GetCommandQueue()
+    void VulkanDevice::DestroySwapchain()
     {
-        return new VulkanCommandQueue(m_Device, m_QueueFamilyIndex, 0);
+        m_Swapchain.reset();
+    }
+
+
+    GraphicsRef<CommandBuffer> VulkanDevice::AllocateCommandBuffer()
+    {
+        VulkanCommandBufferDesc vulkanCommandBufferDesc = {
+            .Device = m_Device,
+            .CommandPool = m_CommandPool
+        };
+
+        return CreateGraphicsRef<VulkanCommandBuffer>(vulkanCommandBufferDesc);
+    }
+
+
+    GraphicsRef<CommandQueue> VulkanDevice::GetCommandQueue()
+    {
+        VulkanCommandQueueDesc commandQueueDesc = {
+            .Device = m_Device,
+            .Swapchain = (VkSwapchainKHR)m_Swapchain->GetNativeHandle(),
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = 0
+        };
+
+        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
     }
 
 

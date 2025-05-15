@@ -20,6 +20,10 @@ namespace Astral {
         static void DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform);
         static void SetBlending(bool enable);
 
+        static void TestInit();
+        static void TestUpdate();
+        static void TestShutdown();
+
     private:
 
         friend SceneRenderer;

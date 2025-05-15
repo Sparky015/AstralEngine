@@ -5,16 +5,17 @@
 #include "RendererAPI.h"
 
 #include "Platform/OpenGL/OpenGLRendererCommands.h"
+#include "Platform/Vulkan/VulkanRendererCommands.h"
 #include "Resources/VertexArrayObject.h"
 
 
 namespace Astral {
 
-    RendererCommands* RendererAPI::s_RendererCommands = new OpenGLRendererCommands();
+    RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
 
     void RendererAPI::Clear()
     {
-        s_RendererCommands->Clear();
+        //s_RendererCommands->Clear(TODO, TODO);
     }
 
 
@@ -35,6 +36,24 @@ namespace Astral {
     void RendererAPI::SetBlending(bool enable)
     {
         s_RendererCommands->SetBlending(enable);
+    }
+
+
+    void RendererAPI::TestInit()
+    {
+        s_RendererCommands->TestInit();
+    }
+
+
+    void RendererAPI::TestUpdate()
+    {
+        s_RendererCommands->TestUpdate();
+    }
+
+
+    void RendererAPI::TestShutdown()
+    {
+        s_RendererCommands->TestShutdown();
     }
 
 }

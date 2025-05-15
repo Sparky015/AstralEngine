@@ -7,6 +7,8 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "RenderTarget.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -15,7 +17,7 @@ namespace Astral {
     public:
         virtual ~Swapchain() = default;
 
-        virtual uint32 AcquireNextImage() = 0;
+        virtual GraphicsRef<RenderTarget> AcquireNextImage() = 0;
 
         virtual void* GetNativeHandle() = 0;
     };

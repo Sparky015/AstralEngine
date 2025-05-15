@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+
 namespace Astral {
 
     class CommandBuffer
@@ -39,5 +41,7 @@ namespace Astral {
         State m_State = State::EMPTY;
         bool m_IsValid = false;
     };
+
+    using CommandBufferHandle = GraphicsRef<CommandBuffer>;
 
 }

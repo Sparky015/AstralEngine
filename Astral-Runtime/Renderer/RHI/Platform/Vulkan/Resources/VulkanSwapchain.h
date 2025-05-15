@@ -7,29 +7,33 @@
 #pragma once
 
 #include "Renderer/RHI/Resources/Swapchain.h"
+#include "Renderer/RHI/Resources/RenderTarget.h"
+#include "VulkanDevice.h"
 #include "VulkanPhysicalDevices.h"
 
 #include <vulkan/vulkan_core.h>
 
-#include "Renderer/RHI/Resources/Device.h"
 
 namespace Astral {
 
     struct VulkanSwapchainDesc
     {
-        Device& Device;
-        VkPhysicalDevice PhysicalDevice;
+        VkDevice Device;
+        VulkanPhysicalDevice PhysicalDevice;
         VkSurfaceKHR WindowSurface;
         uint32 QueueFamilyIndex;
+        uint32 NumberOfSwapchainImages;
     };
 
     class VulkanSwapchain : public Swapchain
     {
     public:
         VulkanSwapchain(const VulkanSwapchainDesc& vulkanSwapchainDesc);
-        ~VulkanSwapchain();
+        ~VulkanSwapchain() override;
 
-        uint32 AcquireNextImage() override;
+        RenderTargetHandle AcquireNextImage() override;
+
+        void* GetNativeHandle() override { return m_Swapchain; }
 
     private:
         uint32 ChooseNumSwapchainImages(const VkSurfaceCapabilitiesKHR& capabilities);
@@ -41,18 +45,22 @@ namespace Astral {
         void CreateSwapchain();
         void DestroySwapchain();
 
-        void CreateSemaphores(Device& device);
+        void CreateSemaphores();
+        void DestroySemaphores();
 
         VkDevice m_Device;
-        VkSurfaceKHR m_WindowSurface;
         VulkanPhysicalDevice m_SelectedPhysicalDevice;
+        VkSurfaceKHR m_WindowSurface;
         uint32 m_QueueFamilyIndex;
+        uint32 m_NumberOfSwapchainImages;
+
         VkSwapchainKHR m_Swapchain;
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
         std::vector<VkSemaphore> m_PresentCompleteSemaphores;
-        uint32 m_NumberOfSwapchainImages;
+        uint32 m_CurrentRenderSemaphoreIndex;
+        uint32 m_CurrentPresentSemaphoreIndex;
     };
 
 }

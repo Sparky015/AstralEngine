@@ -5,6 +5,9 @@
 #pragma once
 #include <string_view>
 
+#include "Common/GraphicsSmartPointers.h"
+#include "Resources/Device.h"
+
 namespace Astral {
 
     /**
@@ -18,6 +21,8 @@ namespace Astral {
 
         virtual void Init() = 0;
         virtual void Shutdown() = 0;
+
+        virtual Device& GetDevice() = 0;
 
         virtual std::string_view GetRenderingAPI() = 0;
         virtual std::string_view GetGPUVendor() = 0;

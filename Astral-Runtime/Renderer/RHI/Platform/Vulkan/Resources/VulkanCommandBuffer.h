@@ -13,10 +13,16 @@
 
 namespace Astral {
 
+    struct VulkanCommandBufferDesc
+    {
+        VkDevice Device;
+        VkCommandPool CommandPool;
+    };
+
     class VulkanCommandBuffer : public CommandBuffer
     {
     public:
-        explicit VulkanCommandBuffer(VkDevice device, VkCommandPool commandPool, VkCommandBuffer commandBuffer);
+        explicit VulkanCommandBuffer(const VulkanCommandBufferDesc& desc);
         ~VulkanCommandBuffer() override;
 
         void BeginRecording() override;
@@ -29,6 +35,9 @@ namespace Astral {
         void* GetNativeHandle() override { return m_CommandBuffer; }
 
     private:
+
+        void AllocateCommandBuffer();
+        void FreeCommandBuffer();
 
         VkDevice m_Device;
         VkCommandPool m_CommandPool;

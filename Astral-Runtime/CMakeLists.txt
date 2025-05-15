@@ -69,10 +69,8 @@ add_library(AstralEngine
         Renderer/RHI/Resources/Texture.h
         Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.cpp
         Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h
-        Renderer/RHI/Resources/BufferLayout.cpp
         Renderer/RHI/Resources/BufferLayout.h
         Core/Math/Math.h
-        Renderer/RHI/Resources/Shader.cpp
         Renderer/RHI/Resources/Shader.h
         Renderer/RHI/RendererAPI.cpp
         Renderer/RHI/RendererAPI.h
@@ -188,30 +186,25 @@ add_library(AstralEngine
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
         Debug/MemoryTracking/NewDeleteOverrides.h
+
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
         Renderer/RHI/Resources/Sampler.h
         Renderer/RHI/Resources/PipelineStateObject.h
-        Renderer/RHI/Resources/Sampler.cpp
-        Renderer/RHI/Resources/RenderTarget.cpp
-        Renderer/RHI/Resources/PipelineStateObject.cpp
         Renderer/RHI/Resources/RenderTarget.h
         Renderer/RHI/Resources/Framebuffer.h
-        Renderer/RHI/Resources/DescriptorSetLayout.cpp
         Renderer/RHI/Resources/Framebuffer.cpp
-        Renderer/RHI/Resources/DescriptorPool.cpp
-        Renderer/RHI/Resources/CommandQueue.cpp
         Renderer/RHI/Resources/DescriptorSetLayout.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
-        Renderer/RHI/Resources/DescriptorSet.cpp
         Renderer/RHI/Resources/DescriptorPool.h
         Renderer/RHI/Resources/CommandQueue.h
         Renderer/RHI/Resources/Buffer.h
         Renderer/RHI/Resources/CommandBuffer.h
-        Renderer/RHI/Resources/Buffer.cpp
+        Renderer/RHI/Resources/Swapchain.h
+        Renderer/RHI/Resources/Semaphore.h
         Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
         Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
@@ -220,7 +213,13 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.cpp
-        Renderer/RHI/Resources/Semaphore.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+        Renderer/RHI/Common/GraphicsSmartPointers.h
 )
 
 

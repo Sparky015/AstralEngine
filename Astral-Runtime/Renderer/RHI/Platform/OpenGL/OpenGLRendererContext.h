@@ -20,6 +20,8 @@ namespace Astral {
         void Init() override;
         void Shutdown() override;
 
+        Device& GetDevice() override;
+
         std::string_view GetGraphicsProcessorName() override;
         std::string_view GetGPUVendor() override;
         std::string_view GetRenderingAPI() override;

@@ -36,8 +36,7 @@ namespace Astral {
         std::string_view GetGPUVendor() override;
         std::string_view GetRenderingAPI() override;
 
-        Device& GetDevice() { return *m_Device; }
-        Swapchain& GetSwapchain() { return *m_Swapchain; }
+        Device& GetDevice() override { return *m_Device; }
 
     private:
 
@@ -68,8 +67,7 @@ namespace Astral {
         VulkanPhysicalDevices m_PhysicalDevices;
         uint32 m_QueueFamilyIndex;
 
-        Device* m_Device;
-        Swapchain* m_Swapchain;
+        GraphicsOwnedPtr<Device> m_Device;
     };
 
 }

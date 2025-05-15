@@ -34,6 +34,13 @@ namespace Astral {
     }
 
 
+    Device& OpenGLRenderingContext::GetDevice()
+    {
+        Device* DO_NOT_USE = nullptr;
+        return *DO_NOT_USE; // TEMP WHILE IMPLEMENTATION IS NOT DONE
+    }
+
+
     std::string_view OpenGLRenderingContext::GetRenderingAPI()
     {
         static std::string renderingAPI = "OpenGL " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));

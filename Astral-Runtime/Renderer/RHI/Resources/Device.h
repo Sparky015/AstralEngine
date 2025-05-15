@@ -16,11 +16,15 @@ namespace Astral {
     public:
         virtual ~Device() = default;
 
-        virtual Swapchain* CreateSwapchain() = 0;
-        virtual CommandBuffer* AllocateCommandBuffer() = 0;
-        virtual CommandQueue* GetCommandQueue() = 0;
+        virtual Swapchain& GetSwapchain() = 0;
+        virtual CommandBufferHandle AllocateCommandBuffer() = 0;
+        virtual CommandQueueHandle GetCommandQueue() = 0;
 
         virtual void* GetNativeHandle() = 0;
+
+    protected:
+
+        virtual GraphicsOwnedPtr<Swapchain> CreateSwapchain(uint32 numberOfImages) = 0;
     };
 
 }

@@ -6,6 +6,7 @@
 
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
+#include "RHI/RendererAPI.h"
 
 namespace Astral {
 
@@ -25,12 +26,15 @@ namespace Astral {
         m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
         m_UpdateListener.StartListening();
+
+        RendererAPI::TestInit();
     }
 
 
     void RendererManager::Update()
     {
         PROFILE_SCOPE("Renderer Manager Update");
+        RendererAPI::TestUpdate();
     }
 
 
@@ -40,6 +44,7 @@ namespace Astral {
         TRACE("Shutting down Renderer Manager!")
         m_RenderContext->Shutdown();
         m_UpdateListener.StopListening();
+        RendererAPI::TestShutdown();
     }
 
 

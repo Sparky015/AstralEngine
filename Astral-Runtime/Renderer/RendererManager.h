@@ -6,7 +6,7 @@
 
 #include "Core/SystemManager.h"
 #include "RHI/RendererContext.h"
-
+#include "RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -29,7 +29,7 @@ namespace Astral {
         RendererManager();
         ~RendererManager() override;
 
-        std::unique_ptr<Astral::RenderingContext> m_RenderContext;
+        GraphicsOwnedPtr<RenderingContext> m_RenderContext;
     };
 
     extern RendererManager& g_RendererManager;

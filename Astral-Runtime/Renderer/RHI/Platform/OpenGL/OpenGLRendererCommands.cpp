@@ -9,7 +9,7 @@
 
 namespace Astral {
 
-    void OpenGLRendererCommands::Clear()
+    void OpenGLRendererCommands::Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget)
     {
         glClear(GL_COLOR_BUFFER_BIT);
     }
