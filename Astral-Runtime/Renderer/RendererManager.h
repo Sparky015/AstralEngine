@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-#include "RenderingContext/RenderingContext.h"
+#include "RHI/RendererContext.h"
 
 
 namespace Astral {

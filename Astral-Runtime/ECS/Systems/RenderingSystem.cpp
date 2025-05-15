@@ -9,7 +9,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 
 
 namespace Astral {
@@ -35,7 +35,7 @@ namespace Astral {
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
             spriteComponent.texture->Bind(0);
-            Astral::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
+            Astral::SceneRenderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
         }
     }
 

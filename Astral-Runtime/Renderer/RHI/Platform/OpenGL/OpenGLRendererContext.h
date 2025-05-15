@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Renderer/RenderingContext/RenderingContext.h"
+#include "Renderer/RHI/RendererContext.h"
 #include <GLFW/glfw3.h>
 
 namespace Astral {

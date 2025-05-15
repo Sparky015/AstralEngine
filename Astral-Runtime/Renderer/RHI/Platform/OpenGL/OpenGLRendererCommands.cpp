@@ -3,25 +3,25 @@
 * @author Andrew Fagan
 * @date 12/5/2024
 */
-#include "OpenGLRendererAPI.h"
+#include "OpenGLRendererCommands.h"
 
 #include "glad/glad.h"
 
 namespace Astral {
 
-    void Astral::OpenGLRendererAPI::Clear()
+    void OpenGLRendererCommands::Clear()
     {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
 
-    void Astral::OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a)
+    void OpenGLRendererCommands::SetClearColor(float r, float g, float b, float a)
     {
         glClearColor(r, g, b, a);
     }
 
 
-    void Astral::OpenGLRendererAPI::DrawElements(Astral::VertexArrayObject* vertexArrayObject)
+    void OpenGLRendererCommands::DrawElements(Astral::VertexArrayObject* vertexArrayObject)
     {
         m_NumberOfDrawCalls++;
         vertexArrayObject->Bind();
@@ -29,7 +29,7 @@ namespace Astral {
     }
 
 
-    void OpenGLRendererAPI::SetBlending(bool enable)
+    void OpenGLRendererCommands::SetBlending(bool enable)
     {
         if (enable)
         {

@@ -7,7 +7,7 @@
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
 #include "Input/KeycodeConversions.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 
 namespace Window {
 
@@ -29,13 +29,13 @@ namespace Window {
             }
         }
 
-        if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::OpenGL)
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::OpenGL)
         {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
-        else if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         }

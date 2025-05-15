@@ -6,13 +6,13 @@
 
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h"
-#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
 
     IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return new OpenGLIndexBuffer(indices, count);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");

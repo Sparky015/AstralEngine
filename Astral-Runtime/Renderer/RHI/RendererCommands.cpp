@@ -1,40 +1,31 @@
-//
-// Created by Andrew Fagan on 12/4/24.
-//
-
+/**
+* @file RendererAPI.cpp
+* @author Andrew Fagan
+* @date 12/5/2024
+*/
 #include "RendererCommands.h"
-
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
-#include "Resources/VertexArrayObject.h"
-
 
 namespace Astral {
 
-    RendererAPI* RendererCommand::s_RendererAPI = new OpenGLRendererAPI();
+#ifdef ASTRAL_DEFAULT_RENDERING_API_OPENGL
+    API RendererCommands::s_RendererAPI = API::OpenGL;
+#elif ASTRAL_DEFAULT_RENDERING_API_VULKAN
+    API RendererCommands::s_RendererAPI = API::Vulkan;
+#elif ASTRAL_DEFAULT_RENDERING_API_DIRECTX12
+    API RendererCommands::s_RendererAPI = API::DirectX12;
+#elif ASTRAL_DEFAULT_RENDERING_API_METAL
+    API RendererCommands::s_RendererAPI = API::Metal;
+#else
+    API RendererCommands::s_RendererAPI = API::None;
+#endif
 
-    void RendererCommand::Clear()
+    RendererCommands::RendererCommands()
     {
-        s_RendererAPI->Clear();
+        m_NewFrameListener.StartListening();
     }
 
-
-    void RendererCommand::SetClearColor(float r, float g, float b, float a)
+    RendererCommands::~RendererCommands()
     {
-        s_RendererAPI->SetClearColor(r, g, b, a);
+        m_NewFrameListener.StopListening();
     }
-
-
-    void RendererCommand::DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
-    {
-        shaderProgram.SetUniform("u_Transform", transform);
-        shaderProgram.Bind();
-        s_RendererAPI->DrawElements(vertexArrayObject);
-    }
-
-
-    void RendererCommand::SetBlending(bool enable)
-    {
-        s_RendererAPI->SetBlending(enable);
-    }
-
 }

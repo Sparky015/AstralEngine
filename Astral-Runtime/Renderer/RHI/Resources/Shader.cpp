@@ -7,14 +7,14 @@
 
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.h"
-#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
 
     Shader* Shader::CreateShaderProgram(const ShaderSource &vertexShader,
                                                       const ShaderSource &fragmentShader)
     {
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return new OpenGLShaderProgram(vertexShader, fragmentShader);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");

@@ -6,13 +6,17 @@
 
 #pragma once
 
-#include "Renderer/RenderingContext/RenderingContext.h"
+#include "Renderer/RHI/RendererContext.h"
 
-#include "VulkanPhysicalDevices.h"
+#include "Resources/VulkanPhysicalDevices.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
+
+#include "Renderer/RHI/Resources/Swapchain.h"
+#include "Renderer/RHI/Resources/Device.h"
+#include "Resources/VulkanDevice.h"
 
 namespace Astral {
 
@@ -32,6 +36,9 @@ namespace Astral {
         std::string_view GetGPUVendor() override;
         std::string_view GetRenderingAPI() override;
 
+        Device& GetDevice() { return *m_Device; }
+        Swapchain& GetSwapchain() { return *m_Swapchain; }
+
     private:
 
         void CreateInstance();
@@ -46,15 +53,6 @@ namespace Astral {
         void CreateDevice();
         void DestroyDevice();
 
-        void CreateSwapchain();
-        void DestroySwapchain();
-
-        void CreateCommandBufferPool();
-        void DestroyCommandBufferPool();
-
-        void CreateCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers);
-        void FreeCommandBuffers(uint32 count, VkCommandBuffer* commandBuffers);
-
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
                 VkDebugUtilsMessageSeverityFlagBitsEXT severity,
                 VkDebugUtilsMessageTypeFlagsEXT type,
@@ -64,19 +62,14 @@ namespace Astral {
         VkInstance m_Instance;
         VkDebugUtilsMessengerEXT m_DebugMessenger;
 
-        VkSurfaceKHR m_WindowSurface;
-        VulkanPhysicalDevices m_PhysicalDevices;
         GLFWwindow* m_Window;
+        VkSurfaceKHR m_WindowSurface;
+
+        VulkanPhysicalDevices m_PhysicalDevices;
         uint32 m_QueueFamilyIndex;
-        VkDevice m_Device;
 
-        VkSwapchainKHR m_Swapchain;
-        std::vector<VkImage> m_Images;
-        std::vector<VkImageView> m_ImageViews;
-
-        VkCommandPool m_CommandPool;
-        uint32 m_NumberOfSwapchainImages;
-        std::vector<VkCommandBuffer> m_CommandBuffers;
+        Device* m_Device;
+        Swapchain* m_Swapchain;
     };
 
 }

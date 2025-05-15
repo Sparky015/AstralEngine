@@ -30,7 +30,7 @@
 #include "Components/MemoryComponents.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
 #include "Input/Keycodes.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 #include "Window/Platform/Generic/GenericWindow.h"
 #include "Window/WindowManager.h"
 
@@ -285,12 +285,12 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::OpenGL)
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::OpenGL)
         {
             ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
             ImGui_ImplOpenGL3_Init("#version 410");
         }
-        else if (Astral::Renderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
             // ImGui_ImplVulkan_Init();

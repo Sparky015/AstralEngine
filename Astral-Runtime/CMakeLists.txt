@@ -53,12 +53,12 @@ add_library(AstralEngine
         Renderer/RHI/Resources/VertexBuffer.h
         Renderer/RHI/Resources/IndexBuffer.cpp
         Renderer/RHI/Resources/IndexBuffer.h
-        Renderer/Renderer.cpp
-        Renderer/Renderer.h
-        Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.h
-        Renderer/RenderingContext/Platform/OpenGL/OpenGLRenderingContext.cpp
-        Renderer/RenderingContext/RenderingContext.h
-        Renderer/RenderingContext/RenderingContext.cpp
+        Renderer/SceneRenderer.cpp
+        Renderer/SceneRenderer.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.cpp
+        Renderer/RHI/RendererContext.h
+        Renderer/RHI/RendererContext.cpp
         Window/Window.cpp
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
@@ -74,12 +74,12 @@ add_library(AstralEngine
         Core/Math/Math.h
         Renderer/RHI/Resources/Shader.cpp
         Renderer/RHI/Resources/Shader.h
-        Renderer/RHI/RendererCommands.cpp
-        Renderer/RHI/RendererCommands.h
         Renderer/RHI/RendererAPI.cpp
         Renderer/RHI/RendererAPI.h
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererAPI.cpp
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererAPI.h
+        Renderer/RHI/RendererCommands.cpp
+        Renderer/RHI/RendererCommands.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.cpp
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.h
         Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
@@ -188,10 +188,39 @@ add_library(AstralEngine
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
         Debug/MemoryTracking/NewDeleteOverrides.h
-        Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.cpp
-        Renderer/RenderingContext/Platform/Vulkan/VulkanRenderingContext.h
-        Renderer/RenderingContext/Platform/Vulkan/VulkanPhysicalDevices.cpp
-        Renderer/RenderingContext/Platform/Vulkan/VulkanPhysicalDevices.h
+        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
+        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
+        Renderer/RHI/Resources/Sampler.h
+        Renderer/RHI/Resources/PipelineStateObject.h
+        Renderer/RHI/Resources/Sampler.cpp
+        Renderer/RHI/Resources/RenderTarget.cpp
+        Renderer/RHI/Resources/PipelineStateObject.cpp
+        Renderer/RHI/Resources/RenderTarget.h
+        Renderer/RHI/Resources/Framebuffer.h
+        Renderer/RHI/Resources/DescriptorSetLayout.cpp
+        Renderer/RHI/Resources/Framebuffer.cpp
+        Renderer/RHI/Resources/DescriptorPool.cpp
+        Renderer/RHI/Resources/CommandQueue.cpp
+        Renderer/RHI/Resources/DescriptorSetLayout.h
+        Renderer/RHI/Resources/Device.h
+        Renderer/RHI/Resources/DescriptorSet.h
+        Renderer/RHI/Resources/DescriptorSet.cpp
+        Renderer/RHI/Resources/DescriptorPool.h
+        Renderer/RHI/Resources/CommandQueue.h
+        Renderer/RHI/Resources/Buffer.h
+        Renderer/RHI/Resources/CommandBuffer.h
+        Renderer/RHI/Resources/Buffer.cpp
+        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
+        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.cpp
+        Renderer/RHI/Resources/Semaphore.h
 )
 
 

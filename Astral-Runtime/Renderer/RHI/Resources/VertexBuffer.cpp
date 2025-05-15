@@ -6,13 +6,13 @@
 
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h"
-#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
 
     VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
     {
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return new OpenGLVertexBuffer(vertices, size, bufferLayout);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");

@@ -1,40 +1,32 @@
-/**
-* @file RendererAPI.h
-* @author Andrew Fagan
-* @date 12/5/2024
-*/
+//
+// Created by Andrew Fagan on 12/4/24.
+//
 
 #pragma once
 
-#include "Core/Events/EventListener.h"
+
+#include "../SceneRenderer.h"
 #include "Renderer/RHI/Resources/VertexArrayObject.h"
-#include "Core/EngineLoopEvents.h"
+#include "Renderer/RHI/Resources/Shader.h"
+#include "RendererCommands.h"
 
 namespace Astral {
 
-    enum class API : uint8 {
-        None = 0, OpenGL, Vulkan, DirectX12, Metal
-    };
-
-    class RendererAPI {
+    class RendererAPI
+    {
     public:
-        RendererAPI();
-        virtual ~RendererAPI();
-
-        static inline API GetAPI() { return s_RendererAPI; }
-
-        virtual void Clear() = 0;
-        virtual void SetClearColor(float r, float g, float b, float a) = 0;
-        virtual void DrawElements(VertexArrayObject* vertexArrayObject) = 0;
-        virtual void SetBlending(bool enable) = 0 ;
-
-        virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }
-    protected:
-        uint32 m_NumberOfDrawCalls = 0;
-        Core::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};
+        static void Clear();
+        static void SetClearColor(float r, float g, float b, float a);
+        static void DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform);
+        static void SetBlending(bool enable);
 
     private:
-        static API s_RendererAPI;
+
+        friend SceneRenderer;
+        static RendererCommands* GetRendererAPIBackend() { return s_RendererCommands; }
+        static RendererCommands* s_RendererCommands;
     };
+
+
 
 }

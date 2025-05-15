@@ -6,7 +6,7 @@
 
 #include <imgui.h>
 
-#include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 #include "Renderer/RendererManager.h"
 
 namespace Debug {
@@ -25,7 +25,7 @@ namespace Debug {
 
     void DrawCallsPerFrameComponent()
     {
-        ImGui::Text("Draw Calls/Frame: %d", Astral::Renderer::GetDrawCallsPerFrame());
+        ImGui::Text("Draw Calls/Frame: %d", Astral::SceneRenderer::GetDrawCallsPerFrame());
     }
 
     void RendererAPIComponent()

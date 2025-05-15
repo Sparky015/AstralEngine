@@ -2,12 +2,12 @@
 // Created by Andrew Fagan on 11/29/24.
 //
 
-#include "RenderingContext.h"
+#include "RendererContext.h"
 
 #include "Debug/Utilities/Error.h"
-#include "Platform/OpenGL/OpenGLRenderingContext.h"
-#include "Renderer/RHI/RendererAPI.h"
-#include "Platform/Vulkan/VulkanRenderingContext.h"
+#include "Platform/OpenGL/OpenGLRendererContext.h"
+#include "Platform/Vulkan/VulkanRendererContext.h"
+#include "Renderer/RHI/RendererCommands.h"
 #include "Window/WindowManager.h"
 
 namespace Astral {
@@ -17,7 +17,7 @@ namespace Astral {
         Window::Window& window = Window::g_WindowManager.GetWindow();
         void* nativeWindow = window.GetNativeWindow();
 
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return new OpenGLRenderingContext((GLFWwindow*)nativeWindow);
             case API::Vulkan: return new VulkanRenderingContext((GLFWwindow*)nativeWindow);

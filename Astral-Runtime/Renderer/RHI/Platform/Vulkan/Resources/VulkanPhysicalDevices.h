@@ -36,11 +36,13 @@ namespace Astral {
 
         uint32 SelectDevice(VkQueueFlags requiredQueueType, bool supportsPresent);
 
-        const VulkanPhysicalDevice& SelectedDevice();
+        VulkanPhysicalDevice& SelectedDevice();
+        uint32 SelectedQueueFamily() { return m_QueueFamilyIndex; }
 
     private:
         std::vector<VulkanPhysicalDevice> m_Devices;
         int m_SelectedDeviceIndex;
+        uint32 m_QueueFamilyIndex;
 
     };
 

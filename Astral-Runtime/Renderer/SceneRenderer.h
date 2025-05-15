@@ -10,11 +10,11 @@
 #include "Renderer/RHI/Resources/VertexArrayObject.h"
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
-#include "RHI/RendererAPI.h"
+#include "RHI/RendererCommands.h"
 
 namespace Astral {
 
-    class Renderer
+    class SceneRenderer
     {
     public:
         static void BeginScene(const OrthographicCamera& orthographicCamera);

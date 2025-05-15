@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 10/8/24.
 //
 
-#include "OpenGLRenderingContext.h"
+#include "OpenGLRendererContext.h"
 
 #include <glad/glad.h>
 

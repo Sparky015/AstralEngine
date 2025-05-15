@@ -6,14 +6,14 @@
 
 #include "PipelineStateObject.h"
 
-#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/RendererCommands.h"
 #include "Debug/Utilities/Error.h"
 
 namespace Astral {
 
 PipelineStateObject* PipelineStateObject::CreatePipelineStateObject()
 {
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: ASTRAL_ERROR("OpenGL is not supported yet!");
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");

@@ -124,9 +124,10 @@ namespace Astral {
             {
                 const VkQueueFamilyProperties queueFamilyProperties = m_Devices[deviceIndex].queueFamilyProperties[queueFamilyIndex];
 
-                if ((queueFamilyProperties.queueFlags & requiredQueueType) && ((bool)m_Devices[deviceIndex].supportsPresent[queueFamilyIndex] == supportsPresent))
+                if ((queueFamilyProperties.queueFlags & requiredQueueType) && (m_Devices[deviceIndex].supportsPresent[queueFamilyIndex] == supportsPresent))
                 {
                     m_SelectedDeviceIndex = deviceIndex;
+                    m_QueueFamilyIndex = queueFamilyIndex;
                     LOG("Vulkan: Using device " << deviceIndex << " and queue family " << queueFamilyIndex)
                     return deviceIndex;
                 }
@@ -137,7 +138,7 @@ namespace Astral {
     }
 
 
-    const VulkanPhysicalDevice& VulkanPhysicalDevices::SelectedDevice()
+    VulkanPhysicalDevice& VulkanPhysicalDevices::SelectedDevice()
     {
         ASSERT(m_SelectedDeviceIndex != -1, "Vulkan physical device has not been selected yet! Call SelectDevice first!");
         return m_Devices[m_SelectedDeviceIndex];

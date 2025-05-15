@@ -6,13 +6,13 @@
 
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h"
-#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
 
     Texture* Texture::CreateTexture(const std::string& filePath)
     {
-        switch (RendererAPI::GetAPI())
+        switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return new OpenGLTexture(filePath);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");

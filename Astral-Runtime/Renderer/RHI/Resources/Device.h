@@ -5,6 +5,9 @@
 */
 
 #pragma once
+#include "CommandQueue.h"
+#include "Swapchain.h"
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 
 namespace Astral {
 
@@ -13,8 +16,11 @@ namespace Astral {
     public:
         virtual ~Device() = default;
 
+        virtual Swapchain* CreateSwapchain() = 0;
+        virtual CommandBuffer* AllocateCommandBuffer() = 0;
+        virtual CommandQueue* GetCommandQueue() = 0;
 
-        static Device* CreateDevice();
+        virtual void* GetNativeHandle() = 0;
     };
 
 }
