@@ -29,8 +29,8 @@ namespace Astral {
         explicit VulkanCommandQueue(const VulkanCommandQueueDesc& desc);
         ~VulkanCommandQueue() override;
 
-        void SubmitAsync(CommandBufferHandle commandBuffer) override;
-        void SubmitSync(CommandBufferHandle commandBuffer) override;
+        void SubmitAsync(CommandBufferHandle commandBufferHandle) override;
+        void SubmitSync(CommandBufferHandle commandBufferHandle) override;
         void Present(RenderTargetHandle renderTarget) override;
 
     private:

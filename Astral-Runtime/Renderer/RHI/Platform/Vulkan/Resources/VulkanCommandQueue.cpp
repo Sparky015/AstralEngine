@@ -27,9 +27,10 @@ namespace Astral {
     }
 
 
-    void VulkanCommandQueue::SubmitAsync(CommandBufferHandle commandBuffer)
+    void VulkanCommandQueue::SubmitAsync(CommandBufferHandle commandBufferHandle)
     {
         VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkSubmitInfo submitInfo = {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -38,7 +39,7 @@ namespace Astral {
             .pWaitSemaphores = &m_WaitSemaphore,
             .pWaitDstStageMask = &waitFlags,
             .commandBufferCount = 1,
-            .pCommandBuffers = (VkCommandBuffer*)commandBuffer->GetNativeHandle(),
+            .pCommandBuffers = &commandBuffer,
             .signalSemaphoreCount = 1,
             .pSignalSemaphores = &m_SignalSemaphore,
         };
