@@ -58,9 +58,8 @@ namespace Astral {
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
-        std::vector<VkSemaphore> m_PresentCompleteSemaphores;
-        uint32 m_CurrentRenderSemaphoreIndex;
-        uint32 m_CurrentPresentSemaphoreIndex;
+        std::vector<VkSemaphore> m_ImageAvailableSemaphores;
+        uint32 m_CurrentSemaphorePairIndex;
     };
 
 }

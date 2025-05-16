@@ -11,7 +11,9 @@ namespace Astral {
     VulkanRenderTarget::VulkanRenderTarget(const VulkanRenderTargetDesc& desc) :
         m_Image(desc.Image),
         m_ImageView(desc.ImageView),
-        m_ImageIndex(desc.ImageIndex)
+        m_ImageIndex(desc.ImageIndex),
+        m_RenderCompleteSemaphore(desc.RenderCompleteSemaphore),
+        m_ImageAvailableSemaphore(desc.ImageAvailableSemaphore)
     {
 
     }

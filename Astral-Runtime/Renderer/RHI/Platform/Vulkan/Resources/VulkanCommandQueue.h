@@ -11,8 +11,6 @@
 
 #include <vulkan/vulkan_core.h>
 
-
-
 namespace Astral {
 
     struct VulkanCommandQueueDesc
@@ -29,16 +27,12 @@ namespace Astral {
         explicit VulkanCommandQueue(const VulkanCommandQueueDesc& desc);
         ~VulkanCommandQueue() override;
 
-        void SubmitAsync(CommandBufferHandle commandBufferHandle) override;
-        void SubmitSync(CommandBufferHandle commandBufferHandle) override;
+        void Submit(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle) override;
         void Present(RenderTargetHandle renderTarget) override;
 
     private:
 
         void GetQueue();
-
-        void CreateSemaphores();
-        void DestroySemaphores();
 
         VkDevice m_Device;
         VkSwapchainKHR m_Swapchain;
@@ -46,8 +40,6 @@ namespace Astral {
         uint32 m_QueueIndex;
 
         VkQueue m_Queue;
-        VkSemaphore m_WaitSemaphore;
-        VkSemaphore m_SignalSemaphore;
     };
 
 }

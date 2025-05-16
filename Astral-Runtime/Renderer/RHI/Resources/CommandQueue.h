@@ -16,8 +16,7 @@ namespace Astral {
     public:
         virtual ~CommandQueue() = default;
 
-        virtual void SubmitAsync(CommandBufferHandle commandBuffer) = 0;
-        virtual void SubmitSync(CommandBufferHandle commandBuffer) = 0;
+        virtual void Submit(CommandBufferHandle commandBuffer, RenderTargetHandle renderTargetHandle) = 0;
         virtual void Present(RenderTargetHandle renderTarget) = 0;
     };
 

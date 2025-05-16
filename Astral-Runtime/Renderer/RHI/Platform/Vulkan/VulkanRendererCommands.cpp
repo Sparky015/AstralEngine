@@ -14,7 +14,7 @@ namespace Astral {
 
     void VulkanRendererCommands::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
-        VkClearColorValue clearColor = {1.0f, 0.0f, 0.0f, 1.0f};
+        VkClearColorValue clearColor = {{1.0f, 0.0f, 0.0f, 1.0f}};
 
         VkImageSubresourceRange subresourceRange = {
             .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -55,12 +55,13 @@ namespace Astral {
         Device& device = context.GetDevice();
         RenderTargetHandle renderTarget = device.GetSwapchain().AcquireNextImage();
         m_CommandBuffer = device.AllocateCommandBuffer();
+
         m_CommandBuffer->BeginRecording();
         Clear(m_CommandBuffer, renderTarget);
         m_CommandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = context.GetDevice().GetCommandQueue();
-        commandQueue->SubmitAsync(m_CommandBuffer);
+        commandQueue->Submit(m_CommandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
     }
 

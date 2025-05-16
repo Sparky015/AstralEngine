@@ -17,50 +17,32 @@ namespace Astral {
         m_QueueIndex(desc.QueueIndex)
     {
         GetQueue();
-        CreateSemaphores();
     }
 
 
     VulkanCommandQueue::~VulkanCommandQueue()
     {
-        DestroySemaphores();
+
     }
 
 
-    void VulkanCommandQueue::SubmitAsync(CommandBufferHandle commandBufferHandle)
+    void VulkanCommandQueue::Submit(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
         VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTargetHandle->GetRenderCompleteSemaphore();
+        VkSemaphore imageAvailableSemaphore = (VkSemaphore)renderTargetHandle->GetImageAvailableSemaphore();
 
         VkSubmitInfo submitInfo = {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = nullptr,
             .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &m_WaitSemaphore,
+            .pWaitSemaphores = &imageAvailableSemaphore,
             .pWaitDstStageMask = &waitFlags,
             .commandBufferCount = 1,
             .pCommandBuffers = &commandBuffer,
             .signalSemaphoreCount = 1,
-            .pSignalSemaphores = &m_SignalSemaphore,
-        };
-
-        VkResult result = vkQueueSubmit(m_Queue, 1, &submitInfo, nullptr);
-        ASSERT(result == VK_SUCCESS, "Queue failed to submit command buffer");
-    }
-
-
-    void VulkanCommandQueue::SubmitSync(CommandBufferHandle commandBuffer)
-    {
-        VkSubmitInfo submitInfo = {
-            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = nullptr,
-            .waitSemaphoreCount = 0,
-            .pWaitSemaphores = nullptr,
-            .pWaitDstStageMask = nullptr,
-            .commandBufferCount = 1,
-            .pCommandBuffers = (VkCommandBuffer*)commandBuffer->GetNativeHandle(),
-            .signalSemaphoreCount = 0,
-            .pSignalSemaphores = nullptr,
+            .pSignalSemaphores = &renderCompleteSemaphore,
         };
 
         VkResult result = vkQueueSubmit(m_Queue, 1, &submitInfo, nullptr);
@@ -71,12 +53,13 @@ namespace Astral {
     void VulkanCommandQueue::Present(RenderTargetHandle renderTarget)
     {
         uint32 imageIndex = renderTarget->GetImageIndex();
+        VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTarget->GetRenderCompleteSemaphore();
 
         VkPresentInfoKHR presentInfo = {
           .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
           .pNext = nullptr,
           .waitSemaphoreCount = 1,
-          .pWaitSemaphores = &m_WaitSemaphore,
+          .pWaitSemaphores = &renderCompleteSemaphore,
           .swapchainCount = 1,
           .pSwapchains = &m_Swapchain,
           .pImageIndices = &imageIndex,
@@ -90,27 +73,6 @@ namespace Astral {
     void VulkanCommandQueue::GetQueue()
     {
         vkGetDeviceQueue(m_Device, m_QueueFamilyIndex, m_QueueIndex, &m_Queue);
-    }
-
-
-    void VulkanCommandQueue::CreateSemaphores()
-    {
-        VkSemaphoreCreateInfo semaphoreCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0
-        };
-
-        VkResult result = vkCreateSemaphore(m_Device, &semaphoreCreateInfo, nullptr, &m_WaitSemaphore);
-        ASSERT(result == VK_SUCCESS, "Semaphore failed to create!");
-        result = vkCreateSemaphore(m_Device, &semaphoreCreateInfo, nullptr, &m_SignalSemaphore);
-        ASSERT(result == VK_SUCCESS, "Semaphore failed to create!");
-    }
-
-    void VulkanCommandQueue::DestroySemaphores()
-    {
-        vkDestroySemaphore(m_Device, m_WaitSemaphore, nullptr);
-        vkDestroySemaphore(m_Device, m_SignalSemaphore, nullptr);
     }
 
 }

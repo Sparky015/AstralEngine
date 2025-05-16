@@ -16,6 +16,8 @@ namespace Astral {
     public:
         virtual ~RenderTarget() = default;
         virtual uint32 GetImageIndex() = 0;
+        virtual void* GetRenderCompleteSemaphore() = 0;
+        virtual void* GetImageAvailableSemaphore() = 0;
         virtual void* GetNativeHandle() = 0;
     };
 

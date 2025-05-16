@@ -195,7 +195,6 @@ add_library(AstralEngine
         Renderer/RHI/Resources/PipelineStateObject.h
         Renderer/RHI/Resources/RenderTarget.h
         Renderer/RHI/Resources/Framebuffer.h
-        Renderer/RHI/Resources/Framebuffer.cpp
         Renderer/RHI/Resources/DescriptorSetLayout.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
@@ -220,6 +219,7 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
         Renderer/RHI/Common/GraphicsSmartPointers.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
 )
 
 

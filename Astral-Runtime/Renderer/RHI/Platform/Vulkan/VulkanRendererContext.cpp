@@ -65,7 +65,20 @@ namespace Astral {
 
     std::string_view VulkanRenderingContext::GetGPUVendor()
     {
-        return "";//m_PhysicalDevices.SelectedDevice().deviceProperties.vendorID;
+        switch (m_PhysicalDevices.SelectedDevice().deviceProperties.vendorID)
+        {
+            case 0x1002: return "AMD";
+            case 0x10DE: return "NVIDIA";
+            case 0x106B: return "Apple";
+            case 0x8086: return "Intel";
+            case 0x13B5: return "ARM";
+            case 0x5143: return "Imagination Technologies";
+            case 0x1AD0: return "Google";
+            case 0x1AE0: return "Samsung";
+            case 0x1217: return "Qualcomm";
+            default: return "Unknown";
+        }
+
     }
 
 

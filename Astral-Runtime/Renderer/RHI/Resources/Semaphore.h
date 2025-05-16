@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -13,7 +14,9 @@ namespace Astral {
     public:
         virtual ~Semaphore();
 
-
+        virtual void* GetNativeHandle() = 0;
     };
+
+    using SemaphoreHandle = GraphicsRef<Semaphore>;
 
 }

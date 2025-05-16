@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -14,7 +15,9 @@ namespace Astral {
         virtual ~Framebuffer() = default;
 
 
-        static Framebuffer* CreateFramebuffer();
+        virtual void* GetNativeHandle() = 0;
     };
+
+    using FramebufferHandle = GraphicsRef<Framebuffer>;
 
 }
