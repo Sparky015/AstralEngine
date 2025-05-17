@@ -27,8 +27,8 @@ namespace Astral {
 
     void RendererAPI::DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
     {
-        shaderProgram.SetUniform("u_Transform", transform);
-        shaderProgram.Bind();
+        // shaderProgram.SetUniform("u_Transform", transform);
+        // shaderProgram.Bind();
         s_RendererCommands->DrawElements(vertexArrayObject);
     }
 

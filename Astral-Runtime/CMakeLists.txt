@@ -220,6 +220,10 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
         Renderer/RHI/Common/GraphicsSmartPointers.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
 )
 
 

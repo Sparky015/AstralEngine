@@ -5,21 +5,23 @@
 */
 
 #pragma once
+
+#include "Framebuffer.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
-    class Renderpass
+    class RenderPass
     {
     public:
-        virtual ~Renderpass() = default;
+        virtual ~RenderPass() = default;
 
-        virtual void BeginRenderpass(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void EndRenderpass(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) = 0;
+        virtual void EndRenderPass(CommandBufferHandle commandBufferHandle) = 0;
 
         virtual void* GetNativeHandle() = 0;
     };
 
-    using RenderpassHandle = GraphicsRef<Renderpass>;
+    using RenderPassHandle = GraphicsRef<RenderPass>;
 
 }

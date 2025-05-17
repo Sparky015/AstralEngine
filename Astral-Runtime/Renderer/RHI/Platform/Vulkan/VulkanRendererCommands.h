@@ -7,8 +7,10 @@
 #pragma once
 
 #include "Renderer/RHI/RendererCommands.h"
+#include "Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.h"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "Renderer/RHI/Resources/RenderTarget.h"
+#include "Renderer/RHI/Resources/Shader.h"
 
 namespace Astral {
 
@@ -27,6 +29,10 @@ namespace Astral {
     private:
 
         CommandBufferHandle m_CommandBuffer;
+        RenderPassHandle m_RenderPass;
+        FramebufferHandle m_Framebuffer;
+        ShaderHandle m_VertexShader;
+        ShaderHandle m_FragmentShader;
     };
 
 }

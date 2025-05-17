@@ -55,9 +55,18 @@ namespace Astral {
         Device& device = context.GetDevice();
         RenderTargetHandle renderTarget = device.GetSwapchain().AcquireNextImage();
         m_CommandBuffer = device.AllocateCommandBuffer();
+        m_RenderPass = device.CreateRenderPass(renderTarget);
+        m_Framebuffer = device.CreateFramebuffer(m_RenderPass, renderTarget);
+
+        ShaderSource vertexSource = ShaderSource( "FirstTriangle.vert");
+        ShaderSource fragmentSource = ShaderSource( "FirstTriangle.frag");
+
+        m_VertexShader = device.CreateShader(vertexSource);
+        m_FragmentShader = device.CreateShader(fragmentSource);
 
         m_CommandBuffer->BeginRecording();
-        Clear(m_CommandBuffer, renderTarget);
+        m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);
+        m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = context.GetDevice().GetCommandQueue();

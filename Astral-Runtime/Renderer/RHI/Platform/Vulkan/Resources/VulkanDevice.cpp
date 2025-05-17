@@ -10,18 +10,23 @@
 #include "VulkanSwapchain.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
+#include "VulkanCommandQueue.h"
+#include "VulkanRenderpass.h"
 
+#include <GLFW/glfw3.h>
 #include <utility>
 
-#include "VulkanCommandQueue.h"
+#include "VulkanFramebuffer.h"
+#include "VulkanShader.h"
 
 namespace Astral {
 
     VulkanDevice::VulkanDevice(const VulkanDeviceDesc& desc) :
             m_PhysicalDevice(std::move(desc.PhysicalDevice)),
-            m_Device(VK_NULL_HANDLE),
             m_QueueFamilyIndex(desc.QueueFamilyIndex),
             m_WindowSurface(desc.WindowSurface),
+            m_Window(desc.Window),
+            m_Device(VK_NULL_HANDLE),
             m_CommandPool(VK_NULL_HANDLE),
             m_Swapchain(nullptr)
     {
@@ -80,6 +85,48 @@ namespace Astral {
         };
 
         return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+    }
+
+
+    RenderPassHandle VulkanDevice::CreateRenderPass(RenderTargetHandle renderTargetHandle)
+    {
+        VkFormat format = *(VkFormat*)renderTargetHandle->GetImageFormat();
+        VulkanRenderpassDesc vulkanRenderpassDesc = {
+            .Device = m_Device,
+            .Format = format,
+        };
+
+        glfwGetWindowSize(m_Window, &vulkanRenderpassDesc.WindowWidth, &vulkanRenderpassDesc.WindowHeight);
+
+        return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
+    }
+
+
+    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle)
+    {
+        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
+        VkImageView imageView = (VkImageView)renderTargetHandle->GetImageView();
+
+        VulkanFramebufferDesc vulkanFramebufferDesc = {
+            .Device = m_Device,
+            .RenderPass = renderPass,
+            .ImageView = imageView,
+        };
+
+        glfwGetWindowSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
+
+        return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
+    }
+
+
+    ShaderHandle VulkanDevice::CreateShader(const ShaderSource& shaderSource)
+    {
+        VulkanShaderDesc shaderDesc = {
+            .Device = m_Device,
+            .ShaderSource = shaderSource,
+        };
+
+        return CreateGraphicsRef<VulkanShader>(shaderDesc);
     }
 
 

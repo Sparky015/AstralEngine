@@ -18,6 +18,7 @@ namespace Astral {
         m_QueueFamilyIndex(vulkanSwapchainDesc.QueueFamilyIndex),
         m_NumberOfSwapchainImages(vulkanSwapchainDesc.NumberOfSwapchainImages),
         m_Swapchain(VK_NULL_HANDLE),
+        m_SwapchainImageFormat(VK_FORMAT_UNDEFINED),
         m_Images(),
         m_ImageViews(),
         m_RenderCompleteSemaphores(),
@@ -48,7 +49,8 @@ namespace Astral {
             .ImageView = m_ImageViews[imageIndex],
             .ImageIndex = imageIndex,
             .ImageAvailableSemaphore = m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex],
-            .RenderCompleteSemaphore = m_RenderCompleteSemaphores[m_CurrentSemaphorePairIndex]
+            .RenderCompleteSemaphore = m_RenderCompleteSemaphores[m_CurrentSemaphorePairIndex],
+            .Format = m_SwapchainImageFormat,
         };
 
         m_CurrentSemaphorePairIndex++;
@@ -56,7 +58,6 @@ namespace Astral {
 
         return CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc);
     }
-
 
 
     uint32 VulkanSwapchain::ChooseNumSwapchainImages(const VkSurfaceCapabilitiesKHR& capabilities)
@@ -94,10 +95,12 @@ namespace Astral {
             if (availableFormat.format == VK_FORMAT_B8G8R8_SRGB &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                 {
+                    m_SwapchainImageFormat = availableFormat.format;
                     return availableFormat;
                 }
         }
 
+        m_SwapchainImageFormat = availableFormats[0].format;
         return availableFormats[0];
     }
 
