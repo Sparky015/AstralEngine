@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include "CommandBuffer.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+
 namespace Astral {
 
     class PipelineStateObject
@@ -13,8 +16,9 @@ namespace Astral {
     public:
         virtual ~PipelineStateObject() = default;
 
-
-        static PipelineStateObject* CreatePipelineStateObject();
+        virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
     };
+
+    using PipelineStateObjectHandle = GraphicsRef<PipelineStateObject>;
 
 }

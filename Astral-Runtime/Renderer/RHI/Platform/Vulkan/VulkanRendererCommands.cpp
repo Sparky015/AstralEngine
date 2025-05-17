@@ -37,8 +37,11 @@ namespace Astral {
     }
 
 
-    void VulkanRendererCommands::DrawElements(Astral::VertexArrayObject* vertexArrayObject)
+    void VulkanRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle)
     {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+
         m_NumberOfDrawCalls++;
     }
 
@@ -55,9 +58,22 @@ namespace Astral {
         Device& device = context.GetDevice();
         RenderTargetHandle renderTarget = device.GetSwapchain().AcquireNextImage();
         m_CommandBuffer = device.AllocateCommandBuffer();
+        m_RenderPass = device.CreateRenderPass(renderTarget);
+        m_Framebuffer = device.CreateFramebuffer(m_RenderPass, renderTarget);
+
+        ShaderSource vertexSource = ShaderSource( "FirstTriangle.vert");
+        ShaderSource fragmentSource = ShaderSource( "FirstTriangle.frag");
+
+        m_VertexShader = device.CreateShader(vertexSource);
+        m_FragmentShader = device.CreateShader(fragmentSource);
+
+        m_PipelineStateObject = device.CreatePipelineStateObject(m_RenderPass, m_VertexShader, m_FragmentShader);
 
         m_CommandBuffer->BeginRecording();
-        Clear(m_CommandBuffer, renderTarget);
+        m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);
+        m_PipelineStateObject->Bind(m_CommandBuffer);
+        DrawElements(m_CommandBuffer);
+        m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = context.GetDevice().GetCommandQueue();

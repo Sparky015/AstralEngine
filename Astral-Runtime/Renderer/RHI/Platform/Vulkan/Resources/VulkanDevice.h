@@ -11,6 +11,7 @@
 #include "VulkanPhysicalDevices.h"
 
 #include <vulkan/vulkan_core.h>
+#include <GLFW/glfw3.h>
 
 namespace Astral {
 
@@ -19,6 +20,7 @@ namespace Astral {
         VulkanPhysicalDevice PhysicalDevice;
         uint32 QueueFamilyIndex;
         VkSurfaceKHR WindowSurface;
+        GLFWwindow* Window;
     };
 
     class VulkanDevice : public Device
@@ -30,6 +32,10 @@ namespace Astral {
         Swapchain& GetSwapchain() override { return *m_Swapchain; }
         CommandBufferHandle AllocateCommandBuffer() override;
         CommandQueueHandle GetCommandQueue() override;
+        RenderPassHandle CreateRenderPass(RenderTargetHandle renderTargetHandle) override;
+        FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle) override;
+        ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
+        PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader) override;
 
         void* GetNativeHandle() override { return m_Device; }
 
@@ -50,11 +56,12 @@ namespace Astral {
         void DestroySwapchain();
 
         VulkanPhysicalDevice m_PhysicalDevice;
-        VkDevice m_Device;
         uint32 m_QueueFamilyIndex;
         VkSurfaceKHR m_WindowSurface;
-        VkCommandPool m_CommandPool;
+        GLFWwindow* m_Window;
 
+        VkDevice m_Device;
+        VkCommandPool m_CommandPool;
         GraphicsOwnedPtr<Swapchain> m_Swapchain;
     };
 

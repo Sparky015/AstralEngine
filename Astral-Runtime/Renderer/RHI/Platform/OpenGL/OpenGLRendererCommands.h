@@ -14,7 +14,7 @@ namespace Astral {
     {
         void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) override;
         void SetClearColor(float r, float g, float b, float a) override;
-        void DrawElements(VertexArrayObject* vertexArrayObject) override;
+        void DrawElements(CommandBufferHandle commandBufferHandle) override;
         void SetBlending(bool enable) override;
     };
 

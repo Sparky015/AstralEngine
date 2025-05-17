@@ -55,6 +55,7 @@ namespace Astral {
         uint32 m_NumberOfSwapchainImages;
 
         VkSwapchainKHR m_Swapchain;
+        VkFormat m_SwapchainImageFormat;
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;

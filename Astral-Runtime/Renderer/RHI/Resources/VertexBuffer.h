@@ -5,6 +5,7 @@
 #pragma once
 
 #include "BufferLayout.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -19,5 +20,7 @@ namespace Astral {
 
         static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout);
     };
+
+    using VertexBufferHandle = GraphicsRef<VertexBuffer>;
 
 } // Renderer

@@ -10,38 +10,57 @@
 
 namespace Astral {
 
-    void VulkanRenderpass::BeginRenderpass(CommandBufferHandle commandBufferHandle)
+    VulkanRenderPass::VulkanRenderPass(const VulkanRenderpassDesc& desc) :
+        m_Device(desc.Device),
+        m_WindowWidth(desc.WindowWidth),
+        m_WindowHeight(desc.WindowHeight),
+        m_Format(desc.Format)
+    {
+        CreateRenderPass();
+    }
+
+
+    VulkanRenderPass::~VulkanRenderPass()
+    {
+        DestroyRenderPass();
+    }
+
+
+    void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkClearValue clearColorValues = {{0.0f, 0.0f, 1.0f, 1.0f}};
+        VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
 
         VkRenderPassBeginInfo renderPassBeginInfo = {
             .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
             .pNext = nullptr,
             .renderPass = m_Renderpass,
+            .framebuffer = framebuffer,
             .renderArea = {
                 .offset = {0,0},
-                .extent = {}
+                .extent = {m_WindowWidth, m_WindowHeight}
             },
             .clearValueCount = 1,
-            .pClearValues = &clearColorValues
+            .pClearValues = &clearColorValues,
         };
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
 
-    void VulkanRenderpass::EndRenderpass(CommandBufferHandle commandBufferHandle)
+    void VulkanRenderPass::EndRenderPass(CommandBufferHandle commandBufferHandle)
     {
-
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdEndRenderPass(commandBuffer);
     }
 
 
-    void VulkanRenderpass::CreateRenderPass()
+    void VulkanRenderPass::CreateRenderPass()
     {
         VkAttachmentDescription attachDesc = {
             .flags = 0,
-            .format = m_SwapchainSurfaceFormat.format,
+            .format = m_Format,
             .samples = VK_SAMPLE_COUNT_1_BIT,
             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
             .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
@@ -53,7 +72,7 @@ namespace Astral {
 
         VkAttachmentReference attachRef = {
             .attachment = 0,
-            .layout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+            .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
         };
 
         VkSubpassDescription subpassDesc = {
@@ -69,12 +88,23 @@ namespace Astral {
             .pPreserveAttachments = nullptr
         };
 
-        VkResult result = vkCreateRenderPass(m_Device, &createInfo, nullptr, &m_Renderpass);
+        VkRenderPassCreateInfo renderPassCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+            .pNext = nullptr,
+            .attachmentCount = 1,
+            .pAttachments = &attachDesc,
+            .subpassCount = 1,
+            .pSubpasses = &subpassDesc,
+            .dependencyCount = 0,
+            .pDependencies = nullptr
+        };
+
+        VkResult result = vkCreateRenderPass(m_Device, &renderPassCreateInfo, nullptr, &m_Renderpass);
         ASSERT(result == VK_SUCCESS, "Renderpass failed to create!");
     }
 
 
-    void VulkanRenderpass::DestoryRenderpass()
+    void VulkanRenderPass::DestroyRenderPass()
     {
         vkDestroyRenderPass(m_Device, m_Renderpass, nullptr);
     }

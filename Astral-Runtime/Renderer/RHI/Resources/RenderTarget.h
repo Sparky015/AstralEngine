@@ -18,6 +18,8 @@ namespace Astral {
         virtual uint32 GetImageIndex() = 0;
         virtual void* GetRenderCompleteSemaphore() = 0;
         virtual void* GetImageAvailableSemaphore() = 0;
+        virtual void* GetImageFormat() = 0;
+        virtual void* GetImageView() = 0;
         virtual void* GetNativeHandle() = 0;
     };
 

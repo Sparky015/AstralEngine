@@ -13,7 +13,8 @@ namespace Astral {
         m_ImageView(desc.ImageView),
         m_ImageIndex(desc.ImageIndex),
         m_RenderCompleteSemaphore(desc.RenderCompleteSemaphore),
-        m_ImageAvailableSemaphore(desc.ImageAvailableSemaphore)
+        m_ImageAvailableSemaphore(desc.ImageAvailableSemaphore),
+        m_ImageFormat(desc.Format)
     {
 
     }

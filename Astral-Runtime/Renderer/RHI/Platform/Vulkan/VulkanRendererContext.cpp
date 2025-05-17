@@ -121,7 +121,7 @@ namespace Astral {
             .applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
             .pEngineName = "Astral Engine",
             .engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
-            .apiVersion = VK_API_VERSION_1_0
+            .apiVersion = VK_API_VERSION_1_2
         };
 
         VkInstanceCreateInfo createInfo = {
@@ -203,7 +203,8 @@ namespace Astral {
         VulkanDeviceDesc desc = {
             .PhysicalDevice = m_PhysicalDevices.SelectedDevice(),
             .QueueFamilyIndex = m_QueueFamilyIndex,
-            .WindowSurface = m_WindowSurface
+            .WindowSurface = m_WindowSurface,
+            .Window = m_Window,
         };
 
         m_Device = CreateGraphicsOwnedPtr<VulkanDevice>(desc);
