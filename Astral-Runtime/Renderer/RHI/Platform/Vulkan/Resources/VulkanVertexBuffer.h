@@ -6,9 +6,17 @@
 
 
 #pragma once
+
 #include "Renderer/RHI/Resources/VertexBuffer.h"
+#include "Renderer/RHI/Resources/Buffer.h"
 
 namespace Astral {
+
+    struct VulkanVertexBufferDesc
+    {
+        BufferHandle BufferHandle;
+
+    };
 
     class VulkanVertexBuffer : public VertexBuffer
     {

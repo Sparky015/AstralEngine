@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/CoreMacroDefinitions.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
 
@@ -18,5 +19,7 @@ namespace Astral {
 
         static Buffer* CreateBuffer();
     };
+
+    using BufferHandle = GraphicsRef<Buffer>;
 
 }

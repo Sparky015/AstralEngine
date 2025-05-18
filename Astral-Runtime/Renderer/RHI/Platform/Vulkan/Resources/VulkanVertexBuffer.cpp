@@ -5,3 +5,9 @@
 */
 
 #include "VulkanVertexBuffer.h"
+
+namespace Astral {
+
+
+
+}
