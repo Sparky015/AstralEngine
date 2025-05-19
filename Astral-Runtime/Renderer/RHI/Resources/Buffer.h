@@ -17,6 +17,8 @@ namespace Astral {
         virtual ~Buffer() = default;
 
 
+        virtual void* GetNativeHandle() = 0;
+
         static Buffer* CreateBuffer();
     };
 

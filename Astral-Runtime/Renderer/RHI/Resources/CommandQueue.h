@@ -17,7 +17,9 @@ namespace Astral {
         virtual ~CommandQueue() = default;
 
         virtual void Submit(CommandBufferHandle commandBuffer, RenderTargetHandle renderTargetHandle) = 0;
+        virtual void SubmitSync(CommandBufferHandle commandBufferHandle) = 0;
         virtual void Present(RenderTargetHandle renderTarget) = 0;
+        virtual void WaitIdle() = 0;
     };
 
     using CommandQueueHandle = GraphicsRef<CommandQueue>;

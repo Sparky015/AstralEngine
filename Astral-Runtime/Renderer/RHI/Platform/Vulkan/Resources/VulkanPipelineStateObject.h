@@ -23,6 +23,7 @@ namespace Astral {
         ShaderHandle FragmentShader;
         int32 WindowWidth;
         int32 WindowHeight;
+        DescriptorSetHandle DescriptorSet;
     };
 
     class VulkanPipelineStateObject : public PipelineStateObject
@@ -32,6 +33,7 @@ namespace Astral {
         ~VulkanPipelineStateObject() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
+        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) override;
 
     private:
 
@@ -44,6 +46,7 @@ namespace Astral {
         ShaderHandle m_FragmentShader;
         uint32 m_WindowWidth;
         uint32 m_WindowHeight;
+        DescriptorSetHandle m_DescriptorSet;
 
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;

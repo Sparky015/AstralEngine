@@ -34,6 +34,8 @@ namespace Astral {
         ShaderHandle m_VertexShader;
         ShaderHandle m_FragmentShader;
         PipelineStateObjectHandle m_PipelineStateObject;
+        DescriptorSetHandle m_DescriptorSet;
+        VertexBufferHandle m_VertexBuffer;
     };
 
 }

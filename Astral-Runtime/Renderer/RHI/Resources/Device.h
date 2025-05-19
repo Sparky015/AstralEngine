@@ -11,6 +11,7 @@
 #include "Renderpass.h"
 #include "Shader.h"
 #include "Swapchain.h"
+#include "VertexBuffer.h"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 
 namespace Astral {
@@ -26,7 +27,10 @@ namespace Astral {
         virtual RenderPassHandle CreateRenderPass(RenderTargetHandle renderTargetHandle) = 0;
         virtual FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle) = 0;
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
-        virtual PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader) = 0;
+        virtual PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle
+                                                                    descriptorSetHandle) = 0;
+        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 size) = 0;
+        virtual DescriptorSetHandle CreateDescriptorSet(VertexBufferHandle vertexBufferHandle) = 0;
 
         virtual void* GetNativeHandle() = 0;
 

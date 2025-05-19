@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+
 namespace Astral {
 
     class DescriptorSet
@@ -13,8 +15,10 @@ namespace Astral {
     public:
         virtual ~DescriptorSet() = default;
 
-
-        static DescriptorSet* CreateDescriptorSet();
+        virtual void* GetLayout() = 0;
+        virtual void* GetNativeHandle() = 0;
     };
+
+    using DescriptorSetHandle = GraphicsRef<DescriptorSet>;
 
 }

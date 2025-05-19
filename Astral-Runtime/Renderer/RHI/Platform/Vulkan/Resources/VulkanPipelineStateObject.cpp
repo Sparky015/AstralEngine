@@ -16,7 +16,8 @@ namespace Astral {
         m_VertexShader(desc.VertexShader),
         m_FragmentShader(desc.FragmentShader),
         m_WindowWidth(desc.WindowWidth),
-        m_WindowHeight(desc.WindowHeight)
+        m_WindowHeight(desc.WindowHeight),
+        m_DescriptorSet(desc.DescriptorSet)
     {
         CreatePipelineStateObject();
     }
@@ -32,6 +33,16 @@ namespace Astral {
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+    }
+
+
+    void VulkanPipelineStateObject::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
+        DescriptorSetHandle descriptorSetHandle)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout,
+                    0, 1, &descriptorSet, 0, nullptr);
     }
 
 
@@ -115,10 +126,12 @@ namespace Astral {
             .pAttachments = &colorBlendAttachmentState,
         };
 
+        VkDescriptorSetLayout descriptorSetLayout = (VkDescriptorSetLayout)m_DescriptorSet->GetLayout();
+
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-            .setLayoutCount = 0,
-            .pSetLayouts = nullptr
+            .setLayoutCount = 1,
+            .pSetLayouts = &descriptorSetLayout
         };
 
         VkResult result = vkCreatePipelineLayout(m_Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout);

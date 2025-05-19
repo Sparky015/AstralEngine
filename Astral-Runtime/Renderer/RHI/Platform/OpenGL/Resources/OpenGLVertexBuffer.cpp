@@ -48,10 +48,10 @@ namespace Astral {
     }
 
 
-    BufferLayout& OpenGLVertexBuffer::GetLayout()
-    {
-        return m_BufferLayout;
-    }
+    // BufferLayout& OpenGLVertexBuffer::GetLayout()
+    // {
+    //     return m_BufferLayout;
+    // }
 
 
 } // namespace Renderer

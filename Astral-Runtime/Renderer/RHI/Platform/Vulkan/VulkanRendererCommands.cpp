@@ -61,13 +61,17 @@ namespace Astral {
         m_RenderPass = device.CreateRenderPass(renderTarget);
         m_Framebuffer = device.CreateFramebuffer(m_RenderPass, renderTarget);
 
-        ShaderSource vertexSource = ShaderSource( "FirstTriangle.vert");
-        ShaderSource fragmentSource = ShaderSource( "FirstTriangle.frag");
+        ShaderSource vertexSource = ShaderSource( "SecondTriangle.vert");
+        ShaderSource fragmentSource = ShaderSource( "SecondTriangle.frag");
 
+
+        float vertices[3] = {};
+        m_VertexBuffer = device.CreateVertexBuffer(vertices, 3);
         m_VertexShader = device.CreateShader(vertexSource);
         m_FragmentShader = device.CreateShader(fragmentSource);
+        m_DescriptorSet = device.CreateDescriptorSet(m_VertexBuffer);
 
-        m_PipelineStateObject = device.CreatePipelineStateObject(m_RenderPass, m_VertexShader, m_FragmentShader);
+        m_PipelineStateObject = device.CreatePipelineStateObject(m_RenderPass, m_VertexShader, m_FragmentShader, m_DescriptorSet);
 
         m_CommandBuffer->BeginRecording();
         m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);

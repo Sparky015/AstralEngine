@@ -15,8 +15,8 @@ namespace Astral {
         m_Device(desc.Device),
         m_Usage(desc.Usage),
         m_Size(desc.Size),
-        m_PhysicalDevice(desc.PhysicalDevice),
-        m_PropertyFlags(desc.PropertyFlags),
+        m_DeviceMemoryProperties(desc.DeviceMemoryProperties),
+        m_RequestedPropertyFlags(desc.RequestedMemoryPropertyFlags),
         m_Buffer(),
         m_Memory(),
         m_DeviceSize()
@@ -27,6 +27,28 @@ namespace Astral {
     VulkanBuffer::~VulkanBuffer()
     {
 
+    }
+
+
+    void VulkanBuffer::CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size)
+    {
+        CommandBufferHandle commandBufferHandle = device.AllocateCommandBuffer();
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        VkBuffer src = (VkBuffer)sourceBuffer.GetNativeHandle();
+
+        VkBufferCopy bufferCopy = {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = size
+        };
+
+        commandBufferHandle->BeginRecording();
+        vkCmdCopyBuffer(commandBuffer, src, m_Buffer, 1, &bufferCopy);
+        commandBufferHandle->EndRecording();
+
+        CommandQueueHandle commandQueueHandle = device.GetCommandQueue();
+        commandQueueHandle->SubmitSync(commandBufferHandle);
+        commandQueueHandle->WaitIdle();
     }
 
 
@@ -71,13 +93,12 @@ namespace Astral {
 
     uint32 VulkanBuffer::GetMemoryTypeIndex(uint32 memoryTypeBitsMask)
     {
-        const VkPhysicalDeviceMemoryProperties& memoryProperties = m_PhysicalDevice.memoryProperties;
-        for (uint32 i = 0; i < memoryProperties.memoryTypeCount; i++)
+        for (uint32 i = 0; i < m_DeviceMemoryProperties.memoryTypeCount; i++)
         {
-            const VkMemoryType& memoryType = memoryProperties.memoryTypes[i];
+            const VkMemoryType& memoryType = m_DeviceMemoryProperties.memoryTypes[i];
             uint32 currentBitmask = (1 << i);
             bool isCurrentMemoryTypeSupported = (memoryTypeBitsMask & currentBitmask);
-            bool hasRequiredMemoryProperties = ((memoryType.propertyFlags & m_PropertyFlags) == m_PropertyFlags);
+            bool hasRequiredMemoryProperties = ((memoryType.propertyFlags & m_RequestedPropertyFlags) == m_RequestedPropertyFlags);
             if (isCurrentMemoryTypeSupported && hasRequiredMemoryProperties) { return i; }
         }
 

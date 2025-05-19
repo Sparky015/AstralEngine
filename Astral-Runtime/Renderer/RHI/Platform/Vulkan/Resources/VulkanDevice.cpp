@@ -6,19 +6,20 @@
 
 #include "VulkanDevice.h"
 
-#include "VulkanCommandBuffer.h"
-#include "VulkanSwapchain.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
+#include "VulkanCommandBuffer.h"
+#include "VulkanSwapchain.h"
 #include "VulkanCommandQueue.h"
 #include "VulkanRenderpass.h"
-
-#include <GLFW/glfw3.h>
-#include <utility>
-
+#include "VulkanDescriptorSet.h"
 #include "VulkanFramebuffer.h"
 #include "VulkanPipelineStateObject.h"
 #include "VulkanShader.h"
+#include "VulkanVertexBuffer.h"
+
+#include <GLFW/glfw3.h>
+#include <utility>
 
 namespace Astral {
 
@@ -132,7 +133,7 @@ namespace Astral {
 
 
     PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(RenderPassHandle renderPassHandle,
-        ShaderHandle vertexShader, ShaderHandle fragmentShader)
+                                                                      ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle descriptorSetHandle)
     {
         VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
 
@@ -141,11 +142,37 @@ namespace Astral {
             .RenderPass = renderPass,
             .VertexShader = vertexShader,
             .FragmentShader = fragmentShader,
+            .DescriptorSet = descriptorSetHandle,
         };
 
         glfwGetWindowSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanPipelineStateObject>(pipelineStateObjectDesc);
+    }
+
+
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 size)
+    {
+        VulkanVertexBufferDesc vertexBufferDesc = {
+            .VulkanDevice = *this,
+            .Device = m_Device,
+            .VerticeData = verticeData,
+            .Size = size,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
+        };
+
+        return CreateGraphicsRef<VulkanVertexBuffer>(vertexBufferDesc);
+    }
+
+
+    DescriptorSetHandle VulkanDevice::CreateDescriptorSet(VertexBufferHandle vertexBufferHandle)
+    {
+        VulkanDescriptorSetDesc descriptorSetDesc = {
+            .Device = m_Device,
+            .VertexBuffer = vertexBufferHandle,
+        };
+
+        return CreateGraphicsRef<VulkanDescriptorSet>(descriptorSetDesc);
     }
 
 

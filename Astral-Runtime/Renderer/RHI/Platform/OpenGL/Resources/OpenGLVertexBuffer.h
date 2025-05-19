@@ -17,7 +17,9 @@ namespace Astral {
         void Bind() override;
         void Unbind() override;
         void SetLayout(BufferLayout& bufferLayout) override;
-        BufferLayout& GetLayout() override;
+        //BufferLayout& GetLayout() override;
+
+        void* GetNativeHande() override { return nullptr; }
 
     private:
         BufferLayout m_BufferLayout;

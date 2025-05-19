@@ -35,7 +35,10 @@ namespace Astral {
         RenderPassHandle CreateRenderPass(RenderTargetHandle renderTargetHandle) override;
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle) override;
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
-        PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader) override;
+        PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle
+                                                            descriptorSetHandle) override;
+        VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 size) override;
+        DescriptorSetHandle CreateDescriptorSet(VertexBufferHandle vertexBufferHandle) override;
 
         void* GetNativeHandle() override { return m_Device; }
 

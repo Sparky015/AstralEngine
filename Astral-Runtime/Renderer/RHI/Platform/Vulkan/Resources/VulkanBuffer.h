@@ -11,7 +11,7 @@
 
 #include <vulkan/vulkan_core.h>
 
-#include "VulkanPhysicalDevices.h"
+#include "VulkanDevice.h"
 
 namespace Astral {
 
@@ -20,15 +20,23 @@ namespace Astral {
         VkDevice Device;
         VkBufferUsageFlags Usage;
         uint32 Size;
-        VulkanPhysicalDevice& PhysicalDevice;
-        VkMemoryPropertyFlags PropertyFlags;
+        VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
+        VkMemoryPropertyFlags RequestedMemoryPropertyFlags;
     };
 
     class VulkanBuffer : public Buffer
     {
     public:
+        VulkanBuffer() = default;
         VulkanBuffer(const VulkanBufferDesc& desc);
         ~VulkanBuffer() override;
+
+        VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
+        VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
+
+        void CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
+
+        void* GetNativeHandle() override { return m_Buffer; }
 
     private:
 
@@ -40,8 +48,8 @@ namespace Astral {
         VkDevice m_Device;
         VkBufferUsageFlags m_Usage;
         uint32 m_Size;
-        VulkanPhysicalDevice& m_PhysicalDevice;
-        VkMemoryPropertyFlags m_PropertyFlags;
+        VkPhysicalDeviceMemoryProperties m_DeviceMemoryProperties;
+        VkMemoryPropertyFlags m_RequestedPropertyFlags;
 
 
         VkBuffer m_Buffer;

@@ -203,7 +203,6 @@ add_library(AstralEngine
         Renderer/RHI/Resources/Buffer.h
         Renderer/RHI/Resources/CommandBuffer.h
         Renderer/RHI/Resources/Swapchain.h
-        Renderer/RHI/Resources/Semaphore.h
         Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
         Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
@@ -230,6 +229,10 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
 )
 
 

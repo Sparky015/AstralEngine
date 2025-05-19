@@ -52,23 +52,23 @@ namespace Astral {
         Bind();
         vertexBuffer->Bind();
 
-        BufferLayout bufferLayout = vertexBuffer->GetLayout();
+        // BufferLayout bufferLayout = vertexBuffer->GetLayout();
 
-        for (const BufferAttribute& bufferAttribute : bufferLayout)
-        {
-            m_StrideSize += bufferAttribute.GetAttributeSize();
-        }
-
-        int64 offset = 0;
-        for (const BufferAttribute& bufferAttribute : bufferLayout)
-        {
-            int attributeSize = bufferAttribute.GetAttributeSize();
-            int numOfComponents = bufferAttribute.GetAttributeComponentCount();
-            glEnableVertexAttribArray(m_AttributeCounter);
-            glVertexAttribPointer(m_AttributeCounter, numOfComponents, GL_FLOAT, GL_FALSE, m_StrideSize, (void*)offset);
-            offset += attributeSize;
-            m_AttributeCounter++;
-        }
+        // for (const BufferAttribute& bufferAttribute : bufferLayout)
+        // {
+        //     m_StrideSize += bufferAttribute.GetAttributeSize();
+        // }
+        //
+        // int64 offset = 0;
+        // for (const BufferAttribute& bufferAttribute : bufferLayout)
+        // {
+        //     int attributeSize = bufferAttribute.GetAttributeSize();
+        //     int numOfComponents = bufferAttribute.GetAttributeComponentCount();
+        //     glEnableVertexAttribArray(m_AttributeCounter);
+        //     glVertexAttribPointer(m_AttributeCounter, numOfComponents, GL_FLOAT, GL_FALSE, m_StrideSize, (void*)offset);
+        //     offset += attributeSize;
+        //     m_AttributeCounter++;
+        // }
 
     }
 
