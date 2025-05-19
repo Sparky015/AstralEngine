@@ -21,12 +21,12 @@ namespace Astral {
         m_Memory(),
         m_DeviceSize()
     {
-
+        CreateBuffer();
     }
 
     VulkanBuffer::~VulkanBuffer()
     {
-
+        DestroyBuffer();
     }
 
 

@@ -28,11 +28,11 @@ namespace Astral {
     {
     public:
         VulkanBuffer() = default;
-        VulkanBuffer(const VulkanBufferDesc& desc);
+        explicit VulkanBuffer(const VulkanBufferDesc& desc);
         ~VulkanBuffer() override;
 
-        VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
-        VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
+        [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
+        [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
 
         void CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
 

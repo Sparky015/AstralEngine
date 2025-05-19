@@ -16,13 +16,13 @@ namespace Astral {
         m_Size(desc.Size),
         m_VerticeData(desc.VerticeData)
     {
-
+        CreateVertexBuffer(desc);
     }
 
 
     VulkanVertexBuffer::~VulkanVertexBuffer()
     {
-
+        DestroyVertexBuffer();
     }
 
 

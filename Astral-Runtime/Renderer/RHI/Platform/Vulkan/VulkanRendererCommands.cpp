@@ -76,6 +76,7 @@ namespace Astral {
         m_CommandBuffer->BeginRecording();
         m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);
         m_PipelineStateObject->Bind(m_CommandBuffer);
+        m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
         DrawElements(m_CommandBuffer);
         m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
