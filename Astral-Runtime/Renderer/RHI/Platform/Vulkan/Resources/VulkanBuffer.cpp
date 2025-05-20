@@ -19,7 +19,8 @@ namespace Astral {
         m_RequestedPropertyFlags(desc.RequestedMemoryPropertyFlags),
         m_Buffer(),
         m_Memory(),
-        m_DeviceSize()
+        m_DeviceSize(),
+        m_IsDeviceMemoryMapped(false)
     {
         CreateBuffer();
     }
@@ -27,6 +28,38 @@ namespace Astral {
     VulkanBuffer::~VulkanBuffer()
     {
         DestroyBuffer();
+    }
+
+
+    void VulkanBuffer::MapPointer(void** cpuPtr)
+    {
+        if (m_IsDeviceMemoryMapped) { vkUnmapMemory(m_Device, m_Memory); }
+
+        VkResult result = vkMapMemory(m_Device, m_Memory, 0,
+                                        m_DeviceSize, 0, cpuPtr);
+        ASSERT(result == VK_SUCCESS, "Failed to map memory in buffer")
+
+        m_IsDeviceMemoryMapped = true;
+    }
+
+
+    void VulkanBuffer::UnmapPointer()
+    {
+        if (m_IsDeviceMemoryMapped)
+        {
+            vkUnmapMemory(m_Device, m_Memory);
+            m_IsDeviceMemoryMapped = false;
+        }
+    }
+
+
+    void VulkanBuffer::CopyDataToBuffer(void* data, uint32 size)
+    {
+        void* memory = nullptr;
+        ASSERT(size <= m_DeviceSize, "Data does not fit in buffer!")
+        MapPointer(&memory);
+        memcpy(memory, data, size);
+        UnmapPointer();
     }
 
 

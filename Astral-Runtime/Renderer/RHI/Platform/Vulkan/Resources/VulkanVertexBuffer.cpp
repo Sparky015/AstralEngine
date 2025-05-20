@@ -28,7 +28,7 @@ namespace Astral {
 
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
-        VkBufferUsageFlags usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        VkBufferUsageFlags usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
         VulkanBufferDesc stagingBufferDesc = {
@@ -39,17 +39,8 @@ namespace Astral {
             .RequestedMemoryPropertyFlags = memoryProperties
         };
         VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
+        stagingBuffer.CopyDataToBuffer(desc.VerticeData, desc.Size);
 
-        void* memory = nullptr;
-        VkDeviceSize offset = 0;
-        VkMemoryMapFlags flags = 0;
-        VkResult result = vkMapMemory(m_Device, stagingBuffer.GetDeviceMemory(), offset,
-                                        stagingBuffer.GetDeviceSize(), flags, &memory);
-        ASSERT(result == VK_SUCCESS, "Failed to map memory in vertex buffer")
-
-        memcpy(memory, desc.VerticeData, desc.Size);
-
-        vkUnmapMemory(m_Device, stagingBuffer.GetDeviceMemory());
 
         VulkanBufferDesc vertexBufferDesc = {
             .Device = m_Device,

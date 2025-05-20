@@ -33,6 +33,9 @@ namespace Astral {
 
         [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
         [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
+        void MapPointer(void** cpuPtr);
+        void UnmapPointer();
+        void CopyDataToBuffer(void* data, uint32 size);
 
         void CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
 
@@ -55,6 +58,7 @@ namespace Astral {
         VkBuffer m_Buffer;
         VkDeviceMemory m_Memory;
         VkDeviceSize m_DeviceSize;
+        bool m_IsDeviceMemoryMapped;
     };
 
 }
