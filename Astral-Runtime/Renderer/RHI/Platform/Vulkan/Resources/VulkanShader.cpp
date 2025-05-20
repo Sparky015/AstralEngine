@@ -11,6 +11,7 @@
 
 #include "glslang/Include/glslang_c_interface.h"
 #include "glslang/Public/resource_limits_c.h"
+#include "glslang/Public/ShaderLang.h"
 
 namespace Astral {
 
@@ -33,6 +34,40 @@ namespace Astral {
 
         std::vector<uint32> SPIRV_Code;
 
+        // if (!glslang::InitializeProcess())
+        // {
+        //     ASTRAL_ERROR("Glslang failed to initialize")
+        // }
+
+        // EShLanguage shaderStage;
+        // switch (shaderSource.GetShaderType())
+        // {
+        //     case VERTEX_SHADER: shaderStage = EShLangVertex; break;
+        //     case FRAGMENT_SHADER: shaderStage = EShLangFragment; break;
+        //     case COMPUTE_SHADER: shaderStage = EShLangCompute; break;
+        //     case GEOMETRY_SHADER: shaderStage = EShLangGeometry; break;
+        //     case TESSELLATION_CONTROL_SHADER: shaderStage = EShLangTessControl; break;
+        //     case TESSELLATION_EVALUATION_SHADER: shaderStage = EShLangTessEvaluation; break;
+        //     case NONE: ASTRAL_ERROR("Invalid shader type!"); break;
+        //     default: ASTRAL_ERROR("Invalid shader type!"); break;
+        // }
+
+
+        // glslang::TShader shader = glslang::TShader(shaderStage);
+
+
+        // glslang::TShader shader = glslang::TShader(shaderStage);
+        //
+        // const char* source = shaderSource.GetShaderCode().c_str();
+        // shader.setStrings(&source, 1);
+        //
+        // shader.setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetVulkan_1_0);
+        // shader.setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_0);
+        // shader.setEnvInput(glslang::EShSourceGlsl, shaderStage, glslang::EShClientVulkan, 100);
+        //
+        //
+        // shader.preprocess();
+
         glslang_stage_t shaderStage;
         switch (shaderSource.GetShaderType())
         {
@@ -46,15 +81,16 @@ namespace Astral {
             default: ASTRAL_ERROR("Invalid shader type!"); break;
         }
 
+
         glslang_initialize_process();
 
         glslang_input_t input = {
             .language = GLSLANG_SOURCE_GLSL,
             .stage = shaderStage,
             .client = GLSLANG_CLIENT_VULKAN,
-            .client_version = GLSLANG_TARGET_VULKAN_1_0,
+            .client_version = GLSLANG_TARGET_VULKAN_1_2,
             .target_language = GLSLANG_TARGET_SPV,
-            .target_language_version = GLSLANG_TARGET_SPV_1_0,
+            .target_language_version = GLSLANG_TARGET_SPV_1_5,
             .code = shaderSource.GetShaderCode().c_str(),
             .default_version = 100,
             .default_profile = GLSLANG_NO_PROFILE,
@@ -116,6 +152,7 @@ namespace Astral {
         glslang_shader_delete(shader);
 
         glslang_finalize_process();
+        // glslang::FinalizeProcess();
 
         // SPIR-V Compilation Finished
 
