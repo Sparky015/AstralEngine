@@ -45,7 +45,8 @@ namespace Astral {
             .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
         };
-        m_VertexBuffer = VulkanBuffer(vertexBufferDesc);
+
+        m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
 
         m_VertexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.Size);
     }

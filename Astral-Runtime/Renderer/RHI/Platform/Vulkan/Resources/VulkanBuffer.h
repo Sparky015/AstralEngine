@@ -41,6 +41,12 @@ namespace Astral {
 
         void* GetNativeHandle() override { return m_Buffer; }
 
+
+        VulkanBuffer(const VulkanBuffer&) = delete;
+        VulkanBuffer& operator=(const VulkanBufferDesc& desc) = delete;
+        VulkanBuffer(VulkanBuffer&& other) = delete;
+        VulkanBuffer& operator=(VulkanBuffer&& other) noexcept;
+
     private:
 
 

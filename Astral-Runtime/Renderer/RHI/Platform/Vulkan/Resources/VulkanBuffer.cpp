@@ -87,12 +87,30 @@ namespace Astral {
     }
 
 
+    VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
+    {
+        m_Device = other.m_Device;
+        m_Buffer = other.m_Buffer;
+        m_Memory = other.m_Memory;
+        m_DeviceSize = other.m_DeviceSize;
+        m_IsDeviceMemoryMapped = other.m_IsDeviceMemoryMapped;
+
+        other.m_Buffer = VK_NULL_HANDLE;
+        other.m_Memory = VK_NULL_HANDLE;
+        other.m_DeviceSize = 0;
+        other.m_IsDeviceMemoryMapped = false;
+
+
+        return *this;
+    }
+
+
     void VulkanBuffer::CreateFinalBuffer()
     {
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
             .size = m_Size,
-            .usage = m_Usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+            .usage = m_Usage,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 

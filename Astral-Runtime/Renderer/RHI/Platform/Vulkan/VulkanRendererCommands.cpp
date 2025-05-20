@@ -51,6 +51,17 @@ namespace Astral {
 
     }
 
+    struct Vertex {
+        Vertex(const glm::vec3& p, const glm::vec2& t)
+        {
+            Pos = p;
+            Tex = t;
+        }
+
+        glm::vec3 Pos;
+        glm::vec2 Tex;
+    };
+
 
     void VulkanRendererCommands::TestInit()
     {
@@ -65,8 +76,14 @@ namespace Astral {
         ShaderSource fragmentSource = ShaderSource( "SecondTriangle.frag");
 
 
-        float vertices[3] = {-0.5f, -0.5f, 0.0f};
-        m_VertexBuffer = device.CreateVertexBuffer(vertices, sizeof(float) * 3);
+
+        std::vector<Vertex> Vertices = {
+            Vertex({-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}),     // top left
+            Vertex({1.0f, -1.0f, 0.0f}, {0.0f, 1.0f} ),      // top right
+            Vertex({0.0f, 1.0f, 0.0f}, {1.0f, 1.0f})       // bottom middle
+        };
+
+        m_VertexBuffer = device.CreateVertexBuffer(Vertices.data(), sizeof(Vertices[0]) * Vertices.size() );
         m_VertexShader = device.CreateShader(vertexSource);
         m_FragmentShader = device.CreateShader(fragmentSource);
         m_DescriptorSet = device.CreateDescriptorSet(m_VertexBuffer);
