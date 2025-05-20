@@ -65,8 +65,8 @@ namespace Astral {
         ShaderSource fragmentSource = ShaderSource( "SecondTriangle.frag");
 
 
-        float vertices[3] = {};
-        m_VertexBuffer = device.CreateVertexBuffer(vertices, 3);
+        float vertices[3] = {-0.5f, -0.5f, 0.0f};
+        m_VertexBuffer = device.CreateVertexBuffer(vertices, sizeof(float) * 3);
         m_VertexShader = device.CreateShader(vertexSource);
         m_FragmentShader = device.CreateShader(fragmentSource);
         m_DescriptorSet = device.CreateDescriptorSet(m_VertexBuffer);

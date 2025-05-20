@@ -41,7 +41,6 @@ namespace Astral {
     private:
 
         void CreateVertexBuffer(const VulkanVertexBufferDesc& desc);
-        void DestroyVertexBuffer();
 
         VkDevice m_Device;
         VulkanBuffer m_VertexBuffer;

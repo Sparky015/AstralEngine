@@ -22,21 +22,17 @@ namespace Astral {
 
     VulkanVertexBuffer::~VulkanVertexBuffer()
     {
-        DestroyVertexBuffer();
     }
 
 
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
-        VkBufferUsageFlags usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
         VulkanBufferDesc stagingBufferDesc = {
             .Device = m_Device,
-            .Usage = usage,
+            .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             .Size = desc.Size,
             .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-            .RequestedMemoryPropertyFlags = memoryProperties
+            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
         VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
         stagingBuffer.CopyDataToBuffer(desc.VerticeData, desc.Size);
@@ -49,15 +45,9 @@ namespace Astral {
             .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
         };
-        VulkanBuffer vertexBuffer = VulkanBuffer(vertexBufferDesc);
+        m_VertexBuffer = VulkanBuffer(vertexBufferDesc);
 
-        vertexBuffer.CopyDataIn(desc.VulkanDevice, stagingBuffer, desc.Size);
-    }
-
-
-    void VulkanVertexBuffer::DestroyVertexBuffer()
-    {
-
+        m_VertexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.Size);
     }
 
 }
