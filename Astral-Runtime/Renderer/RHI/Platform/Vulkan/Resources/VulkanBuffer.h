@@ -37,14 +37,15 @@ namespace Astral {
         void UnmapPointer();
         void CopyDataToBuffer(void* data, uint32 size);
 
-        void CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
+        void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
 
         void* GetNativeHandle() override { return m_Buffer; }
 
     private:
 
-        void CreateBuffer();
-        void DestroyBuffer();
+
+        void CreateFinalBuffer();
+        void DestroyFinalBuffer();
 
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 

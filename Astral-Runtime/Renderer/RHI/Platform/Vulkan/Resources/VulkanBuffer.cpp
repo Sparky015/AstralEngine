@@ -22,12 +22,12 @@ namespace Astral {
         m_DeviceSize(),
         m_IsDeviceMemoryMapped(false)
     {
-        CreateBuffer();
+        CreateFinalBuffer();
     }
 
     VulkanBuffer::~VulkanBuffer()
     {
-        DestroyBuffer();
+        DestroyFinalBuffer();
     }
 
 
@@ -63,11 +63,13 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::CopyDataIn(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size)
+    void VulkanBuffer::CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size)
     {
+        ASSERT(size <= m_DeviceSize, "Data does not fit in buffer!")
+        VkBuffer stagingBuffer = (VkBuffer)sourceBuffer.GetNativeHandle();
+
         CommandBufferHandle commandBufferHandle = device.AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkBuffer src = (VkBuffer)sourceBuffer.GetNativeHandle();
 
         VkBufferCopy bufferCopy = {
             .srcOffset = 0,
@@ -76,7 +78,7 @@ namespace Astral {
         };
 
         commandBufferHandle->BeginRecording();
-        vkCmdCopyBuffer(commandBuffer, src, m_Buffer, 1, &bufferCopy);
+        vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_Buffer, 1, &bufferCopy);
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle commandQueueHandle = device.GetCommandQueue();
@@ -85,12 +87,12 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::CreateBuffer()
+    void VulkanBuffer::CreateFinalBuffer()
     {
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
             .size = m_Size,
-            .usage = m_Usage,
+            .usage = m_Usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 
@@ -118,8 +120,9 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::DestroyBuffer()
+    void VulkanBuffer::DestroyFinalBuffer()
     {
+        vkFreeMemory(m_Device, m_Memory, nullptr);
         vkDestroyBuffer(m_Device, m_Buffer, nullptr);
     }
 
