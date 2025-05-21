@@ -12,10 +12,11 @@
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
-#include "cpuinfo.h"
-
-
 #include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
+
+#include "cpuinfo.h"
+#include "glslang/Include/glslang_c_interface.h"
+
 
 Engine* Engine::m_Instance = nullptr;
 
@@ -28,7 +29,7 @@ Engine::Engine() :
     ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
     m_Instance = this;
 
-    // Core::MemoryTracker::Get().Init();
+    Core::MemoryTracker::Get().Init();
     // Core::MemoryTracker::Get().BeginScene("Engine_Init");
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
@@ -40,6 +41,8 @@ Engine::Engine() :
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
+    glslang_initialize_process();
+
 
     m_WindowClosedListener.StartListening();
     // Core::MemoryTracker::Get().EndScene();
@@ -50,6 +53,9 @@ Engine::~Engine()
 {
     PROFILE_SCOPE("Engine Shutdown");
     m_WindowClosedListener.StopListening();
+
+    glslang_finalize_process();
+    cpuinfo_deinitialize();
 
     m_ApplicationModule->Shutdown();
     Astral::g_RendererManager.Shutdown();

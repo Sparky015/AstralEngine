@@ -100,7 +100,7 @@ namespace Astral {
             .Format = format,
         };
 
-        glfwGetWindowSize(m_Window, &vulkanRenderpassDesc.WindowWidth, &vulkanRenderpassDesc.WindowHeight);
+        glfwGetFramebufferSize(m_Window, &vulkanRenderpassDesc.WindowWidth, &vulkanRenderpassDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
     }
@@ -117,7 +117,7 @@ namespace Astral {
             .ImageView = imageView,
         };
 
-        glfwGetWindowSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
+        glfwGetFramebufferSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
     }
@@ -147,7 +147,7 @@ namespace Astral {
             .DescriptorSet = descriptorSetHandle,
         };
 
-        glfwGetWindowSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
+        glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanPipelineStateObject>(pipelineStateObjectDesc);
     }

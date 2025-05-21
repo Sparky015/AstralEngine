@@ -124,13 +124,29 @@ namespace Astral {
 
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
+        // TODO: Find the exact usages and create the pool at VulkanDescriptorSet::EndBuildingSet
+        VkDescriptorPoolSize poolSizes[3] = {
+            {
+                .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                .descriptorCount = 2
+            },
+            {
+                .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                .descriptorCount = 2
+            },
+            {
+                .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                .descriptorCount = 2
+            }
+        };
+
         VkDescriptorPoolCreateInfo descriptorPoolInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
             .maxSets = 1,
-            .poolSizeCount = 0,
-            .pPoolSizes = nullptr
+            .poolSizeCount = 3,
+            .pPoolSizes = poolSizes
         };
 
         VkResult result = vkCreateDescriptorPool(m_Device, &descriptorPoolInfo, nullptr, &m_DescriptorPool);
