@@ -21,6 +21,8 @@
 #include <GLFW/glfw3.h>
 #include <utility>
 
+#include "VulkanIndexBuffer.h"
+
 namespace Astral {
 
     VulkanDevice::VulkanDevice(const VulkanDeviceDesc& desc) :
@@ -151,13 +153,13 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 size)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
             .VulkanDevice = *this,
             .Device = m_Device,
             .VerticeData = verticeData,
-            .SizeInBytes = size,
+            .SizeInBytes = sizeInBytes,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 
@@ -165,11 +167,40 @@ namespace Astral {
     }
 
 
-    DescriptorSetHandle VulkanDevice::CreateDescriptorSet(VertexBufferHandle vertexBufferHandle)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(void* indiceData, uint32 sizeInBytes)
+    {
+        VulkanIndexBufferDesc indexBufferDesc = {
+            .VulkanDevice = *this,
+            .Device = m_Device,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .IndiceData = indiceData,
+            .SizeInBytes = sizeInBytes
+        };
+
+        return CreateGraphicsRef<VulkanIndexBuffer>(indexBufferDesc);
+    }
+
+
+    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size)
+    {
+        VulkanBufferDesc storageBufferDesc = {
+            .Device = m_Device,
+            .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+            .Size = size,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        };
+
+        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
+        bufferHandle->CopyDataToBuffer(data, size);
+        return bufferHandle;
+    }
+
+
+    DescriptorSetHandle VulkanDevice::CreateDescriptorSet()
     {
         VulkanDescriptorSetDesc descriptorSetDesc = {
-            .Device = m_Device,
-            .VertexBuffer = vertexBufferHandle,
+            .Device = m_Device
         };
 
         return CreateGraphicsRef<VulkanDescriptorSet>(descriptorSetDesc);

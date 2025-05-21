@@ -12,12 +12,15 @@ namespace Astral {
 
     VulkanDescriptorSet::VulkanDescriptorSet(const VulkanDescriptorSetDesc& desc) :
         m_Device(desc.Device),
-        m_VertexBuffer(desc.VertexBuffer)
+        m_DescriptorSetLayoutBindings(),
+        m_NumberOfBindings(0),
+        m_Buffers(),
+        m_Samplers(),
+        m_DescriptorPool(),
+        m_DescriptorSet(),
+        m_DescriptorSetLayout()
     {
         CreateDescriptorPool();
-        CreateDescriptorSetLayout();
-        AllocateDescriptorSets();
-        UpdateDescriptorSets();
     }
 
 
@@ -26,6 +29,82 @@ namespace Astral {
         DestroyDescriptorSets();
         DestroyDescriptorSetLayout();
         DestroyDescriptorPool();
+    }
+
+
+    void VulkanDescriptorSet::BeginBuildingSet()
+    {
+        m_NumberOfBindings = 0;
+        m_DescriptorSetLayoutBindings.clear();
+        while (!m_Buffers.empty()) m_Buffers.pop();
+        while (!m_Samplers.empty()) m_Samplers.pop();
+    }
+
+
+    void VulkanDescriptorSet::AddDescriptorStorageBuffer(BufferHandle bufferHandle, BindStage bindStage)
+    {
+        VkShaderStageFlags stageFlags;
+        if (bindStage == BindStage::VERTEX)
+        {
+            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (bindStage == BindStage::FRAGMENT)
+        {
+            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        else
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
+        VkDescriptorSetLayoutBinding storageBufferDescriptorLayoutBinding = {
+            .binding = m_NumberOfBindings,
+            .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+            .descriptorCount = 1,
+            .stageFlags = stageFlags,
+        };
+        m_NumberOfBindings++;
+
+        m_DescriptorSetLayoutBindings.push_back(storageBufferDescriptorLayoutBinding);
+        m_Buffers.push(bufferHandle);
+    }
+
+
+    void VulkanDescriptorSet::AddDescriptorUniformBuffer(BufferHandle bufferHandle)
+    {
+        VkDescriptorSetLayoutBinding uniformBufferDescriptorLayoutBinding = {
+            .binding = m_NumberOfBindings,
+            .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+            .descriptorCount = 1,
+            .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+        };
+        m_NumberOfBindings++;
+
+        m_DescriptorSetLayoutBindings.push_back(uniformBufferDescriptorLayoutBinding);
+        m_Buffers.push(bufferHandle);
+    }
+
+
+    void VulkanDescriptorSet::AddDescriptorImageSampler(SamplerHandle samplerHandle)
+    {
+        VkDescriptorSetLayoutBinding imageSamplerDescriptorLayoutBinding = {
+            .binding = m_NumberOfBindings,
+            .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            .descriptorCount = 1,
+            .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+        };
+        m_NumberOfBindings++;
+
+        m_DescriptorSetLayoutBindings.push_back(imageSamplerDescriptorLayoutBinding);
+        m_Samplers.push(samplerHandle);
+    }
+
+
+    void VulkanDescriptorSet::EndBuildingSet()
+    {
+        CreateDescriptorSetLayout();
+        AllocateDescriptorSets();
+        UpdateDescriptorSets();
     }
 
 
@@ -53,19 +132,12 @@ namespace Astral {
 
     void VulkanDescriptorSet::CreateDescriptorSetLayout()
     {
-        VkDescriptorSetLayoutBinding vertexShaderLayoutBinding = {
-            .binding = 0,
-            .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            .descriptorCount = 1,
-            .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
-        };
-
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
-            .bindingCount = 1,
-            .pBindings = &vertexShaderLayoutBinding
+            .bindingCount = m_NumberOfBindings,
+            .pBindings = m_DescriptorSetLayoutBindings.data(),
         };
 
         VkResult result = vkCreateDescriptorSetLayout(m_Device, &descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout);
@@ -96,32 +168,80 @@ namespace Astral {
 
     void VulkanDescriptorSet::DestroyDescriptorSets()
     {
-
+        vkFreeDescriptorSets(m_Device, m_DescriptorPool, 1, &m_DescriptorSet);
     }
 
 
     void VulkanDescriptorSet::UpdateDescriptorSets()
     {
-        VkBuffer vertexBuffer = (VkBuffer)m_VertexBuffer->GetNativeHande();
+        // VkBuffer vertexBuffer = (VkBuffer)m_VertexBuffer->GetNativeHande();
+        //
+        // VkDescriptorBufferInfo bufferInfo = {
+        //     .buffer = vertexBuffer,
+        //     .offset = 0,
+        //     .range = m_VertexBuffer->GetSize(),
+        // };
 
-        VkDescriptorBufferInfo bufferInfo = {
-            .buffer = vertexBuffer,
-            .offset = 0,
-            .range = m_VertexBuffer->GetSize(),
-        };
+        for (uint32 i = 0; i < m_DescriptorSetLayoutBindings.size(); i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            VkDescriptorType descriptorType = descriptorSetLayout.descriptorType;
 
-        VkWriteDescriptorSet descriptorSetWrite = {
-            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-            .pNext = nullptr,
-            .dstSet = m_DescriptorSet,
-            .dstBinding = 0,
-            .dstArrayElement = 0,
-            .descriptorCount = 1,
-            .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            .pBufferInfo = &bufferInfo
-        };
+            if (descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER || descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
+            {
+                VkDescriptorBufferInfo bufferInfo = {};
 
-        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+                BufferHandle bufferHandle = m_Buffers.front();
+                m_Buffers.pop();
+                VkBuffer buffer = (VkBuffer)bufferHandle->GetNativeHandle();
+
+                bufferInfo.buffer = buffer;
+                bufferInfo.offset = 0;
+                bufferInfo.range = bufferHandle->GetUsedSize();
+
+
+                VkWriteDescriptorSet descriptorSetWrite = {
+                    .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+                    .pNext = nullptr,
+                    .dstSet = m_DescriptorSet,
+                    .dstBinding = i,
+                    .dstArrayElement = 0,
+                    .descriptorCount = 1,
+                    .descriptorType = descriptorType,
+                    .pBufferInfo = &bufferInfo
+                };
+
+                vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+            }
+            else if (descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            {
+                VkDescriptorImageInfo imageInfo = {};
+
+                SamplerHandle samplerHandle = m_Samplers.front();
+                m_Samplers.pop();
+                VkSampler sampler = (VkSampler)samplerHandle->GetNativeHandle();
+
+
+                imageInfo.sampler = sampler;
+                //imageInfo.imageLayout = ;
+                //imageInfo.imageView = ;
+
+                VkWriteDescriptorSet descriptorSetWrite = {
+                    .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+                    .pNext = nullptr,
+                    .dstSet = m_DescriptorSet,
+                    .dstBinding = i,
+                    .dstArrayElement = 0,
+                    .descriptorCount = 1,
+                    .descriptorType = descriptorType,
+                    .pImageInfo = &imageInfo
+                };
+
+                vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+            }
+        }
+
+
     }
 
 }

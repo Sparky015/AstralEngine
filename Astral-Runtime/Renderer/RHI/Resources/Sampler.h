@@ -13,8 +13,9 @@ namespace Astral {
     public:
         virtual ~Sampler() = default;
 
-
-        static Sampler* CreateSampler();
+        virtual void* GetNativeHandle() = 0;
     };
+
+    using SamplerHandle = GraphicsRef<Sampler>;
 
 }

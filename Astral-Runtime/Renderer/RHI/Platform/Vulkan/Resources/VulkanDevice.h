@@ -13,6 +13,8 @@
 #include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
 
+#include "Renderer/RHI/Resources/IndexBuffer.h"
+
 namespace Astral {
 
     struct VulkanDeviceDesc
@@ -37,8 +39,10 @@ namespace Astral {
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
         PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle
                                                             descriptorSetHandle) override;
-        VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 size) override;
-        DescriptorSetHandle CreateDescriptorSet(VertexBufferHandle vertexBufferHandle) override;
+        VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes) override;
+        IndexBufferHandle CreateIndexBuffer(void* indiceData, uint32 sizeInBytes) override;
+        BufferHandle CreateStorageBuffer(void* data, uint32 size) override;
+        DescriptorSetHandle CreateDescriptorSet() override;
 
         void* GetNativeHandle() override { return m_Device; }
 

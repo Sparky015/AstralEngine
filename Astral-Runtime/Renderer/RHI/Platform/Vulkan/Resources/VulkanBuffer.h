@@ -33,11 +33,13 @@ namespace Astral {
 
         [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
         [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
-        void MapPointer(void** cpuPtr);
-        void UnmapPointer();
-        void CopyDataToBuffer(void* data, uint32 size);
+        void MapPointer(void** cpuPtr) override;
+        void UnmapPointer() override;
+        void CopyDataToBuffer(void* data, uint32 size) override;
 
         void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
+
+        uint32 GetUsedSize() override { return m_Size; }
 
         void* GetNativeHandle() override { return m_Buffer; }
 

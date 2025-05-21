@@ -41,8 +41,8 @@ namespace Astral {
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         // TODO: Query the vertex buffers on the amount of vertices when it gets implemented
-        vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-
+        // vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, 3, 1, 0, 0, 0);
         m_NumberOfDrawCalls++;
     }
 
@@ -73,18 +73,39 @@ namespace Astral {
             {{-0.5f, 0.5f}}
         };
 
+        std::vector<uint32_t> Indices = {
+            0, 1, 2
+        };
+
+
+
         m_VertexBuffer = device.CreateVertexBuffer(Vertices.data(), sizeof(Vertices[0]) * Vertices.size() );
+        m_IndexBuffer = device.CreateIndexBuffer(Indices.data(), sizeof(Indices[0]) * Indices.size());
         m_VertexShader = device.CreateShader(vertexSource);
         m_FragmentShader = device.CreateShader(fragmentSource);
-        m_DescriptorSet = device.CreateDescriptorSet(m_VertexBuffer);
+        m_DescriptorSet = device.CreateDescriptorSet();
+
+
+        Vec4 color = {1.0f, 0.0f, 1.0f, 1.0f};
+        BufferHandle storageBuffer = device.CreateStorageBuffer(&color, sizeof(color));
+
+        float mult = .5f;
+        BufferHandle storageBuffer2 = device.CreateStorageBuffer(&mult, sizeof(mult));
+
+        m_DescriptorSet->BeginBuildingSet();
+        m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer, BindStage::FRAGMENT);
+        m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer2, BindStage::FRAGMENT);
+        m_DescriptorSet->EndBuildingSet();
+
 
         m_PipelineStateObject = device.CreatePipelineStateObject(m_RenderPass, m_VertexShader, m_FragmentShader, m_DescriptorSet);
 
         m_CommandBuffer->BeginRecording();
         m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);
         m_PipelineStateObject->Bind(m_CommandBuffer);
-        // m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
+        m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
         m_VertexBuffer->Bind(m_CommandBuffer);
+        m_IndexBuffer->Bind(m_CommandBuffer);
         DrawElements(m_CommandBuffer, m_VertexBuffer);
         m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();

@@ -36,6 +36,7 @@ namespace Astral {
         PipelineStateObjectHandle m_PipelineStateObject;
         DescriptorSetHandle m_DescriptorSet;
         VertexBufferHandle m_VertexBuffer;
+        IndexBufferHandle m_IndexBuffer;
     };
 
 }

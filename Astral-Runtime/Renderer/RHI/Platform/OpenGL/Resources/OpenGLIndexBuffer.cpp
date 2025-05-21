@@ -4,9 +4,12 @@
 
 #include "OpenGLIndexBuffer.h"
 
+#include <complex.h>
+
 #include "Debug/Utilities/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 
 namespace Astral {
 
@@ -14,7 +17,7 @@ namespace Astral {
     {
         LOG("Creating Index Buffer Object!");
         glGenBuffers(1, &m_RendererID);
-        Bind();
+        // Bind(TODO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * count, indices, GL_STATIC_DRAW);
         Unbind();
         GLCheckError();
@@ -29,7 +32,7 @@ namespace Astral {
     }
 
 
-    void OpenGLIndexBuffer::Bind() const
+    void OpenGLIndexBuffer::Bind(CommandBufferHandle commandBufferHandle)
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
     }

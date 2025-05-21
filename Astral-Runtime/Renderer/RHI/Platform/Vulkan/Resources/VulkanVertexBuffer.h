@@ -57,9 +57,6 @@ namespace Astral {
         }
 
 
-
-
-
     private:
 
         void CreateVertexBuffer(const VulkanVertexBufferDesc& desc);

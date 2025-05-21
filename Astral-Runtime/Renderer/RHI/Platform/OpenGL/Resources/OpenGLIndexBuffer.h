@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <complex.h>
+
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 
 namespace Astral {
@@ -14,7 +17,7 @@ namespace Astral {
         explicit OpenGLIndexBuffer(uint32* indices, uint32 count);
         ~OpenGLIndexBuffer() override;
 
-        void Bind() const override;
+        void Bind(CommandBufferHandle commandBufferHandle) override;
         void Unbind() const override;
 
         uint32 GetCount() const override;

@@ -16,6 +16,10 @@ namespace Astral {
     public:
         virtual ~Buffer() = default;
 
+        virtual uint32 GetUsedSize() = 0;
+        virtual void MapPointer(void** cpuPtr) = 0;
+        virtual void UnmapPointer() = 0;
+        virtual void CopyDataToBuffer(void* data, uint32 size) = 0;
 
         virtual void* GetNativeHandle() = 0;
 

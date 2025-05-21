@@ -75,7 +75,7 @@ namespace Astral {
     void OpenGLVertexArrayObject::SetIndexBuffer(IndexBuffer* indexBuffer)
     {
         Bind();
-        indexBuffer->Bind();
+        // indexBuffer->Bind(TODO);
         m_ElementCount = indexBuffer->GetCount();
         Unbind();
         indexBuffer->Unbind();
