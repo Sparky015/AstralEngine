@@ -188,7 +188,23 @@ namespace Astral {
             .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
             .Size = size,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        };
+
+        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
+        bufferHandle->CopyDataToBuffer(data, size);
+        return bufferHandle;
+    }
+
+
+    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size)
+    {
+        VulkanBufferDesc storageBufferDesc = {
+            .Device = m_Device,
+            .Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            .Size = size,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);

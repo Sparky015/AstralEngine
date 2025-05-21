@@ -41,14 +41,14 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorStorageBuffer(BufferHandle bufferHandle, BindStage bindStage)
+    void VulkanDescriptorSet::AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
         VkShaderStageFlags stageFlags;
-        if (bindStage == BindStage::VERTEX)
+        if (bindStage == ShaderStage::VERTEX)
         {
             stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         }
-        else if (bindStage == BindStage::FRAGMENT)
+        else if (bindStage == ShaderStage::FRAGMENT)
         {
             stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
         }
@@ -70,13 +70,27 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorUniformBuffer(BufferHandle bufferHandle)
+    void VulkanDescriptorSet::AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
+        VkShaderStageFlags stageFlags;
+        if (bindStage == ShaderStage::VERTEX)
+        {
+            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (bindStage == ShaderStage::FRAGMENT)
+        {
+            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        else
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
         VkDescriptorSetLayoutBinding uniformBufferDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
             .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             .descriptorCount = 1,
-            .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+            .stageFlags = stageFlags,
         };
         m_NumberOfBindings++;
 
@@ -174,14 +188,6 @@ namespace Astral {
 
     void VulkanDescriptorSet::UpdateDescriptorSets()
     {
-        // VkBuffer vertexBuffer = (VkBuffer)m_VertexBuffer->GetNativeHande();
-        //
-        // VkDescriptorBufferInfo bufferInfo = {
-        //     .buffer = vertexBuffer,
-        //     .offset = 0,
-        //     .range = m_VertexBuffer->GetSize(),
-        // };
-
         for (uint32 i = 0; i < m_DescriptorSetLayoutBindings.size(); i++)
         {
             const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];

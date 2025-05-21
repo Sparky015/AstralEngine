@@ -15,7 +15,7 @@
 
 namespace Astral {
 
-    enum class BindStage : uint8
+    enum class ShaderStage : uint8
     {
         VERTEX,
         FRAGMENT
@@ -27,8 +27,8 @@ namespace Astral {
         virtual ~DescriptorSet() = default;
 
         virtual void BeginBuildingSet() = 0;
-        virtual void AddDescriptorStorageBuffer(BufferHandle bufferHandle, BindStage bindStage) = 0;
-        virtual void AddDescriptorUniformBuffer(BufferHandle bufferHandle) = 0;
+        virtual void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
+        virtual void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
         virtual void AddDescriptorImageSampler(SamplerHandle samplerHandle) = 0;
         virtual void EndBuildingSet() = 0;
 

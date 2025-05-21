@@ -31,8 +31,8 @@ namespace Astral {
         ~VulkanDescriptorSet() override;
 
         void BeginBuildingSet() override;
-        void AddDescriptorStorageBuffer(BufferHandle bufferHandle, BindStage bindStage) override;
-        void AddDescriptorUniformBuffer(BufferHandle bufferHandle) override;
+        void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
+        void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
         void AddDescriptorImageSampler(SamplerHandle samplerHandle) override;
         void EndBuildingSet() override;
 

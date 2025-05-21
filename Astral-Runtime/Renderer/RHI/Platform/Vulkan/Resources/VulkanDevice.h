@@ -42,6 +42,7 @@ namespace Astral {
         VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes) override;
         IndexBufferHandle CreateIndexBuffer(void* indiceData, uint32 sizeInBytes) override;
         BufferHandle CreateStorageBuffer(void* data, uint32 size) override;
+        BufferHandle CreateUniformBuffer(void* data, uint32 size) override;
         DescriptorSetHandle CreateDescriptorSet() override;
 
         void* GetNativeHandle() override { return m_Device; }

@@ -33,6 +33,7 @@ namespace Astral {
         virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes) = 0;
         virtual IndexBufferHandle CreateIndexBuffer(void* indices, uint32 sizeInBytes) = 0;
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
+        virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
 
         virtual void* GetNativeHandle() = 0;

@@ -78,7 +78,6 @@ namespace Astral {
         };
 
 
-
         m_VertexBuffer = device.CreateVertexBuffer(Vertices.data(), sizeof(Vertices[0]) * Vertices.size() );
         m_IndexBuffer = device.CreateIndexBuffer(Indices.data(), sizeof(Indices[0]) * Indices.size());
         m_VertexShader = device.CreateShader(vertexSource);
@@ -90,11 +89,11 @@ namespace Astral {
         BufferHandle storageBuffer = device.CreateStorageBuffer(&color, sizeof(color));
 
         float mult = .5f;
-        BufferHandle storageBuffer2 = device.CreateStorageBuffer(&mult, sizeof(mult));
+        BufferHandle uniformBuffer = device.CreateUniformBuffer(&mult, sizeof(mult));
 
         m_DescriptorSet->BeginBuildingSet();
-        m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer, BindStage::FRAGMENT);
-        m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer2, BindStage::FRAGMENT);
+        m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer, ShaderStage::FRAGMENT);
+        m_DescriptorSet->AddDescriptorUniformBuffer(uniformBuffer, ShaderStage::FRAGMENT);
         m_DescriptorSet->EndBuildingSet();
 
 
