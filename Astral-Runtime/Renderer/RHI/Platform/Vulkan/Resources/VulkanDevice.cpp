@@ -157,7 +157,7 @@ namespace Astral {
             .VulkanDevice = *this,
             .Device = m_Device,
             .VerticeData = verticeData,
-            .Size = size,
+            .SizeInBytes = size,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 

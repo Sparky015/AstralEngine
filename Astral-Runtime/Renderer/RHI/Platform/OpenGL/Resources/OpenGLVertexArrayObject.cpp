@@ -50,7 +50,7 @@ namespace Astral {
     void OpenGLVertexArrayObject::AddVertexBuffer(VertexBuffer* vertexBuffer)
     {
         Bind();
-        vertexBuffer->Bind();
+        // vertexBuffer->Bind(TODO);
 
         // BufferLayout bufferLayout = vertexBuffer->GetLayout();
 

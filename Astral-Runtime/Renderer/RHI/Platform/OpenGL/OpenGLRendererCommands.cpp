@@ -21,7 +21,7 @@ namespace Astral {
     }
 
 
-    void OpenGLRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle)
+    void OpenGLRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle, VertexBufferHandle vertexBufferHandle)
     {
         m_NumberOfDrawCalls++;
         // commandBufferHandle->Bind();

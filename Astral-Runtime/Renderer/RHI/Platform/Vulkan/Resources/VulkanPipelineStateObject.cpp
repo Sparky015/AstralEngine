@@ -6,6 +6,7 @@
 
 #include "VulkanPipelineStateObject.h"
 
+#include "VulkanVertexBuffer.h"
 #include "Debug/Utilities/Asserts.h"
 
 namespace Astral {
@@ -66,8 +67,15 @@ namespace Astral {
             }
         };
 
+        // TODO: Change this to a more robust method to track binding and attribute descriptions (probably through the existing BufferLayout class)
+        auto bindingDescription = VulkanVertexBuffer::GetBindingDescriptions();
+        auto attributeDescriptions = VulkanVertexBuffer::GetAttributeDescriptions();
         VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
-            .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+            .vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size()),
+            .pVertexBindingDescriptions = bindingDescription.data(),
+            .vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
+            .pVertexAttributeDescriptions = attributeDescriptions.data(),
         };
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly = {

@@ -27,7 +27,7 @@ namespace Astral {
 
         virtual void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) = 0;
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
-        virtual void DrawElements(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void DrawElements(CommandBufferHandle commandBufferHandle, VertexBufferHandle vertexBufferHandle) = 0;
         virtual void SetBlending(bool enable) = 0 ;
 
         virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }

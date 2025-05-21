@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <complex.h>
+
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
 namespace Astral {
@@ -14,7 +17,7 @@ namespace Astral {
         explicit OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout);
         ~OpenGLVertexBuffer() override;
 
-        void Bind() override;
+        void Bind(CommandBufferHandle commandBufferHandle) override;
         void Unbind() override;
         void SetLayout(BufferLayout& bufferLayout) override;
         //BufferLayout& GetLayout() override;

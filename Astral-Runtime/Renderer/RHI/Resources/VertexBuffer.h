@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include <complex.h>
+
 #include "BufferLayout.h"
+#include "CommandBuffer.h"
+#include "Core/Math/Math.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
@@ -12,8 +16,14 @@ namespace Astral {
     class VertexBuffer
     {
     public:
+        struct Vertex
+        {
+            Vec2 position;
+        };
+
+
         virtual ~VertexBuffer() = default;
-        virtual void Bind() {};
+        virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
         virtual void Unbind() {};
         virtual void SetLayout(BufferLayout& bufferLayout) {};
         //virtual BufferLayout& GetLayout() = 0

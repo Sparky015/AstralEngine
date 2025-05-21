@@ -4,11 +4,13 @@
 
 #include "OpenGLVertexBuffer.h"
 
+#include <complex.h>
 #include <utility>
 
 #include "Debug/Utilities/Loggers.h"
 #include "glad/glad.h"
 #include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 
 
 namespace Astral {
@@ -16,7 +18,7 @@ namespace Astral {
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
     {
         glGenBuffers(1, &m_RendererID);
-        Bind();
+        // Bind(TODO);
         glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
         Unbind();
         GLCheckError();
@@ -30,7 +32,7 @@ namespace Astral {
     }
 
 
-    void OpenGLVertexBuffer::Bind()
+    void OpenGLVertexBuffer::Bind(CommandBufferHandle commandBufferHandle)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
     }

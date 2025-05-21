@@ -37,9 +37,10 @@ namespace Astral {
     }
 
 
-    void VulkanRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle)
+    void VulkanRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle, VertexBufferHandle vertexBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        // TODO: Query the vertex buffers on the amount of vertices when it gets implemented
         vkCmdDraw(commandBuffer, 3, 1, 0, 0);
 
         m_NumberOfDrawCalls++;
@@ -51,16 +52,6 @@ namespace Astral {
 
     }
 
-    struct Vertex {
-        Vertex(const glm::vec3& p, const glm::vec2& t)
-        {
-            Pos = p;
-            Tex = t;
-        }
-
-        glm::vec3 Pos;
-        glm::vec2 Tex;
-    };
 
 
     void VulkanRendererCommands::TestInit()
@@ -76,11 +67,10 @@ namespace Astral {
         ShaderSource fragmentSource = ShaderSource( "SecondTriangle.frag");
 
 
-
-        std::vector<Vertex> Vertices = {
-            Vertex({-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}),     // top left
-            Vertex({1.0f, -1.0f, 0.0f}, {0.0f, 1.0f} ),      // top right
-            Vertex({0.0f, 1.0f, 0.0f}, {1.0f, 1.0f})       // bottom middle
+        std::vector<VertexBuffer::Vertex> Vertices = {
+            {{0.0f, -0.5f}},
+            {{0.5f, 0.5f}},
+            {{-0.5f, 0.5f}}
         };
 
         m_VertexBuffer = device.CreateVertexBuffer(Vertices.data(), sizeof(Vertices[0]) * Vertices.size() );
@@ -93,8 +83,9 @@ namespace Astral {
         m_CommandBuffer->BeginRecording();
         m_RenderPass->BeginRenderPass(m_CommandBuffer, m_Framebuffer);
         m_PipelineStateObject->Bind(m_CommandBuffer);
-        m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
-        DrawElements(m_CommandBuffer);
+        // m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
+        m_VertexBuffer->Bind(m_CommandBuffer);
+        DrawElements(m_CommandBuffer, m_VertexBuffer);
         m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
 
