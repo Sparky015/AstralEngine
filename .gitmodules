@@ -1,0 +1,9 @@
+[submodule "ThirdPartyLibraries/glslang"]
+	path = ThirdPartyLibraries/glslang
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "ThirdPartyLibraries/SPIRV-Tools"]
+	path = ThirdPartyLibraries/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+[submodule "ThirdPartyLibraries/SPIRV-Headers"]
+	path = ThirdPartyLibraries/SPIRV-Headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers.git
