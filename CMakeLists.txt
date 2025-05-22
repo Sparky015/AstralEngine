@@ -24,17 +24,16 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 
     if(UPDATE_GIT_SUBMODULES)
         message(STATUS "Updating Git submodules...")
-        execute_process(
-                COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+        execute_process( COMMAND ${GIT_EXECUTABLE} submodule update --recursive
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 RESULT_VARIABLE GIT_SUBMODULE_RESULT
                 OUTPUT_VARIABLE GIT_SUBMODULE_OUTPUT
                 ERROR_VARIABLE GIT_SUBMODULE_ERROR
-                COMMAND_ERROR_IS_FATAL ANY
+                #COMMAND_ERROR_IS_FATAL ANY
         )
 
         if(NOT GIT_SUBMODULE_RESULT EQUAL 0)
-            message(FATAL_ERROR "Failed to update Git submodules:\n${GIT_SUBMODULE_ERROR}")
+            message(FATAL_ERROR "Failed to update Git submodules:\n ${GIT_SUBMODULE_ERROR}")
         else()
             message(STATUS "Git submodules updated successfully.")
         endif()
