@@ -3,6 +3,9 @@
 //
 
 #pragma once
+
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+
 #include <string>
 
 namespace Astral {
@@ -18,5 +21,7 @@ namespace Astral {
 
         static Texture* CreateTexture(const std::string& filePath);
     };
+
+    using TextureHandle = GraphicsRef<Texture>;
 
 } // Renderer

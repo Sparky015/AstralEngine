@@ -22,6 +22,7 @@
 #include <utility>
 
 #include "VulkanIndexBuffer.h"
+#include "VulkanTexture.h"
 
 namespace Astral {
 
@@ -220,6 +221,18 @@ namespace Astral {
         };
 
         return CreateGraphicsRef<VulkanDescriptorSet>(descriptorSetDesc);
+    }
+
+
+    TextureHandle VulkanDevice::CreateTexture(unsigned char* imageData)
+    {
+        VulkanTextureDesc textureDesc = {
+            .Device = m_Device,
+            .ImageData = imageData,
+            .ImageFormat = VK_FORMAT_R8G8B8A8_SRGB,
+        };
+
+        return CreateGraphicsRef<VulkanTexture>(textureDesc);
     }
 
 

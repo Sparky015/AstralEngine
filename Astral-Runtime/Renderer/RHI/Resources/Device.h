@@ -5,6 +5,7 @@
 */
 
 #pragma once
+
 #include "CommandQueue.h"
 #include "Framebuffer.h"
 #include "IndexBuffer.h"
@@ -12,6 +13,7 @@
 #include "Renderpass.h"
 #include "Shader.h"
 #include "Swapchain.h"
+#include "Texture.h"
 #include "VertexBuffer.h"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 
@@ -35,6 +37,7 @@ namespace Astral {
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
         virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
+        virtual TextureHandle CreateTexture(unsigned char* imageData) = 0;
 
         virtual void* GetNativeHandle() = 0;
 
