@@ -85,19 +85,20 @@ namespace Astral {
         m_FragmentShader = device.CreateShader(fragmentSource);
         m_DescriptorSet = device.CreateDescriptorSet();
 
-        int m_Width;
-        int m_Height;
-        int m_BPP; // bits per pixel
-        stbi_set_flip_vertically_on_load(1);
-        unsigned char* data = stbi_load("C:\\Home\\Programming\\Coding Projects\\AstralEngine\\Astral-Runtime\\Renderer\\Shaders\\water.jpeg", &m_Width, &m_Height, &m_BPP, 4);
-        m_Texture = device.CreateTexture(data, m_Width, m_Height);
-
 
         Vec4 color = {1.0f, 0.0f, 1.0f, 1.0f};
         BufferHandle storageBuffer = device.CreateStorageBuffer(&color, sizeof(color));
 
         float mult = .5f;
         BufferHandle uniformBuffer = device.CreateUniformBuffer(&mult, sizeof(mult));
+
+        int m_Width;
+        int m_Height;
+        int m_BPP; // bits per pixel
+        stbi_set_flip_vertically_on_load(1);
+        std::string filePath = std::string(SHADER_DIR) + "water.jpeg";
+        unsigned char* data = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+        m_Texture = device.CreateTexture(data, m_Width, m_Height);
 
         m_DescriptorSet->BeginBuildingSet();
         m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer, ShaderStage::FRAGMENT);

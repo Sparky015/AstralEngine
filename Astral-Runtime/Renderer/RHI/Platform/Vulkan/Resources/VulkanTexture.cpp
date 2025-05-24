@@ -6,8 +6,6 @@
 
 #include "VulkanTexture.h"
 
-#include <barrier>
-
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 #include "VulkanBuffer.h"
@@ -20,7 +18,8 @@ namespace Astral {
         m_ImageView(),
         m_Sampler(),
         m_ImageWidth(desc.ImageWidth),
-        m_ImageHeight(desc.ImageHeight)
+        m_ImageHeight(desc.ImageHeight),
+		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties)
     {
         CreateTexture(desc);
     	TransitionImageLayout(desc, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
