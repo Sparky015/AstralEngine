@@ -224,12 +224,16 @@ namespace Astral {
     }
 
 
-    TextureHandle VulkanDevice::CreateTexture(unsigned char* imageData)
+    TextureHandle VulkanDevice::CreateTexture(unsigned char* imageData, uint32 width, uint32 height)
     {
         VulkanTextureDesc textureDesc = {
+            .VulkanDevice = *this,
             .Device = m_Device,
             .ImageData = imageData,
             .ImageFormat = VK_FORMAT_R8G8B8A8_SRGB,
+            .ImageWidth = width,
+            .ImageHeight = height,
+            .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);

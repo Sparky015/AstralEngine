@@ -33,7 +33,7 @@ namespace Astral {
         void BeginBuildingSet() override;
         void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
         void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
-        void AddDescriptorImageSampler(SamplerHandle samplerHandle) override;
+        void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage) override;
         void EndBuildingSet() override;
 
         void* GetLayout() override { return m_DescriptorSetLayout; }
@@ -61,7 +61,7 @@ namespace Astral {
         uint32 m_NumberOfBindings;
 
         std::queue<BufferHandle, std::deque <BufferHandle>> m_Buffers;
-        std::queue<SamplerHandle, std::deque <SamplerHandle>> m_Samplers;
+        std::queue<TextureHandle, std::deque <TextureHandle>> m_Textures;
 
         VkDescriptorPool m_DescriptorPool;
         VkDescriptorSet m_DescriptorSet;

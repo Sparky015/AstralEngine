@@ -9,6 +9,7 @@
 #include "Renderer/RendererManager.h"
 
 #include <vulkan/vulkan.h>
+#include "stb_image.h"
 
 namespace Astral {
 
@@ -84,6 +85,13 @@ namespace Astral {
         m_FragmentShader = device.CreateShader(fragmentSource);
         m_DescriptorSet = device.CreateDescriptorSet();
 
+        int m_Width;
+        int m_Height;
+        int m_BPP; // bits per pixel
+        stbi_set_flip_vertically_on_load(1);
+        unsigned char* data = stbi_load("C:\\Home\\Programming\\Coding Projects\\AstralEngine\\Astral-Runtime\\Renderer\\Shaders\\water.jpeg", &m_Width, &m_Height, &m_BPP, 4);
+        m_Texture = device.CreateTexture(data, m_Width, m_Height);
+
 
         Vec4 color = {1.0f, 0.0f, 1.0f, 1.0f};
         BufferHandle storageBuffer = device.CreateStorageBuffer(&color, sizeof(color));
@@ -94,6 +102,7 @@ namespace Astral {
         m_DescriptorSet->BeginBuildingSet();
         m_DescriptorSet->AddDescriptorStorageBuffer(storageBuffer, ShaderStage::FRAGMENT);
         m_DescriptorSet->AddDescriptorUniformBuffer(uniformBuffer, ShaderStage::FRAGMENT);
+        m_DescriptorSet->AddDescriptorImageSampler(m_Texture, ShaderStage::FRAGMENT);
         m_DescriptorSet->EndBuildingSet();
 
 

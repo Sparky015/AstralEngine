@@ -15,7 +15,7 @@ namespace Astral {
         m_DescriptorSetLayoutBindings(),
         m_NumberOfBindings(0),
         m_Buffers(),
-        m_Samplers(),
+        m_Textures(),
         m_DescriptorPool(),
         m_DescriptorSet(),
         m_DescriptorSetLayout()
@@ -37,7 +37,7 @@ namespace Astral {
         m_NumberOfBindings = 0;
         m_DescriptorSetLayoutBindings.clear();
         while (!m_Buffers.empty()) m_Buffers.pop();
-        while (!m_Samplers.empty()) m_Samplers.pop();
+        while (!m_Textures.empty()) m_Textures.pop();
     }
 
 
@@ -99,18 +99,32 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorImageSampler(SamplerHandle samplerHandle)
+    void VulkanDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage)
     {
+        VkShaderStageFlags stageFlags;
+        if (bindStage == ShaderStage::VERTEX)
+        {
+            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (bindStage == ShaderStage::FRAGMENT)
+        {
+            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        else
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
         VkDescriptorSetLayoutBinding imageSamplerDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
             .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             .descriptorCount = 1,
-            .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+            .stageFlags = stageFlags,
         };
         m_NumberOfBindings++;
 
         m_DescriptorSetLayoutBindings.push_back(imageSamplerDescriptorLayoutBinding);
-        m_Samplers.push(samplerHandle);
+        m_Textures.push(textureHandle);
     }
 
 
@@ -239,14 +253,15 @@ namespace Astral {
             {
                 VkDescriptorImageInfo imageInfo = {};
 
-                SamplerHandle samplerHandle = m_Samplers.front();
-                m_Samplers.pop();
-                VkSampler sampler = (VkSampler)samplerHandle->GetNativeHandle();
+                TextureHandle textureHandle = m_Textures.front();
+                m_Textures.pop();
+                VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+                VkSampler sampler = (VkSampler)textureHandle->GetSampler();
 
 
                 imageInfo.sampler = sampler;
-                //imageInfo.imageLayout = ;
-                //imageInfo.imageView = ;
+                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                imageInfo.imageView = imageView;
 
                 VkWriteDescriptorSet descriptorSetWrite = {
                     .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,

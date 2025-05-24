@@ -14,10 +14,13 @@ namespace Astral {
     {
     public:
         virtual ~Texture() = default;
-        virtual void Bind(unsigned int slot = 0) = 0;
-        virtual void Unbind() = 0;
+        virtual void Bind(unsigned int slot = 0) {};
+        virtual void Unbind() {};
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
+
+        virtual void* GetSampler() = 0;
+        virtual void* GetNativeHandle() = 0;
 
         static Texture* CreateTexture(const std::string& filePath);
     };

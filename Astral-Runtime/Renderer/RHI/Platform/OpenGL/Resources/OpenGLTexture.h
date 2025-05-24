@@ -19,6 +19,9 @@ namespace Astral {
         inline int GetWidth() override { return m_Width; };
         inline int GetHeight() override { return m_Height; };
 
+        void* GetNativeHandle() override { return nullptr; }
+        void* GetSampler() override { return nullptr; }
+
     private:
         unsigned int m_RendererID;
         std::string filePath;

@@ -37,6 +37,7 @@ namespace Astral {
         DescriptorSetHandle m_DescriptorSet;
         VertexBufferHandle m_VertexBuffer;
         IndexBufferHandle m_IndexBuffer;
+        TextureHandle m_Texture;
     };
 
 }

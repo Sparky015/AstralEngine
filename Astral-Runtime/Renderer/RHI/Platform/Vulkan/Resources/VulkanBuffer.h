@@ -22,7 +22,6 @@ namespace Astral {
         uint32 Size;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
         VkMemoryPropertyFlags RequestedMemoryPropertyFlags;
-
     };
 
     class VulkanBuffer : public Buffer
