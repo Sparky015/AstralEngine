@@ -40,7 +40,7 @@ namespace Astral {
         PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle
                                                             descriptorSetHandle) override;
         VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes) override;
-        IndexBufferHandle CreateIndexBuffer(void* indiceData, uint32 sizeInBytes) override;
+        IndexBufferHandle CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes) override;
         BufferHandle CreateStorageBuffer(void* data, uint32 size) override;
         BufferHandle CreateUniformBuffer(void* data, uint32 size) override;
         DescriptorSetHandle CreateDescriptorSet() override;

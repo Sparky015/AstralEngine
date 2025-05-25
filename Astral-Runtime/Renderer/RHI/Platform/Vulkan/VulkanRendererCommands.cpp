@@ -38,12 +38,12 @@ namespace Astral {
     }
 
 
-    void VulkanRendererCommands::DrawElements(CommandBufferHandle commandBufferHandle, VertexBufferHandle vertexBufferHandle)
+    void VulkanRendererCommands::DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         // TODO: Query the vertex buffers on the amount of vertices when it gets implemented
-        // vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-        vkCmdDrawIndexed(commandBuffer, 3, 1, 0, 0, 0);
+        // vkCmdDraw(commandBuffer, 3, 1, 0, 0); // For just vertex buffer
+        vkCmdDrawIndexed(commandBuffer, indexBufferHandle->GetCount(), 1, 0, 0, 0);
         m_NumberOfDrawCalls++;
     }
 
@@ -115,7 +115,7 @@ namespace Astral {
         m_PipelineStateObject->BindDescriptorSet(m_CommandBuffer, m_DescriptorSet);
         m_VertexBuffer->Bind(m_CommandBuffer);
         m_IndexBuffer->Bind(m_CommandBuffer);
-        DrawElements(m_CommandBuffer, m_VertexBuffer);
+        DrawElementsIndexed(m_CommandBuffer, m_IndexBuffer);
         m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
 

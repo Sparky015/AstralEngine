@@ -19,7 +19,7 @@ namespace Astral {
     public:
         void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle) override;
         void SetClearColor(float r, float g, float b, float a) override;
-        void DrawElements(CommandBufferHandle commandBufferHandle, VertexBufferHandle vertexBufferHandle) override;
+        void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) override;
         void SetBlending(bool enable) override;
 
         void TestInit() override;

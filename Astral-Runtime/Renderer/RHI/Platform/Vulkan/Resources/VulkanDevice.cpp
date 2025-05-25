@@ -168,7 +168,7 @@ namespace Astral {
     }
 
 
-    IndexBufferHandle VulkanDevice::CreateIndexBuffer(void* indiceData, uint32 sizeInBytes)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes)
     {
         VulkanIndexBufferDesc indexBufferDesc = {
             .VulkanDevice = *this,

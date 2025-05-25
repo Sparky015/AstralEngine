@@ -17,7 +17,7 @@ namespace Astral {
         VulkanDevice& VulkanDevice;
         VkDevice Device;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
-        void* IndiceData;
+        uint32* IndiceData;
         uint32 SizeInBytes;
     };
 
@@ -28,6 +28,8 @@ namespace Astral {
         ~VulkanIndexBuffer() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
+
+        uint32 GetCount() const override { return m_SizeInBytes / sizeof(uint32); }
 
     private:
 

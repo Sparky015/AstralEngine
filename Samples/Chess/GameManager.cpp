@@ -33,7 +33,7 @@ namespace Game {
     void GameManager::Update()
     {
         PROFILE_SCOPE("GameManager::Update")
-        RendererCommand::Clear();
+        RendererAPI::Clear();
         m_PieceTracker.UpdatePieceTracking();
         Astral::RenderingSystem::RenderEntities(m_ShaderProgram.get()); // TODO: Refactor shader program to a component
     }
@@ -66,7 +66,7 @@ namespace Game {
 
     void GameManager::InitializeRenderingComponents()
     {
-        RendererCommand::SetClearColor(.3,.3,.8,1);
+        RendererAPI::SetClearColor(.3,.3,.8,1);
 
         float vertices[20] = {
                 -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -78,7 +78,7 @@ namespace Game {
 
         m_ShaderProgram.reset(Shader::CreateShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
                 , ShaderSource(std::string(SHADER_DIR) + "basic.frag")));
-        m_ShaderProgram->Bind();
+
 
         uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
 
@@ -98,7 +98,7 @@ namespace Game {
         m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 6));
         m_VAO->SetIndexBuffer(m_IndexBuffer.get());
 
-        RendererCommand::SetBlending(true);
+        RendererAPI::SetBlending(true);
     }
 
 }
