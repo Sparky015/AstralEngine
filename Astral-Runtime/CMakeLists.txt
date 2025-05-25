@@ -237,6 +237,9 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.h
+        Renderer/Common/Mesh.h
+        Renderer/Common/Material.h
+        Renderer/RHI/Resources/Shader.cpp
 )
 
 

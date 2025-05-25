@@ -240,6 +240,12 @@ namespace Astral {
     }
 
 
+    void VulkanDevice::WaitIdle()
+    {
+        vkDeviceWaitIdle(m_Device);
+    }
+
+
     void VulkanDevice::CreateDevice()
     {
         float priorities[] = { 1.0f };

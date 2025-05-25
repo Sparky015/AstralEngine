@@ -46,6 +46,8 @@ namespace Astral {
         DescriptorSetHandle CreateDescriptorSet() override;
         TextureHandle CreateTexture(unsigned char* imageData, uint32 width, uint32 height) override;
 
+        void WaitIdle() override;
+
         void* GetNativeHandle() override { return m_Device; }
 
         VulkanDevice(const VulkanDevice&) = delete;

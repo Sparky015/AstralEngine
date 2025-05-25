@@ -52,8 +52,12 @@ namespace Astral {
     private:
 
 
-        void CreateFinalBuffer();
-        void DestroyFinalBuffer();
+        void CreateBuffer();
+        void AllocateMemory();
+
+        void DestroyBuffer();
+        void FreeMemory();
+
 
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 

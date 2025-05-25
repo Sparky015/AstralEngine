@@ -15,9 +15,9 @@ namespace Astral {
     class RendererAPI
     {
     public:
-        static void Clear();
+        static void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle);
         static void SetClearColor(float r, float g, float b, float a);
-        static void DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform);
+        static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
         static void SetBlending(bool enable);
 
         static void TestInit();

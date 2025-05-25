@@ -14,7 +14,7 @@
 
 namespace Astral {
 
-    void RenderingSystem::RenderEntities(Astral::Shader* shader)
+    void RenderingSystem::RenderEntities()
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
@@ -34,8 +34,7 @@ namespace Astral {
             Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
-            spriteComponent.texture->Bind(0);
-            Astral::SceneRenderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
+            SceneRenderer::Submit(spriteComponent.mesh, spriteComponent.material, transform);
         }
     }
 

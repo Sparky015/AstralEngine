@@ -39,6 +39,8 @@ namespace Astral {
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
         virtual TextureHandle CreateTexture(unsigned char* imageData, uint32 width, uint32 height) = 0;
 
+        virtual void WaitIdle() = 0;
+
         virtual void* GetNativeHandle() = 0;
 
     protected:

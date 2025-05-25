@@ -14,6 +14,9 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/RHI/Resources/Shader.h"
 
+#include "Renderer/Common/Mesh.h"
+#include "Renderer/Common/Material.h"
+
 
 namespace Game {
 
@@ -37,11 +40,13 @@ namespace Game {
 
         void InitializeRenderingComponents();
 
-        std::unique_ptr<IndexBuffer> m_IndexBuffer;
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
-        std::unique_ptr<VertexArrayObject> m_VAO;
-        std::unique_ptr<Texture> m_Texture;
-        std::unique_ptr<Shader> m_ShaderProgram;
+        Mesh m_Mesh;
+        Material m_Material;
+
+        IndexBufferHandle m_IndexBuffer;
+        VertexBufferHandle m_VertexBuffer;
+        ShaderHandle m_VertexShader;
+        ShaderHandle m_FragmentShader;
 
         PieceTracking m_PieceTracker;
     };

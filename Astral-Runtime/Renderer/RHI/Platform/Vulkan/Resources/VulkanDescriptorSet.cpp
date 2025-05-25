@@ -26,7 +26,7 @@ namespace Astral {
 
     VulkanDescriptorSet::~VulkanDescriptorSet()
     {
-        DestroyDescriptorSets();
+        // DestroyDescriptorSets();
         DestroyDescriptorSetLayout();
         DestroyDescriptorPool();
     }

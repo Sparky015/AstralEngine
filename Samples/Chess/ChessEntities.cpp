@@ -8,6 +8,8 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
 
 
 ECS::Entity ChessEntities::m_BlackPawn1;
@@ -47,7 +49,7 @@ ECS::Entity ChessEntities::m_WhiteKing;
 ECS::Entity ChessEntities::m_ChessBoard;
 
 
-void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
+void ChessEntities::InitEntities(const Astral::Mesh& mesh, const Astral::Material& partialMaterial)
 {
     ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
@@ -125,41 +127,85 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
     ecs.AddComponent(m_WhiteKing,    TransformComponent(450, 50, .25, .25));
 
 
+    Astral::Material chessboardMaterial = partialMaterial;
+    chessboardMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "chessboard.png");
+
+    Astral::Material blackPawnMaterial = partialMaterial;
+    blackPawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png");
+
+    Astral::Material blackRookMaterial = partialMaterial;
+    blackRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_rook.png");
+
+    Astral::Material blackKnightMaterial = partialMaterial;
+    blackKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_knight.png");
+
+    Astral::Material blackBishopMaterial = partialMaterial;
+    blackBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_bishop.png");
+
+    Astral::Material blackQueenMaterial = partialMaterial;
+    blackQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_queen.png");
+
+    Astral::Material blackKingMaterial = partialMaterial;
+    blackKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_king.png");
+
+    Astral::Material whitePawnMaterial = partialMaterial;
+    whitePawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png");
+
+    Astral::Material whiteRookMaterial = partialMaterial;
+    whiteRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_rook.png");
+
+    Astral::Material whiteKnightMaterial = partialMaterial;
+    whiteKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_knight.png");
+
+    Astral::Material whiteBishopMaterial = partialMaterial;
+    whiteBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_bishop.png");
+
+    Astral::Material whiteQueenMaterial = partialMaterial;
+    whiteQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_queen.png");
+
+    Astral::Material whiteKingMaterial = partialMaterial;
+    whiteKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_king.png");
+
+
     // Sprite Components
-    ecs.AddComponent(m_ChessBoard, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "chessboard.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn3, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn4, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn5, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn6, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn7, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn8, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackRook1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_rook.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackRook2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_rook.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackKnight1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_knight.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackKnight2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_knight.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackBishop1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_bishop.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackBishop2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_bishop.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackQueen, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_queen.png"), vertexArrayObject));
-    ecs.AddComponent(m_BlackKing, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_king.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn3, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn4, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn5, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn6, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn7, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn8, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteRook1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_rook.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteRook2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_rook.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_knight.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_knight.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_bishop.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_bishop.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteQueen, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_queen.png"), vertexArrayObject));
-    ecs.AddComponent(m_WhiteKing, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_king.png"), vertexArrayObject));
-    ecs.AddComponent(m_ChessBoard, SpriteComponent(Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "chessboard.png"), vertexArrayObject));}
+    ecs.AddComponent(m_ChessBoard, SpriteComponent(chessboardMaterial, mesh));
+
+    // Black Pieces
+    ecs.AddComponent(m_BlackPawn1, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn2, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn3, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn4, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn5, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn6, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn7, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn8, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackRook1, SpriteComponent(blackRookMaterial, mesh));
+    ecs.AddComponent(m_BlackRook2, SpriteComponent(blackRookMaterial, mesh));
+    ecs.AddComponent(m_BlackKnight1, SpriteComponent(blackKnightMaterial, mesh));
+    ecs.AddComponent(m_BlackKnight2, SpriteComponent(blackKnightMaterial, mesh));
+    ecs.AddComponent(m_BlackBishop1, SpriteComponent(blackBishopMaterial, mesh));
+    ecs.AddComponent(m_BlackBishop2, SpriteComponent(blackBishopMaterial, mesh));
+    ecs.AddComponent(m_BlackQueen, SpriteComponent(blackQueenMaterial, mesh));
+    ecs.AddComponent(m_BlackKing, SpriteComponent(blackKingMaterial, mesh));
+
+    // White Pieces
+    ecs.AddComponent(m_WhitePawn1, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn2, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn3, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn4, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn5, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn6, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn7, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn8, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhiteRook1, SpriteComponent(whiteRookMaterial, mesh));
+    ecs.AddComponent(m_WhiteRook2, SpriteComponent(whiteRookMaterial, mesh));
+    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(whiteKnightMaterial, mesh));
+    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(whiteKnightMaterial, mesh));
+    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(whiteBishopMaterial, mesh));
+    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(whiteBishopMaterial, mesh));
+    ecs.AddComponent(m_WhiteQueen, SpriteComponent(whiteQueenMaterial, mesh));
+    ecs.AddComponent(m_WhiteKing, SpriteComponent(whiteKingMaterial, mesh));
+}
 
 
 void ChessEntities::DestroyEntities()

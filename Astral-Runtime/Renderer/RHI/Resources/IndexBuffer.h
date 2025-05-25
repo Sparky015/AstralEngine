@@ -21,7 +21,7 @@ namespace Astral {
 
         [[nodiscard]] virtual uint32 GetCount() const { return 0; };
 
-        static IndexBuffer* CreateIndexBuffer(uint32* data, uint32 count);
+        static GraphicsRef<IndexBuffer> CreateIndexBuffer(uint32* data, uint32 count);
     };
 
     using IndexBufferHandle = GraphicsRef<IndexBuffer>;

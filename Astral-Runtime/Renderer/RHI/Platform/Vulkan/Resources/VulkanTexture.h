@@ -42,13 +42,21 @@ namespace Astral {
     private:
 
         void CreateTexture(const VulkanTextureDesc& desc);
-        void CreateTextureImageView(const VulkanTextureDesc& desc);
+        void DestroyTexture();
+
+        void AllocateTextureMemory();
+        void FreeTextureMemory();
+
+        void CreateImageView(const VulkanTextureDesc& desc);
+        void DestroyImageView();
+
         void UploadDataToTexture(const VulkanTextureDesc& desc);
 
         void TransitionImageLayout(const VulkanTextureDesc& desc, VkImageLayout oldLayout, VkImageLayout newLayout);
         void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer, const VulkanTextureDesc& desc);
 
         void CreateImageSampler();
+        void DestroyImageSampler();
 
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
         uint32 GetBytesPerTexFormat(VkFormat format);

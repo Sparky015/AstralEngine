@@ -1,5 +1,5 @@
 /**
-* @file VulkanRenderingContext.h
+* @file VulkanRendererContext.h
 * @author Andrew Fagan
 * @date 3/4/2025
 */

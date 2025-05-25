@@ -33,7 +33,8 @@ namespace Astral {
 
         virtual void* GetNativeHande() = 0;
 
-        static VertexBuffer* CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout);
+        static GraphicsRef<VertexBuffer> CreateVertexBuffer(float* vertices, unsigned int size,
+                                                            const BufferLayout& bufferLayout);
     };
 
     using VertexBufferHandle = GraphicsRef<VertexBuffer>;

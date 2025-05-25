@@ -5,6 +5,8 @@
 #pragma once
 
 #include "pch.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
 
 #include "Renderer/RHI/Resources/Texture.h"
 
@@ -12,9 +14,9 @@
 
 struct SpriteComponent
 {
-    SpriteComponent() : texture(nullptr), vertexArrayObject(nullptr), isUsed(false) {}
-    explicit SpriteComponent(Astral::Texture* texture, Astral::VertexArrayObject* vertexArrayObject) : texture(texture), vertexArrayObject(vertexArrayObject), isUsed(true) {}
-    Astral::Texture* texture;
-    Astral::VertexArrayObject* vertexArrayObject;
+    SpriteComponent() : material(), mesh(), isUsed(false) {}
+    explicit SpriteComponent(Astral::Material material, Astral::Mesh mesh) : material(material), mesh(mesh), isUsed(true) {}
+    Astral::Material material;
+    Astral::Mesh mesh;
     bool isUsed;
 };

@@ -26,16 +26,16 @@ namespace Game {
         m_UpdateListener.StartListening();
 
         InitializeRenderingComponents();
-        ChessEntities::InitEntities(m_VAO.get());
+        ChessEntities::InitEntities(m_Mesh, m_Material);
     }
 
 
     void GameManager::Update()
     {
         PROFILE_SCOPE("GameManager::Update")
-        RendererAPI::Clear();
+        RendererAPI::Clear(TODO, TODO);
         m_PieceTracker.UpdatePieceTracking();
-        Astral::RenderingSystem::RenderEntities(m_ShaderProgram.get()); // TODO: Refactor shader program to a component
+        RenderingSystem::RenderEntities();
     }
 
 
@@ -44,11 +44,8 @@ namespace Game {
         TRACE("GameManager::Shutdown");
         m_UpdateListener.StopListening();
 
-        m_ShaderProgram.reset(nullptr);
-        m_IndexBuffer.reset(nullptr);
-        m_VertexBuffer.reset(nullptr);
-        m_VAO.reset(nullptr);
-        m_Texture.reset(nullptr);
+        m_IndexBuffer.reset();
+        m_VertexBuffer.reset();
     }
 
 
@@ -66,6 +63,9 @@ namespace Game {
 
     void GameManager::InitializeRenderingComponents()
     {
+        m_Mesh = {};
+        m_Material = {};
+
         RendererAPI::SetClearColor(.3,.3,.8,1);
 
         float vertices[20] = {
@@ -75,30 +75,24 @@ namespace Game {
                 0.5f,  0.5f, 0.0f, 1.0f, 1.0f
         };
 
-
-        m_ShaderProgram.reset(Shader::CreateShaderProgram(ShaderSource(std::string(SHADER_DIR) + "basic.vert")
-                , ShaderSource(std::string(SHADER_DIR) + "basic.frag")));
-
-
         uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
 
         const BufferLayout bufferLayout = {
-                {Float3, "a_Position"},
-                {Float2, "a_TexCords"}
+            {Float3, "a_Position"},
+            {Float2, "a_TexCords"}
         };
 
-        m_VertexBuffer.reset(VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout));
-        m_VAO.reset(VertexArrayObject::CreateVertexArrayObject());
-        m_VAO->Bind();
+        m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
+        m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
 
-        m_VAO->AddVertexBuffer(m_VertexBuffer.get());
+        m_Mesh.VertexBuffer = m_VertexBuffer;
+        m_Mesh.IndexBuffer = m_IndexBuffer;
 
-        m_ShaderProgram->SetTextureUniform("u_Texture", 0);
+        m_VertexShader = Shader::CreateShader(ShaderSource(std::string(SHADER_DIR) + "basic.vert"));
+        m_FragmentShader = Shader::CreateShader(ShaderSource(std::string(SHADER_DIR) + "basic.frag"));
 
-        m_IndexBuffer.reset(IndexBuffer::CreateIndexBuffer(indices, 6));
-        m_VAO->SetIndexBuffer(m_IndexBuffer.get());
-
-        RendererAPI::SetBlending(true);
+        m_Material.PixelShader = m_FragmentShader;
+        m_Material.VertexShader = m_VertexShader;
     }
 
 }

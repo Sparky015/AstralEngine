@@ -22,12 +22,14 @@ namespace Astral {
         m_DeviceSize(),
         m_IsDeviceMemoryMapped(false)
     {
-        CreateFinalBuffer();
+        CreateBuffer();
+        AllocateMemory();
     }
 
     VulkanBuffer::~VulkanBuffer()
     {
-        DestroyFinalBuffer();
+        FreeMemory();
+        DestroyBuffer();
     }
 
 
@@ -105,7 +107,7 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::CreateFinalBuffer()
+    void VulkanBuffer::CreateBuffer()
     {
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -116,7 +118,11 @@ namespace Astral {
 
         VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &m_Buffer);
         ASSERT(result == VK_SUCCESS, "Failed to create buffer!");
+    }
 
+
+    void VulkanBuffer::AllocateMemory()
+    {
         VkMemoryRequirements memoryRequirements = {};
         vkGetBufferMemoryRequirements(m_Device, m_Buffer, &memoryRequirements);
 
@@ -130,7 +136,7 @@ namespace Astral {
             .memoryTypeIndex = memoryTypeIndex
         };
 
-        result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &m_Memory);
+        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &m_Memory);
         ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
 
         result = vkBindBufferMemory(m_Device, m_Buffer, m_Memory, 0);
@@ -138,10 +144,15 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::DestroyFinalBuffer()
+    void VulkanBuffer::DestroyBuffer()
+    {
+        vkDestroyBuffer(m_Device, m_Buffer, nullptr);
+    }
+
+
+    void VulkanBuffer::FreeMemory()
     {
         vkFreeMemory(m_Device, m_Memory, nullptr);
-        vkDestroyBuffer(m_Device, m_Buffer, nullptr);
     }
 
 

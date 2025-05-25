@@ -40,7 +40,7 @@ namespace Astral {
         // virtual void SetUniform(const std::string& uniformName, Vec3 vec3) const = 0;
 
         static Shader* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
-
+        static GraphicsRef<Shader> CreateShader(const ShaderSource& shaderSource);
         virtual void* GetNativeHandle() = 0;
 
     private:

@@ -4,18 +4,16 @@
 
 #include "RendererAPI.h"
 
-#include "Platform/OpenGL/OpenGLRendererCommands.h"
 #include "Platform/Vulkan/VulkanRendererCommands.h"
-#include "Resources/VertexArrayObject.h"
 
 
 namespace Astral {
 
     RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
 
-    void RendererAPI::Clear()
+    void RendererAPI::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
-        //s_RendererCommands->Clear(TODO, TODO);
+        s_RendererCommands->Clear(commandBufferHandle, renderTargetHandle);
     }
 
 
@@ -25,11 +23,9 @@ namespace Astral {
     }
 
 
-    void RendererAPI::DrawElements(Shader& shaderProgram, VertexArrayObject* vertexArrayObject, Mat4& transform)
+    void RendererAPI::DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer)
     {
-        // shaderProgram.SetUniform("u_Transform", transform);
-        // shaderProgram.Bind();
-        // s_RendererCommands->DrawElements(vertexArrayObject);
+        s_RendererCommands->DrawElementsIndexed(commandBuffer, indexBuffer);
     }
 
 

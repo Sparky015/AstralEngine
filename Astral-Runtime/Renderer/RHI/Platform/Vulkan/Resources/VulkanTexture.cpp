@@ -22,17 +22,21 @@ namespace Astral {
 		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties)
     {
         CreateTexture(desc);
+    	AllocateTextureMemory();
     	TransitionImageLayout(desc, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
     	UploadDataToTexture(desc);
     	TransitionImageLayout(desc, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		CreateTextureImageView(desc);
+		CreateImageView(desc);
     	CreateImageSampler();
     }
 
 
     VulkanTexture::~VulkanTexture()
     {
-
+    	FreeTextureMemory();
+    	DestroyTexture();
+    	DestroyImageView();
+    	DestroyImageSampler();
     }
 
 
@@ -60,28 +64,44 @@ namespace Astral {
 
         VkResult result = vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image);
         ASSERT(result == VK_SUCCESS, "Failed to create image!");
-
-        VkMemoryRequirements memoryRequirements = {};
-        vkGetImageMemoryRequirements(m_Device, m_Image, &memoryRequirements);
-
-        uint32 memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements.memoryTypeBits);
-
-        VkMemoryAllocateInfo memoryAllocateInfo = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .allocationSize = memoryRequirements.size,
-            .memoryTypeIndex = memoryTypeIndex,
-        };
-
-        result = vkAllocateMemory(m_Device, &memoryAllocateInfo, nullptr, &m_ImageMemory);
-        ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
-
-        result = vkBindImageMemory(m_Device, m_Image, m_ImageMemory, 0);
-        ASSERT(result == VK_SUCCESS, "Failed to bind image!");
     }
 
 
-    void VulkanTexture::CreateTextureImageView(const VulkanTextureDesc& desc)
+    void VulkanTexture::DestroyTexture()
+    {
+    	vkDestroyImage(m_Device, m_Image, nullptr);
+    }
+
+
+    void VulkanTexture::AllocateTextureMemory()
+    {
+    	VkMemoryRequirements memoryRequirements = {};
+    	vkGetImageMemoryRequirements(m_Device, m_Image, &memoryRequirements);
+
+    	uint32 memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements.memoryTypeBits);
+
+    	VkMemoryAllocateInfo memoryAllocateInfo = {
+    		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+			.pNext = nullptr,
+			.allocationSize = memoryRequirements.size,
+			.memoryTypeIndex = memoryTypeIndex,
+		};
+
+    	VkResult result = vkAllocateMemory(m_Device, &memoryAllocateInfo, nullptr, &m_ImageMemory);
+    	ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
+
+    	result = vkBindImageMemory(m_Device, m_Image, m_ImageMemory, 0);
+    	ASSERT(result == VK_SUCCESS, "Failed to bind image!");
+    }
+
+
+    void VulkanTexture::FreeTextureMemory()
+    {
+    	vkFreeMemory(m_Device, m_ImageMemory, nullptr);
+    }
+
+
+    void VulkanTexture::CreateImageView(const VulkanTextureDesc& desc)
     {
     	VkImageViewCreateInfo imageViewCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -107,6 +127,12 @@ namespace Astral {
 
     	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_ImageView);
     	ASSERT(result == VK_SUCCESS, "Failed to create image view!");
+    }
+
+
+    void VulkanTexture::DestroyImageView()
+    {
+    	vkDestroyImageView(m_Device, m_ImageView, nullptr);
     }
 
 
@@ -361,6 +387,12 @@ namespace Astral {
 
     	VkResult result = vkCreateSampler(m_Device, &samplerCreateInfo, nullptr, &m_Sampler);
     	ASSERT(result == VK_SUCCESS, "Failed to create sampler!");
+    }
+
+
+    void VulkanTexture::DestroyImageSampler()
+    {
+    	vkDestroySampler(m_Device, m_Sampler, nullptr);
     }
 
 

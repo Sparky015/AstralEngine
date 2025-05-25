@@ -24,7 +24,7 @@ namespace Astral {
 
     VulkanShader::~VulkanShader()
     {
-
+        DestroyShaderModule();
     }
 
 
@@ -116,6 +116,12 @@ namespace Astral {
 
         // SPIR-V Compilation Finished
 
+        CreateShaderModule(SPIRV_Code);
+    }
+
+
+    void VulkanShader::CreateShaderModule(std::vector<uint32>& SPIRV_Code)
+    {
         VkShaderModuleCreateInfo shaderCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
             .codeSize = SPIRV_Code.size() * sizeof(uint32),
@@ -124,6 +130,12 @@ namespace Astral {
 
         VkResult result = vkCreateShaderModule(m_Device, &shaderCreateInfo, nullptr, &m_ShaderModule);
         ASSERT(result == VK_SUCCESS, "Failed to create shader module!");
+    }
+
+
+    void VulkanShader::DestroyShaderModule()
+    {
+        vkDestroyShaderModule(m_Device, m_ShaderModule, nullptr);
     }
 
 }

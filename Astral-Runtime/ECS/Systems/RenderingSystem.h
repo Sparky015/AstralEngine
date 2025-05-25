@@ -14,7 +14,7 @@ namespace Astral {
     {
     public:
 
-        static void RenderEntities(Astral::Shader* shader);
+        static void RenderEntities();
 
     private:
 

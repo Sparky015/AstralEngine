@@ -9,12 +9,11 @@
 #include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
-
-    IndexBuffer* IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
+    IndexBufferHandle IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
     {
         switch (RendererCommands::GetAPI())
         {
-            case API::OpenGL: return new OpenGLIndexBuffer(indices, count);
+            case API::OpenGL: return CreateGraphicsRef<OpenGLIndexBuffer>(indices, count);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");

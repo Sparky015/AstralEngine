@@ -31,6 +31,9 @@ namespace Astral {
 
         void CompileShader(const ShaderSource& shaderSource);
 
+        void CreateShaderModule(std::vector<uint32>& SPIRV_Code);
+        void DestroyShaderModule();
+
         VkDevice m_Device;
         VkShaderModule m_ShaderModule;
     };

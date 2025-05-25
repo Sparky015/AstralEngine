@@ -9,12 +9,13 @@
 #include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
-
-    VertexBuffer* VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, const BufferLayout& bufferLayout)
+    VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size,
+                                                        const BufferLayout& bufferLayout)
     {
+
         switch (RendererCommands::GetAPI())
         {
-            case API::OpenGL: return new OpenGLVertexBuffer(vertices, size, bufferLayout);
+            case API::OpenGL: return CreateGraphicsRef<OpenGLVertexBuffer>(vertices, size, bufferLayout);
             case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");

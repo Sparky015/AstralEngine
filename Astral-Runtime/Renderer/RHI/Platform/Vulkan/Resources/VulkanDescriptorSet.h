@@ -7,15 +7,10 @@
 
 #pragma once
 
-#include <queue>
-
-#include "VulkanDescriptorSet.h"
 #include "Renderer/RHI/Resources/DescriptorSet.h"
 
 #include <vulkan/vulkan_core.h>
-
-#include "VulkanVertexBuffer.h"
-#include "Renderer/RHI/Resources/Sampler.h"
+#include <queue>
 
 namespace Astral {
 
@@ -41,9 +36,6 @@ namespace Astral {
 
     private:
 
-        // void CreateDescriptorSet();
-        // void DestroyDescriptorSet();
-
         void CreateDescriptorPool();
         void DestroyDescriptorPool();
 
@@ -60,8 +52,8 @@ namespace Astral {
         std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
         uint32 m_NumberOfBindings;
 
-        std::queue<BufferHandle, std::deque <BufferHandle>> m_Buffers;
-        std::queue<TextureHandle, std::deque <TextureHandle>> m_Textures;
+        std::queue<BufferHandle> m_Buffers;
+        std::queue<TextureHandle> m_Textures;
 
         VkDescriptorPool m_DescriptorPool;
         VkDescriptorSet m_DescriptorSet;

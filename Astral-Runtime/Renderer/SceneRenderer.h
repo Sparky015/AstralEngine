@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Common/Material.h"
+#include "Common/Mesh.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
@@ -20,11 +22,23 @@ namespace Astral {
         static void BeginScene(const OrthographicCamera& orthographicCamera);
         static void EndScene();
 
-        static void Submit(Shader& shaderProgram, VertexArrayObject* vertexArrayBuffer, Mat4& transform);
+        static void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
 
+        static void TestInit();
+        static void TestShutdown();
+        static void TestUpdate();
+
+    private:
+
+        struct SceneRendererContext
+        {
+            CommandBufferHandle SceneCommandBuffer;
+        };
+
+        static SceneRendererContext m_RendererContext;
     };
 
 } // Renderer
