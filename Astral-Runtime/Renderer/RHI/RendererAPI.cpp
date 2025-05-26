@@ -5,11 +5,19 @@
 #include "RendererAPI.h"
 
 #include "Platform/Vulkan/VulkanRendererCommands.h"
+#include "Renderer/RendererManager.h"
 
 
 namespace Astral {
 
     RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
+
+
+    Device& RendererAPI::GetDevice()
+    {
+        return g_RendererManager.GetContext().GetDevice();
+    }
+
 
     void RendererAPI::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
@@ -32,24 +40,6 @@ namespace Astral {
     void RendererAPI::SetBlending(bool enable)
     {
         s_RendererCommands->SetBlending(enable);
-    }
-
-
-    void RendererAPI::TestInit()
-    {
-        s_RendererCommands->TestInit();
-    }
-
-
-    void RendererAPI::TestUpdate()
-    {
-        s_RendererCommands->TestUpdate();
-    }
-
-
-    void RendererAPI::TestShutdown()
-    {
-        s_RendererCommands->TestShutdown();
     }
 
 }

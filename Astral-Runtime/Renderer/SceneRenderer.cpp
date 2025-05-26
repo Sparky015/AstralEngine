@@ -17,12 +17,13 @@
 
 namespace Astral {
 
-    SceneRenderer::SceneRendererContext SceneRenderer::m_RendererContext = SceneRenderer::SceneRendererContext();
+    GraphicsOwnedPtr<SceneRenderer::SceneRendererContext> SceneRenderer::m_RendererContext = nullptr;
 
     void SceneRenderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
         RendererAPI::SetBlending(true);
     }
+
 
     void SceneRenderer::EndScene()
     {
@@ -32,19 +33,22 @@ namespace Astral {
 
     void SceneRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
     {
-        RendererAPI::DrawElementsIndexed(m_RendererContext.SceneCommandBuffer, mesh.IndexBuffer);
+        Device& device = RendererAPI::GetDevice();
+        CommandBufferHandle commandBuffer = device.AllocateCommandBuffer();
+        RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+        CommandQueueHandle commandQueue = device.GetCommandQueue();
     }
 
 
     uint32 SceneRenderer::GetDrawCallsPerFrame()
     {
-        return RendererAPI::GetRendererAPIBackend()->GetNumberOfDrawCalls();
+        return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
     }
 
 
     API SceneRenderer::GetRendererAPIBackend()
     {
-        return RendererAPI::GetRendererAPIBackend()->GetAPI();
+        return RendererAPI::s_RendererCommands->GetAPI();
     }
 
 
@@ -61,8 +65,7 @@ namespace Astral {
         IndexBufferHandle m_IndexBuffer;
         TextureHandle m_Texture;
 
-        RenderingContext& context = g_RendererManager.GetContext();
-        Device& device = context.GetDevice();
+        Device& device = RendererAPI::GetDevice();
         RenderTargetHandle renderTarget = device.GetSwapchain().AcquireNextImage();
         m_CommandBuffer = device.AllocateCommandBuffer();
         m_RenderPass = device.CreateRenderPass(renderTarget);
@@ -123,7 +126,7 @@ namespace Astral {
         m_RenderPass->EndRenderPass(m_CommandBuffer);
         m_CommandBuffer->EndRecording();
 
-        CommandQueueHandle commandQueue = context.GetDevice().GetCommandQueue();
+        CommandQueueHandle commandQueue = device.GetCommandQueue();
         commandQueue->Submit(m_CommandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
@@ -138,6 +141,24 @@ namespace Astral {
 
 
     void SceneRenderer::TestUpdate()
+    {
+
+    }
+
+
+    void SceneRenderer::RenderScene()
+    {
+
+    }
+
+
+    void SceneRenderer::RenderPassStart()
+    {
+
+    }
+
+
+    void SceneRenderer::RenderPassEnd()
     {
 
     }

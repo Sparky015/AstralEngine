@@ -32,10 +32,6 @@ namespace Astral {
 
         virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }
 
-        virtual void TestInit() = 0;
-        virtual void TestUpdate() = 0;
-        virtual void TestShutdown() = 0;
-
     protected:
         uint32 m_NumberOfDrawCalls = 0;
         Core::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};

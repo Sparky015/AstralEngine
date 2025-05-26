@@ -38,7 +38,6 @@ namespace Astral {
     void VulkanRendererCommands::DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        // TODO: Query the vertex buffers on the amount of vertices when it gets implemented
         // vkCmdDraw(commandBuffer, 3, 1, 0, 0); // For just vertex buffer
         vkCmdDrawIndexed(commandBuffer, indexBufferHandle->GetCount(), 1, 0, 0, 0);
         m_NumberOfDrawCalls++;
@@ -46,25 +45,6 @@ namespace Astral {
 
 
     void VulkanRendererCommands::SetBlending(bool enable)
-    {
-
-    }
-
-
-
-    void VulkanRendererCommands::TestInit()
-    {
-
-    }
-
-
-    void VulkanRendererCommands::TestUpdate()
-    {
-
-    }
-
-
-    void VulkanRendererCommands::TestShutdown()
     {
 
     }

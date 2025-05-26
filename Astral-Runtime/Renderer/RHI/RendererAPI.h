@@ -6,28 +6,23 @@
 
 
 #include "../SceneRenderer.h"
-#include "Renderer/RHI/Resources/VertexArrayObject.h"
-#include "Renderer/RHI/Resources/Shader.h"
 #include "RendererCommands.h"
+#include "Resources/Device.h"
 
 namespace Astral {
 
     class RendererAPI
     {
     public:
+        static Device& GetDevice();
         static void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle);
         static void SetClearColor(float r, float g, float b, float a);
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
         static void SetBlending(bool enable);
 
-        static void TestInit();
-        static void TestUpdate();
-        static void TestShutdown();
-
     private:
 
         friend SceneRenderer;
-        static RendererCommands* GetRendererAPIBackend() { return s_RendererCommands; }
         static RendererCommands* s_RendererCommands;
     };
 

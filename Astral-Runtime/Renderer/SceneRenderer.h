@@ -33,12 +33,20 @@ namespace Astral {
 
     private:
 
+        static void RenderScene();
+
+        static void RenderPassStart();
+        static void RenderPassEnd();
+
         struct SceneRendererContext
         {
+            std::vector<Mesh> Meshes;
+            std::vector<Material> Materials;
+            std::vector<Mat4> Transforms;
             CommandBufferHandle SceneCommandBuffer;
         };
 
-        static SceneRendererContext m_RendererContext;
+        static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;
     };
 
 } // Renderer
