@@ -35,18 +35,40 @@ namespace Astral {
         void Bind(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) override;
 
+
     private:
 
         void CreatePipelineStateObject();
         void DestroyPipelineStateObject();
 
-        VkDevice m_Device;
-        VkRenderPass m_RenderPass;
-        ShaderHandle m_VertexShader;
-        ShaderHandle m_FragmentShader;
-        uint32 m_WindowWidth;
-        uint32 m_WindowHeight;
-        DescriptorSetHandle m_DescriptorSet;
+        void SetShaderStages();
+        void SetVertexInputState();
+        void SetInputAssemblyState();
+        void SetViewportState();
+        void SetRasterizerState();
+        void SetMultisampleState();
+        void SetColorBlendState();
+        void CreatePipelineLayoutState();
+
+        VulkanPipelineStateObjectDesc m_Description;
+
+        struct PipelineCreateInfos
+        {
+            VkPipelineShaderStageCreateInfo ShaderStates[2];
+            VkPipelineVertexInputStateCreateInfo VertexInputState;
+            VkPipelineInputAssemblyStateCreateInfo InputAssemblyState;
+            VkViewport Viewport;
+            VkRect2D Scissor;
+            VkPipelineViewportStateCreateInfo ViewportState;
+            VkPipelineRasterizationStateCreateInfo RasterizationState;
+            VkPipelineMultisampleStateCreateInfo MultisampleState;
+            VkPipelineColorBlendAttachmentState ColorBlendAttachmentState;
+            VkPipelineColorBlendStateCreateInfo ColorBlendState;
+            VkPipelineLayoutCreateInfo PipelineLayout;
+            VkPipelineDynamicStateCreateInfo DynamicState;
+        };
+
+        PipelineCreateInfos m_PipelineCreateInfos;
 
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;
