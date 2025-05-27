@@ -136,7 +136,8 @@ namespace Astral {
 
 
     PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(RenderPassHandle renderPassHandle,
-                                                                      ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle descriptorSetHandle)
+            ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle descriptorSetHandle,
+                const VertexBufferLayout& bufferLayout)
     {
         VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
 
@@ -146,6 +147,7 @@ namespace Astral {
             .VertexShader = vertexShader,
             .FragmentShader = fragmentShader,
             .DescriptorSet = descriptorSetHandle,
+            .VertexBufferLayout = bufferLayout
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
@@ -154,7 +156,7 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, BufferLayout bufferLayout)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
             .VulkanDevice = *this,

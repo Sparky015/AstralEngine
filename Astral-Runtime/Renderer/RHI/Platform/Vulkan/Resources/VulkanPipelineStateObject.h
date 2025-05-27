@@ -12,6 +12,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include "Renderer/RHI/Resources/Shader.h"
+#include "Renderer/RHI/Resources/VertexBufferLayout.h"
 
 namespace Astral {
 
@@ -24,6 +25,7 @@ namespace Astral {
         int32 WindowWidth;
         int32 WindowHeight;
         DescriptorSetHandle DescriptorSet;
+        VertexBufferLayout VertexBufferLayout;
     };
 
     class VulkanPipelineStateObject : public PipelineStateObject
@@ -57,6 +59,8 @@ namespace Astral {
         struct PipelineCreateInfos
         {
             VkPipelineShaderStageCreateInfo ShaderStates[2];
+            VkVertexInputBindingDescription VertexBindingDescription;
+            std::vector<VkVertexInputAttributeDescription> VertexAttributeDescriptions;
             VkPipelineVertexInputStateCreateInfo VertexInputState;
             VkPipelineInputAssemblyStateCreateInfo InputAssemblyState;
             VkViewport Viewport;

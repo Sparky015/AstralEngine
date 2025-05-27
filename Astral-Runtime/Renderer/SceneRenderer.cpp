@@ -226,7 +226,7 @@ namespace Astral {
             if (i == 0)
             {
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
-                        material.VertexShader, material.PixelShader, descriptorSet);
+                    material.VertexShader, material.PixelShader, descriptorSet, mesh.VertexBuffer->GetBufferLayout());
             }
 
             frameContext.TempPipelineState->Bind(commandBuffer); // temp, idk

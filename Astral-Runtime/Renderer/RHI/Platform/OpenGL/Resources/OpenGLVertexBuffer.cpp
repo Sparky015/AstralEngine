@@ -15,7 +15,7 @@
 
 namespace Astral {
 
-    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, BufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
+    OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size, VertexBufferLayout bufferLayout) : m_BufferLayout(std::move(bufferLayout)), m_RendererID(0)
     {
         glGenBuffers(1, &m_RendererID);
         // Bind(TODO);
@@ -44,7 +44,7 @@ namespace Astral {
     }
 
 
-    void OpenGLVertexBuffer::SetLayout(BufferLayout& bufferLayout)
+    void OpenGLVertexBuffer::SetLayout(VertexBufferLayout& bufferLayout)
     {
         m_BufferLayout = bufferLayout;
     }

@@ -69,7 +69,8 @@ add_library(AstralEngine
         Renderer/RHI/Resources/Texture.h
         Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.cpp
         Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h
-        Renderer/RHI/Resources/BufferLayout.h
+        Renderer/RHI/Resources/VertexBufferLayout.cpp
+        Renderer/RHI/Resources/VertexBufferLayout.h
         Core/Math/Math.h
         Renderer/RHI/Resources/Shader.h
         Renderer/RHI/RendererAPI.cpp

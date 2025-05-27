@@ -11,14 +11,14 @@
 
 namespace Astral {
     VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size,
-                                                        const BufferLayout& bufferLayout)
+                                                        VertexBufferLayout& bufferLayout)
     {
         Device& device = g_RendererManager.GetContext().GetDevice();
 
         switch (RendererCommands::GetAPI())
         {
             case API::OpenGL: return CreateGraphicsRef<OpenGLVertexBuffer>(vertices, size, bufferLayout);
-            case API::Vulkan: return device.CreateVertexBuffer(vertices, size, TODO);
+            case API::Vulkan: return device.CreateVertexBuffer(vertices, size, bufferLayout);
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
             default: ASTRAL_ERROR("Invalid Renderer API");

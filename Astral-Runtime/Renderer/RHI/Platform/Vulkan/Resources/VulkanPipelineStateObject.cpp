@@ -8,6 +8,7 @@
 
 #include "VulkanVertexBuffer.h"
 #include "Debug/Utilities/Asserts.h"
+#include "Debug/Utilities/Error.h"
 
 namespace Astral {
 
@@ -108,17 +109,56 @@ namespace Astral {
     }
 
 
+    VkFormat ConvertShaderDataTypeToVkFormat(ShaderDataType type)
+    {
+        switch (type)
+        {
+            case ShaderDataType::Float:  return VK_FORMAT_R32_SFLOAT;
+            case ShaderDataType::Float2: return VK_FORMAT_R32G32_SFLOAT;
+            case ShaderDataType::Float3: return VK_FORMAT_R32G32B32_SFLOAT;
+            case ShaderDataType::Float4: return VK_FORMAT_R32G32B32A32_SFLOAT;
+            case ShaderDataType::Int:    return VK_FORMAT_R32_SINT;
+            case ShaderDataType::Int2:   return VK_FORMAT_R32G32_SINT;
+            case ShaderDataType::Int3:   return VK_FORMAT_R32G32B32_SINT;
+            case ShaderDataType::Int4:   return VK_FORMAT_R32G32B32A32_SINT;
+            default:                     ASTRAL_ERROR("Unknown vertex buffer data type!");
+        }
+    }
+
+
     void VulkanPipelineStateObject::SetVertexInputState()
     {
-        // TODO: Change this to a more robust method to track binding and attribute descriptions (probably through the existing BufferLayout class)
-        std::vector<VkVertexInputBindingDescription> bindingDescription = VulkanVertexBuffer::GetBindingDescriptions();
-        std::vector<VkVertexInputAttributeDescription> attributeDescriptions = VulkanVertexBuffer::GetAttributeDescriptions();
+        VkVertexInputBindingDescription bindingDescription = {
+            .binding = 0,
+            .stride = m_Description.VertexBufferLayout.GetStride(),
+            .inputRate = VK_VERTEX_INPUT_RATE_VERTEX
+        };
+        m_PipelineCreateInfos.VertexBindingDescription = bindingDescription;
+
+
+        uint32 location = 0;
+        uint32 offset = 0;
+
+        for (VertexBufferAttribute& attribute : m_Description.VertexBufferLayout)
+        {
+            VkVertexInputAttributeDescription attributeDescription = {
+                .location = location,
+                .binding = 0,
+                .format = ConvertShaderDataTypeToVkFormat(attribute.DataType),
+                .offset = offset
+            };
+            m_PipelineCreateInfos.VertexAttributeDescriptions.push_back(attributeDescription);
+
+            offset += attribute.GetAttributeSize();
+            location++;
+        }
+
         VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-            .vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size()),
-            .pVertexBindingDescriptions = bindingDescription.data(),
-            .vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
-            .pVertexAttributeDescriptions = attributeDescriptions.data(),
+            .vertexBindingDescriptionCount = 1,
+            .pVertexBindingDescriptions = &m_PipelineCreateInfos.VertexBindingDescription,
+            .vertexAttributeDescriptionCount = static_cast<uint32_t>(m_PipelineCreateInfos.VertexAttributeDescriptions.size()),
+            .pVertexAttributeDescriptions = m_PipelineCreateInfos.VertexAttributeDescriptions.data(),
         };
 
         m_PipelineCreateInfos.VertexInputState = vertexInputInfo;

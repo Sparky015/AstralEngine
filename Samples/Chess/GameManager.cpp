@@ -76,7 +76,7 @@ namespace Game {
 
         uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
 
-        const BufferLayout bufferLayout = {
+        VertexBufferLayout bufferLayout = {
             {Float3, "a_Position"},
             {Float2, "a_TexCords"}
         };

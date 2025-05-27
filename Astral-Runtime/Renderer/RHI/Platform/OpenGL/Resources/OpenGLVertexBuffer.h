@@ -14,18 +14,18 @@ namespace Astral {
     class OpenGLVertexBuffer : public VertexBuffer
     {
     public:
-        explicit OpenGLVertexBuffer(float* vertices, uint32 size, BufferLayout bufferLayout);
+        explicit OpenGLVertexBuffer(float* vertices, uint32 size, VertexBufferLayout bufferLayout);
         ~OpenGLVertexBuffer() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
         void Unbind() override;
-        void SetLayout(BufferLayout& bufferLayout) override;
-        //BufferLayout& GetLayout() override;
+        void SetLayout(VertexBufferLayout& bufferLayout) override;
+        VertexBufferLayout& GetBufferLayout() override { return m_BufferLayout; }
 
         void* GetNativeHande() override { return &m_RendererID; }
 
     private:
-        BufferLayout m_BufferLayout;
+        VertexBufferLayout m_BufferLayout;
         uint32 m_RendererID;
     };
 

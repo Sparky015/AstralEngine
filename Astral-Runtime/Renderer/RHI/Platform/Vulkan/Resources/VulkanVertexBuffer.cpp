@@ -12,6 +12,7 @@ namespace Astral {
 
     VulkanVertexBuffer::VulkanVertexBuffer(const VulkanVertexBufferDesc& desc) :
         m_Device(desc.Device),
+        m_BufferLayout(desc.BufferLayout),
         m_VertexBuffer(),
         m_SizeInBytes(desc.SizeInBytes),
         m_VerticeData(desc.VerticeData)
