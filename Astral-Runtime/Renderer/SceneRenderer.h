@@ -13,12 +13,17 @@
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 #include "RHI/RendererCommands.h"
+#include "RHI/Platform/OpenGL/OpenGLRendererContext.h"
+#include "RHI/Resources/Framebuffer.h"
 
 namespace Astral {
 
     class SceneRenderer
     {
     public:
+        static void Init();
+        static void Shutdown();
+
         static void BeginScene(const OrthographicCamera& orthographicCamera);
         static void EndScene();
 
@@ -27,26 +32,29 @@ namespace Astral {
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
 
-        static void TestInit();
-        static void TestShutdown();
+
         static void TestUpdate();
 
     private:
 
         static void RenderScene();
 
-        static void RenderPassStart();
-        static void RenderPassEnd();
-
-        struct SceneRendererContext
+        struct FrameContext
         {
             std::vector<Mesh> Meshes;
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
             CommandBufferHandle SceneCommandBuffer;
+            FramebufferHandle SceneFramebuffer;
+        };
+
+        struct SceneRendererContext
+        {
+            std::vector<FrameContext> m_FrameContexts;
+            RenderPassHandle RenderPass;
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;
     };
 
-} // Renderer
+} // Astral

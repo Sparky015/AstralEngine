@@ -19,6 +19,9 @@ namespace Astral {
 
         virtual GraphicsRef<RenderTarget> AcquireNextImage() = 0;
 
+        virtual uint32 GetNumberOfImages() = 0;
+        virtual std::vector<RenderTargetHandle>& GetRenderTargets() = 0;
+
         virtual void* GetNativeHandle() = 0;
     };
 

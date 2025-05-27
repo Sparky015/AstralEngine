@@ -48,7 +48,9 @@ namespace Astral {
         void SetRasterizerState();
         void SetMultisampleState();
         void SetColorBlendState();
-        void CreatePipelineLayoutState();
+
+        void CreatePipelineLayout();
+        void DestroyPipelineLayout();
 
         VulkanPipelineStateObjectDesc m_Description;
 

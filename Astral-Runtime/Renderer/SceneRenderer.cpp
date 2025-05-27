@@ -52,8 +52,33 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::TestInit()
+    void SceneRenderer::Init()
     {
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+
+        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
+
+        // TODO: Change this to passing in a format enum value instead of a whole render target object
+        m_RendererContext->RenderPass = device.CreateRenderPass(renderTargets[0]);
+
+        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
+        {
+            m_RendererContext->m_FrameContexts.emplace_back(FrameContext());
+            FrameContext& context = m_RendererContext->m_FrameContexts[i];
+
+            context.Meshes = std::vector<Mesh>();
+            context.Materials = std::vector<Material>();
+            context.Transforms = std::vector<Mat4>();
+            context.SceneCommandBuffer = device.AllocateCommandBuffer();
+            context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass, renderTargets[i]);
+        }
+
+
+
+
+        // TESTING CODE
+
         CommandBufferHandle m_CommandBuffer;
         RenderPassHandle m_RenderPass;
         FramebufferHandle m_Framebuffer;
@@ -65,8 +90,9 @@ namespace Astral {
         IndexBufferHandle m_IndexBuffer;
         TextureHandle m_Texture;
 
-        Device& device = RendererAPI::GetDevice();
-        RenderTargetHandle renderTarget = device.GetSwapchain().AcquireNextImage();
+
+        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+
         m_CommandBuffer = device.AllocateCommandBuffer();
         m_RenderPass = device.CreateRenderPass(renderTarget);
         m_Framebuffer = device.CreateFramebuffer(m_RenderPass, renderTarget);
@@ -134,9 +160,9 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::TestShutdown()
+    void SceneRenderer::Shutdown()
     {
-
+        m_RendererContext.release();
     }
 
 
@@ -148,19 +174,54 @@ namespace Astral {
 
     void SceneRenderer::RenderScene()
     {
+        // TODO: Sort the meshes by material
 
-    }
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+        uint32 imageIndex = renderTarget->GetImageIndex();
+        FrameContext& frameContext = m_RendererContext->m_FrameContexts[imageIndex];
+        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
+        FramebufferHandle framebufferHandle = frameContext.SceneFramebuffer;
+        RenderPassHandle renderPass = m_RendererContext->RenderPass;
 
 
-    void SceneRenderer::RenderPassStart()
-    {
+        commandBuffer->BeginRecording();
+        renderPass->BeginRenderPass(commandBuffer, framebufferHandle);
 
-    }
+        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        {
+            Mesh& mesh = frameContext.Meshes[i];
+            Material& material = frameContext.Materials[i];
+            Mat4& transform = frameContext.Transforms[i];
 
 
-    void SceneRenderer::RenderPassEnd()
-    {
+            BufferHandle transformBuffer = device.CreateUniformBuffer(&frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
 
+            DescriptorSetHandle descriptorSet = device.CreateDescriptorSet();
+
+            descriptorSet->BeginBuildingSet();
+            descriptorSet->AddDescriptorUniformBuffer(transformBuffer, ShaderStage::VERTEX);
+            descriptorSet->AddDescriptorImageSampler(material.TextureUniform, ShaderStage::FRAGMENT);
+            descriptorSet->EndBuildingSet();
+
+            PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(renderPass,
+                    material.VertexShader, material.PixelShader, descriptorSet);
+
+            pipelineStateObject->Bind(commandBuffer); // temp, idk
+            pipelineStateObject->BindDescriptorSet(commandBuffer, descriptorSet); // temp, idk
+
+            mesh.VertexBuffer->Bind(commandBuffer);
+            mesh.IndexBuffer->Bind(commandBuffer);
+            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+        }
+
+        renderPass->EndRenderPass(commandBuffer);
+        commandBuffer->EndRecording();
+
+        CommandQueueHandle commandQueue = device.GetCommandQueue();
+        commandQueue->Submit(commandBuffer, renderTarget);
+        commandQueue->Present(renderTarget);
     }
 
 } // Renderer

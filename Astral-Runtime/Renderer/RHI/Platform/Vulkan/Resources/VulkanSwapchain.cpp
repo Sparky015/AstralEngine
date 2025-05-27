@@ -27,6 +27,7 @@ namespace Astral {
     {
         CreateSwapchain();
         CreateSemaphores();
+        CreateRenderTargets();
     }
 
 
@@ -43,20 +44,7 @@ namespace Astral {
         VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], VK_NULL_HANDLE, &imageIndex);
         ASSERT(result == VK_SUCCESS, "Failed to acquire swapchain image!");
 
-
-        VulkanRenderTargetDesc renderTargetDesc = {
-            .Image = m_Images[imageIndex],
-            .ImageView = m_ImageViews[imageIndex],
-            .ImageIndex = imageIndex,
-            .ImageAvailableSemaphore = m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex],
-            .RenderCompleteSemaphore = m_RenderCompleteSemaphores[m_CurrentSemaphorePairIndex],
-            .Format = m_SwapchainImageFormat,
-        };
-
-        m_CurrentSemaphorePairIndex++;
-        if (m_CurrentSemaphorePairIndex == m_NumberOfSwapchainImages) { m_CurrentSemaphorePairIndex = 0; }
-
-        return CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc);
+        return m_RenderTargets[imageIndex];
     }
 
 
@@ -232,6 +220,24 @@ namespace Astral {
         {
             vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
             vkDestroySemaphore(m_Device, m_RenderCompleteSemaphores[i], nullptr);
+        }
+    }
+
+
+    void VulkanSwapchain::CreateRenderTargets()
+    {
+        for (uint32 i = 0; i < m_NumberOfSwapchainImages; i++)
+        {
+            VulkanRenderTargetDesc renderTargetDesc = {
+                .Image = m_Images[i],
+                .ImageView = m_ImageViews[i],
+                .ImageIndex = i,
+                .ImageAvailableSemaphore = m_ImageAvailableSemaphores[i],
+                .RenderCompleteSemaphore = m_RenderCompleteSemaphores[i],
+                .Format = m_SwapchainImageFormat,
+            };
+
+            m_RenderTargets.emplace_back(CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc));
         }
     }
 

@@ -20,6 +20,7 @@ namespace Astral {
 
     VulkanPipelineStateObject::~VulkanPipelineStateObject()
     {
+        DestroyPipelineLayout();
         DestroyPipelineStateObject();
     }
 
@@ -50,7 +51,7 @@ namespace Astral {
         SetRasterizerState();
         SetMultisampleState();
         SetColorBlendState();
-        CreatePipelineLayoutState();
+        CreatePipelineLayout();
 
 
         VkGraphicsPipelineCreateInfo pipelineCreateInfo = {
@@ -78,7 +79,6 @@ namespace Astral {
 
     void VulkanPipelineStateObject::DestroyPipelineStateObject()
     {
-        vkDestroyPipelineLayout(m_Description.Device, m_PipelineLayout, nullptr);
         vkDestroyPipeline(m_Description.Device, m_Pipeline, nullptr);
     }
 
@@ -96,10 +96,10 @@ namespace Astral {
                 .pName = "main",
             },
          {
-             .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-             .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
-             .module = fragmentShaderModule,
-             .pName = "main",
+                 .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                 .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
+                 .module = fragmentShaderModule,
+                 .pName = "main",
             }
         };
 
@@ -111,8 +111,8 @@ namespace Astral {
     void VulkanPipelineStateObject::SetVertexInputState()
     {
         // TODO: Change this to a more robust method to track binding and attribute descriptions (probably through the existing BufferLayout class)
-        auto bindingDescription = VulkanVertexBuffer::GetBindingDescriptions();
-        auto attributeDescriptions = VulkanVertexBuffer::GetAttributeDescriptions();
+        std::vector<VkVertexInputBindingDescription> bindingDescription = VulkanVertexBuffer::GetBindingDescriptions();
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions = VulkanVertexBuffer::GetAttributeDescriptions();
         VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
             .vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size()),
@@ -216,9 +216,8 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::CreatePipelineLayoutState()
+    void VulkanPipelineStateObject::CreatePipelineLayout()
     {
-
         VkDescriptorSetLayout descriptorSetLayout = (VkDescriptorSetLayout)m_Description.DescriptorSet->GetLayout();
 
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
@@ -229,6 +228,12 @@ namespace Astral {
 
         VkResult result = vkCreatePipelineLayout(m_Description.Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout);
         ASSERT(result == VK_SUCCESS, "Failed to create pipeline layout!");
+    }
+
+
+    void VulkanPipelineStateObject::DestroyPipelineLayout()
+    {
+        vkDestroyPipelineLayout(m_Description.Device, m_PipelineLayout, nullptr);
     }
 
 }

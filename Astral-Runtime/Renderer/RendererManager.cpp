@@ -27,7 +27,7 @@ namespace Astral {
         m_RenderContext->Init();
         m_UpdateListener.StartListening();
 
-        SceneRenderer::TestInit();
+        SceneRenderer::Init();
     }
 
 
@@ -44,7 +44,7 @@ namespace Astral {
         TRACE("Shutting down Renderer Manager!")
 
         m_UpdateListener.StopListening();
-        SceneRenderer::TestShutdown();
+        SceneRenderer::Shutdown();
         m_RenderContext->Shutdown();
     }
 

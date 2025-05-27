@@ -33,6 +33,9 @@ namespace Astral {
 
         RenderTargetHandle AcquireNextImage() override;
 
+        uint32 GetNumberOfImages() override { return m_NumberOfSwapchainImages; }
+        void* GetRenderTargets() override { return m_ImageViews.data(); };
+
         void* GetNativeHandle() override { return m_Swapchain; }
 
     private:
@@ -48,6 +51,8 @@ namespace Astral {
         void CreateSemaphores();
         void DestroySemaphores();
 
+        void CreateRenderTargets();
+
         VkDevice m_Device;
         VulkanPhysicalDevice m_SelectedPhysicalDevice;
         VkSurfaceKHR m_WindowSurface;
@@ -61,6 +66,8 @@ namespace Astral {
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
         std::vector<VkSemaphore> m_ImageAvailableSemaphores;
         uint32 m_CurrentSemaphorePairIndex;
+
+        std::vector<RenderTargetHandle> m_RenderTargets;
     };
 
 }
