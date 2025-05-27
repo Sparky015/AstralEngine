@@ -22,7 +22,7 @@ namespace Astral {
         virtual void* GetSampler() = 0;
         virtual void* GetNativeHandle() = 0;
 
-        static Texture* CreateTexture(const std::string& filePath);
+        static GraphicsRef<Texture> CreateTexture(const std::string& filePath);
     };
 
     using TextureHandle = GraphicsRef<Texture>;

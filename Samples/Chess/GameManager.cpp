@@ -33,7 +33,6 @@ namespace Game {
     void GameManager::Update()
     {
         PROFILE_SCOPE("GameManager::Update")
-        RendererAPI::Clear(TODO, TODO);
         m_PieceTracker.UpdatePieceTracking();
         RenderingSystem::RenderEntities();
     }

@@ -1,15 +1,14 @@
-#version 410
+#version 460
 
 layout(location = 0) out vec4 color;
 
-in vec4 v_Position;
-in vec2 v_TextureCoord;
+layout (location = 2) in vec2 a_TextureCoord;
 
-uniform sampler2D u_Texture;
+layout (binding = 1) uniform sampler2D u_Texture;
 
 void main()
 {
-    color = texture(u_Texture, v_TextureCoord);
+    color = texture(u_Texture, a_TextureCoord);
 }
 
 

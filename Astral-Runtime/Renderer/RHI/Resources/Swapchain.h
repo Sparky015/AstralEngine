@@ -10,6 +10,8 @@
 #include "RenderTarget.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
+#include <vector>
+
 namespace Astral {
 
     class Swapchain

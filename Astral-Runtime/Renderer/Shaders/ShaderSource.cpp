@@ -36,6 +36,10 @@ namespace Astral {
             std::filesystem::path absolutePath = std::string(SHADER_DIR) + filePath.string();
             ParseShader(absolutePath);
         }
+        else
+        {
+            ParseShader(filePath);
+        }
     }
 
 

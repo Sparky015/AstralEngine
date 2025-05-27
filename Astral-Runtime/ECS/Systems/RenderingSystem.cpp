@@ -22,6 +22,8 @@ namespace Astral {
         ECS::ECS::ComponentDisplay<SpriteComponent> spriteDisplay = ecs.GetComponentDisplay<SpriteComponent>();
         ECS::ECS::ComponentDisplay<TransformComponent> transformDisplay = ecs.GetComponentDisplay<TransformComponent>();
 
+        OrthographicCamera camera = OrthographicCamera(-10, 10, -10, 10);
+        SceneRenderer::BeginScene(camera);
         for (ECS::EntityPoolSize entityID = 0; entityID < ECS::MAX_ENTITIES; entityID++)
         {
             if (!ecs.IsEntityUsed(entityID)) { continue; }
@@ -36,6 +38,7 @@ namespace Astral {
 
             SceneRenderer::Submit(spriteComponent.mesh, spriteComponent.material, transform);
         }
+        SceneRenderer::EndScene();
     }
 
 

@@ -25,6 +25,7 @@ namespace Astral {
         void* VerticeData;
         uint32 SizeInBytes;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
+        BufferLayout BufferLayout;
     };
 
     class VulkanVertexBuffer : public VertexBuffer

@@ -46,12 +46,17 @@ namespace Astral {
             std::vector<Mat4> Transforms;
             CommandBufferHandle SceneCommandBuffer;
             FramebufferHandle SceneFramebuffer;
+            PipelineStateObjectHandle TempPipelineState;
+            std::vector<DescriptorSetHandle> TempDescriptorSets;
         };
 
         struct SceneRendererContext
         {
-            std::vector<FrameContext> m_FrameContexts;
+            std::vector<FrameContext> FrameContexts;
+            uint32 CurrentFrameIndex = -1;
             RenderPassHandle RenderPass;
+
+            bool IsSceneStarted = false;
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;

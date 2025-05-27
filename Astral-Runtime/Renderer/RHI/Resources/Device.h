@@ -32,7 +32,7 @@ namespace Astral {
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
         virtual PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle
                                                                     descriptorSetHandle) = 0;
-        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes) = 0;
+        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, BufferLayout bufferLayout) = 0;
         virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes) = 0;
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
         virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;

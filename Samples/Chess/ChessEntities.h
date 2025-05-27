@@ -6,12 +6,14 @@
 
 #include "Common/ChessPieceTypes.h"
 #include "ECS/Entity.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
 #include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 class ChessEntities
 {
 public:
-    static void InitEntities(const Mesh& mesh, const Material& partialMaterial);
+    static void InitEntities(const Astral::Mesh& mesh, const Astral::Material& partialMaterial);
     static void DestroyEntities();
     static ECS::Entity GetEntity(SquareLocation location);
 

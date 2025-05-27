@@ -34,7 +34,7 @@ namespace Astral {
         RenderTargetHandle AcquireNextImage() override;
 
         uint32 GetNumberOfImages() override { return m_NumberOfSwapchainImages; }
-        void* GetRenderTargets() override { return m_ImageViews.data(); };
+        std::vector<RenderTargetHandle>& GetRenderTargets() override { return m_RenderTargets; }
 
         void* GetNativeHandle() override { return m_Swapchain; }
 

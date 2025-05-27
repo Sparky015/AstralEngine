@@ -154,14 +154,15 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, BufferLayout bufferLayout)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
             .VulkanDevice = *this,
             .Device = m_Device,
             .VerticeData = verticeData,
             .SizeInBytes = sizeInBytes,
-            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .BufferLayout = bufferLayout
         };
 
         return CreateGraphicsRef<VulkanVertexBuffer>(vertexBufferDesc);

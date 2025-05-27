@@ -5,17 +5,27 @@
 #include "Texture.h"
 
 #include "Debug/Utilities/Error.h"
+#include "Renderer/RendererManager.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h"
 #include "Renderer/RHI/RendererCommands.h"
 
-namespace Astral {
+#include "stb_image.h"
 
-    Texture* Texture::CreateTexture(const std::string& filePath)
+namespace Astral {
+    TextureHandle Texture::CreateTexture(const std::string& filePath)
     {
+        Device& device = g_RendererManager.GetContext().GetDevice();
+
+        int m_Width;
+        int m_Height;
+        int m_BPP; // bits per pixel
+        stbi_set_flip_vertically_on_load(1);
+        unsigned char* data = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+
         switch (RendererCommands::GetAPI())
         {
-            case API::OpenGL: return new OpenGLTexture(filePath);
-            case API::Vulkan: ASTRAL_ERROR("Vulkan is not supported yet!");
+            case API::OpenGL: return CreateGraphicsRef<OpenGLTexture>(filePath);
+            case API::Vulkan: return device.CreateTexture(data, m_Width, m_Height);
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
             default: ASTRAL_ERROR("Invalid Renderer API");

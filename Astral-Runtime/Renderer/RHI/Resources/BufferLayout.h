@@ -25,7 +25,7 @@ namespace Astral {
 
     struct BufferAttribute
     {
-        BufferAttribute(ShaderDataType shaderDataType, std::string&& name) : DataType(shaderDataType) {};
+        BufferAttribute(ShaderDataType shaderDataType, std::string_view name) : DataType(shaderDataType) {};
         ShaderDataType DataType;
         uint32 GetAttributeSize() const;
         uint32 GetAttributeComponentCount() const;
@@ -35,7 +35,7 @@ namespace Astral {
     class BufferLayout
     {
     public:
-        BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes);
+        BufferLayout(std::initializer_list<BufferAttribute> bufferAttributes) {};
 
         std::vector<BufferAttribute>::iterator begin() { return m_Attributes.begin(); }
         std::vector<BufferAttribute>::iterator end() { return m_Attributes.end(); }
