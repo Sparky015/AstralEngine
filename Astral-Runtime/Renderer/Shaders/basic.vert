@@ -2,9 +2,10 @@
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TextureCoord;
-layout (location = 2) out vec2 v_TextureCoord;
 
-layout (binding = 0) uniform Transform { mat4 transform; } u_Projection;
+layout (push_constant) uniform Transform { mat4 transform; } u_Projection;
+
+layout (location = 0) out vec2 v_TextureCoord;
 
 void main()
 {

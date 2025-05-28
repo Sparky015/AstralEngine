@@ -37,6 +37,8 @@ namespace Astral {
         void Bind(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) override;
 
+        void* GetPipelineLayout() override {return m_PipelineLayout; }
+        void* GetHandleHandle() override { return m_Pipeline; }
 
     private:
 
@@ -78,6 +80,7 @@ namespace Astral {
 
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;
+        VkPushConstantRange m_PushConstantRange;
     };
 
 }

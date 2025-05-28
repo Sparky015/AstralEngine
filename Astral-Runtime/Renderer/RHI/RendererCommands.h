@@ -10,6 +10,7 @@
 #include "Renderer/RHI/Resources/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 #include "Resources/CommandBuffer.h"
+#include "Resources/PipelineStateObject.h"
 #include "Resources/RenderTarget.h"
 
 namespace Astral {
@@ -28,6 +29,8 @@ namespace Astral {
         virtual void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) = 0;
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
+        virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
+                                        pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
         virtual void SetBlending(bool enable) = 0 ;
 
         virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }

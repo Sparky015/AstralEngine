@@ -18,6 +18,7 @@ namespace Astral {
         static void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle);
         static void SetClearColor(float r, float g, float b, float a);
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
+        static void PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes);
         static void SetBlending(bool enable);
 
     private:

@@ -37,6 +37,12 @@ namespace Astral {
     }
 
 
+    void RendererAPI::PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
+    {
+        s_RendererCommands->PushConstants(commandBuffer, pipelineStateObjectHandle, data, sizeInBytes);
+    }
+
+
     void RendererAPI::SetBlending(bool enable)
     {
         s_RendererCommands->SetBlending(enable);

@@ -39,7 +39,9 @@ namespace Game {
     void PieceTracking::StartTrackingPiece()
     {
         const Chessboard& chessBoard = g_BoardManager.GetBoard();
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+
+        // TODO: Fix this temp patch and look up the window dimensions to inverse the transform
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), 800 - InputState::MousePositionY()});
 
         if (IsSquareEmpty(chessBoard, mouseSquareLocation)) { return; }
         if (!IsPieceTurn(chessBoard, mouseSquareLocation)) { return; }
@@ -61,7 +63,7 @@ namespace Game {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
         // The square that the mouse is over
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), InputState::MousePositionY()});
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), 800 - InputState::MousePositionY()});
         Chessboard& chessBoard = g_BoardManager.GetBoard();
 
         AttemptMove(chessBoard, mouseSquareLocation);
@@ -80,8 +82,9 @@ namespace Game {
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
         TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(m_TrackedPiece.PieceEntity);
 
+        // TODO: Fix this temp patch and look up the window dimensions to inverse the transform
         transformComponent.x = InputState::MousePositionX();
-        transformComponent.y = InputState::MousePositionY();
+        transformComponent.y = 800 - InputState::MousePositionY();
         ecs.AddComponent<TransformComponent>(m_TrackedPiece.PieceEntity, TransformComponent(transformComponent));
     }
 
@@ -92,9 +95,10 @@ namespace Game {
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
         ECS::ECS& ecs = ECS::g_ECSManager.GetECS();
 
+        // TODO: Fix this temp patch and look up the window dimensions to inverse the transform
         TransformComponent& transformComponent = ecs.GetComponent<TransformComponent>(m_TrackedPiece.PieceEntity);
         transformComponent.x = pieceCoordinates.x;
-        transformComponent.y = pieceCoordinates.y;
+        transformComponent.y = 800 - pieceCoordinates.y;
 
         // Update the transform component of the piece with the new transform
         ecs.AddComponent<TransformComponent>(m_TrackedPiece.PieceEntity, TransformComponent(transformComponent));

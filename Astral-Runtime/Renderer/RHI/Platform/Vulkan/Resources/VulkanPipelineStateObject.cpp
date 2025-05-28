@@ -260,10 +260,17 @@ namespace Astral {
     {
         VkDescriptorSetLayout descriptorSetLayout = (VkDescriptorSetLayout)m_Description.DescriptorSet->GetLayout();
 
+        m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
+        m_PushConstantRange.offset = 0;
+        m_PushConstantRange.size = 64;
+
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
             .setLayoutCount = 1,
-            .pSetLayouts = &descriptorSetLayout
+            .pSetLayouts = &descriptorSetLayout,
+            .pushConstantRangeCount = 1,
+            .pPushConstantRanges = &m_PushConstantRange,
         };
 
         VkResult result = vkCreatePipelineLayout(m_Description.Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout);

@@ -13,7 +13,7 @@
 #include "Renderer/RendererManager.h"
 
 #include "stb_image.h"
-
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Astral {
 
@@ -213,13 +213,11 @@ namespace Astral {
             Mesh& mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
 
-            BufferHandle transformBuffer = device.CreateUniformBuffer(&frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
 
             frameContext.TempDescriptorSets[i] = device.CreateDescriptorSet();
             DescriptorSetHandle& descriptorSet = frameContext.TempDescriptorSets[i];
-
+            //TODO: Save the descriptor sets to the materials
             descriptorSet->BeginBuildingSet();
-            descriptorSet->AddDescriptorUniformBuffer(transformBuffer, ShaderStage::VERTEX);
             descriptorSet->AddDescriptorImageSampler(material.TextureUniform, ShaderStage::FRAGMENT);
             descriptorSet->EndBuildingSet();
 
@@ -228,6 +226,9 @@ namespace Astral {
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
                     material.VertexShader, material.PixelShader, descriptorSet, mesh.VertexBuffer->GetBufferLayout());
             }
+
+            RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
+
 
             frameContext.TempPipelineState->Bind(commandBuffer); // temp, idk
             frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet); // temp, idk

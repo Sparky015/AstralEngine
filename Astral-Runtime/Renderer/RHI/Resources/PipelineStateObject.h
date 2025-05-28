@@ -19,6 +19,9 @@ namespace Astral {
 
         virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
         virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) = 0;
+
+        virtual void* GetPipelineLayout() = 0;
+        virtual void* GetHandleHandle() = 0;
     };
 
     using PipelineStateObjectHandle = GraphicsRef<PipelineStateObject>;

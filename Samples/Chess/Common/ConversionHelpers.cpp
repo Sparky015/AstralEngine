@@ -68,9 +68,9 @@ namespace Game {
     uint8 ConvertCoordinatesToPieceLocation(Vec2 coordinates)
     {
         int row = ((800 - coordinates.x) / 100);
-        int column = ((800 - coordinates.y) / 100) + 1;
+        int column = ((coordinates.y) / 100);
         row = 9 - row; // invert the row
-        return ((column - 1) * 8) + (row - 1) - 1;
+        return ((column) * 8) + (row - 1) - 1;
     }
 
 }
