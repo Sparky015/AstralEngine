@@ -7,6 +7,10 @@
 #include "VulkanRendererCommands.h"
 
 #include <vulkan/vulkan.h>
+#ifdef ASTRAL_VULKAN_AVAILABLE
+#endif
+
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
 
 namespace Astral {
 
@@ -56,6 +60,14 @@ namespace Astral {
     void VulkanRendererCommands::SetBlending(bool enable)
     {
 
+    }
+
+
+    void VulkanRendererCommands::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        ImGui::Render();
+        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
     }
 
 }

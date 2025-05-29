@@ -20,6 +20,8 @@ namespace Astral {
         virtual void SubmitSync(CommandBufferHandle commandBufferHandle) = 0;
         virtual void Present(RenderTargetHandle renderTarget) = 0;
         virtual void WaitIdle() = 0;
+
+        virtual void* GetNativeHandle() = 0;
     };
 
     using CommandQueueHandle = GraphicsRef<CommandQueue>;

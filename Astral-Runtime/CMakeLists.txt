@@ -22,6 +22,8 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.cpp
         Debug/ImGui/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp

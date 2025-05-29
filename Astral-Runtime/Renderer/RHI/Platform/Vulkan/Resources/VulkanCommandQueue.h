@@ -32,6 +32,8 @@ namespace Astral {
         void Present(RenderTargetHandle renderTarget) override;
         void WaitIdle() override;
 
+        void* GetNativeHandle() override { return m_Queue; }
+
     private:
 
         void GetQueue();

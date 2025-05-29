@@ -18,6 +18,8 @@ namespace Astral {
         void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
                                 pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override {};
         void SetBlending(bool enable) override;
+
+        void CallImGuiDraws(CommandBufferHandle commandBufferHandle) override {};
     };
 
 }

@@ -36,6 +36,9 @@ namespace Astral {
         std::string_view GetGPUVendor() override;
         std::string_view GetRenderingAPI() override;
 
+        void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle);
+        void ShutdownImGuiForAPIBackend();
+
         Device& GetDevice() override { return *m_Device; }
 
     private:

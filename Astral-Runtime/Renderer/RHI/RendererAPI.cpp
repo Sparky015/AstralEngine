@@ -48,4 +48,10 @@ namespace Astral {
         s_RendererCommands->SetBlending(enable);
     }
 
+
+    void RendererAPI::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
+    {
+        s_RendererCommands->CallImGuiDraws(commandBufferHandle);
+    }
+
 }

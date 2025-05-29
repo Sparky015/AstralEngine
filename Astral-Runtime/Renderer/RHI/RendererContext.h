@@ -28,6 +28,9 @@ namespace Astral {
         virtual std::string_view GetGPUVendor() = 0;
         virtual std::string_view GetGraphicsProcessorName() = 0;
 
+        virtual void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) = 0;
+        virtual void ShutdownImGuiForAPIBackend() = 0;
+
         static RenderingContext* CreateRendererContext();
     };
 

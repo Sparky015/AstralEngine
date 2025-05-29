@@ -21,6 +21,8 @@ namespace Astral {
         static void PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes);
         static void SetBlending(bool enable);
 
+        static void CallImGuiDraws(CommandBufferHandle commandBufferHandle);
+
     private:
 
         friend SceneRenderer;

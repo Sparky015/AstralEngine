@@ -6,15 +6,19 @@
 
 #include "VulkanRendererContext.h"
 
-#include <array>
-#include <GLFW/glfw3.h>
-#include <vulkan/vulkan.h>
-
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
+
+#ifdef ASTRAL_VULKAN_AVAILABLE
+#endif
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
+
+#include <array>
+#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 namespace Astral {
 
@@ -216,6 +220,36 @@ namespace Astral {
         m_Device.reset();
     }
 
+
+    void VulkanRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
+    {
+        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
+
+        ImGui_ImplVulkan_InitInfo initInfo =
+        {
+            .Instance = m_Instance,
+            .PhysicalDevice = m_PhysicalDevices.SelectedDevice().physicalDevice,
+            .Device = (VkDevice)m_Device->GetNativeHandle(),
+            .QueueFamily = m_QueueFamilyIndex,
+            .Queue = (VkQueue)m_Device->GetCommandQueue()->GetNativeHandle(),
+            .RenderPass = renderPass,
+            .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
+            .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
+            .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
+            .DescriptorPoolSize = 9,
+            .MinAllocationSize = 1024 * 1024,
+        };
+
+        ImGui_ImplVulkan_Init(&initInfo);
+        ImGui_ImplVulkan_CreateFontsTexture();
+    }
+
+
+    void VulkanRenderingContext::ShutdownImGuiForAPIBackend()
+    {
+        ImGui_ImplVulkan_DestroyFontsTexture();
+        ImGui_ImplVulkan_Shutdown();
+    }
 
 
     const char* GetDebugMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverityFlag)

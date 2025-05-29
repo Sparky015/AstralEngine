@@ -18,9 +18,6 @@
 #ifdef ASTRAL_OPENGL_AVAILABLE
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
 #endif
-#ifdef ASTRAL_VULKAN_AVAILABLE
-    #include "ImGuiDependencies/imgui_impl_vulkan.h"
-#endif
 
 #include "ImGuiDependencies/imgui_impl_glfw.h"
 
@@ -293,14 +290,6 @@ namespace Debug {
         else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
-            //
-            // ImGui_ImplVulkan_InitInfo initInfo =
-            // {
-            //
-            //     .MinAllocationSize = 1024 * 1024,
-            // };
-            //
-            // ImGui_ImplVulkan_Init(&initInfo);
         }
 
     }
@@ -309,7 +298,7 @@ namespace Debug {
     void ImGuiManager::ShutdownImGui() const
     {
         PROFILE_SCOPE("ImGui Manager Shutdown");
-        ImGui_ImplOpenGL3_Shutdown();
+        // ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
 
         ImPlot::DestroyContext();

@@ -33,6 +33,8 @@ namespace Astral {
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
         virtual void SetBlending(bool enable) = 0 ;
 
+        virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
+
         virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCalls; }
 
     protected:
