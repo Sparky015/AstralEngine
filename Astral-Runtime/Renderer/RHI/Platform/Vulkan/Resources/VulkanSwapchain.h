@@ -51,6 +51,9 @@ namespace Astral {
         void CreateSemaphores();
         void DestroySemaphores();
 
+        void CreateFences();
+        void DestroyFences();
+
         void CreateRenderTargets();
 
         VkDevice m_Device;
@@ -63,8 +66,11 @@ namespace Astral {
         VkFormat m_SwapchainImageFormat;
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
+
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
         std::vector<VkSemaphore> m_ImageAvailableSemaphores;
+        std::vector<VkFence> m_Fences;
+
         uint32 m_CurrentSemaphorePairIndex;
 
         std::vector<RenderTargetHandle> m_RenderTargets;

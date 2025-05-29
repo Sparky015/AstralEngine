@@ -131,6 +131,7 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
+        m_RendererContext->FrameContexts.clear();
         m_RendererContext.reset();
     }
 
@@ -198,6 +199,7 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
         RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
         FramebufferHandle framebufferHandle = frameContext.SceneFramebuffer;

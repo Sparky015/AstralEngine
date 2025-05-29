@@ -23,16 +23,19 @@ namespace Astral {
         m_ImageViews(),
         m_RenderCompleteSemaphores(),
         m_ImageAvailableSemaphores(),
-        m_CurrentSemaphorePairIndex(0)
+        m_CurrentSemaphorePairIndex(0),
+        m_Fences()
     {
         CreateSwapchain();
         CreateSemaphores();
+        CreateFences();
         CreateRenderTargets();
     }
 
 
     VulkanSwapchain::~VulkanSwapchain()
     {
+        DestroyFences();
         DestroySemaphores();
         DestroySwapchain();
     }
@@ -41,8 +44,19 @@ namespace Astral {
     GraphicsRef<RenderTarget> VulkanSwapchain::AcquireNextImage()
     {
         uint32 imageIndex;
-        VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], VK_NULL_HANDLE, &imageIndex);
+        VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], m_Fences[m_CurrentSemaphorePairIndex], &imageIndex);
         ASSERT(result == VK_SUCCESS, "Failed to acquire swapchain image!");
+
+        // result = vkWaitForFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex], VK_TRUE, UINT64_MAX);
+        // ASSERT(result == VK_SUCCESS, "Failed to wait on fence!");
+        //
+        // result = vkResetFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex]);
+        // ASSERT(result == VK_SUCCESS, "Failed to reset fence!");
+
+        m_RenderTargets[imageIndex]->SetSyncPrimatives(m_RenderCompleteSemaphores[imageIndex], m_ImageAvailableSemaphores[imageIndex], m_Fences[imageIndex]);
+
+        m_CurrentSemaphorePairIndex++;
+        if (m_CurrentSemaphorePairIndex == 3) { m_CurrentSemaphorePairIndex = 0; }
 
         return m_RenderTargets[imageIndex];
     }
@@ -80,7 +94,7 @@ namespace Astral {
     {
         for (const VkSurfaceFormatKHR& availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_B8G8R8_SRGB &&
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                 {
                     m_SwapchainImageFormat = availableFormat.format;
@@ -220,6 +234,33 @@ namespace Astral {
         {
             vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
             vkDestroySemaphore(m_Device, m_RenderCompleteSemaphores[i], nullptr);
+        }
+    }
+
+
+    void VulkanSwapchain::CreateFences()
+    {
+        VkFenceCreateInfo fenceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0
+        };
+
+        m_Fences.resize(m_NumberOfSwapchainImages);
+
+        for (int i = 0; i < m_NumberOfSwapchainImages; i++)
+        {
+            VkResult result = vkCreateFence(m_Device, &fenceCreateInfo, nullptr, &m_Fences[i]);
+            ASSERT(result == VK_SUCCESS, "Fence failed to create!");
+        }
+    }
+
+
+    void VulkanSwapchain::DestroyFences()
+    {
+        for (int i = 0; i < m_NumberOfSwapchainImages; i++)
+        {
+            vkDestroyFence(m_Device, m_Fences[i], nullptr);
         }
     }
 

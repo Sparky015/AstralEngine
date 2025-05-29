@@ -32,6 +32,7 @@ namespace Astral {
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTargetHandle->GetRenderCompleteSemaphore();
         VkSemaphore imageAvailableSemaphore = (VkSemaphore)renderTargetHandle->GetImageAvailableSemaphore();
+        VkFence fence = (VkFence)renderTargetHandle->GetFence();
 
         VkSubmitInfo submitInfo = {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -45,7 +46,7 @@ namespace Astral {
             .pSignalSemaphores = &renderCompleteSemaphore,
         };
 
-        VkResult result = vkQueueSubmit(m_Queue, 1, &submitInfo, nullptr);
+        VkResult result = vkQueueSubmit(m_Queue, 1, &submitInfo, fence);
         ASSERT(result == VK_SUCCESS, "Queue failed to submit command buffer");
     }
 

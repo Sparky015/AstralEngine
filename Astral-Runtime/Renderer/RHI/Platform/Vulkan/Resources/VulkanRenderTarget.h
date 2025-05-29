@@ -33,9 +33,18 @@ namespace Astral {
 
         void* GetImageAvailableSemaphore() override { return m_ImageAvailableSemaphore; }
         void* GetRenderCompleteSemaphore() override { return m_RenderCompleteSemaphore; }
+        void* GetFence() override { return m_Fence; }
         void* GetImageFormat() override { return &m_ImageFormat; }
         void* GetImageView() override { return m_ImageView; }
         void* GetNativeHandle() override { return m_Image; }
+
+
+        void SetSyncPrimatives(void* renderCompleteSemaphore, void* imageAvailableSemaphore, void* fence) override
+        {
+            m_ImageAvailableSemaphore = (VkSemaphore)imageAvailableSemaphore;
+            m_RenderCompleteSemaphore = (VkSemaphore)renderCompleteSemaphore;
+            m_Fence = (VkFence)fence;
+        }
 
     private:
 
@@ -44,6 +53,7 @@ namespace Astral {
         uint32 m_ImageIndex;
         VkSemaphore m_RenderCompleteSemaphore;
         VkSemaphore m_ImageAvailableSemaphore;
+        VkFence m_Fence;
         VkFormat m_ImageFormat;
     };
 

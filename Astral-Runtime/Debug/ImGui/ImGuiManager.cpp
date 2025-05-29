@@ -293,7 +293,14 @@ namespace Debug {
         else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Window::g_WindowManager.GetWindow().GetNativeWindow(), true);
-            // ImGui_ImplVulkan_Init();
+            //
+            // ImGui_ImplVulkan_InitInfo initInfo =
+            // {
+            //
+            //     .MinAllocationSize = 1024 * 1024,
+            // };
+            //
+            // ImGui_ImplVulkan_Init(&initInfo);
         }
 
     }

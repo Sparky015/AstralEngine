@@ -97,21 +97,21 @@ namespace Astral {
     {
         PROFILE_SCOPE("Creating Vulkan Instance")
 
-        std::array<const char*, 1> layers = {
-            "VK_LAYER_KHRONOS_validation"
+        std::array<const char*, 0> layers = {
+            //"VK_LAYER_KHRONOS_validation"
         };
 
-        std::array<const char*, 4> extensions = {
+        std::vector<const char*> extensions = {
             VK_KHR_SURFACE_EXTENSION_NAME,
 #if ASTRAL_PLATFORM_WINDOWS
             "VK_KHR_win32_surface",
 #elif ASTRAL_PLATFORM_MACOS
             "VK_EXT_metal_surface",
+            VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #elif ASTRAL_PLATFORM_LINUX
             "VK_KHR_xcb_surface",
 #endif
             VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
-            VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
         };
 
         VkApplicationInfo appInfo = {
@@ -127,7 +127,7 @@ namespace Astral {
         VkInstanceCreateInfo createInfo = {
             .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
             .pNext = nullptr,
-            .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
+            .flags = 0, // TODO: VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR for MacOS
             .pApplicationInfo = &appInfo,
             .enabledLayerCount = (uint32)layers.size(),
             .ppEnabledLayerNames = layers.data(),

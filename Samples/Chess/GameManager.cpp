@@ -43,8 +43,15 @@ namespace Game {
         TRACE("GameManager::Shutdown");
         m_UpdateListener.StopListening();
 
+        m_Mesh.IndexBuffer.reset();
+        m_Mesh.VertexBuffer.reset();
+        m_Material.TextureUniform.reset();
+        m_Material.PixelShader.reset();
+        m_Material.VertexShader.reset();
         m_IndexBuffer.reset();
         m_VertexBuffer.reset();
+        m_VertexShader.reset();
+        m_FragmentShader.reset();
     }
 
 

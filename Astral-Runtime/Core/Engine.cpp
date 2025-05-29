@@ -34,10 +34,11 @@ Engine::Engine() :
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
-    IO::g_IOManager.Init();
-    Debug::g_ImGuiManager.Init();
-    ECS::g_ECSManager.Init();
     Astral::g_RendererManager.Init();
+    IO::g_IOManager.Init();
+    // Debug::g_ImGuiManager.Init();
+    ECS::g_ECSManager.Init();
+
     m_ApplicationModule->Init();
 
     cpuinfo_initialize();
@@ -58,10 +59,10 @@ Engine::~Engine()
     cpuinfo_deinitialize();
 
     m_ApplicationModule->Shutdown();
-    Astral::g_RendererManager.Shutdown();
     ECS::g_ECSManager.Shutdown();
     // Debug::g_ImGuiManager.Shutdown();
     IO::g_IOManager.Shutdown();
+    Astral::g_RendererManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 
     Core::MemoryTracker::Get().Shutdown();
