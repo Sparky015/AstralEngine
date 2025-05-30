@@ -46,7 +46,7 @@ namespace Astral {
             context.TempDescriptorSets = std::vector<DescriptorSetHandle>();
         }
 
-        g_RendererManager.GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
+        // g_RendererManager.GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
 
         // TESTING CODE
 
@@ -133,7 +133,7 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
-        g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
+        // g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
         m_RendererContext->FrameContexts.clear();
         m_RendererContext.reset();
     }
@@ -243,7 +243,7 @@ namespace Astral {
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
 
-        RendererAPI::CallImGuiDraws(commandBuffer);
+        // RendererAPI::CallImGuiDraws(commandBuffer);
 
         renderPass->EndRenderPass(commandBuffer);
         commandBuffer->EndRecording();

@@ -34,7 +34,7 @@ Engine::Engine() :
 
     // This is the order that systems are called in for the SubSystemUpdateEvent
     Window::g_WindowManager.Init();
-    Debug::g_ImGuiManager.Init();
+    // Debug::g_ImGuiManager.Init();
     Astral::g_RendererManager.Init();
     IO::g_IOManager.Init();
     ECS::g_ECSManager.Init();
@@ -62,7 +62,7 @@ Engine::~Engine()
     ECS::g_ECSManager.Shutdown();
     IO::g_IOManager.Shutdown();
     Astral::g_RendererManager.Shutdown();
-    Debug::g_ImGuiManager.Shutdown();
+    // Debug::g_ImGuiManager.Shutdown();
     Window::g_WindowManager.Shutdown();
 
     Core::MemoryTracker::Get().Shutdown();
@@ -82,14 +82,14 @@ void Engine::Run()
         m_DeltaTime.UpdateDeltaTime();
 
         m_NewFramePublisher.PublishEvent( NewFrameEvent() );
+        m_ApplicationModule->Update(m_DeltaTime);
+
+
+        // Debug::ImGuiManager::Get().BeginFrame();
+        // m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
+        // Debug::ImGuiManager::Get().EndFrame();
 
         m_SubSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
-
-        Debug::ImGuiManager::Get().BeginFrame();
-        m_RenderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
-        Debug::ImGuiManager::Get().EndFrame();
-
-        m_ApplicationModule->Update(m_DeltaTime);
 
 
         Window::g_WindowManager.SwapBuffers();

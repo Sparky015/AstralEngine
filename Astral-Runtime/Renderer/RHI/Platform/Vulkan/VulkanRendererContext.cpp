@@ -101,8 +101,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("Creating Vulkan Instance")
 
-        std::array<const char*, 0> layers = {
-            //"VK_LAYER_KHRONOS_validation"
+        std::array<const char*, 1> layers = {
+            "VK_LAYER_KHRONOS_validation"
         };
 
         std::vector<const char*> extensions = {
