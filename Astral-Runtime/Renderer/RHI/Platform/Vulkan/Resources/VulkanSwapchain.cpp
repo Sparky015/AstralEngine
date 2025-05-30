@@ -43,17 +43,20 @@ namespace Astral {
 
     GraphicsRef<RenderTarget> VulkanSwapchain::AcquireNextImage()
     {
+        // Waits on the queue work completing on the last frame that owned the fence (so like three frames ago)
+        VkResult result = vkWaitForFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex], VK_TRUE, UINT64_MAX);
+        ASSERT(result == VK_SUCCESS, "Failed to wait on fence!");
+
+        result = vkResetFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex]);
+        ASSERT(result == VK_SUCCESS, "Failed to reset fence!");
+
+
         uint32 imageIndex;
-        VkResult result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], m_Fences[m_CurrentSemaphorePairIndex], &imageIndex);
+        result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], VK_NULL_HANDLE, &imageIndex);
         ASSERT(result == VK_SUCCESS, "Failed to acquire swapchain image!");
 
-        // result = vkWaitForFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex], VK_TRUE, UINT64_MAX);
-        // ASSERT(result == VK_SUCCESS, "Failed to wait on fence!");
-        //
-        // result = vkResetFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex]);
-        // ASSERT(result == VK_SUCCESS, "Failed to reset fence!");
 
-        m_RenderTargets[imageIndex]->SetSyncPrimatives(m_RenderCompleteSemaphores[imageIndex], m_ImageAvailableSemaphores[imageIndex], m_Fences[imageIndex]);
+        m_RenderTargets[imageIndex]->SetSyncPrimatives(m_RenderCompleteSemaphores[m_CurrentSemaphorePairIndex], m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], m_Fences[m_CurrentSemaphorePairIndex]);
 
         m_CurrentSemaphorePairIndex++;
         if (m_CurrentSemaphorePairIndex == 3) { m_CurrentSemaphorePairIndex = 0; }
@@ -243,7 +246,7 @@ namespace Astral {
         VkFenceCreateInfo fenceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
             .pNext = nullptr,
-            .flags = 0
+            .flags = VK_FENCE_CREATE_SIGNALED_BIT
         };
 
         m_Fences.resize(m_NumberOfSwapchainImages);

@@ -48,6 +48,7 @@ namespace Astral {
             FramebufferHandle SceneFramebuffer;
             PipelineStateObjectHandle TempPipelineState;
             std::vector<DescriptorSetHandle> TempDescriptorSets;
+            RenderTargetHandle SceneRenderTarget;
         };
 
         struct SceneRendererContext

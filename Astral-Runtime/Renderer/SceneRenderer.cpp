@@ -44,9 +44,10 @@ namespace Astral {
             context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass, renderTargets[i]);
             context.TempPipelineState = nullptr;
             context.TempDescriptorSets = std::vector<DescriptorSetHandle>();
+            context.SceneRenderTarget = nullptr;
         }
 
-        // g_RendererManager.GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
+        g_RendererManager.GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
 
         // TESTING CODE
 
@@ -133,7 +134,7 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
-        // g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
+        g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
         m_RendererContext->FrameContexts.clear();
         m_RendererContext.reset();
     }
@@ -141,11 +142,18 @@ namespace Astral {
 
     void SceneRenderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+
+        // Blocks until resources from MAX_IN_FLIGHT_FRAMES frames ago are out of use
+        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+
         m_RendererContext->IsSceneStarted = true;
         m_RendererContext->CurrentFrameIndex++;
         if (m_RendererContext->CurrentFrameIndex == 3) { m_RendererContext->CurrentFrameIndex = 0; }
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
+        frameContext.SceneRenderTarget = renderTarget;
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
@@ -200,10 +208,9 @@ namespace Astral {
         // TODO: Sort the meshes by material
 
         Device& device = RendererAPI::GetDevice();
-        Swapchain& swapchain = device.GetSwapchain();
-        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
+        RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
         FramebufferHandle framebufferHandle = frameContext.SceneFramebuffer;
         RenderPassHandle renderPass = m_RendererContext->RenderPass;
@@ -219,7 +226,6 @@ namespace Astral {
             Material& material = frameContext.Materials[i];
 
 
-            frameContext.TempDescriptorSets[i] = device.CreateDescriptorSet();
             DescriptorSetHandle& descriptorSet = frameContext.TempDescriptorSets[i];
             //TODO: Save the descriptor sets to the materials
             descriptorSet->BeginBuildingSet();

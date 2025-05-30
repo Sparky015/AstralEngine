@@ -139,6 +139,11 @@ namespace Astral {
             .ppEnabledExtensionNames = extensions.data()
         };
 
+#ifdef ASTRAL_PLATFORM_MACOS
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
+
+
         VkResult result = vkCreateInstance(&createInfo, nullptr, &m_Instance);
         ASSERT(result == VK_SUCCESS, "Vulkan failed to create the instance! Error code: " << result);
     }

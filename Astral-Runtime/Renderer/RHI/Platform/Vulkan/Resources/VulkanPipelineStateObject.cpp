@@ -237,9 +237,20 @@ namespace Astral {
 
     void VulkanPipelineStateObject::SetColorBlendState()
     {
+        // VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
+        //     .blendEnable = VK_FALSE,
+        //     .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT,
+        // };
+
         VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
-            .blendEnable = VK_FALSE,
-            .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT,
+            .blendEnable = VK_TRUE, // <--- ENABLE BLENDING
+            .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,         // Common for alpha: Source color * source alpha
+            .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, // Common for alpha: Dest color * (1 - source alpha)
+            .colorBlendOp = VK_BLEND_OP_ADD,                          // Add the two results (Source*SrcAlpha + Dest*(1-SrcAlpha))
+            .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,               // Use source alpha
+            .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,              // Don't use destination alpha
+            .alphaBlendOp = VK_BLEND_OP_ADD,                          // Resulting alpha = Source Alpha
+            .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT, // <--- Enable writing to Alpha channel
         };
 
         m_PipelineCreateInfos.ColorBlendAttachmentState = colorBlendAttachmentState;
