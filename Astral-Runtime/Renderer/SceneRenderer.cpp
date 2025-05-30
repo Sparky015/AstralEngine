@@ -134,6 +134,9 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
+        Device& device = RendererAPI::GetDevice();
+        device.WaitIdle();
+
         g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
         m_RendererContext->FrameContexts.clear();
         m_RendererContext.reset();
@@ -249,7 +252,7 @@ namespace Astral {
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
 
-        // RendererAPI::CallImGuiDraws(commandBuffer);
+        RendererAPI::CallImGuiDraws(commandBuffer);
 
         renderPass->EndRenderPass(commandBuffer);
         commandBuffer->EndRecording();
