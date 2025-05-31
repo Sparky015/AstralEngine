@@ -233,7 +233,7 @@ namespace Astral {
             .VulkanDevice = *this,
             .Device = m_Device,
             .ImageData = imageData,
-            .ImageFormat = VK_FORMAT_R8G8B8A8_SRGB,
+            .ImageFormat = VK_FORMAT_R8G8B8A8_UNORM,
             .ImageWidth = width,
             .ImageHeight = height,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
