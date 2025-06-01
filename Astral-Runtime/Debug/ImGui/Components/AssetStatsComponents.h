@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Debug {
+namespace Astral {
 
     void ShowNumberOfAssetsLoaded();
     void ShowTotalNumberOfAssetsLoaded();

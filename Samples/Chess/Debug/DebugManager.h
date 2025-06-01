@@ -7,7 +7,7 @@
 
 #include "Core/SystemManager.h"
 
-namespace Debug {
+namespace Astral {
 
     class ChessDebugManager : public SystemManager
     {

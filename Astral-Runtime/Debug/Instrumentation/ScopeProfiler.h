@@ -8,13 +8,13 @@
 
 /** Profiles a scope and outputs the time to the console. */
 #ifndef TURN_OFF_PROFILER_MACRO
-#define PROFILE_SCOPE(title) Debug::Macros::macro_SCOPE_PROFILER localScopedProfiler = Debug::Macros::macro_SCOPE_PROFILER(title);
+#define PROFILE_SCOPE(title) Astral::Macros::macro_SCOPE_PROFILER localScopedProfiler = Astral::Macros::macro_SCOPE_PROFILER(title);
 #else
 #define PROFILE_SCOPE(title)
 #endif
 
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     /** Profiles a scope and outputs the time to the console. */
     class macro_SCOPE_PROFILER {

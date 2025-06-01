@@ -6,12 +6,12 @@
 
 #include "imgui.h"
 
-void Debug::BuildProfileComponent()
+void Astral::BuildProfileComponent()
 {
     ImGui::Text("Build Profile: %s", ENGINE_BUILD_PROFILE);
 }
 
-void Debug::CompilerInfoComponents()
+void Astral::CompilerInfoComponents()
 {
     /** Outputs the compiler name and version */
 #ifdef __clang__

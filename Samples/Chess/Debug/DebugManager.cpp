@@ -11,7 +11,7 @@
 #include <imgui.h>
 
 
-namespace Debug {
+namespace Astral {
 
     void ChessDebugManager::Init()
     {

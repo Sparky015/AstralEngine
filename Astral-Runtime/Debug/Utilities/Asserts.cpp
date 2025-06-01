@@ -9,7 +9,7 @@
 
 #include <cpptrace/cpptrace.hpp>
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     void macro_ASSERT(const char* expressionString,  const char* errorMessage, const char* file, const int lineNumber, const char* func)
     {

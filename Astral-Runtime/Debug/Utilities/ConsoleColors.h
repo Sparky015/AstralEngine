@@ -6,7 +6,7 @@
 
 #include "pch.h"
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     enum ConsoleOutputColors : Astral::uint8
     {

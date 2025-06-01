@@ -8,7 +8,7 @@
 #include "Input/InputState.h"
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Debug {
+namespace Astral {
 
     const static ImGuiTableFlags imGuiTableFlags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
 

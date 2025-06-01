@@ -9,7 +9,7 @@
 #include "ConsoleColors.h"
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     void macro_TRACE(const std::ostringstream& message)
     {

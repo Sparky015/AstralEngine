@@ -9,7 +9,7 @@
 #include "Core/Engine.h"
 #include "imgui.h"
 
-namespace Debug {
+namespace Astral {
 
     void EngineTimeComponent()
     {

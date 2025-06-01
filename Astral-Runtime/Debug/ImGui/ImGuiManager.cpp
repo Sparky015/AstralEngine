@@ -25,7 +25,7 @@
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
 
-namespace Debug {
+namespace Astral {
 
     void ImGuiManager::Init()
     {

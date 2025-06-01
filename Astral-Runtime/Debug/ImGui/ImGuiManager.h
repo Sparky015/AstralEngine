@@ -9,7 +9,7 @@
 #include "Core/SystemManager.h"
 #include "Window/WindowEvents.h"
 
-namespace Debug{
+namespace Astral{
 
     class ImGuiManager : public SystemManager
     {

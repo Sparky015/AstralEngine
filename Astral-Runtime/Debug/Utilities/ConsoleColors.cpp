@@ -8,7 +8,7 @@
     #include <Windows.h>
 #endif
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     std::string_view SetColor(ConsoleOutputColors color)
     {

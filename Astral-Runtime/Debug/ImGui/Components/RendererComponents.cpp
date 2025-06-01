@@ -12,7 +12,7 @@
 #include "Window/WindowManager.h"
 
 
-namespace Debug {
+namespace Astral {
 
     void FPSComponent()
     {

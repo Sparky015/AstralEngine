@@ -8,7 +8,7 @@
 
 #include "Debug/Utilities/Loggers.h"
 
-namespace Debug {
+namespace Astral {
 
     bool ProfilerLogFile::m_IsLogFileOpen = false;
 

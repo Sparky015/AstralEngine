@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace Debug {
+namespace Astral {
 
     void CompleteInputStateComponent();
 

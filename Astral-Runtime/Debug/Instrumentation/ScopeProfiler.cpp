@@ -8,7 +8,7 @@
 #include "Debug/MemoryTracking/MemoryTracker.h"
 #include "Core/CoreMacroDefinitions.h"
 
-namespace Debug::Macros {
+namespace Astral::Macros {
 
     macro_SCOPE_PROFILER::macro_SCOPE_PROFILER(const char* title) noexcept
         : m_title(title),
@@ -25,7 +25,7 @@ namespace Debug::Macros {
         int64 startTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTime).time_since_epoch().count();
         int64 endTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_EndTime).time_since_epoch().count();
 
-        Debug::ProfilerLogFile::GetInstance().WriteProfile({m_title, startTimePoint, endTimePoint, m_EndAllocationCount - m_StartAllocationCount});
+        Astral::ProfilerLogFile::GetInstance().WriteProfile({m_title, startTimePoint, endTimePoint, m_EndAllocationCount - m_StartAllocationCount});
     }
 
 }

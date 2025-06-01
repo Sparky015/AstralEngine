@@ -23,7 +23,7 @@ namespace Astral {
             PROFILE_SCOPE("EditorModuleInit")
             TRACE("Initializing Editor")
 
-            Debug::ImGuiManager& imguiManager = Astral::Engine::Get().GetImGuiManager();
+            Astral::ImGuiManager& imguiManager = Astral::Engine::Get().GetImGuiManager();
             imguiManager.LoadImGuiConfigFile(std::string(ASTRAL_EDITOR_SOURCE_DIR) + "imgui-editor-config.ini");
 
             Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();

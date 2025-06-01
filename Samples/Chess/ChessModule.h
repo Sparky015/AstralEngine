@@ -36,7 +36,7 @@ public:
 private:
     static ChessModule* m_Instance;
 
-    Debug::ChessDebugManager m_DebugManager;
+    Astral::ChessDebugManager m_DebugManager;
     Game::ChessboardManager m_BoardManager;
     Game::GameManager m_GameManager;
 };

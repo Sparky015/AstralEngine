@@ -8,7 +8,7 @@
 
 #include "Core/FixedIntegerTypes.h"
 
-namespace Debug {
+namespace Astral {
 
     struct ProfileResult
     {

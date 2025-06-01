@@ -7,7 +7,7 @@
 #include "Core/CoreMacroDefinitions.h"
 #include "Debug/Utilities/ConsoleLogFile.h"
 
-namespace Debug {
+namespace Astral {
 
 
     void FunctionProfiler::ProfileFunction(const std::function<void()>& functionToProfile, const char* functionName,

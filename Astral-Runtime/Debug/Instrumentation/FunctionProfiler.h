@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-namespace Debug {
+namespace Astral {
 
 
     class FunctionProfiler

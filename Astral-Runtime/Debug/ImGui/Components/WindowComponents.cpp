@@ -9,7 +9,7 @@
 #include "Core/Engine.h"
 #include "Debug/Utilities/Loggers.h"
 
-namespace Debug {
+namespace Astral {
 
     void WindowDimensionsComponent()
     {

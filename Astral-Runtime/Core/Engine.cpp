@@ -33,7 +33,7 @@ namespace Astral {
         m_IsLoopRunning(true),
 
         m_WindowManager(CreateScopedPtr<WindowManager>()),
-        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>()),
+        m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
         m_RendererManager(CreateScopedPtr<RendererManager>()),
         m_AssetManager(CreateScopedPtr<AssetManager>()),
         m_ECSManager(CreateScopedPtr<ECSManager>())

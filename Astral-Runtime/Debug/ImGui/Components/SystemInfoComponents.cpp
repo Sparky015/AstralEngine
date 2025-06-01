@@ -15,7 +15,7 @@
 #include "imgui.h"
 #include "Core/Engine.h"
 
-namespace Debug {
+namespace Astral {
 
     // Helper function for CPU Info
     const char* GetCPUVendorName(enum cpuinfo_vendor vendor)

@@ -9,7 +9,7 @@
 
 #include "Debug/MemoryTracking/MemoryTracker.h"
 
-namespace Debug {
+namespace Astral {
 
     /**@brief Dynamically adjusts the unit label of the memory used based on the number of bytes being represented.
      * @param numberOfBytes The number of bytes that are being represented

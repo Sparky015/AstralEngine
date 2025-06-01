@@ -9,7 +9,7 @@
 
 #include "Loggers.h"
 
-namespace Debug {
+namespace Astral {
 
      bool ConsoleLogFile::m_IsLogFileOpen = false;
 

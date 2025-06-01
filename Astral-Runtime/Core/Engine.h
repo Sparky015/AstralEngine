@@ -17,7 +17,7 @@ namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Astral { class RendererManager; }
 namespace Astral { class AssetManager; }
-namespace Debug { class ImGuiManager; }
+namespace Astral { class ImGuiManager; }
 
 namespace Astral {
 
@@ -33,7 +33,7 @@ namespace Astral {
 
         WindowManager& GetWindowManager() { return *m_WindowManager; }
         ECSManager& GetECSManager() { return *m_ECSManager; }
-        Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
+        Astral::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
         RendererManager& GetRendererManager() { return *m_RendererManager; }
         AssetManager& GetAssetManager() { return *m_AssetManager; }
 
@@ -48,7 +48,7 @@ namespace Astral {
         Astral::Clock m_Clock;
 
         ScopedPtr<WindowManager> m_WindowManager;
-        ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
+        ScopedPtr<Astral::ImGuiManager> m_ImGuiManager;
         ScopedPtr<RendererManager> m_RendererManager;
         ScopedPtr<AssetManager> m_AssetManager;
         ScopedPtr<ECSManager> m_ECSManager;

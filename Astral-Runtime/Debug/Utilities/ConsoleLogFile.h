@@ -7,7 +7,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace Debug {
+namespace Astral {
 
     /** @class ConsoleLogFile
      *  @brief Singleton that represents the engine-wide log file that all logging macros write into. */

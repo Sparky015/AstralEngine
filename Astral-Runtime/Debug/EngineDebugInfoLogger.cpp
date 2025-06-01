@@ -10,7 +10,7 @@
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 
-namespace Debug {
+namespace Astral {
 
     void LogEngineDebugInfo()
     {

@@ -5,7 +5,7 @@
 #pragma once
 
 
-namespace Debug {
+namespace Astral {
 
     void LogEngineDebugInfo();
 
