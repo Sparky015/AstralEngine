@@ -14,7 +14,9 @@ namespace Astral {
 
     enum class AssetType : uint8
     {
-        Texture
+        Texture,
+        Material,
+        Shader
     };
 
     class Asset
@@ -30,6 +32,8 @@ namespace Astral {
         switch (assetType)
         {
             case AssetType::Texture: return "Texture";
+            case AssetType::Material: return "Material";
+            case AssetType::Shader: return "Shader";
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }
