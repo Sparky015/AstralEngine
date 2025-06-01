@@ -51,7 +51,7 @@ namespace Astral {
             return;
         }
 
-        static bool showMemoryDebugWindow = true;
+        static bool showMemoryDebugWindow = false;
 
         if (showMemoryDebugWindow)
         {
