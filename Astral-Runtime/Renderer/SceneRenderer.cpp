@@ -15,6 +15,8 @@
 #include "stb_image.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Core/Engine.h"
+
 namespace Astral {
 
     GraphicsOwnedPtr<SceneRenderer::SceneRendererContext> SceneRenderer::m_RendererContext = nullptr;
@@ -47,7 +49,7 @@ namespace Astral {
             context.SceneRenderTarget = nullptr;
         }
 
-        g_RendererManager.GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
+        Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
 
         // TESTING CODE
 
@@ -137,7 +139,7 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         device.WaitIdle();
 
-        g_RendererManager.GetContext().ShutdownImGuiForAPIBackend();
+        Engine::Get().GetRendererManager().GetContext().ShutdownImGuiForAPIBackend();
         m_RendererContext->FrameContexts.clear();
         m_RendererContext.reset();
     }

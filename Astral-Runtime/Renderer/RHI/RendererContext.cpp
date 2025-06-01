@@ -4,6 +4,7 @@
 
 #include "RendererContext.h"
 
+#include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 #include "Platform/OpenGL/OpenGLRendererContext.h"
 #include "Platform/Vulkan/VulkanRendererContext.h"

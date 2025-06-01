@@ -29,7 +29,7 @@ namespace Astral {
     void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkClearValue clearColorValues = {{0.0f, 0.0f, 1.0f, 1.0f}};
+        VkClearValue clearColorValues = {0.0f, 0.0f, 1.0f, 1.0f};
         VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
 
         VkRenderPassBeginInfo renderPassBeginInfo = {

@@ -4,6 +4,7 @@
 
 #include "Texture.h"
 
+#include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h"
@@ -12,14 +13,17 @@
 #include "stb_image.h"
 
 namespace Astral {
+
     TextureHandle Texture::CreateTexture(const std::string& filePath)
     {
-        Device& device = g_RendererManager.GetContext().GetDevice();
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 
         int m_Width;
         int m_Height;
         int m_BPP; // bits per pixel
         unsigned char* data = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+
+        if (!data) { return nullptr; }
 
         switch (RendererCommands::GetAPI())
         {

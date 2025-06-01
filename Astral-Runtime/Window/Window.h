@@ -6,9 +6,8 @@
 
 #include "Core/CoreMacroDefinitions.h"
 #include "Core/Math/Math.h"
-#include "../Renderer/RHI/RendererContext.h"
 
-#include <memory>
+#include <string_view>
 
 namespace Astral {
 
@@ -37,14 +36,12 @@ namespace Astral {
         virtual void SetWindowDimensions(int width, int height) = 0;
 
         virtual void* GetNativeWindow() = 0;
-        virtual RendererContext& GetRendererContext() = 0;
         virtual std::string_view GetVersion() = 0;
 
         static Window* ConstructWindow();
 
     protected:
         static WindowAPI s_WindowAPI;
-        std::unique_ptr<RendererContext> m_RenderContext;
 
         int m_WindowWidth = 800; // Default dimensions if user does not set them
         int m_WindowHeight = 800;

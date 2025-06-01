@@ -7,32 +7,25 @@
 
 #include "ApplicationModule.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
-#include "cpuinfo.h"
-#include "nfd.hpp"
-#include "glslang/Include/glslang_c_interface.h"
-
-
+#include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Debug/ImGui/ImGuiEvents.h"
+#include "Debug/ImGui/ImGuiManager.h"
+#include "ECS/ECSManager.h"
 #include "Events/EventListener.h"
 #include "Events/EventPublisher.h"
-#include "Debug/ImGui/ImGuiEvents.h"
 #include "EngineLoopEvents.h"
-#include "Window/WindowEvents.h"
-
-#include "Window/WindowManager.h"
-#include "ECS/ECSManager.h"
-#include "Debug/ImGui/ImGuiManager.h"
 #include "Input/InputState.h"
+#include "Renderer/RendererManager.h"
+#include "Window/WindowEvents.h"
+#include "Window/WindowManager.h"
 
-#include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
-
+#include "cpuinfo.h"
+#include "glslang/Include/glslang_c_interface.h"
+#include "nfd.hpp"
 
 namespace Astral {
 
     Engine* Engine::m_Instance = nullptr;
-
-
-
-Engine* Engine::m_Instance = nullptr;
 
     Engine::Engine() :
         m_ApplicationModule(Application::CreateApplicationModule()),
@@ -40,7 +33,8 @@ Engine* Engine::m_Instance = nullptr;
 
         m_WindowManager(CreateScopedPtr<WindowManager>()),
         m_ECSManager(CreateScopedPtr<ECSManager>()),
-        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>())
+        m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>()),
+        m_RendererManager(CreateScopedPtr<RendererManager>())
     {
         PROFILE_SCOPE("Engine Initialization");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
@@ -48,21 +42,18 @@ Engine* Engine::m_Instance = nullptr;
 
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
-        InputState::Init();
         m_ImGuiManager->Init();
+        m_RendererManager->Init();
+        InputState::Init();
         m_ECSManager->Init();
         m_ApplicationModule->Init();
 
         cpuinfo_initialize();
-        NFD_Init();
         glslang_initialize_process();
+        NFD_Init();
 
+        // Core::MemoryTracker::Get().EndScene();
     }
-
-
-    m_WindowClosedListener.StartListening();
-    // Core::MemoryTracker::Get().EndScene();
-}
 
 
     Engine::~Engine()
@@ -75,8 +66,9 @@ Engine* Engine::m_Instance = nullptr;
 
         m_ApplicationModule->Shutdown();
         m_ECSManager->Shutdown();
-        m_ImGuiManager->Shutdown();
         InputState::Shutdown();
+        m_RendererManager->Shutdown();
+        m_ImGuiManager->Shutdown();
         m_WindowManager->Shutdown();
 
         Core::MemoryTracker::Get().Shutdown();
@@ -106,12 +98,14 @@ Engine* Engine::m_Instance = nullptr;
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
-            subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
-            m_ApplicationModule->Update(m_DeltaTime);
-
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();
+
+            subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+            m_ApplicationModule->Update(m_DeltaTime);
+
+
 
             m_WindowManager->SwapBuffers();
         }

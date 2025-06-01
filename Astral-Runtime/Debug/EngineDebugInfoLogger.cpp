@@ -58,12 +58,12 @@ namespace Debug {
 
         /** Outputs the libraries used depending on the platform. */
         Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
-        Astral::RendererContext& rendererContext = window.GetRendererContext();
+        Astral::RenderingContext& renderingContext = Astral::Engine::Get().GetRendererManager().GetContext();
 
         LOG("Window: " << window.GetVersion());
-        LOG("Rendering API: " << rendererContext.GetRenderingAPI());
-        LOG("Graphics Vendor: " << rendererContext.GetGPUVendor());
-        LOG("Graphics Processor: " << rendererContext.GetGraphicsProcessorName());
+        LOG("Rendering API: " << renderingContext.GetRenderingAPI());
+        LOG("Graphics Vendor: " << renderingContext.GetGPUVendor());
+        LOG("Graphics Processor: " << renderingContext.GetGraphicsProcessorName());
 
 
         LOG(""); // Creates an extra new line

@@ -6,6 +6,8 @@
 
 #include "Renderer/RHI/Resources/Texture.h"
 
+#include <filesystem>
+
 namespace Astral {
 
     class OpenGLTexture : public Texture
@@ -18,7 +20,6 @@ namespace Astral {
         void Unbind() override;
         int GetWidth() override { return m_Width; }
         int GetHeight() override { return m_Height; }
-        bool IsValid() override { return m_IsValid && m_RendererID != 0; }
 
         void* GetNativeHandle() override { return nullptr; }
         void* GetSampler() override { return nullptr; }

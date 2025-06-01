@@ -24,13 +24,13 @@ namespace Astral {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS& ecs = Engine::Get().GetECSManager().GetECS();
 
-        const ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
+        ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         OrthographicCamera camera = OrthographicCamera(-10, 10, -10, 10);
         SceneRenderer::BeginScene(camera);
-        for (ECS::EntityPoolSize entityID = 0; entityID < ECS::MAX_ENTITIES; entityID++)
+        for (EntityID entityID = 0; entityID < ecs.GetNumberOfActiveEntities(); entityID++)
         {
             Entity e = Entity(entityID);
             if (!ecs.IsEntityAlive(entityID)) { continue; }
@@ -38,12 +38,11 @@ namespace Astral {
             if (!transformDisplay[entityID].isUsed) { continue; }
 
             const TransformComponent& transformComponent = transformDisplay[entityID];
-            const SpriteComponent& spriteComponent = spriteDisplay[entityID];
+            SpriteComponent& spriteComponent = spriteDisplay[entityID];
 
             Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
-            g_AssetManager.GetRegistry().GetAsset<Texture>(spriteComponent.textureAssetID)->Bind(0);
             SceneRenderer::Submit(spriteComponent.mesh, spriteComponent.material, transform);
         }
         SceneRenderer::EndScene();

@@ -5,12 +5,13 @@
 #pragma once
 
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Asset/Asset.h"
 
 #include <string>
 
 namespace Astral {
 
-    class Texture
+    class Texture : public Asset
     {
     public:
         virtual ~Texture() = default;
@@ -23,6 +24,9 @@ namespace Astral {
         virtual void* GetNativeHandle() = 0;
 
         static GraphicsRef<Texture> CreateTexture(const std::string& filePath);
+
+        AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
+        static AssetType GetStaticAssetType() { return AssetType::Texture; }
     };
 
     using TextureHandle = GraphicsRef<Texture>;

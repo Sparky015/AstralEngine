@@ -14,12 +14,12 @@ namespace Astral {
 
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
         m_Device(desc.Device),
-        m_Image(),
-        m_ImageView(),
-        m_Sampler(),
+		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
         m_ImageWidth(desc.ImageWidth),
         m_ImageHeight(desc.ImageHeight),
-		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties)
+        m_Image(),
+        m_ImageView(),
+        m_Sampler()
     {
         CreateTexture(desc);
     	AllocateTextureMemory();

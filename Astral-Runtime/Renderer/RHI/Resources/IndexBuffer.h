@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <complex.h>
-
 #include "CommandBuffer.h"
 #include "Core/CoreMacroDefinitions.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"

@@ -10,12 +10,15 @@
 
 namespace Astral {
 
-    RendererManager& g_RendererManager = RendererManager::Get();
-
-    RendererManager& RendererManager::Get()
+    RendererManager::RendererManager()
     {
-        static RendererManager s_RendererManager;
-        return s_RendererManager;
+        TRACE("Constructing Renderer Manager!")
+    }
+
+
+    RendererManager::~RendererManager()
+    {
+        TRACE("Destroying Renderer Manager!")
     }
 
 
@@ -52,17 +55,6 @@ namespace Astral {
     RenderingContext& RendererManager::GetContext()
     {
         return *m_RenderContext;
-    }
-
-    RendererManager::RendererManager()
-    {
-        TRACE("Constructing Renderer Manager!")
-    }
-
-
-    RendererManager::~RendererManager()
-    {
-        TRACE("Destroying Renderer Manager!")
     }
 
 }

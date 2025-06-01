@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Renderer/RHI/Resources/Shader.h"
+#include "Core/Math/Math.h"
 
 namespace Astral {
 
@@ -19,8 +19,6 @@ namespace Astral {
     private:
 
         static Mat4 CreateTransform(Vec3 position, Vec3 scale);
-
-
     };
 
 

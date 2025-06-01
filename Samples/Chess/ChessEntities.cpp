@@ -132,24 +132,24 @@ void ChessEntities::InitEntities(const Astral::Mesh& mesh, const Astral::Materia
     ecs.AddComponent(m_WhiteQueen,   TransformComponent(350, 750, .25, .25));
     ecs.AddComponent(m_WhiteKing,    TransformComponent(450, 750, .25, .25));
 
-    Astral::AssetRegistry& registry = Astral::g_AssetManager.GetRegistry();
-    registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
-
-    Astral::AssetID chessboardTextureID = registry.CreateAsset<Astral::Texture>("chessboard.png");
-
-    Astral::AssetID blackPawnTextureID = registry.CreateAsset<Astral::Texture>("black_pawn.png");
-    Astral::AssetID blackRookTextureID = registry.CreateAsset<Astral::Texture>("black_rook.png");
-    Astral::AssetID blackKnightTextureID = registry.CreateAsset<Astral::Texture>("black_knight.png");
-    Astral::AssetID blackBishopTextureID = registry.CreateAsset<Astral::Texture>("black_bishop.png");
-    Astral::AssetID blackQueenTextureID = registry.CreateAsset<Astral::Texture>("black_queen.png");
-    Astral::AssetID blackKingTextureID = registry.CreateAsset<Astral::Texture>("black_king.png");
-
-    Astral::AssetID whitePawnTextureID = registry.CreateAsset<Astral::Texture>("white_pawn.png");
-    Astral::AssetID whiteRookTextureID = registry.CreateAsset<Astral::Texture>("white_rook.png");
-    Astral::AssetID whiteKnightTextureID = registry.CreateAsset<Astral::Texture>("white_knight.png");
-    Astral::AssetID whiteBishopTextureID = registry.CreateAsset<Astral::Texture>("white_bishop.png");
-    Astral::AssetID whiteQueenTextureID = registry.CreateAsset<Astral::Texture>("white_queen.png");
-    Astral::AssetID whiteKingTextureID = registry.CreateAsset<Astral::Texture>("white_king.png");
+    // Astral::AssetRegistry& registry = Astral::g_AssetManager.GetRegistry();
+    // registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
+    //
+    // Astral::AssetID chessboardTextureID = registry.CreateAsset<Astral::Texture>("chessboard.png");
+    //
+    // Astral::AssetID blackPawnTextureID = registry.CreateAsset<Astral::Texture>("black_pawn.png");
+    // Astral::AssetID blackRookTextureID = registry.CreateAsset<Astral::Texture>("black_rook.png");
+    // Astral::AssetID blackKnightTextureID = registry.CreateAsset<Astral::Texture>("black_knight.png");
+    // Astral::AssetID blackBishopTextureID = registry.CreateAsset<Astral::Texture>("black_bishop.png");
+    // Astral::AssetID blackQueenTextureID = registry.CreateAsset<Astral::Texture>("black_queen.png");
+    // Astral::AssetID blackKingTextureID = registry.CreateAsset<Astral::Texture>("black_king.png");
+    //
+    // Astral::AssetID whitePawnTextureID = registry.CreateAsset<Astral::Texture>("white_pawn.png");
+    // Astral::AssetID whiteRookTextureID = registry.CreateAsset<Astral::Texture>("white_rook.png");
+    // Astral::AssetID whiteKnightTextureID = registry.CreateAsset<Astral::Texture>("white_knight.png");
+    // Astral::AssetID whiteBishopTextureID = registry.CreateAsset<Astral::Texture>("white_bishop.png");
+    // Astral::AssetID whiteQueenTextureID = registry.CreateAsset<Astral::Texture>("white_queen.png");
+    // Astral::AssetID whiteKingTextureID = registry.CreateAsset<Astral::Texture>("white_king.png");
 
 
     Astral::Material chessboardMaterial = partialMaterial;

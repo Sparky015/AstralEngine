@@ -23,8 +23,8 @@ namespace Astral {
         m_ImageViews(),
         m_RenderCompleteSemaphores(),
         m_ImageAvailableSemaphores(),
-        m_CurrentSemaphorePairIndex(0),
-        m_Fences()
+        m_Fences(),
+        m_CurrentSemaphorePairIndex(0)
     {
         CreateSwapchain();
         CreateSemaphores();

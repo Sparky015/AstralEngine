@@ -298,7 +298,7 @@ namespace Debug {
 
         if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
-            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)stral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
+            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Astral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
         }
 
     }

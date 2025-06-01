@@ -9,11 +9,9 @@
 #include "glad/glad.h"
 #include "Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h"
 
-
-
 namespace Astral {
 
-    OpenGLTexture::OpenGLTexture(const std::string& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
+    OpenGLTexture::OpenGLTexture(const std::filesystem::path& filePath) : m_RendererID(0), m_ImageBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
     {
         stbi_set_flip_vertically_on_load(1);
         m_ImageBuffer = stbi_load(filePath.string().c_str(), &m_Width, &m_Height, &m_BPP, 4);

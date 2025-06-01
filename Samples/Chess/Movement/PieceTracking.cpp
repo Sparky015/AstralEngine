@@ -42,7 +42,7 @@ namespace Game {
     void PieceTracking::StartTrackingPiece()
     {
         const Chessboard& chessBoard = ChessModule::Get().GetBoardManager().GetBoard();
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), 800 - Astral::InputState::MousePositionY()});
 
         if (IsSquareEmpty(chessBoard, mouseSquareLocation)) { return; }
         if (!IsPieceTurn(chessBoard, mouseSquareLocation)) { return; }

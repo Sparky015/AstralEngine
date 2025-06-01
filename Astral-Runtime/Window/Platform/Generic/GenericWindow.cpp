@@ -66,9 +66,6 @@ namespace Astral {
             ASTRAL_ERROR("GLFW failed to create the window!")
         }
 
-        m_RenderContext.reset(RendererContext::CreateRendererContext());
-        m_RenderContext->Init();
-
         SetGLFWCallbacks();
     }
 

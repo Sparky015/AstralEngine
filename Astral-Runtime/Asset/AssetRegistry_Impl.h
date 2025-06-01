@@ -5,8 +5,8 @@
 */
 
 #pragma once
+
 #include "Debug/Utilities/Asserts.h"
-#include "Renderer/Primitives/Texture.h"
 
 namespace Astral {
 

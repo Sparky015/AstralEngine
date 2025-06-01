@@ -15,6 +15,7 @@
 // Forward declare the subsystem managers to avoid including large portions of the engine in the header
 namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
+namespace Astral { class RendererManager; }
 namespace Debug { class ImGuiManager; }
 
 namespace Astral {
@@ -32,6 +33,7 @@ namespace Astral {
         WindowManager& GetWindowManager() { return *m_WindowManager; }
         ECSManager& GetECSManager() { return *m_ECSManager; }
         Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
+        RendererManager& GetRendererManager() { return *m_RendererManager; }
 
        /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
        [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
@@ -46,6 +48,7 @@ namespace Astral {
         ScopedPtr<WindowManager> m_WindowManager;
         ScopedPtr<ECSManager> m_ECSManager;
         ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
+        ScopedPtr<RendererManager> m_RendererManager;
     };
 
 }

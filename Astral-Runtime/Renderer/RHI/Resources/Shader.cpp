@@ -6,6 +6,7 @@
 
 #include "Shader.h"
 
+#include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RHI/RendererCommands.h"
@@ -14,7 +15,7 @@ namespace Astral {
 
     GraphicsRef<Shader> Shader::CreateShader(const ShaderSource& shaderSource)
     {
-        Device& device = g_RendererManager.GetContext().GetDevice();
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 
         switch (RendererCommands::GetAPI())
         {
@@ -24,5 +25,4 @@ namespace Astral {
             default: ASTRAL_ERROR("Invalid Renderer API");
         }
     }
-
 }

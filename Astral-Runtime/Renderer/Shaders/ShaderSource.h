@@ -6,8 +6,8 @@
 
 #include "Core/CoreMacroDefinitions.h"
 
-#include <filesystem>
 #include <string>
+#include <filesystem>
 
 
 namespace Astral {

@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include <string_view>
-
-namespace Astral {
 #include "Common/GraphicsSmartPointers.h"
 #include "Resources/Device.h"
+
+#include <string_view>
 
 namespace Astral {
 

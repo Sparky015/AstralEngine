@@ -4,6 +4,7 @@
 
 #include "RendererAPI.h"
 
+#include "Core/Engine.h"
 #include "Platform/Vulkan/VulkanRendererCommands.h"
 #include "Renderer/RendererManager.h"
 
@@ -15,7 +16,7 @@ namespace Astral {
 
     Device& RendererAPI::GetDevice()
     {
-        return g_RendererManager.GetContext().GetDevice();
+        return Engine::Get().GetRendererManager().GetContext().GetDevice();
     }
 
 

@@ -4,11 +4,8 @@
 
 #pragma once
 
-#include "Renderer/Primitives/IndexBuffer.h"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
-namespace Astral {
-
 
 namespace Astral {
 
@@ -28,4 +25,4 @@ namespace Astral {
         uint32 m_Count;
     };
 
-} // namespace Renderer
+} // namespace Astral

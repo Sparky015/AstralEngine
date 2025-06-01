@@ -6,9 +6,6 @@
 
 #pragma once
 
-#include <complex.h>
-#include <complex.h>
-
 #include "Buffer.h"
 #include "Sampler.h"
 #include "Texture.h"

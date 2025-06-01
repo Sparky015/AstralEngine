@@ -13,7 +13,9 @@ namespace Astral {
     class RendererManager : public SystemManager
     {
     public:
-        static RendererManager& Get();
+        RendererManager();
+        ~RendererManager() override;
+
         void Init() override;
         void Update() override;
         void Shutdown() override;
@@ -26,11 +28,8 @@ namespace Astral {
         RenderingContext& GetContext();
 
     private:
-        RendererManager();
-        ~RendererManager() override;
 
         GraphicsOwnedPtr<RenderingContext> m_RenderContext;
     };
 
-    extern RendererManager& g_RendererManager;
 }

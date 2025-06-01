@@ -4,6 +4,7 @@
 
 #include "VertexBuffer.h"
 
+#include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h"
@@ -13,7 +14,7 @@ namespace Astral {
     VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size,
                                                         VertexBufferLayout& bufferLayout)
     {
-        Device& device = g_RendererManager.GetContext().GetDevice();
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 
         switch (RendererCommands::GetAPI())
         {
