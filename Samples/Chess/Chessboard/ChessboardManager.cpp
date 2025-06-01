@@ -10,7 +10,7 @@ namespace Game
 
     void ChessboardManager::Init()
     {
-        PROFILE_SCOPE("Chessboard Manager Initialization");
+        PROFILE_SCOPE("ChessboardManager::Init");
         TRACE("Initializing Board Manager!")
 
         // m_UpdateListener.StartListening();

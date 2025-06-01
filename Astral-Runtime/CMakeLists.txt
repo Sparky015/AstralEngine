@@ -1,5 +1,4 @@
 add_library(AstralEngine
-        Core/CoreMacroDefinitions.h
         pch.h
         pch.cpp
         Core/Events/EventBus.h
@@ -18,8 +17,6 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiManager.cpp
         Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.cpp
         Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
         Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h
         Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.cpp
         Debug/ImGui/ImGuiEvents.h
@@ -35,14 +32,6 @@ add_library(AstralEngine
         ECS/Components/Sprite.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.cpp
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.h
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.cpp
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.cpp
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.cpp
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
         Renderer/RHI/Resources/VertexBuffer.cpp
@@ -51,20 +40,14 @@ add_library(AstralEngine
         Renderer/RHI/Resources/IndexBuffer.h
         Renderer/SceneRenderer.cpp
         Renderer/SceneRenderer.h
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.h
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.cpp
         Renderer/RHI/RendererContext.h
         Renderer/RHI/RendererContext.cpp
         Window/Window.cpp
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
         Window/Platform/Generic/GenericWindow.h
-        Renderer/RHI/Resources/VertexArrayObject.cpp
-        Renderer/RHI/Resources/VertexArrayObject.h
         Renderer/RHI/Resources/Texture.cpp
         Renderer/RHI/Resources/Texture.h
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.cpp
-        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h
         Renderer/RHI/Resources/VertexBufferLayout.cpp
         Renderer/RHI/Resources/VertexBufferLayout.h
         Core/Math/Math.h
@@ -73,9 +56,6 @@ add_library(AstralEngine
         Renderer/RHI/RendererAPI.h
         Renderer/RHI/RendererCommands.cpp
         Renderer/RHI/RendererCommands.h
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.cpp
-        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.h
-        Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
         Astral.h
@@ -267,6 +247,8 @@ add_library(AstralEngine
         Renderer/Common/Mesh.h
         Renderer/Common/Material.h
         Renderer/RHI/Resources/Shader.cpp
+        Asset/Loaders/MaterialLoader.cpp
+        Asset/Loaders/ShaderLoader.cpp
 )
 
 
@@ -369,17 +351,42 @@ target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 
 # Defining Macros
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    # DEBUG
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
+
+
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release
+    target_compile_definitions(AstralEngine PUBLIC
+            -DASTRAL_RELEASE_BUILD
+            -DTURN_OFF_DEBUG_MENU
+            -DTURN_OFF_DEBUG_MACROS
+            -DTURN_OFF_PROFILER_MACRO
+            -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+    )
+
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")    # MinSizeRel
+    target_compile_definitions(AstralEngine PUBLIC
+            -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD
+    )
+
+
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
+    target_compile_definitions(AstralEngine PUBLIC
+            -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
+    )
+
+
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
+    target_compile_definitions(AstralEngine PUBLIC
+            -DASTRAL_DEBUG_BUILD
+
+    )
+
+
 endif()
+
+
+
 
 target_compile_definitions(AstralEngine PUBLIC -DGLFW_INCLUDE_NONE)
 target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
@@ -388,21 +395,18 @@ if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
 
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
 
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (LINUX)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
 
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
 #    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 endif ()

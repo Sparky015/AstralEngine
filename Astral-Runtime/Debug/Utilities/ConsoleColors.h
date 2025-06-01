@@ -8,7 +8,7 @@
 
 namespace Debug::Macros {
 
-    enum ConsoleOutputColors : uint8
+    enum ConsoleOutputColors : Astral::uint8
     {
         BLACK, BLUE, GREEN,
         CYAN, RED, PURPLE,

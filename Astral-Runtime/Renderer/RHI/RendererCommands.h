@@ -7,16 +7,16 @@
 #pragma once
 
 #include "Core/Events/EventListener.h"
-#include "Renderer/RHI/Resources/VertexArrayObject.h"
 #include "Core/EngineLoopEvents.h"
 #include "Resources/CommandBuffer.h"
+#include "Resources/IndexBuffer.h"
 #include "Resources/PipelineStateObject.h"
 #include "Resources/RenderTarget.h"
 
 namespace Astral {
 
     enum class API : uint8 {
-        None = 0, OpenGL, Vulkan, DirectX12, Metal
+        None = 0, Vulkan, DirectX12, Metal
     };
 
     class RendererCommands {
@@ -39,7 +39,7 @@ namespace Astral {
 
     protected:
         uint32 m_NumberOfDrawCalls = 0;
-        Core::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};
+        Astral::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){this->m_NumberOfDrawCalls = 0;}};
 
     private:
         static API s_RendererAPI;

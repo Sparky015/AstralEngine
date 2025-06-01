@@ -15,6 +15,7 @@ namespace Debug {
 
     void ChessDebugManager::Init()
     {
+        PROFILE_SCOPE("ChessDebugManager::Init")
         m_RenderImGuiListener.StartListening();
     }
 

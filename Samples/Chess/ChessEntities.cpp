@@ -16,6 +16,7 @@
 #include "ECS/Components/Transform.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/Common/Mesh.h"
+#include "Asset/AssetManager.h"
 
 
 Astral::Entity ChessEntities::m_BlackPawn1;
@@ -55,7 +56,7 @@ Astral::Entity ChessEntities::m_WhiteKing;
 Astral::Entity ChessEntities::m_ChessBoard;
 
 
-void ChessEntities::InitEntities(const Astral::Mesh& mesh, const Astral::Material& partialMaterial)
+void ChessEntities::InitEntities(const Astral::Mesh& mesh)
 {
     Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
@@ -132,103 +133,65 @@ void ChessEntities::InitEntities(const Astral::Mesh& mesh, const Astral::Materia
     ecs.AddComponent(m_WhiteQueen,   TransformComponent(350, 750, .25, .25));
     ecs.AddComponent(m_WhiteKing,    TransformComponent(450, 750, .25, .25));
 
-    // Astral::AssetRegistry& registry = Astral::g_AssetManager.GetRegistry();
-    // registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
-    //
-    // Astral::AssetID chessboardTextureID = registry.CreateAsset<Astral::Texture>("chessboard.png");
-    //
-    // Astral::AssetID blackPawnTextureID = registry.CreateAsset<Astral::Texture>("black_pawn.png");
-    // Astral::AssetID blackRookTextureID = registry.CreateAsset<Astral::Texture>("black_rook.png");
-    // Astral::AssetID blackKnightTextureID = registry.CreateAsset<Astral::Texture>("black_knight.png");
-    // Astral::AssetID blackBishopTextureID = registry.CreateAsset<Astral::Texture>("black_bishop.png");
-    // Astral::AssetID blackQueenTextureID = registry.CreateAsset<Astral::Texture>("black_queen.png");
-    // Astral::AssetID blackKingTextureID = registry.CreateAsset<Astral::Texture>("black_king.png");
-    //
-    // Astral::AssetID whitePawnTextureID = registry.CreateAsset<Astral::Texture>("white_pawn.png");
-    // Astral::AssetID whiteRookTextureID = registry.CreateAsset<Astral::Texture>("white_rook.png");
-    // Astral::AssetID whiteKnightTextureID = registry.CreateAsset<Astral::Texture>("white_knight.png");
-    // Astral::AssetID whiteBishopTextureID = registry.CreateAsset<Astral::Texture>("white_bishop.png");
-    // Astral::AssetID whiteQueenTextureID = registry.CreateAsset<Astral::Texture>("white_queen.png");
-    // Astral::AssetID whiteKingTextureID = registry.CreateAsset<Astral::Texture>("white_king.png");
 
+    Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+    registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
 
-    Astral::Material chessboardMaterial = partialMaterial;
-    chessboardMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "chessboard.png");
+    Astral::AssetID chessboardMaterialID = registry.CreateAsset<Astral::Material>("chessboard.astmat");
 
-    Astral::Material blackPawnMaterial = partialMaterial;
-    blackPawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png");
+    Astral::AssetID blackPawnMaterialID = registry.CreateAsset<Astral::Material>("black_pawn.astmat");
+    Astral::AssetID blackRookMaterialID = registry.CreateAsset<Astral::Material>("black_rook.astmat");
+    Astral::AssetID blackKnightMaterialID = registry.CreateAsset<Astral::Material>("black_knight.astmat");
+    Astral::AssetID blackBishopMaterialID = registry.CreateAsset<Astral::Material>("black_bishop.astmat");
+    Astral::AssetID blackQueenMaterialID = registry.CreateAsset<Astral::Material>("black_queen.astmat");
+    Astral::AssetID blackKingMaterialID = registry.CreateAsset<Astral::Material>("black_king.astmat");
 
-    Astral::Material blackRookMaterial = partialMaterial;
-    blackRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_rook.png");
+    Astral::AssetID whitePawnMaterialID = registry.CreateAsset<Astral::Material>("white_pawn.astmat");
+    Astral::AssetID whiteRookMaterialID = registry.CreateAsset<Astral::Material>("white_rook.astmat");
+    Astral::AssetID whiteKnightMaterialID = registry.CreateAsset<Astral::Material>("white_knight.astmat");
+    Astral::AssetID whiteBishopMaterialID = registry.CreateAsset<Astral::Material>("white_bishop.astmat");
+    Astral::AssetID whiteQueenMaterialID = registry.CreateAsset<Astral::Material>("white_queen.astmat");
+    Astral::AssetID whiteKingMaterialID = registry.CreateAsset<Astral::Material>("white_king.astmat");
 
-    Astral::Material blackKnightMaterial = partialMaterial;
-    blackKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_knight.png");
-
-    Astral::Material blackBishopMaterial = partialMaterial;
-    blackBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_bishop.png");
-
-    Astral::Material blackQueenMaterial = partialMaterial;
-    blackQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_queen.png");
-
-    Astral::Material blackKingMaterial = partialMaterial;
-    blackKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_king.png");
-
-    Astral::Material whitePawnMaterial = partialMaterial;
-    whitePawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png");
-
-    Astral::Material whiteRookMaterial = partialMaterial;
-    whiteRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_rook.png");
-
-    Astral::Material whiteKnightMaterial = partialMaterial;
-    whiteKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_knight.png");
-
-    Astral::Material whiteBishopMaterial = partialMaterial;
-    whiteBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_bishop.png");
-
-    Astral::Material whiteQueenMaterial = partialMaterial;
-    whiteQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_queen.png");
-
-    Astral::Material whiteKingMaterial = partialMaterial;
-    whiteKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_king.png");
 
     // Sprite Components
-    ecs.AddComponent(m_ChessBoard, SpriteComponent(chessboardMaterial, mesh));
+    ecs.AddComponent(m_ChessBoard, SpriteComponent(chessboardMaterialID, mesh));
 
     // Black Pieces
-    ecs.AddComponent(m_BlackPawn1, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn2, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn3, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn4, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn5, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn6, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn7, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackPawn8, SpriteComponent(blackPawnMaterial, mesh));
-    ecs.AddComponent(m_BlackRook1, SpriteComponent(blackRookMaterial, mesh));
-    ecs.AddComponent(m_BlackRook2, SpriteComponent(blackRookMaterial, mesh));
-    ecs.AddComponent(m_BlackKnight1, SpriteComponent(blackKnightMaterial, mesh));
-    ecs.AddComponent(m_BlackKnight2, SpriteComponent(blackKnightMaterial, mesh));
-    ecs.AddComponent(m_BlackBishop1, SpriteComponent(blackBishopMaterial, mesh));
-    ecs.AddComponent(m_BlackBishop2, SpriteComponent(blackBishopMaterial, mesh));
-    ecs.AddComponent(m_BlackQueen, SpriteComponent(blackQueenMaterial, mesh));
-    ecs.AddComponent(m_BlackKing, SpriteComponent(blackKingMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn1, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn2, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn3, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn4, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn5, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn6, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn7, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackPawn8, SpriteComponent(blackPawnMaterialID, mesh));
+    ecs.AddComponent(m_BlackRook1, SpriteComponent(blackRookMaterialID, mesh));
+    ecs.AddComponent(m_BlackRook2, SpriteComponent(blackRookMaterialID, mesh));
+    ecs.AddComponent(m_BlackKnight1, SpriteComponent(blackKnightMaterialID, mesh));
+    ecs.AddComponent(m_BlackKnight2, SpriteComponent(blackKnightMaterialID, mesh));
+    ecs.AddComponent(m_BlackBishop1, SpriteComponent(blackBishopMaterialID, mesh));
+    ecs.AddComponent(m_BlackBishop2, SpriteComponent(blackBishopMaterialID, mesh));
+    ecs.AddComponent(m_BlackQueen, SpriteComponent(blackQueenMaterialID, mesh));
+    ecs.AddComponent(m_BlackKing, SpriteComponent(blackKingMaterialID, mesh));
 
     // White Pieces
-    ecs.AddComponent(m_WhitePawn1, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn2, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn3, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn4, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn5, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn6, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn7, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhitePawn8, SpriteComponent(whitePawnMaterial, mesh));
-    ecs.AddComponent(m_WhiteRook1, SpriteComponent(whiteRookMaterial, mesh));
-    ecs.AddComponent(m_WhiteRook2, SpriteComponent(whiteRookMaterial, mesh));
-    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(whiteKnightMaterial, mesh));
-    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(whiteKnightMaterial, mesh));
-    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(whiteBishopMaterial, mesh));
-    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(whiteBishopMaterial, mesh));
-    ecs.AddComponent(m_WhiteQueen, SpriteComponent(whiteQueenMaterial, mesh));
-    ecs.AddComponent(m_WhiteKing, SpriteComponent(whiteKingMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn1, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn2, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn3, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn4, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn5, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn6, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn7, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhitePawn8, SpriteComponent(whitePawnMaterialID, mesh));
+    ecs.AddComponent(m_WhiteRook1, SpriteComponent(whiteRookMaterialID, mesh));
+    ecs.AddComponent(m_WhiteRook2, SpriteComponent(whiteRookMaterialID, mesh));
+    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(whiteKnightMaterialID, mesh));
+    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(whiteKnightMaterialID, mesh));
+    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(whiteBishopMaterialID, mesh));
+    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(whiteBishopMaterialID, mesh));
+    ecs.AddComponent(m_WhiteQueen, SpriteComponent(whiteQueenMaterialID, mesh));
+    ecs.AddComponent(m_WhiteKing, SpriteComponent(whiteKingMaterialID, mesh));
 }
 
 

@@ -43,7 +43,9 @@ namespace Astral {
             Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
-            SceneRenderer::Submit(spriteComponent.mesh, spriteComponent.material, transform);
+            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+            Ref<Material> material = registry.GetAsset<Material>(spriteComponent.materialAssetID);
+            SceneRenderer::Submit(spriteComponent.mesh, *material, transform);
         }
         SceneRenderer::EndScene();
     }

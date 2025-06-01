@@ -7,12 +7,15 @@
 #include "TextureLoader.h"
 
 #include "Core/SmartPointers.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/Resources/Texture.h"
 
 namespace Astral {
 
     Ref<Asset> TextureLoader::LoadAsset(const std::filesystem::path& filePath)
     {
+        PROFILE_SCOPE("TextureLoader::LoadAsset")
+
         Ref<Texture> texture = Texture::CreateTexture(filePath);
 
         if (!texture) { return nullptr; } // Return nullptr if an error occured

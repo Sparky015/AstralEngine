@@ -12,28 +12,18 @@
 #include "Components/WindowComponents.h"
 #include "Debug/ImGui/Components/InputStateComponents.h"
 #include "Debug/MemoryTracking/Visualization/Components/LoadFileComponent.h"
-#include "ImPlot/implot.h"
-#include "imgui/imgui.h"
-
-
-#ifdef ASTRAL_OPENGL_AVAILABLE
-#include "ImGuiDependencies/imgui_impl_opengl3.h"
-#endif
-
-#include "ImGuiDependencies/imgui_impl_glfw.h"
-
-
-
-
 #include "Components/MemoryComponents.h"
 #include "Core/Engine.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
 #include "ImGuiDependencies/imgui_impl_vulkan.h"
 #include "Input/Keycodes.h"
 #include "Renderer/SceneRenderer.h"
-#include "Window/Platform/Generic/GenericWindow.h"
 #include "Window/WindowManager.h"
 
+#include "ImGuiDependencies/imgui_impl_glfw.h"
+#include "ImPlot/implot.h"
+#include "imgui/imgui.h"
+#include "GLFW/glfw3.h"
 
 namespace Debug {
 
@@ -64,7 +54,7 @@ namespace Debug {
 
     void ImGuiManager::RenderImGui()
     {
-        PROFILE_SCOPE("Render Debug Menu ImGui");
+        PROFILE_SCOPE("ImGuiManager::RenderImGui");
 
         static bool showDemoWindow = false;
         if (showDemoWindow)
@@ -150,7 +140,7 @@ namespace Debug {
                 ImGui::Spacing();
 
                 ManageMemoryProfilingScene();
-                Core::LoadMemoryProfileButtonComponent();
+                Astral::LoadMemoryProfileButtonComponent();
 
                 ImGui::TreePop();
             }
@@ -219,11 +209,7 @@ namespace Debug {
 
         ImGui_ImplGlfw_NewFrame();
 
-        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::OpenGL)
-        {
-            ImGui_ImplOpenGL3_NewFrame();
-        }
-        else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
         {
             ImGui_ImplVulkan_NewFrame();
         }
@@ -253,6 +239,7 @@ namespace Debug {
 
     void ImGuiManager::LoadImGuiConfigFile(const std::string_view& filePath)
     {
+        PROFILE_SCOPE("ImGuiManager::LoadImGuiConfigFile")
         ImGui::LoadIniSettingsFromDisk(filePath.data());
     }
 

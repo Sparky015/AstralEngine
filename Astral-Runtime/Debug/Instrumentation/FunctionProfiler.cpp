@@ -4,6 +4,7 @@
 
 #include "FunctionProfiler.h"
 
+#include "Core/CoreMacroDefinitions.h"
 #include "Debug/Utilities/ConsoleLogFile.h"
 
 namespace Debug {

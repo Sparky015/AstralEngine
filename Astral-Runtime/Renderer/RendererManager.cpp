@@ -28,16 +28,8 @@ namespace Astral {
         TRACE("Initializing Renderer Manager!");
         m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
-        m_UpdateListener.StartListening();
 
         SceneRenderer::Init();
-    }
-
-
-    void RendererManager::Update()
-    {
-        PROFILE_SCOPE("Renderer Manager Update");
-        SceneRenderer::TestUpdate();
     }
 
 
@@ -46,7 +38,6 @@ namespace Astral {
         PROFILE_SCOPE("Renderer Manager Shutdown");
         TRACE("Shutting down Renderer Manager!")
 
-        m_UpdateListener.StopListening();
         SceneRenderer::Shutdown();
         m_RenderContext->Shutdown();
     }

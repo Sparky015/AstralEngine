@@ -11,8 +11,8 @@
 
 namespace Astral {
 
-    void* TrackingMalloc(size_t size, Astral::MemoryRegion region = Astral::UNKNOWN);
-    void* TrackingRealloc(void* ptr, size_t size, Astral::MemoryRegion region = Astral::UNKNOWN);
+    void* TrackingMalloc(size_t size, MemoryRegion region = UNKNOWN);
+    void* TrackingRealloc(void* ptr, size_t size, MemoryRegion region = UNKNOWN);
     void TrackingFree(void* ptr);
 
 }

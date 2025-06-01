@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <filesystem>
-
 #include "Asset/Asset.h"
 #include "Core/SmartPointers.h"
+
+#include <filesystem>
 
 namespace Astral::TextureLoader {
 

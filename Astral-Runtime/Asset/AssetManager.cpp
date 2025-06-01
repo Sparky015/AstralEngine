@@ -8,12 +8,21 @@
 
 namespace Astral {
 
-    AssetManager& g_AssetManager = AssetManager::Get();
-
-    AssetManager& AssetManager::Get()
+    AssetManager::AssetManager() :
+        m_Registry(nullptr)
     {
-        static AssetManager instance;
-        return instance;
+    }
+
+
+    void AssetManager::Init()
+    {
+        m_Registry = CreateScopedPtr<AssetRegistry>();
+    }
+
+
+    void AssetManager::Shutdown()
+    {
+        m_Registry.reset();
     }
 
 }

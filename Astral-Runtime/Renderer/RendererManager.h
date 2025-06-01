@@ -17,7 +17,6 @@ namespace Astral {
         ~RendererManager() override;
 
         void Init() override;
-        void Update() override;
         void Shutdown() override;
 
         RendererManager(const RendererManager&) = delete;

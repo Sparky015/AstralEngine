@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 
 namespace Astral {
@@ -14,8 +15,21 @@ namespace Astral {
         requires std::is_base_of_v<Asset, AssetType>
     AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
+        PROFILE_SCOPE("AssetRegistry::CreateAsset")
+
+        // Check if the asset is already loaded first, if it is, return the current AssetID
+        if (m_FilePathToAssetID.contains(filePath)) { return m_FilePathToAssetID.at(filePath); }
+
         // Load the asset from disk
-        Ref<Asset> asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
+        Ref<Asset> asset;
+        if (filePath.is_relative())
+        {
+            asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
+        }
+        else
+        {
+            asset = LoadAsset(AssetType::GetStaticAssetType(), filePath);
+        }
 
         if (!asset)
         {
@@ -24,8 +38,6 @@ namespace Astral {
         }
 
 
-        // Check if the asset is already loaded first, if it is, return the current AssetID
-        if (m_FilePathToAssetID.contains(filePath)) { return m_FilePathToAssetID.at(filePath); }
 
         // If the file has never been loaded, assign a new AssetID
         AssetID assetID = AssignNextAvailableAssetID();

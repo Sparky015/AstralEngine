@@ -18,7 +18,7 @@ namespace Astral {
         RENDERER,
         WINDOW,
         ASSETS,
-        ECS,
+        ENTITYCOMPONENTSYSTEM,
         DEBUG,
         CORE,
         UNKNOWN,
@@ -34,7 +34,7 @@ namespace Astral {
             case RENDERER: return "Renderer";
             case WINDOW: return "Window";
             case ASSETS: return "Assets";
-            case ECS: return "ECS";
+            case ENTITYCOMPONENTSYSTEM: return "ECS";
             case DEBUG: return "Debug";
             case CORE: return "Core";
             case UNKNOWN: return "Unknown Region";

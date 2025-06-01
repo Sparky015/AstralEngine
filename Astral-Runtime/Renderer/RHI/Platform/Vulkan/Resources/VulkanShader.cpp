@@ -6,6 +6,7 @@
 
 #include "VulkanShader.h"
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 
@@ -30,8 +31,9 @@ namespace Astral {
 
     void VulkanShader::CompileShader(const ShaderSource& shaderSource)
     {
-        // Compiling to SPIR-V
+        PROFILE_SCOPE("VulkanShader::CompileShader");
 
+        // Compiling to SPIR-V
         std::vector<uint32> SPIRV_Code;
 
         glslang_stage_t shaderStage;

@@ -4,9 +4,11 @@
 
 #include "SceneRenderer.h"
 
-#include "Astral.h"
+
 #include "RHI/RendererAPI.h"
 
+#include "Asset/AssetManager.h"
+#include "Core/Engine.h"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "Renderer/RHI/Resources/RenderTarget.h"
 #include "Renderer/RHI/Resources/Shader.h"
@@ -15,7 +17,7 @@
 #include "stb_image.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Core/Engine.h"
+
 
 namespace Astral {
 
@@ -24,6 +26,8 @@ namespace Astral {
 
     void SceneRenderer::Init()
     {
+        PROFILE_SCOPE("SceneRenderer::Init")
+
         m_RendererContext = CreateGraphicsOwnedPtr<SceneRendererContext>();
 
         Device& device = RendererAPI::GetDevice();
@@ -136,6 +140,8 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
+        PROFILE_SCOPE("SceneRenderer::Shutdown")
+
         Device& device = RendererAPI::GetDevice();
         device.WaitIdle();
 
@@ -147,6 +153,7 @@ namespace Astral {
 
     void SceneRenderer::BeginScene(const OrthographicCamera& orthographicCamera)
     {
+        PROFILE_SCOPE("SceneRenderer::BeginScene")
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
@@ -171,13 +178,18 @@ namespace Astral {
 
     void SceneRenderer::EndScene()
     {
-        m_RendererContext->IsSceneStarted = false;
+        {
+            PROFILE_SCOPE("SceneRenderer::EndScene")
+            m_RendererContext->IsSceneStarted = false;
+        }
+
         RenderScene();
     }
 
 
     void SceneRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
     {
+        PROFILE_SCOPE("SceneRenderer::Submit")
         ASSERT(m_RendererContext->IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
 
@@ -202,16 +214,11 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::TestUpdate()
-    {
-
-    }
-
-
     void SceneRenderer::RenderScene()
     {
-        // TODO: Sort the meshes by material
+        PROFILE_SCOPE("SceneRenderer::RenderScene")
 
+        // TODO: Sort the meshes by material
         Device& device = RendererAPI::GetDevice();
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
@@ -230,17 +237,22 @@ namespace Astral {
             Mesh& mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
 
+            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+            Ref<Texture> texture = registry.GetAsset<Texture>(material.TextureID);
+            Ref<Shader> vertexShader = registry.GetAsset<Shader>(material.VertexShaderID);
+            Ref<Shader> fragmentShader = registry.GetAsset<Shader>(material.PixelShaderID);
+
 
             DescriptorSetHandle& descriptorSet = frameContext.TempDescriptorSets[i];
             //TODO: Save the descriptor sets to the materials
             descriptorSet->BeginBuildingSet();
-            descriptorSet->AddDescriptorImageSampler(material.TextureUniform, ShaderStage::FRAGMENT);
+            descriptorSet->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
             descriptorSet->EndBuildingSet();
 
             if (i == 0)
             {
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
-                    material.VertexShader, material.PixelShader, descriptorSet, mesh.VertexBuffer->GetBufferLayout());
+                    vertexShader, fragmentShader, descriptorSet, mesh.VertexBuffer->GetBufferLayout());
             }
 
             RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));

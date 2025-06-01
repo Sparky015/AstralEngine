@@ -8,6 +8,8 @@
 
 #include "Debug/Utilities/Error.h"
 #include "Loaders/TextureLoader.h"
+#include "Loaders/MaterialLoader.h"
+#include "Loaders/ShaderLoader.h"
 
 namespace Astral {
 
@@ -53,6 +55,8 @@ namespace Astral {
         switch (assetType)
         {
             case AssetType::Texture: return TextureLoader::LoadAsset(filePath);
+            case AssetType::Material: return MaterialLoader::LoadAsset(filePath);
+            case AssetType::Shader: return ShaderLoader::LoadAsset(filePath);
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }

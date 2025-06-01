@@ -7,8 +7,6 @@
 
 #include "Core/SystemManager.h"
 
-#include "Window/WindowEvents.h"
-
 namespace Debug {
 
     class ChessDebugManager : public SystemManager
@@ -26,10 +24,6 @@ namespace Debug {
         ChessDebugManager& operator=(const ChessDebugManager&) = delete;
         ChessDebugManager(ChessDebugManager&&) = delete;
         ChessDebugManager& operator=(ChessDebugManager&&) = delete;
-
-    private:
-
-
     };
 
 }

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/SystemManager.h"
+
 #include "ECS.h"
 
 namespace Astral {
@@ -15,11 +16,11 @@ namespace Astral {
         ECSManager();
         ~ECSManager() override;
 
-        static ECSManager& Get();
         void Init() override;
+        void Update() override;
         void Shutdown() override;
 
-        ECS& GetECS() { return m_ECS; }
+        ECS& GetECS() { return *m_ECS; }
 
         ECSManager(const ECSManager&) = delete;
         ECSManager& operator=(const ECSManager&) = delete;
@@ -28,7 +29,7 @@ namespace Astral {
 
     private:
 
-        ECS m_ECS;
+        ScopedPtr<ECS> m_ECS;
     };
 
 } // ECS

@@ -6,15 +6,11 @@
 
 #include "Common/Material.h"
 #include "Common/Mesh.h"
-#include "Renderer/RHI/Resources/IndexBuffer.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
-
-#include "Renderer/RHI/Resources/VertexArrayObject.h"
-#include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 #include "RHI/RendererCommands.h"
-#include "RHI/Platform/OpenGL/OpenGLRendererContext.h"
 #include "RHI/Resources/Framebuffer.h"
+#include "RHI/Resources/Renderpass.h"
 
 namespace Astral {
 
@@ -31,9 +27,6 @@ namespace Astral {
 
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
-
-
-        static void TestUpdate();
 
     private:
 

@@ -22,6 +22,7 @@
 #include "cpuinfo.h"
 #include "glslang/Include/glslang_c_interface.h"
 #include "nfd.hpp"
+#include "Asset/AssetManager.h"
 
 namespace Astral {
 
@@ -32,18 +33,23 @@ namespace Astral {
         m_IsLoopRunning(true),
 
         m_WindowManager(CreateScopedPtr<WindowManager>()),
-        m_ECSManager(CreateScopedPtr<ECSManager>()),
         m_ImGuiManager(CreateScopedPtr<Debug::ImGuiManager>()),
-        m_RendererManager(CreateScopedPtr<RendererManager>())
+        m_RendererManager(CreateScopedPtr<RendererManager>()),
+        m_AssetManager(CreateScopedPtr<AssetManager>()),
+        m_ECSManager(CreateScopedPtr<ECSManager>())
+
     {
         PROFILE_SCOPE("Engine Initialization");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
         m_Instance = this;
 
+        Astral::MemoryTracker::Get().Init();
+
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
         m_ImGuiManager->Init();
         m_RendererManager->Init();
+        m_AssetManager->Init();
         InputState::Init();
         m_ECSManager->Init();
         m_ApplicationModule->Init();
@@ -51,8 +57,6 @@ namespace Astral {
         cpuinfo_initialize();
         glslang_initialize_process();
         NFD_Init();
-
-        // Core::MemoryTracker::Get().EndScene();
     }
 
 
@@ -66,12 +70,18 @@ namespace Astral {
 
         m_ApplicationModule->Shutdown();
         m_ECSManager->Shutdown();
+        m_ECSManager.reset();
         InputState::Shutdown();
+        m_AssetManager->Shutdown();
+        m_AssetManager.reset();
         m_RendererManager->Shutdown();
+        m_RendererManager.reset();
         m_ImGuiManager->Shutdown();
+        m_ImGuiManager.reset();
         m_WindowManager->Shutdown();
+        m_WindowManager.reset();
 
-        Core::MemoryTracker::Get().Shutdown();
+        Astral::MemoryTracker::Get().Shutdown();
     }
 
 
@@ -79,12 +89,12 @@ namespace Astral {
     {
         PROFILE_SCOPE("Engine Runtime");
 
-        Core::DeltaTime m_DeltaTime;
-        Core::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
-        Core::EventPublisher<NewFrameEvent> newFramePublisher;
-        Core::EventPublisher<RenderImGuiEvent> renderImGuiPublisher;
-        Core::EventListener<WindowClosedEvent> windowClosedListener{
-            Core::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){ this->m_IsLoopRunning = false; }}
+        Astral::DeltaTime m_DeltaTime;
+        Astral::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
+        Astral::EventPublisher<NewFrameEvent> newFramePublisher;
+        Astral::EventPublisher<RenderImGuiEvent> renderImGuiPublisher;
+        Astral::EventListener<WindowClosedEvent> windowClosedListener{
+            Astral::EventListener<WindowClosedEvent>{[this](WindowClosedEvent e){ this->m_IsLoopRunning = false; }}
         };
         windowClosedListener.StartListening();
 

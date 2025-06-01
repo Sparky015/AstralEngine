@@ -101,7 +101,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("Creating Vulkan Instance")
 
-        std::array<const char*, 1> layers = {
+        std::vector<const char*> layers = {
             "VK_LAYER_KHRONOS_validation"
         };
 
@@ -121,7 +121,7 @@ namespace Astral {
         VkApplicationInfo appInfo = {
             .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
             .pNext = nullptr,
-            .pApplicationName = "VulkanPlayground",
+            .pApplicationName = "Astral Client",
             .applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
             .pEngineName = "Astral Engine",
             .engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
@@ -131,7 +131,7 @@ namespace Astral {
         VkInstanceCreateInfo createInfo = {
             .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
             .pNext = nullptr,
-            .flags = 0, // TODO: VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR for MacOS
+            .flags = 0,
             .pApplicationInfo = &appInfo,
             .enabledLayerCount = (uint32)layers.size(),
             .ppEnabledLayerNames = layers.data(),

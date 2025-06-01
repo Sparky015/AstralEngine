@@ -13,11 +13,11 @@ namespace Game {
 
     void GameManager::Init()
     {
-        TRACE("GameManager::Init");
+        PROFILE_SCOPE("GameManager::Init");
         m_UpdateListener.StartListening();
 
         InitializeRenderingComponents();
-        ChessEntities::InitEntities(m_Mesh, m_Material);
+        ChessEntities::InitEntities(m_Mesh);
     }
 
 
@@ -25,7 +25,6 @@ namespace Game {
     {
         PROFILE_SCOPE("GameManager::Update")
         m_PieceTracker.UpdatePieceTracking();
-        RenderingSystem::RenderEntities();
     }
 
 
@@ -36,13 +35,9 @@ namespace Game {
 
         m_Mesh.IndexBuffer.reset();
         m_Mesh.VertexBuffer.reset();
-        m_Material.TextureUniform.reset();
-        m_Material.PixelShader.reset();
-        m_Material.VertexShader.reset();
+
         m_IndexBuffer.reset();
         m_VertexBuffer.reset();
-        m_VertexShader.reset();
-        m_FragmentShader.reset();
     }
 
 
@@ -60,8 +55,8 @@ namespace Game {
 
     void GameManager::InitializeRenderingComponents()
     {
+        PROFILE_SCOPE("GameManager::InitializeRenderingComponents")
         m_Mesh = {};
-        m_Material = {};
 
         RendererAPI::SetClearColor(.3,.3,.8,1);
 
@@ -79,17 +74,14 @@ namespace Game {
             {Float2, "a_TexCords"}
         };
 
-        m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
-        m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
+        {
+            PROFILE_SCOPE("Compile Shaders")
+            m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
+            m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
+        }
 
         m_Mesh.VertexBuffer = m_VertexBuffer;
         m_Mesh.IndexBuffer = m_IndexBuffer;
-
-        m_VertexShader = Shader::CreateShader(ShaderSource(std::string(SHADER_DIR) + "basic.vert"));
-        m_FragmentShader = Shader::CreateShader(ShaderSource(std::string(SHADER_DIR) + "basic.frag"));
-
-        m_Material.PixelShader = m_FragmentShader;
-        m_Material.VertexShader = m_VertexShader;
     }
 
 }
