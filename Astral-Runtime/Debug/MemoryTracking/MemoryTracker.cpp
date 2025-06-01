@@ -27,7 +27,7 @@ namespace Core {
 
     void MemoryTracker::BeginScene(const char* sceneName)
     {
-        std::lock_guard lock(m_Mutex);
+        std::unique_lock lock(m_Mutex);
         bool successFlag = m_SceneMetricsExporter.BeginScene(sceneName);
         if (!successFlag) { LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
     }
@@ -35,14 +35,14 @@ namespace Core {
 
     bool MemoryTracker::IsSceneActive() const
     {
-        std::lock_guard lock(m_Mutex);
+        std::shared_lock lock(m_Mutex);
         return m_SceneMetricsExporter.IsSceneActive();
     }
 
 
     void MemoryTracker::EndScene()
     {
-        std::lock_guard lock(m_Mutex);
+        std::unique_lock lock(m_Mutex);
         m_SceneMetricsExporter.EndScene();
     }
 
@@ -51,7 +51,7 @@ namespace Core {
     {
         if (!IsTrackingEnabled()) { return; }
 
-        std::lock_guard lock(m_Mutex);
+        std::unique_lock lock(m_Mutex);
 
         const AllocationData allocationData = {pointer, size, region, allocatorType, std::this_thread::get_id()};
         m_GlobalAllocationStorage.AddPointer(allocationData);
@@ -67,7 +67,9 @@ namespace Core {
 
     void MemoryTracker::RemoveAllocation(void* pointer)
     {
-        std::lock_guard lock(m_Mutex);
+        if (!IsTrackingEnabled()) { return; }
+
+        std::unique_lock lock(m_Mutex);
 
         if (!m_GlobalAllocationStorage.IsPointerStored(pointer)) { return; }
         const AllocationData& allocationData = m_GlobalAllocationStorage.GetPointerData(pointer);
@@ -101,8 +103,15 @@ namespace Core {
 
 
     MemoryTracker::MemoryTracker() :
-        m_IsTrackingEnabled(true)
+        m_IsTrackingEnabled(false)
     {
     }
 
+    MemoryTracker::~MemoryTracker()
+    {
+        m_SceneMetricsExporter.EndScene();
+        m_IsTrackingEnabled = false;
+    }
 }
+
+

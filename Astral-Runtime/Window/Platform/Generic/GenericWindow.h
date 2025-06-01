@@ -31,7 +31,6 @@ namespace Astral {
         void SetWindowName(std::string_view windowName) override;
         void SetWindowDimensions(int width, int height) override;
 
-        Astral::RendererContext & GetRendererContext() override;
         void* GetNativeWindow() override;
 
     private:

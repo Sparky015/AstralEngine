@@ -9,6 +9,8 @@
 #include "Debug/MemoryTracking/MemoryTracker.h"
 #include "cpuinfo.h"
 #include "nfd.hpp"
+#include "glslang/Include/glslang_c_interface.h"
+
 
 #include "Events/EventListener.h"
 #include "Events/EventPublisher.h"
@@ -21,10 +23,16 @@
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Input/InputState.h"
 
+#include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
+
 
 namespace Astral {
 
     Engine* Engine::m_Instance = nullptr;
+
+
+
+Engine* Engine::m_Instance = nullptr;
 
     Engine::Engine() :
         m_ApplicationModule(Application::CreateApplicationModule()),
@@ -47,7 +55,14 @@ namespace Astral {
 
         cpuinfo_initialize();
         NFD_Init();
+        glslang_initialize_process();
+
     }
+
+
+    m_WindowClosedListener.StartListening();
+    // Core::MemoryTracker::Get().EndScene();
+}
 
 
     Engine::~Engine()
@@ -55,6 +70,7 @@ namespace Astral {
         PROFILE_SCOPE("Engine Shutdown");
 
         NFD_Quit();
+        glslang_finalize_process();
         cpuinfo_deinitialize();
 
         m_ApplicationModule->Shutdown();

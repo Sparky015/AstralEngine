@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Renderer/Shaders/ShaderProgram.h"
+#include "Renderer/RHI/Resources/Shader.h"
 
 namespace Astral {
 
@@ -14,7 +14,7 @@ namespace Astral {
     {
     public:
 
-        static void RenderEntities(Astral::ShaderProgram* shader);
+        static void RenderEntities();
 
     private:
 

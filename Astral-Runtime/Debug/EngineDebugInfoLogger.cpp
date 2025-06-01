@@ -7,6 +7,7 @@
 #include "Core/Engine.h"
 #include "Instrumentation/ScopeProfiler.h"
 #include "Utilities/Loggers.h"
+#include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 
 namespace Debug {
@@ -28,7 +29,9 @@ namespace Debug {
         #endif
 
         /** Outputs the compiler name and version */
-        #ifdef __clang__
+        #ifdef __apple_build_version__ // Check this before Clang because AppleClang also defines __clang__
+        LOG("Compiler: AppleClang " << __clang_version__); // <-- Using __clang_version__ because it is formatted nicer and is correct version number
+        #elif __clang__
         LOG("Compiler: Clang " << __clang_version__);
         #elif __GNUC__
         LOG("Compiler: GNU GCC " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__);

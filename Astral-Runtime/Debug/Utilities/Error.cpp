@@ -7,6 +7,8 @@
 #include "ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
+#include <cpptrace/cpptrace.hpp>
+
 namespace Debug::Macros {
 
     void macro_ERROR(std::ostringstream& errorMessage, const char* file, const int lineNumber, const char* func)
@@ -25,7 +27,10 @@ namespace Debug::Macros {
         if (logFile.IsOpen())
         {
             std::ostringstream outputStream;
-            outputStream << "\n\nERROR called. \n" << filePath
+
+            outputStream << "\n" << cpptrace::generate_trace().current(1).to_string();
+
+            outputStream << "\nERROR called. \n" << filePath
                     << "\nLine: " << lineNumber
                     << "\nFunction: " << func
                     << "\nError Message: " << errorMessage.str() << "\n";
@@ -38,11 +43,14 @@ namespace Debug::Macros {
         }
     #endif
 
-        std::cout << "\n\n" << SetColor(RED)
+        std::cout << "\n";
+        cpptrace::generate_trace().current(1).print();
+
+        std::cout << "\n" << SetColor(RED)
         << "ERROR called. \nFile: " << filePath
         << "\nLine: " << lineNumber
         << "\nFunction: " << func
-        << "\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
+        << "\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n\n";
     }
 
 }

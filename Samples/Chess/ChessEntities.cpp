@@ -7,13 +7,15 @@
 #include <ChessModule.h>
 
 #include "ECS/ECSManager.h"
-#include "Renderer/Primitives/Texture.h"
 #include "Asset/AssetManager.h"
+#include "Renderer/RHI/Resources/Texture.h"
 #include "Chessboard/Chessboard.h"
 #include "Chessboard/ChessboardManager.h"
 #include "Core/Engine.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
 
 
 Astral::Entity ChessEntities::m_BlackPawn1;
@@ -53,7 +55,7 @@ Astral::Entity ChessEntities::m_WhiteKing;
 Astral::Entity ChessEntities::m_ChessBoard;
 
 
-void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
+void ChessEntities::InitEntities(const Astral::Mesh& mesh, const Astral::Material& partialMaterial)
 {
     Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
@@ -96,40 +98,39 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
 
     // Transform Components
 
-    ecs.AddComponent(m_ChessBoard, TransformComponent(Vec3(400.0f), Vec3(2.0f)));
-    ecs.AddComponent(m_BlackPawn1, TransformComponent(50, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn2, TransformComponent(150, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn3, TransformComponent(250, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn4, TransformComponent(350, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn5, TransformComponent(450, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn6, TransformComponent(550, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn7, TransformComponent(650, 650, .25, .25));
-    ecs.AddComponent(m_BlackPawn8, TransformComponent(750, 650, .25, .25));
-    ecs.AddComponent(m_BlackRook1, TransformComponent(50, 750, .25, .25));
-    ecs.AddComponent(m_BlackRook2, TransformComponent(750, 750, .25, .25));
-    ecs.AddComponent(m_BlackKnight1, TransformComponent(150, 750, .25, .25));
-    ecs.AddComponent(m_BlackKnight2, TransformComponent(650, 750, .25, .25));
-    ecs.AddComponent(m_BlackBishop1, TransformComponent(250, 750, .25, .25));
-    ecs.AddComponent(m_BlackBishop2, TransformComponent(550, 750, .25, .25));
-    ecs.AddComponent(m_BlackQueen, TransformComponent(350, 750, .25, .25));
-    ecs.AddComponent(m_BlackKing, TransformComponent(450, 750, .25, .25));
-    ecs.AddComponent(m_WhitePawn1, TransformComponent(50, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn2, TransformComponent(150, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn3, TransformComponent(250, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn4, TransformComponent(350, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn5, TransformComponent(450, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn6, TransformComponent(550, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn7, TransformComponent(650, 150, .25, .25));
-    ecs.AddComponent(m_WhitePawn8, TransformComponent(750, 150, .25, .25));
-    ecs.AddComponent(m_WhiteRook1, TransformComponent(50, 50, .25, .25));
-    ecs.AddComponent(m_WhiteRook2, TransformComponent(750, 50, .25, .25));
-    ecs.AddComponent(m_WhiteKnight1, TransformComponent(150, 50, .25, .25));
-    ecs.AddComponent(m_WhiteKnight2, TransformComponent(650, 50, .25, .25));
-    ecs.AddComponent(m_WhiteBishop1, TransformComponent(250, 50, .25, .25));
-    ecs.AddComponent(m_WhiteBishop2, TransformComponent(550, 50, .25, .25));
-    ecs.AddComponent(m_WhiteQueen, TransformComponent(350, 50, .25, .25));
-    ecs.AddComponent(m_WhiteKing, TransformComponent(450, 50, .25, .25));
-
+    ecs.AddComponent(m_ChessBoard,   TransformComponent(Vec3(400.0f), Vec3(2.0f)));
+    ecs.AddComponent(m_BlackPawn1,   TransformComponent(50, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn2,   TransformComponent(150, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn3,   TransformComponent(250, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn4,   TransformComponent(350, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn5,   TransformComponent(450, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn6,   TransformComponent(550, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn7,   TransformComponent(650, 150, .25, .25));
+    ecs.AddComponent(m_BlackPawn8,   TransformComponent(750, 150, .25, .25));
+    ecs.AddComponent(m_BlackRook1,   TransformComponent(50, 50, .25, .25));
+    ecs.AddComponent(m_BlackRook2,   TransformComponent(750, 50, .25, .25));
+    ecs.AddComponent(m_BlackKnight1, TransformComponent(150, 50, .25, .25));
+    ecs.AddComponent(m_BlackKnight2, TransformComponent(650, 50, .25, .25));
+    ecs.AddComponent(m_BlackBishop1, TransformComponent(250, 50, .25, .25));
+    ecs.AddComponent(m_BlackBishop2, TransformComponent(550, 50, .25, .25));
+    ecs.AddComponent(m_BlackQueen,   TransformComponent(350, 50, .25, .25));
+    ecs.AddComponent(m_BlackKing,    TransformComponent(450, 50, .25, .25));
+    ecs.AddComponent(m_WhitePawn1,   TransformComponent(50, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn2,   TransformComponent(150, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn3,   TransformComponent(250, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn4,   TransformComponent(350, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn5,   TransformComponent(450, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn6,   TransformComponent(550, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn7,   TransformComponent(650, 650, .25, .25));
+    ecs.AddComponent(m_WhitePawn8,   TransformComponent(750, 650, .25, .25));
+    ecs.AddComponent(m_WhiteRook1,   TransformComponent(50, 750, .25, .25));
+    ecs.AddComponent(m_WhiteRook2,   TransformComponent(750, 750, .25, .25));
+    ecs.AddComponent(m_WhiteKnight1, TransformComponent(150, 750, .25, .25));
+    ecs.AddComponent(m_WhiteKnight2, TransformComponent(650, 750, .25, .25));
+    ecs.AddComponent(m_WhiteBishop1, TransformComponent(250, 750, .25, .25));
+    ecs.AddComponent(m_WhiteBishop2, TransformComponent(550, 750, .25, .25));
+    ecs.AddComponent(m_WhiteQueen,   TransformComponent(350, 750, .25, .25));
+    ecs.AddComponent(m_WhiteKing,    TransformComponent(450, 750, .25, .25));
 
     Astral::AssetRegistry& registry = Astral::g_AssetManager.GetRegistry();
     registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
@@ -151,40 +152,83 @@ void ChessEntities::InitEntities(Astral::VertexArrayObject* vertexArrayObject)
     Astral::AssetID whiteKingTextureID = registry.CreateAsset<Astral::Texture>("white_king.png");
 
 
+    Astral::Material chessboardMaterial = partialMaterial;
+    chessboardMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "chessboard.png");
+
+    Astral::Material blackPawnMaterial = partialMaterial;
+    blackPawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_pawn.png");
+
+    Astral::Material blackRookMaterial = partialMaterial;
+    blackRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_rook.png");
+
+    Astral::Material blackKnightMaterial = partialMaterial;
+    blackKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_knight.png");
+
+    Astral::Material blackBishopMaterial = partialMaterial;
+    blackBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_bishop.png");
+
+    Astral::Material blackQueenMaterial = partialMaterial;
+    blackQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_queen.png");
+
+    Astral::Material blackKingMaterial = partialMaterial;
+    blackKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "black_king.png");
+
+    Astral::Material whitePawnMaterial = partialMaterial;
+    whitePawnMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_pawn.png");
+
+    Astral::Material whiteRookMaterial = partialMaterial;
+    whiteRookMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_rook.png");
+
+    Astral::Material whiteKnightMaterial = partialMaterial;
+    whiteKnightMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_knight.png");
+
+    Astral::Material whiteBishopMaterial = partialMaterial;
+    whiteBishopMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_bishop.png");
+
+    Astral::Material whiteQueenMaterial = partialMaterial;
+    whiteQueenMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_queen.png");
+
+    Astral::Material whiteKingMaterial = partialMaterial;
+    whiteKingMaterial.TextureUniform = Astral::Texture::CreateTexture(std::string(CHESS_ASSET_DIR) + "white_king.png");
+
     // Sprite Components
-    ecs.AddComponent(m_ChessBoard, SpriteComponent(chessboardTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn1, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn2, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn3, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn4, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn5, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn6, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn7, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackPawn8, SpriteComponent(blackPawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackRook1, SpriteComponent(blackRookTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackRook2, SpriteComponent(blackRookTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackKnight1, SpriteComponent(blackKnightTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackKnight2, SpriteComponent(blackKnightTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackBishop1, SpriteComponent(blackBishopTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackBishop2, SpriteComponent(blackBishopTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackQueen, SpriteComponent(blackQueenTextureID, vertexArrayObject));
-    ecs.AddComponent(m_BlackKing, SpriteComponent(blackKingTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn1, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn2, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn3, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn4, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn5, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn6, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn7, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhitePawn8, SpriteComponent(whitePawnTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteRook1, SpriteComponent(whiteRookTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteRook2, SpriteComponent(whiteRookTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(whiteKnightTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(whiteKnightTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(whiteBishopTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(whiteBishopTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteQueen, SpriteComponent(whiteQueenTextureID, vertexArrayObject));
-    ecs.AddComponent(m_WhiteKing, SpriteComponent(whiteKingTextureID, vertexArrayObject));
+    ecs.AddComponent(m_ChessBoard, SpriteComponent(chessboardMaterial, mesh));
+
+    // Black Pieces
+    ecs.AddComponent(m_BlackPawn1, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn2, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn3, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn4, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn5, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn6, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn7, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackPawn8, SpriteComponent(blackPawnMaterial, mesh));
+    ecs.AddComponent(m_BlackRook1, SpriteComponent(blackRookMaterial, mesh));
+    ecs.AddComponent(m_BlackRook2, SpriteComponent(blackRookMaterial, mesh));
+    ecs.AddComponent(m_BlackKnight1, SpriteComponent(blackKnightMaterial, mesh));
+    ecs.AddComponent(m_BlackKnight2, SpriteComponent(blackKnightMaterial, mesh));
+    ecs.AddComponent(m_BlackBishop1, SpriteComponent(blackBishopMaterial, mesh));
+    ecs.AddComponent(m_BlackBishop2, SpriteComponent(blackBishopMaterial, mesh));
+    ecs.AddComponent(m_BlackQueen, SpriteComponent(blackQueenMaterial, mesh));
+    ecs.AddComponent(m_BlackKing, SpriteComponent(blackKingMaterial, mesh));
+
+    // White Pieces
+    ecs.AddComponent(m_WhitePawn1, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn2, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn3, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn4, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn5, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn6, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn7, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhitePawn8, SpriteComponent(whitePawnMaterial, mesh));
+    ecs.AddComponent(m_WhiteRook1, SpriteComponent(whiteRookMaterial, mesh));
+    ecs.AddComponent(m_WhiteRook2, SpriteComponent(whiteRookMaterial, mesh));
+    ecs.AddComponent(m_WhiteKnight1, SpriteComponent(whiteKnightMaterial, mesh));
+    ecs.AddComponent(m_WhiteKnight2, SpriteComponent(whiteKnightMaterial, mesh));
+    ecs.AddComponent(m_WhiteBishop1, SpriteComponent(whiteBishopMaterial, mesh));
+    ecs.AddComponent(m_WhiteBishop2, SpriteComponent(whiteBishopMaterial, mesh));
+    ecs.AddComponent(m_WhiteQueen, SpriteComponent(whiteQueenMaterial, mesh));
+    ecs.AddComponent(m_WhiteKing, SpriteComponent(whiteKingMaterial, mesh));
 }
 
 

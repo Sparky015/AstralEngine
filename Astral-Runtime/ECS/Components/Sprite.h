@@ -6,16 +6,18 @@
 
 #include "pch.h"
 #include "Asset/AssetRegistry.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
 
-#include "Renderer/Primitives/Texture.h"
+#include "Renderer/RHI/Resources/Texture.h"
 
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 struct SpriteComponent
 {
-    SpriteComponent() : textureAssetID(Astral::NullAssetID), vertexArrayObject(nullptr), isUsed(false) {}
-    explicit SpriteComponent(Astral::AssetID textureAssetID, Astral::VertexArrayObject* vertexArrayObject) : textureAssetID(textureAssetID), vertexArrayObject(vertexArrayObject), isUsed(true) {}
-    Astral::AssetID textureAssetID;
-    Astral::VertexArrayObject* vertexArrayObject;
+    SpriteComponent() : material(), mesh(), isUsed(false) {}
+    explicit SpriteComponent(Astral::Material material, Astral::Mesh mesh) : material(material), mesh(mesh), isUsed(true) {}
+    Astral::Material material;
+    Astral::Mesh mesh;
     bool isUsed;
 };

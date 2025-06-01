@@ -9,7 +9,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#include "Renderer/RendererContext.h"
+#include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 #include "cpuinfo.h"
 #include "imgui.h"

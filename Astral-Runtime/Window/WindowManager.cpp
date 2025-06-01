@@ -36,7 +36,7 @@ namespace Astral{
 
     void WindowManager::Init()
     {
-        PROFILE_SCOPE("MemorySceneMetricsImporter")
+        PROFILE_SCOPE("WindowManager::Init")
         TRACE("Initializing Window Manager!")
 
         m_UpdateListener.StartListening();

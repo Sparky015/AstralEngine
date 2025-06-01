@@ -14,12 +14,12 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 
 
 namespace Astral {
 
-    void RenderingSystem::RenderEntities(Astral::ShaderProgram* shader)
+    void RenderingSystem::RenderEntities()
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
         ECS& ecs = Engine::Get().GetECSManager().GetECS();
@@ -28,7 +28,9 @@ namespace Astral {
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        for (EntityID entityID = 0; entityID < spriteDisplay.size(); entityID++)
+        OrthographicCamera camera = OrthographicCamera(-10, 10, -10, 10);
+        SceneRenderer::BeginScene(camera);
+        for (ECS::EntityPoolSize entityID = 0; entityID < ECS::MAX_ENTITIES; entityID++)
         {
             Entity e = Entity(entityID);
             if (!ecs.IsEntityAlive(entityID)) { continue; }
@@ -42,8 +44,9 @@ namespace Astral {
             Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
 
             g_AssetManager.GetRegistry().GetAsset<Texture>(spriteComponent.textureAssetID)->Bind(0);
-            Astral::Renderer::Submit(*shader, spriteComponent.vertexArrayObject, transform);
+            SceneRenderer::Submit(spriteComponent.mesh, spriteComponent.material, transform);
         }
+        SceneRenderer::EndScene();
     }
 
 

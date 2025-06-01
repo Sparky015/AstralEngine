@@ -11,6 +11,4 @@ namespace Debug {
     void DrawCallsPerFrameComponent();
     void RendererAPIComponent();
 
-
-
 }

@@ -101,6 +101,8 @@ namespace Core {
 
     void SceneMetricsExporter::OpenExportFile(const char* sceneName)
     {
+        MemoryTracker::Get().DisableTracking();
+
         constexpr int MAX_SCENE_NAME_LENGTH = 90;
         unsigned int sceneNameLength = std::strlen(sceneName);
         if (sceneNameLength > MAX_SCENE_NAME_LENGTH) { sceneNameLength = MAX_SCENE_NAME_LENGTH; }
@@ -163,11 +165,15 @@ namespace Core {
         // std::cout << "- good(): " << GetExportFile().good() << std::endl;
         // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
         // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+        MemoryTracker::Get().EnableTracking();
     }
 
 
     void SceneMetricsExporter::CloseExportFile()
     {
+        MemoryTracker::Get().DisableTracking();
+
          if (GetExportFile().is_open())
          {
              // Log the stream state after opening
@@ -191,6 +197,8 @@ namespace Core {
                  std::cout << "Memory profiling export file failed to close!";
              }
          }
+
+        MemoryTracker::Get().EnableTracking();
     }
 
 }

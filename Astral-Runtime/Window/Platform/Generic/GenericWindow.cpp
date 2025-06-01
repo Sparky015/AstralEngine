@@ -9,6 +9,7 @@
 #include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Input/KeycodeConversions.h"
+#include "Renderer/SceneRenderer.h"
 
 #include "GLFW/glfw3.h"
 
@@ -41,9 +42,17 @@ namespace Astral {
             }
         }
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::OpenGL)
+        {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        }
+        else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        {
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        }
+
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 
@@ -74,7 +83,6 @@ namespace Astral {
     void GenericWindow::Shutdown()
     {
         PROFILE_SCOPE("GenericWindow::Shutdown")
-        m_RenderContext->Shutdown();
         glfwTerminate();
     }
 
@@ -103,13 +111,6 @@ namespace Astral {
     {
         glfwSwapInterval(0);
         m_Vsync = 0;
-    }
-
-
-    Astral::RendererContext& GenericWindow::GetRendererContext()
-    {
-        ASSERT(m_RenderContext, "Renderer context has not been created!");
-        return *m_RenderContext;
     }
 
 

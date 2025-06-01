@@ -20,6 +20,8 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.cpp
         Debug/ImGui/ImGuiDependencies/imgui_impl_opengl3.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.cpp
         Debug/ImGui/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
@@ -31,48 +33,49 @@ add_library(AstralEngine
         ECS/ECSManager.h
         ECS/Components/Transform.h
         ECS/Components/Sprite.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexBuffer.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLVertexArrayObject.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLIndexBuffer.cpp
-        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.cpp
-        Renderer/Platform/OpenGL/Shaders/OpenGLShaderProgram.h
+        Renderer/RendererManager.cpp
+        Renderer/RendererManager.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexArrayObject.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLIndexBuffer.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLShaderProgram.h
         Renderer/Shaders/ShaderSource.h
         Renderer/Shaders/ShaderSource.cpp
-        Renderer/Primitives/VertexBuffer.cpp
-        Renderer/Primitives/VertexBuffer.h
-        Renderer/Primitives/IndexBuffer.cpp
-        Renderer/Primitives/IndexBuffer.h
-        Renderer/Renderer.cpp
-        Renderer/Renderer.h
-        Renderer/Platform/OpenGL/OpenGLRenderingContext.h
-        Renderer/Platform/OpenGL/OpenGLRenderingContext.cpp
-        Renderer/RendererContext.h
-        Renderer/RendererContext.cpp
+        Renderer/RHI/Resources/VertexBuffer.cpp
+        Renderer/RHI/Resources/VertexBuffer.h
+        Renderer/RHI/Resources/IndexBuffer.cpp
+        Renderer/RHI/Resources/IndexBuffer.h
+        Renderer/SceneRenderer.cpp
+        Renderer/SceneRenderer.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererContext.cpp
+        Renderer/RHI/RendererContext.h
+        Renderer/RHI/RendererContext.cpp
         Window/Window.cpp
         Window/Window.h
         Window/Platform/Generic/GenericWindow.cpp
         Window/Platform/Generic/GenericWindow.h
-        Renderer/Primitives/VertexArrayObject.cpp
-        Renderer/Primitives/VertexArrayObject.h
-        Renderer/Primitives/Texture.cpp
-        Renderer/Primitives/Texture.h
-        Renderer/Platform/OpenGL/Primitives/OpenGLTexture.cpp
-        Renderer/Platform/OpenGL/Primitives/OpenGLTexture.h
-        Renderer/Primitives/BufferLayout.cpp
-        Renderer/Primitives/BufferLayout.h
+        Renderer/RHI/Resources/VertexArrayObject.cpp
+        Renderer/RHI/Resources/VertexArrayObject.h
+        Renderer/RHI/Resources/Texture.cpp
+        Renderer/RHI/Resources/Texture.h
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.cpp
+        Renderer/RHI/Platform/OpenGL/Resources/OpenGLTexture.h
+        Renderer/RHI/Resources/VertexBufferLayout.cpp
+        Renderer/RHI/Resources/VertexBufferLayout.h
         Core/Math/Math.h
-        Renderer/Shaders/ShaderProgram.cpp
-        Renderer/Shaders/ShaderProgram.h
-        Renderer/RendererCommands.cpp
-        Renderer/RendererCommands.h
-        Renderer/RendererAPI.cpp
-        Renderer/RendererAPI.h
-        Renderer/Platform/OpenGL/OpenGLRendererAPI.cpp
-        Renderer/Platform/OpenGL/OpenGLRendererAPI.h
-        Renderer/Platform/OpenGL/OpenGLErrorTracking.h
+        Renderer/RHI/Resources/Shader.h
+        Renderer/RHI/RendererAPI.cpp
+        Renderer/RHI/RendererAPI.h
+        Renderer/RHI/RendererCommands.cpp
+        Renderer/RHI/RendererCommands.h
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.cpp
+        Renderer/RHI/Platform/OpenGL/OpenGLRendererCommands.h
+        Renderer/RHI/Platform/OpenGL/OpenGLErrorTracking.h
         Core/ApplicationModule.h
         main.cpp
         Astral.h
@@ -210,6 +213,60 @@ add_library(AstralEngine
         Core/SmartPointers.h
 
 
+
+        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
+        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
+        Renderer/RHI/Resources/Sampler.h
+        Renderer/RHI/Resources/PipelineStateObject.h
+        Renderer/RHI/Resources/RenderTarget.h
+        Renderer/RHI/Resources/Framebuffer.h
+        Renderer/RHI/Resources/DescriptorSetLayout.h
+        Renderer/RHI/Resources/Device.h
+        Renderer/RHI/Resources/DescriptorSet.h
+        Renderer/RHI/Resources/DescriptorPool.h
+        Renderer/RHI/Resources/CommandQueue.h
+        Renderer/RHI/Resources/Buffer.h
+        Renderer/RHI/Resources/CommandBuffer.h
+        Renderer/RHI/Resources/Swapchain.h
+        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
+        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+        Renderer/RHI/Common/GraphicsSmartPointers.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineStateObject.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineStateObject.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.h
+        Renderer/Common/Mesh.h
+        Renderer/Common/Material.h
+        Renderer/RHI/Resources/Shader.cpp
 )
 
 
@@ -257,6 +314,33 @@ endif ()
 
 
 
+#                         ######   VULKAN SET UP   ######
+
+if (WIN32)
+    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
+    target_link_libraries(AstralEngine PUBLIC
+            vulkan-1
+            SPIRV-Toolsd
+            SPIRV-Tools-diffd
+            SPIRV-Tools-optd
+            glslangd
+            glslang-default-resource-limitsd
+    )
+elseif (APPLE)
+    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
+    target_link_libraries(AstralEngine PUBLIC
+            vulkan.1
+            SPIRV-Tools
+            SPIRV-Tools-diff
+            SPIRV-Tools-opt
+            glslang
+            glslang-default-resource-limits
+    )
+endif()
+
+
+
+
 # Include Directories
 target_include_directories(AstralEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -273,6 +357,9 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
+message(STATUS "Vulkan SDK Path: $ENV{VULKAN_SDK}")
+
+target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 
 
 # Precompiled Header
@@ -296,10 +383,28 @@ endif()
 
 target_compile_definitions(AstralEngine PUBLIC -DGLFW_INCLUDE_NONE)
 target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
+elseif (LINUX)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
+
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_OPENGL)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_OPENGL_AVAILABLE)
+#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+
 endif ()
 
 target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
@@ -308,3 +413,4 @@ target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DI
 target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RUNTIME_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")
+

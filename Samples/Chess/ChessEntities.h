@@ -6,12 +6,14 @@
 
 #include "Common/ChessPieceTypes.h"
 #include "ECS/Entity.h"
-#include "Renderer/Primitives/VertexArrayObject.h"
+#include "Renderer/Common/Material.h"
+#include "Renderer/Common/Mesh.h"
+#include "Renderer/RHI/Resources/VertexArrayObject.h"
 
 class ChessEntities
 {
 public:
-    static void InitEntities(Astral::VertexArrayObject* vertexArrayObject);
+    static void InitEntities(const Astral::Mesh& mesh, const Astral::Material& partialMaterial);
     static void DestroyEntities();
     static Astral::Entity GetEntity(SquareLocation location);
 

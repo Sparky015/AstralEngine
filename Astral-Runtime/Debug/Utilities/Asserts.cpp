@@ -7,6 +7,8 @@
 #include "ConsoleLogFile.h"
 #include "ConsoleColors.h"
 
+#include <cpptrace/cpptrace.hpp>
+
 namespace Debug::Macros {
 
     void macro_ASSERT(const char* expressionString,  const char* errorMessage, const char* file, const int lineNumber, const char* func)
@@ -27,7 +29,11 @@ namespace Debug::Macros {
         if (logFile.IsOpen())
         {
             std::ostringstream outputStream;
-            outputStream << "\n\nASSERT failed. "
+
+            outputStream << "\n" << cpptrace::generate_trace().current(1).to_string();
+
+
+            outputStream << "\nASSERT failed. "
                         << "\nFile: " << filePath
                         << "\nLine: " << lineNumber
                         << "\nFunction: " << func
@@ -42,7 +48,10 @@ namespace Debug::Macros {
         }
 #endif
 
-        std::cout << "\n\n" << SetColor(RED)
+        std::cout << "\n";
+        cpptrace::generate_trace().current(1).print();
+
+        std::cout << "\n" << SetColor(RED)
                   << "ASSERT failed. "
                   << "\nFile: " << filePath
                   << "\nLine: " << lineNumber
@@ -70,7 +79,10 @@ namespace Debug::Macros {
         if (logFile.IsOpen())
         {
             std::ostringstream outputStream;
-            outputStream    << "\n\nASSERT failed. "
+
+            outputStream << cpptrace::generate_trace().current(1).to_string();
+
+            outputStream    << "\nASSERT failed. "
                             << "\nFile: " << filePath
                             << "\nLine: " << lineNumber
                             << "\nFunction: " << func
@@ -85,13 +97,17 @@ namespace Debug::Macros {
         }
     #endif
 
-        std::cout << "\n\n" << SetColor(RED)
+        std::cout << "\n";
+        cpptrace::generate_trace().current(1).print();
+
+        std::cout << "\n" << SetColor(RED)
         << "ASSERT failed. "
         << "\nFile: " << filePath
         << "\nLine: " << lineNumber
         << "\nFunction: " << func
         << "\nCondition: (" << expressionString
         << ")\nError Message: " << errorMessage.str() << SetColor(DEFAULT) << "\n";
+
     }
 
 

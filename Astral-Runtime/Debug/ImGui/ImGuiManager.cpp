@@ -16,14 +16,22 @@
 #include "imgui/imgui.h"
 
 
-#include "ImGuiDependencies/imgui_impl_glfw.h"
+#ifdef ASTRAL_OPENGL_AVAILABLE
 #include "ImGuiDependencies/imgui_impl_opengl3.h"
+#endif
+
+#include "ImGuiDependencies/imgui_impl_glfw.h"
+
+
+
 
 #include "Components/MemoryComponents.h"
 #include "Core/Engine.h"
 #include "Debug/ImGui/Components/EngineComponents.h"
-#include "GLFW/glfw3.h"
+#include "ImGuiDependencies/imgui_impl_vulkan.h"
 #include "Input/Keycodes.h"
+#include "Renderer/SceneRenderer.h"
+#include "Window/Platform/Generic/GenericWindow.h"
 #include "Window/WindowManager.h"
 
 
@@ -210,7 +218,16 @@ namespace Debug {
         m_Time = time;
 
         ImGui_ImplGlfw_NewFrame();
-        ImGui_ImplOpenGL3_NewFrame();
+
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::OpenGL)
+        {
+            ImGui_ImplOpenGL3_NewFrame();
+        }
+        else if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        {
+            ImGui_ImplVulkan_NewFrame();
+        }
+
         ImGui::NewFrame();
 
         if (m_ShowViewportDockSpace)
@@ -225,14 +242,11 @@ namespace Debug {
         PROFILE_SCOPE("ImGui End Frame");
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backupCurrentContext);
         }
     }
 
@@ -282,15 +296,18 @@ namespace Debug {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Astral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
-        ImGui_ImplOpenGL3_Init("#version 410");
+        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        {
+            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)stral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
+        }
+
     }
 
 
     void ImGuiManager::ShutdownImGui() const
     {
         PROFILE_SCOPE("ImGui Manager Shutdown");
-        ImGui_ImplOpenGL3_Shutdown();
+
         ImGui_ImplGlfw_Shutdown();
 
         ImPlot::DestroyContext();

@@ -11,7 +11,7 @@
 #include "MemoryMetrics.h"
 #include "Serialization/SceneMetricsExporter.h"
 
-#include <mutex>
+#include <shared_mutex>
 
 namespace Core {
 
@@ -67,7 +67,11 @@ namespace Core {
 
         /**@brief Gets the memory metrics of the engine
          * @return The memory metrics of the engine */
-        [[nodiscard]] constexpr const MemoryMetrics& GetMemoryMetrics() const { return m_MemoryMetrics; }
+        [[nodiscard]] const MemoryMetrics& GetMemoryMetrics() const
+        {
+            std::shared_lock lock(m_Mutex);
+            return m_MemoryMetrics;
+        }
 
 
         MemoryTracker(const MemoryTracker&) = delete;
@@ -77,9 +81,9 @@ namespace Core {
 
     private:
         MemoryTracker();
-        ~MemoryTracker() = default;
+        ~MemoryTracker();
 
-        mutable std::recursive_mutex m_Mutex;
+        mutable std::shared_mutex m_Mutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
         SceneMetricsExporter m_SceneMetricsExporter;

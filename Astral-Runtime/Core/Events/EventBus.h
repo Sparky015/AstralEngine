@@ -41,9 +41,28 @@ namespace Core {
         /**@brief Removes a listener from the callback list. */
         void RemoveListener(std::function<void(T)>* callback)
         {
-            m_TempCallbackBuffer.erase(std::remove(m_TempCallbackBuffer.begin(), m_TempCallbackBuffer.end(), callback), m_TempCallbackBuffer.end());
-            m_Callbacks.erase(std::remove(m_Callbacks.begin(), m_Callbacks.end(), callback), m_Callbacks.end());
-            DecrementListenerCount();
+            if (m_IsEventBeingRaised)
+            {
+                // Check if the callback is present in the vector before erasing
+                auto tempEnd = std::remove(m_TempCallbackBuffer.begin(), m_TempCallbackBuffer.end(), callback);
+
+                if (tempEnd != m_TempCallbackBuffer.end())
+                {
+                    m_TempCallbackBuffer.erase(tempEnd, m_TempCallbackBuffer.end());
+                    DecrementListenerCount();
+                }
+            }
+            else
+            {
+                // Check if the callback is present in the vector before erasing
+                auto callbacksEnd = std::remove(m_Callbacks.begin(), m_Callbacks.end(), callback);
+
+                if (callbacksEnd != m_Callbacks.end())
+                {
+                    m_Callbacks.erase(callbacksEnd, m_Callbacks.end());
+                    DecrementListenerCount();
+                }
+            }
         }
 
 

@@ -64,7 +64,7 @@ namespace Game {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
         // The square that the mouse is over
-        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({Astral::InputState::MousePositionX(), Astral::InputState::MousePositionY()});
+        SquareLocation mouseSquareLocation = Game::ConvertCoordinatesToPieceLocation({InputState::MousePositionX(), 800 - InputState::MousePositionY()});
         Chessboard& chessBoard = ChessModule::Get().GetBoardManager().GetBoard();
 
         AttemptMove(chessBoard, mouseSquareLocation);
@@ -88,7 +88,7 @@ namespace Game {
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = Astral::InputState::MousePositionX();
-        transformComponent.y = Astral::InputState::MousePositionY();
+        transformComponent.y = 800 - Astral::InputState::MousePositionY();
         ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);
     }
 
@@ -100,12 +100,13 @@ namespace Game {
 
         Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
+        // TODO: Fix this temp patch and look up the window dimensions to inverse the transform
         TransformComponent transformComponent;
         Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
         ASSERT(result == Astral::ECS_Result::ECS_SUCCESS, "Failed to get entity component")
 
         transformComponent.x = pieceCoordinates.x;
-        transformComponent.y = pieceCoordinates.y;
+        transformComponent.y = 800 - pieceCoordinates.y;
 
         // Update the transform component of the piece with the new transform
         ecs.AddComponent(m_TrackedPiece.PieceEntity, transformComponent);

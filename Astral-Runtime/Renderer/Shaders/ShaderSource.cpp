@@ -17,13 +17,33 @@ namespace Astral {
         m_ShaderType(NONE)
     {}
     
-    ShaderSource::ShaderSource(const std::string& filePath) : m_ShaderType(NONE)
+    ShaderSource::ShaderSource(const std::filesystem::path& filePath) : m_ShaderType(NONE)
     {
-        ParseShader(filePath);
+        std::filesystem::path extension = filePath.extension();
+
+        if (extension == ".vert") { m_ShaderType = VERTEX_SHADER; }
+        else if (extension == ".frag") { m_ShaderType = FRAGMENT_SHADER; }
+        else if (extension == ".comp") { m_ShaderType = COMPUTE_SHADER; }
+        else if (extension == ".geom") { m_ShaderType = GEOMETRY_SHADER; }
+        else if (extension == ".tesc") { m_ShaderType = TESSELLATION_CONTROL_SHADER; }
+        else if (extension == ".tese") { m_ShaderType = TESSELLATION_EVALUATION_SHADER; }
+        else { m_ShaderType = NONE; }
+
+        m_FileName = filePath.filename().string();
+
+        if (filePath.is_relative())
+        {
+            std::filesystem::path absolutePath = std::string(SHADER_DIR) + filePath.string();
+            ParseShader(absolutePath);
+        }
+        else
+        {
+            ParseShader(filePath);
+        }
     }
 
 
-    void ShaderSource::ParseShader(const std::string& filePath)
+    void ShaderSource::ParseShader(const std::filesystem::path& filePath)
     {
         if (!m_ShaderCode.empty())
         {
@@ -37,34 +57,9 @@ namespace Astral {
             return;
         }
 
-        /** Find the shader type */
-        std::string line;
-        while (std::getline(file, line))
-        {
-            if (line.find("#shader") != std::string::npos)
-            {
-                /** We found "#shader in one of the lines */
-
-                /** Find which type of shader is specified after "#shader" */
-                if (line.find("vertex") != std::string::npos)
-                {
-                    m_ShaderType = VERTEX_SHADER;
-                    break;
-                }
-                else if (line.find("fragment") != std::string::npos)
-                {
-                    m_ShaderType = FRAGMENT_SHADER;
-                    break;
-                }
-                else
-                {
-                   WARN("Shader type not found!");
-                }
-            }
-        }
-
         /** Accumulate all the shader source code into the stringstream. */
         std::stringstream ss;
+        std::string line;
         while (std::getline(file, line))
         {
             ss << line << "\n";
@@ -77,6 +72,12 @@ namespace Astral {
     const std::string& ShaderSource::GetShaderCode() const
     {
         return m_ShaderCode;
+    }
+
+
+    const std::string& ShaderSource::GetFileName() const
+    {
+        return m_FileName;
     }
 
 
