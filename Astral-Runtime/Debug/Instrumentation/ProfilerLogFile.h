@@ -6,15 +6,15 @@
 
 #include <fstream>
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 
 namespace Debug {
 
     struct ProfileResult
     {
         std::string_view Name;
-        int64 StartTimeStamp;
-        int64 EndTimeStamp;
+        Astral::int64 StartTimeStamp;
+        Astral::int64 EndTimeStamp;
         size_t AllocationCount;
     };
 

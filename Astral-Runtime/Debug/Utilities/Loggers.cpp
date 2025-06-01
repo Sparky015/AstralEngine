@@ -7,7 +7,7 @@
 
 #include "ConsoleLogFile.h"
 #include "ConsoleColors.h"
-
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Debug::Macros {
 

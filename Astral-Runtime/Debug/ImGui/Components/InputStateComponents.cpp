@@ -6,6 +6,7 @@
 
 #include "imgui.h"
 #include "Input/InputState.h"
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Debug {
 
@@ -36,7 +37,7 @@ namespace Debug {
     {
         if (ImGui::BeginTable("0-9 Keys Table", 5, imGuiTableFlags))
         {
-            for (uint8 keycode = KEY_0; keycode != KEY_9 + 1; keycode++)
+            for (Astral::uint8 keycode = KEY_0; keycode != KEY_9 + 1; keycode++)
             {
                 ImGui::TableNextColumn();
                 ImGui::Text("%s : %s", Astral::InputState::GetKeyName(keycode).data(),

@@ -6,7 +6,7 @@
 
 #include "Debug/Instrumentation/ProfilerLogFile.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
-#include "pch.h"
+#include "Core/CoreMacroDefinitions.h"
 
 namespace Debug::Macros {
 
