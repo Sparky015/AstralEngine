@@ -7,7 +7,6 @@
 #include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RendererManager.h"
-#include "Renderer/RHI/Platform/OpenGL/Resources/OpenGLVertexBuffer.h"
 #include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
@@ -18,7 +17,6 @@ namespace Astral {
 
         switch (RendererCommands::GetAPI())
         {
-            case API::OpenGL: return CreateGraphicsRef<OpenGLVertexBuffer>(vertices, size, bufferLayout);
             case API::Vulkan: return device.CreateVertexBuffer(vertices, size, bufferLayout);
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
