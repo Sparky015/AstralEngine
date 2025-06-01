@@ -8,14 +8,19 @@
 
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/Texture.h"
+#include "Asset/Asset.h"
+#include "Asset/AssetRegistry.h"
 
 namespace Astral {
 
-    struct Material
+    struct Material : public Asset
     {
-        ShaderHandle VertexShader;
-        ShaderHandle PixelShader;
-        TextureHandle TextureUniform;
+        AssetID VertexShaderID;
+        AssetID PixelShaderID;
+        AssetID TextureID;
+
+        AssetType GetAssetType() override { return GetStaticAssetType(); };
+        static AssetType GetStaticAssetType() { return AssetType::Material; }
     };
 
 }
