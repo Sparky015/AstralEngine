@@ -13,7 +13,7 @@ class PoolAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int NUMBER_OF_BLOCKS = 10;
-    Core::PoolAllocator testAllocator{1024, NUMBER_OF_BLOCKS};
+    Astral::PoolAllocator testAllocator{1024, NUMBER_OF_BLOCKS};
 };
 
 
@@ -163,10 +163,10 @@ TEST_F(PoolAllocatorTest, Free_OrderDoesNotMatter)
 
 TEST_F(PoolAllocatorTest, MoveConstructorTest)
 {
-    Core::PoolAllocator original(64, 4);
+    Astral::PoolAllocator original(64, 4);
     [[maybe_unused]] void* ptr = original.Allocate();
 
-    Core::PoolAllocator moved(std::move(original));
+    Astral::PoolAllocator moved(std::move(original));
 
     EXPECT_EQ(original.GetNumberOfBlocks(), moved.GetNumberOfBlocks());
     EXPECT_EQ(original.GetIndividualBlockSize(), moved.GetIndividualBlockSize());
@@ -176,8 +176,8 @@ TEST_F(PoolAllocatorTest, MoveConstructorTest)
 
 TEST_F(PoolAllocatorTest, MoveAssignmentTest)
 {
-    Core::PoolAllocator allocator1(64, 4);
-    Core::PoolAllocator allocator2(128, 2);
+    Astral::PoolAllocator allocator1(64, 4);
+    Astral::PoolAllocator allocator2(128, 2);
 
     [[maybe_unused]] void* lhsPtr = allocator1.Allocate();
 

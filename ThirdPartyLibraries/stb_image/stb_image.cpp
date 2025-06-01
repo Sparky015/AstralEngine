@@ -4,8 +4,8 @@
 
 #include "Debug/MemoryTracking/MallocFreeOverrides.h"
 
-#define STBI_MALLOC(size) Astral::TrackingMalloc(size, Core::ASSETS)
-#define STBI_REALLOC(ptr, size) Astral::TrackingRealloc(ptr, size, Core::ASSETS)
+#define STBI_MALLOC(size) Astral::TrackingMalloc(size, Astral::ASSETS)
+#define STBI_REALLOC(ptr, size) Astral::TrackingRealloc(ptr, size, Astral::ASSETS)
 #define STBI_FREE(ptr) Astral::TrackingFree(ptr)
 #define STB_IMAGE_IMPLEMENTATION
 
