@@ -4,6 +4,10 @@
 
 #include "InputState.h"
 
+#include "Debug/Utilities/Asserts.h"
+#include "Debug/Utilities/Error.h"
+#include "Debug/Utilities/Loggers.h"
+
 namespace Astral {
 
     std::array<KeyState, InputState::NUMBER_OF_KEYS> InputState::m_KeyState = {KeyState()};

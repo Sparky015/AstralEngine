@@ -2,8 +2,10 @@
 // Created by Andrew Fagan on 12/6/24.
 //
 
-#include "GLFW/glfw3.h"
 #include "Keycodes.h"
+#include "Debug/Utilities/Error.h"
+
+#include "GLFW/glfw3.h"
 
 namespace Input {
 
