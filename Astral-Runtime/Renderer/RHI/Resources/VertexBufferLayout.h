@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include "Core/FixedIntegerTypes.h"
+
 #include <vector>
 #include <string>
-#include "Core/CoreMacroDefinitions.h"
 
 namespace Astral {
 

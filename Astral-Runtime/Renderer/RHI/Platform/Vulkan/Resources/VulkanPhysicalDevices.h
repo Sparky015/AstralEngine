@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include "Core/FixedIntegerTypes.h"
+
 #include <vector>
 #include <vulkan/vulkan.h>
-
-#include "Core/CoreMacroDefinitions.h"
 
 namespace Astral {
 

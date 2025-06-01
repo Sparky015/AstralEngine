@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "RenderTarget.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 

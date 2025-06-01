@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Renderer/RHI/Resources/Device.h"
 #include "VulkanPhysicalDevices.h"
 

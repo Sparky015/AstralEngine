@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CommandBuffer.h"
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {

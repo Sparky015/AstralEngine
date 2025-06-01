@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 
 #include <string>
 #include <filesystem>
