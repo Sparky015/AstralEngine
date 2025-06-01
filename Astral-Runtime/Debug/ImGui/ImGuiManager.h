@@ -45,7 +45,7 @@ namespace Debug{
         bool m_ShowDebugMenu{true};
         bool m_ShowViewportDockSpace{false};
 
-        Core::EventListener<KeyPressedEvent> m_KeyPressedListener;
+        Astral::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
 }

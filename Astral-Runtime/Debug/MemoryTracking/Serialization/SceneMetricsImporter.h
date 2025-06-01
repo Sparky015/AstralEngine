@@ -13,7 +13,7 @@
 #include <fstream>
 #include <string_view>
 
-namespace Core {
+namespace Astral {
 
     class SceneMetricsImporter
     {

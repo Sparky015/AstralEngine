@@ -13,7 +13,7 @@
 #include "Debug/MemoryTracking/MemoryMetrics.h"
 
 
-namespace Core {
+namespace Astral {
 
     class SceneMetricsStorage
     {

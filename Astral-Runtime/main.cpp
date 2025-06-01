@@ -9,7 +9,7 @@ int main()
 
 
     {
-        Core::MemoryTracker::Get().Init();
+        Astral::MemoryTracker::Get().Init();
         Astral::Engine engine = Astral::Engine();
         Debug::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
         engine.Run();

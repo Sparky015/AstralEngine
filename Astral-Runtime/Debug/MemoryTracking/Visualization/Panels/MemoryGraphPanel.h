@@ -10,7 +10,7 @@
 #include "GraphSelectorPanel.h"
 #include "imgui.h"
 
-namespace Core {
+namespace Astral {
 
     enum class MemoryMetricsDataScope : uint8
     {

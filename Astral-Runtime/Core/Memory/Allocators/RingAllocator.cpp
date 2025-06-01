@@ -6,7 +6,7 @@
 
 #include "RingAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     RingAllocator::RingAllocator(size_t memoryBlockSize) :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),

@@ -6,7 +6,7 @@
 
 #include "Clock.h"
 
-namespace Core {
+namespace Astral {
 
     Clock::Clock() : m_InitialTimePoint(std::chrono::high_resolution_clock::now()) {}
 

@@ -12,7 +12,7 @@
 #include <new>
 
 
-namespace Core {
+namespace Astral {
 
     /**@brief STL compliant version of LinearAllocator. It is a heap-based linear allocator.
      *        Deallocate method does nothing. Reset method deallocates the whole memory block.
@@ -25,7 +25,7 @@ namespace Core {
     public:
 
         explicit STLLinearAllocator(size_t memoryBlockSize) :
-            m_LinearAllocator(std::make_shared<Core::LinearAllocator>(memoryBlockSize))
+            m_LinearAllocator(std::make_shared<Astral::LinearAllocator>(memoryBlockSize))
         {}
 
         ~STLLinearAllocator() = default;
@@ -133,7 +133,7 @@ namespace Core {
         template <typename U>
         friend class STLLinearAllocator;
 
-        std::shared_ptr<Core::LinearAllocator> m_LinearAllocator;
+        std::shared_ptr<Astral::LinearAllocator> m_LinearAllocator;
     };
 
 }

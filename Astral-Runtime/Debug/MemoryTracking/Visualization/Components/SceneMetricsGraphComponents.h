@@ -8,7 +8,7 @@
 
 #include "Debug/MemoryTracking/Serialization/SceneMetricsStorage.h"
 
-namespace Core {
+namespace Astral {
 
 
     /**@brief  */

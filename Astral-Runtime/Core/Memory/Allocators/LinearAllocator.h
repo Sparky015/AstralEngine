@@ -7,7 +7,7 @@
 #pragma once
 
 #include "AllocatorUtils.h"
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Asserts.h"
 #include <cstddef>
 #include <cstring>
@@ -15,7 +15,7 @@
 #include <new>
 
 
-namespace Core {
+namespace Astral {
 
     /**@brief A heap-based linear allocator. Deallocate method does nothing. Reset method deallocates the whole memory block.
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.

@@ -8,7 +8,7 @@
 
 #include <chrono>
 
-namespace Core {
+namespace Astral {
 
     /**@class DeltaTime
      * @brief Stores the delta time of each frame. Needs to be updated every frame. */

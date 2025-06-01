@@ -8,7 +8,7 @@
 #include "Debug/Utilities/Asserts.h"
 #include "ImPlot/implot.h"
 
-namespace Core {
+namespace Astral {
 
     struct GraphExtrema
     {

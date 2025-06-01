@@ -6,7 +6,7 @@
 
 #include "AllocatorUtils.h"
 
-namespace Core::AllocatorUtils {
+namespace Astral::AllocatorUtils {
 
     bool ResizeMemoryBlock(void* memoryBlockPtr, size_t memoryBlockSize, void*& outNewMemoryBufferPointer, size_t& newMemoryBufferSize)
     {

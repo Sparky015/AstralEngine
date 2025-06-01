@@ -6,7 +6,7 @@
 
 #include "DoubleBufferedAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     DoubleBufferedAllocator::DoubleBufferedAllocator(size_t memoryBlockSize) :
             m_Buffers{FrameAllocator(memoryBlockSize), FrameAllocator(memoryBlockSize)},

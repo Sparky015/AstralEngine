@@ -8,7 +8,7 @@
 
 
 #include "AllocatorUtils.h"
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Asserts.h"
 #include <cstddef>
 #include <cstring>
@@ -16,7 +16,7 @@
 #include <new>
 
 
-namespace Core {
+namespace Astral {
 
     /**@brief This is an allocator that allows for a continuous stream of allocations. It is basically a buffer that
      *        can be allocated to store temporary data.

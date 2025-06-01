@@ -21,7 +21,7 @@ namespace Astral {
             TRACE("Initializing Editor")
         }
 
-        void Update(const Core::DeltaTime& deltaTime) override
+        void Update(const Astral::DeltaTime& deltaTime) override
         {
 
         }

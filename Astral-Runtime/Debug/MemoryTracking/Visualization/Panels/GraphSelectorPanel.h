@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 
-namespace Core {
+namespace Astral {
 
     enum class MemoryGraphSelection : uint8
     {

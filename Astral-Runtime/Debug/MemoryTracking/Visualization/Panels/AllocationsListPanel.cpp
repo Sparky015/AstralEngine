@@ -8,7 +8,7 @@
 
 #include "imgui.h"
 
-namespace Core {
+namespace Astral {
 
     static const char* AllocationDataArrayGetter(void* data, int idx)
     {

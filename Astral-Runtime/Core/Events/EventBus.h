@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
+
 #include <algorithm>
 #include <functional>
 
-namespace Core {
+namespace Astral {
 
     /** @brief Holds function callbacks for when an event needs to be propagated. */
     template<typename T>

@@ -5,9 +5,9 @@
 */
 
 #pragma once
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 
-namespace Core {
+namespace Astral {
 
     /** @brief Allocates a memory block which has the given alignment
      *  @param size The size of the memory block to allocate

@@ -53,48 +53,48 @@ namespace Debug {
 
     void GlobalMemoryUsage()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
         ImGui::Text("Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetTotalMemoryUsage()).data());
     }
 
 
     void PeakMemoryUsage()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
         ImGui::Text("Peak Memory Usage: %s", MemoryUnitLabelHelper(memoryMetrics.GetPeakMemoryUsage()).data());
     }
 
 
     void GlobalTotalAllocationsMade()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
         ImGui::Text("Total Allocations Made: %zu", memoryMetrics.GetTotalAllocations());
     }
 
 
     void GlobalActiveAllocations()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
         ImGui::Text("Active Allocations: %zu", memoryMetrics.GetTotalActiveAllocations());
     }
 
 
     void AllocationsInCurrentFrame()
     {
-        const Core::FrameAllocationData frameAllocationData = Core::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
+        const Astral::FrameAllocationData frameAllocationData = Astral::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
         ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
     }
 
 
     void MemoryUsageByAllocator()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Memory Usage by Allocator"))
         {
             for (auto [allocatorType, size] : memoryMetrics.GetMemoryUsageByAllocatorIterable())
             {
-                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+                ImGui::Text("%s: %s", Astral::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
             }
             ImGui::TreePop();
         }
@@ -103,13 +103,13 @@ namespace Debug {
 
     void PeakMemoryUsageByAllocator()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Peak Memory Usage by Allocator"))
         {
             for (auto [allocatorType, size] : memoryMetrics.GetPeakMemoryUsageByAllocatorIterable())
             {
-                ImGui::Text("%s: %s", Core::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
+                ImGui::Text("%s: %s", Astral::AllocatorTypeToString(allocatorType), MemoryUnitLabelHelper(size).data());
             }
             ImGui::TreePop();
         }
@@ -118,13 +118,13 @@ namespace Debug {
 
     void TotalAllocationsMadeByAllocator()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Total Allocations Made by Allocator"))
         {
             for (auto [allocatorType, count] : memoryMetrics.GetTotalAllocationsByAllocatorIterable())
             {
-                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
+                ImGui::Text("%s: %zu", Astral::AllocatorTypeToString(allocatorType), count);
             }
             ImGui::TreePop();
         }
@@ -133,13 +133,13 @@ namespace Debug {
 
     void ActiveAllocationsByAllocator()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Alive Allocations by Allocator"))
         {
             for (auto [allocatorType, count] : memoryMetrics.GetActiveAllocationsByAllocatorIterable())
             {
-                ImGui::Text("%s: %zu", Core::AllocatorTypeToString(allocatorType), count);
+                ImGui::Text("%s: %zu", Astral::AllocatorTypeToString(allocatorType), count);
             }
             ImGui::TreePop();
         }
@@ -148,13 +148,13 @@ namespace Debug {
 
     void MemoryUsageByRegion()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Memory Usage by Region"))
         {
             for (auto [region, size] : memoryMetrics.GetMemoryUsageByRegionIterable())
             {
-                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+                ImGui::Text("%s: %s", Astral::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
             }
             ImGui::TreePop();
         }
@@ -163,13 +163,13 @@ namespace Debug {
 
     void PeakMemoryUsageByRegion()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Peak Memory Usage by Region"))
         {
             for (auto [region, size] : memoryMetrics.GetPeakMemoryUsageByRegionIterable())
             {
-                ImGui::Text("%s: %s", Core::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
+                ImGui::Text("%s: %s", Astral::MemoryRegionToString(region), MemoryUnitLabelHelper(size).data());
             }
             ImGui::TreePop();
         }
@@ -178,13 +178,13 @@ namespace Debug {
 
     void TotalAllocationsMadeByRegion()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Total Allocations Made by Region"))
         {
             for (auto [region, count] : memoryMetrics.GetTotalAllocationsByRegionIterable())
             {
-                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
+                ImGui::Text("%s: %zu", Astral::MemoryRegionToString(region), count);
             }
             ImGui::TreePop();
         }
@@ -193,13 +193,13 @@ namespace Debug {
 
     void ActiveAllocationsByRegion()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Alive Allocations by Region"))
         {
             for (auto [region, count] : memoryMetrics.GetActiveAllocationsByRegionIterable())
             {
-                ImGui::Text("%s: %zu", Core::MemoryRegionToString(region), count);
+                ImGui::Text("%s: %zu", Astral::MemoryRegionToString(region), count);
             }
             ImGui::TreePop();
         }
@@ -208,7 +208,7 @@ namespace Debug {
 
     void MemoryUsageByThread()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Memory Usage by Thread"))
         {
@@ -232,7 +232,7 @@ namespace Debug {
 
     void PeakMemoryUsageByThread()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Peak Memory Usage by Thread"))
         {
@@ -256,7 +256,7 @@ namespace Debug {
 
     void TotalAllocationsMadeByThread()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Total Allocations Made by Thread"))
         {
@@ -279,7 +279,7 @@ namespace Debug {
 
     void ActiveAllocationsByThread()
     {
-        const Core::MemoryMetrics& memoryMetrics = Core::MemoryTracker::Get().GetMemoryMetrics();
+        const Astral::MemoryMetrics& memoryMetrics = Astral::MemoryTracker::Get().GetMemoryMetrics();
 
         if (ImGui::TreeNode("Alive Allocations by Thread"))
         {
@@ -303,7 +303,7 @@ namespace Debug {
 
     void ManageMemoryProfilingScene()
     {
-        Core::MemoryTracker& tracker = Core::MemoryTracker::Get();
+        Astral::MemoryTracker& tracker = Astral::MemoryTracker::Get();
         bool isSceneActive = tracker.IsSceneActive();
 
         ImGui::Checkbox("Enable Memory Profiling Scene", &isSceneActive);

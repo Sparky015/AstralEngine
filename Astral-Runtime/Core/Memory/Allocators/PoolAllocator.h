@@ -10,7 +10,7 @@
 #include "Debug/Utilities/Asserts.h"
 #include <cstring>
 
-namespace Core {
+namespace Astral {
 
     /**@brief Allocator that gives memory out in fixed size blocks.
      * @thread_safety This class is NOT thread safe.

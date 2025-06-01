@@ -11,7 +11,7 @@ class StackBasedLinearAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::StackBasedLinearAllocator<DEFAULT_ALLOCATION_SIZE> testAllocator;
+    Astral::StackBasedLinearAllocator<DEFAULT_ALLOCATION_SIZE> testAllocator;
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -42,7 +42,7 @@ TEST_F(StackBasedLinearAllocatorTest, allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2056>();
+    Astral::StackBasedLinearAllocator testAllocator = Astral::StackBasedLinearAllocator<2056>();
     EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
     EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
     EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
@@ -51,7 +51,7 @@ TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2200>();
+    Astral::StackBasedLinearAllocator testAllocator = Astral::StackBasedLinearAllocator<2200>();
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
@@ -64,7 +64,7 @@ TEST_F(StackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAlloca
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(StackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::StackBasedLinearAllocator testAllocator = Core::StackBasedLinearAllocator<2200>();
+    Astral::StackBasedLinearAllocator testAllocator = Astral::StackBasedLinearAllocator<2200>();
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
@@ -86,7 +86,7 @@ TEST_F(StackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(StackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::StackBasedLinearAllocator<2056> testAllocator;
+    Astral::StackBasedLinearAllocator<2056> testAllocator;
 
     testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 );
@@ -108,7 +108,7 @@ TEST_F(StackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOf
 TEST_F(StackBasedLinearAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackBasedLinearAllocator<1024> alignedAllocator;
+    Astral::StackBasedLinearAllocator<1024> alignedAllocator;
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(1, alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -118,7 +118,7 @@ TEST_F(StackBasedLinearAllocatorTest, allocate_RespectsTypeAlignment)
 TEST_F(StackBasedLinearAllocatorTest, allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackBasedLinearAllocator<1024> alignedAllocator;
+    Astral::StackBasedLinearAllocator<1024> alignedAllocator;
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(sizeof(AlignedStruct), alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % alignof(AlignedStruct), 0);
@@ -138,7 +138,7 @@ TEST_F(StackBasedLinearAllocatorTest, MoveConstructor_TransfersOwnership)
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
 
-    Core::StackBasedLinearAllocator<2056> testAllocator2 = Core::StackBasedLinearAllocator<2056>(std::move(testAllocator));
+    Astral::StackBasedLinearAllocator<2056> testAllocator2 = Astral::StackBasedLinearAllocator<2056>(std::move(testAllocator));
 
     EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
     EXPECT_EQ(testAllocator2.GetUsedBlockSize(), alloc1UsedSize);
@@ -155,7 +155,7 @@ TEST_F(StackBasedLinearAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
 
-    Core::StackBasedLinearAllocator<2056> testAllocator2 = Core::StackBasedLinearAllocator<2056>();
+    Astral::StackBasedLinearAllocator<2056> testAllocator2 = Astral::StackBasedLinearAllocator<2056>();
     testAllocator2 = std::move(testAllocator);
 
     EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);

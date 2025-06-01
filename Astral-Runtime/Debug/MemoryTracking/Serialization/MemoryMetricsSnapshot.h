@@ -8,7 +8,7 @@
 
 #include "Debug/MemoryTracking/MemoryMetrics.h"
 
-namespace Core {
+namespace Astral {
 
     struct MemoryMetricsSnapshot
     {

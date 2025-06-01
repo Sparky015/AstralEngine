@@ -13,7 +13,7 @@ class FrameAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::FrameAllocator testAllocator = Core::FrameAllocator(DEFAULT_ALLOCATION_SIZE);
+    Astral::FrameAllocator testAllocator = Astral::FrameAllocator(DEFAULT_ALLOCATION_SIZE);
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -45,7 +45,7 @@ TEST_F(FrameAllocatorTest, Allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(FrameAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::FrameAllocator testAllocator = Core::FrameAllocator(2056);
+    Astral::FrameAllocator testAllocator = Astral::FrameAllocator(2056);
     EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
     EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
     EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
@@ -54,7 +54,7 @@ TEST_F(FrameAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(FrameAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::FrameAllocator testAllocator = Core::FrameAllocator(2200);
+    Astral::FrameAllocator testAllocator = Astral::FrameAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
@@ -67,7 +67,7 @@ TEST_F(FrameAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(FrameAllocatorTest, Reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::FrameAllocator testAllocator = Core::FrameAllocator(2200);
+    Astral::FrameAllocator testAllocator = Astral::FrameAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
@@ -90,7 +90,7 @@ TEST_F(FrameAllocatorTest, Reset_CorrectlyResetsAllocatorMemoryBlock)
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(FrameAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::FrameAllocator testAllocator = Core::FrameAllocator(2056);
+    Astral::FrameAllocator testAllocator = Astral::FrameAllocator(2056);
 
     testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5); // allocation size + 1 for header
@@ -112,7 +112,7 @@ TEST_F(FrameAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurren
 TEST_F(FrameAllocatorTest, Allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::FrameAllocator alignedAllocator = Core::FrameAllocator(128);
+    Astral::FrameAllocator alignedAllocator = Astral::FrameAllocator(128);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(2, alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -124,7 +124,7 @@ TEST_F(FrameAllocatorTest, Allocate_RespectsTypeAlignment)
 TEST_F(FrameAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::FrameAllocator alignedAllocator = Core::FrameAllocator(500);
+    Astral::FrameAllocator alignedAllocator = Astral::FrameAllocator(500);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(sizeof(AlignedStruct), alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % alignof(AlignedStruct), 0);
@@ -152,14 +152,14 @@ TEST_F(FrameAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 /**@brief Tests if the rollback marker moves back to the correct spot */
 TEST_F(FrameAllocatorTest, RollbackToMarker_RollsBackToTheCorrectSpot)
 {
-    Core::FrameAllocator allocator = Core::FrameAllocator(500);
-    Core::FrameAllocator::Marker bottomMarker = allocator.GetMarker();
+    Astral::FrameAllocator allocator = Astral::FrameAllocator(500);
+    Astral::FrameAllocator::Marker bottomMarker = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 5, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
 
     int size1 = allocator.GetUsedBlockSize();
-    Core::FrameAllocator::Marker marker1 = allocator.GetMarker();
+    Astral::FrameAllocator::Marker marker1 = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 7, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
@@ -184,7 +184,7 @@ TEST_F(FrameAllocatorTest, MoveConstructor_TransfersOwnershipCorrectly)
     size_t originalCapacity = testAllocator.GetCapacity();
 
     // Move construct
-    Core::FrameAllocator movedAllocator(std::move(testAllocator));
+    Astral::FrameAllocator movedAllocator(std::move(testAllocator));
 
     // Verify moved allocator has correct state
     EXPECT_EQ(movedAllocator.GetUsedBlockSize(), originalUsedSize);
@@ -209,7 +209,7 @@ TEST_F(FrameAllocatorTest, MoveAssignment_TransfersOwnershipCorrectly)
     size_t originalCapacity = testAllocator.GetCapacity();
 
     // Create second allocator and move assign
-    Core::FrameAllocator secondAllocator(1024);
+    Astral::FrameAllocator secondAllocator(1024);
     secondAllocator = std::move(testAllocator);
 
     // Verify moved allocator has correct state

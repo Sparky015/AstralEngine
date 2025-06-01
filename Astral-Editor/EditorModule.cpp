@@ -32,7 +32,7 @@ namespace Astral {
             m_Editor.Init();
         }
 
-        void Update(const Core::DeltaTime& deltaTime) override
+        void Update(const Astral::DeltaTime& deltaTime) override
         {
 
         }

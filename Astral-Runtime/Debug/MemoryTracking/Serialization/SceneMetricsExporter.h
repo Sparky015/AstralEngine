@@ -16,7 +16,7 @@
 #include "Core/Time/Clock.h"
 
 
-namespace Core {
+namespace Astral {
 
     /**@brief Exports snapshots of the memory metrics to a file */
     class SceneMetricsExporter

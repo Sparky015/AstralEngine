@@ -10,7 +10,7 @@
 #include "Core/Memory/Allocators/StackAllocator.h"
 #include <memory>
 
-namespace Core {
+namespace Astral {
 
     /**@brief An STL compliant version of the StackAllocator. It is a stack-like allocator that allocates memory in a
      *        last in first out order. This means that the user can deallocate only the most recent unfreed memory allocation.
@@ -28,7 +28,7 @@ namespace Core {
         using is_always_equal = std::false_type; // This needs to be false for stateful allocators!
 
         explicit STLStackAllocator(size_type memoryBlock) :
-                m_StackAllocator(std::make_shared<Core::StackAllocator>(memoryBlock))
+                m_StackAllocator(std::make_shared<Astral::StackAllocator>(memoryBlock))
         {}
 
         ~STLStackAllocator() = default;
@@ -143,7 +143,7 @@ namespace Core {
         template <typename U>
         friend class STLStackAllocator;
 
-        std::shared_ptr<Core::StackAllocator> m_StackAllocator;
+        std::shared_ptr<Astral::StackAllocator> m_StackAllocator;
     };
 
 }

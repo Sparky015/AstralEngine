@@ -8,6 +8,7 @@
 
 #include "Core/Time/DeltaTime.h"
 #include "Core/SmartPointers.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
 
 namespace Application {
 
@@ -17,11 +18,11 @@ namespace Application {
         virtual ~ApplicationModule() = default;
 
         virtual void Init() {};
-        virtual void Update(const Core::DeltaTime& deltaTime) {};
+        virtual void Update(const Astral::DeltaTime& deltaTime) {};
         virtual void Shutdown() {};
     };
 
     extern Astral::ScopedPtr<Application::ApplicationModule> CreateApplicationModule();
 
-    #define IMPLEMENT_APPLICATION_MODULE(DerivedApplicationModule) Astral::ScopedPtr<Application::ApplicationModule> Application::CreateApplicationModule() { return Astral::CreateScopedPtr<DerivedApplicationModule>(); }
+    #define IMPLEMENT_APPLICATION_MODULE(DerivedApplicationModule) Astral::ScopedPtr<Application::ApplicationModule> Application::CreateApplicationModule() { PROFILE_SCOPE("Application::CreateApplicationModule"); return Astral::CreateScopedPtr<DerivedApplicationModule>(); }
 }

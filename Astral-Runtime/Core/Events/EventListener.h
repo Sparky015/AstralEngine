@@ -6,7 +6,7 @@
 
 #include "EventBus.h"
 
-namespace Core {
+namespace Astral {
 
     /** Manages the listener callback with the event bus. */
     template<typename T>

@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Error.h"
 #include "msgpack.hpp"
 #include <thread>
 
-namespace Core {
+namespace Astral {
 
     enum MemoryRegion : uint8
     {
@@ -118,20 +118,20 @@ namespace msgpack {
 
             // Serialization support for Core::MemoryRegion
             template<>
-            struct convert<Core::MemoryRegion>
+            struct convert<Astral::MemoryRegion>
             {
-                msgpack::object const& operator()(msgpack::object const& o, Core::MemoryRegion& v) const
+                msgpack::object const& operator()(msgpack::object const& o, Astral::MemoryRegion& v) const
                 {
-                    v = static_cast<Core::MemoryRegion>(o.as<uint8_t>());
+                    v = static_cast<Astral::MemoryRegion>(o.as<uint8_t>());
                     return o;
                 }
             };
 
             template<>
-            struct pack<Core::MemoryRegion>
+            struct pack<Astral::MemoryRegion>
             {
                 template <typename Stream>
-                packer<Stream>& operator()(msgpack::packer<Stream>& o, Core::MemoryRegion const& v) const
+                packer<Stream>& operator()(msgpack::packer<Stream>& o, Astral::MemoryRegion const& v) const
                 {
                     o.pack(static_cast<uint8_t>(v));
                     return o;
@@ -140,20 +140,20 @@ namespace msgpack {
 
             // Serialization support for Core::AllocatorType
             template<>
-            struct convert<Core::AllocatorType>
+            struct convert<Astral::AllocatorType>
             {
-                msgpack::object const& operator()(msgpack::object const& o, Core::AllocatorType& v) const
+                msgpack::object const& operator()(msgpack::object const& o, Astral::AllocatorType& v) const
                 {
-                    v = static_cast<Core::AllocatorType>(o.as<uint8_t>());
+                    v = static_cast<Astral::AllocatorType>(o.as<uint8_t>());
                     return o;
                 }
             };
 
             template<>
-            struct pack<Core::AllocatorType>
+            struct pack<Astral::AllocatorType>
             {
                 template <typename Stream>
-                packer<Stream>& operator()(msgpack::packer<Stream>& o, Core::AllocatorType const& v) const
+                packer<Stream>& operator()(msgpack::packer<Stream>& o, Astral::AllocatorType const& v) const
                         {
                     o.pack(static_cast<uint8_t>(v));
                     return o;

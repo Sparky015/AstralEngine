@@ -8,7 +8,7 @@
 
 #include <cstdlib>
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Core/Memory/Allocators/AlignedAllocator.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
@@ -29,7 +29,7 @@
 #endif
 
 
-namespace Core {
+namespace Astral {
 
     /**@enum ASANRegionPermission
      * @brief Contains the access permissions that can be assigned to a region. */
@@ -46,7 +46,7 @@ namespace Core {
      *   > AllocatorUtils::SetMemoryRegionAccess(alignedAddress, size, ASANRegionPermission::AccessGranted); */
 }
 
-namespace Core::AllocatorUtils {
+namespace Astral::AllocatorUtils {
 
     /** @brief Uses ASAN to set or restrict access to a memory region. This will only set region access when in debug builds.
      *  @param startAddress The address to the start of the memory region.

@@ -17,7 +17,7 @@
 #include "Debug/MemoryTracking/Visualization/Panels/GraphSelectorPanel.h"
 #include "Debug/MemoryTracking/Visualization/Panels/MemoryGraphPanel.h"
 
-namespace Core {
+namespace Astral {
 
     MemoryDebugWindow::MemoryDebugWindow() :
         m_ImGuiRenderListener([this](RenderImGuiEvent e){ OnRenderImGuiEvent(e); }),

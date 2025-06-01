@@ -6,7 +6,7 @@
 
 #include "FrameAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     FrameAllocator::FrameAllocator(size_t memoryBlockSize)  :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),

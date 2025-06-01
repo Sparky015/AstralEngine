@@ -4,7 +4,7 @@
 
 #include "MemoryMetrics.h"
 
-namespace Core {
+namespace Astral {
 
     MemoryMetrics::MemoryMetrics() :
         m_PeakMemoryUsage(0),

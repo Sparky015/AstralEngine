@@ -8,7 +8,7 @@
 #include <cstring>
 #include <memory>
 
-namespace Core {
+namespace Astral {
 
     /**@brief A generic object pool. Constructs many objects at once and lends them out. Objects are not reconstructed and
      *        will maintain the state when released back to the pool.

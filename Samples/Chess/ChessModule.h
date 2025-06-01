@@ -26,7 +26,7 @@ public:
     ~ChessModule() override = default;
 
     void Init() override;
-    void Update(const Core::DeltaTime& deltaTime) override;
+    void Update(const Astral::DeltaTime& deltaTime) override;
     void Shutdown() override;
 
     static ChessModule& Get() { return *ChessModule::m_Instance; }

@@ -65,10 +65,10 @@ namespace Astral {
 
         static std::array<KeyState, NUMBER_OF_KEYS> m_KeyState;
         static MouseCursorState m_MouseCursorState;
-        static Core::EventListener<KeyPressedEvent> m_KeyPressListener;
-        static Core::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
-        static Core::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;
-        static Core::EventListener<MouseMovedEvent> m_MouseMovedListener;
+        static Astral::EventListener<KeyPressedEvent> m_KeyPressListener;
+        static Astral::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
+        static Astral::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;
+        static Astral::EventListener<MouseMovedEvent> m_MouseMovedListener;
 
     };
 

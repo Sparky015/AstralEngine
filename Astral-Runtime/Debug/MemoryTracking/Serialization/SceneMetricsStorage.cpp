@@ -5,7 +5,7 @@
 */
 #include "SceneMetricsStorage.h"
 
-namespace Core {
+namespace Astral {
 
     SceneMetricsStorage::SceneMetricsStorage() :
         m_NumberOfSnapshotsStored(0),

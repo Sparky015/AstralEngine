@@ -11,7 +11,7 @@ class StackAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::StackAllocator testAllocator = Core::StackAllocator(DEFAULT_ALLOCATION_SIZE);
+    Astral::StackAllocator testAllocator = Astral::StackAllocator(DEFAULT_ALLOCATION_SIZE);
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -43,7 +43,7 @@ TEST_F(StackAllocatorTest, Allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::StackAllocator testAllocator = Core::StackAllocator(2056);
+    Astral::StackAllocator testAllocator = Astral::StackAllocator(2056);
     EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
     EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
     EXPECT_NE(testAllocator.Allocate(2055, alignof(char)), nullptr); // Minus one of mem block size for allocation header
@@ -52,7 +52,7 @@ TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::StackAllocator testAllocator = Core::StackAllocator(2200);
+    Astral::StackAllocator testAllocator = Astral::StackAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
@@ -65,7 +65,7 @@ TEST_F(StackAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(StackAllocatorTest, Reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::StackAllocator testAllocator = Core::StackAllocator(2200);
+    Astral::StackAllocator testAllocator = Astral::StackAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
@@ -115,7 +115,7 @@ TEST_F(StackAllocatorTest, Deallocate_ReleasesPreviousAllocationMemory)
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(StackAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::StackAllocator testAllocator = Core::StackAllocator(2056);
+    Astral::StackAllocator testAllocator = Astral::StackAllocator(2056);
 
     testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5 + 1); // allocation size + 1 for header
@@ -137,7 +137,7 @@ TEST_F(StackAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurren
 TEST_F(StackAllocatorTest, Allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackAllocator alignedAllocator = Core::StackAllocator(128);
+    Astral::StackAllocator alignedAllocator = Astral::StackAllocator(128);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(2, alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -149,7 +149,7 @@ TEST_F(StackAllocatorTest, Allocate_RespectsTypeAlignment)
 TEST_F(StackAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::StackAllocator alignedAllocator = Core::StackAllocator(500);
+    Astral::StackAllocator alignedAllocator = Astral::StackAllocator(500);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(sizeof(AlignedStruct), alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % alignof(AlignedStruct), 0);
@@ -177,15 +177,15 @@ TEST_F(StackAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 /**@brief Tests if the rollback marker moves back to the correct spot */
 TEST_F(StackAllocatorTest, RollbackToMarker_RollsBackToTheCorrectSpot)
 {
-    Core::StackAllocator allocator = Core::StackAllocator(500);
+    Astral::StackAllocator allocator = Astral::StackAllocator(500);
 
-    Core::StackAllocator::Marker bottomMarker = allocator.GetMarker();
+    Astral::StackAllocator::Marker bottomMarker = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 5, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
 
     int size1 = allocator.GetUsedBlockSize();
-    Core::StackAllocator::Marker marker1 = allocator.GetMarker();
+    Astral::StackAllocator::Marker marker1 = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 7, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
@@ -207,8 +207,8 @@ TEST_F(StackAllocatorTest, MoveConstructor_TransfersOwnership)
 
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
-    Core::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
-    Core::StackAllocator testAllocator2 = Core::StackAllocator(std::move(testAllocator));
+    Astral::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Astral::StackAllocator testAllocator2 = Astral::StackAllocator(std::move(testAllocator));
 
 
     EXPECT_EQ(testAllocator2.GetCapacity(), alloc1Capacity);
@@ -232,8 +232,8 @@ TEST_F(StackAllocatorTest, MoveAssignmentOperator_TransfersOwnership)
 
     size_t alloc1Capacity = testAllocator.GetCapacity();
     size_t alloc1UsedSize = testAllocator.GetUsedBlockSize();
-    Core::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
-    Core::StackAllocator testAllocator2 = Core::StackAllocator(12);
+    Astral::StackAllocator::Marker alloc1CurrentMarker = testAllocator.GetMarker();
+    Astral::StackAllocator testAllocator2 = Astral::StackAllocator(12);
 
     testAllocator2 = std::move(testAllocator);
 

@@ -10,7 +10,7 @@
 
 #include "MemoryTracker.h"
 
-namespace Core {
+namespace Astral {
 
     GlobalAllocationStorage::~GlobalAllocationStorage()
     {

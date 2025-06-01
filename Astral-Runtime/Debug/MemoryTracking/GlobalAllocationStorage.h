@@ -9,7 +9,7 @@
 #include "NoTrackingSTLAllocator.h"
 #include <unordered_map>
 
-namespace Core {
+namespace Astral {
 
     /**@class GlobalAllocationStorage
      * @brief Stores the size of memory blocks allocated to pointers */

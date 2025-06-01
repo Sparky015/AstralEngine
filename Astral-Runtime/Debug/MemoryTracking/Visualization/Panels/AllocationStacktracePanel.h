@@ -8,7 +8,7 @@
 
 #include "Debug/MemoryTracking/Serialization/SceneMetricsStorage.h"
 
-namespace Core {
+namespace Astral {
 
     void AllocationStackTracePanel(const SceneMetricsStorage& storage, size_t dataPointAddress);
 

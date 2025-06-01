@@ -9,7 +9,7 @@
 
 #include <memory>
 
-namespace Core {
+namespace Astral {
 
     void* AlignedAlloc(size_t size, uint8 alignment)
     {

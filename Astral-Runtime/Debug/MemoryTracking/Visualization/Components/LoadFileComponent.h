@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace Core {
+namespace Astral {
 
     /**@brief Displays a "Load File" button for loading memory profiles into a memory debug window */
     void LoadMemoryProfileButtonComponent();

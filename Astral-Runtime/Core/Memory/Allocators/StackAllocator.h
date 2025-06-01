@@ -8,11 +8,11 @@
 #pragma once
 
 #include "AllocatorUtils.h"
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Asserts.h"
 #include <memory>
 
-namespace Core {
+namespace Astral {
 
     /**@brief Stack-like allocator that allocates memory in a last in first out order. This means that the user can
      *        deallocate only the most recent unfreed memory allocation.

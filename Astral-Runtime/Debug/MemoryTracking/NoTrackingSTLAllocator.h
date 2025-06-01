@@ -8,7 +8,7 @@
 
 #include <memory>
 
-namespace Core {
+namespace Astral {
 
     /**@class NoTrackingSTLAllocator
      * @brief Allocator that bypasses allocation metrics tracking. Uses std::malloc and std::free.

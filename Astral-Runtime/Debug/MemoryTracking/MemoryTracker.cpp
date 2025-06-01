@@ -8,7 +8,7 @@
 
 #include "Debug/Utilities/Loggers.h"
 
-namespace Core {
+namespace Astral {
 
     void MemoryTracker::Init()
     {

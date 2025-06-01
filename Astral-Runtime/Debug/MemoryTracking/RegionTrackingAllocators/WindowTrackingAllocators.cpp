@@ -15,7 +15,7 @@ namespace Astral {
     {
         void* ptr = malloc(size);
         if (!ptr) [[unlikely]] { return nullptr; }
-        Core::MemoryTracker::Get().AddAllocation(ptr, size, Core::MemoryRegion::WINDOW, Core::AllocatorType::MALLOC);
+        Astral::MemoryTracker::Get().AddAllocation(ptr, size, Astral::MemoryRegion::WINDOW, Astral::AllocatorType::MALLOC);
         return ptr;
     }
 
@@ -23,14 +23,14 @@ namespace Astral {
     {
         void* newPtr = realloc(ptr, size);
         if (!newPtr) { return nullptr; }
-        Core::MemoryTracker::Get().RemoveAllocation(ptr);
-        Core::MemoryTracker::Get().AddAllocation(newPtr, size, Core::MemoryRegion::WINDOW, Core::AllocatorType::MALLOC);
+        Astral::MemoryTracker::Get().RemoveAllocation(ptr);
+        Astral::MemoryTracker::Get().AddAllocation(newPtr, size, Astral::MemoryRegion::WINDOW, Astral::AllocatorType::MALLOC);
         return newPtr;
     }
 
     void WindowTrackingFree(void* ptr, void* user)
     {
-        Core::MemoryTracker::Get().RemoveAllocation(ptr);
+        Astral::MemoryTracker::Get().RemoveAllocation(ptr);
         free(ptr);
     }
 

@@ -12,7 +12,7 @@ class DoubleBufferedAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(DEFAULT_ALLOCATION_SIZE);
+    Astral::DoubleBufferedAllocator testAllocator = Astral::DoubleBufferedAllocator(DEFAULT_ALLOCATION_SIZE);
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -44,7 +44,7 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2056);
+    Astral::DoubleBufferedAllocator testAllocator = Astral::DoubleBufferedAllocator(2056);
     EXPECT_EQ(testAllocator.Allocate(3000, alignof(char)), nullptr);
     EXPECT_EQ(testAllocator.Allocate(2057, alignof(char)), nullptr);
     EXPECT_NE(testAllocator.Allocate(2056, alignof(char)), nullptr);
@@ -53,7 +53,7 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveAllocationSize)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2200);
+    Astral::DoubleBufferedAllocator testAllocator = Astral::DoubleBufferedAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr);    // Total: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr);    // Total: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr);    // Total: 900
@@ -66,7 +66,7 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_ThrowsOnExcessiveCumulativeAllocati
 TEST_F(DoubleBufferedAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::DoubleBufferedAllocator alignedAllocator = Core::DoubleBufferedAllocator(500);
+    Astral::DoubleBufferedAllocator alignedAllocator = Astral::DoubleBufferedAllocator(500);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(sizeof(AlignedStruct), alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % alignof(AlignedStruct), 0);
@@ -94,7 +94,7 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_RespectsMultipleTypesAlignment)
 /**@brief Tests if the ClearCurrentBuffer method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(DoubleBufferedAllocatorTest, ClearCurrentBuffer_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2200);
+    Astral::DoubleBufferedAllocator testAllocator = Astral::DoubleBufferedAllocator(2200);
     EXPECT_NE(testAllocator.Allocate(300, alignof(char)), nullptr); // Total Allocation: 300
     EXPECT_NE(testAllocator.Allocate(400, alignof(char)), nullptr); // Total Allocation: 700
     EXPECT_NE(testAllocator.Allocate(200, alignof(char)), nullptr); // Total Allocation: 900
@@ -116,7 +116,7 @@ TEST_F(DoubleBufferedAllocatorTest, ClearCurrentBuffer_CorrectlyResetsAllocatorM
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(DoubleBufferedAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::DoubleBufferedAllocator testAllocator = Core::DoubleBufferedAllocator(2056);
+    Astral::DoubleBufferedAllocator testAllocator = Astral::DoubleBufferedAllocator(2056);
 
     testAllocator.Allocate(5, alignof(char));
     EXPECT_EQ(testAllocator.GetUsedBlockSize(), 5); // allocation size + 1 for header
@@ -138,7 +138,7 @@ TEST_F(DoubleBufferedAllocatorTest, GetUsedBlockSize_ReturnsTheCorrectAmountOfSp
 TEST_F(DoubleBufferedAllocatorTest, Allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::DoubleBufferedAllocator alignedAllocator = Core::DoubleBufferedAllocator(128);
+    Astral::DoubleBufferedAllocator alignedAllocator = Astral::DoubleBufferedAllocator(128);
 
     AlignedStruct* ptr = (AlignedStruct*) alignedAllocator.Allocate(2, alignof(AlignedStruct));
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -149,14 +149,14 @@ TEST_F(DoubleBufferedAllocatorTest, Allocate_RespectsTypeAlignment)
 /**@brief Tests if the rollback marker moves back to the correct spot */
 TEST_F(DoubleBufferedAllocatorTest, RollbackToMarker_RollsBackToTheCorrectSpot)
 {
-    Core::DoubleBufferedAllocator allocator = Core::DoubleBufferedAllocator(500);
-    Core::DoubleBufferedAllocator::Marker bottomMarker = allocator.GetMarker();
+    Astral::DoubleBufferedAllocator allocator = Astral::DoubleBufferedAllocator(500);
+    Astral::DoubleBufferedAllocator::Marker bottomMarker = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 5, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
 
     int size1 = allocator.GetUsedBlockSize();
-    Core::DoubleBufferedAllocator::Marker marker1 = allocator.GetMarker();
+    Astral::DoubleBufferedAllocator::Marker marker1 = allocator.GetMarker();
 
     allocator.Allocate(sizeof(int) * 7, alignof(int));
     allocator.Allocate(sizeof(char) * 3, alignof(char));
@@ -174,12 +174,12 @@ TEST_F(DoubleBufferedAllocatorTest, RollbackToMarker_RollsBackToTheCorrectSpot)
 /**@brief Tests if swap buffer method maintains the state of the swapped buffer */
 TEST_F(DoubleBufferedAllocatorTest, SwapBuffer_MaintainsBlockStateAfterSwap)
 {
-    Core::DoubleBufferedAllocator allocator = Core::DoubleBufferedAllocator(500);
+    Astral::DoubleBufferedAllocator allocator = Astral::DoubleBufferedAllocator(500);
 
     allocator.Allocate(sizeof(int) * 4, alignof(int));
     int* address = (int*)allocator.Allocate(sizeof(int) * 3, alignof(int));
     *address = 2958211;
-    Core::DoubleBufferedAllocator::Marker marker1 = allocator.GetMarker();
+    Astral::DoubleBufferedAllocator::Marker marker1 = allocator.GetMarker();
     int size1 = allocator.GetUsedBlockSize();
 
     allocator.SwapBuffers();
@@ -187,7 +187,7 @@ TEST_F(DoubleBufferedAllocatorTest, SwapBuffer_MaintainsBlockStateAfterSwap)
     allocator.Allocate(sizeof(char) * 3, alignof(char));
     int* address2 = (int*)allocator.Allocate(sizeof(int) * 3, alignof(int));
     *address2 = 2222931;
-    Core::DoubleBufferedAllocator::Marker marker2 = allocator.GetMarker();
+    Astral::DoubleBufferedAllocator::Marker marker2 = allocator.GetMarker();
     int size2 = allocator.GetUsedBlockSize();
 
     allocator.SwapBuffers();
@@ -215,7 +215,7 @@ TEST_F(DoubleBufferedAllocatorTest, MoveConstructor_TransfersOwnershipCorrectly)
     std::strcpy(buffer2Data, "Second Allocation");
 
     // Create second allocator and move assign
-    Core::DoubleBufferedAllocator secondAllocator(std::move(testAllocator));
+    Astral::DoubleBufferedAllocator secondAllocator(std::move(testAllocator));
 
     // Verify moved allocator has correct data
     EXPECT_EQ(secondAllocator.GetUsedBlockSize(), 128);
@@ -234,7 +234,7 @@ TEST_F(DoubleBufferedAllocatorTest, MoveAssignment_TransfersOwnershipCorrectly)
     std::strcpy(buffer2Data, "Second Allocation");
 
     // Create second allocator and move assign
-    Core::DoubleBufferedAllocator secondAllocator(1024);
+    Astral::DoubleBufferedAllocator secondAllocator(1024);
     secondAllocator = std::move(testAllocator);
 
     // Verify moved allocator has correct data

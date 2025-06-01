@@ -8,7 +8,7 @@
 
 #include <chrono>
 
-namespace Core {
+namespace Astral {
 
     /**@class Clock
      * @brief Provides a stopwatch for a way to measure how much time has passed between things or events. */

@@ -8,7 +8,7 @@
 
 #include "imgui.h"
 
-namespace Core {
+namespace Astral {
 
     size_t* GetSelectedDataPointAddress()
     {

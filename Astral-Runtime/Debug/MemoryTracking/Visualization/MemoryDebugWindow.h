@@ -13,7 +13,7 @@
 
 #include "Debug/ImGui/ImGuiEvents.h"
 
-namespace Core {
+namespace Astral {
 
     class MemoryDebugWindow
     {

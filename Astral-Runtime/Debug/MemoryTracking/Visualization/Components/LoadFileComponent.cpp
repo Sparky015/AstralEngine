@@ -15,7 +15,7 @@
 #include "Debug/MemoryTracking/Visualization/MemoryDebugWindow.h"
 #include "nfd.hpp"
 
-namespace Core {
+namespace Astral {
 
 
     /**@brief Pulls up a window for the user to select a file

@@ -12,7 +12,7 @@ class RingAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::RingAllocator testAllocator = Core::RingAllocator(DEFAULT_ALLOCATION_SIZE);
+    Astral::RingAllocator testAllocator = Astral::RingAllocator(DEFAULT_ALLOCATION_SIZE);
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space and maintains proper spacing */
@@ -122,7 +122,7 @@ TEST_F(RingAllocatorTest, MoveOperations_TransferOwnership)
     size_t originalCapacity = testAllocator.GetCapacity();
 
     // Move constructor
-    Core::RingAllocator moved(std::move(testAllocator));
+    Astral::RingAllocator moved(std::move(testAllocator));
     EXPECT_EQ(moved.GetCapacity(), originalCapacity);
 
     // Original should be invalidated

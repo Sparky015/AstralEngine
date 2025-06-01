@@ -11,7 +11,7 @@
 #include "Core/EngineLoopEvents.h"
 #include "msgpack.hpp"
 
-namespace Core {
+namespace Astral {
 
     /**@struct FrameAllocationData
      * @brief Stores memory usage data for a frame.
@@ -163,7 +163,7 @@ namespace Core {
         ThreadMap m_TotalAllocationsByThread;
 
         FrameAllocationData m_FrameAllocationData;
-        Core::EventListener<NewFrameEvent> m_NewFrameEventListener;
+        Astral::EventListener<NewFrameEvent> m_NewFrameEventListener;
 
     public:
         MSGPACK_DEFINE(m_PeakMemoryUsage, m_TotalMemoryUsage, m_TotalActiveAllocations, m_TotalAllocations,

@@ -12,7 +12,7 @@
 #include <new>
 
 
-namespace Core {
+namespace Astral {
 
     /**@brief STL compliant version of StackBasedLinearAllocator. It is a stack-based linear allocator. Max allocation size
      *        is 5.28 KB due to being on the stack. Deallocate method does nothing. Reset method deallocates
@@ -37,7 +37,7 @@ namespace Core {
 
 
         STLStackBasedLinearAllocator() :
-            m_StackBasedLinearAllocator(std::make_shared<Core::StackBasedLinearAllocator<MemoryBlockSize>>())
+            m_StackBasedLinearAllocator(std::make_shared<Astral::StackBasedLinearAllocator<MemoryBlockSize>>())
         {}
 
         explicit STLStackBasedLinearAllocator(size_type) noexcept : STLStackBasedLinearAllocator() {}
@@ -138,7 +138,7 @@ namespace Core {
         template <typename OtherElementType, size_t OtherMemoryBlockSize>
         friend class STLStackBasedLinearAllocator;
 
-        std::shared_ptr<Core::StackBasedLinearAllocator<MemoryBlockSize>> m_StackBasedLinearAllocator;
+        std::shared_ptr<Astral::StackBasedLinearAllocator<MemoryBlockSize>> m_StackBasedLinearAllocator;
 
     };
 

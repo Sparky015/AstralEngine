@@ -162,10 +162,10 @@ namespace Astral {
     }
 
 
-    Core::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Core::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
-    Core::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Core::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
-    Core::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Core::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
-    Core::EventListener<MouseMovedEvent> InputState::m_MouseMovedListener = Core::EventListener<MouseMovedEvent> {[](MouseMovedEvent mouseMovedEvent){InputState::OnMouseMoved(mouseMovedEvent);}};
+    Astral::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Astral::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
+    Astral::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Astral::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
+    Astral::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Astral::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
+    Astral::EventListener<MouseMovedEvent> InputState::m_MouseMovedListener = Astral::EventListener<MouseMovedEvent> {[](MouseMovedEvent mouseMovedEvent){InputState::OnMouseMoved(mouseMovedEvent);}};
 
 
     void InputState::OnKeyPress(KeyPressedEvent keyPressedEvent)

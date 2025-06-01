@@ -13,7 +13,7 @@
 
 #include <shared_mutex>
 
-namespace Core {
+namespace Astral {
 
     /**
      * @class MemoryTracker

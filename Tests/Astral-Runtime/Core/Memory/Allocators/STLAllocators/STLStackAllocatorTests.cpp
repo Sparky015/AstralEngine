@@ -11,7 +11,7 @@ class STLStackAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(DEFAULT_ALLOCATION_SIZE);
+    Astral::STLStackAllocator<char> testAllocator = Astral::STLStackAllocator<char>(DEFAULT_ALLOCATION_SIZE);
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -41,7 +41,7 @@ TEST_F(STLStackAllocatorTest, allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(STLStackAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(2056);
+    Astral::STLStackAllocator<char> testAllocator = Astral::STLStackAllocator<char>(2056);
     EXPECT_THROW(testAllocator.allocate(3000), std::bad_alloc);
     EXPECT_THROW(testAllocator.allocate(2057), std::bad_alloc);
     EXPECT_NO_THROW(testAllocator.allocate(2055)); // 2056 minus one to take into account of the allocation header
@@ -50,7 +50,7 @@ TEST_F(STLStackAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(STLStackAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(2200);
+    Astral::STLStackAllocator<char> testAllocator = Astral::STLStackAllocator<char>(2200);
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -63,7 +63,7 @@ TEST_F(STLStackAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(STLStackAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(2200);
+    Astral::STLStackAllocator<char> testAllocator = Astral::STLStackAllocator<char>(2200);
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -113,7 +113,7 @@ TEST_F(STLStackAllocatorTest, deallocate_ReleasesPreviousAllocationMemory)
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLStackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::STLStackAllocator<char> testAllocator = Core::STLStackAllocator<char>(2056);
+    Astral::STLStackAllocator<char> testAllocator = Astral::STLStackAllocator<char>(2056);
 
     testAllocator.allocate(5);
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 5 + 1); // allocation size + 1 for header
@@ -135,7 +135,7 @@ TEST_F(STLStackAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCur
 TEST_F(STLStackAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::STLStackAllocator<AlignedStruct> alignedAllocator = Core::STLStackAllocator<AlignedStruct>(128);
+    Astral::STLStackAllocator<AlignedStruct> alignedAllocator = Astral::STLStackAllocator<AlignedStruct>(128);
 
     AlignedStruct* ptr = alignedAllocator.allocate(2);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -149,7 +149,7 @@ TEST_F(STLStackAllocatorTest, CopyConstructor_CopiesSharedStateCorrectly)
     char* buffer = (char*)testAllocator.allocate(126);
     std::memcpy(buffer, "This is a test!", 15);
 
-    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(testAllocator);
+    Astral::STLStackAllocator<char> testAllocator2 = Astral::STLStackAllocator<char>(testAllocator);
 
     EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
     EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
@@ -168,7 +168,7 @@ TEST_F(STLStackAllocatorTest, CopyAssignmentOperator_ClonesSharedState)
 {
     [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(531);
 
-    Core::STLStackAllocator<char> testAllocator2 = Core::STLStackAllocator<char>(12);
+    Astral::STLStackAllocator<char> testAllocator2 = Astral::STLStackAllocator<char>(12);
     testAllocator2 = testAllocator;
 
     EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
@@ -192,7 +192,7 @@ TEST_F(STLStackAllocatorTest, rebind_SharesStateBetweenInstances)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 100 + 1); // +1 for allocations header
 
     // Create a rebind-based allocator (switching from char to int, for example) using the same underlying memory
-    Core::STLStackAllocator<char>::rebind<int>::other rebindAllocator{testAllocator};
+    Astral::STLStackAllocator<char>::rebind<int>::other rebindAllocator{testAllocator};
 
     // Allocate memory using the rebind-based allocator
     // This allocation should increase the used block size of both allocators since they share the same memory

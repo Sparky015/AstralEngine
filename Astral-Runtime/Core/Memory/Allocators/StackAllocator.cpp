@@ -6,7 +6,7 @@
 
 #include "StackAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     StackAllocator::StackAllocator(size_t memoryBlockSize) :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),

@@ -32,7 +32,7 @@ class ObjectPoolTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 3;
-    Core::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator = Core::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE>{};
+    Astral::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator = Astral::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE>{};
 };
 
 
@@ -40,7 +40,7 @@ TEST_F(ObjectPoolTest, InitWithElementConstructor_CompilesWithNoDefaultConstruct
 {
     // Default pool allocator holds 3 instances of TestStruct
     NonDefaultConstructorClass testElement = NonDefaultConstructorClass(152);
-    Core::ObjectPool<NonDefaultConstructorClass, 2> testAllocator = Core::ObjectPool<NonDefaultConstructorClass, 2>(testElement);
+    Astral::ObjectPool<NonDefaultConstructorClass, 2> testAllocator = Astral::ObjectPool<NonDefaultConstructorClass, 2>(testElement);
     NonDefaultConstructorClass* object1Ptr = testAllocator.Acquire();
     NonDefaultConstructorClass* object2Ptr = testAllocator.Acquire();
 

@@ -12,14 +12,14 @@
 class GlobalAllocationStorageTest : public ::testing::Test
 {
 public:
-    Core::GlobalAllocationStorage m_Storage;
+    Astral::GlobalAllocationStorage m_Storage;
 };
 
 
 /**@brief  */
 TEST_F(GlobalAllocationStorageTest, AddPointer_DoesNothingWhenPointerIsNullptr)
 {
-    Core::AllocationData allocationData1 = {nullptr, 4};
+    Astral::AllocationData allocationData1 = {nullptr, 4};
     EXPECT_NO_THROW(m_Storage.AddPointer(allocationData1));
     EXPECT_FALSE(m_Storage.IsPointerStored(nullptr));
 }
@@ -28,8 +28,8 @@ TEST_F(GlobalAllocationStorageTest, AddPointer_DoesNothingWhenPointerIsNullptr)
 TEST_F(GlobalAllocationStorageTest, AddPointer_DoesNothingOnDoubleAdds)
 {
     int a = 1;
-    Core::AllocationData allocationData1 = {&a, 4};
-    Core::AllocationData allocationData2 = {&a, 9};
+    Astral::AllocationData allocationData1 = {&a, 4};
+    Astral::AllocationData allocationData2 = {&a, 9};
 
     m_Storage.AddPointer(allocationData1);
     m_Storage.AddPointer(allocationData2);
@@ -44,8 +44,8 @@ TEST_F(GlobalAllocationStorageTest, FreePointer_DoesNothingWhenGivenNullptr)
 {
     int a = 1;
     int b = 2;
-    Core::AllocationData allocationData1 = {&a, 4};
-    Core::AllocationData allocationData2 = {&b, 4};
+    Astral::AllocationData allocationData1 = {&a, 4};
+    Astral::AllocationData allocationData2 = {&b, 4};
 
     m_Storage.AddPointer(allocationData1);
     m_Storage.AddPointer(allocationData2);
@@ -66,7 +66,7 @@ TEST_F(GlobalAllocationStorageTest, FreePointer_DoesNothingWhenGivenNullptr)
 TEST_F(GlobalAllocationStorageTest, IsPointerStored_ReturnsTrueWhenPointerIsStored)
 {
     void* pointer = std::malloc(4);
-    Core::AllocationData allocationData = {pointer, 4, Core::MemoryRegion::UNKNOWN, Core::AllocatorType::NEW_OPERATOR};
+    Astral::AllocationData allocationData = {pointer, 4, Astral::MemoryRegion::UNKNOWN, Astral::AllocatorType::NEW_OPERATOR};
 
     EXPECT_FALSE(m_Storage.IsPointerStored(pointer));
 
@@ -86,8 +86,8 @@ TEST_F(GlobalAllocationStorageTest, GetPointerData_ThrowsIfPointerHasNoEntry)
 {
     int a = 5;
     int b = 10;
-    Core::AllocationData allocationData1 = {&a, 4};
-    Core::AllocationData allocationData2 = {&b, 4};
+    Astral::AllocationData allocationData1 = {&a, 4};
+    Astral::AllocationData allocationData2 = {&b, 4};
 
     EXPECT_ANY_THROW(m_Storage.GetPointerData(allocationData1.pointer));
     EXPECT_ANY_THROW(m_Storage.GetPointerData(allocationData2.pointer));

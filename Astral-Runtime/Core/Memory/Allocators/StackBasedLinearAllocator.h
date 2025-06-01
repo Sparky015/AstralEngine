@@ -11,7 +11,7 @@
 #include "Debug/MemoryTracking/NewDeleteOverrides.h"
 #include <cstddef>
 
-namespace Core {
+namespace Astral {
 
     /**@brief A stack-based linear allocator. Max allocation size is 5.28 KB due to being on the stack.
      *        Deallocate method does nothing. Reset method deallocates the whole memory block.

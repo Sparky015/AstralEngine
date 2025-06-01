@@ -8,7 +8,7 @@
 
 #include "Debug/MemoryTracking/Visualization/Components/SceneMetricsGraphComponents.h"
 
-namespace Core {
+namespace Astral {
 
     void ShowMemoryGraphPanel(const SceneMetricsStorage& storage, MemoryMetricsDataScope metricsType, MemoryGraphSelection graphSelection, size_t
                               selectedDataPointIndex)

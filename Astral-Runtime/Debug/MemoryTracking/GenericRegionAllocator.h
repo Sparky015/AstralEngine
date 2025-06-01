@@ -13,11 +13,11 @@ namespace Astral {
     class GenericRegionAllocator
     {
     public:
-        explicit GenericRegionAllocator(Core::MemoryRegion region);
+        explicit GenericRegionAllocator(Astral::MemoryRegion region);
 
     private:
 
-        Core::MemoryRegion m_Region;
+        Astral::MemoryRegion m_Region;
     };
 
 }

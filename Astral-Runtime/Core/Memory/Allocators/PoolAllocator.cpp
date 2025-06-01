@@ -6,7 +6,7 @@
 
 #include "PoolAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     PoolAllocator::PoolAllocator(size_t blockSize, size_t numberOfBlocks) :
             m_NumberOfBlocks(numberOfBlocks),

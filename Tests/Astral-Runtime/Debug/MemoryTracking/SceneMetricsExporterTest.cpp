@@ -11,7 +11,7 @@
 class SceneMetricsAccumulatorTest : public ::testing::Test
 {
 public:
-    Core::SceneMetricsExporter m_SceneMetricsExporter;
+    Astral::SceneMetricsExporter m_SceneMetricsExporter;
 };
 
 TEST_F(SceneMetricsAccumulatorTest, BeginScene_SceneBecomesActive)

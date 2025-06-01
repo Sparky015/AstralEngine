@@ -12,12 +12,12 @@
 
 #include "Debug/Instrumentation/ScopeProfiler.h"
 
-Core::SceneMetricsImporter::SceneMetricsImporter() : m_HasFileLoaded(false)
+Astral::SceneMetricsImporter::SceneMetricsImporter() : m_HasFileLoaded(false)
 {
 
 }
 
-bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path& filePath)
+bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path& filePath)
 {
     PROFILE_SCOPE("MemorySceneMetricsImporter")
     if (!std::filesystem::exists(filePath))
@@ -156,7 +156,7 @@ bool Core::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::path
 }
 
 
-void Core::SceneMetricsImporter::CloseMemoryProfile()
+void Astral::SceneMetricsImporter::CloseMemoryProfile()
 {
     if (m_File.is_open())
     {

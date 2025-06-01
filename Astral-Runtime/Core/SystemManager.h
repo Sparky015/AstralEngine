@@ -21,6 +21,6 @@ public:
 
 protected:
 
-    Core::EventListener<SubSystemUpdateEvent> m_UpdateListener;
-    Core::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
+    Astral::EventListener<SubSystemUpdateEvent> m_UpdateListener;
+    Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

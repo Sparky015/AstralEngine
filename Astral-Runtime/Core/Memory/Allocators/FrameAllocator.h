@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Asserts.h"
 #include <memory>
 
 #include "AllocatorUtils.h"
 
-namespace Core {
+namespace Astral {
 
     /**@brief An allocator that can be used to allocate during a frame. Do not store or cache any pointers from this allocator.
      *        It will be deallocated after the frame has ended.

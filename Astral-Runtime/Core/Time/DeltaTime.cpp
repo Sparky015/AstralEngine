@@ -6,7 +6,7 @@
 #include "DeltaTime.h"
 
 
-namespace Core {
+namespace Astral {
 
     DeltaTime::DeltaTime() : m_DeltaTime(0) {}
 

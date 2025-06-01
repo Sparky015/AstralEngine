@@ -8,7 +8,7 @@
 
 #include "AllocatorUtils.h"
 
-namespace Core {
+namespace Astral {
 
     template<size_t MemoryBlockSize>
     StackBasedLinearAllocator<MemoryBlockSize>::StackBasedLinearAllocator() :

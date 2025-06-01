@@ -16,17 +16,18 @@ ChessModule::ChessModule()
 
 void ChessModule::Init()
 {
-    PROFILE_SCOPE("ChessModuleInit")
-    TRACE("Initializing Application")
+    PROFILE_SCOPE("ChessModule::Init")
+    TRACE("Initializing Chess Module")
     m_BoardManager.Init();
     m_GameManager.Init();
     m_DebugManager.Init();
+
     Astral::Engine::Get().GetImGuiManager().LoadImGuiConfigFile(std::string(CHESS_SOURCE_DIR) + "imgui-config.ini");
     Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowName("Chess");
     Astral::Engine::Get().GetWindowManager().GetWindow().SetWindowDimensions(800, 800);
 }
 
-void ChessModule::Update(const Core::DeltaTime& deltaTime)
+void ChessModule::Update(const Astral::DeltaTime& deltaTime)
 {
     if (Astral::InputState::IsKeyDown(Keycode::KEY_F))
     {

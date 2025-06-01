@@ -10,7 +10,7 @@ class STLStackBasedLinearAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 2056;
-    Core::STLStackBasedLinearAllocator<char, DEFAULT_ALLOCATION_SIZE> testAllocator;
+    Astral::STLStackBasedLinearAllocator<char, DEFAULT_ALLOCATION_SIZE> testAllocator;
 };
 
 /**@brief Tests if the allocator is allocating the correct amount of space for an allocation */
@@ -40,7 +40,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, allocate_ReturnsUseableAddresses)
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(STLStackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSize)
 {
-    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator;
+    Astral::STLStackBasedLinearAllocator<char, 2056> testAllocator;
     EXPECT_THROW(testAllocator.allocate(3000), std::bad_alloc);
     EXPECT_THROW(testAllocator.allocate(2057), std::bad_alloc);
     EXPECT_NO_THROW(testAllocator.allocate(2056));
@@ -49,7 +49,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveAllocationSiz
 /**@brief Tests if the allocator throws an error if the allocation size is too big */
 TEST_F(STLStackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAllocationSize)
 {
-    Core::STLStackBasedLinearAllocator<char, 2200> testAllocator;
+    Astral::STLStackBasedLinearAllocator<char, 2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -62,7 +62,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, allocate_ThrowsOnExcessiveCumulativeAll
 /**@brief Tests if the Reset method correctly resets the state of the allocator back to the start of the memory block */
 TEST_F(STLStackBasedLinearAllocatorTest, reset_CorrectlyResetsAllocatorMemoryBlock)
 {
-    Core::STLStackBasedLinearAllocator<char, 2200> testAllocator;
+    Astral::STLStackBasedLinearAllocator<char, 2200> testAllocator;
     EXPECT_NO_THROW(testAllocator.allocate(300)); // Total Allocation: 300
     EXPECT_NO_THROW(testAllocator.allocate(400)); // Total Allocation: 700
     EXPECT_NO_THROW(testAllocator.allocate(200)); // Total Allocation: 900
@@ -101,7 +101,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, deallocate_DoesNothing)
 /**@brief Tests if the GetUsedBlockSize method is returning the accurate amount of space that is currently allocated by the allocator */
 TEST_F(STLStackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmountOfSpaceCurrentlyAllocated)
 {
-    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator;
+    Astral::STLStackBasedLinearAllocator<char, 2056> testAllocator;
 
     testAllocator.allocate(5);
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 5);
@@ -122,7 +122,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, getUsedBlockSize_ReturnsTheCorrectAmoun
 TEST_F(STLStackBasedLinearAllocatorTest, allocate_RespectsTypeAlignment)
 {
     struct alignas(16) AlignedStruct { char data[8]; };
-    Core::STLStackBasedLinearAllocator<AlignedStruct, 1024> alignedAllocator;
+    Astral::STLStackBasedLinearAllocator<AlignedStruct, 1024> alignedAllocator;
 
     AlignedStruct* ptr = alignedAllocator.allocate(1);
     EXPECT_EQ(reinterpret_cast<std::uintptr_t>(ptr) % 16, 0);
@@ -134,7 +134,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, CopyConstructor_CopiesStateCorrectly)
     char* buffer = (char*)testAllocator.allocate(126);
     std::memcpy(buffer, "This is a test!", 15);
 
-    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>(testAllocator);
+    Astral::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Astral::STLStackBasedLinearAllocator<char, 2056>(testAllocator);
 
     EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
     EXPECT_EQ(testAllocator2.getUsedBlockSize(), testAllocator.getUsedBlockSize());
@@ -147,7 +147,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, CopyAssignmentOperator_ClonesState)
 {
     [[maybe_unused]] char* buffer = (char*)testAllocator.allocate(531);
 
-    Core::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Core::STLStackBasedLinearAllocator<char, 2056>();
+    Astral::STLStackBasedLinearAllocator<char, 2056> testAllocator2 = Astral::STLStackBasedLinearAllocator<char, 2056>();
     testAllocator2 = testAllocator;
 
     EXPECT_EQ(testAllocator2.getCapacity(), testAllocator.getCapacity());
@@ -164,7 +164,7 @@ TEST_F(STLStackBasedLinearAllocatorTest, rebind_SharesStateBetweenInstances)
     EXPECT_EQ(testAllocator.getUsedBlockSize(), 100);
 
     // Create a rebind-based allocator (switching from char to int, for example) using the same underlying memory
-    Core::STLStackBasedLinearAllocator<char, 2056>::rebind<int>::other rebindAllocator{testAllocator};
+    Astral::STLStackBasedLinearAllocator<char, 2056>::rebind<int>::other rebindAllocator{testAllocator};
 
     // Allocate memory using the rebind-based allocator
     // This allocation should increase the used block size of both allocators since they share the same memory

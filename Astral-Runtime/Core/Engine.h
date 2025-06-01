@@ -16,6 +16,7 @@
 namespace Astral { class WindowManager; }
 namespace Astral { class ECSManager; }
 namespace Astral { class RendererManager; }
+namespace Astral { class AssetManager; }
 namespace Debug { class ImGuiManager; }
 
 namespace Astral {
@@ -34,6 +35,7 @@ namespace Astral {
         ECSManager& GetECSManager() { return *m_ECSManager; }
         Debug::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
         RendererManager& GetRendererManager() { return *m_RendererManager; }
+        AssetManager& GetAssetManager() { return *m_AssetManager; }
 
        /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
        [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
@@ -43,12 +45,13 @@ namespace Astral {
 
         ScopedPtr<Application::ApplicationModule> m_ApplicationModule;
         bool m_IsLoopRunning;
-        Core::Clock m_Clock;
+        Astral::Clock m_Clock;
 
         ScopedPtr<WindowManager> m_WindowManager;
-        ScopedPtr<ECSManager> m_ECSManager;
         ScopedPtr<Debug::ImGuiManager> m_ImGuiManager;
         ScopedPtr<RendererManager> m_RendererManager;
+        ScopedPtr<AssetManager> m_AssetManager;
+        ScopedPtr<ECSManager> m_ECSManager;
     };
 
 }

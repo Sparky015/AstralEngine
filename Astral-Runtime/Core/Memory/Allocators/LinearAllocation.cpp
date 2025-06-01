@@ -6,7 +6,7 @@
 
 #include "LinearAllocator.h"
 
-namespace Core {
+namespace Astral {
 
     LinearAllocator::LinearAllocator(size_t memoryBlockSize) :
             m_StartBlockAddress((unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(memoryBlockSize)),

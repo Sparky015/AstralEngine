@@ -8,7 +8,7 @@
 
 #include "Debug/Instrumentation/ScopeProfiler.h"
 
-namespace Core {
+namespace Astral {
 
     /** Publishes an event to any listeners. */
     template<typename T>

@@ -24,7 +24,7 @@ namespace Astral {
 
         void UpdateEditorUI();
 
-        Core::EventListener<RenderImGuiEvent> m_RenderImGuiListener{[this](RenderImGuiEvent e){ UpdateEditorUI(); }};
+        Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener{[this](RenderImGuiEvent e){ UpdateEditorUI(); }};
     };
 
 }

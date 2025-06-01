@@ -17,7 +17,7 @@
 #include "Debug/MemoryTracking/MemoryTracker.h"
 
 
-namespace Core {
+namespace Astral {
 
     SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0)
     {
@@ -84,7 +84,7 @@ namespace Core {
             msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
             msgpack::pack(GetExportFile(), allocationDataSerializable);
 
-            Core::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+            Astral::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
             static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
                 .addresses(cpptrace::formatter::address_mode::none)
                 .snippets(false)
@@ -92,7 +92,7 @@ namespace Core {
                 .paths(cpptrace::formatter::path_mode::full);
             msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2)));
 
-            Core::MemoryTracker::Get().EnableTracking();
+            Astral::MemoryTracker::Get().EnableTracking();
 
         }
 
