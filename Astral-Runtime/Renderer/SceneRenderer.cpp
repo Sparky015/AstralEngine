@@ -53,6 +53,11 @@ namespace Astral {
             context.TempPipelineState = nullptr;
             context.TempDescriptorSets = std::vector<DescriptorSetHandle>();
             context.SceneRenderTarget = nullptr;
+            context.SceneCameraBuffer = device.CreateUniformBuffer(nullptr, sizeof(Mat4));
+            context.SceneCameraDescriptorSet = device.CreateDescriptorSet();
+            context.SceneCameraDescriptorSet->BeginBuildingSet();
+            context.SceneCameraDescriptorSet->AddDescriptorUniformBuffer(context.SceneCameraBuffer, ShaderStage::VERTEX);
+            context.SceneCameraDescriptorSet->EndBuildingSet();
         }
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
@@ -73,7 +78,7 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::BeginScene(const OrthographicCamera& orthographicCamera)
+    void SceneRenderer::BeginScene(OrthographicCamera& orthographicCamera)
     {
         PROFILE_SCOPE("SceneRenderer::BeginScene")
         Device& device = RendererAPI::GetDevice();
@@ -88,6 +93,7 @@ namespace Astral {
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
+        frameContext.SceneCameraBuffer->CopyDataToBuffer(glm::value_ptr(orthographicCamera.GetProjectionViewMatrix()), sizeof(Mat4));
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
@@ -171,15 +177,16 @@ namespace Astral {
 
             if (i == 0)
             {
+                std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, descriptorSet};
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
-                    vertexShader, fragmentShader, descriptorSet, mesh.VertexBuffer->GetBufferLayout());
+                    vertexShader, fragmentShader, descriptorSets, mesh.VertexBuffer->GetBufferLayout());
             }
 
             RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
 
-
             frameContext.TempPipelineState->Bind(commandBuffer); // temp, idk
-            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet); // temp, idk
+            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
+            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet, 1); // temp, idk
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);

@@ -34,12 +34,12 @@ namespace Astral {
 
 
     void VulkanPipelineStateObject::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
-        DescriptorSetHandle descriptorSetHandle)
+                                                      DescriptorSetHandle descriptorSetHandle, uint32 binding)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout,
-                    0, 1, &descriptorSet, 0, nullptr);
+                    binding, 1, &descriptorSet, 0, nullptr);
     }
 
 
@@ -269,7 +269,12 @@ namespace Astral {
 
     void VulkanPipelineStateObject::CreatePipelineLayout()
     {
-        VkDescriptorSetLayout descriptorSetLayout = (VkDescriptorSetLayout)m_Description.DescriptorSet->GetLayout();
+        std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
+        descriptorSetLayouts.reserve(m_Description.DescriptorSets.size());
+        for (DescriptorSetHandle descriptorSet : m_Description.DescriptorSets)
+        {
+            descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetLayout());
+        }
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
         m_PushConstantRange.offset = 0;
@@ -278,8 +283,8 @@ namespace Astral {
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
             .pNext = nullptr,
-            .setLayoutCount = 1,
-            .pSetLayouts = &descriptorSetLayout,
+            .setLayoutCount = (uint32)descriptorSetLayouts.size(),
+            .pSetLayouts = descriptorSetLayouts.data(),
             .pushConstantRangeCount = 1,
             .pPushConstantRanges = &m_PushConstantRange,
         };

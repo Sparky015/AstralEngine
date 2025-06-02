@@ -134,8 +134,8 @@ namespace Astral {
 
 
     PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(RenderPassHandle renderPassHandle,
-            ShaderHandle vertexShader, ShaderHandle fragmentShader, DescriptorSetHandle descriptorSetHandle,
-                const VertexBufferLayout& bufferLayout)
+                                                                      ShaderHandle vertexShader, ShaderHandle fragmentShader, std::vector<DescriptorSetHandle>& descriptorSets,
+                                                                      const VertexBufferLayout& bufferLayout)
     {
         VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
 
@@ -144,7 +144,7 @@ namespace Astral {
             .RenderPass = renderPass,
             .VertexShader = vertexShader,
             .FragmentShader = fragmentShader,
-            .DescriptorSet = descriptorSetHandle,
+            .DescriptorSets = descriptorSets,
             .VertexBufferLayout = bufferLayout
         };
 

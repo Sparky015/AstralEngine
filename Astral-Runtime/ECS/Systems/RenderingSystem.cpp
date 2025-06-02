@@ -16,6 +16,7 @@
 #include "Window/WindowManager.h"
 #include "Renderer/SceneRenderer.h"
 
+#include "Input/InputState.h"
 
 namespace Astral {
 
@@ -28,7 +29,52 @@ namespace Astral {
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        OrthographicCamera camera = OrthographicCamera(-10, 10, -10, 10);
+        static OrthographicCamera camera = OrthographicCamera();
+        static constexpr float magnitude = 5;
+        // Move Left (A key)
+        if (InputState::IsKeyDown(KEY_A))
+        {
+            const Vec3& position = camera.GetPosition();
+            camera.SetPosition(Vec3(position.x - magnitude, position.y, position.z));
+        }
+        // Move Backwards (S key)
+        if (InputState::IsKeyDown(KEY_D))
+        {
+            const Vec3& position = camera.GetPosition();
+            // Move along the Z-axis (backwards)
+            camera.SetPosition(Vec3(position.x + magnitude, position.y, position.z));
+        }
+        // Move Right (D key)
+        if (InputState::IsKeyDown(KEY_LEFT_SHIFT))
+        {
+            const Vec3& position = camera.GetPosition();
+            // Move along the X-axis (right)
+            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
+        }
+        // Move Forwards (W key)
+        if (InputState::IsKeyDown(KEY_SPACE))
+        {
+            const Vec3& position = camera.GetPosition();
+            // Move along the Z-axis (forwards)
+            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
+        }
+
+        if (InputState::IsKeyDown(KEY_W))
+        {
+            const Vec3& position = camera.GetPosition();
+            // Move along the Z-axis (forwards)
+            camera.SetPosition(Vec3(position.x, position.y, position.z - magnitude));
+        }
+
+        if (InputState::IsKeyDown(KEY_S))
+        {
+            const Vec3& position = camera.GetPosition();
+            // Move along the Z-axis (forwards)
+            camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
+        }
+
+        LOG("Camera Position: (" << camera.GetPosition().x << ", " << camera.GetPosition().y << ", " << camera.GetPosition().z << ")");
+
         SceneRenderer::BeginScene(camera);
         for (EntityID entityID = 0; entityID < ecs.GetNumberOfActiveEntities(); entityID++)
         {
@@ -52,14 +98,9 @@ namespace Astral {
 
 
     Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale) {
-        Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();
-        Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
-
-        Vec3 normalizedPosition = Vec3(1.0f);
-        normalizedPosition.x = position.x / window.GetWidth() * 2 - 1;
-        normalizedPosition.y = position.y / window.GetHeight() * 2 - 1;
-
-        return glm::translate(Mat4(1.0f), normalizedPosition) * scaleMatrix;
+        Mat4 transform = glm::translate(Mat4(1.0f), position); // Apply position (world units)
+        transform = glm::scale(transform, scale);
+        return transform;
     }
 
 }

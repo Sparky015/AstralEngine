@@ -24,7 +24,7 @@ namespace Astral {
         ShaderHandle FragmentShader;
         int32 WindowWidth;
         int32 WindowHeight;
-        DescriptorSetHandle DescriptorSet;
+        std::vector<DescriptorSetHandle> DescriptorSets;
         VertexBufferLayout VertexBufferLayout;
     };
 
@@ -35,7 +35,7 @@ namespace Astral {
         ~VulkanPipelineStateObject() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
-        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) override;
+        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
 
         void* GetPipelineLayout() override {return m_PipelineLayout; }
         void* GetHandleHandle() override { return m_Pipeline; }

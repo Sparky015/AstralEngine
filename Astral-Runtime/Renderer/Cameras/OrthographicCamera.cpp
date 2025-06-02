@@ -5,9 +5,20 @@
 */
 #include "OrthographicCamera.h"
 
+#include "Astral.h"
+#include "Astral.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Astral {
+
+    OrthographicCamera::OrthographicCamera() :
+        m_ProjectionMatrix(glm::ortho(0, 2000, 0, 2000, -100, 100)),
+        m_ViewMatrix(1.0f),
+        m_ProjectionViewMatrix(1.0f),
+        m_Position(0, 0, 0)
+    {
+    }
+
 
     OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float near, float far)
         : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, near, far)),
@@ -18,10 +29,12 @@ namespace Astral {
         CalculateViewProjectionMatrix();
     }
 
-    const Mat4& OrthographicCamera::GetProjectionViewMatrix()
+
+    Mat4& OrthographicCamera::GetProjectionViewMatrix()
     {
         return m_ProjectionViewMatrix;
     }
+
 
     void OrthographicCamera::CalculateViewProjectionMatrix()
     {

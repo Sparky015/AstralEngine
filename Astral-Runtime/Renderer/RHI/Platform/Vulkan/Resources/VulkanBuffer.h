@@ -31,8 +31,8 @@ namespace Astral {
         explicit VulkanBuffer(const VulkanBufferDesc& desc);
         ~VulkanBuffer() override;
 
-        [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_Memory; }
-        [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_DeviceSize; }
+        [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_PrimaryMemory; }
+        [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_PrimaryDeviceSize; }
         void MapPointer(void** cpuPtr) override;
         void UnmapPointer() override;
         void CopyDataToBuffer(void* data, uint32 size) override;
@@ -41,7 +41,7 @@ namespace Astral {
 
         uint32 GetUsedSize() override { return m_Size; }
 
-        void* GetNativeHandle() override { return m_Buffer; }
+        void* GetNativeHandle() override { return m_PrimaryBuffer; }
 
 
         VulkanBuffer(const VulkanBuffer&) = delete;
@@ -68,9 +68,9 @@ namespace Astral {
         VkMemoryPropertyFlags m_RequestedPropertyFlags;
 
 
-        VkBuffer m_Buffer;
-        VkDeviceMemory m_Memory;
-        VkDeviceSize m_DeviceSize;
+        VkBuffer m_PrimaryBuffer;
+        VkDeviceMemory m_PrimaryMemory;
+        VkDeviceSize m_PrimaryDeviceSize;
         bool m_IsDeviceMemoryMapped;
     };
 

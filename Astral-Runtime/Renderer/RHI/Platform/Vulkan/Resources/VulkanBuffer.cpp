@@ -17,9 +17,9 @@ namespace Astral {
         m_Size(desc.Size),
         m_DeviceMemoryProperties(desc.DeviceMemoryProperties),
         m_RequestedPropertyFlags(desc.RequestedMemoryPropertyFlags),
-        m_Buffer(),
-        m_Memory(),
-        m_DeviceSize(),
+        m_PrimaryBuffer(),
+        m_PrimaryMemory(),
+        m_PrimaryDeviceSize(),
         m_IsDeviceMemoryMapped(false)
     {
         CreateBuffer();
@@ -35,10 +35,10 @@ namespace Astral {
 
     void VulkanBuffer::MapPointer(void** cpuPtr)
     {
-        if (m_IsDeviceMemoryMapped) { vkUnmapMemory(m_Device, m_Memory); }
+        if (m_IsDeviceMemoryMapped) { vkUnmapMemory(m_Device, m_PrimaryMemory); }
 
-        VkResult result = vkMapMemory(m_Device, m_Memory, 0,
-                                        m_DeviceSize, 0, cpuPtr);
+        VkResult result = vkMapMemory(m_Device, m_PrimaryMemory, 0,
+                                        m_PrimaryDeviceSize, 0, cpuPtr);
         ASSERT(result == VK_SUCCESS, "Failed to map memory in buffer")
 
         m_IsDeviceMemoryMapped = true;
@@ -49,7 +49,7 @@ namespace Astral {
     {
         if (m_IsDeviceMemoryMapped)
         {
-            vkUnmapMemory(m_Device, m_Memory);
+            vkUnmapMemory(m_Device, m_PrimaryMemory);
             m_IsDeviceMemoryMapped = false;
         }
     }
@@ -57,8 +57,10 @@ namespace Astral {
 
     void VulkanBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
+        if (!data) { return; }
+
         void* memory = nullptr;
-        ASSERT(size <= m_DeviceSize, "Data does not fit in buffer!")
+        ASSERT(size <= m_PrimaryDeviceSize, "Data does not fit in buffer!")
         MapPointer(&memory);
         memcpy(memory, data, size);
         UnmapPointer();
@@ -67,7 +69,7 @@ namespace Astral {
 
     void VulkanBuffer::CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size)
     {
-        ASSERT(size <= m_DeviceSize, "Data does not fit in buffer!")
+        ASSERT(size <= m_PrimaryDeviceSize, "Data does not fit in buffer!")
         VkBuffer stagingBuffer = (VkBuffer)sourceBuffer.GetNativeHandle();
 
         CommandBufferHandle commandBufferHandle = device.AllocateCommandBuffer();
@@ -80,7 +82,7 @@ namespace Astral {
         };
 
         commandBufferHandle->BeginRecording();
-        vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_Buffer, 1, &bufferCopy);
+        vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_PrimaryBuffer, 1, &bufferCopy);
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle commandQueueHandle = device.GetCommandQueue();
@@ -92,14 +94,14 @@ namespace Astral {
     VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
     {
         m_Device = other.m_Device;
-        m_Buffer = other.m_Buffer;
-        m_Memory = other.m_Memory;
-        m_DeviceSize = other.m_DeviceSize;
+        m_PrimaryBuffer = other.m_PrimaryBuffer;
+        m_PrimaryMemory = other.m_PrimaryMemory;
+        m_PrimaryDeviceSize = other.m_PrimaryDeviceSize;
         m_IsDeviceMemoryMapped = other.m_IsDeviceMemoryMapped;
 
-        other.m_Buffer = VK_NULL_HANDLE;
-        other.m_Memory = VK_NULL_HANDLE;
-        other.m_DeviceSize = 0;
+        other.m_PrimaryBuffer = VK_NULL_HANDLE;
+        other.m_PrimaryMemory = VK_NULL_HANDLE;
+        other.m_PrimaryDeviceSize = 0;
         other.m_IsDeviceMemoryMapped = false;
 
 
@@ -116,7 +118,7 @@ namespace Astral {
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 
-        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &m_Buffer);
+        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &m_PrimaryBuffer);
         ASSERT(result == VK_SUCCESS, "Failed to create buffer!");
     }
 
@@ -124,9 +126,9 @@ namespace Astral {
     void VulkanBuffer::AllocateMemory()
     {
         VkMemoryRequirements memoryRequirements = {};
-        vkGetBufferMemoryRequirements(m_Device, m_Buffer, &memoryRequirements);
+        vkGetBufferMemoryRequirements(m_Device, m_PrimaryBuffer, &memoryRequirements);
 
-        m_DeviceSize = memoryRequirements.size;
+        m_PrimaryDeviceSize = memoryRequirements.size;
 
         uint32_t memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements.memoryTypeBits);
 
@@ -136,23 +138,23 @@ namespace Astral {
             .memoryTypeIndex = memoryTypeIndex
         };
 
-        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &m_Memory);
+        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &m_PrimaryMemory);
         ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
 
-        result = vkBindBufferMemory(m_Device, m_Buffer, m_Memory, 0);
+        result = vkBindBufferMemory(m_Device, m_PrimaryBuffer, m_PrimaryMemory, 0);
         ASSERT(result == VK_SUCCESS, "Failed to bind buffer memory!");
     }
 
 
     void VulkanBuffer::DestroyBuffer()
     {
-        vkDestroyBuffer(m_Device, m_Buffer, nullptr);
+        vkDestroyBuffer(m_Device, m_PrimaryBuffer, nullptr);
     }
 
 
     void VulkanBuffer::FreeMemory()
     {
-        vkFreeMemory(m_Device, m_Memory, nullptr);
+        vkFreeMemory(m_Device, m_PrimaryMemory, nullptr);
     }
 
 

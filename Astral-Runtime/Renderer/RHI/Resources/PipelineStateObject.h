@@ -18,7 +18,7 @@ namespace Astral {
         virtual ~PipelineStateObject() = default;
 
         virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle) = 0;
+        virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
 
         virtual void* GetPipelineLayout() = 0;
         virtual void* GetHandleHandle() = 0;
