@@ -52,8 +52,8 @@ namespace Astral {
         std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
         uint32 m_NumberOfBindings;
 
-        std::queue<BufferHandle> m_Buffers;
-        std::queue<TextureHandle> m_Textures;
+        std::vector<BufferHandle> m_Buffers;
+        std::vector<TextureHandle> m_Textures;
 
         VkDescriptorPool m_DescriptorPool;
         VkDescriptorSet m_DescriptorSet;

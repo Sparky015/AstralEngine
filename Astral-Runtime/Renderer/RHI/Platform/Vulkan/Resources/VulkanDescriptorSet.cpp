@@ -29,6 +29,8 @@ namespace Astral {
         // DestroyDescriptorSets();
         DestroyDescriptorSetLayout();
         DestroyDescriptorPool();
+        m_Buffers.clear();
+        m_Textures.clear();
     }
 
 
@@ -36,8 +38,8 @@ namespace Astral {
     {
         m_NumberOfBindings = 0;
         m_DescriptorSetLayoutBindings.clear();
-        while (!m_Buffers.empty()) m_Buffers.pop();
-        while (!m_Textures.empty()) m_Textures.pop();
+        m_Buffers.clear();
+        m_Textures.clear();
     }
 
 
@@ -66,7 +68,7 @@ namespace Astral {
         m_NumberOfBindings++;
 
         m_DescriptorSetLayoutBindings.push_back(storageBufferDescriptorLayoutBinding);
-        m_Buffers.push(bufferHandle);
+        m_Buffers.push_back(bufferHandle);
     }
 
 
@@ -95,7 +97,7 @@ namespace Astral {
         m_NumberOfBindings++;
 
         m_DescriptorSetLayoutBindings.push_back(uniformBufferDescriptorLayoutBinding);
-        m_Buffers.push(bufferHandle);
+        m_Buffers.push_back(bufferHandle);
     }
 
 
@@ -124,7 +126,7 @@ namespace Astral {
         m_NumberOfBindings++;
 
         m_DescriptorSetLayoutBindings.push_back(imageSamplerDescriptorLayoutBinding);
-        m_Textures.push(textureHandle);
+        m_Textures.push_back(textureHandle);
     }
 
 
@@ -218,6 +220,8 @@ namespace Astral {
 
     void VulkanDescriptorSet::UpdateDescriptorSets()
     {
+        uint32 bufferIndex = 0;
+        uint32 samplerIndex = 0;
         for (uint32 i = 0; i < m_DescriptorSetLayoutBindings.size(); i++)
         {
             const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
@@ -227,8 +231,9 @@ namespace Astral {
             {
                 VkDescriptorBufferInfo bufferInfo = {};
 
-                BufferHandle bufferHandle = m_Buffers.front();
-                m_Buffers.pop();
+                BufferHandle bufferHandle = m_Buffers[bufferIndex];
+                bufferIndex++;
+
                 VkBuffer buffer = (VkBuffer)bufferHandle->GetNativeHandle();
 
                 bufferInfo.buffer = buffer;
@@ -253,8 +258,9 @@ namespace Astral {
             {
                 VkDescriptorImageInfo imageInfo = {};
 
-                TextureHandle textureHandle = m_Textures.front();
-                m_Textures.pop();
+                TextureHandle textureHandle = m_Textures[samplerIndex];
+                samplerIndex++;
+
                 VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
                 VkSampler sampler = (VkSampler)textureHandle->GetSampler();
 

@@ -24,11 +24,12 @@ namespace Astral {
             TRACE("Initializing Editor")
 
             Astral::ImGuiManager& imguiManager = Astral::Engine::Get().GetImGuiManager();
+            imguiManager.EnableViewportDockSpace();
             imguiManager.LoadImGuiConfigFile(std::string(ASTRAL_EDITOR_SOURCE_DIR) + "imgui-editor-config.ini");
 
             Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
             window.SetWindowName("Astral Editor");
-            window.SetWindowDimensions(1080, 720);
+            window.SetWindowDimensions(1400, 750);
             m_Editor.Init();
         }
 
