@@ -45,35 +45,33 @@ namespace Astral {
             camera.SetPosition(Vec3(position.x + magnitude, position.y, position.z));
         }
         // Move Right (D key)
-        if (InputState::IsKeyDown(KEY_LEFT_SHIFT))
+        if (InputState::IsKeyDown(KEY_S))
         {
             const Vec3& position = camera.GetPosition();
             // Move along the X-axis (right)
-            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
+            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
         }
         // Move Forwards (W key)
-        if (InputState::IsKeyDown(KEY_SPACE))
+        if (InputState::IsKeyDown(KEY_W))
         {
             const Vec3& position = camera.GetPosition();
             // Move along the Z-axis (forwards)
-            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
+            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
         }
 
-        if (InputState::IsKeyDown(KEY_W))
+        if (InputState::IsKeyDown(KEY_E))
         {
             const Vec3& position = camera.GetPosition();
             // Move along the Z-axis (forwards)
             camera.SetPosition(Vec3(position.x, position.y, position.z - magnitude));
         }
 
-        if (InputState::IsKeyDown(KEY_S))
+        if (InputState::IsKeyDown(KEY_Q))
         {
             const Vec3& position = camera.GetPosition();
             // Move along the Z-axis (forwards)
             camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
         }
-
-        LOG("Camera Position: (" << camera.GetPosition().x << ", " << camera.GetPosition().y << ", " << camera.GetPosition().z << ")");
 
         SceneRenderer::BeginScene(camera);
         for (EntityID entityID = 0; entityID < ecs.GetNumberOfActiveEntities(); entityID++)
@@ -97,10 +95,10 @@ namespace Astral {
     }
 
 
-    Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale) {
-        Mat4 transform = glm::translate(Mat4(1.0f), position); // Apply position (world units)
-        transform = glm::scale(transform, scale);
-        return transform;
+    Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale)
+    {
+        Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
+        return glm::translate(Mat4(1.0f), position) * scaleMatrix;
     }
 
 }

@@ -25,7 +25,7 @@ namespace Astral {
         void SetPosition(const Vec3& position)
         {
             m_Position = position;
-            CalculateViewProjectionMatrix();
+            CalculateProjectionViewMatrix();
         }
 
         /**@brief Gets the position of the camera */
@@ -35,7 +35,7 @@ namespace Astral {
         void SetRotation(float rotation)
         {
             m_Rotation = rotation;
-            CalculateViewProjectionMatrix();
+            CalculateProjectionViewMatrix();
         }
 
         /**@brief Gets the rotation of the camera */
@@ -43,7 +43,7 @@ namespace Astral {
 
     private:
 
-        void CalculateViewProjectionMatrix();
+        void CalculateProjectionViewMatrix();
 
         Mat4 m_ProjectionMatrix; // Contains aspect ratio and fov
         Mat4 m_ViewMatrix; // Kinda like a world transformation that moves the whole scene

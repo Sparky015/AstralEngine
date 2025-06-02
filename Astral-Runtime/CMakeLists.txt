@@ -407,7 +407,7 @@ elseif (LINUX)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
 
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 endif ()
 
@@ -417,4 +417,3 @@ target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DI
 target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RUNTIME_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
 target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")
-
