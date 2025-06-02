@@ -40,7 +40,7 @@ namespace Astral {
     protected:
         uint32 m_NumberOfDrawCallsThisFrame = 0;
         uint32 m_NumberOfDrawCallsLastFrame = 0;
-        Astral::EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){ m_NumberOfDrawCallsLastFrame = m_NumberOfDrawCallsThisFrame; m_NumberOfDrawCallsThisFrame = 0;}};
+        EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){ m_NumberOfDrawCallsLastFrame = m_NumberOfDrawCallsThisFrame; m_NumberOfDrawCallsThisFrame = 0;}};
 
     private:
         static API s_RendererAPI;

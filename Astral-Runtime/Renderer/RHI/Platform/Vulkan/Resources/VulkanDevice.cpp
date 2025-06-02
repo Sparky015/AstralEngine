@@ -84,7 +84,7 @@ namespace Astral {
     {
         VulkanCommandQueueDesc commandQueueDesc = {
             .Device = m_Device,
-            .Swapchain = (VkSwapchainKHR)m_Swapchain->GetNativeHandle(),
+            .Swapchain = *m_Swapchain,
             .QueueFamilyIndex = m_QueueFamilyIndex,
             .QueueIndex = 0
         };
@@ -100,8 +100,6 @@ namespace Astral {
             .Device = m_Device,
             .Format = format,
         };
-
-        glfwGetFramebufferSize(m_Window, &vulkanRenderpassDesc.WindowWidth, &vulkanRenderpassDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
     }

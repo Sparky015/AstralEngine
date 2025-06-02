@@ -11,6 +11,7 @@
 // Abstracted math typedefs in case I need to change one of the math classes
 
 using Vec2 = glm::vec2;
+using UVec2 = glm::uvec2;
 using Vec3 = glm::vec3;
 using Vec4 = glm::vec4;
 

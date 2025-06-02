@@ -11,12 +11,14 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Renderer/RHI/Resources/Swapchain.h"
+
 namespace Astral {
 
     struct VulkanCommandQueueDesc
     {
         VkDevice Device;
-        VkSwapchainKHR Swapchain;
+        Swapchain& Swapchain;
         uint32 QueueFamilyIndex;
         uint32 QueueIndex;
     };
@@ -39,7 +41,7 @@ namespace Astral {
         void GetQueue();
 
         VkDevice m_Device;
-        VkSwapchainKHR m_Swapchain;
+        Swapchain& m_Swapchain;
         uint32 m_QueueFamilyIndex;
         uint32 m_QueueIndex;
 

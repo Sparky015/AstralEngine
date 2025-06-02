@@ -28,6 +28,8 @@ namespace Astral {
         explicit VulkanFramebuffer(const VulkanFramebufferDesc& desc);
         ~VulkanFramebuffer() override;
 
+        UVec2 GetExtent() override { return {m_WindowWidth, m_WindowHeight}; }
+
         void* GetNativeHandle() override { return m_Framebuffer; }
 
     private:

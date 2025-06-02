@@ -19,8 +19,6 @@ namespace Astral {
     struct VulkanRenderpassDesc
     {
         VkDevice Device;
-        int32 WindowWidth;
-        int32 WindowHeight;
         VkFormat Format;
     };
 
@@ -41,8 +39,6 @@ namespace Astral {
         void DestroyRenderPass();
 
         VkDevice m_Device;
-        uint32 m_WindowWidth;
-        uint32 m_WindowHeight;
         VkFormat m_Format;
 
         VkRenderPass m_Renderpass;

@@ -76,6 +76,7 @@ namespace Astral {
     {
         uint32 imageIndex = renderTarget->GetImageIndex();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTarget->GetRenderCompleteSemaphore();
+        VkSwapchainKHR swapchain = (VkSwapchainKHR)m_Swapchain.GetNativeHandle();
 
         VkPresentInfoKHR presentInfo = {
           .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -83,7 +84,7 @@ namespace Astral {
           .waitSemaphoreCount = 1,
           .pWaitSemaphores = &renderCompleteSemaphore,
           .swapchainCount = 1,
-          .pSwapchains = &m_Swapchain,
+          .pSwapchains = &swapchain,
           .pImageIndices = &imageIndex,
         };
 

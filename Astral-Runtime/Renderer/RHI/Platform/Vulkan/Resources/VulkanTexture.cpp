@@ -33,10 +33,10 @@ namespace Astral {
 
     VulkanTexture::~VulkanTexture()
     {
-    	FreeTextureMemory();
-    	DestroyTexture();
-    	DestroyImageView();
     	DestroyImageSampler();
+    	DestroyImageView();
+    	DestroyTexture();
+    	FreeTextureMemory();
     }
 
 

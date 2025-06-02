@@ -24,6 +24,8 @@ namespace Astral {
         virtual uint32 GetNumberOfImages() = 0;
         virtual std::vector<RenderTargetHandle>& GetRenderTargets() = 0;
 
+        virtual void RecreateSwapchain(uint32 width, uint32 height) = 0;
+
         virtual void* GetNativeHandle() = 0;
     };
 

@@ -11,6 +11,7 @@
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
 #include "RHI/Resources/Renderpass.h"
+#include "Window/WindowEvents.h"
 
 namespace Astral {
 
@@ -32,6 +33,8 @@ namespace Astral {
 
         static void RenderScene();
 
+        static void ResizeImages(uint32 width, uint32 height);
+
         struct FrameContext
         {
             std::vector<Mesh> Meshes;
@@ -49,7 +52,7 @@ namespace Astral {
             std::vector<FrameContext> FrameContexts;
             uint32 CurrentFrameIndex = -1;
             RenderPassHandle RenderPass;
-
+            EventListener<FramebufferResizedEvent> WindowResizedListener{[](FramebufferResizedEvent){}};
             bool IsSceneStarted = false;
         };
 

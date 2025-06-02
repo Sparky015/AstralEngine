@@ -30,7 +30,7 @@ namespace Astral {
         allocator.allocate = WindowTrackingMalloc;
         allocator.reallocate = WindowTrackingRealloc;
         allocator.deallocate = WindowTrackingFree;
-        allocator.user = NULL;
+        allocator.user = nullptr;
 
         glfwInitAllocator(&allocator);
 
@@ -116,7 +116,7 @@ namespace Astral {
     {
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
         {
-            Astral::EventPublisher<WindowClosedEvent> windowClosedPublisher;
+            EventPublisher<WindowClosedEvent> windowClosedPublisher;
             windowClosedPublisher.PublishEvent(WindowClosedEvent());
         });
 
@@ -124,17 +124,17 @@ namespace Astral {
         {
             if (action == GLFW_PRESS)
             {
-                Astral::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                EventPublisher<KeyPressedEvent> keyPressedEvent;
                 keyPressedEvent.PublishEvent(KeyPressedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_RELEASE)
             {
-                Astral::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                EventPublisher<KeyReleasedEvent> keyReleasedEvent;
                 keyReleasedEvent.PublishEvent(KeyReleasedEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
             else if (action == GLFW_REPEAT)
             {
-                Astral::EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
+                EventPublisher<KeyRepeatingEvent> keyRepeatingEvent;
                 keyRepeatingEvent.PublishEvent(KeyRepeatingEvent(Input::TranslateGLFWKeycodesToAstral(key)));
             }
 
@@ -146,7 +146,7 @@ namespace Astral {
             int height;
             int width;
             glfwGetWindowSize(window, &width, &height);
-            Astral::EventPublisher<MouseMovedEvent> mouseMovedEvent;
+            EventPublisher<MouseMovedEvent> mouseMovedEvent;
             mouseMovedEvent.PublishEvent(MouseMovedEvent(xpos, height - ypos));
         });
 
@@ -158,18 +158,32 @@ namespace Astral {
                 case GLFW_PRESS:
                 {
                     KeyPressedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
-                    Astral::EventPublisher<KeyPressedEvent> keyPressedEvent;
+                    EventPublisher<KeyPressedEvent> keyPressedEvent;
                     keyPressedEvent.PublishEvent(event);
                     break;
                 }
                 case GLFW_RELEASE:
                 {
                     KeyReleasedEvent event(Input::TranslateGLFWKeycodesToAstral(button));
-                    Astral::EventPublisher<KeyReleasedEvent> keyReleasedEvent;
+                    EventPublisher<KeyReleasedEvent> keyReleasedEvent;
                     keyReleasedEvent.PublishEvent(event);
                     break;
                 }
             }
+        });
+
+
+        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+            WindowResizedEvent event(width, height);
+            EventPublisher<WindowResizedEvent> windowResizedPublisher;
+            windowResizedPublisher.PublishEvent(event);
+        });
+
+
+        glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+            FramebufferResizedEvent event(width, height);
+            EventPublisher<FramebufferResizedEvent> framebufferResizedPublisher;
+            framebufferResizedPublisher.PublishEvent(event);
         });
     }
 

@@ -26,7 +26,8 @@ namespace Astral {
         m_Fences(),
         m_CurrentSemaphorePairIndex(0)
     {
-        CreateSwapchain();
+        VkExtent2D extent = m_SelectedPhysicalDevice.surfaceCapabilities.currentExtent;
+        CreateSwapchain(extent.width, extent.height);
         CreateSemaphores();
         CreateFences();
         CreateRenderTargets();
@@ -142,7 +143,7 @@ namespace Astral {
     }
 
 
-    void VulkanSwapchain::CreateSwapchain()
+    void VulkanSwapchain::CreateSwapchain(uint32 imageWidth, uint32 imageHeight)
     {
         const VkSurfaceCapabilitiesKHR surfaceCapabilities = m_SelectedPhysicalDevice.surfaceCapabilities;
 
@@ -162,7 +163,7 @@ namespace Astral {
             .minImageCount = m_NumberOfSwapchainImages,
             .imageFormat = surfaceFormat.format,
             .imageColorSpace = surfaceFormat.colorSpace,
-            .imageExtent = surfaceCapabilities.currentExtent,
+            .imageExtent = {imageWidth, imageHeight},
             .imageArrayLayers = 1,
             .imageUsage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT),
             .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
@@ -207,6 +208,9 @@ namespace Astral {
         }
 
         vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
+
+        m_Images.clear();
+        m_ImageViews.clear();
     }
 
 
@@ -238,6 +242,9 @@ namespace Astral {
             vkDestroySemaphore(m_Device, m_ImageAvailableSemaphores[i], nullptr);
             vkDestroySemaphore(m_Device, m_RenderCompleteSemaphores[i], nullptr);
         }
+
+        m_ImageAvailableSemaphores.clear();
+        m_RenderCompleteSemaphores.clear();
     }
 
 
@@ -265,6 +272,7 @@ namespace Astral {
         {
             vkDestroyFence(m_Device, m_Fences[i], nullptr);
         }
+        m_Fences.clear();
     }
 
 
@@ -283,6 +291,20 @@ namespace Astral {
 
             m_RenderTargets.emplace_back(CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc));
         }
+    }
+
+
+    void VulkanSwapchain::RecreateSwapchain(uint32 width, uint32 height)
+    {
+        m_RenderTargets.clear();
+        DestroyFences();
+        DestroySemaphores();
+        DestroySwapchain();
+
+        CreateSwapchain(width, height);
+        CreateSemaphores();
+        CreateFences();
+        CreateRenderTargets();
     }
 
 }

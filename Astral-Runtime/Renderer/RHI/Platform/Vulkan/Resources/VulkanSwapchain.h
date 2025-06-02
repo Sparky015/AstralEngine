@@ -6,12 +6,15 @@
 
 #pragma once
 
+#include "Core/Events/EventListener.h"
 #include "Renderer/RHI/Resources/Swapchain.h"
 #include "Renderer/RHI/Resources/RenderTarget.h"
+#include "Window/WindowEvents.h"
 #include "VulkanDevice.h"
 #include "VulkanPhysicalDevices.h"
 
 #include <vulkan/vulkan_core.h>
+
 
 
 namespace Astral {
@@ -36,6 +39,8 @@ namespace Astral {
         uint32 GetNumberOfImages() override { return m_NumberOfSwapchainImages; }
         std::vector<RenderTargetHandle>& GetRenderTargets() override { return m_RenderTargets; }
 
+        void RecreateSwapchain(uint32 width, uint32 height) override;
+
         void* GetNativeHandle() override { return m_Swapchain; }
 
     private:
@@ -45,7 +50,7 @@ namespace Astral {
         VkImageView CreateImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags,
                                 VkImageViewType viewType, uint32 layerCount, uint32 mipLevels);
 
-        void CreateSwapchain();
+        void CreateSwapchain(uint32 imageWidth, uint32 imageHeight);
         void DestroySwapchain();
 
         void CreateSemaphores();

@@ -12,8 +12,6 @@ namespace Astral {
 
     VulkanRenderPass::VulkanRenderPass(const VulkanRenderpassDesc& desc) :
         m_Device(desc.Device),
-        m_WindowWidth(desc.WindowWidth),
-        m_WindowHeight(desc.WindowHeight),
         m_Format(desc.Format)
     {
         CreateRenderPass();
@@ -31,6 +29,7 @@ namespace Astral {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkClearValue clearColorValues = {0.0f, 0.0f, 1.0f, 1.0f};
         VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
+        UVec2 extent = frameBufferHandle->GetExtent();
 
         VkRenderPassBeginInfo renderPassBeginInfo = {
             .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
@@ -39,7 +38,7 @@ namespace Astral {
             .framebuffer = framebuffer,
             .renderArea = {
                 .offset = {0,0},
-                .extent = {m_WindowWidth, m_WindowHeight}
+                .extent = {extent.x, extent.y}
             },
             .clearValueCount = 1,
             .pClearValues = &clearColorValues,
