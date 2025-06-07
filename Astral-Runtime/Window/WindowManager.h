@@ -5,8 +5,9 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-
 #include "Window.h"
+
+#include <memory>
 
 namespace Astral {
 

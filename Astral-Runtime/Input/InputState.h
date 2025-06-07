@@ -7,9 +7,10 @@
 #pragma once
 
 #include "Keycodes.h"
-
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventListener.h"
+
+#include <string_view>
 
 namespace Astral {
 

@@ -13,14 +13,14 @@
 
 namespace Astral {
 
-    TextureHandle Texture::CreateTexture(const std::string& filePath)
+    TextureHandle Texture::CreateTexture(const std::string_view& filePath)
     {
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 
         int m_Width;
         int m_Height;
         int m_BPP; // bits per pixel
-        unsigned char* data = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+        unsigned char* data = stbi_load(filePath.data(), &m_Width, &m_Height, &m_BPP, 4);
 
         if (!data) { return nullptr; }
 

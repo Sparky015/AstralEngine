@@ -23,7 +23,7 @@ namespace Astral {
         virtual void* GetSampler() = 0;
         virtual void* GetNativeHandle() = 0;
 
-        static GraphicsRef<Texture> CreateTexture(const std::string& filePath);
+        static GraphicsRef<Texture> CreateTexture(const std::string_view& filePath);
 
         AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Texture; }

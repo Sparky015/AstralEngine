@@ -8,6 +8,8 @@
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Loggers.h"
 
+#include <array>
+
 namespace Astral {
 
     std::array<KeyState, InputState::NUMBER_OF_KEYS> InputState::m_KeyState = {KeyState()};

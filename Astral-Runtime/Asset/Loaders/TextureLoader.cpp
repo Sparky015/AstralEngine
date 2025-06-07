@@ -16,7 +16,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("TextureLoader::LoadAsset")
 
-        Ref<Texture> texture = Texture::CreateTexture(filePath);
+        Ref<Texture> texture = Texture::CreateTexture(filePath.string());
 
         if (!texture) { return nullptr; } // Return nullptr if an error occured
 

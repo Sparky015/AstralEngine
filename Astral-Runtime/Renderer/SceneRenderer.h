@@ -15,6 +15,12 @@
 
 namespace Astral {
 
+    struct SceneDescription
+    {
+        OrthographicCamera Camera;
+
+    };
+
     class SceneRenderer
     {
     public:
