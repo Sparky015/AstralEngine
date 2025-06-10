@@ -44,7 +44,7 @@ namespace Astral::MaterialLoader {
         DescriptorSetHandle descriptorSetHandle = device.CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
         descriptorSetHandle->AddDescriptorImageSampler(registry.GetAsset<Texture>(textureID), ShaderStage::FRAGMENT);
-        descriptorSetHandle->EndBuildingSet(); // TODO: Annotate the descriptor sets on loads
+        descriptorSetHandle->EndBuildingSet();
 
         RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
 
