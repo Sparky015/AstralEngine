@@ -8,6 +8,7 @@
 
 #include "Core/SmartPointers.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Resources/Texture.h"
 
 namespace Astral {
@@ -17,9 +18,8 @@ namespace Astral {
         PROFILE_SCOPE("TextureLoader::LoadAsset")
 
         Ref<Texture> texture = Texture::CreateTexture(filePath.string());
-
         if (!texture) { return nullptr; } // Return nullptr if an error occured
-
+        RendererAPI::NameObject(texture, filePath.filename().string().data());
         return texture;
     }
 

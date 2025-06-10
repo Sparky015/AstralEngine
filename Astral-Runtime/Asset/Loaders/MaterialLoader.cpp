@@ -12,11 +12,12 @@
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/Common/Material.h"
-// #include "Core/Memory/Allocators/"
+#include "Renderer/RendererManager.h"
 
 #include <fstream>
 
 #include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral::MaterialLoader {
 
@@ -37,13 +38,22 @@ namespace Astral::MaterialLoader {
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         AssetID vertexShaderID = registry.CreateAsset<Shader>(vertexShaderPath);
         AssetID fragmentShaderID = registry.CreateAsset<Shader>(fragmentShaderPath);
-        AssetID textureShaderID = registry.CreateAsset<Texture>(texturePath);
+        AssetID textureID = registry.CreateAsset<Texture>(texturePath);
+
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+        DescriptorSetHandle descriptorSetHandle = device.CreateDescriptorSet();
+        descriptorSetHandle->BeginBuildingSet();
+        descriptorSetHandle->AddDescriptorImageSampler(registry.GetAsset<Texture>(textureID), ShaderStage::FRAGMENT);
+        descriptorSetHandle->EndBuildingSet(); // TODO: Annotate the descriptor sets on loads
+
+        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
 
         // Material* materialPtr = new Material();
         Ref<Material> material = CreateRef<Material>();
         material->VertexShaderID = vertexShaderID;
         material->PixelShaderID = fragmentShaderID;
-        material->TextureID = textureShaderID;
+        material->TextureID = textureID;
+        material->DescriptorSet = descriptorSetHandle;
 
         return material;
     }

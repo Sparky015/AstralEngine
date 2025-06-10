@@ -21,6 +21,11 @@ namespace Astral {
         void SetBlending(bool enable) override;
         void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) override;
         void EndLabel(CommandBufferHandle commandBufferHandle) override;
+        void InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) override;
+        void NameObject(BufferHandle bufferHandle, std::string_view name) override;
+        void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name) override;
+        void NameObject(TextureHandle textureHandle, std::string_view name) override;
+        void NameObject(ShaderHandle shaderHandle, std::string_view name) override;
 
         void CallImGuiDraws(CommandBufferHandle commandBufferHandle) override;
     };

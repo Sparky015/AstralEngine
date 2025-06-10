@@ -7,6 +7,7 @@
 #include "ShaderLoader.h"
 
 #include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Resources/Shader.h"
 
 namespace Astral {
@@ -15,7 +16,9 @@ namespace Astral {
     {
         PROFILE_SCOPE("ShaderLoader::LoadAsset")
         ShaderSource shaderSource = ShaderSource(filePath);
-        return Shader::CreateShader(shaderSource);
+        ShaderHandle shaderHandle = Shader::CreateShader(shaderSource);
+        RendererAPI::NameObject(shaderHandle, filePath.filename().string().data());
+        return shaderHandle;
     }
 
 }

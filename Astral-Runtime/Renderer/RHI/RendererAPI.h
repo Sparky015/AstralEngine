@@ -22,6 +22,11 @@ namespace Astral {
         static void SetBlending(bool enable);
         static void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
         static void EndLabel(CommandBufferHandle commandBufferHandle);
+        static void InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
+        static void NameObject(BufferHandle bufferHandle, std::string_view name);
+        static void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name);
+        static void NameObject(TextureHandle textureHandle, std::string_view name);
+        static void NameObject(ShaderHandle shaderHandle, std::string_view name);
 
         static void CallImGuiDraws(CommandBufferHandle commandBufferHandle);
 

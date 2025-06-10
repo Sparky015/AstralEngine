@@ -93,6 +93,103 @@ namespace Astral {
     }
 
 
+    void VulkanRendererCommands::InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
+    {
+        thread_local VkInstance instance = (VkInstance)Engine::Get().GetRendererManager().GetContext().GetInstanceHandle();
+        thread_local PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT = (PFN_vkCmdInsertDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdInsertDebugUtilsLabelEXT");
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+
+        VkDebugUtilsLabelEXT debugUtilsLabel = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+            .pNext = nullptr,
+            .pLabelName = label.data(),
+            .color = {color.r, color.g, color.b, color.a},
+        };
+
+        vkCmdInsertDebugUtilsLabelEXT(commandBuffer, &debugUtilsLabel);
+    }
+
+
+    void VulkanRendererCommands::NameObject(BufferHandle bufferHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+        VkBuffer buffer = (VkBuffer)bufferHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_BUFFER,
+            .objectHandle = (uint64)buffer,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
+    void VulkanRendererCommands::NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+        VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_DESCRIPTOR_SET,
+            .objectHandle = (uint64)descriptorSet,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
+    void VulkanRendererCommands::NameObject(TextureHandle textureHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_IMAGE_VIEW,
+            .objectHandle = (uint64)imageView,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
+    void VulkanRendererCommands::NameObject(ShaderHandle shaderHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+        VkShaderModule shader = (VkShaderModule)shaderHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_SHADER_MODULE,
+            .objectHandle = (uint64)shader,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
     void VulkanRendererCommands::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();

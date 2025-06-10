@@ -51,13 +51,13 @@ namespace Astral {
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
             context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass, renderTargets[i]);
             context.TempPipelineState = nullptr;
-            context.TempDescriptorSets = std::vector<DescriptorSetHandle>();
             context.SceneRenderTarget = nullptr;
             context.SceneCameraBuffer = device.CreateUniformBuffer(nullptr, sizeof(Mat4));
             context.SceneCameraDescriptorSet = device.CreateDescriptorSet();
             context.SceneCameraDescriptorSet->BeginBuildingSet();
             context.SceneCameraDescriptorSet->AddDescriptorUniformBuffer(context.SceneCameraBuffer, ShaderStage::VERTEX);
             context.SceneCameraDescriptorSet->EndBuildingSet();
+            RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
         }
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
@@ -98,8 +98,6 @@ namespace Astral {
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
 
-        frameContext.TempDescriptorSets.clear();
-
         RendererAPI::SetBlending(true);
     }
 
@@ -123,9 +121,6 @@ namespace Astral {
         frameContext.Meshes.push_back(mesh);
         frameContext.Materials.push_back(material);
         frameContext.Transforms.push_back(transform);
-
-        Device& device = RendererAPI::GetDevice();
-        frameContext.TempDescriptorSets.push_back(device.CreateDescriptorSet());
     }
 
 
@@ -162,22 +157,13 @@ namespace Astral {
         {
             Mesh& mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
+            DescriptorSetHandle& descriptorSet = material.DescriptorSet;
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            Ref<Texture> texture = registry.GetAsset<Texture>(material.TextureID);
             Ref<Shader> vertexShader = registry.GetAsset<Shader>(material.VertexShaderID);
             Ref<Shader> fragmentShader = registry.GetAsset<Shader>(material.PixelShaderID);
 
-
-            DescriptorSetHandle& descriptorSet = frameContext.TempDescriptorSets[i];
-            //TODO: Save the descriptor sets to the materials
-            RendererAPI::BeginLabel(commandBuffer, "Building Descriptor Set", Vec4(1.0 , 0, 0, 1.0));
-            descriptorSet->BeginBuildingSet();
-            descriptorSet->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
-            descriptorSet->EndBuildingSet();
-            RendererAPI::EndLabel(commandBuffer);
-
-            if (i == 0)
+            if (frameContext.TempPipelineState == nullptr)
             {
                 std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, descriptorSet};
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
@@ -186,9 +172,9 @@ namespace Astral {
 
             RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
 
-            frameContext.TempPipelineState->Bind(commandBuffer); // temp, idk
+            frameContext.TempPipelineState->Bind(commandBuffer);
             frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
-            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet, 1); // temp, idk
+            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);

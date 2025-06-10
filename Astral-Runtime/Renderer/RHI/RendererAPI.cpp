@@ -62,6 +62,36 @@ namespace Astral {
     }
 
 
+    void RendererAPI::InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
+    {
+        s_RendererCommands->InsertMarker(commandBufferHandle, label, color);
+    }
+
+
+    void RendererAPI::NameObject(BufferHandle bufferHandle, std::string_view name)
+    {
+        s_RendererCommands->NameObject(bufferHandle, name);
+    }
+
+
+    void RendererAPI::NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name)
+    {
+        s_RendererCommands->NameObject(descriptorSetHandle, name);
+    }
+
+
+    void RendererAPI::NameObject(TextureHandle textureHandle, std::string_view name)
+    {
+        s_RendererCommands->NameObject(textureHandle, name);
+    }
+
+
+    void RendererAPI::NameObject(ShaderHandle shaderHandle, std::string_view name)
+    {
+        s_RendererCommands->NameObject(shaderHandle, name);
+    }
+
+
     void RendererAPI::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         s_RendererCommands->CallImGuiDraws(commandBufferHandle);

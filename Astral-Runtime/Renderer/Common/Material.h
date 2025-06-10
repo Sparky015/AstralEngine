@@ -10,6 +10,7 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Asset/Asset.h"
 #include "Asset/AssetRegistry.h"
+#include "Renderer/RHI/Resources/DescriptorSet.h"
 
 namespace Astral {
 
@@ -18,6 +19,7 @@ namespace Astral {
         AssetID VertexShaderID;
         AssetID PixelShaderID;
         AssetID TextureID;
+        DescriptorSetHandle DescriptorSet;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::Material; }
