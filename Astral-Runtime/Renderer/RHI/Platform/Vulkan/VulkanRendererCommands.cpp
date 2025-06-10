@@ -6,11 +6,14 @@
 
 #include "VulkanRendererCommands.h"
 
+
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #ifdef ASTRAL_VULKAN_AVAILABLE
 #endif
-
+#include "Core/Engine.h"
 #include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
+#include "Renderer/RendererManager.h"
 
 namespace Astral {
 
@@ -60,6 +63,33 @@ namespace Astral {
     void VulkanRendererCommands::SetBlending(bool enable)
     {
 
+    }
+
+
+    void VulkanRendererCommands::BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
+    {
+        thread_local VkInstance instance = (VkInstance)Engine::Get().GetRendererManager().GetContext().GetInstanceHandle();
+        thread_local PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdBeginDebugUtilsLabelEXT");
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+
+        VkDebugUtilsLabelEXT debugUtilsLabel = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+            .pNext = nullptr,
+            .pLabelName = label.data(),
+            .color = {color.r, color.g, color.b, color.a},
+        };
+
+        vkCmdBeginDebugUtilsLabelEXT(commandBuffer, &debugUtilsLabel);
+    }
+
+
+    void VulkanRendererCommands::EndLabel(CommandBufferHandle commandBufferHandle)
+    {
+        thread_local VkInstance instance = (VkInstance)Engine::Get().GetRendererManager().GetContext().GetInstanceHandle();
+        thread_local PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdEndDebugUtilsLabelEXT");
+
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdEndDebugUtilsLabelEXT(commandBuffer);
     }
 
 

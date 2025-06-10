@@ -50,6 +50,18 @@ namespace Astral {
     }
 
 
+    void RendererAPI::BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
+    {
+        s_RendererCommands->BeginLabel(commandBufferHandle, label, color);
+    }
+
+
+    void RendererAPI::EndLabel(CommandBufferHandle commandBufferHandle)
+    {
+        s_RendererCommands->EndLabel(commandBufferHandle);
+    }
+
+
     void RendererAPI::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         s_RendererCommands->CallImGuiDraws(commandBufferHandle);

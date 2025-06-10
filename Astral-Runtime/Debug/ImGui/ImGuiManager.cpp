@@ -74,6 +74,7 @@ namespace Astral {
 
                 ImGui::Spacing();
                 RendererAPIComponent();
+                RendererAPIValidationStatus();
 
                 ImGui::Spacing();
                 ImGui::TreePop();

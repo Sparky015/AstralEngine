@@ -27,7 +27,7 @@ namespace Astral {
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(OrthographicCamera& orthographicCamera);
+        static void BeginScene(const SceneDescription& sceneDescription);
         static void EndScene();
 
         static void Submit(Mesh& mesh, Material& material, Mat4& transform);
@@ -53,6 +53,8 @@ namespace Astral {
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneCameraBuffer;
             DescriptorSetHandle SceneCameraDescriptorSet;
+
+            TextureHandle OffscreenRenderTarget;
         };
 
         struct SceneRendererContext

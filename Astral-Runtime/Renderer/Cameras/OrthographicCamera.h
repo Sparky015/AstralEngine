@@ -19,7 +19,7 @@ namespace Astral {
         OrthographicCamera(float left, float right, float bottom, float top, float near = -1, float far = 1);
 
         /**@brief Gets the ProjectionView matrix. The matrix is calculated on other calls and cached. */
-        Mat4& GetProjectionViewMatrix();
+        const Mat4& GetProjectionViewMatrix() const;
 
         /**@brief Sets the position of the camera in world space */
         void SetPosition(const Vec3& position)

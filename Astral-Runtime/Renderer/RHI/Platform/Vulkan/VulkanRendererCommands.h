@@ -19,6 +19,8 @@ namespace Astral {
         void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
                                 pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
         void SetBlending(bool enable) override;
+        void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) override;
+        void EndLabel(CommandBufferHandle commandBufferHandle) override;
 
         void CallImGuiDraws(CommandBufferHandle commandBufferHandle) override;
     };

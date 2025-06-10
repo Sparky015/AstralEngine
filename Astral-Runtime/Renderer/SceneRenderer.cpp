@@ -78,7 +78,7 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::BeginScene(OrthographicCamera& orthographicCamera)
+    void SceneRenderer::BeginScene(const SceneDescription& sceneDescription)
     {
         PROFILE_SCOPE("SceneRenderer::BeginScene")
         Device& device = RendererAPI::GetDevice();
@@ -93,7 +93,7 @@ namespace Astral {
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
-        frameContext.SceneCameraBuffer->CopyDataToBuffer(glm::value_ptr(orthographicCamera.GetProjectionViewMatrix()), sizeof(Mat4));
+        frameContext.SceneCameraBuffer->CopyDataToBuffer((void*)glm::value_ptr(sceneDescription.Camera.GetProjectionViewMatrix()), sizeof(Mat4));
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
@@ -156,6 +156,7 @@ namespace Astral {
         RenderPassHandle renderPass = m_RendererContext->RenderPass;
 
         commandBuffer->BeginRecording();
+        RendererAPI::BeginLabel(commandBuffer, "Main Render Pass", Vec4(1.0 , 1.0, 0, 1.0));
         renderPass->BeginRenderPass(commandBuffer, framebufferHandle);
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
@@ -171,9 +172,11 @@ namespace Astral {
 
             DescriptorSetHandle& descriptorSet = frameContext.TempDescriptorSets[i];
             //TODO: Save the descriptor sets to the materials
+            RendererAPI::BeginLabel(commandBuffer, "Building Descriptor Set", Vec4(1.0 , 0, 0, 1.0));
             descriptorSet->BeginBuildingSet();
             descriptorSet->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
             descriptorSet->EndBuildingSet();
+            RendererAPI::EndLabel(commandBuffer);
 
             if (i == 0)
             {
@@ -192,8 +195,11 @@ namespace Astral {
             mesh.IndexBuffer->Bind(commandBuffer);
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
+        RendererAPI::EndLabel(commandBuffer);
 
+        RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
         RendererAPI::CallImGuiDraws(commandBuffer);
+        RendererAPI::EndLabel(commandBuffer);
 
         renderPass->EndRenderPass(commandBuffer);
         commandBuffer->EndRecording();

@@ -8,6 +8,7 @@
 
 #include "Core/Events/EventListener.h"
 #include "Core/EngineLoopEvents.h"
+#include "Core/Math/Math.h"
 #include "Resources/CommandBuffer.h"
 #include "Resources/IndexBuffer.h"
 #include "Resources/PipelineStateObject.h"
@@ -31,7 +32,9 @@ namespace Astral {
         virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
         virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
-        virtual void SetBlending(bool enable) = 0 ;
+        virtual void SetBlending(bool enable) = 0;
+        virtual void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) = 0;
+        virtual void EndLabel(CommandBufferHandle commandBufferHandle) = 0;
 
         virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
 

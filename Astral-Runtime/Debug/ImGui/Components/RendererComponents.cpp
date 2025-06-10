@@ -37,4 +37,14 @@ namespace Astral {
         ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
     }
 
+
+    void RendererAPIValidationStatus()
+    {
+#ifdef ASTRAL_DISABLE_RENDERING_API_VALIDATION
+        ImGui::Text("Renderer API Validation: Off");
+#else
+        ImGui::Text("Renderer API Validation: On");
+#endif
+    }
+
 }

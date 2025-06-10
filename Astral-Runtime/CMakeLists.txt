@@ -302,11 +302,11 @@ if (WIN32)
     target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
     target_link_libraries(AstralEngine PUBLIC
             vulkan-1
-            SPIRV-Toolsd
-            SPIRV-Tools-diffd
-            SPIRV-Tools-optd
-            glslangd
-            glslang-default-resource-limitsd
+            SPIRV-Tools
+            SPIRV-Tools-diff
+            SPIRV-Tools-opt
+            glslang
+            glslang-default-resource-limits
     )
 elseif (APPLE)
     target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
@@ -352,8 +352,8 @@ target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 # Defining Macros
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    # DEBUG
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD)
-
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEBUG_BUILD
+    )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release
     target_compile_definitions(AstralEngine PUBLIC
@@ -362,6 +362,7 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release
             -DTURN_OFF_DEBUG_MACROS
             -DTURN_OFF_PROFILER_MACRO
             -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+            -DASTRAL_DISABLE_RENDERING_API_VALIDATION
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")    # MinSizeRel
@@ -369,19 +370,19 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")    # MinSizeRel
             -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD
     )
 
-
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
     target_compile_definitions(AstralEngine PUBLIC
             -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
+            -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+            -DTURN_OFF_DEBUG_MACROS
+            -DASTRAL_DISABLE_RENDERING_API_VALIDATION
     )
-
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
     target_compile_definitions(AstralEngine PUBLIC
             -DASTRAL_DEBUG_BUILD
 
     )
-
 
 endif()
 

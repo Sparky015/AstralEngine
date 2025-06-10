@@ -49,6 +49,7 @@ namespace Astral {
             default: ASTRAL_ERROR("Invalid shader type!"); break;
         }
 
+
         const glslang_input_t input = {
             .language = GLSLANG_SOURCE_GLSL,
             .stage = shaderStage,
@@ -101,7 +102,20 @@ namespace Astral {
             ASTRAL_ERROR("GLSL linking failed " << shaderSource.GetFileName().data());
         }
 
-        glslang_program_SPIRV_generate(program, shaderStage);
+        glslang_spv_options_t spv_options = {
+            .generate_debug_info = true,                    // Enable debug info
+            .strip_debug_info = false,                      // Don't strip debug info
+            .disable_optimizer = true,                      // Disable optimizer to preserve debug info
+            .optimize_size = false,
+            .disassemble = false,
+            .validate = true,
+            .emit_nonsemantic_shader_debug_info = true,     // Enable NonSemantic debug info
+            .emit_nonsemantic_shader_debug_source = true,   // Include source in debug info
+            .compile_only = false,
+            .optimize_allow_expanded_id_bound = false
+        };
+
+        glslang_program_SPIRV_generate_with_options(program, shaderStage, &spv_options);
 
         size_t numberOfWords = glslang_program_SPIRV_get_size(program);
         SPIRV_Code.resize(numberOfWords);

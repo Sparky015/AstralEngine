@@ -102,7 +102,9 @@ namespace Astral {
         PROFILE_SCOPE("Creating Vulkan Instance")
 
         std::vector<const char*> layers = {
+#ifndef ASTRAL_DISABLE_RENDERING_API_VALIDATION
             "VK_LAYER_KHRONOS_validation"
+#endif
         };
 
         std::vector<const char*> extensions = {

@@ -20,6 +20,8 @@ namespace Astral {
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
         static void PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes);
         static void SetBlending(bool enable);
+        static void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
+        static void EndLabel(CommandBufferHandle commandBufferHandle);
 
         static void CallImGuiDraws(CommandBufferHandle commandBufferHandle);
 

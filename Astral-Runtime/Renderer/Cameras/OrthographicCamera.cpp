@@ -5,9 +5,6 @@
 */
 #include "OrthographicCamera.h"
 
-#include "Astral.h"
-#include "Astral.h"
-
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -35,7 +32,7 @@ namespace Astral {
     }
 
 
-    Mat4& OrthographicCamera::GetProjectionViewMatrix()
+    const Mat4& OrthographicCamera::GetProjectionViewMatrix() const
     {
         return m_ProjectionViewMatrix;
     }

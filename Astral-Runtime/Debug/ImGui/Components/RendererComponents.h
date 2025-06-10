@@ -10,5 +10,6 @@ namespace Astral {
     void FrameTimeComponent();
     void DrawCallsPerFrameComponent();
     void RendererAPIComponent();
+    void RendererAPIValidationStatus();
 
 }
