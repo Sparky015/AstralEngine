@@ -117,7 +117,6 @@ namespace Astral {
 
     void SceneRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
     {
-        PROFILE_SCOPE("SceneRenderer::Submit")
         ASSERT(m_RendererContext->IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
 
