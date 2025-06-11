@@ -105,18 +105,17 @@ namespace Astral {
     }
 
 
-    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle)
+    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
     {
         VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-        VkImageView imageView = (VkImageView)renderTargetHandle->GetImageView();
 
         VulkanFramebufferDesc vulkanFramebufferDesc = {
             .Device = m_Device,
-            .RenderPass = renderPass,
-            .ImageView = imageView,
+            .RenderPass = renderPass
         };
 
-        glfwGetFramebufferSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
+        // TODO: Move this
+        // glfwGetFramebufferSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
     }

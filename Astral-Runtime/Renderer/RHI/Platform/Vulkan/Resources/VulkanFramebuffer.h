@@ -11,15 +11,15 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Renderer/RHI/Resources/RenderTarget.h"
+#include "Renderer/RHI/Resources/Texture.h"
+
 namespace Astral {
 
     struct VulkanFramebufferDesc
     {
         VkDevice Device;
         VkRenderPass RenderPass;
-        int32 WindowWidth;
-        int32 WindowHeight;
-        VkImageView ImageView;
     };
 
     class VulkanFramebuffer : public Framebuffer
@@ -28,7 +28,14 @@ namespace Astral {
         explicit VulkanFramebuffer(const VulkanFramebufferDesc& desc);
         ~VulkanFramebuffer() override;
 
-        UVec2 GetExtent() override { return {m_WindowWidth, m_WindowHeight}; }
+        UVec2 GetExtent() override { return {m_FramebufferWidth, m_FramebufferHeight}; }
+
+        void BeginBuildingFramebuffer(uint32 framebufferWidth, uint32 framebufferHeight) override;
+        void AttachRenderTarget(RenderTargetHandle renderTargetHandle) override;
+        void AttachTexture(TextureHandle textureHandle) override;
+        void EndBuildingFramebuffer() override;
+
+        void InvalidateFramebuffer() override;
 
         void* GetNativeHandle() override { return m_Framebuffer; }
 
@@ -39,9 +46,14 @@ namespace Astral {
 
         VkDevice m_Device;
         VkRenderPass m_RenderPass;
-        uint32 m_WindowWidth;
-        uint32 m_WindowHeight;
-        VkImageView m_ImageView;
+
+        // Hold a ref to each image added so they will stay alive while framebuffer is alive
+        std::vector<TextureHandle> m_Textures;
+        std::vector<RenderTargetHandle> m_RenderTargets;
+        std::vector<VkImageView> m_ImageViews;
+
+        uint32 m_FramebufferWidth;
+        uint32 m_FramebufferHeight;
 
         VkFramebuffer m_Framebuffer;
     };

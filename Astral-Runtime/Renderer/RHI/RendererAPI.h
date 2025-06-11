@@ -7,6 +7,7 @@
 
 #include "../SceneRenderer.h"
 #include "RendererCommands.h"
+#include "RendererContext.h"
 #include "Resources/Device.h"
 
 namespace Astral {
@@ -15,6 +16,7 @@ namespace Astral {
     {
     public:
         static Device& GetDevice();
+        static RenderingContext& GetContext();
         static void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle);
         static void SetClearColor(float r, float g, float b, float a);
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);

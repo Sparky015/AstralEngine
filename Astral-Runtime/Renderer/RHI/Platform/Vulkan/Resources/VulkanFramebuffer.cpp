@@ -13,16 +13,58 @@ namespace Astral {
     VulkanFramebuffer::VulkanFramebuffer(const VulkanFramebufferDesc& desc) :
         m_Device(desc.Device),
         m_RenderPass(desc.RenderPass),
-        m_WindowWidth(desc.WindowWidth),
-        m_WindowHeight(desc.WindowHeight),
-        m_ImageView(desc.ImageView)
+        m_FramebufferWidth(0),
+        m_FramebufferHeight(0),
+        m_Framebuffer(VK_NULL_HANDLE)
     {
-        CreateFramebuffer();
+
     }
 
     VulkanFramebuffer::~VulkanFramebuffer()
     {
-        DestroyFramebuffer();
+        VulkanFramebuffer::InvalidateFramebuffer();
+    }
+
+
+    void VulkanFramebuffer::BeginBuildingFramebuffer(uint32 framebufferWidth, uint32 framebufferHeight)
+    {
+        InvalidateFramebuffer();
+        m_FramebufferWidth = framebufferWidth;
+        m_FramebufferHeight = framebufferHeight;
+    }
+
+
+    void VulkanFramebuffer::AttachRenderTarget(RenderTargetHandle renderTargetHandle)
+    {
+        VkImageView imageView = (VkImageView)renderTargetHandle->GetImageView();
+        m_ImageViews.push_back(imageView);
+        m_RenderTargets.push_back(renderTargetHandle);
+    }
+
+
+    void VulkanFramebuffer::AttachTexture(TextureHandle textureHandle)
+    {
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+        m_ImageViews.push_back(imageView);
+        m_Textures.push_back(textureHandle);
+    }
+
+
+    void VulkanFramebuffer::EndBuildingFramebuffer()
+    {
+        CreateFramebuffer();
+    }
+
+
+    void VulkanFramebuffer::InvalidateFramebuffer()
+    {
+        if (m_Framebuffer != VK_NULL_HANDLE)
+        {
+            DestroyFramebuffer();
+        }
+        m_ImageViews.clear();
+        m_Textures.clear();
+        m_RenderTargets.clear();
     }
 
 
@@ -31,10 +73,10 @@ namespace Astral {
         VkFramebufferCreateInfo framebufferInfo = {
             .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
             .renderPass = m_RenderPass,
-            .attachmentCount = 1,
-            .pAttachments = &m_ImageView,
-            .width = m_WindowWidth,
-            .height = m_WindowHeight,
+            .attachmentCount = (uint32)m_ImageViews.size(),
+            .pAttachments = m_ImageViews.data(),
+            .width = m_FramebufferWidth,
+            .height = m_FramebufferHeight,
             .layers = 1,
         };
 
@@ -46,6 +88,7 @@ namespace Astral {
     void VulkanFramebuffer::DestroyFramebuffer()
     {
         vkDestroyFramebuffer(m_Device, m_Framebuffer, nullptr);
+        m_Framebuffer = nullptr;
     }
 
 }

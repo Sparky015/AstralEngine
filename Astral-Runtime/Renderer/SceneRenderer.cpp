@@ -32,6 +32,7 @@ namespace Astral {
         m_RendererContext->WindowResizedListener = EventListener<FramebufferResizedEvent>{[](FramebufferResizedEvent event) { SceneRenderer::ResizeImages(event.Width, event.Height); }};
         m_RendererContext->WindowResizedListener.StartListening();
 
+        RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
@@ -49,7 +50,11 @@ namespace Astral {
             context.Materials = std::vector<Material>();
             context.Transforms = std::vector<Mat4>();
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
-            context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass, renderTargets[i]);
+            context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
+            UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
+            context.SceneFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
+            context.SceneFramebuffer->AttachRenderTarget(renderTargets[i]);
+            context.SceneFramebuffer->EndBuildingFramebuffer();
             context.TempPipelineState = nullptr;
             context.SceneRenderTarget = nullptr;
             context.SceneCameraBuffer = device.CreateUniformBuffer(nullptr, sizeof(Mat4));
@@ -204,7 +209,7 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
-            m_RendererContext->FrameContexts[i].SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass, renderTargets[i]);
+            m_RendererContext->FrameContexts[i].SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
         }
         device.WaitIdle();
     }

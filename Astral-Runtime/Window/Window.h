@@ -30,6 +30,7 @@ namespace Astral {
         virtual uint8 GetVsyncSetting() = 0;
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
+        virtual UVec2 GetFramebufferDimensions() = 0;
         virtual Vec2 GetFramebufferScale() = 0;
 
         virtual void SetWindowName(std::string_view windowName) = 0;

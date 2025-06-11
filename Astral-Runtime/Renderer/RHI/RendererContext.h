@@ -24,6 +24,7 @@ namespace Astral {
         virtual void Shutdown() = 0;
 
         virtual Device& GetDevice() = 0;
+        UVec2 GetFramebufferSize();
 
         virtual std::string_view GetRenderingAPI() = 0;
         virtual std::string_view GetGPUVendor() = 0;

@@ -12,6 +12,13 @@
 
 namespace Astral {
 
+    UVec2 RenderingContext::GetFramebufferSize()
+    {
+        Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();
+        return window.GetFramebufferDimensions();
+    }
+
+
     RenderingContext* RenderingContext::CreateRendererContext()
     {
         Astral::Window& window = Engine::Get().GetWindowManager().GetWindow();

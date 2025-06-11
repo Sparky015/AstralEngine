@@ -35,7 +35,7 @@ namespace Astral {
         CommandBufferHandle AllocateCommandBuffer() override;
         CommandQueueHandle GetCommandQueue() override;
         RenderPassHandle CreateRenderPass(RenderTargetHandle renderTargetHandle) override;
-        FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle, RenderTargetHandle renderTargetHandle) override;
+        FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override;
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
         PipelineStateObjectHandle CreatePipelineStateObject(RenderPassHandle renderPassHandle, ShaderHandle vertexShader, ShaderHandle fragmentShader, std::vector<
                                                             DescriptorSetHandle>

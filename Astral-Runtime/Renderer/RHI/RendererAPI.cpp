@@ -20,6 +20,12 @@ namespace Astral {
     }
 
 
+    RenderingContext& RendererAPI::GetContext()
+    {
+        return Engine::Get().GetRendererManager().GetContext();
+    }
+
+
     void RendererAPI::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
         s_RendererCommands->Clear(commandBufferHandle, renderTargetHandle);

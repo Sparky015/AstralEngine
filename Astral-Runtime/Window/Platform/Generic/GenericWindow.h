@@ -26,6 +26,7 @@ namespace Astral {
         uint8 GetVsyncSetting() override { return m_Vsync; }
         int GetWidth() override;
         int GetHeight() override;
+        UVec2 GetFramebufferDimensions() override;
         Vec2 GetFramebufferScale() override;
 
         void SetWindowName(std::string_view windowName) override;

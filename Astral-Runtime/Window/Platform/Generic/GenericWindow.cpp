@@ -204,6 +204,14 @@ namespace Astral {
     }
 
 
+    UVec2 GenericWindow::GetFramebufferDimensions()
+    {
+        int32 width, height;
+        glfwGetFramebufferSize(m_Window, &width, &height);
+        return UVec2((uint32)width, (uint32)height);
+    }
+
+
     Vec2 GenericWindow::GetFramebufferScale()
     {
         int width, height;
