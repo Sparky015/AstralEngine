@@ -8,5 +8,11 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-    color = texture(u_Texture, a_TextureCoord);
+    vec4 texColor = texture(u_Texture, a_TextureCoord);
+    if (texColor.a < 0.01f)
+    {
+        discard;
+    }
+
+    color = texColor;
 }
