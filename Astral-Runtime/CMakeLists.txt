@@ -253,6 +253,7 @@ add_library(AstralEngine
         Renderer/RHI/Common/ImageFormats.h
         Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
         Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
+        Renderer/RHI/Common/AccessFlags.h
 )
 
 
@@ -304,14 +305,25 @@ endif ()
 
 if (WIN32)
     target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
-    target_link_libraries(AstralEngine PUBLIC
-            vulkan-1
-            SPIRV-Tools
-            SPIRV-Tools-diff
-            SPIRV-Tools-opt
-            glslang
-            glslang-default-resource-limits
-    )
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        target_link_libraries(AstralEngine PUBLIC
+                vulkan-1
+                SPIRV-Toolsd
+                SPIRV-Tools-diffd
+                SPIRV-Tools-optd
+                glslangd
+                glslang-default-resource-limitsd
+        )
+    else ()
+        target_link_libraries(AstralEngine PUBLIC
+                vulkan-1
+                SPIRV-Tools
+                SPIRV-Tools-diff
+                SPIRV-Tools-opt
+                glslang
+                glslang-default-resource-limits
+        )
+    endif ()
 elseif (APPLE)
     target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
     target_link_libraries(AstralEngine PUBLIC

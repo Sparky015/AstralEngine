@@ -8,6 +8,7 @@
 
 #include "Core/FixedIntegerTypes.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/ImageFormats.h"
 
 namespace Astral {
 
@@ -19,7 +20,7 @@ namespace Astral {
         virtual void* GetRenderCompleteSemaphore() = 0;
         virtual void* GetImageAvailableSemaphore() = 0;
         virtual void* GetFence() = 0;
-        virtual void* GetImageFormat() = 0;
+        virtual ImageFormat GetImageFormat() = 0;
         virtual void* GetImageView() = 0;
         virtual void* GetNativeHandle() = 0;
 

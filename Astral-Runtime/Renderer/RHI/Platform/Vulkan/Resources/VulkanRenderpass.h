@@ -13,13 +13,11 @@
 
 #include <vulkan/vulkan_core.h>
 
-
 namespace Astral {
 
     struct VulkanRenderpassDesc
     {
         VkDevice Device;
-        VkFormat Format;
     };
 
     class VulkanRenderPass : public RenderPass
@@ -28,11 +26,20 @@ namespace Astral {
         explicit VulkanRenderPass(const VulkanRenderpassDesc& desc);
         ~VulkanRenderPass() override;
 
-        void BeginBuildingRenderPass();
-        void DefineAttachment();
-        void BeginBuildingSubpass();
-        void EndBuildingSubpass();
-        void EndBuildingRenderPass();
+        void BeginBuildingRenderPass() override;
+
+        AttachmentIndex DefineAttachment(const AttachmentDescription& attachmentDescription) override;
+        void BeginBuildingSubpass() override;
+        void AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
+        void AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
+        void AddResolveAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
+        void AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
+        void PreserveAttachment(AttachmentIndex attachmentIndex) override;
+        SubpassIndex EndBuildingSubpass() override;
+        void DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks) override;
+        void EndBuildingRenderPass() override;
+
+        void Invalidate() override;
 
         void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) override;
         void NextSubpass(CommandBufferHandle commandBufferHandle);
@@ -45,19 +52,24 @@ namespace Astral {
         void CreateRenderPass();
         void DestroyRenderPass();
 
-        using AttachmentIndex = uint8;
+        VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
+        VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
 
-        struct Subpass
+        struct SubpassAttachments
         {
-            VkSubpassDescription m_SubpassDescription;
-            std::vector<AttachmentIndex> m_AttachmentIndices;
+            std::vector<VkAttachmentReference> InputAttachments;
+            std::vector<VkAttachmentReference> ColorAttachments;
+            std::vector<VkAttachmentReference> ResolveAttachments;
+            std::vector<VkAttachmentReference> DepthStencilAttachment;
+            std::vector<AttachmentIndex> PreserveAttachments;
         };
 
         VkDevice m_Device;
-        VkFormat m_Format;
 
-        std::vector<VkAttachmentDescription> m_Attachments;
-        std::vector<Subpass> m_Subpasses;
+        std::vector<VkAttachmentDescription> m_RenderPassAttachments;
+        std::vector<SubpassAttachments> m_SubpassAttachments;
+        std::vector<VkSubpassDescription> m_SubpassDescriptions;
+        std::vector<VkSubpassDependency> m_SubpassDependencies;
 
         VkRenderPass m_RenderPass;
     };

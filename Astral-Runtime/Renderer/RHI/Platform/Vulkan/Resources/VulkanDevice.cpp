@@ -93,12 +93,10 @@ namespace Astral {
     }
 
 
-    RenderPassHandle VulkanDevice::CreateRenderPass(RenderTargetHandle renderTargetHandle)
+    RenderPassHandle VulkanDevice::CreateRenderPass()
     {
-        VkFormat format = *(VkFormat*)renderTargetHandle->GetImageFormat();
         VulkanRenderpassDesc vulkanRenderpassDesc = {
             .Device = m_Device,
-            .Format = format,
         };
 
         return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
@@ -113,9 +111,6 @@ namespace Astral {
             .Device = m_Device,
             .RenderPass = renderPass
         };
-
-        // TODO: Move this
-        // glfwGetFramebufferSize(m_Window, &vulkanFramebufferDesc.WindowWidth, &vulkanFramebufferDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
     }

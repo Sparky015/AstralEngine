@@ -38,8 +38,27 @@ namespace Astral {
 
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
 
-        // TODO: Change this to passing in a format enum value instead of a whole render target object
-        m_RendererContext->RenderPass = device.CreateRenderPass(renderTargets[0]);
+        m_RendererContext->RenderPass = device.CreateRenderPass();
+        RenderPassHandle& renderPass = m_RendererContext->RenderPass;
+
+        renderPass->BeginBuildingRenderPass();
+
+        AttachmentDescription attachmentDescription = {
+            .Format = renderTargets[0]->GetImageFormat(),
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::UNDEFINED,
+            .FinalLayout = ImageLayout::PRESENT_SRC_KHR
+        };
+
+        AttachmentIndex renderTargetIndex = renderPass->DefineAttachment(attachmentDescription);
+
+        renderPass->BeginBuildingSubpass();
+        renderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        renderPass->EndBuildingSubpass();
+
+        renderPass->EndBuildingRenderPass();
+
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
@@ -50,11 +69,13 @@ namespace Astral {
             context.Materials = std::vector<Material>();
             context.Transforms = std::vector<Mat4>();
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
+
             context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
             UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
             context.SceneFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
             context.SceneFramebuffer->AttachRenderTarget(renderTargets[i]);
             context.SceneFramebuffer->EndBuildingFramebuffer();
+
             context.TempPipelineState = nullptr;
             context.SceneRenderTarget = nullptr;
             context.SceneCameraBuffer = device.CreateUniformBuffer(nullptr, sizeof(Mat4));

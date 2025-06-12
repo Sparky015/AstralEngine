@@ -10,12 +10,18 @@
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
+#include "Renderer/RHI/Common/AccessFlags.h"
+#include "Renderer/RHI/Resources/PipelineStateObject.h"
 
 #include <vulkan/vulkan_core.h>
 
 namespace Astral {
 
-    VkFormat AstralImageFormatToVkFormat(ImageFormat imageFormat);
-    VkImageLayout AstralImageLayoutToVkImageLayout(ImageLayout imageLayout);
+    VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat);
+    VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
+    VkAccessFlags ConvertAccessFlagsToVkAccessFlags(AccessFlags accessFlags);
+    VkPipelineStageFlags ConvertPipelineStageToVkPipelineStageFlags(PipelineStageFlags pipelineStageFlags);
+
+    ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);
 
 }

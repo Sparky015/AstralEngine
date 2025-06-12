@@ -8,6 +8,7 @@
 
 #include "VulkanRenderTarget.h"
 #include "Debug/Utilities/Asserts.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
@@ -18,7 +19,7 @@ namespace Astral {
         m_QueueFamilyIndex(vulkanSwapchainDesc.QueueFamilyIndex),
         m_NumberOfSwapchainImages(vulkanSwapchainDesc.NumberOfSwapchainImages),
         m_Swapchain(VK_NULL_HANDLE),
-        m_SwapchainImageFormat(VK_FORMAT_UNDEFINED),
+        m_SwapchainImageFormat(ImageFormat::UNDEFINED),
         m_Images(),
         m_ImageViews(),
         m_RenderCompleteSemaphores(),
@@ -101,12 +102,12 @@ namespace Astral {
             if (availableFormat.format == VK_FORMAT_B8G8R8_SRGB &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                 {
-                    m_SwapchainImageFormat = availableFormat.format;
+                    m_SwapchainImageFormat = ConvertVkFormatToImageFormat(availableFormat.format);
                     return availableFormat;
                 }
         }
 
-        m_SwapchainImageFormat = availableFormats[0].format;
+        m_SwapchainImageFormat = ConvertVkFormatToImageFormat(availableFormats[0].format);
         return availableFormats[0];
     }
 

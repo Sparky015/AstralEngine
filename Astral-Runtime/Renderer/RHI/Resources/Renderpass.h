@@ -7,14 +7,68 @@
 #pragma once
 
 #include "Framebuffer.h"
+#include "Renderer/RHI/Common/AccessFlags.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/ImageFormats.h"
+#include "Renderer/RHI/Common/ImageLayouts.h"
+#include "Renderer/RHI/Resources/PipelineStateObject.h"
 
 namespace Astral {
+
+    enum class AttachmentLoadOp : uint8
+    {
+        LOAD,
+        CLEAR,
+        DONT_CARE,
+        NONE
+    };
+
+    enum class AttachmentStoreOp : uint8
+    {
+        STORE,
+        DONT_CARE,
+        NONE
+    };
+
+    struct AttachmentDescription
+    {
+        ImageFormat Format;
+        AttachmentLoadOp LoadOp;
+        AttachmentStoreOp StoreOp;
+        ImageLayout InitialLayout;
+        ImageLayout FinalLayout;
+    };
+
+    struct SubpassDependencyMasks
+    {
+        PipelineStageFlags SourceStageMask;
+        PipelineStageFlags DestinationStageMask;
+        AccessFlags SourceAccessMask;
+        AccessFlags DestinationAccessMask;
+    };
+
+    using AttachmentIndex = uint8;
+    using SubpassIndex = uint8;
+    static constexpr SubpassIndex SubpassExternal = -1;
 
     class RenderPass
     {
     public:
         virtual ~RenderPass() = default;
+
+        virtual void BeginBuildingRenderPass() = 0;
+        virtual AttachmentIndex DefineAttachment(const AttachmentDescription& attachmentDescription) = 0;
+        virtual void BeginBuildingSubpass() = 0;
+        virtual void AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+        virtual void AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+        virtual void AddResolveAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+        virtual void AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+        virtual void PreserveAttachment(AttachmentIndex attachmentIndex) = 0;
+        virtual SubpassIndex EndBuildingSubpass() = 0;
+        virtual void DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks) = 0;
+        virtual void EndBuildingRenderPass() = 0;
+
+        virtual void Invalidate() = 0;
 
         virtual void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) = 0;
         virtual void EndRenderPass(CommandBufferHandle commandBufferHandle) = 0;
