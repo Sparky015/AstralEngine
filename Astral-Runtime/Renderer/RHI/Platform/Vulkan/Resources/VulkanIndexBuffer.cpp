@@ -41,7 +41,7 @@ namespace Astral {
             .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
         VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
-        stagingBuffer.CopyDataToBuffer(desc.IndiceData, desc.SizeInBytes);
+        stagingBuffer.CopyDataToBuffer(m_IndiceData, desc.SizeInBytes);
 
 
         VulkanBufferDesc indexBufferDesc = {

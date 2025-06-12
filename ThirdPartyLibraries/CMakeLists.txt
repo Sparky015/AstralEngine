@@ -11,7 +11,3 @@ add_subdirectory(ImGuiFileDialog)
 add_subdirectory(ImPlot)
 add_subdirectory(cpptrace)
 add_subdirectory(nativefiledialog-extended)
-
-add_subdirectory(SPIRV-Headers)
-add_subdirectory(SPIRV-Tools)
-add_subdirectory(glslang)

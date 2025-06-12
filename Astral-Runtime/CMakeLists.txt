@@ -316,11 +316,11 @@ elseif (APPLE)
     target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
     target_link_libraries(AstralEngine PUBLIC
             vulkan.1
+            glslang
+            glslang-default-resource-limits
             SPIRV-Tools
             SPIRV-Tools-diff
             SPIRV-Tools-opt
-            glslang
-            glslang-default-resource-limits
     )
 endif()
 
@@ -423,4 +423,4 @@ target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/"
 target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
 target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RUNTIME_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DSHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/")
-target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}/")
+target_compile_definitions(AstralEngine PUBLIC -DENGINE_BUILD_PROFILE="${CMAKE_BUILD_TYPE}")

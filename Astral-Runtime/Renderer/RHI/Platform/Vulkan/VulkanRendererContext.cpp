@@ -127,7 +127,7 @@ namespace Astral {
             .applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
             .pEngineName = "Astral Engine",
             .engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0),
-            .apiVersion = VK_API_VERSION_1_2
+            .apiVersion = VK_API_VERSION_1_3
         };
 
         VkInstanceCreateInfo createInfo = {
