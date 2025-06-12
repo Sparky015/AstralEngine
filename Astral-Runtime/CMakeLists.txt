@@ -249,6 +249,10 @@ add_library(AstralEngine
         Renderer/RHI/Resources/Shader.cpp
         Asset/Loaders/MaterialLoader.cpp
         Asset/Loaders/ShaderLoader.cpp
+        Renderer/RHI/Common/ImageLayouts.h
+        Renderer/RHI/Common/ImageFormats.h
+        Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
+        Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
 )
 
 

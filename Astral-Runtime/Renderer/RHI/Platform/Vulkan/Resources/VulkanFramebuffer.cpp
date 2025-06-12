@@ -88,7 +88,7 @@ namespace Astral {
     void VulkanFramebuffer::DestroyFramebuffer()
     {
         vkDestroyFramebuffer(m_Device, m_Framebuffer, nullptr);
-        m_Framebuffer = nullptr;
+        m_Framebuffer = VK_NULL_HANDLE;
     }
 
 }

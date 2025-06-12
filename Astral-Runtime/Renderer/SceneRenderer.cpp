@@ -210,8 +210,12 @@ namespace Astral {
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
             m_RendererContext->FrameContexts[i].SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
+            FramebufferHandle framebuffer = m_RendererContext->FrameContexts[i].SceneFramebuffer;
+
+            framebuffer->BeginBuildingFramebuffer(width, height);
+            framebuffer->AttachRenderTarget(renderTargets[i]);
+            framebuffer->EndBuildingFramebuffer();
         }
-        device.WaitIdle();
     }
 
 } // Renderer

@@ -34,7 +34,7 @@ namespace Astral {
         VkRenderPassBeginInfo renderPassBeginInfo = {
             .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
             .pNext = nullptr,
-            .renderPass = m_Renderpass,
+            .renderPass = m_RenderPass,
             .framebuffer = framebuffer,
             .renderArea = {
                 .offset = {0,0},
@@ -45,6 +45,13 @@ namespace Astral {
         };
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    }
+
+
+    void VulkanRenderPass::NextSubpass(CommandBufferHandle commandBufferHandle)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
     }
 
 
@@ -98,14 +105,14 @@ namespace Astral {
             .pDependencies = nullptr
         };
 
-        VkResult result = vkCreateRenderPass(m_Device, &renderPassCreateInfo, nullptr, &m_Renderpass);
+        VkResult result = vkCreateRenderPass(m_Device, &renderPassCreateInfo, nullptr, &m_RenderPass);
         ASSERT(result == VK_SUCCESS, "Renderpass failed to create!");
     }
 
 
     void VulkanRenderPass::DestroyRenderPass()
     {
-        vkDestroyRenderPass(m_Device, m_Renderpass, nullptr);
+        vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
     }
 
 }
