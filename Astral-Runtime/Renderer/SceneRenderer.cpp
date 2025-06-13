@@ -70,6 +70,15 @@ namespace Astral {
             context.Transforms = std::vector<Mat4>();
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
 
+            TextureCreateInfo textureCreateInfo = {
+                .Format = renderTargets[0]->GetImageFormat(),
+                .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .Dimensions = renderTargets[0]->GetDimensions(),
+                .ImageData = nullptr
+            };
+            context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
             context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
             UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
             context.SceneFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
@@ -85,8 +94,8 @@ namespace Astral {
             context.SceneCameraDescriptorSet->EndBuildingSet();
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
 
-            RenderTargetHandle renderTarget = renderTargets[0];
-            context.OffscreenRenderTarget = device.CreateTexture(renderTarget->GetImageFormat(), ImageLayout::COLOR_ATTACHMENT_OPTIMAL, renderTarget->GetDimensions(), nullptr);
+
+
         }
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);

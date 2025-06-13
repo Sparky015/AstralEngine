@@ -13,6 +13,7 @@
 
 #include "VulkanBuffer.h"
 #include "Core/CoreMacroDefinitions.h"
+#include "Renderer/RHI/Common/ImageUsageFlags.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
@@ -25,6 +26,7 @@ namespace Astral {
         unsigned char* ImageData;
         ImageFormat ImageFormat;
         ImageLayout ImageLayout;
+        ImageUsageFlags ImageUsageFlags;
         uint32 ImageWidth;
         uint32 ImageHeight;
     };
@@ -47,7 +49,7 @@ namespace Astral {
 
     private:
 
-        void CreateTexture();
+        void CreateTexture(ImageUsageFlags imageUsageFlags);
         void DestroyTexture();
 
         void AllocateTextureMemory();

@@ -24,7 +24,7 @@ namespace Astral {
         m_ImageView(),
         m_Sampler()
     {
-        CreateTexture();
+        CreateTexture(desc.ImageUsageFlags);
     	AllocateTextureMemory();
     	CreateImageView();
     	CreateImageSampler();
@@ -40,8 +40,11 @@ namespace Astral {
     	else
     	{
     		// Image has no data
-    		m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
-    		TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, m_CurrentLayout);
+    		if (desc.ImageLayout != ImageLayout::UNDEFINED)
+    		{
+    			m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
+    			TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, m_CurrentLayout);
+    		}
     	}
     }
 
@@ -55,9 +58,10 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateTexture()
+    void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
     {
-        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
+        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | userUsageFlag;
 
         VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,

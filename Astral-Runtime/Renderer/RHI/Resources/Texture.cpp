@@ -24,9 +24,17 @@ namespace Astral {
 
         if (!data) { return nullptr; }
 
+        TextureCreateInfo textureCreateInfo = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .Dimensions = UVec2(m_Width, m_Height),
+            .ImageData = data,
+        };
+
         switch (RendererCommands::GetAPI())
         {
-            case API::Vulkan: return device.CreateTexture(ImageFormat::R8G8B8A8_UNORM, ImageLayout::SHADER_READ_ONLY_OPTIMAL, UVec2(m_Width, m_Height), data);
+            case API::Vulkan: return device.CreateTexture(textureCreateInfo);
             case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
             case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
             default: ASTRAL_ERROR("Invalid Renderer API");

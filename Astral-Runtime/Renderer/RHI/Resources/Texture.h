@@ -6,14 +6,25 @@
 
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Asset/Asset.h"
-
-#include <string>
-
 #include "Core/Math/Math.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
 
+#include <string>
+
+#include "Renderer/RHI/Common/ImageUsageFlags.h"
+
+
 namespace Astral {
+
+    struct TextureCreateInfo
+    {
+        ImageFormat Format;
+        ImageLayout Layout;
+        ImageUsageFlags UsageFlags;
+        UVec2 Dimensions;
+        uint8* ImageData;
+    };
 
     class Texture : public Asset
     {
