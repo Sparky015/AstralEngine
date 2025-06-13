@@ -37,7 +37,7 @@ namespace Astral {
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
         virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
-        virtual TextureHandle CreateTexture(unsigned char* imageData, uint32 width, uint32 height) = 0;
+        virtual TextureHandle CreateTexture(ImageFormat imageFormat, ImageLayout imageLayout, UVec2 dimensions, uint8* imageData) = 0;
 
         virtual void WaitIdle() = 0;
 

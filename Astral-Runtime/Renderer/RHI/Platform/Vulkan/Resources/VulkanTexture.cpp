@@ -9,25 +9,40 @@
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 #include "VulkanBuffer.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
+		m_DeviceManager(desc.VulkanDevice),
         m_Device(desc.Device),
 		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
         m_ImageWidth(desc.ImageWidth),
         m_ImageHeight(desc.ImageHeight),
+		m_Format(ConvertImageFormatToVkFormat(desc.ImageFormat)),
         m_Image(),
         m_ImageView(),
         m_Sampler()
     {
-        CreateTexture(desc);
+        CreateTexture();
     	AllocateTextureMemory();
-    	TransitionImageLayout(desc, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-    	UploadDataToTexture(desc);
-    	TransitionImageLayout(desc, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		CreateImageView(desc);
+    	CreateImageView();
     	CreateImageSampler();
+
+    	if (desc.ImageData)
+    	{
+    		// Image has data
+    		m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
+    		TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    		UploadDataToTexture(desc.ImageData);
+    		TransitionImageLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_CurrentLayout);
+    	}
+    	else
+    	{
+    		// Image has no data
+    		m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
+    		TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, m_CurrentLayout);
+    	}
     }
 
 
@@ -40,7 +55,7 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateTexture(const VulkanTextureDesc& desc)
+    void VulkanTexture::CreateTexture()
     {
         VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
@@ -49,7 +64,7 @@ namespace Astral {
             .pNext = nullptr,
             .flags = 0,
             .imageType = VK_IMAGE_TYPE_2D,
-            .format = desc.ImageFormat,
+            .format = m_Format,
             .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},
             .mipLevels = 1,
             .arrayLayers = 1,
@@ -101,7 +116,7 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateImageView(const VulkanTextureDesc& desc)
+    void VulkanTexture::CreateImageView()
     {
     	VkImageViewCreateInfo imageViewCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -109,7 +124,7 @@ namespace Astral {
     		.flags = 0,
     		.image = m_Image,
     		.viewType = VK_IMAGE_VIEW_TYPE_2D,
-    		.format = desc.ImageFormat,
+    		.format = m_Format,
     		.components = {
 				.r = VK_COMPONENT_SWIZZLE_R,
 				.g = VK_COMPONENT_SWIZZLE_G,
@@ -136,9 +151,9 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::UploadDataToTexture(const VulkanTextureDesc& desc)
+    void VulkanTexture::UploadDataToTexture(uint8* data)
     {
-        uint32 bytesPerPixel = GetBytesPerTexFormat(desc.ImageFormat);
+        uint32 bytesPerPixel = GetBytesPerTexFormat(m_Format);
         uint32 layerSize = m_ImageWidth * m_ImageHeight * bytesPerPixel;
         uint32 layerCount = 1;
         uint32 imageSize = layerCount * layerSize;
@@ -147,20 +162,20 @@ namespace Astral {
             .Device = m_Device,
             .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             .Size = imageSize,
-            .DeviceMemoryProperties = desc.PhysicalDeviceMemoryProperties,
+            .DeviceMemoryProperties = m_PhysicalDeviceMemoryProperties,
             .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
 
         VulkanBuffer stagingBuffer = VulkanBuffer{bufferDesc};
-        stagingBuffer.CopyDataToBuffer(desc.ImageData, imageSize);
+        stagingBuffer.CopyDataToBuffer(data, imageSize);
 
-		CopyFromStagingBuffer(stagingBuffer, desc);
+		CopyFromStagingBuffer(stagingBuffer);
     }
 
 
-    void VulkanTexture::TransitionImageLayout(const VulkanTextureDesc& desc, VkImageLayout oldLayout, VkImageLayout newLayout)
+    void VulkanTexture::TransitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
     {
-        CommandBufferHandle commandBufferHandle = desc.VulkanDevice.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkImageMemoryBarrier barrier = {
@@ -182,6 +197,7 @@ namespace Astral {
             }
         };
 
+    	// TODO: Abstract this better than a ton of if statements
         VkPipelineStageFlags sourceStage = VK_PIPELINE_STAGE_NONE;
 		VkPipelineStageFlags destinationStage = VK_PIPELINE_STAGE_NONE;
 
@@ -326,16 +342,16 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = desc.VulkanDevice.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
 
 
-    void VulkanTexture::CopyFromStagingBuffer(VulkanBuffer& stagingBuffer, const VulkanTextureDesc& desc)
+    void VulkanTexture::CopyFromStagingBuffer(VulkanBuffer& stagingBuffer)
     {
         VkBuffer buffer = (VkBuffer)stagingBuffer.GetNativeHandle();
-        CommandBufferHandle commandBufferHandle = desc.VulkanDevice.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
     	VkBufferImageCopy bufferImageCopy = {
@@ -357,7 +373,7 @@ namespace Astral {
 		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = desc.VulkanDevice.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }

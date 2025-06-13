@@ -9,16 +9,23 @@
 
 #include <string>
 
+#include "Core/Math/Math.h"
+#include "Renderer/RHI/Common/ImageFormats.h"
+#include "Renderer/RHI/Common/ImageLayouts.h"
+
 namespace Astral {
 
     class Texture : public Asset
     {
     public:
-        virtual ~Texture() = default;
-        virtual void Bind(unsigned int slot = 0) {};
-        virtual void Unbind() {};
+        ~Texture() override = default;
+
         virtual int GetWidth() = 0;
         virtual int GetHeight() = 0;
+        virtual UVec2 GetDimensions() = 0;
+
+        virtual ImageLayout GetLayout() = 0;
+        virtual ImageFormat GetFormat() = 0;
 
         virtual void* GetSampler() = 0;
         virtual void* GetNativeHandle() = 0;

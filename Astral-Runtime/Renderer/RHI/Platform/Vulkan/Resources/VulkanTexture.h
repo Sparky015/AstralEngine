@@ -13,6 +13,7 @@
 
 #include "VulkanBuffer.h"
 #include "Core/CoreMacroDefinitions.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
@@ -20,11 +21,12 @@ namespace Astral {
     {
         VulkanDevice& VulkanDevice;
         VkDevice Device;
+        VkPhysicalDeviceMemoryProperties PhysicalDeviceMemoryProperties;
         unsigned char* ImageData;
-        VkFormat ImageFormat;
+        ImageFormat ImageFormat;
+        ImageLayout ImageLayout;
         uint32 ImageWidth;
         uint32 ImageHeight;
-        VkPhysicalDeviceMemoryProperties PhysicalDeviceMemoryProperties;
     };
 
     class VulkanTexture : public Texture
@@ -35,25 +37,29 @@ namespace Astral {
 
         int GetHeight() override { return m_ImageHeight; }
         int GetWidth() override { return m_ImageWidth; }
+        UVec2 GetDimensions() override { return UVec2(m_ImageWidth, m_ImageHeight); }
+
+        ImageLayout GetLayout() override { return ConvertVkImageLayoutToImageLayout(m_CurrentLayout); }
+        ImageFormat GetFormat() override { return ConvertVkFormatToImageFormat(m_Format); }
 
         void* GetSampler() override { return m_Sampler; }
         void* GetNativeHandle() override { return m_ImageView; }
 
     private:
 
-        void CreateTexture(const VulkanTextureDesc& desc);
+        void CreateTexture();
         void DestroyTexture();
 
         void AllocateTextureMemory();
         void FreeTextureMemory();
 
-        void CreateImageView(const VulkanTextureDesc& desc);
+        void CreateImageView();
         void DestroyImageView();
 
-        void UploadDataToTexture(const VulkanTextureDesc& desc);
+        void UploadDataToTexture(uint8* data);
 
-        void TransitionImageLayout(const VulkanTextureDesc& desc, VkImageLayout oldLayout, VkImageLayout newLayout);
-        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer, const VulkanTextureDesc& desc);
+        void TransitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout);
+        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer);
 
         void CreateImageSampler();
         void DestroyImageSampler();
@@ -62,12 +68,13 @@ namespace Astral {
         uint32 GetBytesPerTexFormat(VkFormat format);
 
 
-
+        VulkanDevice& m_DeviceManager;
         VkDevice m_Device;
         VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
         uint32 m_ImageWidth;
         uint32 m_ImageHeight;
         VkFormat m_Format;
+        VkImageLayout m_CurrentLayout;
 
         VkImage m_Image;
         VkDeviceMemory m_ImageMemory;

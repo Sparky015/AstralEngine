@@ -71,11 +71,11 @@ namespace Astral {
         ImageFormat m_SwapchainImageFormat;
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
+        UVec2 m_ImageDimensions;
 
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
         std::vector<VkSemaphore> m_ImageAvailableSemaphores;
         std::vector<VkFence> m_Fences;
-
         uint32 m_CurrentSemaphorePairIndex;
 
         std::vector<RenderTargetHandle> m_RenderTargets;

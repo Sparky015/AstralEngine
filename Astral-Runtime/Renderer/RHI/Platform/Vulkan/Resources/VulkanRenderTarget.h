@@ -21,6 +21,8 @@ namespace Astral {
         VkSemaphore ImageAvailableSemaphore;
         VkSemaphore RenderCompleteSemaphore;
         ImageFormat Format;
+        uint32 ImageWidth;
+        uint32 ImageHeight;
     };
 
     class VulkanRenderTarget : public RenderTarget
@@ -29,12 +31,14 @@ namespace Astral {
         explicit VulkanRenderTarget(const VulkanRenderTargetDesc& desc);
         ~VulkanRenderTarget() override;
 
+        ImageFormat GetImageFormat() override { return m_ImageFormat; }
+        UVec2 GetDimensions() override { return UVec2(m_ImageWidth, m_ImageHeight); }
+
         uint32 GetImageIndex() override { return m_ImageIndex; }
 
         void* GetImageAvailableSemaphore() override { return m_ImageAvailableSemaphore; }
         void* GetRenderCompleteSemaphore() override { return m_RenderCompleteSemaphore; }
         void* GetFence() override { return m_Fence; }
-        ImageFormat GetImageFormat() override { return m_ImageFormat; }
         void* GetImageView() override { return m_ImageView; }
         void* GetNativeHandle() override { return m_Image; }
 
@@ -55,6 +59,9 @@ namespace Astral {
         VkSemaphore m_ImageAvailableSemaphore;
         VkFence m_Fence;
         ImageFormat m_ImageFormat;
+
+        uint32 m_ImageWidth;
+        uint32 m_ImageHeight;
     };
 
 }

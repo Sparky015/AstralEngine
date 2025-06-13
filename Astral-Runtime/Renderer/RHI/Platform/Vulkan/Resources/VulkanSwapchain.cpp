@@ -146,6 +146,8 @@ namespace Astral {
 
     void VulkanSwapchain::CreateSwapchain(uint32 imageWidth, uint32 imageHeight)
     {
+        m_ImageDimensions = UVec2(imageWidth, imageHeight);
+
         const VkSurfaceCapabilitiesKHR surfaceCapabilities = m_SelectedPhysicalDevice.surfaceCapabilities;
 
         m_NumberOfSwapchainImages = ChooseNumSwapchainImages(surfaceCapabilities);
@@ -288,6 +290,8 @@ namespace Astral {
                 .ImageAvailableSemaphore = m_ImageAvailableSemaphores[i],
                 .RenderCompleteSemaphore = m_RenderCompleteSemaphores[i],
                 .Format = m_SwapchainImageFormat,
+                .ImageWidth = m_ImageDimensions.x,
+                .ImageHeight = m_ImageDimensions.y
             };
 
             m_RenderTargets.emplace_back(CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc));

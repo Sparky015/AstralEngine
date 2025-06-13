@@ -84,6 +84,9 @@ namespace Astral {
             context.SceneCameraDescriptorSet->AddDescriptorUniformBuffer(context.SceneCameraBuffer, ShaderStage::VERTEX);
             context.SceneCameraDescriptorSet->EndBuildingSet();
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
+
+            RenderTargetHandle renderTarget = renderTargets[0];
+            context.OffscreenRenderTarget = device.CreateTexture(renderTarget->GetImageFormat(), ImageLayout::COLOR_ATTACHMENT_OPTIMAL, renderTarget->GetDimensions(), nullptr);
         }
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);

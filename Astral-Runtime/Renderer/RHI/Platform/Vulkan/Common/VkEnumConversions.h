@@ -22,6 +22,7 @@ namespace Astral {
     VkAccessFlags ConvertAccessFlagsToVkAccessFlags(AccessFlags accessFlags);
     VkPipelineStageFlags ConvertPipelineStageToVkPipelineStageFlags(PipelineStageFlags pipelineStageFlags);
 
+    ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);
     ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);
 
 }
