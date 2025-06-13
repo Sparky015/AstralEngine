@@ -32,6 +32,8 @@ namespace Astral {
 
         static void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
+        static TextureHandle GetViewportTexture();
+
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
 
@@ -63,6 +65,7 @@ namespace Astral {
             RenderPassHandle RenderPass;
             EventListener<FramebufferResizedEvent> WindowResizedListener{[](FramebufferResizedEvent){}};
             bool IsSceneStarted = false;
+            TextureHandle CurrentViewportTexture;
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;

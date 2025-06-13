@@ -23,9 +23,6 @@ namespace Astral {
         void Shutdown() override;
         void Update() override;
 
-        [[nodiscard]] inline int GetWidth() const {return m_WindowWidth;}
-        [[nodiscard]] inline int GetHeight() const {return m_WindowHeight;}
-
         [[nodiscard]] inline Window& GetWindow() const { return *m_Window; };
         inline void SwapBuffers() const { m_Window->SwapBuffers(); }
 
@@ -38,10 +35,6 @@ namespace Astral {
     private:
 
         std::unique_ptr<Window> m_Window;
-
-        int m_WindowWidth = 800;
-        int m_WindowHeight = 800;
-
     };
 
 }

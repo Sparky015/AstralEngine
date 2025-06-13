@@ -37,6 +37,7 @@ namespace Astral {
         AttachmentStoreOp StoreOp;
         ImageLayout InitialLayout;
         ImageLayout FinalLayout;
+        Vec4 ClearColor; // Only use when load op is set to clear
     };
 
     struct SubpassDependencyMasks
@@ -71,7 +72,10 @@ namespace Astral {
         virtual void Invalidate() = 0;
 
         virtual void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) = 0;
+        virtual void NextSubpass(CommandBufferHandle commandBufferHandle) = 0;
         virtual void EndRenderPass(CommandBufferHandle commandBufferHandle) = 0;
+
+        virtual uint32 GetNumberOfSubpasses() = 0;
 
         virtual void* GetNativeHandle() = 0;
     };

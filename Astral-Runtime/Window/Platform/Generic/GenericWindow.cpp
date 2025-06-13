@@ -230,6 +230,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("GenericWindow::SetWindowDimensions");
         glfwSetWindowSize(m_Window, width, height);
+        m_WindowWidth = width;
+        m_WindowHeight = height;
     }
 
 } // Window

@@ -51,6 +51,13 @@ namespace Astral {
             .finalLayout = finalLayout
         };
 
+        if (attachmentDescription.LoadOp == AttachmentLoadOp::CLEAR)
+        {
+            Vec4 color = attachmentDescription.ClearColor;
+            VkClearValue clearColor = {{color.r, color.g, color.b, color.a}};
+            m_ClearValues.push_back(clearColor);
+        }
+
         m_RenderPassAttachments.push_back(vkAttachmentDescription);
         return m_RenderPassAttachments.size() - 1;
     }
@@ -183,7 +190,6 @@ namespace Astral {
     void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkClearValue clearColorValues = {.color = {0.0f, 0.0f, 1.0f, 1.0f}};
         VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
         UVec2 extent = frameBufferHandle->GetExtent();
 
@@ -196,8 +202,8 @@ namespace Astral {
                 .offset = {0,0},
                 .extent = {extent.x, extent.y}
             },
-            .clearValueCount = 1,
-            .pClearValues = &clearColorValues,
+            .clearValueCount = (uint32)m_ClearValues.size(),
+            .pClearValues = m_ClearValues.data(),
         };
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);

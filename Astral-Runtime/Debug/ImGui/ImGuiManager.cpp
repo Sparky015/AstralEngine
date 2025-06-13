@@ -267,8 +267,8 @@ namespace Astral {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO();
 
-        Astral::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
-        io.DisplaySize = ImVec2((float)windowManager.GetWidth(), (float)windowManager.GetHeight());
+        Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
+        io.DisplaySize = ImVec2((float)window.GetWidth(), (float)window.GetHeight());
         io.DisplayFramebufferScale = ImVec2(1,1);
 
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;

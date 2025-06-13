@@ -43,16 +43,31 @@ namespace Astral {
 
         renderPass->BeginBuildingRenderPass();
 
-        AttachmentDescription attachmentDescription = {
+        AttachmentDescription offscreenTextureDescription = {
             .Format = renderTargets[0]->GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
-            .FinalLayout = ImageLayout::PRESENT_SRC_KHR
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
         };
 
-        AttachmentIndex renderTargetIndex = renderPass->DefineAttachment(attachmentDescription);
+        AttachmentDescription renderTargetDescription = {
+            .Format = renderTargets[0]->GetImageFormat(),
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::UNDEFINED,
+            .FinalLayout = ImageLayout::PRESENT_SRC_KHR,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+        };
 
+        AttachmentIndex offscreenTextureIndex = renderPass->DefineAttachment(offscreenTextureDescription);
+        AttachmentIndex renderTargetIndex = renderPass->DefineAttachment(renderTargetDescription);
+
+        renderPass->BeginBuildingSubpass();
+        renderPass->AddColorAttachment(offscreenTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        renderPass->PreserveAttachment(renderTargetIndex);
+        renderPass->EndBuildingSubpass();
         renderPass->BeginBuildingSubpass();
         renderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         renderPass->EndBuildingSubpass();
@@ -72,7 +87,7 @@ namespace Astral {
 
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
-                .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
                 .ImageData = nullptr
@@ -82,6 +97,7 @@ namespace Astral {
             context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
             UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
             context.SceneFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
+            context.SceneFramebuffer->AttachTexture(context.OffscreenRenderTarget);
             context.SceneFramebuffer->AttachRenderTarget(renderTargets[i]);
             context.SceneFramebuffer->EndBuildingFramebuffer();
 
@@ -93,10 +109,9 @@ namespace Astral {
             context.SceneCameraDescriptorSet->AddDescriptorUniformBuffer(context.SceneCameraBuffer, ShaderStage::VERTEX);
             context.SceneCameraDescriptorSet->EndBuildingSet();
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
-
-
-
         }
+
+        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[2].OffscreenRenderTarget;
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
     }
@@ -162,6 +177,12 @@ namespace Astral {
     }
 
 
+    TextureHandle SceneRenderer::GetViewportTexture()
+    {
+        return m_RendererContext->CurrentViewportTexture;
+    }
+
+
     uint32 SceneRenderer::GetDrawCallsPerFrame()
     {
         return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
@@ -220,6 +241,8 @@ namespace Astral {
         }
         RendererAPI::EndLabel(commandBuffer);
 
+        renderPass->NextSubpass(commandBuffer);
+
         RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
         RendererAPI::CallImGuiDraws(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
@@ -230,6 +253,9 @@ namespace Astral {
         CommandQueueHandle commandQueue = device.GetCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
+
+        uint32 oldestFrameIndex = (m_RendererContext->CurrentFrameIndex + 1) % 3;
+        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[oldestFrameIndex].OffscreenRenderTarget;
     }
 
 
@@ -242,10 +268,22 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
-            m_RendererContext->FrameContexts[i].SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
-            FramebufferHandle framebuffer = m_RendererContext->FrameContexts[i].SceneFramebuffer;
+            FrameContext& frameContext = m_RendererContext->FrameContexts[i];
+            frameContext.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
+
+            TextureCreateInfo textureCreateInfo = {
+                .Format = renderTargets[0]->GetImageFormat(),
+                .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .Dimensions = UVec2(width, height),
+                .ImageData = nullptr
+            };
+            frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
+            FramebufferHandle framebuffer = frameContext.SceneFramebuffer;
 
             framebuffer->BeginBuildingFramebuffer(width, height);
+            framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
         }

@@ -9,10 +9,10 @@
 #include "Core/Math/Math.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
+#include "Renderer/RHI/Common/ImageUsageFlags.h"
 
 #include <string>
-
-#include "Renderer/RHI/Common/ImageUsageFlags.h"
+#include "imgui/imgui.h"
 
 
 namespace Astral {
@@ -40,6 +40,8 @@ namespace Astral {
 
         virtual void* GetSampler() = 0;
         virtual void* GetNativeHandle() = 0;
+
+        virtual ImTextureID GetImGuiTextureID() = 0;
 
         static GraphicsRef<Texture> CreateTexture(const std::string_view& filePath);
 

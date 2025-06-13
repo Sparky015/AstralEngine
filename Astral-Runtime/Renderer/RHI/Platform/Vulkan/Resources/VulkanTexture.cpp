@@ -11,6 +11,8 @@
 #include "VulkanBuffer.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
+
 namespace Astral {
 
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
@@ -22,7 +24,8 @@ namespace Astral {
 		m_Format(ConvertImageFormatToVkFormat(desc.ImageFormat)),
         m_Image(),
         m_ImageView(),
-        m_Sampler()
+        m_Sampler(),
+		m_ImGuiTextureID(VK_NULL_HANDLE)
     {
         CreateTexture(desc.ImageUsageFlags);
     	AllocateTextureMemory();
@@ -55,6 +58,22 @@ namespace Astral {
     	DestroyImageView();
     	DestroyTexture();
     	FreeTextureMemory();
+
+    	if (m_ImGuiTextureID != VK_NULL_HANDLE)
+    	{
+    		ImGui_ImplVulkan_RemoveTexture(m_ImGuiTextureID);
+    	}
+    }
+
+
+    ImTextureID VulkanTexture::GetImGuiTextureID()
+    {
+    	if (m_ImGuiTextureID == VK_NULL_HANDLE)
+    	{
+	    	m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_Sampler, m_ImageView, m_CurrentLayout);
+    	}
+
+    	return (ImTextureID)m_ImGuiTextureID;
     }
 
 
@@ -336,8 +355,17 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			destinationStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 		}
+    	// else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    	// {
+    	// 	barrier.srcAccessMask = 0;
+    	// 	barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	    //
+    	// 	sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    	// 	destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    	// }
 		else
 		{
+			return;
 			ASTRAL_ERROR("Unknown barrier transition!");
 		}
 

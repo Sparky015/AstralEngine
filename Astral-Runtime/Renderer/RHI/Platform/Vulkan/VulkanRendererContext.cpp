@@ -243,6 +243,7 @@ namespace Astral {
             .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
+            .Subpass = renderPassHandle->GetNumberOfSubpasses() - 1,
             .DescriptorPoolSize = 9,
             .MinAllocationSize = 1024 * 1024,
         };
