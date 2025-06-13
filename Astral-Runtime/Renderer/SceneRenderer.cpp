@@ -47,7 +47,7 @@ namespace Astral {
             .Format = renderTargets[0]->GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::UNDEFINED,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
             .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
             .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
         };
@@ -111,7 +111,7 @@ namespace Astral {
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
         }
 
-        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[2].OffscreenRenderTarget;
+        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[1].OffscreenRenderTarget;
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
     }
@@ -254,8 +254,8 @@ namespace Astral {
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
-        uint32 oldestFrameIndex = (m_RendererContext->CurrentFrameIndex + 1) % 3;
-        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[oldestFrameIndex].OffscreenRenderTarget;
+        uint32 nextOldestFrameIndex = (m_RendererContext->CurrentFrameIndex + 2) % 3;
+        m_RendererContext->CurrentViewportTexture = m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenRenderTarget;
     }
 
 
@@ -273,7 +273,7 @@ namespace Astral {
 
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
-                .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr

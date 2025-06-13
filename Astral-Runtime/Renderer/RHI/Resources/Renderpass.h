@@ -48,7 +48,7 @@ namespace Astral {
         AccessFlags DestinationAccessMask;
     };
 
-    using AttachmentIndex = uint8;
+    using AttachmentIndex = uint32;
     using SubpassIndex = uint8;
     static constexpr SubpassIndex SubpassExternal = -1;
 

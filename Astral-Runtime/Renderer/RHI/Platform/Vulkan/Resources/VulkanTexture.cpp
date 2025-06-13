@@ -43,9 +43,9 @@ namespace Astral {
     	else
     	{
     		// Image has no data
+    		m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
     		if (desc.ImageLayout != ImageLayout::UNDEFINED)
     		{
-    			m_CurrentLayout = ConvertImageLayoutToVkImageLayout(desc.ImageLayout);
     			TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, m_CurrentLayout);
     		}
     	}
@@ -355,17 +355,16 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			destinationStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 		}
-    	// else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-    	// {
-    	// 	barrier.srcAccessMask = 0;
-    	// 	barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-	    //
-    	// 	sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-    	// 	destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-    	// }
+    	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    	{
+    		barrier.srcAccessMask = 0;
+    		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+    		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+    		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    	}
 		else
 		{
-			return;
 			ASTRAL_ERROR("Unknown barrier transition!");
 		}
 

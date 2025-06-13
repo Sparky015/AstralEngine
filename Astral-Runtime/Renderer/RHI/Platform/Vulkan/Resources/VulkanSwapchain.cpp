@@ -46,10 +46,10 @@ namespace Astral {
     GraphicsRef<RenderTarget> VulkanSwapchain::AcquireNextImage()
     {
         // Waits on the queue work completing on the last frame that owned the fence (so like three frames ago)
-        VkResult result = vkWaitForFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex], VK_TRUE, UINT64_MAX);
+        VkResult result = vkWaitForFences(m_Device, 1, &m_Fences[(m_CurrentSemaphorePairIndex + 1) % 3], VK_TRUE, UINT64_MAX);
         ASSERT(result == VK_SUCCESS, "Failed to wait on fence!");
 
-        result = vkResetFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex]);
+        result = vkResetFences(m_Device, 1, &m_Fences[(m_CurrentSemaphorePairIndex + 1) % 3]);
         ASSERT(result == VK_SUCCESS, "Failed to reset fence!");
 
 
@@ -256,13 +256,14 @@ namespace Astral {
         VkFenceCreateInfo fenceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
             .pNext = nullptr,
-            .flags = VK_FENCE_CREATE_SIGNALED_BIT
+            .flags = 0
         };
 
         m_Fences.resize(m_NumberOfSwapchainImages);
 
         for (int i = 0; i < m_NumberOfSwapchainImages; i++)
         {
+            if (i >= 1) { fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT; }
             VkResult result = vkCreateFence(m_Device, &fenceCreateInfo, nullptr, &m_Fences[i]);
             ASSERT(result == VK_SUCCESS, "Fence failed to create!");
         }
