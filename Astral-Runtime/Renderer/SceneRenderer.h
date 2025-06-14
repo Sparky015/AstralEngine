@@ -6,6 +6,7 @@
 
 #include "Common/Material.h"
 #include "Common/Mesh.h"
+#include "Core/Events/EventPublisher.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 #include "Renderer/Cameras/OrthographicCamera.h"
 #include "RHI/RendererCommands.h"
@@ -13,11 +14,13 @@
 #include "RHI/Resources/Renderpass.h"
 #include "Window/WindowEvents.h"
 
+#include <queue>
+
 namespace Astral {
 
     struct SceneDescription
     {
-        OrthographicCamera Camera;
+        OrthographicCamera& Camera;
 
     };
 
@@ -33,6 +36,7 @@ namespace Astral {
         static void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
         static TextureHandle GetViewportTexture();
+        static void ResizeViewport(uint32 width, uint32 height);
 
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
@@ -50,22 +54,29 @@ namespace Astral {
             std::vector<Mat4> Transforms;
             CommandBufferHandle SceneCommandBuffer;
             FramebufferHandle SceneFramebuffer;
+            FramebufferHandle WindowFramebuffer;
             PipelineStateObjectHandle TempPipelineState;
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneCameraBuffer;
             DescriptorSetHandle SceneCameraDescriptorSet;
 
             TextureHandle OffscreenRenderTarget;
+
+            std::vector<TextureHandle> ImGuiTexturesToBeFreed;
         };
 
         struct SceneRendererContext
         {
             std::vector<FrameContext> FrameContexts;
             uint32 CurrentFrameIndex = -1;
-            RenderPassHandle RenderPass;
+            RenderPassHandle MainRenderPass;
+            RenderPassHandle ImGuiRenderPass;
             EventListener<FramebufferResizedEvent> WindowResizedListener{[](FramebufferResizedEvent){}};
+            EventPublisher<ViewportResizedEvent> ViewportResizedPublisher;
             bool IsSceneStarted = false;
-            TextureHandle CurrentViewportTexture;
+            std::queue<TextureHandle> CurrentViewportTexture;
+
+            UVec2 ViewportSize;
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;

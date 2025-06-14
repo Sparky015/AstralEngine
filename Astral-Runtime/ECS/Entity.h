@@ -6,6 +6,8 @@
 
 #include "Core/FixedIntegerTypes.h"
 
+#include <string_view>
+
 namespace Astral {
 
     using EntityID = uint32;
@@ -15,13 +17,14 @@ namespace Astral {
     {
     public:
         Entity() = default;
-        explicit Entity(EntityID id) : m_ID(id) {}
+        explicit Entity(EntityID id, std::string_view debugName = "") : m_ID(id), m_DebugName(debugName) {}
 
         [[nodiscard]] EntityID GetID() const { return m_ID; }
 
     private:
 
         EntityID m_ID{NULL_ENTITY};
+        std::string_view m_DebugName;
     };
 
 }

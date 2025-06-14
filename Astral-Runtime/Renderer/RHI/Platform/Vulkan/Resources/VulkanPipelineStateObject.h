@@ -37,6 +37,8 @@ namespace Astral {
         void Bind(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
 
+        void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
+
         void* GetPipelineLayout() override {return m_PipelineLayout; }
         void* GetHandleHandle() override { return m_Pipeline; }
 
@@ -52,6 +54,7 @@ namespace Astral {
         void SetRasterizerState();
         void SetMultisampleState();
         void SetColorBlendState();
+        void SetDynamicState();
 
         void CreatePipelineLayout();
         void DestroyPipelineLayout();
@@ -73,6 +76,7 @@ namespace Astral {
             VkPipelineColorBlendAttachmentState ColorBlendAttachmentState;
             VkPipelineColorBlendStateCreateInfo ColorBlendState;
             VkPipelineLayoutCreateInfo PipelineLayout;
+            VkDynamicState DynamicStateSpecs[2];
             VkPipelineDynamicStateCreateInfo DynamicState;
         };
 
@@ -81,6 +85,8 @@ namespace Astral {
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;
         VkPushConstantRange m_PushConstantRange;
+
+        UVec2 m_ViewportDimensions;
     };
 
 }

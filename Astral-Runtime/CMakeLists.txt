@@ -254,6 +254,8 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
         Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
         Renderer/RHI/Common/AccessFlags.h
+        Renderer/Common/RendererEvents.h
+        Renderer/Common/RendererEvents.h
 )
 
 

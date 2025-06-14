@@ -45,6 +45,8 @@ namespace Astral {
         virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
         virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
 
+        virtual void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) = 0;
+
         virtual void* GetPipelineLayout() = 0;
         virtual void* GetHandleHandle() = 0;
     };

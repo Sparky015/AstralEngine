@@ -311,6 +311,8 @@ namespace Astral {
         CreateSemaphores();
         CreateFences();
         CreateRenderTargets();
+
+        m_CurrentSemaphorePairIndex = 0;
     }
 
 }

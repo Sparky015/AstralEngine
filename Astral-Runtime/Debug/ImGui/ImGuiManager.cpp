@@ -305,10 +305,7 @@ namespace Astral {
 
     void ImGuiManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
-        if (keyPressedEvent.keycode == KEY_D)
-        {
-            m_ShowDebugMenu = !m_ShowDebugMenu;
-        }
+
     }
 
 }

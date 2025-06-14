@@ -318,8 +318,8 @@ namespace Astral {
             case ImageFormat::R16G16_S10_5_NV: return VK_FORMAT_R16G16_S10_5_NV;
 
             case ImageFormat::MAX_ENUM: // Fallthrough
-                default: ASTRAL_ERROR("Invalid Image Format Given!")
-            }
+            default: ASTRAL_ERROR("Invalid Image Format Given!");
+        }
     }
 
 
@@ -758,7 +758,7 @@ namespace Astral {
             case VK_FORMAT_A8_UNORM_KHR: return ImageFormat::A8_UNORM_KHR;
 
             case VK_FORMAT_MAX_ENUM: // Fallthrough
-                default: ASTRAL_ERROR("Invalid VkFormat Given!")
+            default: ASTRAL_ERROR("Invalid VkFormat Given!");
         }
     }
 

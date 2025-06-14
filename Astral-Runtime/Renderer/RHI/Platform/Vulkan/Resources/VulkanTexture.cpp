@@ -54,15 +54,15 @@ namespace Astral {
 
     VulkanTexture::~VulkanTexture()
     {
-    	DestroyImageSampler();
-    	DestroyImageView();
-    	DestroyTexture();
-    	FreeTextureMemory();
-
     	if (m_ImGuiTextureID != VK_NULL_HANDLE)
     	{
     		ImGui_ImplVulkan_RemoveTexture(m_ImGuiTextureID);
     	}
+
+    	DestroyImageSampler();
+    	DestroyImageView();
+    	DestroyTexture();
+    	FreeTextureMemory();
     }
 
 
