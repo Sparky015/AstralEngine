@@ -67,13 +67,18 @@ namespace Astral {
 
                             static char inputBuffer[200];
 
-                            strncpy_s(inputBuffer, filePath.c_str(), sizeof(inputBuffer) - 1);
+                            strncpy(inputBuffer, filePath.c_str(), sizeof(inputBuffer) - 1);
                             inputBuffer[sizeof(inputBuffer) - 1] = '\0'; // Ensure null-termination
 
 
                             if (ImGui::InputText("##MaterialFilePath", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
                             {
-                                sprite.materialAssetID = registry.GetAssetIDFromFilePath(inputBuffer);
+                                AssetID newAssetID = registry.GetAssetIDFromFilePath(inputBuffer);
+
+                                if (newAssetID != NullAssetID)
+                                {
+                                    sprite.materialAssetID = newAssetID;
+                                }
                             }
 
                             ecs.AddComponent(entity, sprite);

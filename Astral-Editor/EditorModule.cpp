@@ -31,7 +31,7 @@ namespace Astral {
 
             Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
             window.SetWindowName("Astral Editor");
-            window.SetWindowDimensions(1400, 750);
+            window.SetWindowDimensions(1600, 800);
             m_Editor.Init();
 
             m_Mesh = {};
