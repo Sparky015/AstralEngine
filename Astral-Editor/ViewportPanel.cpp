@@ -9,6 +9,7 @@
 #include "Renderer/SceneRenderer.h"
 
 #include "imgui.h"
+#include "Input/InputState.h"
 
 
 namespace Astral {
@@ -18,6 +19,17 @@ namespace Astral {
         static ImVec2 contentRegionSize = ImVec2();
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0,0));
         ImGui::Begin("Viewport##EditorViewport", nullptr);
+
+        // Engine does not update input for client if the viewport is not active, so that the editor can take inputs
+        // and the user can type things without moving the camera in the viewport or do other things in the client
+        if (ImGui::IsWindowFocused())
+        {
+            InputState::EnableTrackingInputs();
+        }
+        else
+        {
+            InputState::DisableTrackingInputs();
+        }
 
         DescriptorSetHandle viewportTexture = Astral::SceneRenderer::GetViewportTexture();
 

@@ -14,6 +14,7 @@ namespace Astral {
 
     std::array<KeyState, InputState::NUMBER_OF_KEYS> InputState::m_KeyState = {KeyState()};
     MouseCursorState InputState::m_MouseCursorState = MouseCursorState();
+    bool InputState::m_IgnoreNewInputs = false;
 
     bool InputState::IsKeyDown(int keycode)
     {
@@ -176,6 +177,7 @@ namespace Astral {
 
     void InputState::OnKeyPress(KeyPressedEvent keyPressedEvent)
     {
+        if (m_IgnoreNewInputs) { return; }
         uint8 keycode = keyPressedEvent.keycode;
         ASSERT(keycode < NUMBER_OF_KEYS, "Keycode is not valid. Needs to be in range of 0 - NUMBER_OF_KEYS.")
         m_KeyState[keyPressedEvent.keycode].IsDown = true;
@@ -185,6 +187,7 @@ namespace Astral {
 
     void InputState::OnKeyRelease(KeyReleasedEvent keyReleasedEvent)
     {
+        if (m_IgnoreNewInputs) { return; }
         uint8 keycode = keyReleasedEvent.keycode;
         ASSERT(keycode < NUMBER_OF_KEYS, "Keycode is not valid. Needs to be in range of 0 - NUMBER_OF_KEYS.")
         m_KeyState[keyReleasedEvent.keycode].IsDown = false;
@@ -194,6 +197,7 @@ namespace Astral {
 
     void InputState::OnKeyRepeating(KeyRepeatingEvent keyRepeatingEvent)
     {
+        if (m_IgnoreNewInputs) { return; }
         uint8 keycode = keyRepeatingEvent.keycode;
         ASSERT(keycode < NUMBER_OF_KEYS, "Keycode is not valid. Needs to be in range of 0 - NUMBER_OF_KEYS.")
         m_KeyState[keyRepeatingEvent.keycode].IsRepeating = true;
@@ -202,6 +206,7 @@ namespace Astral {
 
     void InputState::OnMouseMoved(MouseMovedEvent mouseMovedEvent)
     {
+        if (m_IgnoreNewInputs) { return; }
         m_MouseCursorState.MouseXPosition = mouseMovedEvent.xPosition;
         m_MouseCursorState.MouseYPosition = mouseMovedEvent.yPosition;
     }
@@ -210,6 +215,7 @@ namespace Astral {
     void InputState::Init()
     {
         TRACE("Initializing Input State!")
+        m_IgnoreNewInputs = false;
         m_KeyPressListener.StartListening();
         m_KeyReleaseListener.StartListening();
         m_KeyRepeatingListener.StartListening();

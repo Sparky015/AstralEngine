@@ -93,6 +93,13 @@ namespace Astral {
         }
     }
 
+
+    void IsTrackingInputsComponent()
+    {
+        ImGui::Text("Tracking Inputs: %s", InputState::IsTrackingInputs() == true ? "True" : "False");
+    }
+
+
     void CompleteInputStateComponent()
     {
         if (ImGui::TreeNode("Mouse"))

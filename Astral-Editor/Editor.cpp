@@ -37,7 +37,6 @@ namespace Astral {
 
     void Editor::UpdateEditorUI()
     {
-
         ViewportPanel();
         SceneGraphPanel();
 

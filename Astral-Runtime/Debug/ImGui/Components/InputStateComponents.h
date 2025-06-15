@@ -13,5 +13,6 @@ namespace Astral {
     void ZeroToNineKeyStatesComponent();
     void SpecialKeyStatesComponent();
     void OtherKeyStatesComponent();
+    void IsTrackingInputsComponent();
 
 }

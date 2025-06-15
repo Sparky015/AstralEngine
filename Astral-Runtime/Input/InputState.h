@@ -55,6 +55,10 @@ namespace Astral {
         /** Returns the Y position of the mouse cursor. */
         [[nodiscard]] static double MousePositionY();
 
+        static void DisableTrackingInputs() { m_IgnoreNewInputs = true; }
+        static void EnableTrackingInputs() { m_IgnoreNewInputs = false; }
+        static bool IsTrackingInputs() { return !m_IgnoreNewInputs; }
+
         static const int NUMBER_OF_KEYS = 120;
 
     private:
@@ -66,6 +70,7 @@ namespace Astral {
 
         static std::array<KeyState, NUMBER_OF_KEYS> m_KeyState;
         static MouseCursorState m_MouseCursorState;
+        static bool m_IgnoreNewInputs;
         static Astral::EventListener<KeyPressedEvent> m_KeyPressListener;
         static Astral::EventListener<KeyReleasedEvent> m_KeyReleaseListener;
         static Astral::EventListener<KeyRepeatingEvent> m_KeyRepeatingListener;

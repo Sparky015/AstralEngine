@@ -159,6 +159,8 @@ namespace Astral {
 
             if (ImGui::TreeNode("Input State"))
             {
+                IsTrackingInputsComponent();
+                ImGui::Spacing();
                 CompleteInputStateComponent();
                 ImGui::TreePop();
             }
