@@ -148,7 +148,8 @@ namespace Astral {
     {
         m_ImageDimensions = UVec2(imageWidth, imageHeight);
 
-        const VkSurfaceCapabilitiesKHR surfaceCapabilities = m_SelectedPhysicalDevice.surfaceCapabilities;
+        VkSurfaceCapabilitiesKHR surfaceCapabilities;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_SelectedPhysicalDevice.physicalDevice, m_WindowSurface, &surfaceCapabilities);
 
         m_NumberOfSwapchainImages = ChooseNumSwapchainImages(surfaceCapabilities);
 

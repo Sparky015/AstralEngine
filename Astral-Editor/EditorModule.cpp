@@ -73,6 +73,9 @@ namespace Astral {
             TRACE("Shutting down Editor")
 
             ChessEntities::DestroyEntities();
+            m_Mesh = {};
+            m_VertexBuffer.reset();
+            m_IndexBuffer.reset();
             m_Editor.Shutdown();
         }
 

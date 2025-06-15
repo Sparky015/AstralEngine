@@ -99,6 +99,11 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            context.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            context.OffscreenDescriptorSet->BeginBuildingSet();
+            context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
+            context.OffscreenDescriptorSet->EndBuildingSet();
+            context.FramesTillFree = 2;
 
 
             context.WindowFramebuffer = device.CreateFramebuffer(m_RendererContext->ImGuiRenderPass);
@@ -129,9 +134,9 @@ namespace Astral {
 
         }
 
-        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[1].OffscreenRenderTarget);
+        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[1].OffscreenDescriptorSet);
 
-        Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->MainRenderPass);
+        Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->ImGuiRenderPass);
     }
 
 
@@ -169,7 +174,11 @@ namespace Astral {
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
 
-        frameContext.ImGuiTexturesToBeFreed.clear();
+        frameContext.FramesTillFree--;
+        if (frameContext.FramesTillFree == 0)
+        {
+            frameContext.ImGuiTexturesToBeFreed.clear();
+        }
 
         RendererAPI::SetBlending(true);
     }
@@ -197,11 +206,11 @@ namespace Astral {
     }
 
 
-    TextureHandle SceneRenderer::GetViewportTexture()
+    DescriptorSetHandle SceneRenderer::GetViewportTexture()
     {
-        TextureHandle& texture = m_RendererContext->CurrentViewportTexture.front();
+        DescriptorSetHandle& descriptorSet = m_RendererContext->CurrentViewportTexture.front();
         m_RendererContext->CurrentViewportTexture.pop();
-        return texture;
+        return descriptorSet;
     }
 
 
@@ -287,7 +296,7 @@ namespace Astral {
         uint32 nextOldestFrameIndex = (m_RendererContext->CurrentFrameIndex + 2) % 3;
         if (m_RendererContext->CurrentViewportTexture.size() == 0)
         {
-            m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenRenderTarget);
+            m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
         }
     }
 
@@ -324,8 +333,8 @@ namespace Astral {
 
         auto& context = *m_RendererContext;
 
-        uint32 nextOldestFrameIndex = (m_RendererContext->CurrentFrameIndex) % 3;
-        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenRenderTarget);
+        uint32 nextOldestFrameIndex = m_RendererContext->CurrentFrameIndex;
+        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
 
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
@@ -339,8 +348,15 @@ namespace Astral {
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };
-            m_RendererContext->FrameContexts[(m_RendererContext->CurrentFrameIndex) % 3].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenRenderTarget);
+            m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].FramesTillFree = 2;
+            m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenDescriptorSet);
+
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
+            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            frameContext.OffscreenDescriptorSet->BeginBuildingSet();
+            frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
+            frameContext.OffscreenDescriptorSet->EndBuildingSet();
 
             frameContext.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->MainRenderPass);
             FramebufferHandle framebuffer = frameContext.SceneFramebuffer;

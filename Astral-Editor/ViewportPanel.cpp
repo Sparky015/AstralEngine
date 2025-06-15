@@ -19,7 +19,7 @@ namespace Astral {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0,0));
         ImGui::Begin("Viewport##EditorViewport", nullptr);
 
-        TextureHandle viewportTexture = Astral::SceneRenderer::GetViewportTexture();
+        DescriptorSetHandle viewportTexture = Astral::SceneRenderer::GetViewportTexture();
 
         if (contentRegionSize.x != ImGui::GetContentRegionAvail().x ||
             contentRegionSize.y != ImGui::GetContentRegionAvail().y)
@@ -28,10 +28,7 @@ namespace Astral {
             SceneRenderer::ResizeViewport(contentRegionSize.x, contentRegionSize.y);
         }
 
-        UVec2 textureDimensions = viewportTexture->GetDimensions();
-        ImVec2 imguiDimensions = ImVec2(textureDimensions.x, textureDimensions.y);
-
-        ImGui::Image(viewportTexture->GetImGuiTextureID(), imguiDimensions);
+        ImGui::Image((ImTextureID)viewportTexture->GetNativeHandle(), contentRegionSize);
 
         ImGui::End();
         ImGui::PopStyleVar();

@@ -35,7 +35,7 @@ namespace Astral {
 
         static void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
-        static TextureHandle GetViewportTexture();
+        static DescriptorSetHandle GetViewportTexture();
         static void ResizeViewport(uint32 width, uint32 height);
 
         static uint32 GetDrawCallsPerFrame();
@@ -61,8 +61,10 @@ namespace Astral {
             DescriptorSetHandle SceneCameraDescriptorSet;
 
             TextureHandle OffscreenRenderTarget;
+            DescriptorSetHandle OffscreenDescriptorSet;
 
-            std::vector<TextureHandle> ImGuiTexturesToBeFreed;
+            std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
+            uint32 FramesTillFree = 2;
         };
 
         struct SceneRendererContext
@@ -74,7 +76,7 @@ namespace Astral {
             EventListener<FramebufferResizedEvent> WindowResizedListener{[](FramebufferResizedEvent){}};
             EventPublisher<ViewportResizedEvent> ViewportResizedPublisher;
             bool IsSceneStarted = false;
-            std::queue<TextureHandle> CurrentViewportTexture;
+            std::queue<DescriptorSetHandle> CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
 
             UVec2 ViewportSize;
         };
