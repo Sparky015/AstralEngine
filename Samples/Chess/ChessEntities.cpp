@@ -60,41 +60,41 @@ void ChessEntities::InitEntities(const Astral::Mesh& mesh)
 {
     Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
-    m_ChessBoard = ecs.CreateEntity(TODO);
+    m_ChessBoard = ecs.CreateEntity("Chessboard");
 
-    m_BlackPawn1 = ecs.CreateEntity(TODO);
-    m_BlackPawn2 = ecs.CreateEntity(TODO);
-    m_BlackPawn3 = ecs.CreateEntity(TODO);
-    m_BlackPawn4 = ecs.CreateEntity(TODO);
-    m_BlackPawn5 = ecs.CreateEntity(TODO);
-    m_BlackPawn6 = ecs.CreateEntity(TODO);
-    m_BlackPawn7 = ecs.CreateEntity(TODO);
-    m_BlackPawn8 = ecs.CreateEntity(TODO);
-    m_BlackRook1 = ecs.CreateEntity(TODO);
-    m_BlackRook2 = ecs.CreateEntity(TODO);
-    m_BlackKnight1 = ecs.CreateEntity(TODO);
-    m_BlackKnight2 = ecs.CreateEntity(TODO);
-    m_BlackBishop1 = ecs.CreateEntity(TODO);
-    m_BlackBishop2 = ecs.CreateEntity(TODO);
-    m_BlackQueen = ecs.CreateEntity(TODO);
-    m_BlackKing = ecs.CreateEntity(TODO);
+    m_BlackPawn1 = ecs.CreateEntity("BlackPawn1");
+    m_BlackPawn2 = ecs.CreateEntity("BlackPawn2");
+    m_BlackPawn3 = ecs.CreateEntity("BlackPawn3");
+    m_BlackPawn4 = ecs.CreateEntity("BlackPawn4");
+    m_BlackPawn5 = ecs.CreateEntity("BlackPawn5");
+    m_BlackPawn6 = ecs.CreateEntity("BlackPawn6");
+    m_BlackPawn7 = ecs.CreateEntity("BlackPawn7");
+    m_BlackPawn8 = ecs.CreateEntity("BlackPawn8");
+    m_BlackRook1 = ecs.CreateEntity("BlackRook1");
+    m_BlackRook2 = ecs.CreateEntity("BlackRook2");
+    m_BlackKnight1 = ecs.CreateEntity("BlackKnight1");
+    m_BlackKnight2 = ecs.CreateEntity("BlackKnight2");
+    m_BlackBishop1 = ecs.CreateEntity("BlackBishop1");
+    m_BlackBishop2 = ecs.CreateEntity("BlackBishop2");
+    m_BlackQueen = ecs.CreateEntity("BlackQueen");
+    m_BlackKing = ecs.CreateEntity("BlackKing");
 
-    m_WhitePawn1 = ecs.CreateEntity(TODO);
-    m_WhitePawn2 = ecs.CreateEntity(TODO);
-    m_WhitePawn3 = ecs.CreateEntity(TODO);
-    m_WhitePawn4 = ecs.CreateEntity(TODO);
-    m_WhitePawn5 = ecs.CreateEntity(TODO);
-    m_WhitePawn6 = ecs.CreateEntity(TODO);
-    m_WhitePawn7 = ecs.CreateEntity(TODO);
-    m_WhitePawn8 = ecs.CreateEntity(TODO);
-    m_WhiteRook1 = ecs.CreateEntity(TODO);
-    m_WhiteRook2 = ecs.CreateEntity(TODO);
-    m_WhiteKnight1 = ecs.CreateEntity(TODO);
-    m_WhiteKnight2 = ecs.CreateEntity(TODO);
-    m_WhiteBishop1 = ecs.CreateEntity(TODO);
-    m_WhiteBishop2 = ecs.CreateEntity(TODO);
-    m_WhiteQueen = ecs.CreateEntity(TODO);
-    m_WhiteKing = ecs.CreateEntity(TODO);
+    m_WhitePawn1 = ecs.CreateEntity("WhitePawn1");
+    m_WhitePawn2 = ecs.CreateEntity("WhitePawn2");
+    m_WhitePawn3 = ecs.CreateEntity("WhitePawn3");
+    m_WhitePawn4 = ecs.CreateEntity("WhitePawn4");
+    m_WhitePawn5 = ecs.CreateEntity("WhitePawn5");
+    m_WhitePawn6 = ecs.CreateEntity("WhitePawn6");
+    m_WhitePawn7 = ecs.CreateEntity("WhitePawn7");
+    m_WhitePawn8 = ecs.CreateEntity("WhitePawn8");
+    m_WhiteRook1 = ecs.CreateEntity("WhiteRook1");
+    m_WhiteRook2 = ecs.CreateEntity("WhiteRook2");
+    m_WhiteKnight1 = ecs.CreateEntity("WhiteKnight1");
+    m_WhiteKnight2 = ecs.CreateEntity("WhiteKnight2");
+    m_WhiteBishop1 = ecs.CreateEntity("WhiteBishop1");
+    m_WhiteBishop2 = ecs.CreateEntity("WhiteBishop2");
+    m_WhiteQueen = ecs.CreateEntity("WhiteQueen");
+    m_WhiteKing = ecs.CreateEntity("WhiteKing");
 
 
     // Transform Components

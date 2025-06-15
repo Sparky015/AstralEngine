@@ -79,6 +79,7 @@ namespace Astral {
 
         class Iterator
         {
+        public:
             // Iterator Traits
             using value_type = Entity;
             using difference_type = std::ptrdiff_t;
@@ -86,7 +87,26 @@ namespace Astral {
             using reference = Entity&;
             using iterator_category = std::forward_iterator_tag;
 
+            explicit Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex);
+
+            value_type operator*() const;
+            Iterator& operator++();
+            Iterator operator++(int);
+            bool operator==(const Iterator& other) const;
+            bool operator!=(const Iterator& other) const;
+
+
+        private:
+
+            size_t FindNextAliveEntity();
+
+            std::vector<bool>* m_Entities;
+            std::vector<std::string_view>& m_EntityDebugNames;
+            EntityID m_CurrentIndex;
         };
+
+        Iterator begin() { return Iterator(&m_Entities, m_EntityDebugNames, 0); }
+        Iterator end() { return Iterator(&m_Entities, m_EntityDebugNames, m_Entities.size()); }
 
     private:
 
@@ -95,7 +115,8 @@ namespace Astral {
         EntityID GetNextInactiveEntity();
 
         uint32 m_NumberOfActiveEntities;
-        std::vector<bool> m_ActiveEntities;
+        std::vector<bool> m_Entities;
+        std::vector<std::string_view> m_EntityDebugNames;
         std::stack<EntityID, std::vector<EntityID>> m_FreeEntities;
 
         /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,

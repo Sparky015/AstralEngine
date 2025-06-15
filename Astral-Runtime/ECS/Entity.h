@@ -20,6 +20,7 @@ namespace Astral {
         explicit Entity(EntityID id, std::string_view debugName = "") : m_ID(id), m_DebugName(debugName) {}
 
         [[nodiscard]] EntityID GetID() const { return m_ID; }
+        [[nodiscard]] std::string_view GetDebugName() const { return m_DebugName; }
 
     private:
 
