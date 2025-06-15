@@ -58,9 +58,9 @@ namespace Astral {
         void RecreateProjectionMatrix();
         void CalculateProjectionViewMatrix();
 
-        Mat4 m_ProjectionMatrix; // Contains aspect ratio and fov
+        Mat4 m_ProjectionMatrix; // Contains aspect ratio and zoom
         Mat4 m_ViewMatrix; // Kinda like a world transformation that moves the whole scene
-        Mat4 m_ProjectionViewMatrix; // Cache for projection matrix
+        Mat4 m_ProjectionViewMatrix; // Cache for projection-view matrix
 
         Vec3 m_Position;
         float m_Rotation = 0.0f;
