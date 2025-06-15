@@ -11,30 +11,48 @@
 namespace Astral {
 
     OrthographicCamera::OrthographicCamera() :
-        m_ProjectionMatrix(glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, -1000.0f, 1000.0f)), // Fits 0-800 range
+        m_ProjectionMatrix(glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1000.0f, 1000.0f)),
         m_ViewMatrix(1.0f),
         m_ProjectionViewMatrix(1.0f),
         m_Position(0, 0, 0),
         m_Rotation(0.0f)
     {
+        RecreateProjectionMatrix();
         CalculateProjectionViewMatrix();
+        m_ViewportResizedListener.StartListening();
     }
 
 
-    OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float near, float far)
-        : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, near, far)),
+    OrthographicCamera::OrthographicCamera(float aspectRatio, float zoomLevel)
+        : m_ProjectionMatrix(),
         m_ViewMatrix(1.0f),
         m_ProjectionViewMatrix(1.0f),
         m_Position(0, 0, 0),
         m_Rotation(0.0f)
     {
+        m_ZoomLevel = zoomLevel;
+        m_AspectRatio = aspectRatio;
+        RecreateProjectionMatrix();
         CalculateProjectionViewMatrix();
+        m_ViewportResizedListener.StartListening();
+    }
+
+
+    OrthographicCamera::~OrthographicCamera()
+    {
+        m_ViewportResizedListener.StopListening();
     }
 
 
     const Mat4& OrthographicCamera::GetProjectionViewMatrix() const
     {
         return m_ProjectionViewMatrix;
+    }
+
+
+    void OrthographicCamera::RecreateProjectionMatrix()
+    {
+        m_ProjectionMatrix = glm::ortho(-m_AspectRatio / 2 * m_ZoomLevel, m_AspectRatio / 2 * m_ZoomLevel, -m_ZoomLevel / 2, m_ZoomLevel / 2, -1000.0f, 1000.0f);
     }
 
 

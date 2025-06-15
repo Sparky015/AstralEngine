@@ -13,8 +13,8 @@ namespace Astral {
 
     void WindowDimensionsComponent()
     {
-        Astral::WindowManager& windowManager = Astral::Engine::Get().GetWindowManager();
-        ImGui::Text("Window Dimensions: %d px x %d px", windowManager.GetWidth(), windowManager.GetHeight());
+        Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
+        ImGui::Text("Window Dimensions: %d px x %d px", window.GetWidth(), window.GetHeight());
     }
 
     void WindowVsyncStateComponent()

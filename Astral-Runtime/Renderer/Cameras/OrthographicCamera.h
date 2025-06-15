@@ -6,7 +6,9 @@
 
 #pragma once
 
+#include "Core/Events/EventListener.h"
 #include "Core/Math/Math.h"
+#include "Renderer/Common/RendererEvents.h"
 
 namespace Astral {
 
@@ -16,7 +18,8 @@ namespace Astral {
     {
     public:
         OrthographicCamera();
-        OrthographicCamera(float left, float right, float bottom, float top, float near = -1, float far = 1);
+        OrthographicCamera(float aspectRatio, float zoomLevel);
+        ~OrthographicCamera();
 
         /**@brief Gets the ProjectionView matrix. The matrix is calculated on other calls and cached. */
         const Mat4& GetProjectionViewMatrix() const;
@@ -41,16 +44,35 @@ namespace Astral {
         /**@brief Gets the rotation of the camera */
         [[nodiscard]] float GetRotation() const { return m_Rotation; }
 
+        void SetZoom(float zoom)
+        {
+            m_ZoomLevel = zoom;
+            RecreateProjectionMatrix();
+            CalculateProjectionViewMatrix();
+        }
+
+        float GetZoomLevel() const { return m_ZoomLevel; }
+
     private:
 
+        void RecreateProjectionMatrix();
         void CalculateProjectionViewMatrix();
 
-        Mat4 m_ProjectionMatrix; // Contains aspect ratio and fov
+        Mat4 m_ProjectionMatrix; // Contains aspect ratio and zoom
         Mat4 m_ViewMatrix; // Kinda like a world transformation that moves the whole scene
-        Mat4 m_ProjectionViewMatrix; // Cache for projection matrix
+        Mat4 m_ProjectionViewMatrix; // Cache for projection-view matrix
 
         Vec3 m_Position;
         float m_Rotation = 0.0f;
+        float m_ZoomLevel = 1.0f;
+        float m_AspectRatio = 1.0f;
+
+        EventListener<ViewportResizedEvent> m_ViewportResizedListener{[this](ViewportResizedEvent e)
+        {
+            m_AspectRatio = (float)e.Width / (float)e.Height;
+            RecreateProjectionMatrix();
+            CalculateProjectionViewMatrix();
+        }};
     };
 
 }

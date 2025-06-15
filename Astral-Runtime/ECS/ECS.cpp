@@ -30,7 +30,7 @@ namespace Astral {
     }
 
 
-    Entity ECS::CreateEntity()
+    Entity ECS::CreateEntity(std::string_view debugName)
     {
         if (m_NumberOfActiveEntities == m_ActiveEntities.size())
         {
@@ -46,7 +46,7 @@ namespace Astral {
         m_ActiveEntities[newEntityID] = true;
 
         m_NumberOfActiveEntities++;
-        return Entity(newEntityID);
+        return Entity(newEntityID, debugName);
     }
 
 

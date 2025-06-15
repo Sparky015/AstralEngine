@@ -32,33 +32,53 @@ namespace Astral {
         m_RendererContext->WindowResizedListener = EventListener<FramebufferResizedEvent>{[](FramebufferResizedEvent event) { SceneRenderer::ResizeImages(event.Width, event.Height); }};
         m_RendererContext->WindowResizedListener.StartListening();
 
+        m_RendererContext->ViewportSize = RendererAPI::GetContext().GetFramebufferSize();
+        m_RendererContext->CurrentFrameIndex = 0;
+
         RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
 
-        m_RendererContext->RenderPass = device.CreateRenderPass();
-        RenderPassHandle& renderPass = m_RendererContext->RenderPass;
+        m_RendererContext->MainRenderPass = device.CreateRenderPass();
+        RenderPassHandle& mainRenderPass = m_RendererContext->MainRenderPass;
 
-        renderPass->BeginBuildingRenderPass();
+        AttachmentDescription offscreenTextureDescription = {
+            .Format = renderTargets[0]->GetImageFormat(),
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+        };
 
-        AttachmentDescription attachmentDescription = {
+        mainRenderPass->BeginBuildingRenderPass();
+        AttachmentIndex offscreenTextureIndex = mainRenderPass->DefineAttachment(offscreenTextureDescription);
+        mainRenderPass->BeginBuildingSubpass();
+        mainRenderPass->AddColorAttachment(offscreenTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        mainRenderPass->EndBuildingSubpass();
+        mainRenderPass->EndBuildingRenderPass();
+
+
+        m_RendererContext->ImGuiRenderPass = device.CreateRenderPass();
+        RenderPassHandle& imguiRenderPass = m_RendererContext->ImGuiRenderPass;
+
+        AttachmentDescription renderTargetDescription = {
             .Format = renderTargets[0]->GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
-            .FinalLayout = ImageLayout::PRESENT_SRC_KHR
+            .FinalLayout = ImageLayout::PRESENT_SRC_KHR,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
         };
 
-        AttachmentIndex renderTargetIndex = renderPass->DefineAttachment(attachmentDescription);
-
-        renderPass->BeginBuildingSubpass();
-        renderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        renderPass->EndBuildingSubpass();
-
-        renderPass->EndBuildingRenderPass();
-
+        imguiRenderPass->BeginBuildingRenderPass();
+        AttachmentIndex renderTargetIndex = imguiRenderPass->DefineAttachment(renderTargetDescription);
+        imguiRenderPass->BeginBuildingSubpass();
+        imguiRenderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        imguiRenderPass->EndBuildingSubpass();
+        imguiRenderPass->EndBuildingRenderPass();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
@@ -70,23 +90,40 @@ namespace Astral {
             context.Transforms = std::vector<Mat4>();
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
 
+
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
-                .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            context.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            context.OffscreenDescriptorSet->BeginBuildingSet();
+            context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
+            context.OffscreenDescriptorSet->EndBuildingSet();
+            context.FramesTillFree = 2;
 
-            context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
+
+            context.WindowFramebuffer = device.CreateFramebuffer(m_RendererContext->ImGuiRenderPass);
             UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
-            context.SceneFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
-            context.SceneFramebuffer->AttachRenderTarget(renderTargets[i]);
+            context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
+            context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
+            context.WindowFramebuffer->EndBuildingFramebuffer();
+
+
+            context.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->MainRenderPass);
+            UVec2 viewportDimensions = m_RendererContext->ViewportSize;
+            context.SceneFramebuffer->BeginBuildingFramebuffer(viewportDimensions.x, viewportDimensions.y);
+            context.SceneFramebuffer->AttachTexture(context.OffscreenRenderTarget);
             context.SceneFramebuffer->EndBuildingFramebuffer();
+
 
             context.TempPipelineState = nullptr;
             context.SceneRenderTarget = nullptr;
+
+
             context.SceneCameraBuffer = device.CreateUniformBuffer(nullptr, sizeof(Mat4));
             context.SceneCameraDescriptorSet = device.CreateDescriptorSet();
             context.SceneCameraDescriptorSet->BeginBuildingSet();
@@ -95,10 +132,11 @@ namespace Astral {
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
 
 
-
         }
 
-        Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->RenderPass);
+        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[1].OffscreenDescriptorSet);
+
+        Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_RendererContext->ImGuiRenderPass);
     }
 
 
@@ -126,8 +164,7 @@ namespace Astral {
         RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
 
         m_RendererContext->IsSceneStarted = true;
-        m_RendererContext->CurrentFrameIndex++;
-        if (m_RendererContext->CurrentFrameIndex == 3) { m_RendererContext->CurrentFrameIndex = 0; }
+        m_RendererContext->CurrentFrameIndex = renderTarget->GetImageIndex();
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
@@ -135,6 +172,12 @@ namespace Astral {
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
+
+        frameContext.FramesTillFree--;
+        if (frameContext.FramesTillFree == 0)
+        {
+            frameContext.ImGuiTexturesToBeFreed.clear();
+        }
 
         RendererAPI::SetBlending(true);
     }
@@ -162,6 +205,14 @@ namespace Astral {
     }
 
 
+    DescriptorSetHandle SceneRenderer::GetViewportTexture()
+    {
+        DescriptorSetHandle& descriptorSet = m_RendererContext->CurrentViewportTexture.front();
+        m_RendererContext->CurrentViewportTexture.pop();
+        return descriptorSet;
+    }
+
+
     uint32 SceneRenderer::GetDrawCallsPerFrame()
     {
         return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
@@ -184,12 +235,18 @@ namespace Astral {
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
-        FramebufferHandle framebufferHandle = frameContext.SceneFramebuffer;
-        RenderPassHandle renderPass = m_RendererContext->RenderPass;
+        FramebufferHandle mainFramebufferHandle = frameContext.SceneFramebuffer;
+        RenderPassHandle mainRenderPass = m_RendererContext->MainRenderPass;
 
         commandBuffer->BeginRecording();
         RendererAPI::BeginLabel(commandBuffer, "Main Render Pass", Vec4(1.0 , 1.0, 0, 1.0));
-        renderPass->BeginRenderPass(commandBuffer, framebufferHandle);
+        mainRenderPass->BeginRenderPass(commandBuffer, mainFramebufferHandle);
+
+        if (frameContext.TempPipelineState)
+        {
+            frameContext.TempPipelineState->Bind(commandBuffer);
+            frameContext.TempPipelineState->SetViewportAndScissor(commandBuffer, m_RendererContext->ViewportSize);
+        }
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -204,13 +261,15 @@ namespace Astral {
             if (frameContext.TempPipelineState == nullptr)
             {
                 std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, descriptorSet};
-                frameContext.TempPipelineState = device.CreatePipelineStateObject(renderPass,
+                frameContext.TempPipelineState = device.CreatePipelineStateObject(mainRenderPass,
                     vertexShader, fragmentShader, descriptorSets, mesh.VertexBuffer->GetBufferLayout());
+                frameContext.TempPipelineState->Bind(commandBuffer);
+                frameContext.TempPipelineState->SetViewportAndScissor(commandBuffer, m_RendererContext->ViewportSize);
+
             }
 
             RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
 
-            frameContext.TempPipelineState->Bind(commandBuffer);
             frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
             frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet, 1);
 
@@ -218,18 +277,26 @@ namespace Astral {
             mesh.IndexBuffer->Bind(commandBuffer);
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
+        mainRenderPass->EndRenderPass(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
 
         RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+        m_RendererContext->ImGuiRenderPass->BeginRenderPass(commandBuffer, frameContext.WindowFramebuffer);
         RendererAPI::CallImGuiDraws(commandBuffer);
+        m_RendererContext->ImGuiRenderPass->EndRenderPass(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
 
-        renderPass->EndRenderPass(commandBuffer);
         commandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = device.GetCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
+
+        uint32 nextOldestFrameIndex = (m_RendererContext->CurrentFrameIndex + 2) % 3;
+        if (m_RendererContext->CurrentViewportTexture.size() == 0)
+        {
+            m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
+        }
     }
 
 
@@ -242,13 +309,62 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
-            m_RendererContext->FrameContexts[i].SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->RenderPass);
-            FramebufferHandle framebuffer = m_RendererContext->FrameContexts[i].SceneFramebuffer;
+            FrameContext& frameContext = m_RendererContext->FrameContexts[i];
+            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_RendererContext->ImGuiRenderPass);
+            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
 
             framebuffer->BeginBuildingFramebuffer(width, height);
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
         }
+    }
+
+
+    void SceneRenderer::ResizeViewport(uint32 width, uint32 height)
+    {
+        m_RendererContext->ViewportSize = UVec2(width, height);
+        m_RendererContext->ViewportResizedPublisher.PublishEvent(ViewportResizedEvent(width, height));
+
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
+        device.WaitIdle();
+
+        auto& context = *m_RendererContext;
+
+        uint32 nextOldestFrameIndex = m_RendererContext->CurrentFrameIndex;
+        m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
+
+
+        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
+        {
+            FrameContext& frameContext = m_RendererContext->FrameContexts[i];
+
+            TextureCreateInfo textureCreateInfo = {
+                .Format = renderTargets[0]->GetImageFormat(),
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .Dimensions = UVec2(width, height),
+                .ImageData = nullptr
+            };
+            m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].FramesTillFree = 2;
+            m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenDescriptorSet);
+
+            frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
+            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            frameContext.OffscreenDescriptorSet->BeginBuildingSet();
+            frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
+            frameContext.OffscreenDescriptorSet->EndBuildingSet();
+
+            frameContext.SceneFramebuffer = device.CreateFramebuffer(m_RendererContext->MainRenderPass);
+            FramebufferHandle framebuffer = frameContext.SceneFramebuffer;
+
+            framebuffer->BeginBuildingFramebuffer(width, height);
+            framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
+            framebuffer->EndBuildingFramebuffer();
+        }
+
     }
 
 } // Renderer

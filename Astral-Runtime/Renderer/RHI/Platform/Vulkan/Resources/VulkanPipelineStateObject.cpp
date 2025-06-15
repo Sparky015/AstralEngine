@@ -13,7 +13,8 @@
 namespace Astral {
 
     VulkanPipelineStateObject::VulkanPipelineStateObject(const VulkanPipelineStateObjectDesc& desc) :
-        m_Description(desc)
+        m_Description(desc),
+        m_ViewportDimensions()
     {
         CreatePipelineStateObject();
     }
@@ -43,6 +44,27 @@ namespace Astral {
     }
 
 
+    void VulkanPipelineStateObject::SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        VkViewport viewport = {
+            .x = 0.0f,
+            .y = 0.0f,
+            .width = (float)dimensions.x,
+            .height = (float)dimensions.y,
+            .minDepth = 0.0f,
+            .maxDepth = 1.0f,
+        };
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+        VkRect2D rect = {
+            .offset = {0, 0},
+            .extent = {dimensions.x, dimensions.y},
+        };
+        vkCmdSetScissor(commandBuffer, 0, 1, &rect);
+    }
+
+
     void VulkanPipelineStateObject::CreatePipelineStateObject()
     {
         SetShaderStages();
@@ -53,6 +75,7 @@ namespace Astral {
         SetMultisampleState();
         SetColorBlendState();
         CreatePipelineLayout();
+        SetDynamicState();
 
 
         VkGraphicsPipelineCreateInfo pipelineCreateInfo = {
@@ -65,6 +88,7 @@ namespace Astral {
             .pRasterizationState = &m_PipelineCreateInfos.RasterizationState,
             .pMultisampleState = &m_PipelineCreateInfos.MultisampleState,
             .pColorBlendState = &m_PipelineCreateInfos.ColorBlendState,
+            .pDynamicState = &m_PipelineCreateInfos.DynamicState, // TODO: Make the viewport and scissor dynamic
             .layout = m_PipelineLayout,
             .renderPass = m_Description.RenderPass,
             .subpass = 0,
@@ -264,6 +288,23 @@ namespace Astral {
         };
 
         m_PipelineCreateInfos.ColorBlendState = colorBlendStateCreateInfo;
+    }
+
+
+    void VulkanPipelineStateObject::SetDynamicState()
+    {
+        m_PipelineCreateInfos.DynamicStateSpecs[0] = VK_DYNAMIC_STATE_VIEWPORT;
+        m_PipelineCreateInfos.DynamicStateSpecs[1] = VK_DYNAMIC_STATE_SCISSOR;
+
+        VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .dynamicStateCount = 2,
+            .pDynamicStates = m_PipelineCreateInfos.DynamicStateSpecs,
+        };
+
+        m_PipelineCreateInfos.DynamicState = dynamicStateCreateInfo;
     }
 
 

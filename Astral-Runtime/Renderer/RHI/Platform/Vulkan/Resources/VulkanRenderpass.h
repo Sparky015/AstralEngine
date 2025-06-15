@@ -42,8 +42,10 @@ namespace Astral {
         void Invalidate() override;
 
         void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) override;
-        void NextSubpass(CommandBufferHandle commandBufferHandle);
+        void NextSubpass(CommandBufferHandle commandBufferHandle) override;
         void EndRenderPass(CommandBufferHandle commandBufferHandle) override;
+
+        uint32 GetNumberOfSubpasses() override { return (uint32)m_SubpassDescriptions.size(); }
 
         void* GetNativeHandle() override { return m_RenderPass; }
 
@@ -70,6 +72,7 @@ namespace Astral {
         std::vector<SubpassAttachments> m_SubpassAttachments;
         std::vector<VkSubpassDescription> m_SubpassDescriptions;
         std::vector<VkSubpassDependency> m_SubpassDependencies;
+        std::vector<VkClearValue> m_ClearValues;
 
         VkRenderPass m_RenderPass;
     };

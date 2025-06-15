@@ -47,4 +47,11 @@ namespace Astral {
 #endif
     }
 
+
+    void RendererViewportSizeComponent()
+    {
+        UVec2 viewportSize = SceneRenderer::GetViewportSize();
+        ImGui::Text("Viewport Dimensions: %d px x %d px", viewportSize.x, viewportSize.y);
+    }
+
 }

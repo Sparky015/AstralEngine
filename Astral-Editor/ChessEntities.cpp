@@ -4,13 +4,10 @@
 
 #include "ChessEntities.h"
 
-#include <ChessModule.h>
-
 #include "ECS/ECSManager.h"
 #include "Asset/AssetManager.h"
 #include "Renderer/RHI/Resources/Texture.h"
-#include "Chessboard/Chessboard.h"
-#include "Chessboard/ChessboardManager.h"
+
 #include "Core/Engine.h"
 #include "ECS/Components/Sprite.h"
 #include "ECS/Components/Transform.h"
@@ -60,78 +57,78 @@ void ChessEntities::InitEntities(const Astral::Mesh& mesh)
 {
     Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
-    m_ChessBoard = ecs.CreateEntity(TODO);
+    m_ChessBoard = ecs.CreateEntity("Chessboard");
 
-    m_BlackPawn1 = ecs.CreateEntity(TODO);
-    m_BlackPawn2 = ecs.CreateEntity(TODO);
-    m_BlackPawn3 = ecs.CreateEntity(TODO);
-    m_BlackPawn4 = ecs.CreateEntity(TODO);
-    m_BlackPawn5 = ecs.CreateEntity(TODO);
-    m_BlackPawn6 = ecs.CreateEntity(TODO);
-    m_BlackPawn7 = ecs.CreateEntity(TODO);
-    m_BlackPawn8 = ecs.CreateEntity(TODO);
-    m_BlackRook1 = ecs.CreateEntity(TODO);
-    m_BlackRook2 = ecs.CreateEntity(TODO);
-    m_BlackKnight1 = ecs.CreateEntity(TODO);
-    m_BlackKnight2 = ecs.CreateEntity(TODO);
-    m_BlackBishop1 = ecs.CreateEntity(TODO);
-    m_BlackBishop2 = ecs.CreateEntity(TODO);
-    m_BlackQueen = ecs.CreateEntity(TODO);
-    m_BlackKing = ecs.CreateEntity(TODO);
+    m_BlackPawn1 = ecs.CreateEntity("BlackPawn1");
+    m_BlackPawn2 = ecs.CreateEntity("BlackPawn2");
+    m_BlackPawn3 = ecs.CreateEntity("BlackPawn3");
+    m_BlackPawn4 = ecs.CreateEntity("BlackPawn4");
+    m_BlackPawn5 = ecs.CreateEntity("BlackPawn5");
+    m_BlackPawn6 = ecs.CreateEntity("BlackPawn6");
+    m_BlackPawn7 = ecs.CreateEntity("BlackPawn7");
+    m_BlackPawn8 = ecs.CreateEntity("BlackPawn8");
+    m_BlackRook1 = ecs.CreateEntity("BlackRook1");
+    m_BlackRook2 = ecs.CreateEntity("BlackRook2");
+    m_BlackKnight1 = ecs.CreateEntity("BlackKnight1");
+    m_BlackKnight2 = ecs.CreateEntity("BlackKnight2");
+    m_BlackBishop1 = ecs.CreateEntity("BlackBishop1");
+    m_BlackBishop2 = ecs.CreateEntity("BlackBishop2");
+    m_BlackQueen = ecs.CreateEntity("BlackQueen");
+    m_BlackKing = ecs.CreateEntity("BlackKing");
 
-    m_WhitePawn1 = ecs.CreateEntity(TODO);
-    m_WhitePawn2 = ecs.CreateEntity(TODO);
-    m_WhitePawn3 = ecs.CreateEntity(TODO);
-    m_WhitePawn4 = ecs.CreateEntity(TODO);
-    m_WhitePawn5 = ecs.CreateEntity(TODO);
-    m_WhitePawn6 = ecs.CreateEntity(TODO);
-    m_WhitePawn7 = ecs.CreateEntity(TODO);
-    m_WhitePawn8 = ecs.CreateEntity(TODO);
-    m_WhiteRook1 = ecs.CreateEntity(TODO);
-    m_WhiteRook2 = ecs.CreateEntity(TODO);
-    m_WhiteKnight1 = ecs.CreateEntity(TODO);
-    m_WhiteKnight2 = ecs.CreateEntity(TODO);
-    m_WhiteBishop1 = ecs.CreateEntity(TODO);
-    m_WhiteBishop2 = ecs.CreateEntity(TODO);
-    m_WhiteQueen = ecs.CreateEntity(TODO);
-    m_WhiteKing = ecs.CreateEntity(TODO);
+    m_WhitePawn1 = ecs.CreateEntity("WhitePawn1");
+    m_WhitePawn2 = ecs.CreateEntity("WhitePawn2");
+    m_WhitePawn3 = ecs.CreateEntity("WhitePawn3");
+    m_WhitePawn4 = ecs.CreateEntity("WhitePawn4");
+    m_WhitePawn5 = ecs.CreateEntity("WhitePawn5");
+    m_WhitePawn6 = ecs.CreateEntity("WhitePawn6");
+    m_WhitePawn7 = ecs.CreateEntity("WhitePawn7");
+    m_WhitePawn8 = ecs.CreateEntity("WhitePawn8");
+    m_WhiteRook1 = ecs.CreateEntity("WhiteRook1");
+    m_WhiteRook2 = ecs.CreateEntity("WhiteRook2");
+    m_WhiteKnight1 = ecs.CreateEntity("WhiteKnight1");
+    m_WhiteKnight2 = ecs.CreateEntity("WhiteKnight2");
+    m_WhiteBishop1 = ecs.CreateEntity("WhiteBishop1");
+    m_WhiteBishop2 = ecs.CreateEntity("WhiteBishop2");
+    m_WhiteQueen = ecs.CreateEntity("WhiteQueen");
+    m_WhiteKing = ecs.CreateEntity("WhiteKing");
 
 
     // Transform Components
 
-    ecs.AddComponent(m_ChessBoard,   TransformComponent(400.0f, 400.0f, 800, 800));
-    ecs.AddComponent(m_BlackPawn1,   TransformComponent(50, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn2,   TransformComponent(150, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn3,   TransformComponent(250, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn4,   TransformComponent(350, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn5,   TransformComponent(450, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn6,   TransformComponent(550, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn7,   TransformComponent(650, 150, 100, 100));
-    ecs.AddComponent(m_BlackPawn8,   TransformComponent(750, 150, 100, 100));
-    ecs.AddComponent(m_BlackRook1,   TransformComponent(50, 50, 100, 100));
-    ecs.AddComponent(m_BlackRook2,   TransformComponent(750, 50, 100, 100));
-    ecs.AddComponent(m_BlackKnight1, TransformComponent(150, 50, 100, 100));
-    ecs.AddComponent(m_BlackKnight2, TransformComponent(650, 50, 100, 100));
-    ecs.AddComponent(m_BlackBishop1, TransformComponent(250, 50, 100, 100));
-    ecs.AddComponent(m_BlackBishop2, TransformComponent(550, 50, 100, 100));
-    ecs.AddComponent(m_BlackQueen,   TransformComponent(350, 50, 100, 100));
-    ecs.AddComponent(m_BlackKing,    TransformComponent(450, 50, 100, 100));
-    ecs.AddComponent(m_WhitePawn1,   TransformComponent(50, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn2,   TransformComponent(150, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn3,   TransformComponent(250, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn4,   TransformComponent(350, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn5,   TransformComponent(450, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn6,   TransformComponent(550, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn7,   TransformComponent(650, 650, 100, 100));
-    ecs.AddComponent(m_WhitePawn8,   TransformComponent(750, 650, 100, 100));
-    ecs.AddComponent(m_WhiteRook1,   TransformComponent(50, 750, 100, 100));
-    ecs.AddComponent(m_WhiteRook2,   TransformComponent(750, 750, 100, 100));
-    ecs.AddComponent(m_WhiteKnight1, TransformComponent(150, 750, 100, 100));
-    ecs.AddComponent(m_WhiteKnight2, TransformComponent(650, 750, 100, 100));
-    ecs.AddComponent(m_WhiteBishop1, TransformComponent(250, 750, 100, 100));
-    ecs.AddComponent(m_WhiteBishop2, TransformComponent(550, 750, 100, 100));
-    ecs.AddComponent(m_WhiteQueen,   TransformComponent(350, 750, 100, 100));
-    ecs.AddComponent(m_WhiteKing,    TransformComponent(450, 750, 100, 100));
+    ecs.AddComponent(m_ChessBoard,   TransformComponent(0.0f, 0.0f, 800, 800));
+    ecs.AddComponent(m_BlackPawn1,   TransformComponent(-350, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn2,   TransformComponent(-250, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn3,   TransformComponent(-150, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn4,   TransformComponent(-50, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn5,   TransformComponent(50, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn6,   TransformComponent(150, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn7,   TransformComponent(250, -250, 100, 100));
+    ecs.AddComponent(m_BlackPawn8,   TransformComponent(350, -250, 100, 100));
+    ecs.AddComponent(m_BlackRook1,   TransformComponent(-350, -350, 100, 100));
+    ecs.AddComponent(m_BlackRook2,   TransformComponent(350, -350, 100, 100));
+    ecs.AddComponent(m_BlackKnight1, TransformComponent(-250, -350, 100, 100));
+    ecs.AddComponent(m_BlackKnight2, TransformComponent(250, -350, 100, 100));
+    ecs.AddComponent(m_BlackBishop1, TransformComponent(-150, -350, 100, 100));
+    ecs.AddComponent(m_BlackBishop2, TransformComponent(150, -350, 100, 100));
+    ecs.AddComponent(m_BlackQueen,   TransformComponent(-50, -350, 100, 100));
+    ecs.AddComponent(m_BlackKing,    TransformComponent(50, -350, 100, 100));
+    ecs.AddComponent(m_WhitePawn1,   TransformComponent(-350, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn2,   TransformComponent(-250, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn3,   TransformComponent(-150, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn4,   TransformComponent(-50, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn5,   TransformComponent(50, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn6,   TransformComponent(150, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn7,   TransformComponent(250, 250, 100, 100));
+    ecs.AddComponent(m_WhitePawn8,   TransformComponent(350, 250, 100, 100));
+    ecs.AddComponent(m_WhiteRook1,   TransformComponent(-350, 350, 100, 100));
+    ecs.AddComponent(m_WhiteRook2,   TransformComponent(350, 350, 100, 100));
+    ecs.AddComponent(m_WhiteKnight1, TransformComponent(-250, 350, 100, 100));
+    ecs.AddComponent(m_WhiteKnight2, TransformComponent(250, 350, 100, 100));
+    ecs.AddComponent(m_WhiteBishop1, TransformComponent(-150, 350, 100, 100));
+    ecs.AddComponent(m_WhiteBishop2, TransformComponent(150, 350, 100, 100));
+    ecs.AddComponent(m_WhiteQueen,   TransformComponent(-50, 350, 100, 100));
+    ecs.AddComponent(m_WhiteKing,    TransformComponent(50, 350, 100, 100));
 
 
     Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
@@ -237,62 +234,3 @@ void ChessEntities::DestroyEntities()
 }
 
 
-Astral::Entity ChessEntities::GetEntity(SquareLocation location)
-{
-    Game::Chessboard& board = ChessModule::Get().GetBoardManager().GetBoard();
-
-    if (board.GetSquareType(location) == PieceType::NONE)
-    {
-        return m_WhiteKing;
-    }
-
-    PieceColor color = board.GetSquareColor(location);
-    uint8 pieceID = board.GetSquarePieceID(location);
-
-    if (color.IsBlack())
-    {
-        switch (pieceID)
-        {
-            case 0: return m_BlackPawn1;
-            case 1: return m_BlackPawn2;
-            case 2: return m_BlackPawn3;
-            case 3: return m_BlackPawn4;
-            case 4: return m_BlackPawn5;
-            case 5: return m_BlackPawn6;
-            case 6: return m_BlackPawn7;
-            case 7: return m_BlackPawn8;
-            case 8: return m_BlackRook1;
-            case 9: return m_BlackKnight1;
-            case 10: return m_BlackBishop1;
-            case 11: return m_BlackQueen;
-            case 12: return m_BlackKing;
-            case 13: return m_BlackBishop2;
-            case 14: return m_BlackKnight2;
-            case 15: return m_BlackRook2;
-            default: return m_WhiteKing;
-        }
-    }
-    else
-    {
-        switch (pieceID)
-        {
-            case 0: return m_WhitePawn1;
-            case 1: return m_WhitePawn2;
-            case 2: return m_WhitePawn3;
-            case 3: return m_WhitePawn4;
-            case 4: return m_WhitePawn5;
-            case 5: return m_WhitePawn6;
-            case 6: return m_WhitePawn7;
-            case 7: return m_WhitePawn8;
-            case 8: return m_WhiteRook1;
-            case 9: return m_WhiteKnight1;
-            case 10: return m_WhiteBishop1;
-            case 11: return m_WhiteQueen;
-            case 12: return m_WhiteKing;
-            case 13: return m_WhiteBishop2;
-            case 14: return m_WhiteKnight2;
-            case 15: return m_WhiteRook2;
-            default: return m_WhiteKing;
-        }
-    }
-}

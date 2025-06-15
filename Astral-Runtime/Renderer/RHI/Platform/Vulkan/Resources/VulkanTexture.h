@@ -47,6 +47,8 @@ namespace Astral {
         void* GetSampler() override { return m_Sampler; }
         void* GetNativeHandle() override { return m_ImageView; }
 
+        ImTextureID GetImGuiTextureID() override;
+
     private:
 
         void CreateTexture(ImageUsageFlags imageUsageFlags);
@@ -83,6 +85,7 @@ namespace Astral {
         VkImageView m_ImageView;
         VkSampler m_Sampler;
 
+        VkDescriptorSet m_ImGuiTextureID;
     };
 
 }

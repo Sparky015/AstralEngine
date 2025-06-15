@@ -318,8 +318,8 @@ namespace Astral {
             case ImageFormat::R16G16_S10_5_NV: return VK_FORMAT_R16G16_S10_5_NV;
 
             case ImageFormat::MAX_ENUM: // Fallthrough
-                default: ASTRAL_ERROR("Invalid Image Format Given!")
-            }
+            default: ASTRAL_ERROR("Invalid Image Format Given!");
+        }
     }
 
 
@@ -449,7 +449,6 @@ namespace Astral {
         case ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT: return VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         case ImageUsageFlags::TRANSIENT_ATTACHMENT_BIT: return VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
         case ImageUsageFlags::INPUT_ATTACHMENT_BIT: return VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-        case ImageUsageFlags::HOST_TRANSFER_BIT: return VK_IMAGE_USAGE_HOST_TRANSFER_BIT;
         case ImageUsageFlags::VIDEO_DECODE_DST_BIT: return VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR;
         case ImageUsageFlags::VIDEO_DECODE_SRC_BIT: return VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR;
         case ImageUsageFlags::VIDEO_DECODE_DPB_BIT: return VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR;
@@ -459,8 +458,6 @@ namespace Astral {
         case ImageUsageFlags::VIDEO_ENCODE_SRC_BIT: return VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR;
         case ImageUsageFlags::VIDEO_ENCODE_DPB_BIT: return VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR;
         case ImageUsageFlags::ATTACHMENT_FEEDBACK_LOOP_BIT_EXT: return VK_IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT;
-        case ImageUsageFlags::VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT: return VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR;
-        case ImageUsageFlags::VIDEO_ENCODE_EMPHASIS_MAP_BIT: return VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR;
         default: ASTRAL_ERROR("Invalid Image Usage Flag Given!");
     }
     }
@@ -761,7 +758,7 @@ namespace Astral {
             case VK_FORMAT_A8_UNORM_KHR: return ImageFormat::A8_UNORM_KHR;
 
             case VK_FORMAT_MAX_ENUM: // Fallthrough
-                default: ASTRAL_ERROR("Invalid VkFormat Given!")
+            default: ASTRAL_ERROR("Invalid VkFormat Given!");
         }
     }
 

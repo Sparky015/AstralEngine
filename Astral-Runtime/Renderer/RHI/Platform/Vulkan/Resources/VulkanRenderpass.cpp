@@ -51,6 +51,13 @@ namespace Astral {
             .finalLayout = finalLayout
         };
 
+        if (attachmentDescription.LoadOp == AttachmentLoadOp::CLEAR)
+        {
+            Vec4 color = attachmentDescription.ClearColor;
+            VkClearValue clearColor = {{color.r, color.g, color.b, color.a}};
+            m_ClearValues.push_back(clearColor);
+        }
+
         m_RenderPassAttachments.push_back(vkAttachmentDescription);
         return m_RenderPassAttachments.size() - 1;
     }
@@ -183,7 +190,6 @@ namespace Astral {
     void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkClearValue clearColorValues = {.color = {0.0f, 0.0f, 1.0f, 1.0f}};
         VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
         UVec2 extent = frameBufferHandle->GetExtent();
 
@@ -196,8 +202,8 @@ namespace Astral {
                 .offset = {0,0},
                 .extent = {extent.x, extent.y}
             },
-            .clearValueCount = 1,
-            .pClearValues = &clearColorValues,
+            .clearValueCount = (uint32)m_ClearValues.size(),
+            .pClearValues = m_ClearValues.data(),
         };
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -250,7 +256,7 @@ namespace Astral {
             case AttachmentLoadOp::LOAD:   return VK_ATTACHMENT_LOAD_OP_LOAD;
             case AttachmentLoadOp::CLEAR:  return VK_ATTACHMENT_LOAD_OP_CLEAR;
             case AttachmentLoadOp::DONT_CARE: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            default: ASTRAL_ERROR("Invalid Load Op Given!")
+            default: ASTRAL_ERROR("Invalid Load Op Given!");
         }
     }
 
@@ -261,7 +267,7 @@ namespace Astral {
         {
             case AttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
             case AttachmentStoreOp::DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            default: ASTRAL_ERROR("Invalid Store Op Given!")
+            default: ASTRAL_ERROR("Invalid Store Op Given!");
         }
     }
 

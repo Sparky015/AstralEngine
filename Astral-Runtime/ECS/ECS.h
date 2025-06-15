@@ -34,7 +34,7 @@ namespace Astral {
         void Shutdown();
 
         /**@brief Creates an entity in the ECS and returns its instance */
-        Entity CreateEntity();
+        Entity CreateEntity(std::string_view debugName);
 
         /**@brief Deletes an entity from the ECS */
         void DeleteEntity(Entity entity);
@@ -76,6 +76,17 @@ namespace Astral {
          * @return An iterable ComponentView of the requested type. */
         template <typename ComponentType>
         ComponentView<ComponentType>& GetView(); // TODO: Return an iterator of the view instead of actual view
+
+        class Iterator
+        {
+            // Iterator Traits
+            using value_type = Entity;
+            using difference_type = std::ptrdiff_t;
+            using pointer = Entity*;
+            using reference = Entity&;
+            using iterator_category = std::forward_iterator_tag;
+
+        };
 
     private:
 
