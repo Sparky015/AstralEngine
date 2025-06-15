@@ -37,6 +37,7 @@ namespace Astral {
 
         static DescriptorSetHandle GetViewportTexture();
         static void ResizeViewport(uint32 width, uint32 height);
+        static UVec2 GetViewportSize() { return m_RendererContext->ViewportSize; }
 
         static uint32 GetDrawCallsPerFrame();
         static API GetRendererAPIBackend();
@@ -79,6 +80,7 @@ namespace Astral {
             std::queue<DescriptorSetHandle> CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
 
             UVec2 ViewportSize;
+
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;

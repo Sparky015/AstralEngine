@@ -11,5 +11,6 @@ namespace Astral {
     void DrawCallsPerFrameComponent();
     void RendererAPIComponent();
     void RendererAPIValidationStatus();
+    void RendererViewportSizeComponent();
 
 }

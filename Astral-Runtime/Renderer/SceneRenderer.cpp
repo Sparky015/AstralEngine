@@ -164,8 +164,7 @@ namespace Astral {
         RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
 
         m_RendererContext->IsSceneStarted = true;
-        m_RendererContext->CurrentFrameIndex++;
-        if (m_RendererContext->CurrentFrameIndex == 3) { m_RendererContext->CurrentFrameIndex = 0; }
+        m_RendererContext->CurrentFrameIndex = renderTarget->GetImageIndex();
 
         FrameContext& frameContext = m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
@@ -365,6 +364,7 @@ namespace Astral {
             framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
             framebuffer->EndBuildingFramebuffer();
         }
+
     }
 
 } // Renderer

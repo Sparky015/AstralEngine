@@ -71,6 +71,7 @@ namespace Astral {
                 FPSComponent();
                 FrameTimeComponent();
                 DrawCallsPerFrameComponent();
+                RendererViewportSizeComponent();
 
                 ImGui::Spacing();
                 RendererAPIComponent();
