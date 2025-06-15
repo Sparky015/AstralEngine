@@ -17,7 +17,7 @@
 namespace Astral {
 
     using AssetID = size_t;
-    static constexpr AssetID NullAssetID = 0;
+    static constexpr AssetID NullAssetID = -1;
 
     class AssetRegistry
     {
@@ -48,7 +48,7 @@ namespace Astral {
 
         AssetID AssignNextAvailableAssetID();
 
-        AssetID m_NextAvailableAssetID{1};
+        AssetID m_NextAvailableAssetID{0};
         std::filesystem::path m_AssetDirectoryPath;
 
         std::unordered_map<std::filesystem::path, AssetID> m_FilePathToAssetID;

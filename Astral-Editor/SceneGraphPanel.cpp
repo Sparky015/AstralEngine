@@ -30,30 +30,29 @@ namespace Astral {
 
                 if (ImGui::TreeNode(entity.GetDebugName().data()))
                 {
-                    if (ImGui::TreeNode("Transform##TransformComponentSceneGraph"))
+                    if (ImGui::TreeNodeEx("Transform##TransformComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         if (ecs.HasComponent<TransformComponent>(entity))
                         {
+                            TransformComponent transform;
+                            ECS_Result result = ecs.GetComponent(entity, transform);
+                            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
 
-                                TransformComponent transform;
-                                ECS_Result result = ecs.GetComponent(entity, transform);
-                                ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
+                            ImGui::Text("Position: ");
+                            ImGui::SameLine();
+                            ImGui::InputFloat3("##PositionInput", glm::value_ptr(transform.position));
 
-                                ImGui::Text("Position: ");
-                                ImGui::SameLine();
-                                ImGui::InputFloat3("##PositionInput", glm::value_ptr(transform.position));
+                            ImGui::Text("Scale: ");
+                            ImGui::SameLine();
+                            ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
 
-                                ImGui::Text("Scale: ");
-                                ImGui::SameLine();
-                                ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
-
-                                ecs.AddComponent(entity, transform);
+                            ecs.AddComponent(entity, transform);
                         }
 
                         ImGui::TreePop();
                     }
 
-                    if (ImGui::TreeNode("Sprite##SpriteComponentSceneGraph"))
+                    if (ImGui::TreeNodeEx("Sprite##SpriteComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         if (ecs.HasComponent<SpriteComponent>(entity))
                         {
@@ -78,7 +77,6 @@ namespace Astral {
                             }
 
                             ecs.AddComponent(entity, sprite);
-
                         }
 
                         ImGui::TreePop();

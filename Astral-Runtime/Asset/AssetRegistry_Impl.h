@@ -58,7 +58,12 @@ namespace Astral {
         requires std::is_base_of_v<Asset, AssetType>
     Ref<AssetType> AssetRegistry::GetAsset(AssetID assetID)
     {
-        if (!m_AssetIDToAsset.contains(assetID)) { return nullptr; }
+        ASSERT(assetID != NullAssetID, "Asset ID is null!");
+        if (!m_AssetIDToAsset.contains(assetID))
+        {
+            ASTRAL_ERROR("Asset registry does not contain an asset with given asset ID!");
+            return nullptr;
+        }
         return std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));
     }
 
