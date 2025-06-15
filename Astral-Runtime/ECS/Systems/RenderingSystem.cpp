@@ -65,13 +65,13 @@ namespace Astral {
             camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
         }
 
-        if (InputState::IsKeyDown(KEY_RIGHT_ARROW))
+        if (InputState::IsKeyDown(KEY_H))
         {
             const float rotation = camera.GetRotation();
             camera.SetRotation(rotation + 1);
         }
 
-        if (InputState::IsKeyDown(KEY_LEFT_ARROW))
+        if (InputState::IsKeyDown(KEY_G))
         {
             const float rotation = camera.GetRotation();
             camera.SetRotation(rotation - 1);
@@ -95,18 +95,16 @@ namespace Astral {
         };
 
         SceneRenderer::BeginScene(sceneDescription);
-        for (EntityID entityID = 0; entityID < ecs.GetNumberOfActiveEntities(); entityID++)
+        for (Entity entity : ecs)
         {
-            Entity e = Entity(entityID);
-            if (!ecs.IsEntityAlive(entityID)) { continue; }
-            if (!ecs.HasComponent<SpriteComponent>(e)) { continue; }
-            if (!transformDisplay[entityID].isUsed) { continue; }
+            if (!ecs.IsEntityAlive(entity)) { continue; }
+            if (!ecs.HasComponent<SpriteComponent>(entity)) { continue; }
+            EntityID entityID = entity.GetID();
 
             const TransformComponent& transformComponent = transformDisplay[entityID];
             SpriteComponent& spriteComponent = spriteDisplay[entityID];
 
-            Vec3 position = Vec3(transformComponent.x, transformComponent.y, transformComponent.z);
-            Mat4 transform = CreateTransform(position, Vec3(transformComponent.scaleX, transformComponent.scaleY, 1));
+            Mat4 transform = CreateTransform(transformComponent.position, transformComponent.scale);
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
             Ref<Material> material = registry.GetAsset<Material>(spriteComponent.materialAssetID);

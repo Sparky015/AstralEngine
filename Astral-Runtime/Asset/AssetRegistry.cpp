@@ -69,6 +69,12 @@ namespace Astral {
     }
 
 
+    std::filesystem::path AssetRegistry::GetFilePathFromAssetID(AssetID assetID)
+    {
+        return m_AssetIDToFilePath[assetID];
+    }
+
+
     AssetID AssetRegistry::AssignNextAvailableAssetID()
     {
         AssetID nextAssetID = m_NextAvailableAssetID;

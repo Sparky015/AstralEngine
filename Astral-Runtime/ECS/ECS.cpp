@@ -19,7 +19,8 @@ namespace Astral {
     void ECS::Init()
     {
         constexpr size_t INITIAL_ENTITY_COUNT = 64;
-        m_ActiveEntities.resize(INITIAL_ENTITY_COUNT);
+        m_Entities.resize(INITIAL_ENTITY_COUNT, false);
+        m_EntityDebugNames.resize(INITIAL_ENTITY_COUNT);
         m_ComponentPoolSet.ResizeComponentPool(INITIAL_ENTITY_COUNT);
     }
 
@@ -32,18 +33,20 @@ namespace Astral {
 
     Entity ECS::CreateEntity(std::string_view debugName)
     {
-        if (m_NumberOfActiveEntities == m_ActiveEntities.size())
+        if (m_NumberOfActiveEntities == m_Entities.size())
         {
             // Resize all the component pools
-            const size_t size = m_ActiveEntities.size();
-            m_ActiveEntities.resize(2 * size, false);
+            const size_t size = m_Entities.size();
+            m_Entities.resize(2 * size, false);
+            m_EntityDebugNames.resize(2 * size);
             m_ComponentPoolSet.ResizeComponentPool(2 * size);
         }
 
         EntityID newEntityID = GetNextInactiveEntity();
 
         // This should not go out of bounds due to the resizing above if m_ActiveEntities is at max capacity.
-        m_ActiveEntities[newEntityID] = true;
+        m_Entities[newEntityID] = true;
+        m_EntityDebugNames[newEntityID] = debugName;
 
         m_NumberOfActiveEntities++;
         return Entity(newEntityID, debugName);
@@ -53,7 +56,7 @@ namespace Astral {
     void ECS::DeleteEntity(Entity entity)
     {
         m_NumberOfActiveEntities--;
-        m_ActiveEntities[entity.GetID()] = false;
+        m_Entities[entity.GetID()] = false;
         m_FreeEntities.push(entity.GetID());
         m_ComponentPoolSet.ResetEntityUsedComponentFlags(entity);
     }
@@ -67,19 +70,77 @@ namespace Astral {
 
     bool ECS::IsEntityAlive(Entity entity)
     {
-        return m_ActiveEntities[entity.GetID()];
+        return m_Entities[entity.GetID()];
     }
 
 
     bool ECS::IsEntityAlive(EntityID entityID)
     {
-        return m_ActiveEntities[entityID];
+        return m_Entities[entityID];
     }
 
 
     uint32 ECS::GetNumberOfActiveEntities()
     {
         return m_NumberOfActiveEntities;
+    }
+
+
+    ECS::Iterator::Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex) :
+        m_Entities(entities),
+        m_EntityDebugNames(debugNames),
+        m_CurrentIndex(startingIndex - 1)
+    {
+        ASSERT(entities != nullptr, "Iterator was passed a null entities container!")
+        FindNextAliveEntity();
+    }
+
+
+    ECS::Iterator::value_type ECS::Iterator::operator*() const
+    {
+        ASSERT(m_CurrentIndex != m_Entities->size(), "Tried to dereference a iterator pointing to end!")
+        return Entity(m_CurrentIndex, m_EntityDebugNames[m_CurrentIndex]);
+    }
+
+
+    ECS::Iterator& ECS::Iterator::operator++()
+    {
+        FindNextAliveEntity();
+        return *this;
+    }
+
+
+    ECS::Iterator ECS::Iterator::operator++(int)
+    {
+        Iterator temp = *this;
+        FindNextAliveEntity();
+        return temp;
+    }
+
+
+    bool ECS::Iterator::operator==(const Iterator& other) const
+    {
+        return m_CurrentIndex == other.m_CurrentIndex && m_Entities == other.m_Entities;
+    }
+
+
+    bool ECS::Iterator::operator!=(const Iterator& other) const
+    {
+        return !(*this == other);
+    }
+
+
+    size_t ECS::Iterator::FindNextAliveEntity()
+    {
+        m_CurrentIndex++;
+        if (m_CurrentIndex > m_Entities->size()) { m_CurrentIndex = m_Entities->size(); }
+
+        while (m_CurrentIndex < m_Entities->size() && m_Entities->at(m_CurrentIndex) == false)
+        {
+            m_CurrentIndex++;
+        }
+
+        return m_CurrentIndex;
     }
 
 
