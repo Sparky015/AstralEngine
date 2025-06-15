@@ -330,8 +330,6 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
 
-        auto& context = *m_RendererContext;
-
         uint32 nextOldestFrameIndex = m_RendererContext->CurrentFrameIndex;
         m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
 
