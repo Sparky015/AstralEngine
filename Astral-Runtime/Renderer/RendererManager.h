@@ -28,6 +28,8 @@ namespace Astral {
 
     private:
 
+        void LoadRendererAssets();
+
         GraphicsOwnedPtr<RenderingContext> m_RenderContext;
     };
 

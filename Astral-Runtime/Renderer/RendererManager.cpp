@@ -4,6 +4,8 @@
 
 #include "RendererManager.h"
 
+#include "Asset/AssetManager.h"
+#include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 #include "RHI/RendererAPI.h"
@@ -30,6 +32,7 @@ namespace Astral {
         m_RenderContext->Init();
 
         SceneRenderer::Init();
+        LoadRendererAssets();
     }
 
 
@@ -46,6 +49,29 @@ namespace Astral {
     RenderingContext& RendererManager::GetContext()
     {
         return *m_RenderContext;
+    }
+
+
+    void RendererManager::LoadRendererAssets()
+    {
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        registry.SetAssetDirectoryPath(ASTRAL_RENDERER_ASSETS_DIR);
+
+        // Materials
+        registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");
+
+        // Meshs
+        // registry.CreateAsset<Mesh>("MissingMaterial.astmat");
+
+        // Shaders
+        registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
+        registry.CreateAsset<Shader>("Shaders/Sample_Image.frag");
+
+        // Textures
+        registry.CreateAsset<Texture>("Textures/MissingTexture.png");
+        registry.CreateAsset<Texture>("Textures/SolidBlack.png");
+        registry.CreateAsset<Texture>("Textures/SolidWhite.png");
+
     }
 
 }
