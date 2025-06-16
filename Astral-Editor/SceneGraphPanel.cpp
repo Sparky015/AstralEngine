@@ -22,7 +22,18 @@ namespace Astral {
 
         ImGui::Begin("SceneGraph##EditorSceneGraph", nullptr);
 
-        if (ImGui::TreeNode("Entities"))
+        if (ImGui::BeginPopupContextWindow())
+        {
+            if (ImGui::MenuItem("Add Entity"))
+            {
+                Entity entity = ecs.CreateEntity("Untitled");
+            }
+
+            ImGui::EndPopup();
+        }
+
+
+        if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
         {
             for (Entity entity : ecs)
             {
@@ -30,10 +41,44 @@ namespace Astral {
 
                 if (ImGui::TreeNode(entity.GetDebugName().data()))
                 {
-                    if (ImGui::TreeNodeEx("Transform##TransformComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+
+
+                    if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
                     {
-                        if (ecs.HasComponent<TransformComponent>(entity))
+                        if (ImGui::BeginMenu("Add Component"))
                         {
+                            if (!ecs.HasComponent<TransformComponent>(entity))
+                            {
+                                if (ImGui::MenuItem("Transform"))
+                                {
+                                    TransformComponent transformComponent{};
+                                    ecs.AddComponent(entity, transformComponent);
+                                }
+                            }
+
+                            if (!ecs.HasComponent<SpriteComponent>(entity))
+                            {
+                                if (ImGui::MenuItem("Sprite"))
+                                {
+                                    SpriteComponent spriteComponent{};
+                                    // ecs.AddComponent(entity, spriteComponent);
+                                    // TODO: Add defaultable meshes, textures, and materials
+                                }
+                            }
+
+                            ImGui::EndMenu();
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+
+
+                    if (ecs.HasComponent<TransformComponent>(entity))
+                    {
+                        if (ImGui::TreeNodeEx("Transform##TransformComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+                        {
+
                             TransformComponent transform;
                             ECS_Result result = ecs.GetComponent(entity, transform);
                             ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
@@ -47,15 +92,16 @@ namespace Astral {
                             ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
 
                             ecs.AddComponent(entity, transform);
-                        }
 
-                        ImGui::TreePop();
+                            ImGui::TreePop();
+                        }
                     }
 
-                    if (ImGui::TreeNodeEx("Sprite##SpriteComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+                    if (ecs.HasComponent<SpriteComponent>(entity))
                     {
-                        if (ecs.HasComponent<SpriteComponent>(entity))
+                        if (ImGui::TreeNodeEx("Sprite##SpriteComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
                         {
+
                             SpriteComponent sprite;
                             ECS_Result result = ecs.GetComponent(entity, sprite);
                             ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get sprite component")
@@ -82,9 +128,9 @@ namespace Astral {
                             }
 
                             ecs.AddComponent(entity, sprite);
-                        }
 
-                        ImGui::TreePop();
+                            ImGui::TreePop();
+                        }
                     }
 
                     ImGui::TreePop();
