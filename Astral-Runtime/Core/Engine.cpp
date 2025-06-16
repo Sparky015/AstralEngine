@@ -48,8 +48,8 @@ namespace Astral {
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
         m_ImGuiManager->Init();
-        m_RendererManager->Init();
         m_AssetManager->Init();
+        m_RendererManager->Init();
         InputState::Init();
         m_ECSManager->Init();
         m_ApplicationModule->Init();
@@ -72,10 +72,10 @@ namespace Astral {
         m_ECSManager->Shutdown();
         m_ECSManager.reset();
         InputState::Shutdown();
-        m_AssetManager->Shutdown();
-        m_AssetManager.reset();
         m_RendererManager->Shutdown();
         m_RendererManager.reset();
+        m_AssetManager->Shutdown();
+        m_AssetManager.reset();
         m_ImGuiManager->Shutdown();
         m_ImGuiManager.reset();
         m_WindowManager->Shutdown();

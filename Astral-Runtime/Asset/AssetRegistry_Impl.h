@@ -24,10 +24,13 @@ namespace Astral {
         Ref<Asset> asset;
         if (filePath.is_relative())
         {
-            asset = LoadAsset(AssetType::GetStaticAssetType(), m_AssetDirectoryPath.string() + filePath.string());
+            std::string fullFilePath = m_AssetDirectoryPath.string() + filePath.string();
+            ASSERT(std::filesystem::exists(fullFilePath), "Given asset file path does not exist! (" << fullFilePath << ")")
+            asset = LoadAsset(AssetType::GetStaticAssetType(), fullFilePath);
         }
         else
         {
+            ASSERT(std::filesystem::exists(filePath), "Given asset file path does not exist! (" << filePath.string() << ")")
             asset = LoadAsset(AssetType::GetStaticAssetType(), filePath);
         }
 
