@@ -96,7 +96,7 @@ void ChessEntities::InitEntities(const Astral::Mesh& mesh)
 
     // Transform Components
 
-    ecs.AddComponent(m_ChessBoard,   TransformComponent(0.0f, 0.0f, 800, 800));
+    ecs.AddComponent(m_ChessBoard,   TransformComponent({0.0f, 0.0f, 0.0f}, {800, 800, 800}));
     ecs.AddComponent(m_BlackPawn1,   TransformComponent(-350, -250, 100, 100));
     ecs.AddComponent(m_BlackPawn2,   TransformComponent(-250, -250, 100, 100));
     ecs.AddComponent(m_BlackPawn3,   TransformComponent(-150, -250, 100, 100));

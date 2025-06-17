@@ -8,7 +8,7 @@
 #include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
-#include "Renderer/Cameras/OrthographicCamera.h"
+#include "Renderer/Cameras/Camera.h"
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
 #include "RHI/Resources/Renderpass.h"
@@ -20,7 +20,7 @@ namespace Astral {
 
     struct SceneDescription
     {
-        OrthographicCamera& Camera;
+        Camera& Camera;
 
     };
 

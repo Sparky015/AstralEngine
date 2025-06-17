@@ -29,7 +29,7 @@ namespace Astral {
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        static OrthographicCamera camera = OrthographicCamera(1.0, 800.0f);
+        static Camera camera = Camera(CameraType::ORTHOGRAPHIC, 1.0, 800.0f);
         static constexpr float magnitude = 5;
 
         if (InputState::IsKeyDown(KEY_A))

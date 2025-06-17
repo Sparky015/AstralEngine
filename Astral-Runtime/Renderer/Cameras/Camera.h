@@ -12,14 +12,20 @@
 
 namespace Astral {
 
-    /**@class OrthographicCamera
+    enum class CameraType : uint8
+    {
+        ORTHOGRAPHIC,
+        PERSPECTIVE
+    };
+
+    /**@class Camera
      * @brief An orthographic camera to use in scenes. */
-    class OrthographicCamera
+    class Camera
     {
     public:
-        OrthographicCamera();
-        OrthographicCamera(float aspectRatio, float zoomLevel);
-        ~OrthographicCamera();
+        Camera();
+        Camera(CameraType cameraType, float aspectRatio, float zoomLevel);
+        ~Camera();
 
         /**@brief Gets the ProjectionView matrix. The matrix is calculated on other calls and cached. */
         const Mat4& GetProjectionViewMatrix() const;
@@ -58,14 +64,25 @@ namespace Astral {
         void RecreateProjectionMatrix();
         void CalculateProjectionViewMatrix();
 
+        CameraType m_CameraType;
+
         Mat4 m_ProjectionMatrix; // Contains aspect ratio and zoom
         Mat4 m_ViewMatrix; // Kinda like a world transformation that moves the whole scene
         Mat4 m_ProjectionViewMatrix; // Cache for projection-view matrix
 
         Vec3 m_Position;
         float m_Rotation = 0.0f;
-        float m_ZoomLevel = 1.0f;
         float m_AspectRatio = 1.0f;
+
+        union
+        {
+            float m_ZoomLevel; // Orthographic
+            float m_POV; // Perspective
+        };
+
+        float m_Pitch = 0.0f; // Rotation around X-axis (looking up/down)
+        float m_Yaw = 0.0f;   // Rotation around Y-axis (looking left/right)
+        float m_Roll = 0.0f; // Optional: Rotation around Z-axis (tilting)
 
         EventListener<ViewportResizedEvent> m_ViewportResizedListener{[this](ViewportResizedEvent e)
         {
