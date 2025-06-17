@@ -61,7 +61,7 @@ namespace Astral {
         registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");
 
         // Meshs
-        // registry.CreateAsset<Mesh>("MissingMaterial.astmat");
+        registry.CreateAsset<Mesh>("Meshes/Quad.obj");
 
         // Shaders
         registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");

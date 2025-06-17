@@ -12,6 +12,13 @@ namespace Astral {
         m_Stride(0),
         m_Attributes(bufferAttributes)
     {
+        CalcStride();
+    }
+
+
+    void VertexBufferLayout::CalcStride()
+    {
+        m_Stride = 0;
         for (VertexBufferAttribute& attribute : m_Attributes)
         {
             m_Stride += attribute.GetAttributeSize();

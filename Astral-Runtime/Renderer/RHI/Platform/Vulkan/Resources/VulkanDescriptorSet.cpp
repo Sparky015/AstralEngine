@@ -16,9 +16,9 @@ namespace Astral {
         m_NumberOfBindings(0),
         m_Buffers(),
         m_Textures(),
-        m_DescriptorPool(),
-        m_DescriptorSet(),
-        m_DescriptorSetLayout()
+        m_DescriptorPool(VK_NULL_HANDLE),
+        m_DescriptorSet(VK_NULL_HANDLE),
+        m_DescriptorSetLayout(VK_NULL_HANDLE)
     {
         CreateDescriptorPool();
     }
@@ -27,8 +27,8 @@ namespace Astral {
     VulkanDescriptorSet::~VulkanDescriptorSet()
     {
         // DestroyDescriptorSets();
-        DestroyDescriptorSetLayout();
-        DestroyDescriptorPool();
+        if (m_DescriptorSetLayout != VK_NULL_HANDLE) { DestroyDescriptorSetLayout(); }
+        if (m_DescriptorPool != VK_NULL_HANDLE) { DestroyDescriptorPool(); }
         m_Buffers.clear();
         m_Textures.clear();
     }
@@ -173,6 +173,7 @@ namespace Astral {
     void VulkanDescriptorSet::DestroyDescriptorPool()
     {
         vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+        m_DescriptorPool = VK_NULL_HANDLE;
     }
 
 
@@ -194,6 +195,7 @@ namespace Astral {
     void VulkanDescriptorSet::DestroyDescriptorSetLayout()
     {
         vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
+        m_DescriptorSetLayout = VK_NULL_HANDLE;
     }
 
 
@@ -215,6 +217,7 @@ namespace Astral {
     void VulkanDescriptorSet::DestroyDescriptorSets()
     {
         vkFreeDescriptorSets(m_Device, m_DescriptorPool, 1, &m_DescriptorSet);
+        m_DescriptorSet = VK_NULL_HANDLE;
     }
 
 

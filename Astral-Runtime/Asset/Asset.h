@@ -16,7 +16,8 @@ namespace Astral {
     {
         Texture,
         Material,
-        Shader
+        Shader,
+        Mesh
     };
 
     class Asset
@@ -34,6 +35,7 @@ namespace Astral {
             case AssetType::Texture: return "Texture";
             case AssetType::Material: return "Material";
             case AssetType::Shader: return "Shader";
+            case AssetType::Mesh: return "Mesh";
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }

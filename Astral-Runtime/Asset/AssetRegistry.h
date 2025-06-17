@@ -34,6 +34,10 @@ namespace Astral {
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> GetAsset(AssetID assetID);
 
+        template <typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        Ref<AssetType> GetAsset(std::string_view filePath);
+
         void UnloadAsset(AssetID assetID);
         void UnloadAsset(const std::filesystem::path& filePath);
 
