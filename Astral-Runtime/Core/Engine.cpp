@@ -72,10 +72,10 @@ namespace Astral {
         m_ECSManager->Shutdown();
         m_ECSManager.reset();
         InputState::Shutdown();
-        m_RendererManager->Shutdown();
-        m_RendererManager.reset();
         m_AssetManager->Shutdown();
         m_AssetManager.reset();
+        m_RendererManager->Shutdown();
+        m_RendererManager.reset();
         m_ImGuiManager->Shutdown();
         m_ImGuiManager.reset();
         m_WindowManager->Shutdown();

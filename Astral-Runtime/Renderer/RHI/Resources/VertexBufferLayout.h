@@ -38,11 +38,19 @@ namespace Astral {
     public:
         VertexBufferLayout(std::initializer_list<VertexBufferAttribute> bufferAttributes);
 
+        void AddAttribute(VertexBufferAttribute attribute)
+        {
+            m_Attributes.push_back(attribute);
+            CalcStride();
+        }
+
         uint32 GetStride() { return m_Stride; }
 
         std::vector<VertexBufferAttribute>::iterator begin() { return m_Attributes.begin(); }
         std::vector<VertexBufferAttribute>::iterator end() { return m_Attributes.end(); }
     private:
+
+        void CalcStride();
 
         uint32 m_Stride;
         std::vector<VertexBufferAttribute> m_Attributes;

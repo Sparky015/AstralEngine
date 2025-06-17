@@ -7,15 +7,19 @@
 
 #pragma once
 
+#include "Asset/Asset.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
 namespace Astral {
 
-    struct Mesh
+    struct Mesh : Asset
     {
         VertexBufferHandle VertexBuffer;
         IndexBufferHandle IndexBuffer;
+
+        AssetType GetAssetType() override { return Mesh::GetStaticAssetType(); }
+        static AssetType GetStaticAssetType() { return AssetType::Mesh; }
     };
 
 }

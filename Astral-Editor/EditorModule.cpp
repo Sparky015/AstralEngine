@@ -12,6 +12,8 @@
 #include "Debug/ImGui/ImGuiManager.h"
 
 #include "ChessEntities.h"
+#include "Asset/AssetManager.h"
+#include "Asset/AssetRegistry.h"
 
 namespace Astral {
 
@@ -34,32 +36,32 @@ namespace Astral {
             window.SetWindowDimensions(1600, 800);
             m_Editor.Init();
 
-            m_Mesh = {};
+        //     m_Mesh = {};
+        //
+        //     float vertices[20] = {
+        //         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+        //         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        //         -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        //         0.5f,  0.5f, 0.0f, 1.0f, 1.0f
+        // };
+        //
+        //     uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
+        //
+        //     VertexBufferLayout bufferLayout = {
+        //         {Float3, "a_Position"},
+        //         {Float2, "a_TexCords"}
+        //     };
+        //
+        //
+        //     m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
+        //     m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
+            //
+            // m_Mesh.VertexBuffer = m_VertexBuffer;
+            // m_Mesh.IndexBuffer = m_IndexBuffer;
 
-            float vertices[20] = {
-                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-                0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-                -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-                0.5f,  0.5f, 0.0f, 1.0f, 1.0f
-        };
-
-            uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
-
-            VertexBufferLayout bufferLayout = {
-                {Float3, "a_Position"},
-                {Float2, "a_TexCords"}
-            };
-
-            {
-                PROFILE_SCOPE("Compile Shaders")
-                m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
-                m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
-            }
-
-            m_Mesh.VertexBuffer = m_VertexBuffer;
-            m_Mesh.IndexBuffer = m_IndexBuffer;
-
-            ChessEntities::InitEntities(m_Mesh);
+            Astral::AssetRegistry registry = Engine::Get().GetAssetManager().GetRegistry();
+            Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+            ChessEntities::InitEntities(*mesh);
         }
 
         void Update(const Astral::DeltaTime& deltaTime) override

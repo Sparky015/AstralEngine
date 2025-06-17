@@ -57,6 +57,7 @@ namespace Astral {
         return assetID;
     }
 
+
     template <typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
     Ref<AssetType> AssetRegistry::GetAsset(AssetID assetID)
@@ -68,6 +69,15 @@ namespace Astral {
             return nullptr;
         }
         return std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));
+    }
+
+
+    template <typename AssetType>
+        requires std::is_base_of_v<Asset, AssetType>
+    Ref<AssetType> AssetRegistry::GetAsset(std::string_view filePath)
+    {
+        AssetID assetID = m_FilePathToAssetID[filePath];
+        return GetAsset<AssetType>(assetID);
     }
 
 }
