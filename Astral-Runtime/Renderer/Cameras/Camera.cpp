@@ -81,15 +81,20 @@ namespace Astral {
 
         if (m_CameraType == CameraType::PERSPECTIVE)
         {
-            Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Pitch), Vec3(1, 0, 0)); // Rotate around X
-            Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Yaw), Vec3(0, 1, 0));   // Rotate around Y
-            Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Roll), Vec3(0, 0, 1)); // Rotate around Z
+            Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.x), Vec3(1, 0, 0)); // Rotate around X
+            Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.y), Vec3(0, 1, 0));   // Rotate around Y
+            Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1)); // Rotate around Z
 
             orientation = rotationZ * rotationY * rotationX;
         }
         else if (m_CameraType == CameraType::ORTHOGRAPHIC)
         {
-            orientation = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation), Vec3(0, 0, 1));
+            // orientation = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1));
+            Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.x), Vec3(1, 0, 0)); // Rotate around X
+            Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.y), Vec3(0, 1, 0));   // Rotate around Y
+            Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1)); // Rotate around Z
+
+            orientation = rotationZ * rotationY * rotationX;
         }
 
 

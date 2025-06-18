@@ -12,6 +12,8 @@
 
 #include <string_view>
 
+#include "Core/Math/Math.h"
+
 namespace Astral {
 
     struct KeyState
@@ -54,6 +56,8 @@ namespace Astral {
 
         /** Returns the Y position of the mouse cursor. */
         [[nodiscard]] static double MousePositionY();
+
+        [[nodiscard]] static Vec2 MousePosition();
 
         static void DisableTrackingInputs() { m_IgnoreNewInputs = true; }
         static void EnableTrackingInputs() { m_IgnoreNewInputs = false; }

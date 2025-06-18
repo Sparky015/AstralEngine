@@ -29,8 +29,33 @@ namespace Astral {
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        static Camera camera = Camera(CameraType::ORTHOGRAPHIC, 1.0, 800.0f);
+        static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
         static constexpr float magnitude = 5;
+        static Vec2 initialMousePos{};
+        static Vec3 initialRotation{};
+        static bool isReadyToTrack = true;
+
+        if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
+        {
+            if (isReadyToTrack)
+            {
+                initialMousePos = InputState::MousePosition();
+                initialRotation = camera.GetRotation();
+                isReadyToTrack = false;
+            }
+
+            Vec2 currentMousePos = InputState::MousePosition();
+            float xDiff = currentMousePos.x - initialMousePos.x;
+            float yDiff = currentMousePos.y - initialMousePos.y;
+
+            Vec3 newRotation = {initialRotation.x - yDiff, initialRotation.y - xDiff, initialRotation.z};
+            camera.SetRotation(newRotation);
+        }
+        else
+        {
+            isReadyToTrack = true;
+        }
+
 
         if (InputState::IsKeyDown(KEY_A))
         {
@@ -42,24 +67,24 @@ namespace Astral {
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x + magnitude, position.y, position.z));
         }
-        if (InputState::IsKeyDown(KEY_S))
+        if (InputState::IsKeyDown(KEY_LEFT_SHIFT) || InputState::IsKeyDown(KEY_RIGHT_SHIFT))
         {
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
         }
-        if (InputState::IsKeyDown(KEY_W))
+        if (InputState::IsKeyDown(KEY_SPACE))
         {
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
         }
 
-        if (InputState::IsKeyDown(KEY_E))
+        if (InputState::IsKeyDown(KEY_W))
         {
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y, position.z - magnitude));
         }
 
-        if (InputState::IsKeyDown(KEY_Q))
+        if (InputState::IsKeyDown(KEY_S))
         {
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
@@ -67,14 +92,16 @@ namespace Astral {
 
         if (InputState::IsKeyDown(KEY_H))
         {
-            const float rotation = camera.GetRotation();
-            camera.SetRotation(rotation + 1);
+            Vec3 rotation = camera.GetRotation();
+            rotation.z += 1;
+            camera.SetRotation(rotation);
         }
 
         if (InputState::IsKeyDown(KEY_G))
         {
-            const float rotation = camera.GetRotation();
-            camera.SetRotation(rotation - 1);
+            Vec3 rotation = camera.GetRotation();
+            rotation.z -= 1;
+            camera.SetRotation(rotation);
         }
 
         if (InputState::IsKeyDown(KEY_T))

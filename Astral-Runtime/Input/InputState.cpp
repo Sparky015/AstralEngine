@@ -169,6 +169,12 @@ namespace Astral {
     }
 
 
+    Vec2 InputState::MousePosition()
+    {
+        return Vec2(m_MouseCursorState.MouseXPosition, m_MouseCursorState.MouseYPosition);
+    }
+
+
     Astral::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Astral::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
     Astral::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Astral::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
     Astral::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Astral::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};

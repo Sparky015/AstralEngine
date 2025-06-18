@@ -41,14 +41,14 @@ namespace Astral {
         [[nodiscard]] const Vec3& GetPosition() const { return m_Position; }
 
         /**@brief Sets the rotation of the camera */
-        void SetRotation(float rotation)
+        void SetRotation(const Vec3& rotation)
         {
             m_Rotation = rotation;
             CalculateProjectionViewMatrix();
         }
 
         /**@brief Gets the rotation of the camera */
-        [[nodiscard]] float GetRotation() const { return m_Rotation; }
+        [[nodiscard]] const Vec3& GetRotation() const { return m_Rotation; }
 
         void SetZoom(float zoom)
         {
@@ -71,7 +71,7 @@ namespace Astral {
         Mat4 m_ProjectionViewMatrix; // Cache for projection-view matrix
 
         Vec3 m_Position;
-        float m_Rotation = 0.0f;
+        Vec3 m_Rotation;
         float m_AspectRatio = 1.0f;
 
         union
@@ -79,10 +79,6 @@ namespace Astral {
             float m_ZoomLevel; // Orthographic
             float m_POV; // Perspective
         };
-
-        float m_Pitch = 0.0f; // Rotation around X-axis (looking up/down)
-        float m_Yaw = 0.0f;   // Rotation around Y-axis (looking left/right)
-        float m_Roll = 0.0f; // Optional: Rotation around Z-axis (tilting)
 
         EventListener<ViewportResizedEvent> m_ViewportResizedListener{[this](ViewportResizedEvent e)
         {
