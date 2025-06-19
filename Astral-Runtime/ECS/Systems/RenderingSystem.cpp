@@ -9,8 +9,8 @@
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
-#include "ECS/Components/Sprite.h"
-#include "ECS/Components/Transform.h"
+#include "ECS/Components/SpriteComponent.h"
+#include "ECS/Components/TransformComponent.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
@@ -18,15 +18,13 @@
 
 #include "Input/InputState.h"
 
+#include <cmath>
+
 namespace Astral {
 
     void RenderingSystem::RenderEntities()
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
-
-        ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
-        const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
@@ -59,13 +57,15 @@ namespace Astral {
 
         if (InputState::IsKeyDown(KEY_A))
         {
+            const Vec3& rotation = camera.GetRotation();
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x - magnitude, position.y, position.z));
+            camera.SetPosition(Vec3(position.x - (magnitude), position.y, position.z));
         }
         if (InputState::IsKeyDown(KEY_D))
         {
+            const Vec3& rotation = camera.GetRotation();
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x + magnitude, position.y, position.z));
+            camera.SetPosition(Vec3(position.x + (magnitude), position.y, position.z));
         }
         if (InputState::IsKeyDown(KEY_LEFT_SHIFT) || InputState::IsKeyDown(KEY_RIGHT_SHIFT))
         {
@@ -80,12 +80,14 @@ namespace Astral {
 
         if (InputState::IsKeyDown(KEY_W))
         {
+            const Vec3& rotation = camera.GetRotation();
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y, position.z - magnitude));
         }
 
         if (InputState::IsKeyDown(KEY_S))
         {
+            const Vec3& rotation = camera.GetRotation();
             const Vec3& position = camera.GetPosition();
             camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
         }
@@ -117,27 +119,68 @@ namespace Astral {
         }
 
 
+
         SceneDescription sceneDescription = {
             .Camera = camera,
         };
 
         SceneRenderer::BeginScene(sceneDescription);
+
+        SubmitMeshComponents();
+        SubmitSpriteComponents();
+
+        SceneRenderer::EndScene();
+    }
+
+
+    void RenderingSystem::SubmitMeshComponents()
+    {
+        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+
+        ECS::ComponentView<MeshComponent>& meshDisplay = ecs.GetView<MeshComponent>();
+        const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
+
         for (Entity entity : ecs)
         {
-            if (!ecs.IsEntityAlive(entity)) { continue; }
+            if (!ecs.HasComponent<MeshComponent>(entity)) { continue; }
+            EntityID entityID = entity.GetID();
+
+            const TransformComponent& transformComponent = transformDisplay[entityID];
+            MeshComponent& meshComponent = meshDisplay[entityID];
+
+            if (meshComponent.Material == nullptr) { continue; }
+            if (meshComponent.MeshData == nullptr) { continue; }
+
+            Mat4 modelTransform = CreateTransform(transformComponent.position, transformComponent.scale);
+
+            SceneRenderer::Submit(*meshComponent.MeshData, *meshComponent.Material, modelTransform);
+        }
+    }
+
+
+    void RenderingSystem::SubmitSpriteComponents()
+    {
+        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+
+        ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
+        const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
+
+
+        for (Entity entity : ecs)
+        {
             if (!ecs.HasComponent<SpriteComponent>(entity)) { continue; }
             EntityID entityID = entity.GetID();
 
             const TransformComponent& transformComponent = transformDisplay[entityID];
             SpriteComponent& spriteComponent = spriteDisplay[entityID];
 
-            Mat4 transform = CreateTransform(transformComponent.position, transformComponent.scale);
+            if (spriteComponent.Material == nullptr) { continue; }
+            if (spriteComponent.MeshData == nullptr) { continue; }
 
-            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            Ref<Material> material = registry.GetAsset<Material>(spriteComponent.materialAssetID);
-            SceneRenderer::Submit(spriteComponent.mesh, *material, transform);
+            Mat4 modelTransform = CreateTransform(transformComponent.position, transformComponent.scale);
+
+            SceneRenderer::Submit(*spriteComponent.MeshData, *spriteComponent.Material, modelTransform);
         }
-        SceneRenderer::EndScene();
     }
 
 

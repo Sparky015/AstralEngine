@@ -18,6 +18,9 @@ namespace Astral {
 
     private:
 
+        static void SubmitMeshComponents();
+        static void SubmitSpriteComponents();
+
         static Mat4 CreateTransform(Vec3 position, Vec3 scale);
     };
 
