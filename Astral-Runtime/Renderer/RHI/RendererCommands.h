@@ -21,6 +21,13 @@ namespace Astral {
         None = 0, Vulkan, DirectX12, Metal
     };
 
+    struct RendererDebugStats
+    {
+        uint32 NumberOfDrawCalls;
+        uint32 NumberOfTriangles;
+        uint32 NumberOfVertices;
+    };
+
     class RendererCommands {
     public:
         RendererCommands();
@@ -45,12 +52,15 @@ namespace Astral {
 
         virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
 
-        virtual inline uint32 GetNumberOfDrawCalls() { return m_NumberOfDrawCallsLastFrame; }
+        RendererDebugStats GetNumberOfDrawCalls() { return m_DebugStatsLastFrame; }
 
     protected:
-        uint32 m_NumberOfDrawCallsThisFrame = 0;
-        uint32 m_NumberOfDrawCallsLastFrame = 0;
-        EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent){ m_NumberOfDrawCallsLastFrame = m_NumberOfDrawCallsThisFrame; m_NumberOfDrawCallsThisFrame = 0;}};
+        RendererDebugStats m_DebugStatsThisFrame = {};
+        RendererDebugStats m_DebugStatsLastFrame = {};
+        EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent) {
+            m_DebugStatsLastFrame = m_DebugStatsThisFrame;
+            m_DebugStatsThisFrame = {};
+        }};
 
     private:
         static API s_RendererAPI;

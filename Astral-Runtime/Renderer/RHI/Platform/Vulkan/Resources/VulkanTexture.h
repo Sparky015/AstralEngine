@@ -57,7 +57,7 @@ namespace Astral {
         void AllocateTextureMemory();
         void FreeTextureMemory();
 
-        void CreateImageView();
+        void CreateImageView(ImageUsageFlags imageUsageFlags);
         void DestroyImageView();
 
         void UploadDataToTexture(uint8* data);

@@ -53,6 +53,7 @@ namespace Astral {
         void SetViewportState();
         void SetRasterizerState();
         void SetMultisampleState();
+        void SetDepthStencilState();
         void SetColorBlendState();
         void SetDynamicState();
 
@@ -73,6 +74,7 @@ namespace Astral {
             VkPipelineViewportStateCreateInfo ViewportState;
             VkPipelineRasterizationStateCreateInfo RasterizationState;
             VkPipelineMultisampleStateCreateInfo MultisampleState;
+            VkPipelineDepthStencilStateCreateInfo DepthStencilState;
             VkPipelineColorBlendAttachmentState ColorBlendAttachmentState;
             VkPipelineColorBlendStateCreateInfo ColorBlendState;
             VkPipelineLayoutCreateInfo PipelineLayout;

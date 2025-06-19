@@ -47,9 +47,10 @@ namespace Astral {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         // vkCmdDraw(commandBuffer, 3, 1, 0, 0); // For just vertex buffer
         vkCmdDrawIndexed(commandBuffer, indexBufferHandle->GetCount(), 1, 0, 0, 0);
-        m_NumberOfDrawCallsThisFrame++;
+        m_DebugStatsThisFrame.NumberOfDrawCalls++;
+        m_DebugStatsThisFrame.NumberOfTriangles += (indexBufferHandle->GetCount() / 3);
     }
-\
+
 
     void VulkanRendererCommands::PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle pipelineStateObjectHandle,
                                                     void* data, uint32 sizeInBytes)

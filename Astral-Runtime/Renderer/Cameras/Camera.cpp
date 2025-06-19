@@ -34,6 +34,7 @@ namespace Astral {
         m_Position(0, 0, 0),
         m_Rotation(0.0f)
     {
+        m_Position = {0, 0, 800};
         if (m_CameraType == CameraType::PERSPECTIVE)
         {
             m_POV = 60.0f;
@@ -66,7 +67,7 @@ namespace Astral {
     {
         if (m_CameraType == CameraType::PERSPECTIVE)
         {
-            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, .1f, 1000.0f);
+            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, .1f, 5000.0f);
         }
         else if (m_CameraType == CameraType::ORTHOGRAPHIC)
         {

@@ -17,7 +17,7 @@ namespace Game {
         m_UpdateListener.StartListening();
 
         InitializeRenderingComponents();
-        ChessEntities::InitEntities(m_Mesh);
+        ChessEntities::InitEntities();
     }
 
 

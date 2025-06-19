@@ -73,6 +73,7 @@ namespace Astral {
         SetViewportState();
         SetRasterizerState();
         SetMultisampleState();
+        SetDepthStencilState();
         SetColorBlendState();
         CreatePipelineLayout();
         SetDynamicState();
@@ -87,8 +88,9 @@ namespace Astral {
             .pViewportState = &m_PipelineCreateInfos.ViewportState,
             .pRasterizationState = &m_PipelineCreateInfos.RasterizationState,
             .pMultisampleState = &m_PipelineCreateInfos.MultisampleState,
+            .pDepthStencilState = &m_PipelineCreateInfos.DepthStencilState,
             .pColorBlendState = &m_PipelineCreateInfos.ColorBlendState,
-            .pDynamicState = &m_PipelineCreateInfos.DynamicState, // TODO: Make the viewport and scissor dynamic
+            .pDynamicState = &m_PipelineCreateInfos.DynamicState,
             .layout = m_PipelineLayout,
             .renderPass = m_Description.RenderPass,
             .subpass = 0,
@@ -256,6 +258,27 @@ namespace Astral {
         };
 
         m_PipelineCreateInfos.MultisampleState = multisample;
+    }
+
+
+    void VulkanPipelineStateObject::SetDepthStencilState()
+    {
+        VkPipelineDepthStencilStateCreateInfo depthStencilState = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .depthTestEnable = true,
+            .depthWriteEnable = true,
+            .depthCompareOp = VK_COMPARE_OP_LESS,
+            .depthBoundsTestEnable = VK_FALSE,
+            .stencilTestEnable = VK_FALSE,
+            .front = {},
+            .back = {},
+            .minDepthBounds = 0.0f,
+            .maxDepthBounds = 1.0f,
+        };
+
+        m_PipelineCreateInfos.DepthStencilState = depthStencilState;
     }
 
 

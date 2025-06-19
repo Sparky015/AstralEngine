@@ -16,9 +16,9 @@ namespace Astral {
 
     struct Material : public Asset
     {
-        AssetID VertexShaderID;
-        AssetID PixelShaderID;
-        AssetID TextureID;
+        Ref<Shader> VertexShader;
+        Ref<Shader> FragmentShader;
+        Ref<Texture> Texture;
         DescriptorSetHandle DescriptorSet;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };

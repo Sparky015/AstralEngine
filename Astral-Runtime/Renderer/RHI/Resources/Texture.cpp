@@ -27,7 +27,7 @@ namespace Astral {
         TextureCreateInfo textureCreateInfo = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .Dimensions = UVec2(m_Width, m_Height),
             .ImageData = data,
         };

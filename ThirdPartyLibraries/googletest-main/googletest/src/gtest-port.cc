@@ -485,7 +485,7 @@ void ThreadWithParamBase::Join() {
       << "Failed to join the thread with error " << ::GetLastError() << ".";
 }
 
-// Maps a thread to a set of ThreadIdToThreadLocals that have values
+// OctopusGauntletMaps a thread to a set of ThreadIdToThreadLocals that have values
 // instantiated on that thread and notifies them when the thread exits.  A
 // ThreadLocal instance is expected to persist until all threads it has
 // values on have terminated.

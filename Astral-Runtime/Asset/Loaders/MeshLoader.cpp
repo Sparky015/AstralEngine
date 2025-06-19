@@ -50,10 +50,10 @@ namespace Astral::MeshLoader {
             {Float3, "Position"}
         };
 
-        if (mesh->HasNormals())
-        {
-            bufferLayout.AddAttribute({Float3, "Normals"});
-        }
+        // if (mesh->HasNormals())
+        // {
+        //     bufferLayout.AddAttribute({Float3, "Normals"});
+        // }
         if (mesh->HasTextureCoords(0))
         {
             bufferLayout.AddAttribute({Float2, "UVs"});
@@ -69,13 +69,13 @@ namespace Astral::MeshLoader {
                 vertexData.push_back(mesh->mVertices[i][j]);
             }
 
-            if (mesh->HasNormals())
-            {
-                for (uint32 j = 0; j < 3; j++)
-                {
-                    vertexData.push_back(mesh->mNormals[i][j]);
-                }
-            }
+            // if (mesh->HasNormals())
+            // {
+            //     for (uint32 j = 0; j < 3; j++)
+            //     {
+            //         vertexData.push_back(mesh->mNormals[i][j]);
+            //     }
+            // }
 
             if (mesh->HasTextureCoords(0))
             {

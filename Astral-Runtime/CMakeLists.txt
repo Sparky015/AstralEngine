@@ -28,8 +28,8 @@ add_library(AstralEngine
         Debug/Instrumentation/ProfilerLogFile.h
         ECS/ECSManager.cpp
         ECS/ECSManager.h
-        ECS/Components/Transform.h
-        ECS/Components/Sprite.h
+        ECS/Components/TransformComponent.h
+        ECS/Components/SpriteComponent.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
         Renderer/Shaders/ShaderSource.h

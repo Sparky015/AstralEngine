@@ -29,7 +29,7 @@ namespace Astral {
     {
         CreateTexture(desc.ImageUsageFlags);
     	AllocateTextureMemory();
-    	CreateImageView();
+    	CreateImageView(desc.ImageUsageFlags);
     	CreateImageSampler();
 
     	if (desc.ImageData)
@@ -139,8 +139,19 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateImageView()
+    void VulkanTexture::CreateImageView(ImageUsageFlags imageUsageFlags)
     {
+    	VkImageAspectFlags aspectFlags{};
+
+    	if (imageUsageFlags == ImageUsageFlags::COLOR_ATTACHMENT_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
+    	}
+    	else if (imageUsageFlags == ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+    	}
+
     	VkImageViewCreateInfo imageViewCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
     		.pNext = nullptr,
@@ -155,7 +166,7 @@ namespace Astral {
 				.a = VK_COMPONENT_SWIZZLE_A,
     		},
     		.subresourceRange = {
-				.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+				.aspectMask = aspectFlags,
 				.baseMipLevel = 0,
 				.levelCount = 1,
 				.baseArrayLayer = 0,
@@ -232,7 +243,7 @@ namespace Astral {
 					(m_Format == VK_FORMAT_D16_UNORM_S8_UINT) ||
 					(m_Format == VK_FORMAT_D24_UNORM_S8_UINT))
 		{
-			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 
 			// if (HasStencilComponent(m_Format))
 			// {
@@ -287,6 +298,8 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		} /* Convert depth texture from undefined state to depth-stencil buffer */
+
+
 		else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
@@ -295,6 +308,8 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 		} /* Wait for render pass to complete */
+
+
 		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0; // VK_ACCESS_SHADER_READ_BIT;

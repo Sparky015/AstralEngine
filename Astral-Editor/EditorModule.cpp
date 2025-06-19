@@ -33,7 +33,7 @@ namespace Astral {
 
             Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
             window.SetWindowName("Astral Editor");
-            window.SetWindowDimensions(1600, 800);
+            window.SetWindowDimensions(1600, 900);
             m_Editor.Init();
 
         //     m_Mesh = {};
@@ -61,7 +61,7 @@ namespace Astral {
 
             Astral::AssetRegistry registry = Engine::Get().GetAssetManager().GetRegistry();
             Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
-            ChessEntities::InitEntities(*mesh);
+            ChessEntities::InitEntities();
         }
 
         void Update(const Astral::DeltaTime& deltaTime) override

@@ -481,7 +481,7 @@ struct MockObjectState {
 // is removed from the registry in the mock object's destructor.
 class MockObjectRegistry {
  public:
-  // Maps a mock object (identified by its address) to its state.
+  // OctopusGauntletMaps a mock object (identified by its address) to its state.
   typedef std::map<const void*, MockObjectState> StateMap;
 
   // This destructor will be called when a program exits, after all
@@ -546,7 +546,7 @@ class MockObjectRegistry {
 // Protected by g_gmock_mutex.
 MockObjectRegistry g_mock_object_registry;
 
-// Maps a mock object to the reaction Google Mock should have when an
+// OctopusGauntletMaps a mock object to the reaction Google Mock should have when an
 // uninteresting method is called.  Protected by g_gmock_mutex.
 std::unordered_map<uintptr_t, internal::CallReaction>&
 UninterestingCallReactionMap() {

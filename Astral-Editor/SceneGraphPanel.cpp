@@ -27,6 +27,10 @@ namespace Astral {
             if (ImGui::MenuItem("Add Entity"))
             {
                 Entity entity = ecs.CreateEntity("Untitled");
+
+                // Add transform component by default
+                TransformComponent transformComponent{};
+                ecs.AddComponent(entity, transformComponent);
             }
 
             ImGui::EndPopup();
@@ -47,8 +51,11 @@ namespace Astral {
                     {
                         if (ImGui::BeginMenu("Add Component"))
                         {
+                            bool canAddAComponent = false;
+
                             if (!ecs.HasComponent<TransformComponent>(entity))
                             {
+                                canAddAComponent = true;
                                 if (ImGui::MenuItem("Transform"))
                                 {
                                     TransformComponent transformComponent{};
@@ -58,12 +65,29 @@ namespace Astral {
 
                             if (!ecs.HasComponent<SpriteComponent>(entity))
                             {
+                                canAddAComponent = true;
                                 if (ImGui::MenuItem("Sprite"))
                                 {
                                     SpriteComponent spriteComponent{};
-                                    // ecs.AddComponent(entity, spriteComponent);
+                                    ecs.AddComponent(entity, spriteComponent);
                                     // TODO: Add defaultable meshes, textures, and materials
                                 }
+                            }
+
+                            if (!ecs.HasComponent<MeshComponent>(entity))
+                            {
+                                canAddAComponent = true;
+                                if (ImGui::MenuItem("Mesh"))
+                                {
+                                    MeshComponent meshComponent{};
+                                    ecs.AddComponent(entity, meshComponent);
+
+                                }
+                            }
+
+                            if (!canAddAComponent)
+                            {
+                                ImGui::Text("(All Component Types Used Already)");
                             }
 
                             ImGui::EndMenu();
@@ -76,61 +100,17 @@ namespace Astral {
 
                     if (ecs.HasComponent<TransformComponent>(entity))
                     {
-                        if (ImGui::TreeNodeEx("Transform##TransformComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-
-                            TransformComponent transform;
-                            ECS_Result result = ecs.GetComponent(entity, transform);
-                            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
-
-                            ImGui::Text("Position: ");
-                            ImGui::SameLine();
-                            ImGui::InputFloat3("##PositionInput", glm::value_ptr(transform.position));
-
-                            ImGui::Text("Scale: ");
-                            ImGui::SameLine();
-                            ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
-
-                            ecs.AddComponent(entity, transform);
-
-                            ImGui::TreePop();
-                        }
+                        ShowTransformComponent(ecs, entity);
                     }
 
                     if (ecs.HasComponent<SpriteComponent>(entity))
                     {
-                        if (ImGui::TreeNodeEx("Sprite##SpriteComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
+                        ShowSpriteComponent(ecs, entity);
+                    }
 
-                            SpriteComponent sprite;
-                            ECS_Result result = ecs.GetComponent(entity, sprite);
-                            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get sprite component")
-
-                            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-                            Ref<Material> material = registry.GetAsset<Material>(sprite.materialAssetID);
-
-                            std::string filePath = registry.GetFilePathFromAssetID(sprite.materialAssetID).string();
-
-                            static char inputBuffer[200];
-
-                            strncpy(inputBuffer, filePath.c_str(), sizeof(inputBuffer) - 1);
-                            inputBuffer[sizeof(inputBuffer) - 1] = '\0'; // Ensure null-termination
-
-
-                            if (ImGui::InputText("##MaterialFilePath", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-                            {
-                                AssetID newAssetID = registry.GetAssetIDFromFilePath(inputBuffer);
-
-                                if (newAssetID != NullAssetID)
-                                {
-                                    sprite.materialAssetID = newAssetID;
-                                }
-                            }
-
-                            ecs.AddComponent(entity, sprite);
-
-                            ImGui::TreePop();
-                        }
+                    if (ecs.HasComponent<MeshComponent>(entity))
+                    {
+                        ShowMeshComponent(ecs, entity);
                     }
 
                     ImGui::TreePop();
@@ -143,6 +123,147 @@ namespace Astral {
         }
 
         ImGui::End();
+    }
+
+
+    void ShowTransformComponent(ECS& ecs, const Entity& entity)
+    {
+        if (ImGui::TreeNodeEx("Transform##TransformComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+
+            TransformComponent transform;
+            ECS_Result result = ecs.GetComponent(entity, transform);
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
+
+            ImGui::Text("Position: ");
+            ImGui::SameLine();
+            ImGui::InputFloat3("##PositionInput", glm::value_ptr(transform.position));
+
+            ImGui::Text("Scale: ");
+            ImGui::SameLine();
+            ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
+
+            ecs.AddComponent(entity, transform);
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ShowSpriteComponent(ECS& ecs, const Entity& entity)
+    {
+        if (ImGui::TreeNodeEx("Sprite##SpriteComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+
+            SpriteComponent sprite;
+            ECS_Result result = ecs.GetComponent(entity, sprite);
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get sprite component")
+
+            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+            AssetID materialAssetID = NullAssetID;
+            if (sprite.Material)
+            {
+                materialAssetID = sprite.Material->GetAssetID();
+            }
+
+            // Show Material asset file path
+            static char materialInputBuffer[200];
+            GetAssetFilePath(registry, materialAssetID, materialInputBuffer, sizeof(materialInputBuffer));
+
+            ImGui::Text("Material: ");
+            ImGui::SameLine();
+            if (ImGui::InputText("##MaterialFilePath", materialInputBuffer, sizeof(materialInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                Ref<Material> newMaterial = registry.GetAsset<Material>(materialInputBuffer);
+
+                if (newMaterial != nullptr)
+                {
+                    sprite.Material = newMaterial;
+                }
+            }
+
+            ecs.AddComponent(entity, sprite);
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ShowMeshComponent(ECS& ecs, const Entity& entity)
+    {
+        if (ImGui::TreeNodeEx("Mesh##MeshComponentSceneGraph", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+
+            MeshComponent meshComponent;
+            ECS_Result result = ecs.GetComponent(entity, meshComponent);
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
+
+            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+            AssetID meshAssetID = NullAssetID;
+            if (meshComponent.MeshData)
+            {
+                meshAssetID = meshComponent.MeshData->GetAssetID();
+            }
+            static char meshInputBuffer[200];
+            GetAssetFilePath(registry, meshAssetID, meshInputBuffer, sizeof(meshInputBuffer));
+
+
+            ImGui::Text("Mesh: ");
+            ImGui::SameLine();
+            if (ImGui::InputText("##MeshFilePath", meshInputBuffer, sizeof(meshInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                Ref<Mesh> newMesh = registry.GetAsset<Mesh>(meshInputBuffer);
+
+                if (newMesh != nullptr)
+                {
+                    meshComponent.MeshData = newMesh;
+                }
+            }
+
+
+            AssetID materialAssetID = NullAssetID;
+            if (meshComponent.Material)
+            {
+                materialAssetID = meshComponent.Material->GetAssetID();
+            }
+            static char materialInputBuffer[200];
+            GetAssetFilePath(registry, materialAssetID, materialInputBuffer, sizeof(materialInputBuffer));
+
+
+            ImGui::Text("Material: ");
+            ImGui::SameLine();
+            if (ImGui::InputText("##MaterialFilePath", materialInputBuffer, sizeof(materialInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                Ref<Material> newMaterial = registry.GetAsset<Material>(materialInputBuffer);
+
+                if (newMaterial != nullptr)
+                {
+                    meshComponent.Material = newMaterial;
+                }
+            }
+
+            ecs.AddComponent(entity, meshComponent);
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void GetAssetFilePath(AssetRegistry& registry, AssetID materialAssetID, char* inputBuffer, int inputBufferSize)
+    {
+        std::string filePath;
+        if (materialAssetID != NullAssetID)
+        {
+            filePath = registry.GetFilePathFromAssetID(materialAssetID).string();
+        }
+        else
+        {
+            filePath = "";
+        }
+        strncpy(inputBuffer, filePath.c_str(), inputBufferSize - 1);
+        inputBuffer[inputBufferSize - 1] = '\0'; // Ensure null-termination
     }
 
 }

@@ -72,6 +72,9 @@ namespace Astral {
         registry.CreateAsset<Texture>("Textures/SolidBlack.png");
         registry.CreateAsset<Texture>("Textures/SolidWhite.png");
 
+        // Demo Models
+        registry.CreateAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
+        registry.CreateAsset<Material>("Models/WaterBendingGauntlet.astmat");
     }
 
 }

@@ -36,23 +36,22 @@ namespace Astral::MaterialLoader {
         std::getline(fileStream, texturePath);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        AssetID vertexShaderID = registry.CreateAsset<Shader>(vertexShaderPath);
-        AssetID fragmentShaderID = registry.CreateAsset<Shader>(fragmentShaderPath);
-        AssetID textureID = registry.CreateAsset<Texture>(texturePath);
+        Ref<Shader> vertexShader = registry.CreateAsset<Shader>(vertexShaderPath);
+        Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
+        Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
         DescriptorSetHandle descriptorSetHandle = device.CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
-        descriptorSetHandle->AddDescriptorImageSampler(registry.GetAsset<Texture>(textureID), ShaderStage::FRAGMENT);
+        descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
         descriptorSetHandle->EndBuildingSet();
 
         RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
 
-        // Material* materialPtr = new Material();
         Ref<Material> material = CreateRef<Material>();
-        material->VertexShaderID = vertexShaderID;
-        material->PixelShaderID = fragmentShaderID;
-        material->TextureID = textureID;
+        material->VertexShader = vertexShader;
+        material->FragmentShader = fragmentShader;
+        material->Texture = texture;
         material->DescriptorSet = descriptorSetHandle;
 
         return material;
