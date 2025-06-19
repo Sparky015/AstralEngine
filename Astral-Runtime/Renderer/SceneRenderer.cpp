@@ -53,10 +53,21 @@ namespace Astral {
             .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
         };
 
+        AttachmentDescription offscreenDepthBufferDescription = {
+            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
+        };
+
         mainRenderPass->BeginBuildingRenderPass();
         AttachmentIndex offscreenTextureIndex = mainRenderPass->DefineAttachment(offscreenTextureDescription);
+        AttachmentIndex offscreenDepthBufferIndex = mainRenderPass->DefineAttachment(offscreenDepthBufferDescription);
         mainRenderPass->BeginBuildingSubpass();
         mainRenderPass->AddColorAttachment(offscreenTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        mainRenderPass->AddDepthStencilAttachment(offscreenDepthBufferIndex, ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
         mainRenderPass->EndBuildingSubpass();
         mainRenderPass->EndBuildingRenderPass();
 
@@ -99,6 +110,15 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            TextureCreateInfo depthBufferTextureCreateInfo = {
+                .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+                .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                .UsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+                .Dimensions = renderTargets[0]->GetDimensions(),
+                .ImageData = nullptr
+            };
+            context.OffscreenDepthBuffer = device.CreateTexture(depthBufferTextureCreateInfo);
+
             context.OffscreenDescriptorSet = device.CreateDescriptorSet();
             context.OffscreenDescriptorSet->BeginBuildingSet();
             context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
@@ -117,6 +137,7 @@ namespace Astral {
             UVec2 viewportDimensions = m_RendererContext->ViewportSize;
             context.SceneFramebuffer->BeginBuildingFramebuffer(viewportDimensions.x, viewportDimensions.y);
             context.SceneFramebuffer->AttachTexture(context.OffscreenRenderTarget);
+            context.SceneFramebuffer->AttachTexture(context.OffscreenDepthBuffer);
             context.SceneFramebuffer->EndBuildingFramebuffer();
 
 
@@ -161,7 +182,11 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
 
         // Blocks until resources from MAX_IN_FLIGHT_FRAMES - 1 frames ago are out of use
-        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+        RenderTargetHandle renderTarget;
+        {
+            PROFILE_SCOPE("SceneRenderer::BeginScene::AcquireNextImage")
+            renderTarget = swapchain.AcquireNextImage();
+        }
 
         m_RendererContext->IsSceneStarted = true;
         m_RendererContext->CurrentFrameIndex = renderTarget->GetImageIndex();
@@ -177,9 +202,8 @@ namespace Astral {
         if (frameContext.FramesTillFree == 0)
         {
             frameContext.ImGuiTexturesToBeFreed.clear();
+            frameContext.TexturesToBeFreed.clear();
         }
-
-        RendererAPI::SetBlending(true);
     }
 
 
@@ -213,7 +237,7 @@ namespace Astral {
     }
 
 
-    uint32 SceneRenderer::GetDrawCallsPerFrame()
+    RendererDebugStats SceneRenderer::GetRendererDebugStats()
     {
         return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
     }
@@ -252,15 +276,14 @@ namespace Astral {
         {
             Mesh& mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
-            DescriptorSetHandle& descriptorSet = material.DescriptorSet;
 
-            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            Ref<Shader> vertexShader = registry.GetAsset<Shader>(material.VertexShaderID);
-            Ref<Shader> fragmentShader = registry.GetAsset<Shader>(material.PixelShaderID);
+            DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
+            Ref<Shader> vertexShader = material.VertexShader;
+            Ref<Shader> fragmentShader = material.FragmentShader;
 
             if (frameContext.TempPipelineState == nullptr)
             {
-                std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, descriptorSet};
+                std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, materialDescriptorSet};
                 frameContext.TempPipelineState = device.CreatePipelineStateObject(mainRenderPass,
                     vertexShader, fragmentShader, descriptorSets, mesh.VertexBuffer->GetBufferLayout());
                 frameContext.TempPipelineState->Bind(commandBuffer);
@@ -271,7 +294,7 @@ namespace Astral {
             RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
 
             frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
-            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, descriptorSet, 1);
+            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);
@@ -347,8 +370,18 @@ namespace Astral {
             };
             m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].FramesTillFree = 2;
             m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenDescriptorSet);
+            m_RendererContext->FrameContexts[m_RendererContext->CurrentFrameIndex].TexturesToBeFreed.push_back(frameContext.OffscreenDepthBuffer);
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
+            TextureCreateInfo depthBufferTextureCreateInfo = {
+                .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+                .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                .UsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+                .Dimensions = UVec2(width, height),
+                .ImageData = nullptr
+            };
+            frameContext.OffscreenDepthBuffer = device.CreateTexture(depthBufferTextureCreateInfo);
 
             frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
             frameContext.OffscreenDescriptorSet->BeginBuildingSet();
@@ -360,6 +393,7 @@ namespace Astral {
 
             framebuffer->BeginBuildingFramebuffer(width, height);
             framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
+            framebuffer->AttachTexture(frameContext.OffscreenDepthBuffer);
             framebuffer->EndBuildingFramebuffer();
         }
 

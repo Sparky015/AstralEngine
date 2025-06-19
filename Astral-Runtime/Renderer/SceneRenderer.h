@@ -39,7 +39,8 @@ namespace Astral {
         static void ResizeViewport(uint32 width, uint32 height);
         static UVec2 GetViewportSize() { return m_RendererContext->ViewportSize; }
 
-        static uint32 GetDrawCallsPerFrame();
+        static RendererDebugStats GetRendererDebugStats();
+
         static API GetRendererAPIBackend();
 
     private:
@@ -62,9 +63,11 @@ namespace Astral {
             DescriptorSetHandle SceneCameraDescriptorSet;
 
             TextureHandle OffscreenRenderTarget;
+            TextureHandle OffscreenDepthBuffer;
             DescriptorSetHandle OffscreenDescriptorSet;
 
             std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
+            std::vector<TextureHandle> TexturesToBeFreed;
             uint32 FramesTillFree = 2;
         };
 
