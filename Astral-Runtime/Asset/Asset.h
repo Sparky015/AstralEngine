@@ -20,12 +20,22 @@ namespace Astral {
         Mesh
     };
 
+    using AssetID = size_t;
+    static constexpr AssetID NullAssetID = -1;
+
     class Asset
     {
     public:
         virtual ~Asset() = default;
 
+        void SetAssetID(AssetID assetID) { m_AssetID = assetID; }
+        AssetID GetAssetID() const { return m_AssetID; }
+
         virtual AssetType GetAssetType() = 0; // For debug and editor purposes
+
+    private:
+
+        AssetID m_AssetID{NullAssetID};
     };
 
     inline const char* AssetTypeToString(AssetType assetType)

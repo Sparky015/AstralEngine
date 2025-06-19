@@ -13,12 +13,12 @@ namespace Astral {
 
     template<typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
-    AssetID AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
+    Ref<AssetType> AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("AssetRegistry::CreateAsset")
 
         // Check if the asset is already loaded first, if it is, return the current AssetID
-        if (m_FilePathToAssetID.contains(filePath)) { return m_FilePathToAssetID.at(filePath); }
+        if (m_FilePathToAssetID.contains(filePath)) { return GetAsset<AssetType>(m_FilePathToAssetID.at(filePath)); }
 
         // Load the asset from disk
         Ref<Asset> asset;
@@ -37,7 +37,7 @@ namespace Astral {
         if (!asset)
         {
             WARN("An asset failed to load! File name: " << m_AssetDirectoryPath.string() + filePath.string())
-            return NullAssetID;
+            return nullptr;
         }
 
 
@@ -54,7 +54,9 @@ namespace Astral {
         m_AssetIDToFilePath[assetID] = filePath;
         m_AssetIDToAsset[assetID] = asset;
 
-        return assetID;
+        asset->SetAssetID(assetID);
+
+        return GetAsset<AssetType>(assetID);
     }
 
 

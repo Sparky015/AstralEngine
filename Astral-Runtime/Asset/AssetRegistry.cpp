@@ -73,6 +73,7 @@ namespace Astral {
 
     std::filesystem::path AssetRegistry::GetFilePathFromAssetID(AssetID assetID)
     {
+        if (!m_AssetIDToFilePath.contains(assetID)) { return ""; }
         return m_AssetIDToFilePath[assetID];
     }
 

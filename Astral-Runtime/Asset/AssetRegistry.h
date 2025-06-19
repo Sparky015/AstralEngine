@@ -16,9 +16,6 @@
 
 namespace Astral {
 
-    using AssetID = size_t;
-    static constexpr AssetID NullAssetID = -1;
-
     class AssetRegistry
     {
      public:
@@ -28,7 +25,7 @@ namespace Astral {
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
-        AssetID CreateAsset(const std::filesystem::path& filePath);
+        Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
