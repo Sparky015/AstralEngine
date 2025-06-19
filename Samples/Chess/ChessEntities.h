@@ -11,7 +11,7 @@
 class ChessEntities
 {
 public:
-    static void InitEntities(const Astral::Mesh& mesh);
+    static void InitEntities();
     static void DestroyEntities();
     static Astral::Entity GetEntity(SquareLocation location);
 

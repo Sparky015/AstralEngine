@@ -56,7 +56,7 @@ Astral::Entity ChessEntities::m_WhiteKing;
 Astral::Entity ChessEntities::m_ChessBoard;
 
 
-void ChessEntities::InitEntities(const Astral::Mesh& mesh)
+void ChessEntities::InitEntities()
 {
     Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
 
