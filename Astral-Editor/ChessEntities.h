@@ -53,4 +53,6 @@ private:
 
     static Astral::Entity m_ChessBoard;
 
+    static Astral::Entity m_Mesh;
+
 };

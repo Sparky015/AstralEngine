@@ -256,6 +256,7 @@ add_library(AstralEngine
         Renderer/RHI/Common/AccessFlags.h
         Renderer/Common/RendererEvents.h
         Asset/Loaders/MeshLoader.cpp
+        Asset/Loaders/MeshLoader.cpp
 )
 
 

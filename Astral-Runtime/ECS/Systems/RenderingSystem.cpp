@@ -28,7 +28,7 @@ namespace Astral {
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
-        static constexpr float magnitude = 5;
+        static constexpr float magnitude = 2;
         static Vec2 initialMousePos{};
         static Vec3 initialRotation{};
         static bool isReadyToTrack = true;
@@ -43,10 +43,10 @@ namespace Astral {
             }
 
             Vec2 currentMousePos = InputState::MousePosition();
-            float xDiff = currentMousePos.x - initialMousePos.x;
-            float yDiff = currentMousePos.y - initialMousePos.y;
+            float xDiff = initialMousePos.x - currentMousePos.x;
+            float yDiff = initialMousePos.y - currentMousePos.y;
 
-            Vec3 newRotation = {initialRotation.x - yDiff, initialRotation.y - xDiff, initialRotation.z};
+            Vec3 newRotation = {initialRotation.x - yDiff, initialRotation.y + xDiff, initialRotation.z};
             camera.SetRotation(newRotation);
         }
         else
@@ -54,43 +54,58 @@ namespace Astral {
             isReadyToTrack = true;
         }
 
+        const Vec3& rotation = camera.GetRotation();
+        LOG("Rotation: (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")")
+        LOG("Camera Tangent Vector: (" << -1 * rotation.y << ", " << rotation.x << ", " << rotation.z << ")")
 
+        if (InputState::IsKeyDown(KEY_W))
+        {
+
+            Vec3 forwardVec = camera.GetForwardVector();
+            forwardVec *= magnitude;
+            const Vec3& position = camera.GetPosition();
+            Vec3 newPosition = position + forwardVec;
+
+            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+        }
+        if (InputState::IsKeyDown(KEY_S))
+        {
+            Vec3 forwardVec = camera.GetForwardVector();
+            forwardVec *= magnitude;
+            const Vec3& position = camera.GetPosition();
+            Vec3 newPosition = position - forwardVec;
+
+            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+        }
         if (InputState::IsKeyDown(KEY_A))
         {
-            const Vec3& rotation = camera.GetRotation();
+            Vec3 leftVec = camera.GetLeftVector();
+            leftVec *= magnitude;
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x - (magnitude), position.y, position.z));
+            Vec3 newPosition = position + leftVec;
+
+            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
         }
         if (InputState::IsKeyDown(KEY_D))
         {
-            const Vec3& rotation = camera.GetRotation();
+            Vec3 leftVec = camera.GetLeftVector();
+            leftVec *= magnitude;
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x + (magnitude), position.y, position.z));
+            Vec3 newPosition = position - leftVec;
+
+            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
         }
         if (InputState::IsKeyDown(KEY_LEFT_SHIFT) || InputState::IsKeyDown(KEY_RIGHT_SHIFT))
         {
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
+            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
         }
         if (InputState::IsKeyDown(KEY_SPACE))
         {
             const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
+            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
         }
 
-        if (InputState::IsKeyDown(KEY_W))
-        {
-            const Vec3& rotation = camera.GetRotation();
-            const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y, position.z - magnitude));
-        }
-
-        if (InputState::IsKeyDown(KEY_S))
-        {
-            const Vec3& rotation = camera.GetRotation();
-            const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y, position.z + magnitude));
-        }
 
         if (InputState::IsKeyDown(KEY_H))
         {
@@ -126,8 +141,8 @@ namespace Astral {
 
         SceneRenderer::BeginScene(sceneDescription);
 
+        SubmitSpriteComponents(); // TODO: Flip this back when a pipeline abstraction is made
         SubmitMeshComponents();
-        SubmitSpriteComponents();
 
         SceneRenderer::EndScene();
     }
@@ -186,8 +201,10 @@ namespace Astral {
 
     Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale)
     {
+        Vec3 flippedPosition = {position.x, -1 * position.y, position.z};
+
         Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
-        return glm::translate(Mat4(1.0f), position) * scaleMatrix;
+        return glm::translate(Mat4(1.0f), flippedPosition) * scaleMatrix;
     }
 
 }

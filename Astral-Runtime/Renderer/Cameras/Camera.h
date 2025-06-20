@@ -59,6 +59,10 @@ namespace Astral {
 
         float GetZoomLevel() const { return m_ZoomLevel; }
 
+        Vec3 GetForwardVector() const;
+        Vec3 GetLeftVector() const;
+        Vec3 GetRightVector() const;
+
     private:
 
         void RecreateProjectionMatrix();

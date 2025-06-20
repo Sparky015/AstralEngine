@@ -63,6 +63,38 @@ namespace Astral {
     }
 
 
+    Vec3 Camera::GetForwardVector() const
+    {
+        Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.x), Vec3(1, 0, 0)); // Rotate around X
+        Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.y), Vec3(0, 1, 0));   // Rotate around Y
+        Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1)); // Rotate around Z
+
+        Mat4 orientation = rotationZ * rotationY * rotationX;
+        return glm::normalize(orientation * Vec4(0.0f, 0.0f, -1.0f, 0.0f));
+    }
+
+
+    Vec3 Camera::GetLeftVector() const
+    {
+        Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.x), Vec3(1, 0, 0)); // Rotate around X
+        Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.y), Vec3(0, 1, 0));   // Rotate around Y
+        Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1)); // Rotate around Z
+
+        Mat4 orientation = rotationZ * rotationY * rotationX;
+        return glm::normalize(orientation * Vec4(-1.0f, 0.0f, 0.0f, 0.0f));
+    }
+
+    Vec3 Camera::GetRightVector() const
+    {
+        Mat4 rotationX = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.x), Vec3(1, 0, 0)); // Rotate around X
+        Mat4 rotationY = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.y), Vec3(0, 1, 0));   // Rotate around Y
+        Mat4 rotationZ = glm::rotate(Mat4(1.0f), glm::radians(m_Rotation.z), Vec3(0, 0, 1)); // Rotate around Z
+
+        Mat4 orientation = rotationZ * rotationY * rotationX;
+        return glm::normalize(orientation * Vec4(1.0f, 0.0f, 0.0f, 0.0f));
+    }
+
+
     void Camera::RecreateProjectionMatrix()
     {
         if (m_CameraType == CameraType::PERSPECTIVE)
@@ -73,6 +105,9 @@ namespace Astral {
         {
             m_ProjectionMatrix = glm::ortho(-m_AspectRatio / 2 * m_ZoomLevel, m_AspectRatio / 2 * m_ZoomLevel, -m_ZoomLevel / 2, m_ZoomLevel / 2, -1000.0f, 1000.0f);
         }
+
+
+        m_ProjectionMatrix[1][1] *= -1; // Flip the Y axis for Vulkan
     }
 
 

@@ -52,6 +52,8 @@ Astral::Entity ChessEntities::m_WhiteKing;
 
 Astral::Entity ChessEntities::m_ChessBoard;
 
+Astral::Entity ChessEntities::m_Mesh;
+
 
 void ChessEntities::InitEntities()
 {
@@ -93,42 +95,41 @@ void ChessEntities::InitEntities()
     m_WhiteQueen = ecs.CreateEntity("WhiteQueen");
     m_WhiteKing = ecs.CreateEntity("WhiteKing");
 
-
     // Transform Components
 
     ecs.AddComponent(m_ChessBoard,   TransformComponent({0.0f, 0.0f, -3.0f}, {800, 800, 800}));
-    ecs.AddComponent(m_BlackPawn1,   TransformComponent(-350, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn2,   TransformComponent(-250, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn3,   TransformComponent(-150, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn4,   TransformComponent(-50, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn5,   TransformComponent(50, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn6,   TransformComponent(150, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn7,   TransformComponent(250, -250, 100, 100));
-    ecs.AddComponent(m_BlackPawn8,   TransformComponent(350, -250, 100, 100));
-    ecs.AddComponent(m_BlackRook1,   TransformComponent(-350, -350, 100, 100));
-    ecs.AddComponent(m_BlackRook2,   TransformComponent(350, -350, 100, 100));
-    ecs.AddComponent(m_BlackKnight1, TransformComponent(-250, -350, 100, 100));
-    ecs.AddComponent(m_BlackKnight2, TransformComponent(250, -350, 100, 100));
-    ecs.AddComponent(m_BlackBishop1, TransformComponent(-150, -350, 100, 100));
-    ecs.AddComponent(m_BlackBishop2, TransformComponent(150, -350, 100, 100));
-    ecs.AddComponent(m_BlackQueen,   TransformComponent(-50, -350, 100, 100));
-    ecs.AddComponent(m_BlackKing,    TransformComponent(50, -350, 100, 100));
-    ecs.AddComponent(m_WhitePawn1,   TransformComponent(-350, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn2,   TransformComponent(-250, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn3,   TransformComponent(-150, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn4,   TransformComponent(-50, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn5,   TransformComponent(50, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn6,   TransformComponent(150, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn7,   TransformComponent(250, 250, 100, 100));
-    ecs.AddComponent(m_WhitePawn8,   TransformComponent(350, 250, 100, 100));
-    ecs.AddComponent(m_WhiteRook1,   TransformComponent(-350, 350, 100, 100));
-    ecs.AddComponent(m_WhiteRook2,   TransformComponent(350, 350, 100, 100));
-    ecs.AddComponent(m_WhiteKnight1, TransformComponent(-250, 350, 100, 100));
-    ecs.AddComponent(m_WhiteKnight2, TransformComponent(250, 350, 100, 100));
-    ecs.AddComponent(m_WhiteBishop1, TransformComponent(-150, 350, 100, 100));
-    ecs.AddComponent(m_WhiteBishop2, TransformComponent(150, 350, 100, 100));
-    ecs.AddComponent(m_WhiteQueen,   TransformComponent(-50, 350, 100, 100));
-    ecs.AddComponent(m_WhiteKing,    TransformComponent(50, 350, 100, 100));
+    ecs.AddComponent(m_BlackPawn1,   TransformComponent(-350, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn2,   TransformComponent(-250, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn3,   TransformComponent(-150, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn4,   TransformComponent(-50, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn5,   TransformComponent(50, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn6,   TransformComponent(150, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn7,   TransformComponent(250, 250, 100, 100));
+    ecs.AddComponent(m_BlackPawn8,   TransformComponent(350, 250, 100, 100));
+    ecs.AddComponent(m_BlackRook1,   TransformComponent(-350, 350, 100, 100));
+    ecs.AddComponent(m_BlackRook2,   TransformComponent(350, 350, 100, 100));
+    ecs.AddComponent(m_BlackKnight1, TransformComponent(-250, 350, 100, 100));
+    ecs.AddComponent(m_BlackKnight2, TransformComponent(250, 350, 100, 100));
+    ecs.AddComponent(m_BlackBishop1, TransformComponent(-150, 350, 100, 100));
+    ecs.AddComponent(m_BlackBishop2, TransformComponent(150, 350, 100, 100));
+    ecs.AddComponent(m_BlackQueen,   TransformComponent(-50, 350, 100, 100));
+    ecs.AddComponent(m_BlackKing,    TransformComponent(50, 350, 100, 100));
+    ecs.AddComponent(m_WhitePawn1,   TransformComponent(-350, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn2,   TransformComponent(-250, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn3,   TransformComponent(-150, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn4,   TransformComponent(-50, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn5,   TransformComponent(50, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn6,   TransformComponent(150, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn7,   TransformComponent(250, -250, 100, 100));
+    ecs.AddComponent(m_WhitePawn8,   TransformComponent(350, -250, 100, 100));
+    ecs.AddComponent(m_WhiteRook1,   TransformComponent(-350, -350, 100, 100));
+    ecs.AddComponent(m_WhiteRook2,   TransformComponent(350, -350, 100, 100));
+    ecs.AddComponent(m_WhiteKnight1, TransformComponent(-250, -350, 100, 100));
+    ecs.AddComponent(m_WhiteKnight2, TransformComponent(250, -350, 100, 100));
+    ecs.AddComponent(m_WhiteBishop1, TransformComponent(-150, -350, 100, 100));
+    ecs.AddComponent(m_WhiteBishop2, TransformComponent(150, -350, 100, 100));
+    ecs.AddComponent(m_WhiteQueen,   TransformComponent(-50, -350, 100, 100));
+    ecs.AddComponent(m_WhiteKing,    TransformComponent(50, -350, 100, 100));
 
 
     Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
@@ -150,6 +151,12 @@ void ChessEntities::InitEntities()
     Astral::Ref<Astral::Material> whiteQueenMaterial = registry.CreateAsset<Astral::Material>("white_queen.astmat");
     Astral::Ref<Astral::Material> whiteKingMaterial = registry.CreateAsset<Astral::Material>("white_king.astmat");
 
+    Astral::Ref<Astral::Mesh> mesh = registry.GetAsset<Astral::Mesh>("Models/WaterBendingGauntlet.fbx");
+    Astral::Ref<Astral::Material> material = registry.GetAsset<Astral::Material>("Models/WaterBendingGauntlet.astmat");
+
+    m_Mesh = ecs.CreateEntity("Mesh");
+    ecs.AddComponent(m_Mesh, TransformComponent({0,0,500}, {500, 500, 500}));
+    ecs.AddComponent(m_Mesh, Astral::MeshComponent(material, mesh));
 
     // Sprite Componen
     ecs.AddComponent(m_ChessBoard, Astral::SpriteComponent(chessboardMaterial));
