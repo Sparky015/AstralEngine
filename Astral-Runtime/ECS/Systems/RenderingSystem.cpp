@@ -54,10 +54,6 @@ namespace Astral {
             isReadyToTrack = true;
         }
 
-        const Vec3& rotation = camera.GetRotation();
-        LOG("Rotation: (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")")
-        LOG("Camera Tangent Vector: (" << -1 * rotation.y << ", " << rotation.x << ", " << rotation.z << ")")
-
         if (InputState::IsKeyDown(KEY_W))
         {
 
