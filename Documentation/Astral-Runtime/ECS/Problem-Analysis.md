@@ -95,3 +95,7 @@ What data values are common? Outliers?
 - The transform component is the most common component that will be reused. Some uncommon components include the camera
 component or maybe some user introduced component.
 
+
+Possible Future Features:
+1. Sparse Sets
+2. Iterator for Component Views
