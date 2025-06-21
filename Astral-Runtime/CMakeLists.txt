@@ -257,6 +257,12 @@ add_library(AstralEngine
         Renderer/Common/RendererEvents.h
         Asset/Loaders/MeshLoader.cpp
         Asset/Loaders/MeshLoader.cpp
+        Scenes/Scene.h
+        Scenes/Scene.h
+        Asset/Loaders/SceneLoader.cpp
+        Asset/Loaders/SceneLoader.h
+        Renderer/RHI/Resources/DescriptorSet.cpp
+        Renderer/RHI/Resources/DescriptorSet.cpp
 )
 
 
@@ -398,7 +404,7 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
     target_compile_definitions(AstralEngine PUBLIC
             -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
             -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
-            -DTURN_OFF_DEBUG_MACROS
+#            -DTURN_OFF_DEBUG_MACROS
             -DASTRAL_DISABLE_RENDERING_API_VALIDATION
             -DASTRAL_DISABLE_MEMORY_TRACKING
     )

@@ -7,7 +7,9 @@ add_executable(AstralEditor EditorModule.cpp
         Editor.cpp
         Editor.h
         ChessEntities.h
-        ChessEntities.cpp)
+        ChessEntities.cpp
+        MenuBar.cpp
+        MenuBar.h)
 
 target_link_libraries(AstralEditor AstralEngine)
 target_link_libraries(AstralEditor ImGui)
