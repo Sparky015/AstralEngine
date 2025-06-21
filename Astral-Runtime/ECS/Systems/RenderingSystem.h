@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Math/Math.h"
+#include "ECS/Components/TransformComponent.h"
 
 namespace Astral {
 
@@ -21,7 +22,7 @@ namespace Astral {
         static void SubmitMeshComponents();
         static void SubmitSpriteComponents();
 
-        static Mat4 CreateTransform(Vec3 position, Vec3 scale);
+        static Mat4 CreateTransform(const TransformComponent& transform);
     };
 
 

@@ -5,13 +5,12 @@
 */
 #include "RenderingSystem.h"
 
-#include "../ECSManager.h"
+#include "ECS/ECSManager.h"
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "ECS/Components/SpriteComponent.h"
 #include "ECS/Components/TransformComponent.h"
-#include "glm/ext/matrix_transform.hpp"
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
 #include "Renderer/SceneRenderer.h"
@@ -19,6 +18,10 @@
 #include "Input/InputState.h"
 
 #include <cmath>
+
+#include "glm/ext/matrix_transform.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/euler_angles.hpp"
 
 namespace Astral {
 
@@ -28,10 +31,19 @@ namespace Astral {
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
-        static constexpr float magnitude = 2;
+        static float magnitude = 2;
         static Vec2 initialMousePos{};
         static Vec3 initialRotation{};
         static bool isReadyToTrack = true;
+        static DeltaTime deltaTime;
+
+        deltaTime.UpdateDeltaTime();
+        magnitude = 800 * deltaTime.GetSeconds();
+
+        if (InputState::IsKeyDown(KEY_LEFT_CLICK))
+        {
+            magnitude *= 20;
+        }
 
         if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
         {
@@ -162,7 +174,7 @@ namespace Astral {
             if (meshComponent.Material == nullptr) { continue; }
             if (meshComponent.MeshData == nullptr) { continue; }
 
-            Mat4 modelTransform = CreateTransform(transformComponent.position, transformComponent.scale);
+            Mat4 modelTransform = CreateTransform(transformComponent);
 
             SceneRenderer::Submit(*meshComponent.MeshData, *meshComponent.Material, modelTransform);
         }
@@ -188,19 +200,22 @@ namespace Astral {
             if (spriteComponent.Material == nullptr) { continue; }
             if (spriteComponent.MeshData == nullptr) { continue; }
 
-            Mat4 modelTransform = CreateTransform(transformComponent.position, transformComponent.scale);
+            Mat4 modelTransform = CreateTransform(transformComponent);
 
             SceneRenderer::Submit(*spriteComponent.MeshData, *spriteComponent.Material, modelTransform);
         }
     }
 
 
-    Mat4 RenderingSystem::CreateTransform(Vec3 position, Vec3 scale)
+    Mat4 RenderingSystem::CreateTransform(const TransformComponent& transform)
     {
-        Vec3 flippedPosition = {position.x, -1 * position.y, position.z};
+        Vec3 flippedPosition = {transform.position.x, -1 * transform.position.y, transform.position.z};
 
-        Mat4 scaleMatrix = glm::scale(Mat4(1.0f), scale);
-        return glm::translate(Mat4(1.0f), flippedPosition) * scaleMatrix;
+        Vec3 rotationInRadians = glm::radians(transform.rotation);
+        Mat4 rotationMatrix = glm::eulerAngleXYZ(rotationInRadians.x, rotationInRadians.y, rotationInRadians.z);
+
+        Mat4 scaleMatrix = glm::scale(Mat4(1.0f), transform.scale);
+        return glm::translate(Mat4(1.0f), flippedPosition) * rotationMatrix * scaleMatrix;
     }
 
 }
