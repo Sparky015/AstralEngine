@@ -40,8 +40,7 @@ namespace Astral::MaterialLoader {
         Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
         Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
 
-        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
-        DescriptorSetHandle descriptorSetHandle = device.CreateDescriptorSet();
+        DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
         descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
         descriptorSetHandle->EndBuildingSet();

@@ -27,6 +27,8 @@ namespace Astral {
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
 
+        void LoadScene(const std::filesystem::path& filePath);
+
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> GetAsset(AssetID assetID);
@@ -44,6 +46,7 @@ namespace Astral {
         AssetID GetAssetIDFromFilePath(const std::filesystem::path& filePath);
         std::filesystem::path GetFilePathFromAssetID(AssetID assetID);
         [[nodiscard]] const AssetRegistryStats& GetAssetRegistryStats() const { return m_RegistryStats; }
+        const std::filesystem::path& GetAssetDirectoryPath() { return m_AssetDirectoryPath; }
 
     private:
 

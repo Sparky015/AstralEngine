@@ -10,6 +10,7 @@
 #include "Loaders/TextureLoader.h"
 #include "Loaders/MaterialLoader.h"
 #include "Loaders/MeshLoader.h"
+#include "Loaders/SceneLoader.h"
 #include "Loaders/ShaderLoader.h"
 
 namespace Astral {
@@ -18,6 +19,25 @@ namespace Astral {
     {
 
     }
+
+
+    void AssetRegistry::LoadScene(const std::filesystem::path& filePath)
+    {
+        PROFILE_SCOPE("AssetRegistry::LoadScene")
+
+        if (filePath.is_relative())
+        {
+            std::string fullFilePath = m_AssetDirectoryPath.string() + filePath.string();
+            ASSERT(std::filesystem::exists(fullFilePath), "Given scene file path does not exist! (" << fullFilePath << ")")
+            SceneLoader::LoadSceneAssets(fullFilePath);
+        }
+        else
+        {
+            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath.string() << ")")
+            SceneLoader::LoadSceneAssets(filePath);
+        }
+    }
+
 
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {

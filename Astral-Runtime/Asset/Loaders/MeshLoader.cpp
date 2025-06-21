@@ -46,6 +46,12 @@ namespace Astral::MeshLoader {
 
         aiMesh* mesh = scene->mMeshes[0];
 
+        return LoadMesh(mesh);
+    }
+
+
+    Ref<Mesh> LoadMesh(aiMesh* mesh)
+    {
         std::vector<float> vertexData{};
 
         VertexBufferLayout bufferLayout = {
