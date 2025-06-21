@@ -88,7 +88,7 @@ namespace Astral {
             using reference = Entity&;
             using iterator_category = std::forward_iterator_tag;
 
-            explicit Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex);
+            explicit Iterator(std::vector<bool>* entities, std::vector<std::string>& debugNames, EntityID startingIndex);
 
             value_type operator*() const;
             Iterator& operator++();
@@ -102,7 +102,7 @@ namespace Astral {
             size_t FindNextAliveEntity();
 
             std::vector<bool>* m_Entities;
-            std::vector<std::string_view>& m_EntityDebugNames;
+            std::vector<std::string>& m_EntityDebugNames;
             EntityID m_CurrentIndex;
         };
 
@@ -117,7 +117,7 @@ namespace Astral {
 
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_Entities;
-        std::vector<std::string_view> m_EntityDebugNames;
+        std::vector<std::string> m_EntityDebugNames;
         std::stack<EntityID, std::vector<EntityID>> m_FreeEntities;
 
         /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,

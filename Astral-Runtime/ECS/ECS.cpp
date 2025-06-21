@@ -86,7 +86,7 @@ namespace Astral {
     }
 
 
-    ECS::Iterator::Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex) :
+    ECS::Iterator::Iterator(std::vector<bool>* entities, std::vector<std::string>& debugNames, EntityID startingIndex) :
         m_Entities(entities),
         m_EntityDebugNames(debugNames),
         m_CurrentIndex(startingIndex - 1)
