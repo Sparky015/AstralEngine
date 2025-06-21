@@ -32,6 +32,8 @@ namespace Astral {
 
         virtual void* GetLayout() = 0;
         virtual void* GetNativeHandle() = 0;
+
+        static GraphicsRef<DescriptorSet> CreateDescriptorSet();
     };
 
     using DescriptorSetHandle = GraphicsRef<DescriptorSet>;
