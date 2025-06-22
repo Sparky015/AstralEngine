@@ -10,7 +10,7 @@
 #include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 #include "Events/EventListener.h"
 #include "Events/EventPublisher.h"
 #include "EngineLoopEvents.h"
@@ -36,7 +36,7 @@ namespace Astral {
         m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
         m_RendererManager(CreateScopedPtr<RendererManager>()),
         m_AssetManager(CreateScopedPtr<AssetManager>()),
-        m_ECSManager(CreateScopedPtr<ECSManager>())
+        m_ECSManager(CreateScopedPtr<SceneManager>())
 
     {
         PROFILE_SCOPE("Engine Initialization");

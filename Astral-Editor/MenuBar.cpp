@@ -12,6 +12,7 @@
 #include "nfd.hpp"
 
 #include "imgui.h"
+#include "ECS/SceneManager.h"
 
 namespace Astral {
 
@@ -19,11 +20,17 @@ namespace Astral {
     {
         ImGui::BeginMainMenuBar();
 
+        Astral::SceneManager& sceneManager = Astral::Engine::Get().GetSceneManager();
         Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
 
 
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("Create Empty Scene"))
+            {
+                sceneManager.CreateEmptyScene();
+            }
+
             if (ImGui::MenuItem("Load Scene"))
             {
 
@@ -49,7 +56,7 @@ namespace Astral {
                 {
                     std::string outFilePath = std::string(outPath);
                     NFD_FreePathU8(outPath);
-                    registry.LoadScene(outFilePath);
+                    sceneManager.LoadScene(outFilePath);
                 }
                 else if (result == NFD_CANCEL)
                 {

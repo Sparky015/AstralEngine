@@ -5,7 +5,7 @@
 */
 #include "RenderingSystem.h"
 
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
@@ -158,7 +158,7 @@ namespace Astral {
 
     void RenderingSystem::SubmitMeshComponents()
     {
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         ECS::ComponentView<MeshComponent>& meshDisplay = ecs.GetView<MeshComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
@@ -183,7 +183,7 @@ namespace Astral {
 
     void RenderingSystem::SubmitSpriteComponents()
     {
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();

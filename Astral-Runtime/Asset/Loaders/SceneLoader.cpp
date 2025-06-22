@@ -16,7 +16,7 @@
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Core/SmartPointers.h"
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 #include "glm/detail/type_quat.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "Renderer/Common/Material.h"
@@ -64,8 +64,8 @@ namespace Astral::SceneLoader {
             {
                 Ref<Texture> textureRef;
                 aiTexture* texture = scene->mTextures[i];
-
-                textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight);
+                // TODO: Convert the format hint to a image format
+                textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM);
                 m_EmbeddedTextures.push_back(textureRef);
             }
         }
@@ -153,7 +153,7 @@ namespace Astral::SceneLoader {
             }
         }
 
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         aiNode* rootNode = scene->mRootNode;
         std::vector<aiMatrix4x4> transforms;
@@ -184,7 +184,7 @@ namespace Astral::SceneLoader {
 
     void Helpers::ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes)
     {
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         Entity entity = ecs.CreateEntity(node->mName.C_Str());
 
         // Transform
