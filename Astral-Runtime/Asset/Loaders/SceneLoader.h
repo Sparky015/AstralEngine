@@ -13,11 +13,13 @@
 #include "Core/SmartPointers.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/Common/Mesh.h"
+#include "Scenes/Scene.h"
 
 
 namespace Astral::SceneLoader {
 
     void LoadSceneAssets(const std::filesystem::path& filePath);
+    void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
     namespace Helpers {
 

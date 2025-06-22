@@ -44,11 +44,11 @@ namespace Astral {
                 // registry.LoadScene("Scenes/Toolbox/Toolbox.fbx");
 
                 nfdu8char_t* outPath;
-                nfdu8filteritem_t filters[1] = { { "3D Object Files", "fbx,obj,gltf,glb" }};
+                nfdu8filteritem_t filters[1] = { { "Astral Scene", "aescene" }};
                 nfdopendialogu8args_t args = {0};
                 args.filterList = filters;
                 args.filterCount = 1;
-                args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+                // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
 
                 nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
 
@@ -60,10 +60,46 @@ namespace Astral {
                 }
                 else if (result == NFD_CANCEL)
                 {
-                    LOG("File Dialog Canceled")
+                    LOG("Open File Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    WARN("NFD Error: " << NFD_GetError())
                 }
 
             }
+
+            if (ImGui::MenuItem("Save Scene"))
+            {
+                if (sceneManager.IsSceneActive())
+                {
+                    nfdu8char_t* outPath;
+                    nfdu8filteritem_t filters[1] = { { "Astral Scene", "aescene" }};
+                    nfdsavedialogu8args_t args = {0};
+                    args.filterList = filters;
+                    args.filterCount = 1;
+                    // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+                    // Use the Save dialog instead of Open
+                    nfdresult_t result = NFD_SaveDialogU8_With(&outPath, &args);
+
+                    if (result == NFD_OKAY)
+                    {
+                        std::string outFilePath = std::string(outPath);
+                        NFD_FreePathU8(outPath);
+                        sceneManager.SaveActiveScene(outFilePath);
+                    }
+                    else if (result == NFD_CANCEL)
+                    {
+                        LOG("Save File Dialog Canceled");
+                    }
+                    else if (result == NFD_ERROR)
+                    {
+                        WARN("NFD Error: " << NFD_GetError())
+                    }
+                }
+            }
+
 
             ImGui::EndMenu();
         }

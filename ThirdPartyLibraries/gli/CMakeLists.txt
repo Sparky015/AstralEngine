@@ -72,8 +72,6 @@ endmacro(addExternalPackageGTC)
 # Add subdirectory
 
 add_subdirectory(gli)
-add_subdirectory(test)
-#add_subdirectory(doc)
 
 ################################
 # Add installer

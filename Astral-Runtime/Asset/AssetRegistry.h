@@ -16,6 +16,8 @@
 
 namespace Astral {
 
+    struct Scene; // Forward Declared
+
     class AssetRegistry
     {
      public:
@@ -28,6 +30,7 @@ namespace Astral {
         Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
 
         void LoadScene(const std::filesystem::path& filePath);
+        void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>

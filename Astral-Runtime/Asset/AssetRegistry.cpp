@@ -39,6 +39,12 @@ namespace Astral {
     }
 
 
+    void AssetRegistry::SerializeScene(Scene& scene, const std::filesystem::path& filePath)
+    {
+        SceneLoader::SerializeScene(scene, filePath);
+    }
+
+
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
         if (!m_AssetIDToFilePath.contains(assetID)) { return; }

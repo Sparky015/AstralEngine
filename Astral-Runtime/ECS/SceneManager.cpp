@@ -30,8 +30,8 @@ namespace Astral {
         PROFILE_SCOPE("Scene Manager Initialization");
         TRACE("Initializing Scene Manager!")
         Scene scene{};
-        scene.ECS = ECS();
-        scene.ECS.Init();
+        scene.SceneECS = ECS();
+        scene.SceneECS.Init();
 
         m_Scenes["Engine:\\BaseScene.fbx"] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes["Engine:\\BaseScene.fbx"].get();;
@@ -61,8 +61,8 @@ namespace Astral {
     void SceneManager::CreateEmptyScene()
     {
         Scene scene{};
-        scene.ECS = ECS();
-        scene.ECS.Init();
+        scene.SceneECS = ECS();
+        scene.SceneECS.Init();
 
         m_Scenes[""] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[""].get();
@@ -81,14 +81,21 @@ namespace Astral {
 
         Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         Scene scene{};
-        scene.ECS = ECS();
-        scene.ECS.Init();
+        scene.SceneECS = ECS();
+        scene.SceneECS.Init();
 
         m_Scenes[filePath] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[filePath].get();
         m_ActiveSceneExists = true;
 
         registry.LoadScene(filePath);
+    }
+
+
+    void SceneManager::SaveActiveScene(const std::string& filePath)
+    {
+        Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+        registry.SerializeScene(*m_ActiveScene, filePath);
     }
 
 

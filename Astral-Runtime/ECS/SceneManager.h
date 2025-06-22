@@ -23,12 +23,20 @@ namespace Astral {
 
         void CreateEmptyScene();
         void LoadScene(const std::filesystem::path& filePath);
+        void SaveActiveScene(const std::string& filePath);
         void UnloadScene();
+        bool IsSceneActive() { return m_ActiveSceneExists; }
+
+        Scene& GetActiveScene()
+        {
+            ASSERT(m_ActiveSceneExists, "Can't get active scene! No scene is currently set active!")
+            return *m_ActiveScene;
+        }
 
         ECS& GetECS()
         {
-            ASSERT(m_ActiveSceneExists, "Can't get ECS! No scene is currently set!")
-            return m_ActiveScene->ECS;
+            ASSERT(m_ActiveSceneExists, "Can't get ECS! No scene is currently set active!")
+            return m_ActiveScene->SceneECS;
         }
 
         SceneManager(const SceneManager&) = delete;
