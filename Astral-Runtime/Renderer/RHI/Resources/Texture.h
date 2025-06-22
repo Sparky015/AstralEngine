@@ -12,6 +12,7 @@
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
 
 #include <string>
+#include <filesystem>
 #include "imgui/imgui.h"
 
 
@@ -43,8 +44,8 @@ namespace Astral {
 
         virtual ImTextureID GetImGuiTextureID() = 0;
 
-        static GraphicsRef<Texture> CreateTexture(const std::string_view& filePath);
-        static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height);
+        static GraphicsRef<Texture> CreateTexture(const std::filesystem::path& filePath);
+        static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
 
         AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Texture; }
