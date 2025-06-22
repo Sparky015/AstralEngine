@@ -47,6 +47,9 @@ namespace Astral {
         /**@brief Checks if an entity is alive and in the ECS */
         bool IsEntityAlive(EntityID entityID);
 
+        /**@brief Renames the debug name of an entity to the given name */
+        void RenameEntity(Entity entity, const std::string_view& name);
+
         /**@brief Gets the number of entities that are alive. */
         uint32 GetNumberOfActiveEntities();
 
@@ -55,6 +58,12 @@ namespace Astral {
          * @param component The component being added to the entity */
         template <typename ComponentType>
         void AddComponent(Entity entity, const ComponentType& component);
+
+        /**@brief Updates a component to an entity
+         * @param entity The entity to update a component on
+         * @param component The component to update the entity with */
+        template <typename ComponentType>
+        void UpdateComponent(Entity entity, const ComponentType& component);
 
         /**@brief Retrieves the requested component of an entity.
          * @param outComponent Populates with the requested component's data

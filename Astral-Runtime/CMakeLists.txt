@@ -26,8 +26,8 @@ add_library(AstralEngine
         Debug/Utilities/ConsoleLogFile.h
         Debug/Instrumentation/ProfilerLogFile.cpp
         Debug/Instrumentation/ProfilerLogFile.h
-        ECS/ECSManager.cpp
-        ECS/ECSManager.h
+        ECS/SceneManager.cpp
+        ECS/SceneManager.h
         ECS/Components/TransformComponent.h
         ECS/Components/SpriteComponent.h
         Renderer/RendererManager.cpp
@@ -286,6 +286,8 @@ target_link_libraries(AstralEngine PRIVATE ImPlot)
 target_link_libraries(AstralEngine PRIVATE nfd)
 target_link_libraries(AstralEngine PUBLIC msgpack-cxx)
 target_link_libraries(AstralEngine PUBLIC assimp)
+target_link_libraries(AstralEngine PUBLIC gli)
+
 
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
 target_compile_definitions(AstralEngine PRIVATE -DCPPTRACE_STATIC_DEFINE)
@@ -303,6 +305,7 @@ add_dependencies(AstralEngine
         cpuinfo
         assimp
         nfd
+        gli
 )
 
 if (APPLE)
@@ -365,6 +368,8 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/nativefiledialog-extended/src/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/assimp/include")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/gli/")
+
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 

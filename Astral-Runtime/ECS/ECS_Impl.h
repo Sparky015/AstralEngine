@@ -20,6 +20,14 @@ namespace Astral {
 
 
     template<typename ComponentType>
+    void ECS::UpdateComponent(Entity entity, const ComponentType& component)
+    {
+        m_ComponentPoolSet.GetComponentPool<ComponentType>().componentData[entity.GetID()] = component;
+        m_ComponentPoolSet.GetComponentPool<ComponentType>().entityRegistry[entity.GetID()] = true;
+    }
+
+
+    template<typename ComponentType>
     ECS_Result ECS::GetComponent(Entity entity, ComponentType& outComponent)
     {
         if (!HasComponent<ComponentType>(entity)) { return ECS_Result::ECS_COMPONENT_NOT_PRESENT; }

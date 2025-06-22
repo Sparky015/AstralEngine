@@ -7,7 +7,7 @@
 #include "SceneGraphPanel.h"
 
 #include "Core/Engine.h"
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 
 #include "imgui.h"
 #include "Asset/AssetManager.h"
@@ -18,7 +18,10 @@ namespace Astral {
 
     void SceneGraphPanel()
     {
-        ECS& ecs = Engine::Get().GetECSManager().GetECS();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+
+        static Entity entityToBeRenamed{};
+        static bool openEntityRenamePopup = false;
 
         ImGui::Begin("SceneGraph##EditorSceneGraph", nullptr);
 
@@ -46,9 +49,14 @@ namespace Astral {
                 if (ImGui::TreeNode(entity.GetDebugName().data()))
                 {
 
-
                     if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
                     {
+                        if (ImGui::MenuItem("Rename Entity"))
+                        {
+                            entityToBeRenamed = entity;
+                            openEntityRenamePopup = true;
+                        }
+
                         if (ImGui::BeginMenu("Add Component"))
                         {
                             bool canAddAComponent = false;
@@ -96,8 +104,6 @@ namespace Astral {
                         ImGui::EndPopup();
                     }
 
-
-
                     if (ecs.HasComponent<TransformComponent>(entity))
                     {
                         ShowTransformComponent(ecs, entity);
@@ -123,6 +129,35 @@ namespace Astral {
         }
 
         ImGui::End();
+
+        static char entityNameBuffer[128];
+        if (openEntityRenamePopup)
+        {
+            ImGui::OpenPopup("Rename Entity##SceneGraphPanel");
+            openEntityRenamePopup = false;
+            strncpy(entityNameBuffer, entityToBeRenamed.GetDebugName().data(), sizeof(entityNameBuffer));
+        }
+
+        if (ImGui::BeginPopupModal("Rename Entity##SceneGraphPanel", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (ImGui::InputText("##SceneGraphRenameEntityInput", entityNameBuffer, sizeof(entityNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                ecs.RenameEntity(entityToBeRenamed, entityNameBuffer);
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("OK"))
+            {
+                ecs.RenameEntity(entityToBeRenamed, entityNameBuffer);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 
 
@@ -142,6 +177,10 @@ namespace Astral {
             ImGui::Text("Scale: ");
             ImGui::SameLine();
             ImGui::InputFloat3("##ScaleInput", glm::value_ptr(transform.scale));
+
+            ImGui::Text("Rotation: ");
+            ImGui::SameLine();
+            ImGui::InputFloat3("##RotationInput", glm::value_ptr(transform.rotation));
 
             ecs.AddComponent(entity, transform);
 

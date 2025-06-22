@@ -80,6 +80,12 @@ namespace Astral {
     }
 
 
+    void ECS::RenameEntity(Entity entity, const std::string_view& name)
+    {
+        m_EntityDebugNames[entity.GetID()] = name;
+    }
+
+
     uint32 ECS::GetNumberOfActiveEntities()
     {
         return m_NumberOfActiveEntities;

@@ -4,7 +4,7 @@
 
 #include "ChessEntities.h"
 
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 #include "Asset/AssetManager.h"
 #include "Renderer/RHI/Resources/Texture.h"
 
@@ -57,7 +57,7 @@ Astral::Entity ChessEntities::m_Mesh;
 
 void ChessEntities::InitEntities()
 {
-    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetSceneManager().GetECS();
 
     // m_ChessBoard = ecs.CreateEntity("Chessboard");
     //
@@ -202,7 +202,7 @@ void ChessEntities::InitEntities()
 
 void ChessEntities::DestroyEntities()
 {
-    Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
+    Astral::ECS& ecs = Astral::Engine::Get().GetSceneManager().GetECS();
 
     // ecs.DeleteEntity(m_ChessBoard);
     //
