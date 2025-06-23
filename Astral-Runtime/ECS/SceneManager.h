@@ -36,7 +36,7 @@ namespace Astral {
         ECS& GetECS()
         {
             ASSERT(m_ActiveSceneExists, "Can't get ECS! No scene is currently set active!")
-            return m_ActiveScene->SceneECS;
+            return m_ActiveScene->ECS;
         }
 
         SceneManager(const SceneManager&) = delete;

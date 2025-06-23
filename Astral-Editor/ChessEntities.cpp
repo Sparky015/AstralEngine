@@ -94,8 +94,8 @@ void ChessEntities::InitEntities()
     // m_WhiteBishop2 = ecs.CreateEntity("WhiteBishop2");
     // m_WhiteQueen = ecs.CreateEntity("WhiteQueen");
     // m_WhiteKing = ecs.CreateEntity("WhiteKing");
-
-    // Transform Components
+    //
+    // // Transform Components
     //
     // ecs.AddComponent(m_ChessBoard,   TransformComponent({0.0f, 0.0f, -3.0f}, {800, 800, 800}));
     // ecs.AddComponent(m_BlackPawn1,   TransformComponent(-350, 250, 100, 100));
@@ -132,11 +132,13 @@ void ChessEntities::InitEntities()
     // ecs.AddComponent(m_WhiteKing,    TransformComponent(50, -350, 100, 100));
 
 
+    Astral::Scene& activeScene = Astral::Engine::Get().GetSceneManager().GetActiveScene();
     Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-    // registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
+    registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
 
 
     // Astral::Ref<Astral::Material> chessboardMaterial = registry.CreateAsset<Astral::Material>("chessboard.astmat");
+    //
     //
     // Astral::Ref<Astral::Material> blackPawnMaterial = registry.CreateAsset<Astral::Material>("black_pawn.astmat");
     // Astral::Ref<Astral::Material> blackRookMaterial = registry.CreateAsset<Astral::Material>("black_rook.astmat");
@@ -160,7 +162,7 @@ void ChessEntities::InitEntities()
     // ecs.AddComponent(m_Mesh, Astral::MeshComponent(material, mesh));
     //
     // // Sprite Componen
-    // ecs.AddComponent(m_ChessBoard, Astral::SpriteComponent(chessboardMaterial));
+    // ecs.AddComponent(m_ChessBoard, Astral::SpriteComponent(chessboardMaterial)); activeScene.IncrementResourceRef("chessboard.astmat");
     //
     // // Black Pieces
     // ecs.AddComponent(m_BlackPawn1, Astral::SpriteComponent(blackPawnMaterial));

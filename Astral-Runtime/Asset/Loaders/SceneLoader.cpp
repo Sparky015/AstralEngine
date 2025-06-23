@@ -26,10 +26,16 @@
 
 namespace Astral::SceneLoader {
 
-    void LoadSceneAssets(const std::filesystem::path& filePath)
+    void LoadSceneAssets(const std::filesystem::path& sceneFilePath)
     {
+        if (sceneFilePath.extension() != ".aescene")
+        {
+            WARN("Skipping the loading of the scene! File extension does not match the Astral Scene extension (.aescene)!")
+            return;
+        }
+
         Assimp::Importer importer;
-        const aiScene* importedScene = importer.ReadFile( filePath.string(), 0);
+        const aiScene* importedScene = importer.ReadFile( sceneFilePath.string(), 0);
         ASSERT(importedScene != nullptr, "Scene file parsing failed!")
 
         SceneManager& sceneManager = Engine::Get().GetSceneManager();
@@ -78,30 +84,34 @@ namespace Astral::SceneLoader {
 
             if (node->mMetaData->HasKey("Mesh_MeshData"))
             {
-                SceneResourceID meshDataResourceID;
+                // SceneResourceID meshDataResourceID;
+                // node->mMetaData->Get("Mesh_MeshData", meshDataResourceID);
+                // SceneResourceID materialResourceID;
+                // node->mMetaData->Get("Mesh_Material", materialResourceID);
+                aiString meshDataResourceID;
                 node->mMetaData->Get("Mesh_MeshData", meshDataResourceID);
-                SceneResourceID materialResourceID;
+                aiString materialResourceID;
                 node->mMetaData->Get("Mesh_Material", materialResourceID);
                 MeshComponent meshComponent{};
 
-                if (materialResourceID != NullSceneResourceID)
+                if (materialResourceID.C_Str() != "")
                 {
-                    ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
-                    std::string materialFilePath = externalResourceIDMapping[materialResourceID];
-                    activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    meshComponent.Material = registry.CreateAsset<Material>(materialFilePath);
+                    // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
+                    // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
+                    // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
+                    meshComponent.Material = registry.CreateAsset<Material>(materialResourceID.C_Str());
                 }
                 else
                 {
                     meshComponent.Material = nullptr;
                 }
 
-                if (meshDataResourceID != NullSceneResourceID)
+                if (meshDataResourceID.C_Str() != "")
                 {
-                    ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
-                    std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
-                    activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataFilePath);
+                    // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
+                    // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
+                    // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
+                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceID.C_Str());
                 }
                 else
                 {
@@ -113,30 +123,34 @@ namespace Astral::SceneLoader {
 
             if (node->mMetaData->HasKey("Sprite_MeshData"))
             {
-                SceneResourceID meshDataResourceID;
+                // SceneResourceID meshDataResourceID;
+                // node->mMetaData->Get("Sprite_MeshData", meshDataResourceID);
+                // SceneResourceID materialResourceID;
+                // node->mMetaData->Get("Sprite_Material", materialResourceID);
+                aiString meshDataResourceID;
                 node->mMetaData->Get("Sprite_MeshData", meshDataResourceID);
-                SceneResourceID materialResourceID;
+                aiString materialResourceID;
                 node->mMetaData->Get("Sprite_Material", materialResourceID);
                 SpriteComponent spriteComponent{};
 
-                if (materialResourceID != NullSceneResourceID)
+                if (materialResourceID.C_Str() != "")
                 {
-                    ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
-                    std::string materialFilePath = externalResourceIDMapping[materialResourceID];
-                    activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    spriteComponent.Material = registry.CreateAsset<Material>(materialFilePath);
+                    // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
+                    // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
+                    // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
+                    spriteComponent.Material = registry.CreateAsset<Material>(materialResourceID.C_Str());
                 }
                 else
                 {
                     spriteComponent.Material = nullptr;
                 }
 
-                if (meshDataResourceID != NullSceneResourceID)
+                if (meshDataResourceID.C_Str() != "")
                 {
-                    ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
-                    std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
-                    activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataFilePath);
+                    // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
+                    // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
+                    // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
+                    spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceID.C_Str());
                 }
                 else
                 {
@@ -154,7 +168,7 @@ namespace Astral::SceneLoader {
     {
         ScopedPtr<aiScene> exportScene = CreateScopedPtr<aiScene>();
         exportScene->mName = filePath.stem().string();
-        ECS& ecs = scene.SceneECS;
+        ECS& ecs = scene.ECS;
 
         // Serialize external resource file paths in scene metadata
         aiMetadata resourceMetaData = aiMetadata();
@@ -170,7 +184,7 @@ namespace Astral::SceneLoader {
 
         // Serialize ecs in scene node metadata
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        exportScene->mRootNode = new aiNode; // assimp will delete the root node when the aiScene goes out of scope
+        exportScene->mRootNode = new aiNode("Root Node"); // assimp will delete the root node when the aiScene goes out of scope
         for (Entity entity : ecs)
         {
             aiNode* node = new aiNode; // assimp will recursively delete all child nodes when the root node gets deleted
@@ -195,22 +209,36 @@ namespace Astral::SceneLoader {
             {
                 MeshComponent meshComponent;
                 ecs.GetComponent(entity, meshComponent);
-                std::filesystem::path meshDataPath = registry.GetFilePathFromAssetID(meshComponent.MeshData->GetAssetID());
-                std::filesystem::path meshMaterialPath = registry.GetFilePathFromAssetID(meshComponent.Material->GetAssetID());
 
+                std::filesystem::path meshDataPath;
+                std::filesystem::path materialPath;
+
+                if (meshComponent.MeshData) { meshDataPath = registry.GetFilePathFromAssetID(meshComponent.MeshData->GetAssetID()); }
+                else { meshDataPath = ""; }
+                if (meshComponent.Material) { materialPath = registry.GetFilePathFromAssetID(meshComponent.Material->GetAssetID()); }
+                else { materialPath = ""; }
+
+                if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
                 node->mMetaData->Add("Mesh_MeshData", aiString(meshDataPath.string())); // Could be empty strings -> ""
-                node->mMetaData->Add("Mesh_Material", aiString(meshMaterialPath.string()));
+                node->mMetaData->Add("Mesh_Material", aiString(materialPath.string()));
             }
 
             if (ecs.HasComponent<SpriteComponent>(entity))
             {
                 SpriteComponent spriteComponent;
                 ecs.GetComponent(entity, spriteComponent);
-                std::filesystem::path meshDataPath = registry.GetFilePathFromAssetID(spriteComponent.MeshData->GetAssetID());
-                std::filesystem::path meshMaterialPath = registry.GetFilePathFromAssetID(spriteComponent.Material->GetAssetID());
 
+                std::filesystem::path meshDataPath;
+                std::filesystem::path materialPath;
+
+                if (spriteComponent.MeshData) { meshDataPath = registry.GetFilePathFromAssetID(spriteComponent.MeshData->GetAssetID()); }
+                else { meshDataPath = ""; }
+                if (spriteComponent.Material) { materialPath = registry.GetFilePathFromAssetID(spriteComponent.Material->GetAssetID()); }
+                else { materialPath = ""; }
+
+                if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
                 node->mMetaData->Add("Sprite_MeshData", aiString(meshDataPath.string()));  // Could be empty strings -> ""
-                node->mMetaData->Add("Sprite_Material", aiString(meshMaterialPath.string()));
+                node->mMetaData->Add("Sprite_Material", aiString(materialPath.string()));
             }
 
             exportScene->mRootNode->addChildren(1, &node);
@@ -220,7 +248,7 @@ namespace Astral::SceneLoader {
         // Scene file is in format of .gltf but when file extension of .aescene as not all gltf's can be imported as a scene
         // in the expected format
         Assimp::Exporter exporter;
-        exporter.Export(exportScene.get(), "gltf", filePath.string().c_str());
+        exporter.Export(exportScene.get(), "gltf2", filePath.string().c_str());
     }
 
 

@@ -111,4 +111,75 @@ namespace Astral {
         return nextAssetID;
     }
 
+
+    void AssetRegistry::GetAbsolutePath(std::filesystem::path& outPath)
+    {
+        if (outPath.is_absolute()) { return; }
+
+        if (IsInDirectory(m_AssetDirectoryPath, outPath))
+        {
+            // Path is contained in assets directory
+            outPath = m_AssetDirectoryPath / std::filesystem::proximate(outPath, m_AssetDirectoryPath);
+            return;
+        }
+
+        if (IsInDirectory(m_EngineAssetsDirectoryPath, outPath))
+        {
+            // Path is contained in engine assets directory
+            outPath = m_EngineAssetsDirectoryPath / std::filesystem::proximate(outPath, m_EngineAssetsDirectoryPath);
+        }
+    }
+
+
+    bool AssetRegistry::IsInDirectory(const std::filesystem::path& directory, const std::filesystem::path& assetFile)
+    {
+        if (directory.empty() || assetFile.empty()) { return false; }
+        std::filesystem::path canonicalDirectory = std::filesystem::weakly_canonical(directory);
+        std::filesystem::path canonicalAssetPath;
+
+        if (assetFile.is_relative())
+        {
+            canonicalAssetPath = std::filesystem::weakly_canonical(directory / assetFile);
+            return std::filesystem::exists(canonicalAssetPath);
+        }
+        else
+        {
+           canonicalAssetPath = std::filesystem::weakly_canonical(assetFile);
+        }
+
+
+        auto dirIt = canonicalDirectory.begin();
+        auto filePathIt = canonicalAssetPath.begin();
+
+        for (;dirIt != canonicalDirectory.end() && filePathIt != canonicalAssetPath.end(); ++dirIt, ++filePathIt)
+        {
+            if (*dirIt != *filePathIt)
+            {
+                // Asset file is not within asset directory
+                return false;
+            }
+        }
+
+        return canonicalDirectory != canonicalAssetPath && dirIt == canonicalDirectory.end();
+    }
+
+
+    void AssetRegistry::GetRelativePath(std::filesystem::path& outfilePath)
+    {
+        if (IsInDirectory(m_AssetDirectoryPath, outfilePath))
+        {
+            // Path is contained in assets directory
+            outfilePath = std::filesystem::proximate(outfilePath, m_AssetDirectoryPath);
+            return;
+        }
+
+        if (IsInDirectory(m_EngineAssetsDirectoryPath, outfilePath))
+        {
+            // Path is contained in engine assets directory
+            outfilePath = std::filesystem::proximate(outfilePath, m_EngineAssetsDirectoryPath);
+        }
+    }
+
+
+
 }

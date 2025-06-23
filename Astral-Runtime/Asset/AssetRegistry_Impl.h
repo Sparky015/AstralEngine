@@ -24,13 +24,24 @@ namespace Astral {
         Ref<Asset> asset;
         if (filePath.is_relative())
         {
-            std::string fullFilePath = m_AssetDirectoryPath.string() + filePath.string();
-            ASSERT(std::filesystem::exists(fullFilePath), "Given asset file path does not exist! (" << fullFilePath << ")")
-            asset = LoadAsset(AssetType::GetStaticAssetType(), fullFilePath);
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            if (!std::filesystem::exists(fullPath))
+            {
+                if (fullPath == "") { return nullptr; }
+                WARN("Trying to create asset from file path that does not exist! (\"" << fullPath.string() << "\")")
+                return nullptr;
+            }
+            asset = LoadAsset(AssetType::GetStaticAssetType(), fullPath);
         }
         else
         {
-            ASSERT(std::filesystem::exists(filePath), "Given asset file path does not exist! (" << filePath.string() << ")")
+            if (!std::filesystem::exists(filePath))
+            {
+                if (filePath == "") { return nullptr; }
+                WARN("Trying to create asset from file path that does not exist! (" << filePath.string() << ")")
+                return nullptr;
+            }
             asset = LoadAsset(AssetType::GetStaticAssetType(), filePath);
         }
 
@@ -78,6 +89,7 @@ namespace Astral {
         requires std::is_base_of_v<Asset, AssetType>
     Ref<AssetType> AssetRegistry::GetAsset(std::string_view filePath)
     {
+        if (!m_FilePathToAssetID.contains(filePath)) { return nullptr; }
         AssetID assetID = m_FilePathToAssetID[filePath];
         return GetAsset<AssetType>(assetID);
     }

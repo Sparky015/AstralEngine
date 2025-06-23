@@ -18,7 +18,7 @@
 
 namespace Astral::SceneLoader {
 
-    void LoadSceneAssets(const std::filesystem::path& filePath);
+    void LoadSceneAssets(const std::filesystem::path& sceneFilePath);
     void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
     namespace Helpers {

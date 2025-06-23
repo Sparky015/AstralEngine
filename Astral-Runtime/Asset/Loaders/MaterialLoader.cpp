@@ -24,7 +24,7 @@ namespace Astral::MaterialLoader {
     Ref<Asset> LoadAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("MaterialLoader::LoadAsset")
-        if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension"); }
+        if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
 
         std::ifstream fileStream = std::ifstream(filePath);
 

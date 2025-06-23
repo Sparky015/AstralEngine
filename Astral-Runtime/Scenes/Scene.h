@@ -26,12 +26,14 @@ namespace Astral {
         ~Scene() = default;
 
         std::unordered_map<std::string, SceneResource> ExternalResourceFiles;
-        ECS SceneECS;
+        ECS ECS;
 
         void IncrementResourceRef(const std::string& filePath);
         void IncrementResourceRef(const std::filesystem::path& filePath);
+        void IncrementResourceRef(const char* filePath);
         void DecrementResourceRef(const std::string& filePath);
         void DecrementResourceRef(const std::filesystem::path& filePath);
+        void DecrementResourceRef(const char* filePath);
 
         SceneResourceID NextSceneResourceID = 0;
     };
@@ -39,6 +41,7 @@ namespace Astral {
 
     inline void Scene::IncrementResourceRef(const std::string& filePath)
     {
+        ASSERT(filePath != "", "Can't increment the scene resource ref when file path is empty!")
         if (!ExternalResourceFiles.contains(filePath))
         {
             ExternalResourceFiles[filePath].SceneResourceID = NextSceneResourceID;
@@ -53,8 +56,14 @@ namespace Astral {
         IncrementResourceRef(filePath.string());
     }
 
+    inline void Scene::IncrementResourceRef(const char* filePath)
+    {
+        IncrementResourceRef(std::string(filePath));
+    }
+
     inline void Scene::DecrementResourceRef(const std::string& filePath)
     {
+        if (filePath == "") { return; }
         ASSERT(ExternalResourceFiles.contains(filePath), "Trying to decrement ref of scene resource that was never added to the scene!")
         ExternalResourceFiles[filePath].ReferenceCount--;
     }
@@ -64,4 +73,8 @@ namespace Astral {
         DecrementResourceRef(filePath.string());
     }
 
+    inline void Scene::DecrementResourceRef(const char* filePath)
+    {
+        DecrementResourceRef(std::string(filePath));
+    }
 }

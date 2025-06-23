@@ -10,6 +10,7 @@
 #include "ECS/SceneManager.h"
 
 #include "imgui.h"
+#include "nfd.h"
 #include "Asset/AssetManager.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "Renderer/Common/Material.h"
@@ -51,12 +52,6 @@ namespace Astral {
 
                     if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
                     {
-                        if (ImGui::MenuItem("Rename Entity"))
-                        {
-                            entityToBeRenamed = entity;
-                            openEntityRenamePopup = true;
-                        }
-
                         if (ImGui::BeginMenu("Add Component"))
                         {
                             bool canAddAComponent = false;
@@ -99,6 +94,17 @@ namespace Astral {
                             }
 
                             ImGui::EndMenu();
+                        }
+
+                        if (ImGui::MenuItem("Rename Entity"))
+                        {
+                            entityToBeRenamed = entity;
+                            openEntityRenamePopup = true;
+                        }
+
+                        if (ImGui::MenuItem("Delete Entity"))
+                        {
+                            ecs.DeleteEntity(entity);
                         }
 
                         ImGui::EndPopup();
@@ -218,6 +224,26 @@ namespace Astral {
 
                 if (newMaterial != nullptr)
                 {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (sprite.Material) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(sprite.Material->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMaterial->GetAssetID()));
+                    sprite.Material = newMaterial;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("...##SelectMaterialFilePath"))
+            {
+                std::filesystem::path selectedFilePath;
+                SelectFileFromDialog(selectedFilePath, "Astral Material", "astmat");
+                registry.GetRelativePath(selectedFilePath);
+                std::string relativePath = selectedFilePath.string();
+                Ref<Material> newMaterial = registry.CreateAsset<Material>(relativePath);
+
+                if (newMaterial != nullptr)
+                {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (sprite.Material) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(sprite.Material->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMaterial->GetAssetID()));
                     sprite.Material = newMaterial;
                 }
             }
@@ -253,10 +279,30 @@ namespace Astral {
             ImGui::SameLine();
             if (ImGui::InputText("##MeshFilePath", meshInputBuffer, sizeof(meshInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                Ref<Mesh> newMesh = registry.GetAsset<Mesh>(meshInputBuffer);
+                Ref<Mesh> newMesh = registry.CreateAsset<Mesh>(meshInputBuffer);
 
                 if (newMesh != nullptr)
                 {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (meshComponent.MeshData) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(meshComponent.MeshData->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMesh->GetAssetID()));
+                    meshComponent.MeshData = newMesh;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("...##SelectMeshFilePath"))
+            {
+                std::filesystem::path selectedFilePath;
+                SelectFileFromDialog(selectedFilePath, "3D Object", "fbx,gltf,obj");
+                registry.GetRelativePath(selectedFilePath);
+                std::string relativePath = selectedFilePath.string();
+                Ref<Mesh> newMesh = registry.CreateAsset<Mesh>(relativePath);
+
+                if (newMesh != nullptr)
+                {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (meshComponent.MeshData) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(meshComponent.MeshData->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMesh->GetAssetID()));
                     meshComponent.MeshData = newMesh;
                 }
             }
@@ -275,10 +321,30 @@ namespace Astral {
             ImGui::SameLine();
             if (ImGui::InputText("##MaterialFilePath", materialInputBuffer, sizeof(materialInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                Ref<Material> newMaterial = registry.GetAsset<Material>(materialInputBuffer);
+                Ref<Material> newMaterial = registry.CreateAsset<Material>(materialInputBuffer);
 
                 if (newMaterial != nullptr)
                 {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (meshComponent.Material) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(meshComponent.Material->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMaterial->GetAssetID()));
+                    meshComponent.Material = newMaterial;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("...##SelectMaterialFilePath"))
+            {
+                std::filesystem::path selectedFilePath;
+                SelectFileFromDialog(selectedFilePath, "Astral Material", "astmat");
+                registry.GetRelativePath(selectedFilePath);
+                std::string relativePath = selectedFilePath.string();
+                Ref<Material> newMaterial = registry.CreateAsset<Material>(relativePath);
+
+                if (newMaterial != nullptr)
+                {
+                    Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+                    if (meshComponent.Material) { scene.DecrementResourceRef(registry.GetFilePathFromAssetID(meshComponent.Material->GetAssetID())); }
+                    scene.IncrementResourceRef(registry.GetFilePathFromAssetID(newMaterial->GetAssetID()));
                     meshComponent.Material = newMaterial;
                 }
             }
@@ -303,6 +369,65 @@ namespace Astral {
         }
         strncpy(inputBuffer, filePath.c_str(), inputBufferSize - 1);
         inputBuffer[inputBufferSize - 1] = '\0'; // Ensure null-termination
+    }
+
+
+    void SelectFileFromDialog(std::string& outFilePath, std::string_view filterName, std::string_view filterSpec)
+    {
+        nfdu8char_t* outPath;
+        nfdu8filteritem_t filters[1] = { { filterName.data(), filterSpec.data() }};
+        nfdopendialogu8args_t args = {0};
+        args.filterList = filters;
+        args.filterCount = 1;
+        // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+        nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+        if (result == NFD_OKAY)
+        {
+            outFilePath = std::string(outPath);
+            NFD_FreePathU8(outPath);
+        }
+        else if (result == NFD_CANCEL)
+        {
+            outFilePath = "";
+            LOG("Open File Dialog Canceled")
+        }
+        else if (result == NFD_ERROR)
+        {
+            outFilePath = "";
+            WARN("NFD Error: " << NFD_GetError())
+        }
+    }
+
+
+    void SelectFileFromDialog(std::filesystem::path& outFilePath, std::string_view filterName,
+        std::string_view filterSpec)
+    {
+        nfdu8char_t* outPath;
+        nfdu8filteritem_t filters[1] = { { filterName.data(), filterSpec.data() }};
+        nfdopendialogu8args_t args = {0};
+        args.filterList = filters;
+        args.filterCount = 1;
+        // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+        nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+        if (result == NFD_OKAY)
+        {
+            outFilePath = std::string(outPath);
+            NFD_FreePathU8(outPath);
+        }
+        else if (result == NFD_CANCEL)
+        {
+            outFilePath = "";
+            LOG("Open File Dialog Canceled")
+        }
+        else if (result == NFD_ERROR)
+        {
+            outFilePath = "";
+            WARN("NFD Error: " << NFD_GetError())
+        }
     }
 
 }

@@ -30,8 +30,8 @@ namespace Astral {
         PROFILE_SCOPE("Scene Manager Initialization");
         TRACE("Initializing Scene Manager!")
         Scene scene{};
-        scene.SceneECS = ECS();
-        scene.SceneECS.Init();
+        scene.ECS = ECS();
+        scene.ECS.Init();
 
         m_Scenes["Engine:\\BaseScene.fbx"] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes["Engine:\\BaseScene.fbx"].get();;
@@ -61,8 +61,8 @@ namespace Astral {
     void SceneManager::CreateEmptyScene()
     {
         Scene scene{};
-        scene.SceneECS = ECS();
-        scene.SceneECS.Init();
+        scene.ECS = ECS();
+        scene.ECS.Init();
 
         m_Scenes[""] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[""].get();
@@ -72,17 +72,17 @@ namespace Astral {
 
     void SceneManager::LoadScene(const std::filesystem::path& filePath)
     {
-        if (m_Scenes.contains(filePath))
-        {
-            m_ActiveScene = m_Scenes[filePath].get();
-            m_ActiveSceneExists = true;
-            return;
-        }
+        // if (m_Scenes.contains(filePath)) // TODO: Add way to switch to different scene without loading it from a file
+        // {
+        //     m_ActiveScene = m_Scenes[filePath].get();
+        //     m_ActiveSceneExists = true;
+        //     return;
+        // }
 
         Astral::AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         Scene scene{};
-        scene.SceneECS = ECS();
-        scene.SceneECS.Init();
+        scene.ECS = ECS();
+        scene.ECS.Init();
 
         m_Scenes[filePath] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[filePath].get();
