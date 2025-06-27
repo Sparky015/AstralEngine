@@ -1,6 +1,7 @@
 #version 460
 
-layout (location = 0) in vec2 a_TextureCoord;
+layout(location = 0) in vec3 v_WorldPosition;
+layout (location = 1) in vec2 v_TextureCoord;
 
 layout (set = 1, binding = 0) uniform sampler2D u_Texture;
 
@@ -8,7 +9,7 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-    vec4 texColor = texture(u_Texture, a_TextureCoord);
+    vec4 texColor = texture(u_Texture, v_TextureCoord);
     if (texColor.a < 0.01f)
     {
         discard;

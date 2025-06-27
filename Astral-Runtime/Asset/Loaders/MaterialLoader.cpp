@@ -28,27 +28,50 @@ namespace Astral::MaterialLoader {
 
         std::ifstream fileStream = std::ifstream(filePath);
 
-        std::string vertexShaderPath;
+        ASSERT(!fileStream.eof(), "Material file is empty!")
+
         std::string fragmentShaderPath;
         std::string texturePath;
-        std::getline(fileStream, vertexShaderPath);
         std::getline(fileStream, fragmentShaderPath);
         std::getline(fileStream, texturePath);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        Ref<Shader> vertexShader = registry.CreateAsset<Shader>(vertexShaderPath);
         Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
         Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
+        if (!texture) { texture = registry.GetAsset<Texture>("Textures/MissingTexture.png"); }
+
+        std::string optional_metallic;
+        std::string optional_roughness;
+        std::string optional_emission;
+        Ref<Texture> texture_metallic;
+        Ref<Texture> texture_roughness;
+        Ref<Texture> texture_emission;
+        if (!fileStream.eof())
+        {
+            std::getline(fileStream, optional_metallic);
+            std::getline(fileStream, optional_roughness);
+            std::getline(fileStream, optional_emission);
+
+            texture_metallic = registry.CreateAsset<Texture>(optional_metallic);
+            texture_roughness = registry.CreateAsset<Texture>(optional_roughness);
+            texture_emission = registry.CreateAsset<Texture>(optional_emission);
+        }
+
 
         DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
         descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
+        if (optional_metallic != "")
+        {
+            descriptorSetHandle->AddDescriptorImageSampler(texture_metallic, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_roughness, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_emission, ShaderStage::FRAGMENT);
+        }
         descriptorSetHandle->EndBuildingSet();
 
         RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
 
         Ref<Material> material = CreateRef<Material>();
-        material->VertexShader = vertexShader;
         material->FragmentShader = fragmentShader;
         material->Texture = texture;
         material->DescriptorSet = descriptorSetHandle;
@@ -64,11 +87,10 @@ namespace Astral::MaterialLoader {
         std::ofstream fileStream = std::ofstream(outFilePath);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        std::filesystem::path vertexShaderPath = registry.GetFilePathFromAssetID(material->VertexShader->GetAssetID());
         std::filesystem::path fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID());
         std::filesystem::path texturePath = registry.GetFilePathFromAssetID(material->Texture->GetAssetID());
 
-        fileStream << vertexShaderPath.string() << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
+        fileStream << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
     }
 
 }

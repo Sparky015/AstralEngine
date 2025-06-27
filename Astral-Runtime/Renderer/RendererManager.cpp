@@ -66,7 +66,10 @@ namespace Astral {
 
         // Shaders
         registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
+        registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
         registry.CreateAsset<Shader>("Shaders/Sample_Image.frag");
+        registry.CreateAsset<Shader>("Shaders/brdf.frag");
+
 
         // Textures
         registry.CreateAsset<Texture>("Textures/MissingTexture.png");

@@ -8,7 +8,9 @@
 #pragma once
 
 #include "Asset/Asset.h"
+#include "Core/SmartPointers.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
+#include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
 namespace Astral {
@@ -17,6 +19,7 @@ namespace Astral {
     {
         VertexBufferHandle VertexBuffer;
         IndexBufferHandle IndexBuffer;
+        Ref<Shader> VertexShader;
 
         AssetType GetAssetType() override { return Mesh::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Mesh; }

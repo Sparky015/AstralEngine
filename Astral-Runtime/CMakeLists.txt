@@ -263,6 +263,12 @@ add_library(AstralEngine
         Asset/Loaders/SceneLoader.h
         Renderer/RHI/Resources/DescriptorSet.cpp
         Renderer/RHI/Resources/DescriptorSet.cpp
+        Renderer/RHI/Resources/PipelineStateCache.cpp
+        Renderer/RHI/Resources/PipelineStateCache.h
+        Core/Utility/Hashing/HashCombiner.cpp
+        Core/Utility/Hashing/HashCombiner.h
+        Core/Utility/Hashing/Hashes.cpp
+        Core/Utility/Hashing/Hashes.h
 )
 
 

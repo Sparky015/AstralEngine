@@ -141,7 +141,6 @@ namespace Astral {
             context.SceneFramebuffer->EndBuildingFramebuffer();
 
 
-            context.TempPipelineState = nullptr;
             context.SceneRenderTarget = nullptr;
 
 
@@ -151,9 +150,10 @@ namespace Astral {
             context.SceneCameraDescriptorSet->AddDescriptorUniformBuffer(context.SceneCameraBuffer, ShaderStage::VERTEX);
             context.SceneCameraDescriptorSet->EndBuildingSet();
             RendererAPI::NameObject(context.SceneCameraDescriptorSet, "Camera Matrix");
-
-
         }
+
+        m_RendererContext->PipelineStateCache.SetSceneDescriptorSet(m_RendererContext->FrameContexts[0].SceneCameraDescriptorSet);
+
 
         m_RendererContext->CurrentViewportTexture.push(m_RendererContext->FrameContexts[1].OffscreenDescriptorSet);
 
@@ -266,35 +266,24 @@ namespace Astral {
         RendererAPI::BeginLabel(commandBuffer, "Main Render Pass", Vec4(1.0 , 1.0, 0, 1.0));
         mainRenderPass->BeginRenderPass(commandBuffer, mainFramebufferHandle);
 
-        if (frameContext.TempPipelineState)
-        {
-            frameContext.TempPipelineState->Bind(commandBuffer);
-            frameContext.TempPipelineState->SetViewportAndScissor(commandBuffer, m_RendererContext->ViewportSize);
-        }
-
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
             Mesh& mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
 
             DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
-            Ref<Shader> vertexShader = material.VertexShader;
+
+            Ref<Shader> vertexShader = mesh.VertexShader;
             Ref<Shader> fragmentShader = material.FragmentShader;
 
-            if (frameContext.TempPipelineState == nullptr)
-            {
-                std::vector<DescriptorSetHandle> descriptorSets{frameContext.SceneCameraDescriptorSet, materialDescriptorSet};
-                frameContext.TempPipelineState = device.CreatePipelineStateObject(mainRenderPass,
-                    vertexShader, fragmentShader, descriptorSets, mesh.VertexBuffer->GetBufferLayout());
-                frameContext.TempPipelineState->Bind(commandBuffer);
-                frameContext.TempPipelineState->SetViewportAndScissor(commandBuffer, m_RendererContext->ViewportSize);
+            PipelineStateObjectHandle pipeline = m_RendererContext->PipelineStateCache.GetPipeline(mainRenderPass, material, mesh);
+            pipeline->Bind(commandBuffer);
+            pipeline->SetViewportAndScissor(commandBuffer, m_RendererContext->ViewportSize);
 
-            }
+            RendererAPI::PushConstants(commandBuffer, pipeline, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
 
-            RendererAPI::PushConstants(commandBuffer, frameContext.TempPipelineState, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
-
-            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
-            frameContext.TempPipelineState->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
+            pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneCameraDescriptorSet, 0);
+            pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);

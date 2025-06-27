@@ -16,7 +16,6 @@ namespace Astral {
 
     struct Material : public Asset
     {
-        Ref<Shader> VertexShader;
         Ref<Shader> FragmentShader;
         Ref<Texture> Texture;
         DescriptorSetHandle DescriptorSet;

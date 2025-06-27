@@ -384,8 +384,6 @@ namespace Astral::SceneLoader {
                      materialRef->DescriptorSet->BeginBuildingSet();
                      materialRef->DescriptorSet->AddDescriptorImageSampler(textureRef, ShaderStage::FRAGMENT);
                      materialRef->DescriptorSet->EndBuildingSet();
-
-                     materialRef->VertexShader = assetRegistry.GetAsset<Shader>("Shaders/Mesh_Position_UV.vert");
                      materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/Sample_Image.frag");
                      materialRef->Texture = textureRef;
 

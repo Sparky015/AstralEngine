@@ -12,9 +12,11 @@
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
 #include "RHI/Resources/Renderpass.h"
+#include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 
 #include <queue>
+
 
 namespace Astral {
 
@@ -57,7 +59,6 @@ namespace Astral {
             CommandBufferHandle SceneCommandBuffer;
             FramebufferHandle SceneFramebuffer;
             FramebufferHandle WindowFramebuffer;
-            PipelineStateObjectHandle TempPipelineState;
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneCameraBuffer;
             DescriptorSetHandle SceneCameraDescriptorSet;
@@ -83,7 +84,7 @@ namespace Astral {
             std::queue<DescriptorSetHandle> CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
 
             UVec2 ViewportSize;
-
+            PipelineStateCache PipelineStateCache;
         };
 
         static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;
