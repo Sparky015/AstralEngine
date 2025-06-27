@@ -1,0 +1,914 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.ad6e8e21)"
+    },
+    "extensionsUsed": [
+        "FB_ngon_encoding"
+    ],
+    "buffers": [
+        {
+            "byteLength": 0,
+            "uri": "YAAAAAAAAAAY.aescene.bin"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node",
+            "children": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34
+            ]
+        },
+        {
+            "name": "Chessboard",
+            "matrix": [
+                0.0,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                800.0,
+                0.0,
+                0.0,
+                -3.0,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "chessboard.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn1",
+            "matrix": [
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn2",
+            "matrix": [
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn3",
+            "matrix": [
+                -150.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn4",
+            "matrix": [
+                -50.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn5",
+            "matrix": [
+                50.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn6",
+            "matrix": [
+                150.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn7",
+            "matrix": [
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackPawn8",
+            "matrix": [
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_pawn.astmat"
+            }
+        },
+        {
+            "name": "BlackRook1",
+            "matrix": [
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_rook.astmat"
+            }
+        },
+        {
+            "name": "BlackRook2",
+            "matrix": [
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_rook.astmat"
+            }
+        },
+        {
+            "name": "BlackKnight1",
+            "matrix": [
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_knight.astmat"
+            }
+        },
+        {
+            "name": "BlackKnight2",
+            "matrix": [
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_knight.astmat"
+            }
+        },
+        {
+            "name": "BlackBishop1",
+            "matrix": [
+                -150.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_bishop.astmat"
+            }
+        },
+        {
+            "name": "BlackBishop2",
+            "matrix": [
+                150.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_bishop.astmat"
+            }
+        },
+        {
+            "name": "BlackQueen",
+            "matrix": [
+                -50.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_queen.astmat"
+            }
+        },
+        {
+            "name": "BlackKing",
+            "matrix": [
+                50.0,
+                100.0,
+                0.0,
+                0.0,
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "black_king.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn1",
+            "matrix": [
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn2",
+            "matrix": [
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn3",
+            "matrix": [
+                -150.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn4",
+            "matrix": [
+                -50.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn5",
+            "matrix": [
+                50.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn6",
+            "matrix": [
+                150.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn7",
+            "matrix": [
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhitePawn8",
+            "matrix": [
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_pawn.astmat"
+            }
+        },
+        {
+            "name": "WhiteRook1",
+            "matrix": [
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_rook.astmat"
+            }
+        },
+        {
+            "name": "WhiteRook2",
+            "matrix": [
+                350.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_rook.astmat"
+            }
+        },
+        {
+            "name": "WhiteKnight1",
+            "matrix": [
+                -250.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_knight.astmat"
+            }
+        },
+        {
+            "name": "WhiteKnight2",
+            "matrix": [
+                250.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_knight.astmat"
+            }
+        },
+        {
+            "name": "WhiteBishop1",
+            "matrix": [
+                -150.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_bishop.astmat"
+            }
+        },
+        {
+            "name": "WhiteBishop2",
+            "matrix": [
+                150.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_bishop.astmat"
+            }
+        },
+        {
+            "name": "WhiteQueen",
+            "matrix": [
+                -50.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_queen.astmat"
+            }
+        },
+        {
+            "name": "WhiteKing",
+            "matrix": [
+                50.0,
+                100.0,
+                0.0,
+                0.0,
+                -350.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Sprite_MeshData": "Meshes/Quad.obj",
+                "Sprite_Material": "white_king.astmat"
+            }
+        },
+        {
+            "name": "YAAAAAY",
+            "matrix": [
+                0.0,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                800.0,
+                0.0,
+                0.0,
+                500.0,
+                800.0,
+                45.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Mesh_MeshData": "Models\\WaterBendingGauntlet.fbx",
+                "Mesh_Material": "Models\\WaterBendingGauntlet.astmat"
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

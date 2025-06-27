@@ -1,0 +1,56 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.ad6e8e21)"
+    },
+    "extensionsUsed": [
+        "FB_ngon_encoding"
+    ],
+    "buffers": [
+        {
+            "byteLength": 0,
+            "uri": "PBR_Testing.aescene.bin"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node",
+            "children": [
+                1
+            ]
+        },
+        {
+            "name": "Untitled",
+            "matrix": [
+                9.792396545410156,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                800.0,
+                -45.0,
+                0.0,
+                309.1148681640625,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Mesh_MeshData": "Models\\WaterBendingGauntlet.fbx",
+                "Mesh_Material": "Models\\WaterBendingGauntlet_PBR.astmat"
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}
