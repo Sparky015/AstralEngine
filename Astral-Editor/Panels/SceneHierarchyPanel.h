@@ -1,5 +1,5 @@
 /**
-* @file SceneGraphPanel.h
+* @file SceneHierarchyPanel.h
 * @author Andrew Fagan
 * @date 3/1/2025
 */
@@ -11,8 +11,16 @@
 
 namespace Astral {
 
-    void SceneGraphPanel();
+    class SceneHierarchyPanel
+    {
+    public:
+        static void Show();
+        static Entity GetSelectedEntity() { return selectedEntity; }
 
+    private:
+
+        static Entity selectedEntity;
+    };
 
     // Helpers
 

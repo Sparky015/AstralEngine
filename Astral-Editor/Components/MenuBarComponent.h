@@ -1,5 +1,5 @@
 /**
-* @file ToolBar.h
+* @file MenuBarComponent.h
 * @author Andrew Fagan
 * @date 6/21/2025
 */

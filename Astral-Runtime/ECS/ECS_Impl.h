@@ -14,6 +14,7 @@ namespace Astral {
     template<typename ComponentType>
     void ECS::AddComponent(Entity entity, const ComponentType& component)
     {
+        if (entity.GetID() == NULL_ENTITY) { WARN("Trying to add component to null entity!"); return; }
         m_ComponentPoolSet.GetComponentPool<ComponentType>().componentData[entity.GetID()] = component;
         m_ComponentPoolSet.GetComponentPool<ComponentType>().entityRegistry[entity.GetID()] = true;
     }
@@ -22,6 +23,7 @@ namespace Astral {
     template<typename ComponentType>
     void ECS::UpdateComponent(Entity entity, const ComponentType& component)
     {
+        if (entity.GetID() == NULL_ENTITY) { WARN("Trying to update component of null entity!"); return; }
         m_ComponentPoolSet.GetComponentPool<ComponentType>().componentData[entity.GetID()] = component;
         m_ComponentPoolSet.GetComponentPool<ComponentType>().entityRegistry[entity.GetID()] = true;
     }
@@ -39,6 +41,7 @@ namespace Astral {
     template<typename ComponentType>
     void ECS::RemoveComponent(Entity entity)
     {
+        if (entity.GetID() == NULL_ENTITY) { return; }
         m_ComponentPoolSet.GetComponentPool<ComponentType>().entityRegistry = false;
     }
 
@@ -46,6 +49,7 @@ namespace Astral {
     template<typename ComponentType>
     bool ECS::HasComponent(Entity entity)
     {
+        if (entity.GetID() == NULL_ENTITY) { return false; }
         return m_ComponentPoolSet.GetComponentPool<ComponentType>().entityRegistry[entity.GetID()];
     }
 

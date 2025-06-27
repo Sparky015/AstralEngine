@@ -64,7 +64,7 @@ namespace Astral {
     inline void Scene::DecrementResourceRef(const std::string& filePath)
     {
         if (filePath == "") { return; }
-        ASSERT(ExternalResourceFiles.contains(filePath), "Trying to decrement ref of scene resource that was never added to the scene!")
+        // ASSERT(ExternalResourceFiles.contains(filePath), "Trying to decrement ref of scene resource that was never added to the scene!") // TODO: Add back if this resource ref set up is being used
         ExternalResourceFiles[filePath].ReferenceCount--;
     }
 

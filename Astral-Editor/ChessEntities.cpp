@@ -137,22 +137,22 @@ void ChessEntities::InitEntities()
     registry.SetAssetDirectoryPath(CHESS_ASSET_DIR);
 
 
-    // Astral::Ref<Astral::Material> chessboardMaterial = registry.CreateAsset<Astral::Material>("chessboard.astmat");
+    // Astral::Ref<Astral::Material> chessboardMaterial = registry.RegisterAsset<Astral::Material>("chessboard.astmat");
     //
     //
-    // Astral::Ref<Astral::Material> blackPawnMaterial = registry.CreateAsset<Astral::Material>("black_pawn.astmat");
-    // Astral::Ref<Astral::Material> blackRookMaterial = registry.CreateAsset<Astral::Material>("black_rook.astmat");
-    // Astral::Ref<Astral::Material> blackKnightMaterial = registry.CreateAsset<Astral::Material>("black_knight.astmat");
-    // Astral::Ref<Astral::Material> blackBishopMaterial = registry.CreateAsset<Astral::Material>("black_bishop.astmat");
-    // Astral::Ref<Astral::Material> blackQueenMaterial = registry.CreateAsset<Astral::Material>("black_queen.astmat");
-    // Astral::Ref<Astral::Material> blackKingMaterial = registry.CreateAsset<Astral::Material>("black_king.astmat");
+    // Astral::Ref<Astral::Material> blackPawnMaterial = registry.RegisterAsset<Astral::Material>("black_pawn.astmat");
+    // Astral::Ref<Astral::Material> blackRookMaterial = registry.RegisterAsset<Astral::Material>("black_rook.astmat");
+    // Astral::Ref<Astral::Material> blackKnightMaterial = registry.RegisterAsset<Astral::Material>("black_knight.astmat");
+    // Astral::Ref<Astral::Material> blackBishopMaterial = registry.RegisterAsset<Astral::Material>("black_bishop.astmat");
+    // Astral::Ref<Astral::Material> blackQueenMaterial = registry.RegisterAsset<Astral::Material>("black_queen.astmat");
+    // Astral::Ref<Astral::Material> blackKingMaterial = registry.RegisterAsset<Astral::Material>("black_king.astmat");
     //
-    // Astral::Ref<Astral::Material> whitePawnMaterial = registry.CreateAsset<Astral::Material>("white_pawn.astmat");
-    // Astral::Ref<Astral::Material> whiteRookMaterial = registry.CreateAsset<Astral::Material>("white_rook.astmat");
-    // Astral::Ref<Astral::Material> whiteKnightMaterial = registry.CreateAsset<Astral::Material>("white_knight.astmat");
-    // Astral::Ref<Astral::Material> whiteBishopMaterial = registry.CreateAsset<Astral::Material>("white_bishop.astmat");
-    // Astral::Ref<Astral::Material> whiteQueenMaterial = registry.CreateAsset<Astral::Material>("white_queen.astmat");
-    // Astral::Ref<Astral::Material> whiteKingMaterial = registry.CreateAsset<Astral::Material>("white_king.astmat");
+    // Astral::Ref<Astral::Material> whitePawnMaterial = registry.RegisterAsset<Astral::Material>("white_pawn.astmat");
+    // Astral::Ref<Astral::Material> whiteRookMaterial = registry.RegisterAsset<Astral::Material>("white_rook.astmat");
+    // Astral::Ref<Astral::Material> whiteKnightMaterial = registry.RegisterAsset<Astral::Material>("white_knight.astmat");
+    // Astral::Ref<Astral::Material> whiteBishopMaterial = registry.RegisterAsset<Astral::Material>("white_bishop.astmat");
+    // Astral::Ref<Astral::Material> whiteQueenMaterial = registry.RegisterAsset<Astral::Material>("white_queen.astmat");
+    // Astral::Ref<Astral::Material> whiteKingMaterial = registry.RegisterAsset<Astral::Material>("white_king.astmat");
     //
     // Astral::Ref<Astral::Mesh> mesh = registry.GetAsset<Astral::Mesh>("Models/WaterBendingGauntlet.fbx");
     // Astral::Ref<Astral::Material> material = registry.GetAsset<Astral::Material>("Models/WaterBendingGauntlet.astmat");

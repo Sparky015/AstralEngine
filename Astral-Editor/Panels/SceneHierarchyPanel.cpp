@@ -1,10 +1,10 @@
 /**
-* @file SceneGraphPanel.cpp
+* @file SceneHierarchyPanel.cpp
 * @author Andrew Fagan
 * @date 3/1/2025
 */
 
-#include "SceneGraphPanel.h"
+#include "SceneHierarchyPanel.h"
 
 #include "Core/Engine.h"
 #include "ECS/SceneManager.h"
@@ -17,9 +17,12 @@
 
 namespace Astral {
 
-    void SceneGraphPanel()
+    Entity SceneHierarchyPanel::selectedEntity = Entity(NULL_ENTITY);
+
+    void SceneHierarchyPanel::Show()
     {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+        if (ecs.GetNumberOfActiveEntities() == 0) { selectedEntity = Entity(NULL_ENTITY); }
 
         static Entity entityToBeRenamed{};
         static bool openEntityRenamePopup = false;
@@ -41,110 +44,67 @@ namespace Astral {
         }
 
 
-        if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            for (Entity entity : ecs)
-            {
-                ImGui::PushID(entity.GetID());
 
-                if (ImGui::TreeNode(entity.GetDebugName().data()))
+        for (Entity entity : ecs)
+        {
+            ImGui::PushID(entity.GetID());
+
+            ImGui::Spacing();
+
+            if (ImGui::Selectable(entity.GetDebugName().data(), selectedEntity == entity))
+            {
+                selectedEntity = entity;
+
+                if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
                 {
 
-                    if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
+
+                    if (ImGui::MenuItem("Rename Entity"))
                     {
-                        if (ImGui::BeginMenu("Add Component"))
-                        {
-                            bool canAddAComponent = false;
-
-                            if (!ecs.HasComponent<TransformComponent>(entity))
-                            {
-                                canAddAComponent = true;
-                                if (ImGui::MenuItem("Transform"))
-                                {
-                                    TransformComponent transformComponent{};
-                                    ecs.AddComponent(entity, transformComponent);
-                                }
-                            }
-
-                            if (!ecs.HasComponent<SpriteComponent>(entity))
-                            {
-                                canAddAComponent = true;
-                                if (ImGui::MenuItem("Sprite"))
-                                {
-                                    SpriteComponent spriteComponent{};
-                                    ecs.AddComponent(entity, spriteComponent);
-                                    // TODO: Add defaultable meshes, textures, and materials
-                                }
-                            }
-
-                            if (!ecs.HasComponent<MeshComponent>(entity))
-                            {
-                                canAddAComponent = true;
-                                if (ImGui::MenuItem("Mesh"))
-                                {
-                                    MeshComponent meshComponent{};
-                                    ecs.AddComponent(entity, meshComponent);
-
-                                }
-                            }
-
-                            if (!canAddAComponent)
-                            {
-                                ImGui::Text("(All Component Types Used Already)");
-                            }
-
-                            ImGui::EndMenu();
-                        }
-
-                        if (ImGui::MenuItem("Rename Entity"))
-                        {
-                            entityToBeRenamed = entity;
-                            openEntityRenamePopup = true;
-                        }
-
-                        if (ImGui::MenuItem("Delete Entity"))
-                        {
-                            ecs.DeleteEntity(entity);
-                        }
-
-                        ImGui::EndPopup();
+                        entityToBeRenamed = entity;
+                        openEntityRenamePopup = true;
                     }
 
-                    if (ecs.HasComponent<TransformComponent>(entity))
+                    if (ImGui::MenuItem("Delete Entity") || ImGui::IsKeyDown(ImGuiKey_Delete))
                     {
-                        ShowTransformComponent(ecs, entity);
+                        ecs.DeleteEntity(entity);
                     }
 
-                    if (ecs.HasComponent<SpriteComponent>(entity))
-                    {
-                        ShowSpriteComponent(ecs, entity);
-                    }
-
-                    if (ecs.HasComponent<MeshComponent>(entity))
-                    {
-                        ShowMeshComponent(ecs, entity);
-                    }
-
-                    ImGui::TreePop();
+                    ImGui::EndPopup();
                 }
 
-                ImGui::PopID();
+                if (ecs.HasComponent<TransformComponent>(entity))
+                {
+                    ShowTransformComponent(ecs, entity);
+                }
+
+                if (ecs.HasComponent<SpriteComponent>(entity))
+                {
+                    ShowSpriteComponent(ecs, entity);
+                }
+
+                if (ecs.HasComponent<MeshComponent>(entity))
+                {
+                    ShowMeshComponent(ecs, entity);
+                }
+
             }
 
-            ImGui::TreePop();
+            ImGui::PopID();
         }
+
 
         ImGui::End();
 
         static char entityNameBuffer[128];
         if (openEntityRenamePopup)
         {
-            ImGui::OpenPopup("Rename Entity##SceneGraphPanel");
+            ImGui::OpenPopup("Rename Entity##SceneHierarchyPanel");
             openEntityRenamePopup = false;
             strncpy(entityNameBuffer, entityToBeRenamed.GetDebugName().data(), sizeof(entityNameBuffer));
         }
 
-        if (ImGui::BeginPopupModal("Rename Entity##SceneGraphPanel", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::BeginPopupModal("Rename Entity##SceneHierarchyPanel", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
             if (ImGui::InputText("##SceneGraphRenameEntityInput", entityNameBuffer, sizeof(entityNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
             {
@@ -174,7 +134,7 @@ namespace Astral {
 
             TransformComponent transform;
             ECS_Result result = ecs.GetComponent(entity, transform);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
 
             ImGui::Text("Position: ");
             ImGui::SameLine();
@@ -202,7 +162,7 @@ namespace Astral {
 
             SpriteComponent sprite;
             ECS_Result result = ecs.GetComponent(entity, sprite);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get sprite component")
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get sprite component")
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
@@ -262,7 +222,7 @@ namespace Astral {
 
             MeshComponent meshComponent;
             ECS_Result result = ecs.GetComponent(entity, meshComponent);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneGraphPanel failed to get transform component")
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 

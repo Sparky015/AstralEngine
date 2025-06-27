@@ -23,6 +23,7 @@ namespace Astral::SceneLoader {
 
     namespace Helpers {
 
+        void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);
         void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
 
     }

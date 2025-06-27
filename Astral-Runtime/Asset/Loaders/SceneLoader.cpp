@@ -12,6 +12,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "MaterialLoader.h"
 #include "MeshLoader.h"
 #include "Asset/AssetManager.h"
 #include "assimp/Exporter.hpp"
@@ -252,10 +253,222 @@ namespace Astral::SceneLoader {
     }
 
 
+    // TODO: Add a hashmap of already loaded aiMesh's as keys and their serialized file path as the value to prevent creating duplicates of the same mesh
+    void Helpers::LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects)
+    {
+        std::filesystem::path sceneDir = sceneFilePath.parent_path();
+
+         Assimp::Importer importer;
+
+         const aiScene* scene = importer.ReadFile( sceneFilePath.string(),
+           aiProcess_CalcTangentSpace       |
+           aiProcess_Triangulate            |
+           aiProcess_JoinIdenticalVertices  |
+           aiProcess_SortByPType            |
+           aiProcess_FlipUVs
+           );
+
+         // If the import failed, report it
+         if (nullptr == scene)
+         {
+             WARN(importer.GetErrorString());
+             return;
+         }
+
+         LOG("Loading Scene: " << scene->mName.C_Str());
+
+        // Create directory for new files to go into for better organization
+        std::filesystem::path destinationDir{};
+        if (shouldSerializeObjects)
+        {
+            std::string destinationDirString = sceneDir.string() + '/' + sceneFilePath.stem().string() + '/';
+            if (std::filesystem::exists(destinationDirString))
+            {
+                uint32 extension = 0;
+                while (std::filesystem::exists(sceneDir.string() + '/' + sceneFilePath.stem().string() + "_" + std::to_string(extension) + '/'))
+                {
+                    extension++;
+                }
+                destinationDirString = sceneDir.string() + '/' + sceneFilePath.stem().string() + "_" + std::to_string(extension) + '/';
+                LOG("Duplicate directory name found! Creating new directory at " << destinationDirString);
+            }
+            std::filesystem::create_directory(destinationDirString);
+            destinationDir = destinationDirString;
+        }
+
+
+
+         AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
+
+         std::vector<Ref<Texture>> m_EmbeddedTextures;
+         std::unordered_map<std::filesystem::path, Ref<Texture>> m_ExternalTextures;
+         std::vector<Ref<Material>> m_Materials;
+         std::vector<Ref<Mesh>> m_Meshes;
+
+         // Load Embedded Textures
+         if (scene->HasTextures())
+         {
+             for (int i = 0; i < scene->mNumTextures; i++)
+             {
+                 Ref<Texture> textureRef;
+                 aiTexture* texture = scene->mTextures[i];
+                 // TODO: Convert the format hint to a image format
+                 textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM);
+                 WARN("Loading an embedded texture! This probably won't work!")
+                 m_EmbeddedTextures.push_back(textureRef);
+             }
+         }
+
+         // Load Materials
+         if (scene->HasMaterials())
+         {
+
+             for (int i = 0; i < scene->mNumMaterials; i++)
+             {
+                 aiMaterial* material = scene->mMaterials[i];
+                 Ref<Material> materialRef = CreateRef<Material>();
+
+                 // for (int j = 0; j < material->mNumProperties; j++)
+                 // {
+                 //     aiMaterialProperty* materialProperty = material->mProperties[j];
+                 // }
+
+                 // Load just the diffuse map for now
+                 aiString textureFilePath;
+                 material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+
+
+                 if (textureFilePath.length == 0)
+                 {
+                     LOG("No Diffuse. Trying base color...")
+                     material->GetTexture(aiTextureType_BASE_COLOR, 0, &textureFilePath);
+
+                     if (textureFilePath.length == 0)
+                     {
+                         LOG("No base color. Discarding material!")
+                         m_Materials.push_back(assetRegistry.GetAsset<Material>("Materials/MissingMaterial.astmat"));
+                     }
+                     else
+                     {
+                         LOG("Base color found!")
+                     }
+                 }
+                 else
+                 {
+                     Ref<Texture> textureRef;
+
+                     if (textureFilePath.data[0] == '*')
+                     {
+                         // Embedded Texture
+                         std::string embeddedFileID = textureFilePath.C_Str();
+                         int embeddedTextureIndex = std::stoi(embeddedFileID.substr(1));
+                         textureRef = m_EmbeddedTextures[embeddedTextureIndex];
+                     }
+                     else
+                     {
+                         // External Texture
+                         std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(textureFilePath.C_Str());
+                         if (m_ExternalTextures.contains(fullFilePath))
+                         {
+                             textureRef = m_ExternalTextures[fullFilePath];
+                         }
+                         else
+                         {
+                             textureRef = Texture::CreateTexture(fullFilePath.string());
+                             assetRegistry.RegisterAsset(textureRef, fullFilePath.string());
+                             m_ExternalTextures[fullFilePath] = textureRef;
+                         }
+                     }
+
+                     materialRef->DescriptorSet = DescriptorSet::CreateDescriptorSet();
+                     materialRef->DescriptorSet->BeginBuildingSet();
+                     materialRef->DescriptorSet->AddDescriptorImageSampler(textureRef, ShaderStage::FRAGMENT);
+                     materialRef->DescriptorSet->EndBuildingSet();
+
+                     materialRef->VertexShader = assetRegistry.GetAsset<Shader>("Shaders/Mesh_Position_UV.vert");
+                     materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/Sample_Image.frag");
+                     materialRef->Texture = textureRef;
+
+                     LOG("Material: " << material->GetName().C_Str());
+
+                     if (shouldSerializeObjects)
+                     {
+                         std::filesystem::path filePath = destinationDir / std::filesystem::path(material->GetName().C_Str());
+
+                         filePath.replace_extension(".astmat");
+                         if (std::filesystem::exists(filePath))
+                         {
+                             filePath.replace_extension("");
+                             std::string uniqueFilePath = filePath.string();
+                             uint32 extension = 0;
+                             while (std::filesystem::exists(uniqueFilePath + '_' + std::to_string(extension) + ".astmat"))
+                             {
+                                 extension++;
+                             }
+                             filePath = uniqueFilePath + '_' + std::to_string(extension);
+                             LOG("Duplicate material name found! Serializing to " << filePath);
+                         }
+
+                         MaterialLoader::SerializeMaterial(materialRef, filePath);
+                         assetRegistry.RegisterAsset(materialRef, filePath);
+                     }
+
+                     m_Materials.push_back(materialRef);
+                 }
+             }
+         }
+
+         // Load Meshes
+         if (scene->HasMeshes())
+         {
+             m_Meshes.reserve(scene->mNumMeshes);
+             LOG("Number of meshes: " << scene->mNumMeshes)
+             for (int i = 0; i < scene->mNumMeshes; i++)
+             {
+                 aiMesh* mesh = scene->mMeshes[i];
+                 LOG("Mesh: " << mesh->mName.C_Str());
+                 Ref<Mesh> meshRef = MeshLoader::LoadMesh(mesh);
+
+                 if (shouldSerializeObjects)
+                {
+                    std::filesystem::path filePath = destinationDir / std::filesystem::path(mesh->mName.C_Str());
+                    filePath.replace_extension(".gltf");
+                    if (std::filesystem::exists(filePath))
+                    {
+                        filePath.replace_extension("");
+                        std::string uniqueFilePath = filePath.string();
+                        uint32 extension = 0;
+                        while (std::filesystem::exists(uniqueFilePath + '_' + std::to_string(extension) + ".gltf"))
+                        {
+                         extension++;
+                        }
+                        filePath = uniqueFilePath + '_' + std::to_string(extension);
+                        LOG("Duplicate mesh name found! Serializing to " << filePath);
+                    }
+
+                    MeshLoader::SerializeMesh(mesh, scene->mMaterials[mesh->mMaterialIndex], filePath);
+                    assetRegistry.RegisterAsset(meshRef, filePath);
+                }
+
+                m_Meshes.push_back(meshRef);
+            }
+        }
+
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+
+        aiNode* rootNode = scene->mRootNode;
+        std::vector<aiMatrix4x4> transforms;
+
+        LOG("Total root child nodes: " << scene->mRootNode->mNumChildren)
+        Helpers::ProcessSceneNode(scene, rootNode, m_Materials, m_Meshes);
+    }
+
 
     void Helpers::ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes)
     {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+
+
         Entity entity = ecs.CreateEntity(node->mName.C_Str());
 
         // Transform
@@ -294,6 +507,18 @@ namespace Astral::SceneLoader {
             meshComponent.Material = materials[materialIndex];
             meshComponent.MeshData = meshes[node->mMeshes[0]];
             ecs.AddComponent(entity, meshComponent);
+
+            // Create an additional entity per additional mesh in node
+            for (int i = 1; i < node->mNumMeshes; i++)
+            {
+                Entity anotherEntity = ecs.CreateEntity(node->mName.C_Str());
+                ecs.AddComponent(anotherEntity, transformComponent);
+                MeshComponent meshComponent2;
+                int materialIndex2 = scene->mMeshes[node->mMeshes[i]]->mMaterialIndex;
+                meshComponent2.Material = materials[materialIndex2];
+                meshComponent2.MeshData = meshes[node->mMeshes[i]];
+                ecs.AddComponent(anotherEntity, meshComponent2);
+            }
         }
 
         for (int i = 0; i < node->mNumChildren; i++)
@@ -310,138 +535,3 @@ namespace Astral::SceneLoader {
 
 
 
-//     void LoadSceneAssets(const std::filesystem::path& filePath)
-//     {
-//         std::string pFile = filePath.string();
-//         std::filesystem::path sceneDir = filePath.parent_path();
-//
-//
-//         Assimp::Importer importer;
-//
-//         const aiScene* scene = importer.ReadFile( pFile,
-//           aiProcess_CalcTangentSpace       |
-//           aiProcess_Triangulate            |
-//           aiProcess_JoinIdenticalVertices  |
-//           aiProcess_SortByPType            |
-//           aiProcess_FlipUVs
-//           );
-//
-//         // If the import failed, report it
-//         if (nullptr == scene)
-//         {
-//             WARN(importer.GetErrorString());
-//             return;
-//         }
-//
-//         LOG("Loading Scene: " << scene->mName.C_Str());
-//
-//         AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
-//
-//         std::vector<Ref<Texture>> m_EmbeddedTextures;
-//         std::unordered_map<std::filesystem::path, Ref<Texture>> m_ExternalTextures;
-//         std::vector<Ref<Material>> m_Materials;
-//         std::vector<Ref<Mesh>> m_Meshes;
-//
-//         // Load Embedded Textures
-//         if (scene->HasTextures())
-//         {
-//             for (int i = 0; i < scene->mNumTextures; i++)
-//             {
-//                 Ref<Texture> textureRef;
-//                 aiTexture* texture = scene->mTextures[i];
-//                 // TODO: Convert the format hint to a image format
-//                 textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM);
-//                 m_EmbeddedTextures.push_back(textureRef);
-//             }
-//         }
-//
-//         // Load Materials
-//         if (scene->HasMaterials())
-//         {
-//
-//             for (int i = 0; i < scene->mNumMaterials; i++)
-//             {
-//                 aiMaterial* material = scene->mMaterials[i];
-//                 Ref<Material> materialRef = CreateRef<Material>();
-//
-//                 // for (int j = 0; j < material->mNumProperties; j++)
-//                 // {
-//                 //     aiMaterialProperty* materialProperty = material->mProperties[j];
-//                 // }
-//
-//                 // Load just the diffuse map for now
-//                 aiString textureFilePath;
-//                 material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-//
-//
-//                 if (textureFilePath.length == 0)
-//                 {
-//                     LOG("No Diffuse. Trying base color...")
-//                     material->GetTexture(aiTextureType_BASE_COLOR, 0, &textureFilePath);
-//
-//                     if (textureFilePath.length == 0)
-//                     {
-//                         LOG("No base color. Discarding material!")
-//                         m_Materials.push_back(nullptr);
-//                         continue;
-//                     }
-//                     else
-//                     {
-//                         LOG("Base color found!")
-//                     }
-//                 }
-//
-//                 Ref<Texture> textureRef;
-//
-//                 if (textureFilePath.data[0] == '*')
-//                 {
-//                     // Embedded Texture
-//                     std::string embeddedFileID = textureFilePath.C_Str();
-//                     int embeddedTextureIndex = std::stoi(embeddedFileID.substr(1));
-//                     textureRef = m_EmbeddedTextures[embeddedTextureIndex];
-//                 }
-//                 else
-//                 {
-//                     // External Texture
-//                     std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(textureFilePath.C_Str());
-//                     if (m_ExternalTextures.contains(fullFilePath))
-//                     {
-//                         textureRef = m_ExternalTextures[fullFilePath];
-//                     }
-//                     else
-//                     {
-//                         textureRef = Texture::CreateTexture(fullFilePath.string());
-//                         m_ExternalTextures[fullFilePath] = textureRef;
-//                     }
-//                 }
-//
-//                 materialRef->DescriptorSet = DescriptorSet::CreateDescriptorSet();
-//                 materialRef->DescriptorSet->BeginBuildingSet();
-//                 materialRef->DescriptorSet->AddDescriptorImageSampler(textureRef, ShaderStage::FRAGMENT);
-//                 materialRef->DescriptorSet->EndBuildingSet();
-//
-//                 materialRef->VertexShader = assetRegistry.GetAsset<Shader>("Shaders/Mesh_Position_UV.vert");
-//                 materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/Sample_Image.frag");
-//
-//                 m_Materials.push_back(materialRef);
-//             }
-//         }
-//
-//         // Load Meshes
-//         if (scene->HasMeshes())
-//         {
-//             for (int i = 0; i < scene->mNumMeshes; i++)
-//             {
-//                 aiMesh* mesh = scene->mMeshes[i];
-//                 Ref<Mesh> meshRef = MeshLoader::LoadMesh(mesh);
-//                 m_Meshes.push_back(meshRef);
-//             }
-//         }
-//
-//         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
-//
-//         aiNode* rootNode = scene->mRootNode;
-//         std::vector<aiMatrix4x4> transforms;
-//
-//         Helpers::ProcessSceneNode(scene, rootNode, m_Materials, m_Meshes);
-//     }

@@ -29,6 +29,10 @@ namespace Astral {
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
 
+        template <typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        void RegisterAsset(Ref<AssetType> alreadyLoadedAsset, const std::filesystem::path& filePath);
+
         void LoadScene(const std::filesystem::path& filePath);
         void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 

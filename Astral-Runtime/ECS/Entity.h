@@ -11,7 +11,7 @@
 namespace Astral {
 
     using EntityID = uint32;
-    static constexpr EntityID NULL_ENTITY = 0;
+    static constexpr EntityID NULL_ENTITY = -1;
 
     class Entity
     {
@@ -21,6 +21,8 @@ namespace Astral {
 
         [[nodiscard]] EntityID GetID() const { return m_ID; }
         [[nodiscard]] std::string_view GetDebugName() const { return m_DebugName; }
+
+        bool operator==(const Entity& other) const { return m_ID == other.m_ID; }
 
     private:
 

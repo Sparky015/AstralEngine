@@ -25,12 +25,13 @@
 
 namespace Astral {
 
+    static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
+
     void RenderingSystem::RenderEntities()
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
         static float magnitude = 2;
         static Vec2 initialMousePos{};
         static Vec3 initialRotation{};
@@ -55,8 +56,8 @@ namespace Astral {
             }
 
             Vec2 currentMousePos = InputState::MousePosition();
-            float xDiff = initialMousePos.x - currentMousePos.x;
-            float yDiff = initialMousePos.y - currentMousePos.y;
+            float xDiff = (initialMousePos.x - currentMousePos.x) * .5;
+            float yDiff = (initialMousePos.y - currentMousePos.y) * .5;
 
             Vec3 newRotation = {initialRotation.x - yDiff, initialRotation.y + xDiff, initialRotation.z};
             camera.SetRotation(newRotation);
@@ -156,6 +157,12 @@ namespace Astral {
     }
 
 
+    Camera& RenderingSystem::GetCamera()
+    {
+        return camera;
+    }
+
+
     void RenderingSystem::SubmitMeshComponents()
     {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
@@ -209,13 +216,10 @@ namespace Astral {
 
     Mat4 RenderingSystem::CreateTransform(const TransformComponent& transform)
     {
-        Vec3 flippedPosition = {transform.position.x, -1 * transform.position.y, transform.position.z};
-
         Vec3 rotationInRadians = glm::radians(transform.rotation);
         Mat4 rotationMatrix = glm::eulerAngleXYZ(rotationInRadians.x, rotationInRadians.y, rotationInRadians.z);
-
         Mat4 scaleMatrix = glm::scale(Mat4(1.0f), transform.scale);
-        return glm::translate(Mat4(1.0f), flippedPosition) * rotationMatrix * scaleMatrix;
+        return glm::translate(Mat4(1.0f), transform.position) * rotationMatrix * scaleMatrix;
     }
 
 }

@@ -56,4 +56,19 @@ namespace Astral::MaterialLoader {
         return material;
     }
 
+
+    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
+    {
+        outFilePath.replace_extension(".astmat");
+
+        std::ofstream fileStream = std::ofstream(outFilePath);
+
+        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+        std::filesystem::path vertexShaderPath = registry.GetFilePathFromAssetID(material->VertexShader->GetAssetID());
+        std::filesystem::path fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID());
+        std::filesystem::path texturePath = registry.GetFilePathFromAssetID(material->Texture->GetAssetID());
+
+        fileStream << vertexShaderPath.string() << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
+    }
+
 }

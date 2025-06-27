@@ -8,6 +8,7 @@
 
 #include "Core/Math/Math.h"
 #include "ECS/Components/TransformComponent.h"
+#include "Renderer/Cameras/Camera.h"
 
 namespace Astral {
 
@@ -16,6 +17,7 @@ namespace Astral {
     public:
 
         static void RenderEntities();
+        static Camera& GetCamera();
 
     private:
 

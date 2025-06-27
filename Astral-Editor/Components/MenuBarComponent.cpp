@@ -1,10 +1,10 @@
 /**
-* @file ToolBar.cpp
+* @file MenuBarComponent.cpp
 * @author Andrew Fagan
 * @date 6/21/2025
 */
 
-#include "MenuBar.h"
+#include "MenuBarComponent.h"
 
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
@@ -13,6 +13,7 @@
 
 #include "imgui.h"
 #include "ECS/SceneManager.h"
+#include "Asset/Loaders/SceneLoader.h"
 
 namespace Astral {
 
@@ -100,6 +101,59 @@ namespace Astral {
                 }
             }
 
+            if (ImGui::MenuItem("Load and Condition 3D File with Multiple Objects"))
+            {
+                nfdu8char_t* outPath;
+                nfdu8filteritem_t filters[1] = { { "3D Object", "fbx,gltf,obj" }};
+                nfdopendialogu8args_t args = {0};
+                args.filterList = filters;
+                args.filterCount = 1;
+                // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+                nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+                if (result == NFD_OKAY)
+                {
+                    std::string outFilePath = std::string(outPath);
+                    NFD_FreePathU8(outPath);
+                    SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(outFilePath, true);
+                }
+                else if (result == NFD_CANCEL)
+                {
+                    LOG("Open File Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    WARN("NFD Error: " << NFD_GetError())
+                }
+            }
+
+            if (ImGui::MenuItem("View 3D File with Multiple Objects"))
+            {
+                nfdu8char_t* outPath;
+                nfdu8filteritem_t filters[1] = { { "3D Object", "fbx,gltf,obj" }};
+                nfdopendialogu8args_t args = {0};
+                args.filterList = filters;
+                args.filterCount = 1;
+                // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+                nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+                if (result == NFD_OKAY)
+                {
+                    std::string outFilePath = std::string(outPath);
+                    NFD_FreePathU8(outPath);
+                    SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(outFilePath, false);
+                }
+                else if (result == NFD_CANCEL)
+                {
+                    LOG("Open File Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    WARN("NFD Error: " << NFD_GetError())
+                }
+            }
 
             ImGui::EndMenu();
         }
