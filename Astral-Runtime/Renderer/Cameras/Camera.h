@@ -62,6 +62,8 @@ namespace Astral {
         Vec3 GetForwardVector() const;
         Vec3 GetLeftVector() const;
         Vec3 GetRightVector() const;
+        const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
+        const Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
     private:
 

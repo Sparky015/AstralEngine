@@ -10,7 +10,7 @@
 
 #include "Chessboard/ChessboardManager.h"
 #include "ECS/ECS.h"
-#include "ECS/ECSManager.h"
+#include "ECS/SceneManager.h"
 #include "MoveValidation.h"
 #include "ChessEntities.h"
 #include "Input/InputState.h"
@@ -81,7 +81,7 @@ namespace Game {
     {
         if (m_PieceTrackingState != PieceTrackingState::TRACKING) { return; }
 
-        Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
+        Astral::ECS& ecs = Astral::Engine::Get().GetSceneManager().GetECS();
 
         TransformComponent transformComponent = TransformComponent();
         Astral::ECS_Result result = ecs.GetComponent(m_TrackedPiece.PieceEntity, transformComponent);
@@ -98,7 +98,7 @@ namespace Game {
         SquareLocation pieceLocation = chessBoard.GetPieceLocation(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor);
         Vec2 pieceCoordinates = Game::ConvertPieceLocationToCoordinates(pieceLocation.GetRawValue());
 
-        Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
+        Astral::ECS& ecs = Astral::Engine::Get().GetSceneManager().GetECS();
 
         // TODO: Fix this temp patch and look up the window dimensions to inverse the transform
         TransformComponent transformComponent;
@@ -143,7 +143,7 @@ namespace Game {
             if (IsMoveValid(boardManager.GetBoard(), boardManager.GetMoveList(), chessMove))
             {
                 // Delete entity of taken piece
-                Astral::ECS& ecs = Astral::Engine::Get().GetECSManager().GetECS();
+                Astral::ECS& ecs = Astral::Engine::Get().GetSceneManager().GetECS();
                 ecs.DeleteEntity(ChessEntities::GetEntity(attemptedMoveLocation));
 
                 chessBoard.CapturePiece(m_TrackedPiece.PieceID, m_TrackedPiece.PieceColor, chessMove.targetLocation);

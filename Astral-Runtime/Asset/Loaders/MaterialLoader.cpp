@@ -24,7 +24,7 @@ namespace Astral::MaterialLoader {
     Ref<Asset> LoadAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("MaterialLoader::LoadAsset")
-        if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension"); }
+        if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
 
         std::ifstream fileStream = std::ifstream(filePath);
 
@@ -40,8 +40,7 @@ namespace Astral::MaterialLoader {
         Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
         Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
 
-        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
-        DescriptorSetHandle descriptorSetHandle = device.CreateDescriptorSet();
+        DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
         descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
         descriptorSetHandle->EndBuildingSet();
@@ -55,6 +54,21 @@ namespace Astral::MaterialLoader {
         material->DescriptorSet = descriptorSetHandle;
 
         return material;
+    }
+
+
+    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
+    {
+        outFilePath.replace_extension(".astmat");
+
+        std::ofstream fileStream = std::ofstream(outFilePath);
+
+        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+        std::filesystem::path vertexShaderPath = registry.GetFilePathFromAssetID(material->VertexShader->GetAssetID());
+        std::filesystem::path fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID());
+        std::filesystem::path texturePath = registry.GetFilePathFromAssetID(material->Texture->GetAssetID());
+
+        fileStream << vertexShaderPath.string() << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
     }
 
 }

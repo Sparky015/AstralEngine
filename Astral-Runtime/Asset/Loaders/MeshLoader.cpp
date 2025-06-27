@@ -13,8 +13,12 @@
 #include "Renderer/RHI/Resources/VertexBuffer.h"
 
 #include <assimp/Importer.hpp>
+#include "assimp/Exporter.hpp"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include "assimp/SceneCombiner.h"
+
 
 namespace Astral::MeshLoader {
 
@@ -45,7 +49,14 @@ namespace Astral::MeshLoader {
         if (!scene->HasMeshes()) { return nullptr; }
 
         aiMesh* mesh = scene->mMeshes[0];
+        if (scene->mNumMeshes > 1) {  WARN("Loading 3D object file with more than 1 mesh! Ignoring " << scene->mNumMeshes << " other meshes!") }
 
+        return LoadMesh(mesh);
+    }
+
+
+    Ref<Mesh> LoadMesh(aiMesh* mesh)
+    {
         std::vector<float> vertexData{};
 
         VertexBufferLayout bufferLayout = {
@@ -109,6 +120,37 @@ namespace Astral::MeshLoader {
         meshInstance.IndexBuffer = indexBuffer;
 
         return CreateRef<Mesh>(meshInstance);
+    }
+
+
+    void SerializeMesh(aiMesh* mesh, aiMaterial* material, std::filesystem::path& outFilePath)
+    {
+        ScopedPtr<aiScene> exportScene = CreateScopedPtr<aiScene>();
+        outFilePath.replace_extension(".gltf");
+
+        aiMesh** meshes = new aiMesh*[1];
+        aiMaterial** materials = new aiMaterial*[1];
+        Assimp::SceneCombiner::Copy(meshes, mesh);
+        Assimp::SceneCombiner::Copy(materials, material);
+        aiMesh* copiedMesh = meshes[0];
+
+        exportScene->mName = copiedMesh->mName;
+        exportScene->mRootNode = new aiNode(copiedMesh->mName.C_Str()); // assimp will delete the root node when the aiScene goes out of scope
+        exportScene->mNumMeshes = 1;
+        exportScene->mMeshes = meshes;
+        exportScene->mNumMaterials = 1;
+        exportScene->mMaterials = materials;
+        copiedMesh->mMaterialIndex = 0;
+        exportScene->mRootNode->mNumMeshes = 1;
+        unsigned int* meshIndex = new unsigned int[1](0);
+        exportScene->mRootNode->mMeshes = meshIndex;
+
+        Assimp::Exporter exporter;
+        exporter.Export(exportScene.get(), "gltf2", outFilePath.string().c_str(), aiProcess_CalcTangentSpace       |
+                                                                                                                      aiProcess_Triangulate            |
+                                                                                                                      aiProcess_JoinIdenticalVertices  |
+                                                                                                                      aiProcess_SortByPType            |
+                                                                                                                      aiProcess_FlipUVs);
     }
 
 }

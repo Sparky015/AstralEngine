@@ -7,9 +7,11 @@
 #include "Editor.h"
 
 #include "Debug/ImGui/ImGuiManager.h"
-#include "SceneGraphPanel.h"
-#include "ViewportPanel.h"
+#include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ViewportPanel.h"
+#include "Components/MenuBarComponent.h"
 #include "Core/Engine.h"
+#include "Panels/PropertiesPanel.h"
 
 namespace Astral {
 
@@ -37,9 +39,10 @@ namespace Astral {
 
     void Editor::UpdateEditorUI()
     {
-        ViewportPanel();
-        SceneGraphPanel();
-
+        SceneHierarchyPanel::Show();
+        ViewportPanel::Show();
+        MenuBarComponent();
+        PropertiesPanel();
     }
 
 }

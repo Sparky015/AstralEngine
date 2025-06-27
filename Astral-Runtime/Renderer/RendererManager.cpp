@@ -9,6 +9,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
 #include "RHI/RendererAPI.h"
+#include "Scenes/Scene.h"
 
 namespace Astral {
 
@@ -55,7 +56,7 @@ namespace Astral {
     void RendererManager::LoadRendererAssets()
     {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        registry.SetAssetDirectoryPath(ASTRAL_RENDERER_ASSETS_DIR);
+        registry.SetEngineAssetDirectoryPath(ASTRAL_RENDERER_ASSETS_DIR);
 
         // Materials
         registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");
@@ -73,8 +74,10 @@ namespace Astral {
         registry.CreateAsset<Texture>("Textures/SolidWhite.png");
 
         // Demo Models
-        registry.CreateAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
-        registry.CreateAsset<Material>("Models/WaterBendingGauntlet.astmat");
+        // registry.RegisterAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
+        // registry.RegisterAsset<Material>("Models/WaterBendingGauntlet.astmat");
+
+        // Demo Scene
     }
 
 }

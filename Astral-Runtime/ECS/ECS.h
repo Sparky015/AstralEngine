@@ -47,6 +47,9 @@ namespace Astral {
         /**@brief Checks if an entity is alive and in the ECS */
         bool IsEntityAlive(EntityID entityID);
 
+        /**@brief Renames the debug name of an entity to the given name */
+        void RenameEntity(Entity entity, const std::string_view& name);
+
         /**@brief Gets the number of entities that are alive. */
         uint32 GetNumberOfActiveEntities();
 
@@ -55,6 +58,12 @@ namespace Astral {
          * @param component The component being added to the entity */
         template <typename ComponentType>
         void AddComponent(Entity entity, const ComponentType& component);
+
+        /**@brief Updates a component to an entity
+         * @param entity The entity to update a component on
+         * @param component The component to update the entity with */
+        template <typename ComponentType>
+        void UpdateComponent(Entity entity, const ComponentType& component);
 
         /**@brief Retrieves the requested component of an entity.
          * @param outComponent Populates with the requested component's data
@@ -88,7 +97,7 @@ namespace Astral {
             using reference = Entity&;
             using iterator_category = std::forward_iterator_tag;
 
-            explicit Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex);
+            explicit Iterator(std::vector<bool>* entities, std::vector<std::string>& debugNames, EntityID startingIndex);
 
             value_type operator*() const;
             Iterator& operator++();
@@ -102,7 +111,7 @@ namespace Astral {
             size_t FindNextAliveEntity();
 
             std::vector<bool>* m_Entities;
-            std::vector<std::string_view>& m_EntityDebugNames;
+            std::vector<std::string>& m_EntityDebugNames;
             EntityID m_CurrentIndex;
         };
 
@@ -117,7 +126,7 @@ namespace Astral {
 
         uint32 m_NumberOfActiveEntities;
         std::vector<bool> m_Entities;
-        std::vector<std::string_view> m_EntityDebugNames;
+        std::vector<std::string> m_EntityDebugNames;
         std::stack<EntityID, std::vector<EntityID>> m_FreeEntities;
 
         /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,

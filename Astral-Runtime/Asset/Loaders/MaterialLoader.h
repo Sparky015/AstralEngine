@@ -11,8 +11,12 @@
 
 #include <filesystem>
 
+#include "Renderer/Common/Material.h"
+
 namespace Astral::MaterialLoader {
 
     Ref<Asset> LoadAsset(const std::filesystem::path& filePath);
+
+    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath);
 
 }

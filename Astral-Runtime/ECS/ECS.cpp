@@ -80,13 +80,19 @@ namespace Astral {
     }
 
 
+    void ECS::RenameEntity(Entity entity, const std::string_view& name)
+    {
+        m_EntityDebugNames[entity.GetID()] = name;
+    }
+
+
     uint32 ECS::GetNumberOfActiveEntities()
     {
         return m_NumberOfActiveEntities;
     }
 
 
-    ECS::Iterator::Iterator(std::vector<bool>* entities, std::vector<std::string_view>& debugNames, EntityID startingIndex) :
+    ECS::Iterator::Iterator(std::vector<bool>* entities, std::vector<std::string>& debugNames, EntityID startingIndex) :
         m_Entities(entities),
         m_EntityDebugNames(debugNames),
         m_CurrentIndex(startingIndex - 1)

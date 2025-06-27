@@ -7,6 +7,8 @@
 #pragma once
 
 #include "Core/Math/Math.h"
+#include "ECS/Components/TransformComponent.h"
+#include "Renderer/Cameras/Camera.h"
 
 namespace Astral {
 
@@ -15,13 +17,14 @@ namespace Astral {
     public:
 
         static void RenderEntities();
+        static Camera& GetCamera();
 
     private:
 
         static void SubmitMeshComponents();
         static void SubmitSpriteComponents();
 
-        static Mat4 CreateTransform(Vec3 position, Vec3 scale);
+        static Mat4 CreateTransform(const TransformComponent& transform);
     };
 
 
