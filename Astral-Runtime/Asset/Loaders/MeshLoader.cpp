@@ -32,6 +32,7 @@ namespace Astral::MeshLoader {
         Assimp::Importer importer;
 
         const aiScene* scene = importer.ReadFile( pFile,
+        aiProcess_GenNormals         |
           aiProcess_CalcTangentSpace       |
           aiProcess_Triangulate            |
           aiProcess_JoinIdenticalVertices  |
@@ -69,6 +70,12 @@ namespace Astral::MeshLoader {
             bufferLayout.AddAttribute({Float3, "Normals"});
         }
 
+        if (mesh->HasTangentsAndBitangents())
+        {
+            bufferLayout.AddAttribute({Float3, "Tangents"});
+            bufferLayout.AddAttribute({Float3, "Bitangents"});
+        }
+
         if (mesh->HasTextureCoords(0))
         {
             bufferLayout.AddAttribute({Float2, "UVs"});
@@ -89,6 +96,19 @@ namespace Astral::MeshLoader {
                 for (uint32 j = 0; j < 3; j++)
                 {
                     vertexData.push_back(mesh->mNormals[i][j]);
+                }
+            }
+
+            if (mesh->HasTangentsAndBitangents())
+            {
+                for (uint32 j = 0; j < 3; j++)
+                {
+                    vertexData.push_back(mesh->mTangents[i][j]);
+                }
+
+                for (uint32 j = 0; j < 3; j++)
+                {
+                    vertexData.push_back(mesh->mBitangents[i][j]);
                 }
             }
 
