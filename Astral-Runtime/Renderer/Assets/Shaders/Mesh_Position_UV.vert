@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TextureCoord;
 
-layout (set = 0, binding = 0) uniform ViewProjection { mat4 viewProjectionMat; } u_ViewProjection;
+layout (set = 0, binding = 0) uniform ViewProjection { mat4 viewProjectionMat; vec3 cameraPosition; } u_ViewProjection;
 layout (push_constant) uniform ModelTransform { mat4 transform; } u_ModelProjection;
 
 layout (location = 0) out vec2 v_TextureCoord;

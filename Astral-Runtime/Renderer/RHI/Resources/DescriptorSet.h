@@ -16,7 +16,8 @@ namespace Astral {
     enum class ShaderStage : uint8
     {
         VERTEX,
-        FRAGMENT
+        FRAGMENT,
+        ALL
     };
 
     class DescriptorSet
