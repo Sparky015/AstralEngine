@@ -13,11 +13,10 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/RendererManager.h"
-
-#include <fstream>
-
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
+
+#include <fstream>
 
 namespace Astral::MaterialLoader {
 
@@ -43,18 +42,22 @@ namespace Astral::MaterialLoader {
         std::string optional_metallic;
         std::string optional_roughness;
         std::string optional_emission;
+        std::string optional_normals;
         Ref<Texture> texture_metallic;
         Ref<Texture> texture_roughness;
         Ref<Texture> texture_emission;
+        Ref<Texture> texture_normals;
         if (!fileStream.eof())
         {
             std::getline(fileStream, optional_metallic);
             std::getline(fileStream, optional_roughness);
             std::getline(fileStream, optional_emission);
+            std::getline(fileStream, optional_normals);
 
             texture_metallic = registry.CreateAsset<Texture>(optional_metallic);
             texture_roughness = registry.CreateAsset<Texture>(optional_roughness);
             texture_emission = registry.CreateAsset<Texture>(optional_emission);
+            texture_normals = registry.CreateAsset<Texture>(optional_normals);
         }
 
 
@@ -66,14 +69,15 @@ namespace Astral::MaterialLoader {
             descriptorSetHandle->AddDescriptorImageSampler(texture_metallic, ShaderStage::FRAGMENT);
             descriptorSetHandle->AddDescriptorImageSampler(texture_roughness, ShaderStage::FRAGMENT);
             descriptorSetHandle->AddDescriptorImageSampler(texture_emission, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_normals, ShaderStage::FRAGMENT);
         }
         descriptorSetHandle->EndBuildingSet();
 
-        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
+        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().generic_string().data());
 
         Ref<Material> material = CreateRef<Material>();
         material->FragmentShader = fragmentShader;
-        material->Texture = texture;
+        material->Textures.push_back(texture);
         material->DescriptorSet = descriptorSetHandle;
 
         return material;
@@ -83,14 +87,29 @@ namespace Astral::MaterialLoader {
     void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
     {
         outFilePath.replace_extension(".astmat");
-
         std::ofstream fileStream = std::ofstream(outFilePath);
 
-        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        std::filesystem::path fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID());
-        std::filesystem::path texturePath = registry.GetFilePathFromAssetID(material->Texture->GetAssetID());
+        fileStream << ShaderModelToString(material->ShaderModel) << "\n";
 
-        fileStream << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
+
+        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+        std::string fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID()).generic_string();
+
+        fileStream << fragmentShaderPath << "\n";
+
+        ASSERT(!material->Textures.empty(), "Expected material to have at least 1 texture!")
+        std::filesystem::path baseColorPath = registry.GetFilePathFromAssetID(material->Textures[0]->GetAssetID());
+        fileStream << baseColorPath.generic_string();
+
+        if (material->ShaderModel == ShaderModel::PBR)
+        {
+            ASSERT(material->Textures.size() >= 5, "Expected PBR material to have at least 5 maps!")
+            for (int i = 1; i < material->Textures.size(); i++)
+            {
+                std::filesystem::path mapPath = registry.GetFilePathFromAssetID(material->Textures[i]->GetAssetID());
+                fileStream << mapPath.generic_string();
+            }
+        }
     }
 
 }

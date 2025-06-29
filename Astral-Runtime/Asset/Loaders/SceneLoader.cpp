@@ -21,6 +21,7 @@
 #include "ECS/SceneManager.h"
 #include "glm/detail/type_quat.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Renderer/Common/Material.h"
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/RHI/Resources/Texture.h"
@@ -160,6 +161,22 @@ namespace Astral::SceneLoader {
 
                 sceneECS.AddComponent(entity, spriteComponent);
             }
+
+            if (node->mMetaData->HasKey("PointLightComponent_Intensity"))
+            {
+                double intensity;
+                node->mMetaData->Get("PointLightComponent_Intensity", intensity);
+                double x, y, z;
+                node->mMetaData->Get("PointLightComponent_LightColor_X", x);
+                node->mMetaData->Get("PointLightComponent_LightColor_Y", y);
+                node->mMetaData->Get("PointLightComponent_LightColor_Z", z);
+
+                PointLightComponent pointLightComponent{};
+                pointLightComponent.Intensity = intensity;
+                pointLightComponent.LightColor = Vec3(x, y, z);
+
+                sceneECS.AddComponent(entity, pointLightComponent);
+            }
         }
 
     }
@@ -168,7 +185,7 @@ namespace Astral::SceneLoader {
     void SerializeScene(Scene& scene, const std::filesystem::path& filePath)
     {
         ScopedPtr<aiScene> exportScene = CreateScopedPtr<aiScene>();
-        exportScene->mName = filePath.stem().string();
+        exportScene->mName = filePath.stem().generic_string();
         ECS& ecs = scene.ECS;
 
         // Serialize external resource file paths in scene metadata
@@ -220,8 +237,8 @@ namespace Astral::SceneLoader {
                 else { materialPath = ""; }
 
                 if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
-                node->mMetaData->Add("Mesh_MeshData", aiString(meshDataPath.string())); // Could be empty strings -> ""
-                node->mMetaData->Add("Mesh_Material", aiString(materialPath.string()));
+                node->mMetaData->Add("Mesh_MeshData", aiString(meshDataPath.generic_string())); // Could be empty strings -> ""
+                node->mMetaData->Add("Mesh_Material", aiString(materialPath.generic_string()));
             }
 
             if (ecs.HasComponent<SpriteComponent>(entity))
@@ -238,8 +255,20 @@ namespace Astral::SceneLoader {
                 else { materialPath = ""; }
 
                 if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
-                node->mMetaData->Add("Sprite_MeshData", aiString(meshDataPath.string()));  // Could be empty strings -> ""
-                node->mMetaData->Add("Sprite_Material", aiString(materialPath.string()));
+                node->mMetaData->Add("Sprite_MeshData", aiString(meshDataPath.generic_string()));  // Could be empty strings -> ""
+                node->mMetaData->Add("Sprite_Material", aiString(materialPath.generic_string()));
+            }
+
+            if (ecs.HasComponent<PointLightComponent>(entity))
+            {
+                PointLightComponent pointLightComponent;
+                ecs.GetComponent(entity, pointLightComponent);
+
+                if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
+                node->mMetaData->Add("PointLightComponent_Intensity", pointLightComponent.Intensity);
+                node->mMetaData->Add("PointLightComponent_LightColor_X", pointLightComponent.LightColor.x);
+                node->mMetaData->Add("PointLightComponent_LightColor_Y", pointLightComponent.LightColor.y);
+                node->mMetaData->Add("PointLightComponent_LightColor_Z", pointLightComponent.LightColor.z);
             }
 
             exportScene->mRootNode->addChildren(1, &node);
@@ -281,15 +310,15 @@ namespace Astral::SceneLoader {
         std::filesystem::path destinationDir{};
         if (shouldSerializeObjects)
         {
-            std::string destinationDirString = sceneDir.string() + '/' + sceneFilePath.stem().string() + '/';
+            std::string destinationDirString = sceneDir.generic_string() + '/' + sceneFilePath.stem().generic_string() + '/';
             if (std::filesystem::exists(destinationDirString))
             {
                 uint32 extension = 0;
-                while (std::filesystem::exists(sceneDir.string() + '/' + sceneFilePath.stem().string() + "_" + std::to_string(extension) + '/'))
+                while (std::filesystem::exists(sceneDir.generic_string() + '/' + sceneFilePath.stem().generic_string() + "_" + std::to_string(extension) + '/'))
                 {
                     extension++;
                 }
-                destinationDirString = sceneDir.string() + '/' + sceneFilePath.stem().string() + "_" + std::to_string(extension) + '/';
+                destinationDirString = sceneDir.generic_string() + '/' + sceneFilePath.stem().generic_string() + "_" + std::to_string(extension) + '/';
                 LOG("Duplicate directory name found! Creating new directory at " << destinationDirString);
             }
             std::filesystem::create_directory(destinationDirString);
@@ -374,8 +403,8 @@ namespace Astral::SceneLoader {
                          }
                          else
                          {
-                             textureRef = Texture::CreateTexture(fullFilePath.string());
-                             assetRegistry.RegisterAsset(textureRef, fullFilePath.string());
+                             textureRef = Texture::CreateTexture(fullFilePath.generic_string());
+                             assetRegistry.RegisterAsset(textureRef, fullFilePath.generic_string());
                              m_ExternalTextures[fullFilePath] = textureRef;
                          }
                      }
@@ -385,7 +414,7 @@ namespace Astral::SceneLoader {
                      materialRef->DescriptorSet->AddDescriptorImageSampler(textureRef, ShaderStage::FRAGMENT);
                      materialRef->DescriptorSet->EndBuildingSet();
                      materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/Sample_Image.frag");
-                     materialRef->Texture = textureRef;
+                     materialRef->Textures.push_back(textureRef);
 
                      LOG("Material: " << material->GetName().C_Str());
 
@@ -397,7 +426,7 @@ namespace Astral::SceneLoader {
                          if (std::filesystem::exists(filePath))
                          {
                              filePath.replace_extension("");
-                             std::string uniqueFilePath = filePath.string();
+                             std::string uniqueFilePath = filePath.generic_string();
                              uint32 extension = 0;
                              while (std::filesystem::exists(uniqueFilePath + '_' + std::to_string(extension) + ".astmat"))
                              {
@@ -434,7 +463,7 @@ namespace Astral::SceneLoader {
                     if (std::filesystem::exists(filePath))
                     {
                         filePath.replace_extension("");
-                        std::string uniqueFilePath = filePath.string();
+                        std::string uniqueFilePath = filePath.generic_string();
                         uint32 extension = 0;
                         while (std::filesystem::exists(uniqueFilePath + '_' + std::to_string(extension) + ".gltf"))
                         {

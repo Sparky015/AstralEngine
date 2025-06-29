@@ -898,8 +898,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Models\\WaterBendingGauntlet.fbx",
-                "Mesh_Material": "Models\\WaterBendingGauntlet.astmat"
+                "Mesh_MeshData": "Models/WaterBendingGauntlet.fbx",
+                "Mesh_Material": "Models/WaterBendingGauntlet.astmat"
             }
         }
     ],
