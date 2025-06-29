@@ -162,7 +162,7 @@ namespace Astral::MeshLoader {
         exportScene->mMaterials = materials;
         copiedMesh->mMaterialIndex = 0;
         exportScene->mRootNode->mNumMeshes = 1;
-        unsigned int* meshIndex = new unsigned int[1](0);
+        unsigned int* meshIndex = new unsigned int[1];
         exportScene->mRootNode->mMeshes = meshIndex;
 
         Assimp::Exporter exporter;

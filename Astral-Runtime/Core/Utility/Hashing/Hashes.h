@@ -10,7 +10,7 @@
 
 // Forward declarations for the classes we'll need for hash specializations
 namespace Astral {
-    class VertexBufferAttribute;
+    struct VertexBufferAttribute;
     class VertexBufferLayout;
     struct PipelineStateConfiguration;
 }
