@@ -16,6 +16,7 @@ namespace Astral {
     public:
         virtual ~Buffer() = default;
 
+        virtual uint32 GetAllocatedSize() = 0;
         virtual uint32 GetUsedSize() = 0;
         virtual void MapPointer(void** cpuPtr) = 0;
         virtual void UnmapPointer() = 0;

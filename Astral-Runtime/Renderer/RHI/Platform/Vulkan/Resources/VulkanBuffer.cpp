@@ -6,15 +6,17 @@
 
 #include "VulkanBuffer.h"
 
+#include "assimp/code/AssetLib/Blender/BlenderCustomData.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
+#include "Debug/Utilities/Loggers.h"
 
 namespace Astral {
 
     VulkanBuffer::VulkanBuffer(const VulkanBufferDesc& desc) :
         m_Device(desc.Device),
         m_Usage(desc.Usage),
-        m_Size(desc.Size),
+        m_UsedMemorySize(desc.Size),
         m_DeviceMemoryProperties(desc.DeviceMemoryProperties),
         m_RequestedPropertyFlags(desc.RequestedMemoryPropertyFlags),
         m_PrimaryBuffer(),
@@ -22,14 +24,14 @@ namespace Astral {
         m_PrimaryDeviceSize(),
         m_IsDeviceMemoryMapped(false)
     {
-        CreateBuffer();
-        AllocateMemory();
+        CreateBuffer(m_UsedMemorySize, m_PrimaryBuffer);
+        m_PrimaryDeviceSize = AllocateMemory(m_PrimaryBuffer, m_PrimaryMemory);
     }
 
     VulkanBuffer::~VulkanBuffer()
     {
-        FreeMemory();
-        DestroyBuffer();
+        FreeMemory(m_PrimaryMemory);
+        DestroyBuffer(m_PrimaryBuffer);
     }
 
 
@@ -64,6 +66,8 @@ namespace Astral {
         MapPointer(&memory);
         memcpy(memory, data, size);
         UnmapPointer();
+
+        m_UsedMemorySize = size;
     }
 
 
@@ -90,6 +94,41 @@ namespace Astral {
         commandQueueHandle->WaitIdle();
     }
 
+    void VulkanBuffer::ReallocateMemory(uint32 newSize)
+    {
+        if (newSize <= m_PrimaryDeviceSize)
+        {
+            WARN("New size is less than or equal to current buffer size. Skipping reallocation!")
+            return;
+        }
+        // Creating new buffer with at least newSize bytes of device memory
+        VkBuffer newBuffer = nullptr;
+        CreateBuffer(newSize, newBuffer);
+        VkDeviceMemory newDeviceMemory = nullptr;
+        uint32 deviceBufferSize = AllocateMemory(newBuffer, newDeviceMemory);
+
+        // Copying data from current buffer to new buffer
+        void* currentBufferPtr;
+        MapPointer(&currentBufferPtr);
+
+        void* newBufferPtr;
+        VkResult result = vkMapMemory(m_Device, newDeviceMemory, 0, deviceBufferSize, 0, &newBufferPtr);
+        ASSERT(result == VK_SUCCESS, "Failed to map new memory in buffer")
+
+        memcpy(newBufferPtr, currentBufferPtr, m_UsedMemorySize);
+
+        UnmapPointer();
+        vkUnmapMemory(m_Device, newDeviceMemory);
+
+        m_PrimaryBuffer = newBuffer;
+        m_PrimaryMemory = newDeviceMemory;
+        m_PrimaryDeviceSize = deviceBufferSize;
+
+        // Cleaning up old buffer
+        FreeMemory(m_PrimaryMemory);
+        DestroyBuffer(m_PrimaryBuffer);
+    }
+
 
     VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
     {
@@ -109,26 +148,24 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::CreateBuffer()
+    void VulkanBuffer::CreateBuffer(uint32 size, VkBuffer buffer)
     {
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-            .size = m_Size,
+            .size = size,
             .usage = m_Usage,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 
-        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &m_PrimaryBuffer);
+        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &buffer);
         ASSERT(result == VK_SUCCESS, "Failed to create buffer!");
     }
 
 
-    void VulkanBuffer::AllocateMemory()
+    uint32 VulkanBuffer::AllocateMemory(VkBuffer buffer, VkDeviceMemory deviceMemory)
     {
         VkMemoryRequirements memoryRequirements = {};
-        vkGetBufferMemoryRequirements(m_Device, m_PrimaryBuffer, &memoryRequirements);
-
-        m_PrimaryDeviceSize = memoryRequirements.size;
+        vkGetBufferMemoryRequirements(m_Device, buffer, &memoryRequirements);
 
         uint32_t memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements.memoryTypeBits);
 
@@ -138,23 +175,25 @@ namespace Astral {
             .memoryTypeIndex = memoryTypeIndex
         };
 
-        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &m_PrimaryMemory);
+        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &deviceMemory);
         ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
 
-        result = vkBindBufferMemory(m_Device, m_PrimaryBuffer, m_PrimaryMemory, 0);
+        result = vkBindBufferMemory(m_Device, buffer, deviceMemory, 0);
         ASSERT(result == VK_SUCCESS, "Failed to bind buffer memory!");
+
+        return memoryRequirements.size;
     }
 
 
-    void VulkanBuffer::DestroyBuffer()
+    void VulkanBuffer::DestroyBuffer(VkBuffer buffer)
     {
         vkDestroyBuffer(m_Device, m_PrimaryBuffer, nullptr);
     }
 
 
-    void VulkanBuffer::FreeMemory()
+    void VulkanBuffer::FreeMemory(VkDeviceMemory deviceMemory)
     {
-        vkFreeMemory(m_Device, m_PrimaryMemory, nullptr);
+        vkFreeMemory(m_Device, deviceMemory, nullptr);
     }
 
 

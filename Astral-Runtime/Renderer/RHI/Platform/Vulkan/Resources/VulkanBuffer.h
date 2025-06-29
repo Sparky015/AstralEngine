@@ -39,7 +39,9 @@ namespace Astral {
 
         void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
 
-        uint32 GetUsedSize() override { return m_Size; }
+        uint32 GetAllocatedSize() override { return m_PrimaryDeviceSize; }
+        uint32 GetUsedSize() override { return m_UsedMemorySize; }
+        void ReallocateMemory(uint32 newSize);
 
         void* GetNativeHandle() override { return m_PrimaryBuffer; }
 
@@ -52,18 +54,18 @@ namespace Astral {
     private:
 
 
-        void CreateBuffer();
-        void AllocateMemory();
+        void CreateBuffer(uint32 size, VkBuffer buffer);
+        uint32 AllocateMemory(VkBuffer buffer, VkDeviceMemory deviceMemory);
 
-        void DestroyBuffer();
-        void FreeMemory();
+        void DestroyBuffer(VkBuffer buffer);
+        void FreeMemory(VkDeviceMemory deviceMemory);
 
 
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 
         VkDevice m_Device;
         VkBufferUsageFlags m_Usage;
-        uint32 m_Size;
+        uint32 m_UsedMemorySize;
         VkPhysicalDeviceMemoryProperties m_DeviceMemoryProperties;
         VkMemoryPropertyFlags m_RequestedPropertyFlags;
 
