@@ -41,7 +41,7 @@ namespace Astral {
 
         uint32 GetAllocatedSize() override { return m_PrimaryDeviceSize; }
         uint32 GetUsedSize() override { return m_UsedMemorySize; }
-        void ReallocateMemory(uint32 newSize);
+        void ReallocateMemory(uint32 newSize) override;
 
         void* GetNativeHandle() override { return m_PrimaryBuffer; }
 
@@ -54,8 +54,8 @@ namespace Astral {
     private:
 
 
-        void CreateBuffer(uint32 size, VkBuffer buffer);
-        uint32 AllocateMemory(VkBuffer buffer, VkDeviceMemory deviceMemory);
+        void CreateBuffer(uint32 size, VkBuffer* buffer);
+        uint32 AllocateMemory(VkBuffer buffer, VkDeviceMemory* deviceMemory);
 
         void DestroyBuffer(VkBuffer buffer);
         void FreeMemory(VkDeviceMemory deviceMemory);

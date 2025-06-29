@@ -24,8 +24,8 @@ namespace Astral {
         m_PrimaryDeviceSize(),
         m_IsDeviceMemoryMapped(false)
     {
-        CreateBuffer(m_UsedMemorySize, m_PrimaryBuffer);
-        m_PrimaryDeviceSize = AllocateMemory(m_PrimaryBuffer, m_PrimaryMemory);
+        CreateBuffer(m_UsedMemorySize, &m_PrimaryBuffer);
+        m_PrimaryDeviceSize = AllocateMemory(m_PrimaryBuffer, &m_PrimaryMemory);
     }
 
     VulkanBuffer::~VulkanBuffer()
@@ -103,9 +103,9 @@ namespace Astral {
         }
         // Creating new buffer with at least newSize bytes of device memory
         VkBuffer newBuffer = nullptr;
-        CreateBuffer(newSize, newBuffer);
+        CreateBuffer(newSize, &newBuffer);
         VkDeviceMemory newDeviceMemory = nullptr;
-        uint32 deviceBufferSize = AllocateMemory(newBuffer, newDeviceMemory);
+        uint32 deviceBufferSize = AllocateMemory(newBuffer, &newDeviceMemory);
 
         // Copying data from current buffer to new buffer
         void* currentBufferPtr;
@@ -148,7 +148,7 @@ namespace Astral {
     }
 
 
-    void VulkanBuffer::CreateBuffer(uint32 size, VkBuffer buffer)
+    void VulkanBuffer::CreateBuffer(uint32 size, VkBuffer* buffer)
     {
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -157,12 +157,12 @@ namespace Astral {
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 
-        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, &buffer);
+        VkResult result = vkCreateBuffer(m_Device, &bufferInfo, nullptr, buffer);
         ASSERT(result == VK_SUCCESS, "Failed to create buffer!");
     }
 
 
-    uint32 VulkanBuffer::AllocateMemory(VkBuffer buffer, VkDeviceMemory deviceMemory)
+    uint32 VulkanBuffer::AllocateMemory(VkBuffer buffer, VkDeviceMemory* deviceMemory)
     {
         VkMemoryRequirements memoryRequirements = {};
         vkGetBufferMemoryRequirements(m_Device, buffer, &memoryRequirements);
@@ -175,10 +175,10 @@ namespace Astral {
             .memoryTypeIndex = memoryTypeIndex
         };
 
-        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, &deviceMemory);
+        VkResult result = vkAllocateMemory(m_Device, &memoryAllocationInfo, nullptr, deviceMemory);
         ASSERT(result == VK_SUCCESS, "Failed to allocate memory!");
 
-        result = vkBindBufferMemory(m_Device, buffer, deviceMemory, 0);
+        result = vkBindBufferMemory(m_Device, buffer, *deviceMemory, 0);
         ASSERT(result == VK_SUCCESS, "Failed to bind buffer memory!");
 
         return memoryRequirements.size;
