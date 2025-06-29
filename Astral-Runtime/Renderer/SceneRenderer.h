@@ -14,16 +14,19 @@
 #include "RHI/Resources/Renderpass.h"
 #include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
+#include "ECS/Components/PointLightComponent.h"
 
 #include <queue>
 
+#include "ForwardRenderer.h"
 
 namespace Astral {
 
     struct SceneDescription
     {
         Camera& Camera;
-
+        std::vector<Vec3>& LightPositions;
+        std::vector<Vec3>& LightColors;
     };
 
     class SceneRenderer
@@ -39,7 +42,7 @@ namespace Astral {
 
         static DescriptorSetHandle GetViewportTexture();
         static void ResizeViewport(uint32 width, uint32 height);
-        static UVec2 GetViewportSize() { return m_RendererContext->ViewportSize; }
+        static UVec2 GetViewportSize() { return m_RendererBackend->GetViewportSize(); }
 
         static RendererDebugStats GetRendererDebugStats();
 
@@ -47,47 +50,7 @@ namespace Astral {
 
     private:
 
-        static void RenderScene();
-
-        static void ResizeImages(uint32 width, uint32 height);
-
-        struct FrameContext
-        {
-            std::vector<Mesh> Meshes;
-            std::vector<Material> Materials;
-            std::vector<Mat4> Transforms;
-            CommandBufferHandle SceneCommandBuffer;
-            FramebufferHandle SceneFramebuffer;
-            FramebufferHandle WindowFramebuffer;
-            RenderTargetHandle SceneRenderTarget;
-            BufferHandle SceneCameraBuffer;
-            DescriptorSetHandle SceneCameraDescriptorSet;
-
-            TextureHandle OffscreenRenderTarget;
-            TextureHandle OffscreenDepthBuffer;
-            DescriptorSetHandle OffscreenDescriptorSet;
-
-            std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
-            std::vector<TextureHandle> TexturesToBeFreed;
-            uint32 FramesTillFree = 2;
-        };
-
-        struct SceneRendererContext
-        {
-            std::vector<FrameContext> FrameContexts;
-            uint32 CurrentFrameIndex = -1;
-            RenderPassHandle MainRenderPass;
-            RenderPassHandle ImGuiRenderPass;
-            EventListener<FramebufferResizedEvent> WindowResizedListener{[](FramebufferResizedEvent){}};
-            EventPublisher<ViewportResizedEvent> ViewportResizedPublisher;
-            bool IsSceneStarted = false;
-            std::queue<DescriptorSetHandle> CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
-
-            UVec2 ViewportSize;
-            PipelineStateCache PipelineStateCache;
-        };
-
-        static GraphicsOwnedPtr<SceneRendererContext> m_RendererContext;
+        static GraphicsOwnedPtr<ForwardRenderer> m_RendererBackend;
     };
 
 } // Astral
