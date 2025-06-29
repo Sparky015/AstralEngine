@@ -4,10 +4,20 @@ layout(location = 0) in vec3 v_WorldPosition;
 layout (location = 1) in vec2 v_TextureCoord;
 layout (location = 2) in vec3 v_Normals;
 
+layout (set = 0, binding = 0) uniform SceneData {
+    mat4 cameraViewProjection;
+    vec3 cameraPosition;
+    vec3 lightPosition;
+    vec3 lightColor;
+} u_SceneData;
+
 layout (set = 1, binding = 0) uniform sampler2D u_BaseColor;
 layout (set = 1, binding = 1) uniform sampler2D u_Metallic;
 layout (set = 1, binding = 2) uniform sampler2D u_Roughness;
 layout (set = 1, binding = 3) uniform sampler2D u_Emission;
+layout (set = 1, binding = 4) uniform sampler2D u_Normals;
+
+layout (push_constant) uniform ModelTransform { mat4 transform; } u_ModelProjection;
 
 layout(location = 0) out vec4 color;
 
@@ -55,10 +65,13 @@ void main()
     vec3 metallic = texture(u_Metallic, v_TextureCoord).rgb;
     float roughness = texture(u_Roughness, v_TextureCoord).r;
     vec3 emission = texture(u_Emission, v_TextureCoord).rgb;
+    vec3 normal = texture(u_Normals, v_TextureCoord).rgb;
+    normal = mat3(u_ModelProjection.transform) * normal;
 
-    vec3 cameraPosition = vec3(0.0f, 130.0f, 800.0f);
-    vec3 lightPosition = vec3(-69.0f, 160.0f, 433.0f);
-    vec3 lightColor = vec3(7.0f, 7.0f, 7.0f);
+    vec3 cameraPosition = u_SceneData.cameraPosition;
+    vec3 lightPosition = u_SceneData.lightPosition;
+    lightPosition.x = lightPosition.x * -1;
+    vec3 lightColor = u_SceneData.lightColor;
 
     // Vectors
     vec3 N = normalize(v_Normals);
@@ -83,7 +96,6 @@ void main()
 
     vec3 BRDF = Kd * lambert + cookTorrance;
     vec3 outgoingLight = emission + BRDF * lightColor * max(dot(L, N), 0.0);
-
 
     color = vec4(outgoingLight, 1.0f);
 }

@@ -143,15 +143,21 @@ namespace Astral {
         }
 
 
+        std::vector<Vec3> lightPositions;
+        std::vector<Vec3> lightColors;
+        GetPointLightComponents(lightPositions, lightColors);
 
         SceneDescription sceneDescription = {
             .Camera = camera,
+            .LightPositions = lightPositions,
+            .LightColors = lightColors,
         };
+
 
         SceneRenderer::BeginScene(sceneDescription);
 
-        SubmitSpriteComponents(); // TODO: Flip this back when a pipeline abstraction is made
         SubmitMeshComponents();
+        SubmitSpriteComponents();
 
         SceneRenderer::EndScene();
     }
@@ -210,6 +216,28 @@ namespace Astral {
             Mat4 modelTransform = CreateTransform(transformComponent);
 
             SceneRenderer::Submit(*spriteComponent.MeshData, *spriteComponent.Material, modelTransform);
+        }
+    }
+
+    void RenderingSystem::GetPointLightComponents(std::vector<Vec3>& outLightPositions, std::vector<Vec3>& outLightColor)
+    {
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+        const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
+        const ECS::ComponentView<PointLightComponent>& pointLightDisplay = ecs.GetView<PointLightComponent>();
+
+        for (Entity entity : ecs)
+        {
+            if (!ecs.HasComponent<PointLightComponent>(entity)) { continue; }
+            EntityID entityID = entity.GetID();
+
+            const TransformComponent& transformComponent = transformDisplay[entityID];
+            const PointLightComponent& pointLightComponent = pointLightDisplay[entityID];
+
+            if (pointLightComponent.Intensity == 0) { continue; }
+            if (pointLightComponent.LightColor == Vec3(0.0f)) { continue; }
+
+            outLightPositions.push_back(transformComponent.position);
+            outLightColor.push_back(pointLightComponent.LightColor * pointLightComponent.Intensity);
         }
     }
 

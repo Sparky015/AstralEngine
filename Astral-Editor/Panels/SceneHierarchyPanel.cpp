@@ -40,6 +40,17 @@ namespace Astral {
                 ecs.AddComponent(entity, transformComponent);
             }
 
+            if (ImGui::MenuItem("Rename Entity"))
+            {
+                entityToBeRenamed = selectedEntity;
+                openEntityRenamePopup = true;
+            }
+
+            if (ImGui::MenuItem("Delete Entity") || ImGui::IsKeyDown(ImGuiKey_Delete))
+            {
+                ecs.DeleteEntity(selectedEntity);
+            }
+
             ImGui::EndPopup();
         }
 
@@ -54,24 +65,6 @@ namespace Astral {
             if (ImGui::Selectable(entity.GetDebugName().data(), selectedEntity == entity))
             {
                 selectedEntity = entity;
-
-                if (ImGui::BeginPopupContextItem("##EntityAddComponentPopUp"))
-                {
-
-
-                    if (ImGui::MenuItem("Rename Entity"))
-                    {
-                        entityToBeRenamed = entity;
-                        openEntityRenamePopup = true;
-                    }
-
-                    if (ImGui::MenuItem("Delete Entity") || ImGui::IsKeyDown(ImGuiKey_Delete))
-                    {
-                        ecs.DeleteEntity(entity);
-                    }
-
-                    ImGui::EndPopup();
-                }
 
                 if (ecs.HasComponent<TransformComponent>(entity))
                 {
