@@ -1,7 +1,7 @@
 {
     "asset": {
         "version": "2.0",
-        "generator": "Open Asset Import Library (assimp v6.0.ad6e8e21)"
+        "generator": "Open Asset Import Library (assimp v6.0.b447485c)"
     },
     "extensionsUsed": [
         "FB_ngon_encoding"
@@ -442,8 +442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_00.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_00.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -467,8 +467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_01.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_01.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -492,8 +492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_03.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__298.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_03.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__298.astmat"
             }
         },
         {
@@ -517,8 +517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_05.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_05.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -542,8 +542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_06.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_06.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -567,8 +567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_07.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_07.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -592,8 +592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_08.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_08.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -617,8 +617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_09.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_09.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -642,8 +642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_10.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_10.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -667,8 +667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_11.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_11.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -692,8 +692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_12.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_12.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -717,8 +717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_13.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_13.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -742,8 +742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_14.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_14.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -767,8 +767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_15.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_15.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -792,8 +792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_16.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_16.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -817,8 +817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_17.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_17.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -842,8 +842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_18.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\floor.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_18.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/floor.astmat"
             }
         },
         {
@@ -867,8 +867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_19.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_19.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -892,8 +892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_20.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_20.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -917,8 +917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_21.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_21.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -942,8 +942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_22.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_22.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -967,8 +967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_23.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_23.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -992,8 +992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_24.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_24.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1017,8 +1017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_25.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_25.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1042,8 +1042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_26.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_26.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1067,8 +1067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_27.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_27.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1092,8 +1092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_28.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_28.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1117,8 +1117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_29.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_29.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1142,8 +1142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_30.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_30.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1167,8 +1167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_31.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_31.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1192,8 +1192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_32.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_32.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1217,8 +1217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_33.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_33.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -1242,8 +1242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_34.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_34.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -1267,8 +1267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_35.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_35.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1292,8 +1292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_36.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_36.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -1317,8 +1317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_37.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_37.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1342,8 +1342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_38.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_38.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1367,8 +1367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_39.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_39.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1392,8 +1392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_40.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_40.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1417,8 +1417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_41.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_41.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1442,8 +1442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_42.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_42.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1467,8 +1467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_43.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_43.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1492,8 +1492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_44.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_44.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1517,8 +1517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_45.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_45.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1542,8 +1542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_46.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_46.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1567,8 +1567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_47.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_47.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1592,8 +1592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_48.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_48.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1617,8 +1617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_49.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_49.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1642,8 +1642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_50.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_50.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1667,8 +1667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_51.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_51.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1692,8 +1692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_52.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_52.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1717,8 +1717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_53.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_53.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1742,8 +1742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_54.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\ceiling.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_54.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/ceiling.astmat"
             }
         },
         {
@@ -1767,8 +1767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_55.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_55.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1792,8 +1792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_56.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_56.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1817,8 +1817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_57.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_57.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1842,8 +1842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_58.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_58.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1867,8 +1867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_59.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_59.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1892,8 +1892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_60.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_60.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1917,8 +1917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_61.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_61.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1942,8 +1942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_62.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_62.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1967,8 +1967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_63.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_63.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -1992,8 +1992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_64.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_64.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -2017,8 +2017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_65.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_65.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -2042,8 +2042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_66.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_66.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -2067,8 +2067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_67.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_67.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -2092,8 +2092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_68.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_68.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -2117,8 +2117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_69.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_69.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -2142,8 +2142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_70.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\details.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_70.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/details.astmat"
             }
         },
         {
@@ -2167,8 +2167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_71.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\details.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_71.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/details.astmat"
             }
         },
         {
@@ -2192,8 +2192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_72.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\details.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_72.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/details.astmat"
             }
         },
         {
@@ -2217,8 +2217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_73.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\details.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_73.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/details.astmat"
             }
         },
         {
@@ -2242,8 +2242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_74.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\details.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_74.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/details.astmat"
             }
         },
         {
@@ -2267,8 +2267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_75.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_75.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -2292,8 +2292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_76.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_76.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2317,8 +2317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_77.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_77.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2342,8 +2342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_78.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_78.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2367,8 +2367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_79.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_79.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2392,8 +2392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_80.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_80.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2417,8 +2417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_81.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_81.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2442,8 +2442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_82.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_82.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2467,8 +2467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_83.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_83.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2492,8 +2492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_84.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_84.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2517,8 +2517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_85.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_85.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2542,8 +2542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_86.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_86.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2567,8 +2567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_87.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_87.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2592,8 +2592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_88.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_88.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2617,8 +2617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_89.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_89.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2642,8 +2642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_90.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_90.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2667,8 +2667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_91.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_91.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2692,8 +2692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_92.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_92.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2717,8 +2717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_93.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_93.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2742,8 +2742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_94.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_94.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2767,8 +2767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_95.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_95.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2792,8 +2792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_96.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_96.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2817,8 +2817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_97.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_97.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2842,8 +2842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_98.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_98.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2867,8 +2867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_99.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_99.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2892,8 +2892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_100.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_100.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2917,8 +2917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_101.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_101.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2942,8 +2942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_102.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_102.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2967,8 +2967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_103.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_103.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -2992,8 +2992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_104.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_104.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3017,8 +3017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_105.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_105.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3042,8 +3042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_106.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_106.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3067,8 +3067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_107.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_107.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3092,8 +3092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_108.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_108.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3117,8 +3117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_109.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_109.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3142,8 +3142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_110.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_110.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3167,8 +3167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_111.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_111.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3192,8 +3192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_112.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_112.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3217,8 +3217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_113.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_113.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3242,8 +3242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_114.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_114.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3267,8 +3267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_115.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_115.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_c.astmat"
             }
         },
         {
@@ -3292,8 +3292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_116.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_116.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -3317,8 +3317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_117.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\floor.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_117.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/floor.astmat"
             }
         },
         {
@@ -3342,8 +3342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_118.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_118.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -3367,8 +3367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_119.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_119.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -3392,8 +3392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_120.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_120.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -3417,8 +3417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_121.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_121.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_a.astmat"
             }
         },
         {
@@ -3442,8 +3442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_122.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_122.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -3467,8 +3467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_123.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_123.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -3492,8 +3492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_124.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\arch.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_124.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/arch.astmat"
             }
         },
         {
@@ -3517,8 +3517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_125.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_125.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3542,8 +3542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_126.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_126.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3567,8 +3567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_127.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_127.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3592,8 +3592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_128.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_128.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3617,8 +3617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_129.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_129.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3642,8 +3642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_130.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_130.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3667,8 +3667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_131.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_131.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3692,8 +3692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_132.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_132.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3717,8 +3717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_133.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_133.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3742,8 +3742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_134.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_134.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3767,8 +3767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_135.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_135.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3792,8 +3792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_136.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_136.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3817,8 +3817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_137.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_137.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3842,8 +3842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_138.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_138.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3867,8 +3867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_139.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_139.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3892,8 +3892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_140.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_140.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3917,8 +3917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_141.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_141.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3942,8 +3942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_142.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_142.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3967,8 +3967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_143.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_143.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -3992,8 +3992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_144.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_144.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4017,8 +4017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_145.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_145.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4042,8 +4042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_146.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_146.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4067,8 +4067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_147.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_147.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4092,8 +4092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_148.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_148.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4117,8 +4117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_149.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_149.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4142,8 +4142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_150.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_150.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4167,8 +4167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_151.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_151.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4192,8 +4192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_152.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_152.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4217,8 +4217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_153.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_153.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4242,8 +4242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_154.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_154.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4267,8 +4267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_155.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_155.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4292,8 +4292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_156.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_156.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4317,8 +4317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_157.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_157.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4342,8 +4342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_158.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_158.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4367,8 +4367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_159.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_159.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4392,8 +4392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_160.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_160.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4417,8 +4417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_161.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_161.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4442,8 +4442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_162.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_162.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4467,8 +4467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_163.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_163.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4492,8 +4492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_164.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_164.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4517,8 +4517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_165.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_165.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4542,8 +4542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_166.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_166.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4567,8 +4567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_167.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_167.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4592,8 +4592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_168.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_168.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4617,8 +4617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_169.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_169.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4642,8 +4642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_170.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_170.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4667,8 +4667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_171.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_171.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4692,8 +4692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_172.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_172.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4717,8 +4717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_173.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_173.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4742,8 +4742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_174.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_174.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4767,8 +4767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_175.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_175.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4792,8 +4792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_176.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_176.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4817,8 +4817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_177.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_177.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4842,8 +4842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_178.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_178.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4867,8 +4867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_179.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_179.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4892,8 +4892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_180.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_180.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4917,8 +4917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_181.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_181.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4942,8 +4942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_182.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_182.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4967,8 +4967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_183.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_183.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -4992,8 +4992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_184.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_184.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5017,8 +5017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_185.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_185.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5042,8 +5042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_186.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_186.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5067,8 +5067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_187.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_187.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5092,8 +5092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_188.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_188.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5117,8 +5117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_189.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_189.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5142,8 +5142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_190.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_190.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5167,8 +5167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_191.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_191.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5192,8 +5192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_192.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_192.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5217,8 +5217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_193.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_193.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5242,8 +5242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_194.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_194.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5267,8 +5267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_195.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_195.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5292,8 +5292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_196.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_196.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5317,8 +5317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_197.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_197.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5342,8 +5342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_198.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_198.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5367,8 +5367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_199.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_199.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5392,8 +5392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_200.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_200.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5417,8 +5417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_201.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_201.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5442,8 +5442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_202.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_202.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5467,8 +5467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_203.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_203.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5492,8 +5492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_204.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_204.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5517,8 +5517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_205.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_205.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5542,8 +5542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_206.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_206.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5567,8 +5567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_207.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_207.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5592,8 +5592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_208.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_208.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5617,8 +5617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_209.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_209.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5642,8 +5642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_210.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_210.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5667,8 +5667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_211.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_211.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5692,8 +5692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_212.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_212.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5717,8 +5717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_213.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_213.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5742,8 +5742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_214.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_214.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5767,8 +5767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_215.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_215.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5792,8 +5792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_216.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_216.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5817,8 +5817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_217.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_217.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5842,8 +5842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_218.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_218.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5867,8 +5867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_219.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_219.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5892,8 +5892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_220.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_220.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5917,8 +5917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_221.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_221.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5942,8 +5942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_222.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_222.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5967,8 +5967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_223.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_223.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -5992,8 +5992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_224.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_224.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6017,8 +6017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_225.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_225.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6042,8 +6042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_226.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_226.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6067,8 +6067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_227.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_227.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6092,8 +6092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_228.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_228.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6117,8 +6117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_229.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_229.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6142,8 +6142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_230.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_230.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6167,8 +6167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_231.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_231.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6192,8 +6192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_232.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_232.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6217,8 +6217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_233.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_233.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6242,8 +6242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_234.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_234.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6267,8 +6267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_235.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_235.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6292,8 +6292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_236.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_236.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6317,8 +6317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_237.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_237.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6342,8 +6342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_238.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_238.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6367,8 +6367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_239.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_239.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6392,8 +6392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_240.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_240.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6417,8 +6417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_241.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_241.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6442,8 +6442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_242.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_242.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6467,8 +6467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_243.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_243.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6492,8 +6492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_244.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_244.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6517,8 +6517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_245.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_245.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6542,8 +6542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_246.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_246.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6567,8 +6567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_247.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_247.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6592,8 +6592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_248.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_248.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6617,8 +6617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_249.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_249.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6642,8 +6642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_250.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_250.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6667,8 +6667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_251.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_251.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6692,8 +6692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_252.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_252.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6717,8 +6717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_253.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_253.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6742,8 +6742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_254.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_254.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6767,8 +6767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_255.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_255.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6792,8 +6792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_256.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\column_b.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_256.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/column_b.astmat"
             }
         },
         {
@@ -6817,7 +6817,7 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_257.gltf",
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_257.gltf",
                 "Mesh_Material": "Materials/MissingMaterial.astmat"
             }
         },
@@ -6842,8 +6842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_258.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_258.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -6867,8 +6867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_259.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_259.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -6892,8 +6892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_260.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_260.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -6917,8 +6917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_261.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_261.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -6942,8 +6942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_262.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_262.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -6967,8 +6967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_263.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_263.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -6992,8 +6992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_264.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_264.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7017,8 +7017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_265.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_265.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7042,8 +7042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_266.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_266.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7067,8 +7067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_267.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_267.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7092,8 +7092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_268.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_268.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7117,8 +7117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_269.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_269.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7142,8 +7142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_270.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_270.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7167,8 +7167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_271.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_271.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7192,8 +7192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_272.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_272.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7217,8 +7217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_273.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_273.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7242,8 +7242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_274.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_274.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7267,8 +7267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_275.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_275.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7292,8 +7292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_276.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_276.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7317,8 +7317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_277.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_277.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7342,8 +7342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_278.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_278.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7367,8 +7367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_279.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_279.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7392,8 +7392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_280.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_280.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7417,8 +7417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_281.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\leaf.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_281.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/leaf.astmat"
             }
         },
         {
@@ -7442,8 +7442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_282.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_e.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_282.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_e.astmat"
             }
         },
         {
@@ -7467,8 +7467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_283.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_d.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_283.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_d.astmat"
             }
         },
         {
@@ -7492,8 +7492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_284.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_284.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_a.astmat"
             }
         },
         {
@@ -7517,8 +7517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_285.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_e.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_285.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_e.astmat"
             }
         },
         {
@@ -7542,8 +7542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_286.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_d.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_286.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_d.astmat"
             }
         },
         {
@@ -7567,8 +7567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_287.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_e.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_287.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_e.astmat"
             }
         },
         {
@@ -7592,8 +7592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_288.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_a.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_288.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_a.astmat"
             }
         },
         {
@@ -7617,8 +7617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_289.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_d.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_289.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_d.astmat"
             }
         },
         {
@@ -7642,8 +7642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_290.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_290.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7667,8 +7667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_291.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_291.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7692,8 +7692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_292.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_292.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7717,8 +7717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_293.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_293.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7742,8 +7742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_294.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_294.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7767,8 +7767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_295.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_295.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7792,8 +7792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_296.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_296.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7817,8 +7817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_297.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_297.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7842,8 +7842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_298.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_298.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7867,8 +7867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_299.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_299.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7892,8 +7892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_300.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_300.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7917,8 +7917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_301.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_301.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7942,8 +7942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_302.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_302.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7967,8 +7967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_303.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_303.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -7992,8 +7992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_304.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_304.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8017,8 +8017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_305.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_305.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8042,8 +8042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_306.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_306.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8067,8 +8067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_307.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_307.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8092,8 +8092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_308.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_308.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8117,8 +8117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_309.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_309.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8142,8 +8142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_310.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_310.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8167,8 +8167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_311.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_311.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8192,8 +8192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_312.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_312.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8217,8 +8217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_313.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_313.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8242,8 +8242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_314.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_314.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8267,8 +8267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_315.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_315.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8292,8 +8292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_316.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_316.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8317,8 +8317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_317.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_317.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8342,8 +8342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_318.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_318.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8367,8 +8367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_319.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\flagpole.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_319.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/flagpole.astmat"
             }
         },
         {
@@ -8392,8 +8392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_320.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_g.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_320.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_g.astmat"
             }
         },
         {
@@ -8417,8 +8417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_321.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_321.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_c.astmat"
             }
         },
         {
@@ -8442,8 +8442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_322.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_f.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_322.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_f.astmat"
             }
         },
         {
@@ -8467,8 +8467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_323.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_323.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_c.astmat"
             }
         },
         {
@@ -8492,8 +8492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_324.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_f.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_324.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_f.astmat"
             }
         },
         {
@@ -8517,8 +8517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_325.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_325.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_c.astmat"
             }
         },
         {
@@ -8542,8 +8542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_326.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_g.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_326.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_g.astmat"
             }
         },
         {
@@ -8567,8 +8567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_327.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_f.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_327.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_f.astmat"
             }
         },
         {
@@ -8592,8 +8592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_328.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_c.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_328.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_c.astmat"
             }
         },
         {
@@ -8617,8 +8617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_329.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\fabric_g.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_329.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/fabric_g.astmat"
             }
         },
         {
@@ -8642,8 +8642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_330.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_330.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8667,8 +8667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_331.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_331.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8692,8 +8692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_332.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_332.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8717,8 +8717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_333.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_333.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8742,8 +8742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_334.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_334.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8767,8 +8767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_335.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_335.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8792,8 +8792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_336.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_336.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8817,8 +8817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_337.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_337.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8842,8 +8842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_338.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_338.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8867,8 +8867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_339.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_339.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8892,8 +8892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_340.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_340.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8917,8 +8917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_341.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_341.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8942,8 +8942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_342.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_342.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -8967,8 +8967,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_343.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_343.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -8992,8 +8992,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_344.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_344.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9017,8 +9017,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_345.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_345.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9042,8 +9042,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_346.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_346.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9067,8 +9067,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_347.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_347.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9092,8 +9092,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_348.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_348.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9117,8 +9117,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_349.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_349.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9142,8 +9142,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_350.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_350.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9167,8 +9167,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_351.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_351.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9192,8 +9192,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_352.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_352.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9217,8 +9217,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_353.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_353.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9242,8 +9242,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_354.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_354.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9267,8 +9267,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_355.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_355.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9292,8 +9292,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_356.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_356.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9317,8 +9317,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_357.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_357.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9342,8 +9342,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_358.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_358.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9367,8 +9367,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_359.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_359.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9392,8 +9392,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_360.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\chain.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_360.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/chain.astmat"
             }
         },
         {
@@ -9417,8 +9417,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_361.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_361.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9442,8 +9442,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_362.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_362.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9467,8 +9467,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_363.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_363.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9492,8 +9492,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_364.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_364.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9517,8 +9517,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_365.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase_hanging.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_365.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase_hanging.astmat"
             }
         },
         {
@@ -9542,8 +9542,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_366.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_366.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9567,8 +9567,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_367.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_367.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9592,8 +9592,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_368.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_368.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9617,8 +9617,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_369.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_369.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9642,8 +9642,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_370.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_370.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9667,8 +9667,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_371.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_371.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9692,8 +9692,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_372.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__57.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_372.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__57.astmat"
             }
         },
         {
@@ -9717,8 +9717,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_373.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_373.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase.astmat"
             }
         },
         {
@@ -9742,8 +9742,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_374.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_374.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase.astmat"
             }
         },
         {
@@ -9767,8 +9767,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_375.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_375.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase.astmat"
             }
         },
         {
@@ -9792,8 +9792,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_376.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\vase.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_376.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/vase.astmat"
             }
         },
         {
@@ -9817,8 +9817,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_377.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__25.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_377.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__25.astmat"
             }
         },
         {
@@ -9842,8 +9842,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_378.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\Material__25.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_378.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/Material__25.astmat"
             }
         },
         {
@@ -9867,8 +9867,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_379.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_379.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         },
         {
@@ -9892,8 +9892,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_380.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\roof.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_380.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/roof.astmat"
             }
         },
         {
@@ -9917,8 +9917,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_381.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\roof.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_381.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/roof.astmat"
             }
         },
         {
@@ -9942,8 +9942,8 @@
                 1.0
             ],
             "extras": {
-                "Mesh_MeshData": "Scenes\\Sponza\\sponza\\sponza_382.gltf",
-                "Mesh_Material": "Scenes\\Sponza\\sponza\\bricks.astmat"
+                "Mesh_MeshData": "Scenes/Sponza/sponza/sponza_382.gltf",
+                "Mesh_Material": "Scenes/Sponza/sponza/bricks.astmat"
             }
         }
     ],
