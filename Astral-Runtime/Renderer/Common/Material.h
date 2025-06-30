@@ -26,6 +26,7 @@ namespace Astral {
         Ref<Shader> FragmentShader;
         std::vector<Ref<Texture>> Textures;
         DescriptorSetHandle DescriptorSet;
+        bool HasNormalMap;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::Material; }

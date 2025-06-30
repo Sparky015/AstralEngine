@@ -27,7 +27,10 @@ layout (set = 1, binding = 2) uniform sampler2D u_Roughness;
 layout (set = 1, binding = 3) uniform sampler2D u_Emission;
 layout (set = 1, binding = 4) uniform sampler2D u_Normals;
 
-layout (push_constant) uniform ModelTransform { mat4 transform; } u_ModelProjection;
+layout (push_constant) uniform ModelData {
+    mat4 transform;
+    bool hasNormalMap;
+} u_ModelData;
 
 layout(location = 0) out vec4 color;
 
@@ -77,22 +80,32 @@ void main()
     vec3 emission = texture(u_Emission, v_TextureCoord).rgb;
     vec3 tangentSpaceNormal = texture(u_Normals, v_TextureCoord).rgb;
 
-    tangentSpaceNormal = normalize(tangentSpaceNormal * 2.0 - 1.0); // Convert from [0, 1] to [-1, 1] and normalize
-    vec3 N = normalize(v_Normals);
-    vec3 T = normalize(v_Tangents);
-    vec3 B = normalize(v_Bitangents);
-    T = normalize(T - N * dot(N, T));
-    B = cross(N, T);
-    mat3 TBN = mat3(T, B, N);
-    vec3 normal = normalize(TBN * tangentSpaceNormal);
+    vec3 normal = v_Normals;
+
+    if (u_ModelData.hasNormalMap)
+    {
+        tangentSpaceNormal = normalize(tangentSpaceNormal * 2.0 - 1.0); // Convert from [0, 1] to [-1, 1] and normalize
+        vec3 N = normalize(v_Normals);
+        vec3 T = normalize(v_Tangents);
+        vec3 B = normalize(v_Bitangents);
+        T = normalize(T - N * dot(N, T));
+        B = cross(N, T);
+        mat3 TBN = mat3(T, B, N);
+        normal = normalize(TBN * tangentSpaceNormal);
+    }
 
     vec3 cameraPosition = u_SceneData.cameraPosition;
     vec3 finalLight = vec3(0.0f);
 
+    if (u_SceneData.numLights == 0)
+    {
+        color = vec4(emission, 1.0f);
+    }
+
     for (int i = 0; i < u_SceneData.numLights; i++)
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
-        lightPosition.x = lightPosition.x * -1;
+        //lightPosition.x = lightPosition.x * -1;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
 
         // Vectors

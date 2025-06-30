@@ -314,7 +314,12 @@ namespace Astral {
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, glm::value_ptr(frameContext.Transforms[i]), sizeof(Mat4));
+            PushConstant pushConstant = {
+                .ModelMatrix = frameContext.Transforms[i],
+                .HasNormalMap = material.HasNormalMap
+            };
+
+            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstant, sizeof(PushConstant));
 
             pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
             pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);

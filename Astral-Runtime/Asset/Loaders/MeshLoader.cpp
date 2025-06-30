@@ -150,7 +150,8 @@ namespace Astral::MeshLoader {
         }
         else
         {
-            ASTRAL_ERROR("Unknown mesh data combination needed to pick vertex shader!")
+            WARN("Unknown mesh data combination needed to pick vertex shader!")
+            return nullptr;
         }
 
         Mesh meshInstance{};
@@ -183,6 +184,7 @@ namespace Astral::MeshLoader {
         copiedMesh->mMaterialIndex = 0;
         exportScene->mRootNode->mNumMeshes = 1;
         unsigned int* meshIndex = new unsigned int[1];
+        *meshIndex = 0;
         exportScene->mRootNode->mMeshes = meshIndex;
 
         Assimp::Exporter exporter;

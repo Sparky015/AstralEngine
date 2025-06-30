@@ -85,7 +85,7 @@ namespace Astral {
     {
         for (const VkPresentModeKHR& mode : presentModes)
         {
-            if (mode == VK_PRESENT_MODE_MAILBOX_KHR)
+            if (mode == VK_PRESENT_MODE_MAILBOX_KHR) // <-- vsync off   // VK_PRESENT_MODE_FIFO_KHR) // <-- vsync on
             {
                 return mode;
             }

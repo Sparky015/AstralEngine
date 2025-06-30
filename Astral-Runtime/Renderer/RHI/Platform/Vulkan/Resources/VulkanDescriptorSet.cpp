@@ -107,6 +107,8 @@ namespace Astral {
 
     void VulkanDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage)
     {
+        ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
+
         VkShaderStageFlags stageFlags;
         if (bindStage == ShaderStage::VERTEX)
         {

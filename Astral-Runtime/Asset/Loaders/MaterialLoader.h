@@ -11,12 +11,20 @@
 
 #include <filesystem>
 
+#include "assimp/material.h"
 #include "Renderer/Common/Material.h"
 
-namespace Astral::MaterialLoader {
+namespace Astral {
 
-    Ref<Asset> LoadAsset(const std::filesystem::path& filePath);
+    class MaterialLoader
+    {
+    public:
+        static Ref<Asset> LoadAsset(const std::filesystem::path& filePath);
 
-    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath);
+        static void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath);
+    };
+
+
+
 
 }

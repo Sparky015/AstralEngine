@@ -18,9 +18,9 @@
 
 #include <fstream>
 
-namespace Astral::MaterialLoader {
+namespace Astral {
 
-    Ref<Asset> LoadAsset(const std::filesystem::path& filePath)
+    Ref<Asset> MaterialLoader::LoadAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("MaterialLoader::LoadAsset")
         if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
@@ -87,7 +87,7 @@ namespace Astral::MaterialLoader {
     }
 
 
-    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
+    void MaterialLoader::SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
     {
         outFilePath.replace_extension(".astmat");
         std::ofstream fileStream = std::ofstream(outFilePath);
@@ -110,7 +110,7 @@ namespace Astral::MaterialLoader {
             for (int i = 1; i < material->Textures.size(); i++)
             {
                 std::filesystem::path mapPath = registry.GetFilePathFromAssetID(material->Textures[i]->GetAssetID());
-                fileStream << mapPath.generic_string();
+                fileStream << mapPath.generic_string() << "\n";
             }
         }
     }

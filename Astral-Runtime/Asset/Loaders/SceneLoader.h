@@ -16,16 +16,32 @@
 #include "Scenes/Scene.h"
 
 
-namespace Astral::SceneLoader {
+namespace Astral {
 
-    void LoadSceneAssets(const std::filesystem::path& sceneFilePath);
-    void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
+    class SceneLoader
+    {
+    public:
 
-    namespace Helpers {
+        static void LoadSceneAssets(const std::filesystem::path& sceneFilePath);
+        static void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
-        void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);
-        void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
 
-    }
+        struct Helpers
+        {
+            static void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);
+            static void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
+        };
+
+    private:
+
+        static Ref<Material> LoadMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+                                          path& sceneDir);
+        static Ref<Texture> GetTexture(aiString& filePath, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+                                          path& sceneDir);
+    };
+
+
+
+
 
 }
