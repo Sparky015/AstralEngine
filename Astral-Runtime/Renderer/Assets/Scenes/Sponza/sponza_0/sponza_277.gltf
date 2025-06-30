@@ -1,0 +1,201 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.b447485c)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "KHR_materials_ior",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1577,
+            "type": "VEC3",
+            "max": [
+                -587.9343872070313,
+                222.71640014648438,
+                -244.65980529785156
+            ],
+            "min": [
+                -653.2003173828125,
+                2.2250738585072014e-308,
+                -299.4366149902344
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1577,
+            "type": "VEC3",
+            "max": [
+                0.9996811747550964,
+                0.9993023872375488,
+                0.9997496008872986
+            ],
+            "min": [
+                -0.9997813105583191,
+                -0.9969444870948792,
+                -0.9706435203552246
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1577,
+            "type": "VEC3",
+            "max": [
+                0.9989440441131592,
+                0.9998201131820679,
+                0.9727694392204285
+            ],
+            "min": [
+                -0.998275876045227,
+                -0.999999463558197,
+                -0.998452365398407
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1577,
+            "type": "VEC2",
+            "max": [
+                0.9205999970436096,
+                0.8116999864578247
+            ],
+            "min": [
+                0.0,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 6612,
+            "type": "SCALAR",
+            "max": [
+                1576
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 95836,
+            "uri": "sponza_277.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 18924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 18924,
+            "byteLength": 18924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 37848,
+            "byteLength": 18924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 56772,
+            "byteLength": 12616,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 69388,
+            "byteLength": 26448,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "textures\\sponza_thorn_diff.png"
+        }
+    ],
+    "materials": [
+        {
+            "name": "leaf",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "sponza_277",
+            "primitives": [
+                {
+                    "extensions": {
+                        "FB_ngon_encoding": {}
+                    },
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 4,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "sponza_277",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        }
+    ],
+    "scene": 0
+}
