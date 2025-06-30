@@ -1,6 +1,7 @@
 PBR
 Shaders/brdf.frag
-Scenes/Sponza/textures/lion.pngTextures/SolidBlack.png
+Scenes/Sponza/textures/lion.png
+Textures/SolidBlack.png
 Textures/SolidWhite.png
 Textures/SolidBlack.png
 Textures/SolidBlack.png

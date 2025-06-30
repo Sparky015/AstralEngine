@@ -1,6 +1,7 @@
 PBR
 Shaders/brdf.frag
-Scenes/Sponza/textures/vase_hanging.pngTextures/SolidBlack.png
+Scenes/Sponza/textures/vase_hanging.png
+Textures/SolidBlack.png
 Textures/SolidWhite.png
 Textures/SolidBlack.png
 Textures/SolidBlack.png

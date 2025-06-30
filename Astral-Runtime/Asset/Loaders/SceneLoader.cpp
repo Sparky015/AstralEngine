@@ -361,7 +361,9 @@ namespace Astral {
 
                  if (shouldSerializeObjects)
                  {
-                     std::filesystem::path filePath = destinationDir / std::filesystem::path(material->GetName().C_Str());
+                     std::string filePathString = material->GetName().C_Str();
+                     std::replace(filePathString.begin(), filePathString.end(), '\\', '/');
+                     std::filesystem::path filePath = destinationDir / std::filesystem::path(filePathString);
 
                      filePath.replace_extension(".astmat");
                      if (std::filesystem::exists(filePath))
@@ -396,7 +398,10 @@ namespace Astral {
 
                 if (shouldSerializeObjects)
                 {
-                    std::filesystem::path filePath = destinationDir / std::filesystem::path(mesh->mName.C_Str());
+                    std::string filePathString = mesh->mName.C_Str();
+                    std::replace(filePathString.begin(), filePathString.end(), '\\', '/');
+                    std::filesystem::path filePath = destinationDir / std::filesystem::path(filePathString);
+
                     filePath.replace_extension(".gltf");
                     if (std::filesystem::exists(filePath))
                     {
@@ -629,7 +634,10 @@ namespace Astral {
         else
         {
             // External Texture
-            std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(filePath.C_Str());
+            std::string filePathString = filePath.C_Str();
+            std::replace(filePathString.begin(), filePathString.end(), '\\', '/');
+            std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(filePathString);
+
             if (externalTextures.contains(fullFilePath))
             {
                 textureRef = externalTextures[fullFilePath];

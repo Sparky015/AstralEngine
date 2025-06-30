@@ -34,8 +34,10 @@ namespace Astral {
 
         std::string fragmentShaderPath;
         std::getline(fileStream, fragmentShaderPath);
+        std::replace(fragmentShaderPath.begin(), fragmentShaderPath.end(), '\\', '/');
         std::string texturePath;
         std::getline(fileStream, texturePath);
+        std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
@@ -53,9 +55,13 @@ namespace Astral {
         if (!fileStream.eof())
         {
             std::getline(fileStream, optional_metallic);
+            std::replace(optional_metallic.begin(), optional_metallic.end(), '\\', '/');
             std::getline(fileStream, optional_roughness);
+            std::replace(optional_roughness.begin(), optional_roughness.end(), '\\', '/');
             std::getline(fileStream, optional_emission);
+            std::replace(optional_emission.begin(), optional_emission.end(), '\\', '/');
             std::getline(fileStream, optional_normals);
+            std::replace(optional_normals.begin(), optional_normals.end(), '\\', '/');
 
             texture_metallic = registry.CreateAsset<Texture>(optional_metallic);
             texture_roughness = registry.CreateAsset<Texture>(optional_roughness);
@@ -102,7 +108,7 @@ namespace Astral {
 
         ASSERT(!material->Textures.empty(), "Expected material to have at least 1 texture!")
         std::filesystem::path baseColorPath = registry.GetFilePathFromAssetID(material->Textures[0]->GetAssetID());
-        fileStream << baseColorPath.generic_string();
+        fileStream << baseColorPath.generic_string() << "\n";
 
         if (material->ShaderModel == ShaderModel::PBR)
         {

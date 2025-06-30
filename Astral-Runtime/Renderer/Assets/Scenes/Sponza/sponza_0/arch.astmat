@@ -1,6 +1,7 @@
 PBR
 Shaders/brdf.frag
-Scenes/Sponza/textures/sponza_arch_diff.pngTextures/SolidBlack.png
+Scenes/Sponza/textures/sponza_arch_diff.png
+Textures/SolidBlack.png
 Textures/SolidWhite.png
 Textures/SolidBlack.png
 Textures/SolidBlack.png
