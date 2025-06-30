@@ -41,14 +41,4 @@ namespace Astral {
         }
     }
 
-    inline ShaderModel StringToShaderModel(std::string_view shaderModelString)
-    {
-        switch (shaderModelString)
-        {
-            case "Unlit": return ShaderModel::UNLIT;
-            case "PBR": return ShaderModel::PBR;
-            default: ASTRAL_ERROR("Unknown shader model string!"); return ShaderModel::UNLIT;
-        }
-    }
-
 }
