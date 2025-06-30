@@ -25,8 +25,7 @@ namespace Astral {
     struct SceneDescription
     {
         Camera& Camera;
-        std::vector<Vec3>& LightPositions;
-        std::vector<Vec3>& LightColors;
+        std::vector<Light>& Lights;
     };
 
     class SceneRenderer

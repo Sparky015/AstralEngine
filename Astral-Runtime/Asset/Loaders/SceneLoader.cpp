@@ -363,16 +363,16 @@ namespace Astral::SceneLoader {
                  // }
 
                  // Load just the diffuse map for now
-                 aiString textureFilePath;
-                 material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+                 aiString baseColorFilePath;
+                 material->GetTexture(aiTextureType_DIFFUSE, 0, &baseColorFilePath);
 
-
-                 if (textureFilePath.length == 0)
+// TODO: make a class that handles the generation of a Astral::Material from a aiMaterial*. Apply defaults if there is a map missing. Assert that there is a normal map though.
+                 if (baseColorFilePath.length == 0)
                  {
                      LOG("No Diffuse. Trying base color...")
-                     material->GetTexture(aiTextureType_BASE_COLOR, 0, &textureFilePath);
+                     material->GetTexture(aiTextureType_BASE_COLOR, 0, &baseColorFilePath);
 
-                     if (textureFilePath.length == 0)
+                     if (baseColorFilePath.length == 0)
                      {
                          LOG("No base color. Discarding material!")
                          m_Materials.push_back(assetRegistry.GetAsset<Material>("Materials/MissingMaterial.astmat"));
@@ -386,17 +386,17 @@ namespace Astral::SceneLoader {
                  {
                      Ref<Texture> textureRef;
 
-                     if (textureFilePath.data[0] == '*')
+                     if (baseColorFilePath.data[0] == '*')
                      {
                          // Embedded Texture
-                         std::string embeddedFileID = textureFilePath.C_Str();
+                         std::string embeddedFileID = baseColorFilePath.C_Str();
                          int embeddedTextureIndex = std::stoi(embeddedFileID.substr(1));
                          textureRef = m_EmbeddedTextures[embeddedTextureIndex];
                      }
                      else
                      {
                          // External Texture
-                         std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(textureFilePath.C_Str());
+                         std::filesystem::path fullFilePath = sceneDir / std::filesystem::path(baseColorFilePath.C_Str());
                          if (m_ExternalTextures.contains(fullFilePath))
                          {
                              textureRef = m_ExternalTextures[fullFilePath];

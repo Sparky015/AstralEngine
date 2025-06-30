@@ -24,7 +24,7 @@ namespace Astral {
 
         static void SubmitMeshComponents();
         static void SubmitSpriteComponents();
-        static void GetPointLightComponents(std::vector<Vec3>& outLightPositions, std::vector<Vec3>& outLightColor);
+        static void GetPointLightComponents(std::vector<Light>& outLights);
 
         static Mat4 CreateTransform(const TransformComponent& transform);
     };

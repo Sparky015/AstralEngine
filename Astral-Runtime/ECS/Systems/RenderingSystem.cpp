@@ -143,14 +143,12 @@ namespace Astral {
         }
 
 
-        std::vector<Vec3> lightPositions;
-        std::vector<Vec3> lightColors;
-        GetPointLightComponents(lightPositions, lightColors);
+        std::vector<Light> lights;
+        GetPointLightComponents(lights);
 
         SceneDescription sceneDescription = {
             .Camera = camera,
-            .LightPositions = lightPositions,
-            .LightColors = lightColors,
+            .Lights = lights,
         };
 
 
@@ -219,7 +217,7 @@ namespace Astral {
         }
     }
 
-    void RenderingSystem::GetPointLightComponents(std::vector<Vec3>& outLightPositions, std::vector<Vec3>& outLightColor)
+    void RenderingSystem::GetPointLightComponents(std::vector<Light>& outLights)
     {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
@@ -236,8 +234,10 @@ namespace Astral {
             if (pointLightComponent.Intensity == 0) { continue; }
             if (pointLightComponent.LightColor == Vec3(0.0f)) { continue; }
 
-            outLightPositions.push_back(transformComponent.position);
-            outLightColor.push_back(pointLightComponent.LightColor * pointLightComponent.Intensity);
+            Light light{};
+            light.Position = transformComponent.position;
+            light.LightColor = pointLightComponent.LightColor * pointLightComponent.Intensity;
+            outLights.push_back(light);
         }
     }
 

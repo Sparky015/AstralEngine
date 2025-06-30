@@ -39,8 +39,6 @@ namespace Astral {
 
 
         m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
-
-
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
@@ -82,11 +80,18 @@ namespace Astral {
         SceneData sceneData = {
             .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
             .CameraPosition = sceneDescription.Camera.GetPosition(),
-            .LightPosition = !sceneDescription.LightPositions.empty() ? sceneDescription.LightPositions[0] : Vec3(0.0f),
-            .LightColor = !sceneDescription.LightColors.empty() ? sceneDescription.LightColors[0] : Vec3(0.0f),
+            .NumLights = (uint32)sceneDescription.Lights.size(),
         };
 
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));
+
+        if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
+        {
+            uint32 currentBufferAllocation = frameContext.SceneLightsBuffer->GetAllocatedSize();
+            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
+        }
+        frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights); // TODO: Check if it fits
+
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
@@ -214,7 +219,6 @@ namespace Astral {
             context.Meshes = std::vector<Mesh>();
             context.Materials = std::vector<Material>();
             context.Transforms = std::vector<Mat4>();
-            context.SceneCommandBuffer = device.AllocateCommandBuffer();
 
 
             TextureCreateInfo textureCreateInfo = {
@@ -225,6 +229,8 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+
+
             TextureCreateInfo depthBufferTextureCreateInfo = {
                 .Format = ImageFormat::D32_SFLOAT_S8_UINT,
                 .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -234,6 +240,7 @@ namespace Astral {
             };
             context.OffscreenDepthBuffer = device.CreateTexture(depthBufferTextureCreateInfo);
 
+
             context.OffscreenDescriptorSet = device.CreateDescriptorSet();
             context.OffscreenDescriptorSet->BeginBuildingSet();
             context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
@@ -241,12 +248,7 @@ namespace Astral {
             context.FramesTillFree = 2;
 
 
-            context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
-            context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
-            context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
-            context.WindowFramebuffer->EndBuildingFramebuffer();
-
+            context.SceneCommandBuffer = device.AllocateCommandBuffer();
 
             context.SceneFramebuffer = device.CreateFramebuffer(m_MainRenderPass);
             UVec2 viewportDimensions = m_ViewportSize;
@@ -255,16 +257,28 @@ namespace Astral {
             context.SceneFramebuffer->AttachTexture(context.OffscreenDepthBuffer);
             context.SceneFramebuffer->EndBuildingFramebuffer();
 
-
             context.SceneRenderTarget = nullptr;
 
 
             context.SceneDataBuffer = device.CreateUniformBuffer(nullptr, sizeof(SceneData));
+            RendererAPI::NameObject(context.SceneDataBuffer, "Scene Data Buffer");
+
+            context.SceneLightsBuffer = device.CreateStorageBuffer(nullptr, 1024);
+            RendererAPI::NameObject(context.SceneLightsBuffer, "Scene Lights Buffer");
+
             context.SceneDataDescriptorSet = device.CreateDescriptorSet();
             context.SceneDataDescriptorSet->BeginBuildingSet();
             context.SceneDataDescriptorSet->AddDescriptorUniformBuffer(context.SceneDataBuffer, ShaderStage::ALL);
+            context.SceneDataDescriptorSet->AddDescriptorStorageBuffer(context.SceneLightsBuffer, ShaderStage::ALL);
             context.SceneDataDescriptorSet->EndBuildingSet();
             RendererAPI::NameObject(context.SceneDataDescriptorSet, "Scene Data");
+
+
+            context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
+            UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
+            context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
+            context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
+            context.WindowFramebuffer->EndBuildingFramebuffer();
         }
     }
 

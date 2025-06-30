@@ -29,9 +29,12 @@ namespace Astral::MaterialLoader {
 
         ASSERT(!fileStream.eof(), "Material file is empty!")
 
+        std::string shaderModel;
+        std::getline(fileStream, shaderModel);
+
         std::string fragmentShaderPath;
-        std::string texturePath;
         std::getline(fileStream, fragmentShaderPath);
+        std::string texturePath;
         std::getline(fileStream, texturePath);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();

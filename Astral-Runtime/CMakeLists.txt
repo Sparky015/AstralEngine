@@ -269,6 +269,7 @@ add_library(AstralEngine
         Core/Utility/Hashing/HashCombiner.h
         Core/Utility/Hashing/Hashes.cpp
         Core/Utility/Hashing/Hashes.h
+        Renderer/ForwardRenderer.cpp
 )
 
 
@@ -375,6 +376,7 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/nativefiledialog-extended/src/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/assimp/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/gli/")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/rapidjson/")
 
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")

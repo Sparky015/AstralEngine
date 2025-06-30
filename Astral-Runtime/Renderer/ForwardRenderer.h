@@ -9,14 +9,12 @@
 #include "Common/Material.h"
 #include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
-#include "Renderer/RHI/Resources/VertexBuffer.h"
 #include "Renderer/Cameras/Camera.h"
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
 #include "RHI/Resources/Renderpass.h"
 #include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
-#include "ECS/Components/PointLightComponent.h"
 
 #include <queue>
 
@@ -50,8 +48,7 @@ namespace Astral {
         {
             Mat4 CameraViewProjection;
             alignas(16) Vec3 CameraPosition;
-            alignas(16) Vec3 LightPosition;
-            alignas(16) Vec3 LightColor;
+            alignas(4) uint32 NumLights;
         };
 
         struct FrameContext
@@ -59,16 +56,19 @@ namespace Astral {
             std::vector<Mesh> Meshes;
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
-            CommandBufferHandle SceneCommandBuffer;
-            FramebufferHandle SceneFramebuffer;
-            FramebufferHandle WindowFramebuffer;
-            RenderTargetHandle SceneRenderTarget;
-            BufferHandle SceneDataBuffer;
-            DescriptorSetHandle SceneDataDescriptorSet;
 
             TextureHandle OffscreenRenderTarget;
             TextureHandle OffscreenDepthBuffer;
             DescriptorSetHandle OffscreenDescriptorSet;
+
+            CommandBufferHandle SceneCommandBuffer;
+            FramebufferHandle SceneFramebuffer;
+            RenderTargetHandle SceneRenderTarget;
+            BufferHandle SceneDataBuffer;
+            BufferHandle SceneLightsBuffer;
+            DescriptorSetHandle SceneDataDescriptorSet;
+
+            FramebufferHandle WindowFramebuffer;
 
             std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
             std::vector<TextureHandle> TexturesToBeFreed;

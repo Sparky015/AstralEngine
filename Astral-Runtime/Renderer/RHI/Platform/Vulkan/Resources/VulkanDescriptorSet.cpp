@@ -54,6 +54,10 @@ namespace Astral {
         {
             stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
         }
+        else if (bindStage == ShaderStage::ALL)
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
         else
         {
             stageFlags = VK_SHADER_STAGE_ALL;
