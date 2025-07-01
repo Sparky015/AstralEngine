@@ -17,7 +17,7 @@ struct Light {
     vec3 lightColor;
 };
 
-layout (set = 0, binding = 1) buffer Lights {
+layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
@@ -105,7 +105,6 @@ void main()
     for (int i = 0; i < u_SceneData.numLights; i++)
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
-        //lightPosition.x = lightPosition.x * -1;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
 
         // Vectors
