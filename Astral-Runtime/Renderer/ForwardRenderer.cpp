@@ -135,18 +135,6 @@ namespace Astral {
     }
 
 
-    RendererDebugStats ForwardRenderer::GetRendererDebugStats()
-    {
-        return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
-    }
-
-
-    API ForwardRenderer::GetRendererAPIBackend()
-    {
-        return RendererAPI::s_RendererCommands->GetAPI();
-    }
-
-
     void ForwardRenderer::BuildRenderPasses()
     {
         Device& device = RendererAPI::GetDevice();
@@ -168,7 +156,7 @@ namespace Astral {
         AttachmentDescription offscreenDepthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
             .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
+            .StoreOp = AttachmentStoreOp::DONT_CARE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)

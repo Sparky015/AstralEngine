@@ -38,10 +38,6 @@ namespace Astral {
         void ResizeViewport(uint32 width, uint32 height);
         UVec2 GetViewportSize() { return m_ViewportSize; }
 
-        RendererDebugStats GetRendererDebugStats();
-
-        API GetRendererAPIBackend();
-
     private:
 
         struct SceneData
