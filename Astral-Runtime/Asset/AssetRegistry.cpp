@@ -119,15 +119,18 @@ namespace Astral {
         if (IsInDirectory(m_AssetDirectoryPath, outPath))
         {
             // Path is contained in assets directory
-            outPath = m_AssetDirectoryPath / std::filesystem::proximate(outPath, m_AssetDirectoryPath);
+            outPath = m_AssetDirectoryPath / outPath;
             return;
         }
 
         if (IsInDirectory(m_EngineAssetsDirectoryPath, outPath))
         {
             // Path is contained in engine assets directory
-            outPath = m_EngineAssetsDirectoryPath / std::filesystem::proximate(outPath, m_EngineAssetsDirectoryPath);
+            outPath = m_EngineAssetsDirectoryPath / outPath;
+            return;
         }
+
+        WARN("Unable to identify parent directory of relative path! Using executable directory!")
     }
 
 

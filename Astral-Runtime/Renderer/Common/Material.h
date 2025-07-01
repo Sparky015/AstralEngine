@@ -14,15 +14,32 @@
 
 namespace Astral {
 
+    enum class ShaderModel : uint8
+    {
+        UNLIT,
+        PBR,
+    };
+
     struct Material : public Asset
     {
-        Ref<Shader> VertexShader;
+        ShaderModel ShaderModel;
         Ref<Shader> FragmentShader;
-        Ref<Texture> Texture;
+        std::vector<Ref<Texture>> Textures;
         DescriptorSetHandle DescriptorSet;
+        bool HasNormalMap;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::Material; }
     };
+
+    inline std::string_view ShaderModelToString(ShaderModel shaderModel)
+    {
+        switch (shaderModel)
+        {
+            case ShaderModel::UNLIT: return "Unlit";
+            case ShaderModel::PBR: return "PBR";
+            default: return "None";
+        }
+    }
 
 }

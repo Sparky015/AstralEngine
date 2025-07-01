@@ -12,6 +12,14 @@
 
 namespace Astral {
 
+    struct PushConstant
+    {
+        Mat4 ModelMatrix;
+        uint32 HasNormalMap;
+    };
+
+    static_assert(sizeof(PushConstant) <= 128, "Push constant can not be greater than 128 bytes in size");
+
     enum class PipelineStageFlags : uint8
     {
         TOP_OF_PIPE_BIT,

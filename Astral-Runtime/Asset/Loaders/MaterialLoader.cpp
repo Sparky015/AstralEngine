@@ -13,62 +13,113 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/RendererManager.h"
-
-#include <fstream>
-
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-namespace Astral::MaterialLoader {
+#include <fstream>
 
-    Ref<Asset> LoadAsset(const std::filesystem::path& filePath)
+namespace Astral {
+
+    Ref<Asset> MaterialLoader::LoadAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("MaterialLoader::LoadAsset")
         if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
 
         std::ifstream fileStream = std::ifstream(filePath);
 
-        std::string vertexShaderPath;
+        ASSERT(!fileStream.eof(), "Material file is empty!")
+
+        std::string shaderModel;
+        std::getline(fileStream, shaderModel);
+
         std::string fragmentShaderPath;
-        std::string texturePath;
-        std::getline(fileStream, vertexShaderPath);
         std::getline(fileStream, fragmentShaderPath);
+        std::replace(fragmentShaderPath.begin(), fragmentShaderPath.end(), '\\', '/');
+        std::string texturePath;
         std::getline(fileStream, texturePath);
+        std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        Ref<Shader> vertexShader = registry.CreateAsset<Shader>(vertexShaderPath);
         Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
         Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
+        if (!texture) { texture = registry.GetAsset<Texture>("Textures/MissingTexture.png"); }
+
+        std::string optional_metallic;
+        std::string optional_roughness;
+        std::string optional_emission;
+        std::string optional_normals;
+        Ref<Texture> texture_metallic;
+        Ref<Texture> texture_roughness;
+        Ref<Texture> texture_emission;
+        Ref<Texture> texture_normals;
+        if (!fileStream.eof())
+        {
+            std::getline(fileStream, optional_metallic);
+            std::replace(optional_metallic.begin(), optional_metallic.end(), '\\', '/');
+            std::getline(fileStream, optional_roughness);
+            std::replace(optional_roughness.begin(), optional_roughness.end(), '\\', '/');
+            std::getline(fileStream, optional_emission);
+            std::replace(optional_emission.begin(), optional_emission.end(), '\\', '/');
+            std::getline(fileStream, optional_normals);
+            std::replace(optional_normals.begin(), optional_normals.end(), '\\', '/');
+
+            texture_metallic = registry.CreateAsset<Texture>(optional_metallic);
+            texture_roughness = registry.CreateAsset<Texture>(optional_roughness);
+            texture_emission = registry.CreateAsset<Texture>(optional_emission);
+            texture_normals = registry.CreateAsset<Texture>(optional_normals);
+        }
+
 
         DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
         descriptorSetHandle->BeginBuildingSet();
         descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
+        if (optional_metallic != "")
+        {
+            descriptorSetHandle->AddDescriptorImageSampler(texture_metallic, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_roughness, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_emission, ShaderStage::FRAGMENT);
+            descriptorSetHandle->AddDescriptorImageSampler(texture_normals, ShaderStage::FRAGMENT);
+        }
         descriptorSetHandle->EndBuildingSet();
 
-        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().string().data());
+        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().generic_string().data());
 
         Ref<Material> material = CreateRef<Material>();
-        material->VertexShader = vertexShader;
         material->FragmentShader = fragmentShader;
-        material->Texture = texture;
+        material->Textures.push_back(texture);
         material->DescriptorSet = descriptorSetHandle;
+        material->HasNormalMap = false; // TODO: Write this to the material file or have a normal map field with no file path assigned
 
         return material;
     }
 
 
-    void SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
+    void MaterialLoader::SerializeMaterial(Ref<Material> material, std::filesystem::path& outFilePath)
     {
         outFilePath.replace_extension(".astmat");
-
         std::ofstream fileStream = std::ofstream(outFilePath);
 
-        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        std::filesystem::path vertexShaderPath = registry.GetFilePathFromAssetID(material->VertexShader->GetAssetID());
-        std::filesystem::path fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID());
-        std::filesystem::path texturePath = registry.GetFilePathFromAssetID(material->Texture->GetAssetID());
+        fileStream << ShaderModelToString(material->ShaderModel) << "\n";
 
-        fileStream << vertexShaderPath.string() << "\n" << fragmentShaderPath.string() << "\n" << texturePath.string();
+
+        AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
+        std::string fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID()).generic_string();
+
+        fileStream << fragmentShaderPath << "\n";
+
+        ASSERT(!material->Textures.empty(), "Expected material to have at least 1 texture!")
+        std::filesystem::path baseColorPath = registry.GetFilePathFromAssetID(material->Textures[0]->GetAssetID());
+        fileStream << baseColorPath.generic_string() << "\n";
+
+        if (material->ShaderModel == ShaderModel::PBR)
+        {
+            ASSERT(material->Textures.size() >= 5, "Expected PBR material to have at least 5 maps!")
+            for (int i = 1; i < material->Textures.size(); i++)
+            {
+                std::filesystem::path mapPath = registry.GetFilePathFromAssetID(material->Textures[i]->GetAssetID());
+                fileStream << mapPath.generic_string() << "\n";
+            }
+        }
     }
 
 }

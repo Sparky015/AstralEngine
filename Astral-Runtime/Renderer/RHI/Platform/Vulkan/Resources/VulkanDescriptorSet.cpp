@@ -54,6 +54,10 @@ namespace Astral {
         {
             stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
         }
+        else if (bindStage == ShaderStage::ALL)
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
         else
         {
             stageFlags = VK_SHADER_STAGE_ALL;
@@ -103,6 +107,8 @@ namespace Astral {
 
     void VulkanDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage)
     {
+        ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
+
         VkShaderStageFlags stageFlags;
         if (bindStage == ShaderStage::VERTEX)
         {

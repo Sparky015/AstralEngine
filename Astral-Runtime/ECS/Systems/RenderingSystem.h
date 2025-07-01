@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Math/Math.h"
+#include "ECS/Components/PointLightComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "Renderer/Cameras/Camera.h"
 
@@ -23,6 +24,7 @@ namespace Astral {
 
         static void SubmitMeshComponents();
         static void SubmitSpriteComponents();
+        static void GetPointLightComponents(std::vector<Light>& outLights);
 
         static Mat4 CreateTransform(const TransformComponent& transform);
     };

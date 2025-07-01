@@ -342,7 +342,7 @@ namespace Astral {
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
         m_PushConstantRange.offset = 0;
-        m_PushConstantRange.size = 64;
+        m_PushConstantRange.size = sizeof(PushConstant);
 
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
