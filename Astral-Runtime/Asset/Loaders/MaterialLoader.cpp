@@ -88,6 +88,7 @@ namespace Astral {
         material->FragmentShader = fragmentShader;
         material->Textures.push_back(texture);
         material->DescriptorSet = descriptorSetHandle;
+        material->HasNormalMap = false; // TODO: Write this to the material file or have a normal map field with no file path assigned
 
         return material;
     }

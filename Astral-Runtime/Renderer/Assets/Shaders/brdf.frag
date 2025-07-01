@@ -29,7 +29,7 @@ layout (set = 1, binding = 4) uniform sampler2D u_Normals;
 
 layout (push_constant) uniform ModelData {
     mat4 transform;
-    bool hasNormalMap;
+    uint hasNormalMap;
 } u_ModelData;
 
 layout(location = 0) out vec4 color;
@@ -82,7 +82,7 @@ void main()
 
     vec3 normal = v_Normals;
 
-    if (u_ModelData.hasNormalMap)
+    if (u_ModelData.hasNormalMap != 0)
     {
         tangentSpaceNormal = normalize(tangentSpaceNormal * 2.0 - 1.0); // Convert from [0, 1] to [-1, 1] and normalize
         vec3 N = normalize(v_Normals);

@@ -15,7 +15,7 @@ namespace Astral {
     struct PushConstant
     {
         Mat4 ModelMatrix;
-        alignas(4) bool HasNormalMap;
+        uint32 HasNormalMap;
     };
 
     static_assert(sizeof(PushConstant) <= 128, "Push constant can not be greater than 128 bytes in size");
