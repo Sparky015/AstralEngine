@@ -1,6 +1,9 @@
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
+    mat4 inverseCameraView;
+    mat4 inverseCameraProjection;
+    vec2 screenSize;
     vec3 cameraPosition;
     uint numLights;
 } u_SceneData;
@@ -22,6 +25,26 @@ layout(input_attachment_index = 4, set = 1, binding = 4) uniform subpassInput u_
 layout(input_attachment_index = 5, set = 1, binding = 5) uniform subpassInput u_DepthBufferInput;
 
 layout(location = 0) out vec4 outColor;
+
+// Find world position of frag from depth buffer
+vec3 GetWorldPosition()
+{
+    vec3 worldPosition;
+
+    vec2 pixelCoords = gl_FragCoord.xy;
+    float depth = subpassLoad(u_DepthBufferInput).r;
+    vec4 clipSpacePosition;
+    clipSpacePosition.x = (gl_FragCoord.x / u_SceneData.screenSize.x) * 2.0 - 1.0;
+    clipSpacePosition.y = (gl_FragCoord.y / u_SceneData.screenSize.y) * 2.0 - 1.0;
+    clipSpacePosition.z = depth * 2.0 - 1.0;
+    clipSpacePosition.w = 1.0;
+    vec4 viewSpacePosition = u_SceneData.inverseCameraProjection * clipSpacePosition;
+    viewSpacePosition /= viewSpacePosition.w;
+    vec4 worldPosHomogeneous = u_SceneData.inverseCameraView * viewSpacePosition;
+    worldPosition = worldPosHomogeneous.xyz / worldPosHomogeneous.w;
+
+    return worldPosition;
+}
 
 // GGX/Trowbridge-Reitz Normal Distribution Function
 float D(float alpha, vec3 N, vec3 H)
@@ -67,13 +90,10 @@ void main()
     float roughness = subpassLoad(u_RoughnessInput).r;
     vec3 emission = subpassLoad(u_EmissionInput).rgb;
     vec3 normal = subpassLoad(u_NormalInput).rgb;
-    vec3 worldPosition = vec3(0.0f);
+    vec3 worldPosition = GetWorldPosition();
 
     vec3 cameraPosition = u_SceneData.cameraPosition;
     vec3 finalLight = vec3(0.0f);
-
-    outColor = vec4(0.0,1.0f,0.0f, 1.0f);
-    return;
 
     if (u_SceneData.numLights == 0)
     {

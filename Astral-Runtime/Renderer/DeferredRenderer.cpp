@@ -82,6 +82,9 @@ namespace Astral {
 
         SceneData sceneData = {
             .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
+            .CameraInverseViewMat = glm::inverse(sceneDescription.Camera.GetViewMatrix()),
+            .CameraInverseProjectionMat = glm::inverse(sceneDescription.Camera.GetProjectionMatrix()),
+            .ScreenSize = m_ViewportSize,
             .CameraPosition = sceneDescription.Camera.GetPosition(),
             .NumLights = (uint32)sceneDescription.Lights.size(),
         };
@@ -91,9 +94,9 @@ namespace Astral {
         if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
         {
             uint32 currentBufferAllocation = frameContext.SceneLightsBuffer->GetAllocatedSize();
-            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
+            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2); // TODO: If reallocation happens, you need to re-add to descriptor set as it is a new buffer
         }
-        frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights); // TODO: Check if it fits
+        frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
 
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
@@ -493,7 +496,7 @@ namespace Astral {
             framebuffer->BeginBuildingFramebuffer(width, height);
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
-        } // TODO: Resize g buffer images
+        }
     }
 
 
@@ -502,6 +505,8 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
         RenderPassHandle mainRenderPass = m_MainRenderPass;
+
+        RendererAPI::BeginLabel(commandBuffer, "Geometry Pass", Vec4(1.0 , 0.0, 1.0, 1.0));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -532,6 +537,8 @@ namespace Astral {
             mesh.IndexBuffer->Bind(commandBuffer);
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
+
+        RendererAPI::EndLabel(commandBuffer);
     }
 
 
@@ -542,6 +549,8 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         m_MainRenderPass->NextSubpass(commandBuffer);
+
+        RendererAPI::BeginLabel(commandBuffer, "Lighting Pass", Vec4(1.0 , 0.0, 0, 1.0));
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
@@ -561,6 +570,8 @@ namespace Astral {
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+
+        RendererAPI::EndLabel(commandBuffer);
     }
 
 
