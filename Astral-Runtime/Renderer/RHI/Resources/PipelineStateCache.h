@@ -30,7 +30,7 @@ namespace Astral {
     {
     public:
         void SetSceneDescriptorSet(DescriptorSetHandle sceneDescriptorSet);
-        PipelineStateObjectHandle GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh);
+        PipelineStateObjectHandle GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex);
 
     private:
 

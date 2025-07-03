@@ -298,7 +298,7 @@ namespace Astral {
             Ref<Shader> vertexShader = mesh.VertexShader;
             Ref<Shader> fragmentShader = material.FragmentShader;
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh);
+            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 

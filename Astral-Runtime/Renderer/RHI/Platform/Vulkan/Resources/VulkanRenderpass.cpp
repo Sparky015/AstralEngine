@@ -224,6 +224,12 @@ namespace Astral {
     }
 
 
+    uint32 VulkanRenderPass::GetNumColorAttachments(SubpassIndex subpassIndex)
+    {
+        return m_SubpassAttachments.at(subpassIndex).ColorAttachments.size();
+    }
+
+
     void VulkanRenderPass::CreateRenderPass()
     {
         VkRenderPassCreateInfo renderPassCreateInfo = {

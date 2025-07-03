@@ -32,8 +32,8 @@ namespace Astral {
         m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
 
-        SceneRenderer::Init();
         LoadRendererAssets();
+        SceneRenderer::Init();
     }
 
 

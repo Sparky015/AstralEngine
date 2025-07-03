@@ -29,6 +29,7 @@ namespace Astral {
         virtual void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
         virtual void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
         virtual void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage) = 0;
+        virtual void AddDescriptorInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) = 0;
         virtual void EndBuildingSet() = 0;
 
         virtual void* GetLayout() = 0;

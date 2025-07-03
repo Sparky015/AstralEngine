@@ -8,24 +8,24 @@
 #pragma once
 
 #include "Renderer/RHI/Resources/PipelineStateObject.h"
-
-#include <vulkan/vulkan_core.h>
-
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/VertexBufferLayout.h"
+
+#include <vulkan/vulkan_core.h>
 
 namespace Astral {
 
     struct VulkanPipelineStateObjectDesc
     {
         VkDevice Device;
-        VkRenderPass RenderPass;
+        RenderPassHandle RenderPass;
         ShaderHandle VertexShader;
         ShaderHandle FragmentShader;
         int32 WindowWidth;
         int32 WindowHeight;
         std::vector<DescriptorSetHandle> DescriptorSets;
         VertexBufferLayout VertexBufferLayout;
+        uint32 SubpassIndex;
     };
 
     class VulkanPipelineStateObject : public PipelineStateObject
@@ -75,7 +75,7 @@ namespace Astral {
             VkPipelineRasterizationStateCreateInfo RasterizationState;
             VkPipelineMultisampleStateCreateInfo MultisampleState;
             VkPipelineDepthStencilStateCreateInfo DepthStencilState;
-            VkPipelineColorBlendAttachmentState ColorBlendAttachmentState;
+            std::vector<VkPipelineColorBlendAttachmentState> ColorBlendAttachmentStates;
             VkPipelineColorBlendStateCreateInfo ColorBlendState;
             VkPipelineLayoutCreateInfo PipelineLayout;
             VkDynamicState DynamicStateSpecs[2];

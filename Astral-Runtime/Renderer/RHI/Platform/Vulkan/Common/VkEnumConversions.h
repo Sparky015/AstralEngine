@@ -7,11 +7,13 @@
 
 #pragma once
 
+
 #include "Debug/Utilities/Error.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/AccessFlags.h"
-#include "Renderer/RHI/Resources/PipelineStateObject.h"
+#include "Renderer/RHI/Common/PipelineStageFlags.h"
+#include <Renderer/RHI/Common/ImageUsageFlags.h>
 
 #include <vulkan/vulkan_core.h>
 

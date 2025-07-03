@@ -127,19 +127,16 @@ namespace Astral {
     }
 
 
-    PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(RenderPassHandle renderPassHandle,
-                                                                      ShaderHandle vertexShader, ShaderHandle fragmentShader, std::vector<DescriptorSetHandle>& descriptorSets,
-                                                                      const VertexBufferLayout& bufferLayout)
+    PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(const PipelineStateObjectCreateInfo& pipelineStateObjectCreateInfo)
     {
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-
         VulkanPipelineStateObjectDesc pipelineStateObjectDesc = {
             .Device = m_Device,
-            .RenderPass = renderPass,
-            .VertexShader = vertexShader,
-            .FragmentShader = fragmentShader,
-            .DescriptorSets = descriptorSets,
-            .VertexBufferLayout = bufferLayout
+            .RenderPass = pipelineStateObjectCreateInfo.RenderPass,
+            .VertexShader = pipelineStateObjectCreateInfo.VertexShader,
+            .FragmentShader = pipelineStateObjectCreateInfo.FragmentShader,
+            .DescriptorSets = pipelineStateObjectCreateInfo.DescriptorSets,
+            .VertexBufferLayout = pipelineStateObjectCreateInfo.BufferLayout,
+            .SubpassIndex = pipelineStateObjectCreateInfo.SubpassIndex
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);

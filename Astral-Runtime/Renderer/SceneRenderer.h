@@ -19,6 +19,7 @@
 #include <queue>
 
 #include "ForwardRenderer.h"
+#include "DeferredRenderer.h"
 
 namespace Astral {
 
@@ -49,7 +50,7 @@ namespace Astral {
 
     private:
 
-        static GraphicsOwnedPtr<ForwardRenderer> m_RendererBackend;
+        static GraphicsOwnedPtr<DeferredRenderer> m_RendererBackend;
     };
 
 } // Astral

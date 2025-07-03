@@ -136,6 +136,37 @@ namespace Astral {
     }
 
 
+    void VulkanDescriptorSet::AddDescriptorInputAttachment(TextureHandle textureHandle, ShaderStage bindStage)
+    {
+        ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
+
+       VkShaderStageFlags stageFlags;
+        if (bindStage == ShaderStage::VERTEX)
+        {
+            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (bindStage == ShaderStage::FRAGMENT)
+        {
+            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        else
+        {
+            stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
+        VkDescriptorSetLayoutBinding inputAttachmentDescriptorLayoutBinding = {
+            .binding = m_NumberOfBindings,
+            .descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+            .descriptorCount = 1,
+            .stageFlags = stageFlags,
+        };
+        m_NumberOfBindings++;
+
+        m_DescriptorSetLayoutBindings.push_back(inputAttachmentDescriptorLayoutBinding);
+        m_Textures.push_back(textureHandle);
+    }
+
+
     void VulkanDescriptorSet::EndBuildingSet()
     {
         CreateDescriptorSetLayout();
@@ -147,7 +178,7 @@ namespace Astral {
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
         // TODO: Find the exact usages and create the pool at VulkanDescriptorSet::EndBuildingSet
-        VkDescriptorPoolSize poolSizes[3] = {
+        VkDescriptorPoolSize poolSizes[4] = {
             {
                 .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                 .descriptorCount = 2
@@ -159,6 +190,10 @@ namespace Astral {
             {
                 .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                 .descriptorCount = 2
+            },
+            {
+                .type = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+                .descriptorCount = 2
             }
         };
 
@@ -167,7 +202,7 @@ namespace Astral {
             .pNext = nullptr,
             .flags = 0,
             .maxSets = 1,
-            .poolSizeCount = 3,
+            .poolSizeCount = 4,
             .pPoolSizes = poolSizes
         };
 
@@ -263,7 +298,7 @@ namespace Astral {
 
                 vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
             }
-            else if (descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+            else if (descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
             {
                 VkDescriptorImageInfo imageInfo = {};
 

@@ -36,7 +36,6 @@ namespace Astral {
     private:
 
         friend SceneRenderer;
-        friend ForwardRenderer;
         static RendererCommands* s_RendererCommands;
     };
 

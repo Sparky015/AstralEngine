@@ -8,12 +8,12 @@
 
 namespace Astral {
 
-    GraphicsOwnedPtr<ForwardRenderer> SceneRenderer::m_RendererBackend{nullptr};
+    GraphicsOwnedPtr<DeferredRenderer> SceneRenderer::m_RendererBackend{nullptr};
 
 
     void SceneRenderer::Init()
     {
-        m_RendererBackend = CreateGraphicsOwnedPtr<ForwardRenderer>();
+        m_RendererBackend = CreateGraphicsOwnedPtr<DeferredRenderer>();
         m_RendererBackend->Init();
     }
 
