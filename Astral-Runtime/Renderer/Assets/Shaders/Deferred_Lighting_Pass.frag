@@ -36,7 +36,7 @@ vec3 GetWorldPosition()
     vec4 clipSpacePosition;
     clipSpacePosition.x = (gl_FragCoord.x / u_SceneData.screenSize.x) * 2.0 - 1.0;
     clipSpacePosition.y = (gl_FragCoord.y / u_SceneData.screenSize.y) * 2.0 - 1.0;
-    clipSpacePosition.z = depth * 2.0 - 1.0;
+    clipSpacePosition.z = depth;
     clipSpacePosition.w = 1.0;
     vec4 viewSpacePosition = u_SceneData.inverseCameraProjection * clipSpacePosition;
     viewSpacePosition /= viewSpacePosition.w;
@@ -90,6 +90,7 @@ void main()
     float roughness = subpassLoad(u_RoughnessInput).r;
     vec3 emission = subpassLoad(u_EmissionInput).rgb;
     vec3 normal = subpassLoad(u_NormalInput).rgb;
+    normal *= 2.0f - 1.0f;
     vec3 worldPosition = GetWorldPosition();
 
     vec3 cameraPosition = u_SceneData.cameraPosition;

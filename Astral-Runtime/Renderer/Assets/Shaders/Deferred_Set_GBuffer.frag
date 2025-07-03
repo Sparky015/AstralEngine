@@ -50,5 +50,5 @@ void main()
     metallicProp = metallic;
     roughnessProp = roughness;
     emissionProp = emission;
-    normalProp = normal;
+    normalProp = (normal + 1.0f) * .5f;
 }
