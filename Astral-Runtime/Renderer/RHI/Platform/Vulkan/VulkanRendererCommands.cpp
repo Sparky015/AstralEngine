@@ -194,7 +194,11 @@ namespace Astral {
     void VulkanRendererCommands::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+        ImDrawData* drawData = ImGui::GetDrawData();
+        if (drawData)
+        {
+            ImGui_ImplVulkan_RenderDrawData(drawData, commandBuffer);
+        }
     }
 
 }

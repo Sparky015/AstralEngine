@@ -1,54 +1,72 @@
 /**
-* @file ForwardRenderer.h
+* @file DeferredRenderer.h
 * @author Andrew Fagan
-* @date 6/29/25
+* @date 7/1/2025
 */
+
 
 #pragma once
 
-#include "Common/Material.h"
-#include "Common/Mesh.h"
+#include "../Common/Material.h"
+#include "../Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
 #include "Renderer/Cameras/Camera.h"
-#include "RHI/RendererCommands.h"
-#include "RHI/Resources/Framebuffer.h"
-#include "RHI/Resources/Renderpass.h"
-#include "RHI/Resources/PipelineStateCache.h"
+#include "../RHI/RendererCommands.h"
+#include "../RHI/Resources/Framebuffer.h"
+#include "../RHI/Resources/Renderpass.h"
+#include "../RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
+#include "Renderer/Renderer.h"
+
 
 #include <queue>
 
 
+
 namespace Astral {
 
-    struct SceneDescription;
+    struct SceneDescription; // Forward declared
 
-    class ForwardRenderer
+    class DeferredRenderer : public Renderer
     {
     public:
-        void Init();
-        void Shutdown();
+        ~DeferredRenderer() override = default;
 
-        void BeginScene(const SceneDescription& sceneDescription);
-        void EndScene();
+        void Init() override;
+        void Shutdown() override;
 
-        void Submit(Mesh& mesh, Material& material, Mat4& transform);
+        void BeginScene(const SceneDescription& sceneDescription) override;
+        void EndScene() override;
 
-        DescriptorSetHandle GetViewportTexture();
-        void ResizeViewport(uint32 width, uint32 height);
-        UVec2 GetViewportSize() { return m_ViewportSize; }
+        void Submit(Mesh& mesh, Material& material, Mat4& transform) override;
 
-        RendererDebugStats GetRendererDebugStats();
+        DescriptorSetHandle GetViewportTexture() override;
+        void ResizeViewport(uint32 width, uint32 height) override;
+        UVec2 GetViewportSize() override { return m_ViewportSize; }
 
-        API GetRendererAPIBackend();
+        RendererType GetType() override { return RendererType::DEFERRED; }
 
     private:
 
         struct SceneData
         {
             Mat4 CameraViewProjection;
+            Mat4 CameraInverseViewMat;
+            Mat4 CameraInverseProjectionMat;
+            Vec2 ScreenSize;
             alignas(16) Vec3 CameraPosition;
-            alignas(4) uint32 NumLights;
+            uint32 NumLights;
+        };
+
+        struct GBuffer
+        {
+            TextureHandle AlbedoBuffer;
+            TextureHandle MetallicBuffer;
+            TextureHandle RoughnessBuffer;
+            TextureHandle EmissionBuffer;
+            TextureHandle NormalBuffer;
+            TextureHandle DepthBuffer;
+            DescriptorSetHandle GBufferDescriptorSet;
         };
 
         struct FrameContext
@@ -57,8 +75,9 @@ namespace Astral {
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
 
+            GBuffer GBuffer;
+
             TextureHandle OffscreenRenderTarget;
-            TextureHandle OffscreenDepthBuffer;
             DescriptorSetHandle OffscreenDescriptorSet;
 
             CommandBufferHandle SceneCommandBuffer;
@@ -77,11 +96,15 @@ namespace Astral {
 
 
         void BuildRenderPasses();
+        void CreateGBufferTextures(GBuffer& outGBuffer, UVec2 dimensions);
         void InitializeFrameResources();
 
         void RenderScene();
 
         void ResizeImages(uint32 width, uint32 height);
+
+        void GeometryPass();
+        void LightingPass();
 
 
 
@@ -96,6 +119,9 @@ namespace Astral {
 
         UVec2 m_ViewportSize{};
         PipelineStateCache m_PipelineStateCache;
+
+        ShaderHandle m_GeometryPassShader;
+        ShaderHandle m_LightingShader;
     };
 
 }

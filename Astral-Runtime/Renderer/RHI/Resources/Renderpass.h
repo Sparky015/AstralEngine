@@ -11,7 +11,7 @@
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
-#include "Renderer/RHI/Resources/PipelineStateObject.h"
+#include "Renderer/RHI/Common/PipelineStageFlags.h"
 
 namespace Astral {
 
@@ -76,6 +76,7 @@ namespace Astral {
         virtual void EndRenderPass(CommandBufferHandle commandBufferHandle) = 0;
 
         virtual uint32 GetNumberOfSubpasses() = 0;
+        virtual uint32 GetNumColorAttachments(SubpassIndex subpassIndex) = 0;
 
         virtual void* GetNativeHandle() = 0;
     };

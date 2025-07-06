@@ -26,7 +26,7 @@ namespace Astral {
     }
 
 
-    PipelineStateObjectHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh)
+    PipelineStateObjectHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
     {
         // Build pipeline configuration struct
 
@@ -46,8 +46,17 @@ namespace Astral {
         ASSERT(m_SceneDescriptorSet != nullptr, "Scene descriptor set was not given to the pipeline cache!")
         Device& device = RendererAPI::GetDevice();
         std::vector<DescriptorSetHandle> descriptorSets{m_SceneDescriptorSet, material.DescriptorSet};
-        PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(renderPass, mesh.VertexShader,
-                                                        material.FragmentShader, descriptorSets, pipelineStateConfiguration.VertexBufferLayout);
+
+        PipelineStateObjectCreateInfo pipelineStateObjectCreateInfo = {
+            .RenderPass = renderPass,
+            .VertexShader = mesh.VertexShader,
+            .FragmentShader = material.FragmentShader,
+            .DescriptorSets = descriptorSets,
+            .BufferLayout = mesh.VertexBuffer->GetBufferLayout(),
+            .SubpassIndex = subpassIndex
+        };
+
+        PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);
         m_PipelineCache[pipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;

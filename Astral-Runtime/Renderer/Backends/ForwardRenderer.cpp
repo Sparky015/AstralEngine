@@ -6,7 +6,7 @@
 
 #include "ForwardRenderer.h"
 
-#include "RHI/RendererAPI.h"
+#include "../RHI/RendererAPI.h"
 
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
@@ -135,18 +135,6 @@ namespace Astral {
     }
 
 
-    RendererDebugStats ForwardRenderer::GetRendererDebugStats()
-    {
-        return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
-    }
-
-
-    API ForwardRenderer::GetRendererAPIBackend()
-    {
-        return RendererAPI::s_RendererCommands->GetAPI();
-    }
-
-
     void ForwardRenderer::BuildRenderPasses()
     {
         Device& device = RendererAPI::GetDevice();
@@ -168,7 +156,7 @@ namespace Astral {
         AttachmentDescription offscreenDepthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
             .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
+            .StoreOp = AttachmentStoreOp::DONT_CARE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
@@ -310,7 +298,7 @@ namespace Astral {
             Ref<Shader> vertexShader = mesh.VertexShader;
             Ref<Shader> fragmentShader = material.FragmentShader;
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh);
+            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 

@@ -79,6 +79,8 @@ namespace Astral {
         SetDynamicState();
 
 
+        VkRenderPass renderPass = (VkRenderPass)m_Description.RenderPass->GetNativeHandle();
+
         VkGraphicsPipelineCreateInfo pipelineCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
             .stageCount = sizeof(m_PipelineCreateInfos.ShaderStates) / sizeof(VkPipelineShaderStageCreateInfo),
@@ -92,8 +94,8 @@ namespace Astral {
             .pColorBlendState = &m_PipelineCreateInfos.ColorBlendState,
             .pDynamicState = &m_PipelineCreateInfos.DynamicState,
             .layout = m_PipelineLayout,
-            .renderPass = m_Description.RenderPass,
-            .subpass = 0,
+            .renderPass = renderPass,
+            .subpass = m_Description.SubpassIndex,
             .basePipelineHandle = VK_NULL_HANDLE,
             .basePipelineIndex = -1
         };
@@ -112,6 +114,9 @@ namespace Astral {
 
     void VulkanPipelineStateObject::SetShaderStages()
     {
+        ASSERT(m_Description.VertexShader, "Vertex shader can't be null!")
+        ASSERT(m_Description.FragmentShader, "Fragment shader can't be null!")
+
         VkShaderModule vertexShaderModule = (VkShaderModule)m_Description.VertexShader->GetNativeHandle();
         VkShaderModule fragmentShaderModule = (VkShaderModule)m_Description.FragmentShader->GetNativeHandle();
 
@@ -290,24 +295,30 @@ namespace Astral {
         // };
 
         VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
-            .blendEnable = VK_TRUE, // <--- ENABLE BLENDING
-            .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,         // Common for alpha: Source color * source alpha
-            .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, // Common for alpha: Dest color * (1 - source alpha)
-            .colorBlendOp = VK_BLEND_OP_ADD,                          // Add the two results (Source*SrcAlpha + Dest*(1-SrcAlpha))
-            .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,               // Use source alpha
-            .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,              // Don't use destination alpha
-            .alphaBlendOp = VK_BLEND_OP_ADD,                          // Resulting alpha = Source Alpha
+            .blendEnable = VK_FALSE,
+            .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,
+            .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+            .colorBlendOp = VK_BLEND_OP_ADD,
+            .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,
+            .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,
+            .alphaBlendOp = VK_BLEND_OP_ADD,
             .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT, // <--- Enable writing to Alpha channel
         };
 
-        m_PipelineCreateInfos.ColorBlendAttachmentState = colorBlendAttachmentState;
+        uint32 numColorAttachments = m_Description.RenderPass->GetNumColorAttachments(m_Description.SubpassIndex);
+        m_PipelineCreateInfos.ColorBlendAttachmentStates.reserve(numColorAttachments);
+
+        for (int i = 0; i < numColorAttachments; i++)
+        {
+            m_PipelineCreateInfos.ColorBlendAttachmentStates.push_back(colorBlendAttachmentState);
+        }
 
         VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
             .logicOpEnable = VK_FALSE,
             .logicOp = VK_LOGIC_OP_COPY,
-            .attachmentCount = 1,
-            .pAttachments = &m_PipelineCreateInfos.ColorBlendAttachmentState,
+            .attachmentCount = (uint32)m_PipelineCreateInfos.ColorBlendAttachmentStates.size(),
+            .pAttachments = m_PipelineCreateInfos.ColorBlendAttachmentStates.data(),
         };
 
         m_PipelineCreateInfos.ColorBlendState = colorBlendStateCreateInfo;

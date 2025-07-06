@@ -80,7 +80,7 @@ namespace Astral {
     void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
     {
     	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
-        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | userUsageFlag;
+        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | userUsageFlag;
 
         VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -149,7 +149,7 @@ namespace Astral {
     	}
     	else if (imageUsageFlags == ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT)
     	{
-    		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+    		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
     	}
 
 

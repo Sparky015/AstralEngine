@@ -29,8 +29,12 @@ namespace Astral {
 
         ASSERT(!fileStream.eof(), "Material file is empty!")
 
+        Ref<Material> material = CreateRef<Material>();
+
         std::string shaderModel;
         std::getline(fileStream, shaderModel);
+
+        material->ShaderModel = shaderModel == "PBR" ? ShaderModel::PBR : ShaderModel::UNLIT;
 
         std::string fragmentShaderPath;
         std::getline(fileStream, fragmentShaderPath);
@@ -84,7 +88,6 @@ namespace Astral {
 
         RendererAPI::NameObject(descriptorSetHandle, filePath.filename().generic_string().data());
 
-        Ref<Material> material = CreateRef<Material>();
         material->FragmentShader = fragmentShader;
         material->Textures.push_back(texture);
         material->DescriptorSet = descriptorSetHandle;

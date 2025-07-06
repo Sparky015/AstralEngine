@@ -45,6 +45,8 @@ namespace Astral{
         bool m_ShowDebugMenu{true};
         bool m_ShowViewportDockSpace{false};
 
+        std::vector<std::string> m_LoadedConfigs;
+
         Astral::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 

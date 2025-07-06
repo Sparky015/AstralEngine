@@ -46,6 +46,7 @@ namespace Astral {
         void EndRenderPass(CommandBufferHandle commandBufferHandle) override;
 
         uint32 GetNumberOfSubpasses() override { return (uint32)m_SubpassDescriptions.size(); }
+        uint32 GetNumColorAttachments(SubpassIndex subpassIndex) override;
 
         void* GetNativeHandle() override { return m_RenderPass; }
 

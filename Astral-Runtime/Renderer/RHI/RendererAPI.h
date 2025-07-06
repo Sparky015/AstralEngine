@@ -8,7 +8,7 @@
 #include "../SceneRenderer.h"
 #include "RendererCommands.h"
 #include "RendererContext.h"
-#include "Renderer/ForwardRenderer.h"
+#include "../Backends/ForwardRenderer.h"
 #include "Resources/Device.h"
 
 namespace Astral {
@@ -36,7 +36,6 @@ namespace Astral {
     private:
 
         friend SceneRenderer;
-        friend ForwardRenderer;
         static RendererCommands* s_RendererCommands;
     };
 

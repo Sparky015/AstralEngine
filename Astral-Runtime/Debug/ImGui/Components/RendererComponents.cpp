@@ -55,4 +55,29 @@ namespace Astral {
         ImGui::Text("Viewport Dimensions: %d px x %d px", viewportSize.x, viewportSize.y);
     }
 
+
+    void RendererTypeSelector()
+    {
+        ImGui::Text("Renderer Type:");
+        ImGui::SameLine();
+
+        if (ImGui::BeginCombo("##DebugMenuRendererTypeSelector", RendererTypeToString(SceneRenderer::GetRendererType()).data()))
+        {
+
+            if (ImGui::Selectable("Deferred"))
+            {
+                SceneRenderer::SetRendererType(RendererType::DEFERRED);
+            }
+
+            if (ImGui::Selectable("Forward"))
+            {
+                SceneRenderer::SetRendererType(RendererType::FORWARD);
+            }
+
+            ImGui::EndCombo();
+        }
+
+
+    }
+
 }
