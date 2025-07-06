@@ -30,8 +30,8 @@ namespace Astral {
 
     VulkanBuffer::~VulkanBuffer()
     {
-        FreeMemory(m_PrimaryMemory);
         DestroyBuffer(m_PrimaryBuffer);
+        FreeMemory(m_PrimaryMemory);
     }
 
 

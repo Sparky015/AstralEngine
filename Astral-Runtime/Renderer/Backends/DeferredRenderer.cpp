@@ -242,6 +242,7 @@ namespace Astral {
         m_MainRenderPass->AddInputAttachment(roughnessTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         m_MainRenderPass->AddInputAttachment(emissionTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         m_MainRenderPass->AddInputAttachment(normalTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        m_MainRenderPass->AddInputAttachment(depthBufferIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
         m_MainRenderPass->AddColorAttachment(offscreenTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         SubpassIndex lightingSubpassIndex = m_MainRenderPass->EndBuildingSubpass();
@@ -554,6 +555,7 @@ namespace Astral {
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_LightingShader;
         material.DescriptorSet = frameContext.GBuffer.GBufferDescriptorSet;
