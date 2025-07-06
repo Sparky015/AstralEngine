@@ -6,7 +6,7 @@
 
 #include "ForwardRenderer.h"
 
-#include "RHI/RendererAPI.h"
+#include "../RHI/RendererAPI.h"
 
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"

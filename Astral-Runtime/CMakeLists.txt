@@ -269,9 +269,9 @@ add_library(AstralEngine
         Core/Utility/Hashing/HashCombiner.h
         Core/Utility/Hashing/Hashes.cpp
         Core/Utility/Hashing/Hashes.h
-        Renderer/ForwardRenderer.cpp
-        Renderer/DeferredRenderer.cpp
-        Renderer/DeferredRenderer.h
+        Renderer/Backends/ForwardRenderer.cpp
+        Renderer/Backends/DeferredRenderer.cpp
+        Renderer/Backends/DeferredRenderer.h
         Renderer/RHI/Common/PipelineStageFlags.h
 )
 

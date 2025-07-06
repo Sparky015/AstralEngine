@@ -34,7 +34,15 @@ namespace Astral {
 
         InitImGui();
 
-        LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
+        for (const std::string& configFilePath : m_LoadedConfigs)
+        {
+            ImGui::LoadIniSettingsFromDisk(configFilePath.c_str());
+        }
+
+        if (m_LoadedConfigs.size() == 0)
+        {
+            LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
+        }
 
         m_RenderImGuiListener.StartListening();
         m_KeyPressedListener.StartListening();
@@ -74,6 +82,7 @@ namespace Astral {
                 RendererViewportSizeComponent();
 
                 ImGui::Spacing();
+                RendererTypeSelector();
                 RendererAPIComponent();
                 RendererAPIValidationStatus();
 
@@ -245,6 +254,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("ImGuiManager::LoadImGuiConfigFile")
         ImGui::LoadIniSettingsFromDisk(filePath.data());
+        m_LoadedConfigs.push_back(filePath.data());
     }
 
 
