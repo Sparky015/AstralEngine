@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <string_view>
-
 #include "Core/SystemManager.h"
 #include "Window/WindowEvents.h"
+
+#include <string>
 
 namespace Astral{
 

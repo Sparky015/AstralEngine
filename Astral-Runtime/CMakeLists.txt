@@ -273,6 +273,12 @@ add_library(AstralEngine
         Renderer/Backends/DeferredRenderer.cpp
         Renderer/Backends/DeferredRenderer.h
         Renderer/RHI/Common/PipelineStageFlags.h
+        Renderer/RenderGraph/RenderGraph.cpp
+        Renderer/RenderGraph/RenderGraph.h
+        Renderer/RenderGraph/RenderGraphSubpass.cpp
+        Renderer/RenderGraph/RenderGraphSubpass.h
+        Core/Containers/DirectedGraph.cpp
+        Core/Containers/DirectedGraph.h
 )
 
 

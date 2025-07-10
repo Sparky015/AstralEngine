@@ -17,11 +17,9 @@
 #include "../RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 #include "Renderer/Renderer.h"
-
+#include "Renderer/RenderGraph/RenderGraph.h"
 
 #include <queue>
-
-
 
 namespace Astral {
 
@@ -94,7 +92,7 @@ namespace Astral {
             uint32 FramesTillFree = 2;
         };
 
-
+        void BuildRenderGraph();
         void BuildRenderPasses();
         void CreateGBufferTextures(GBuffer& outGBuffer, UVec2 dimensions);
         void InitializeFrameResources();
@@ -107,6 +105,7 @@ namespace Astral {
         void LightingPass();
 
 
+        RenderGraph m_RenderGraph;
 
         std::vector<FrameContext> m_FrameContexts;
         uint32 m_CurrentFrameIndex = -1;

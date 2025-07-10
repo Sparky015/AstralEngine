@@ -31,6 +31,10 @@ namespace Astral {
         m_CurrentFrameIndex = 0;
 
 
+        BuildRenderGraph();
+
+        m_RenderGraph.Execute();
+
         // Building the main render pass and the imgui render pass
         BuildRenderPasses();
 
@@ -138,6 +142,102 @@ namespace Astral {
         DescriptorSetHandle& descriptorSet = m_CurrentViewportTexture.front();
         m_CurrentViewportTexture.pop();
         return descriptorSet;
+    }
+
+
+    void DeferredRenderer::BuildRenderGraph()
+    {
+
+        AttachmentDescription albedoBufferDescription = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+        };
+
+        AttachmentDescription metallicBufferDescription = {
+            .Format = ImageFormat::R8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+        };
+
+        AttachmentDescription roughnessBufferDescription = {
+            .Format = ImageFormat::R8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+        };
+
+        AttachmentDescription emissionBufferDescription = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+        };
+
+        AttachmentDescription normalBufferDescription = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+        };
+
+        AttachmentDescription depthBufferDescription = {
+            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
+        };
+
+        RenderGraphSubpass geometryPass;
+        geometryPass.SetDebugName("Geometry Pass");
+        geometryPass.AddColorAttachment(albedoBufferDescription, "Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(metallicBufferDescription, "Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(roughnessBufferDescription, "Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(emissionBufferDescription, "Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(normalBufferDescription, "Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddDepthStencilAttachment(depthBufferDescription, "Depth", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+
+
+        AttachmentDescription lightingTextureDescription = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+        };
+
+
+        RenderGraphSubpass lightingPass;
+        lightingPass.SetDebugName("Lighting Pass");
+        lightingPass.AddInputAttachment(geometryPass, "Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Depth", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+
+        lightingPass.AddColorAttachment(lightingTextureDescription, "Lighting", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+
+        m_RenderGraph.BeginBuildingRenderGraph();
+        m_RenderGraph.AddSubpass(geometryPass);
+        m_RenderGraph.SetOutputPass(lightingPass);
+        m_RenderGraph.EndBuildingRenderGraph();
     }
 
 

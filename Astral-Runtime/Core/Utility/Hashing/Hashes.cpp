@@ -6,6 +6,7 @@
 
 #include "Hashes.h"
 
+#include "Core/Containers/DirectedGraph.h"
 #include "Renderer/RHI/Resources/PipelineStateCache.h"
 
 
@@ -66,3 +67,11 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
 
     return seed;
 }
+
+
+size_t std::hash<Astral::Vertex<uint8>>::operator()(const typename Astral::Vertex<uint8>& v) const noexcept
+{
+    return std::hash<uint8>()(v.GetVertexIndex());
+}
+
+
