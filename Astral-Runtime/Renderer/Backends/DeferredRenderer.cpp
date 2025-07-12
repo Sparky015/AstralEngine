@@ -33,8 +33,6 @@ namespace Astral {
 
         BuildRenderGraph();
 
-        m_RenderGraph.Execute();
-
         // Building the main render pass and the imgui render pass
         BuildRenderPasses();
 
@@ -150,6 +148,7 @@ namespace Astral {
 
         AttachmentDescription albedoBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -159,6 +158,7 @@ namespace Astral {
 
         AttachmentDescription metallicBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -168,6 +168,7 @@ namespace Astral {
 
         AttachmentDescription roughnessBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -177,6 +178,7 @@ namespace Astral {
 
         AttachmentDescription emissionBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -186,6 +188,7 @@ namespace Astral {
 
         AttachmentDescription normalBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -195,6 +198,7 @@ namespace Astral {
 
         AttachmentDescription depthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .ImageUsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -202,8 +206,7 @@ namespace Astral {
             .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
         };
 
-        RenderGraphSubpass geometryPass;
-        geometryPass.SetDebugName("Geometry Pass");
+        RenderGraphPass geometryPass = RenderGraphPass(m_ViewportSize, "Geometry Pass", [&](){ GeometryPass(); });
         geometryPass.AddColorAttachment(albedoBufferDescription, "Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         geometryPass.AddColorAttachment(metallicBufferDescription, "Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         geometryPass.AddColorAttachment(roughnessBufferDescription, "Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
@@ -214,7 +217,8 @@ namespace Astral {
 
 
         AttachmentDescription lightingTextureDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Format = ImageFormat::B8G8R8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -223,8 +227,7 @@ namespace Astral {
         };
 
 
-        RenderGraphSubpass lightingPass;
-        lightingPass.SetDebugName("Lighting Pass");
+        RenderGraphPass lightingPass = RenderGraphPass(m_ViewportSize, "Lighting Pass", [&](){ LightingPass(); });;
         lightingPass.AddInputAttachment(geometryPass, "Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.AddInputAttachment(geometryPass, "Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.AddInputAttachment(geometryPass, "Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
@@ -234,8 +237,8 @@ namespace Astral {
 
         lightingPass.AddColorAttachment(lightingTextureDescription, "Lighting", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
-        m_RenderGraph.BeginBuildingRenderGraph();
-        m_RenderGraph.AddSubpass(geometryPass);
+        m_RenderGraph.BeginBuildingRenderGraph("Viewport");
+        m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.SetOutputPass(lightingPass);
         m_RenderGraph.EndBuildingRenderGraph();
     }
@@ -486,6 +489,8 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            RendererAPI::NameObject(context.OffscreenRenderTarget, "Offscreen Render Target");
+
 
 
 
@@ -509,6 +514,8 @@ namespace Astral {
             context.SceneFramebuffer->AttachTexture(context.GBuffer.DepthBuffer);
             context.SceneFramebuffer->AttachTexture(context.OffscreenRenderTarget);
             context.SceneFramebuffer->EndBuildingFramebuffer();
+            RendererAPI::NameObject(context.OffscreenRenderTarget, "Offscreen Render Target");
+
 
             context.SceneRenderTarget = nullptr;
 
@@ -547,17 +554,10 @@ namespace Astral {
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
         FramebufferHandle mainFramebufferHandle = frameContext.SceneFramebuffer;
 
-        // Screen Rendering
         commandBuffer->BeginRecording();
-        RendererAPI::BeginLabel(commandBuffer, "Main Render Pass", Vec4(1.0 , 1.0, 0, 1.0));
-        m_MainRenderPass->BeginRenderPass(commandBuffer, mainFramebufferHandle);
 
-        GeometryPass();
-        LightingPass();
-
-        m_MainRenderPass->EndRenderPass(commandBuffer);
-        RendererAPI::EndLabel(commandBuffer);
-
+        // Viewport Rendering
+        m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
 
 
         // ImGui Rendering
@@ -603,11 +603,10 @@ namespace Astral {
 
     void DeferredRenderer::GeometryPass()
     {
+        const RenderGraphExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
-        RenderPassHandle mainRenderPass = m_MainRenderPass;
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
-        RendererAPI::BeginLabel(commandBuffer, "Geometry Pass", Vec4(1.0 , 0.0, 1.0, 1.0));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -620,7 +619,7 @@ namespace Astral {
 
             material.FragmentShader = m_GeometryPassShader;
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
+            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -639,19 +638,16 @@ namespace Astral {
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
 
-        RendererAPI::EndLabel(commandBuffer);
     }
 
 
     void DeferredRenderer::LightingPass()
     {
+        const RenderGraphExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_MainRenderPass->NextSubpass(commandBuffer);
-
-        RendererAPI::BeginLabel(commandBuffer, "Lighting Pass", Vec4(1.0 , 0.0, 0, 1.0));
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
@@ -662,7 +658,7 @@ namespace Astral {
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
-        PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(m_MainRenderPass, material, mesh, 1);
+        PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
         pipeline->Bind(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -673,7 +669,6 @@ namespace Astral {
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
-        RendererAPI::EndLabel(commandBuffer);
     }
 
 

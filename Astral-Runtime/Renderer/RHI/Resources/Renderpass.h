@@ -34,6 +34,7 @@ namespace Astral {
     struct AttachmentDescription
     {
         ImageFormat Format;
+        ImageUsageFlags ImageUsageFlags;
         AttachmentLoadOp LoadOp;
         AttachmentStoreOp StoreOp;
         ImageLayout InitialLayout;

@@ -247,3 +247,18 @@ Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
 MacOS: AppleClang 16.0.0, Clang 19.1.7      
 Windows: MSVC 19.43
 
+
+
+
+### TODOs: All Render Passes
+
+* Frustum Culling - CPU Side
+* Tiled Light Culling - Compute
+* Cascaded Shadow Maps - Vertex Heavy
+* Geometry Pass - Fragment Heavy
+* SSAO - Compute
+* Lighting Pass - Fragment Heavy
+* Transparent Objects Forward Pass - Fragment Heavy
+* Bloom - Compute
+* SMAA - Fragment Heavy
+

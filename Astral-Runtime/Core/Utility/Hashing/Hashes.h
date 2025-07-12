@@ -15,7 +15,7 @@ namespace Astral {
     struct VertexBufferAttribute;
     class VertexBufferLayout;
     struct PipelineStateConfiguration;
-    class RenderGraphSubpass;
+    class RenderGraphPass;
 
     template<typename DataType>
     class Vertex;

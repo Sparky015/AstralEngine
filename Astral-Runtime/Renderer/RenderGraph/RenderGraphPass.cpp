@@ -1,23 +1,29 @@
 /**
-* @file RenderGraphSubpass.cpp
+* @file RenderGraphPass.cpp
 * @author Andrew Fagan
 * @date 7/7/2025
 */
 
-#include "RenderGraphSubpass.h"
+#include "RenderGraphPass.h"
 
 namespace Astral {
 
-    bool RenderGraphSubpass::ExternalAttachment::operator==(const ExternalAttachment& other) const noexcept
+    RenderGraphPass::RenderGraphPass(UVec2 resourceDimensions, const std::string_view& debugName, const std::function<void()>& callback) :
+        m_ResourceDimensions(resourceDimensions),
+        m_Callback(callback),
+        m_DebugName(debugName)
+    {}
+
+    bool RenderGraphPass::ExternalAttachment::operator==(const ExternalAttachment& other) const noexcept
     {
-        return OwningSubpass == other.OwningSubpass && Name == other.Name && OptimalImageLayout == other.OptimalImageLayout;
+        return OwningPass == other.OwningPass && Name == other.Name && OptimalImageLayout == other.OptimalImageLayout;
     }
 
 
-    void RenderGraphSubpass::AddInputAttachment(const RenderGraphSubpass& subpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddInputAttachment(const RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         ExternalAttachment externalAttachment = {
-            .OwningSubpass = subpass,
+            .OwningPass = subpass,
             .Name = name,
             .OptimalImageLayout = optimalImageLayout
         };
@@ -26,7 +32,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphSubpass::AddColorAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddColorAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -41,7 +47,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphSubpass::AddResolveAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddResolveAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -56,7 +62,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphSubpass::AddDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -71,7 +77,7 @@ namespace Astral {
     }
 
 
-    AttachmentIndex RenderGraphSubpass::GetAttachment(const std::string_view& name) const
+    AttachmentIndex RenderGraphPass::GetAttachment(const std::string_view& name) const
     {
         for (int i = 0; i < m_Attachments.size(); i++)
         {
@@ -82,7 +88,7 @@ namespace Astral {
     }
 
 
-    bool RenderGraphSubpass::operator==(const RenderGraphSubpass& other) const noexcept
+    bool RenderGraphPass::operator==(const RenderGraphPass& other) const noexcept
     {
         return m_Attachments == other.m_Attachments &&
                 m_InputAttachments == other.m_InputAttachments &&

@@ -14,132 +14,133 @@
 
 namespace Astral {
 
-    void RenderGraph::BeginBuildingRenderGraph()
+    void RenderGraph::BeginBuildingRenderGraph(const std::string_view& debugName)
     {
-        Device& device = RendererAPI::GetDevice();
-        m_RenderPass = device.CreateRenderPass();
+        m_DebugName = debugName;
 
-        m_Subpasses.clear();
-        m_SubpassAttachmentOffset.clear();
-        m_NumAttachments = 0;
-        m_Textures.clear();
+        m_Passes.clear();
+
+        m_RenderPassResources.clear();
     }
 
 
-    void RenderGraph::AddSubpass(const RenderGraphSubpass& subpass)
+    void RenderGraph::AddPass(const RenderGraphPass& pass)
     {
-        m_Subpasses.push_back(subpass);
+        m_Passes.push_back(pass);
+        m_RenderPasses.push_back(nullptr);
+        m_RenderPassResources.push_back(std::vector<RenderPassResources>());
     }
 
 
-    void RenderGraph::SetOutputPass(const RenderGraphSubpass& subpass)
+    void RenderGraph::SetOutputPass(const RenderGraphPass& pass)
     {
-        m_Subpasses.push_back(subpass);
-        m_OutputSubpassIndex = m_Subpasses.size() - 1;
+        AddPass(pass);
+        m_OutputRenderPassIndex = m_Passes.size() - 1;
     }
 
 
     void RenderGraph::EndBuildingRenderGraph()
     {
-        m_RenderPass->BeginBuildingRenderPass();
 
-        for (const RenderGraphSubpass& subpass : m_Subpasses)
-        {
-            m_SubpassAttachmentOffset.push_back(m_NumAttachments);
+        // Populates the actual graph struction
+        BuildRenderGraph();
 
-            for (const RenderGraphSubpass::LocalAttachment& localAttachment : subpass.GetAttachments())
-            {
-                m_RenderPass->DefineAttachment(localAttachment.AttachmentDescription);
-                m_NumAttachments++;
-            }
-
-            SubpassIndex subpassIndex = m_SubpassNodes.size();
-            AEDirectedGraph<SubpassIndex>::Vertex subpassPassNode = m_RenderGraph.AddVertex(subpassIndex);
-            m_SubpassNodes.push_back(subpassPassNode);
-        }
-
-        for (size_t i = 0; i < m_Subpasses.size(); i++)
-        {
-            m_RenderPass->BeginBuildingSubpass();
-
-            const RenderGraphSubpass& subpass = m_Subpasses[i];
-            const std::vector<RenderGraphSubpass::LocalAttachment>& m_SubpassAttachments = subpass.GetAttachments();
-
-            for (AttachmentIndex localAttachmentIndex : subpass.GetColorAttachments())
-            {
-                const RenderGraphSubpass::LocalAttachment& localAttachment = m_SubpassAttachments[localAttachmentIndex];
-                AttachmentIndex globalAttachmentIndex = m_SubpassAttachmentOffset[i] + localAttachmentIndex;
-                m_RenderPass->AddColorAttachment(globalAttachmentIndex, localAttachment.OptimalImageLayout);
-            }
+        // Detects dependencies between the render passes and sorts the passes into the correct order
+        SolveRenderPassExecutionOrder();
 
 
-            for (AttachmentIndex localAttachmentIndex : subpass.GetResolveAttachments())
-            {
-                const RenderGraphSubpass::LocalAttachment& localAttachment = m_SubpassAttachments[localAttachmentIndex];
-                AttachmentIndex globalAttachmentIndex = m_SubpassAttachmentOffset[i] + localAttachmentIndex;
-                m_RenderPass->AddResolveAttachment(globalAttachmentIndex, localAttachment.OptimalImageLayout);
-            }
+        BuildRenderPassObjects();
 
-
-            for (RenderGraphSubpass::ExternalAttachment externalAttachment : subpass.GetInputAttachments())
-            {
-                std::string_view& inputAttachmentName = externalAttachment.Name;
-                const RenderGraphSubpass& owningSubpass = externalAttachment.OwningSubpass;
-                AttachmentIndex localAttachmentIndex = owningSubpass.GetAttachment(inputAttachmentName);
-                ASSERT(localAttachmentIndex != NullAttachmentIndex, "External subpass does not contain attachment by name " << inputAttachmentName << "!")
-
-                SubpassIndex subpassIndex = GetSubpassIndex(owningSubpass);
-                ASSERT(subpassIndex != NullSubpassIndex, "Subpass does not exist in render graph!")
-
-                AEDirectedGraph<SubpassIndex>::Vertex originSubpassNode = m_SubpassNodes[subpassIndex];
-                AEDirectedGraph<SubpassIndex>::Vertex userSubpassNode = m_SubpassNodes[i];
-                userSubpassNode.AddEdge(originSubpassNode, subpassIndex); // User node depends on origin node
-
-                AttachmentIndex globalAttachmentIndex = m_SubpassAttachmentOffset[subpassIndex] + localAttachmentIndex;
-                m_RenderPass->AddInputAttachment(globalAttachmentIndex, externalAttachment.OptimalImageLayout);
-            }
-
-
-            AttachmentIndex localAttachmentIndex = subpass.GetDepthAttachment();
-            if (localAttachmentIndex != NullAttachmentIndex)
-            {
-                const RenderGraphSubpass::LocalAttachment& localAttachment = m_SubpassAttachments[localAttachmentIndex];
-                AttachmentIndex globalAttachmentIndex = m_SubpassAttachmentOffset[i] + localAttachmentIndex;
-                m_RenderPass->AddDepthStencilAttachment(globalAttachmentIndex, localAttachment.OptimalImageLayout);
-            }
-
-
-            m_RenderPass->EndBuildingSubpass();
-        }
-
-        m_RenderPass->EndBuildingRenderPass();
     }
 
 
-    void RenderGraph::Execute()
+    void RenderGraph::Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex)
     {
-        std::vector<SubpassIndex> executionOrder;
+        m_ExecutionContext.CommandBuffer = commandBuffer;
 
-        std::unordered_set<AEDirectedGraph<SubpassIndex>::Vertex> visitedSubpassNodes;
-        std::unordered_set<AEDirectedGraph<SubpassIndex>::Vertex> childPushedNodes;
-        std::unordered_set<AEDirectedGraph<SubpassIndex>::Vertex> processedSubpassNodes;
+        RendererAPI::BeginLabel(commandBuffer, m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
-        std::stack<AEDirectedGraph<SubpassIndex>::Vertex> nodesToVisit;
+        for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
+        {
+            PassIndex renderPassIndex = m_ExecutionOrder[i];
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            RenderPassHandle rhiRenderPass = m_RenderPasses[renderPassIndex];
+            RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
 
-        AEDirectedGraph<SubpassIndex>::Vertex outputNode = m_SubpassNodes[m_OutputSubpassIndex];
+
+            m_ExecutionContext.RenderPass = rhiRenderPass;
+
+
+            RendererAPI::BeginLabel(commandBuffer, pass.GetDebugName(), Vec4(1.0 , 0.0, 1.0, 1.0));
+            rhiRenderPass->BeginRenderPass(commandBuffer, renderPassResource.Framebuffer);
+
+            pass.Execute();
+
+            RendererAPI::EndLabel(commandBuffer);
+
+            rhiRenderPass->EndRenderPass(commandBuffer);
+        }
+
+        RendererAPI::EndLabel(commandBuffer);
+
+        m_ExecutionContext = {};
+    }
+
+
+    void RenderGraph::BuildRenderGraph()
+    {
+        // Add all the render passes as a node in the render graph
+        for (size_t renderPassIndex = 0; renderPassIndex < m_Passes.size(); renderPassIndex++)
+        {
+            AEDirectedGraph<PassIndex>::Vertex renderPassNode = m_RenderGraph.AddVertex(renderPassIndex);
+            m_RenderPassNodes.push_back(renderPassNode);
+        }
+
+        // Add edges to all render passes with dependencies
+        for (size_t i = 0; i < m_Passes.size(); i++)
+        {
+            const RenderGraphPass& pass = m_Passes[i];
+
+            for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
+            {
+                std::string_view& inputAttachmentName = externalAttachment.Name;
+                const RenderGraphPass& owningPass = externalAttachment.OwningPass;
+                AttachmentIndex localAttachmentIndex = owningPass.GetAttachment(inputAttachmentName);
+                ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
+
+                PassIndex externalRenderPassIndex = GetRenderPassIndex(owningPass);
+                ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
+                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+            }
+        }
+    }
+
+
+    void RenderGraph::SolveRenderPassExecutionOrder()
+    {
+        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> visitedPassNodes;
+        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> childPushedNodes;
+        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> processedPassNodes;
+
+        std::stack<AEDirectedGraph<PassIndex>::Vertex> nodesToVisit;
+
+        AEDirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
         nodesToVisit.push(outputNode);
 
         while (!nodesToVisit.empty())
         {
-            AEDirectedGraph<SubpassIndex>::Vertex currentNode = nodesToVisit.top();
+            AEDirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
             nodesToVisit.pop();
 
-            if (processedSubpassNodes.contains(currentNode)) { continue; }
+            if (processedPassNodes.contains(currentNode)) { continue; }
 
             if (childPushedNodes.contains(currentNode))
             {
-                executionOrder.push_back(currentNode.GetData());
-                processedSubpassNodes.insert(currentNode);
+                m_ExecutionOrder.push_back(currentNode.GetData());
+                processedPassNodes.insert(currentNode);
             }
             else
             {
@@ -147,35 +148,189 @@ namespace Astral {
                 nodesToVisit.push(currentNode);
             }
 
-            for (AEDirectedGraph<SubpassIndex>::Edge edge : currentNode)
+            for (AEDirectedGraph<PassIndex>::Edge edge : currentNode)
             {
-                AEDirectedGraph<SubpassIndex>::Vertex dependentNode = edge.GetRightVertex();
+                AEDirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
                 nodesToVisit.push(dependentNode);
-                ASSERT(!(visitedSubpassNodes.contains(dependentNode) && !processedSubpassNodes.contains(dependentNode)), "Cycle detected in render graph!")
-                visitedSubpassNodes.insert(dependentNode);
+                ASSERT(!(visitedPassNodes.contains(dependentNode) && !processedPassNodes.contains(dependentNode)), "Cycle detected in render graph!")
+                visitedPassNodes.insert(dependentNode);
             }
 
         }
 
-        // Execute subpass' code
-        for (SubpassIndex subpassIndex : executionOrder)
-        {
-            const RenderGraphSubpass& subpass = m_Subpasses[subpassIndex];
-            LOG(subpass.GetDebugName());
+    }
 
-            subpass.Execute();
+
+    void RenderGraph::BuildRenderPassObjects()
+    {
+        Device& device = RendererAPI::GetDevice();
+
+        // Pass One: Create the resources for all the render passes ahead of building the render pass objects
+        for (PassIndex renderPassIndex : m_ExecutionOrder)
+        {
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            std::vector<RenderPassResources>& passResources = m_RenderPassResources[renderPassIndex];
+            passResources.resize(m_FramesInFlight);
+
+            RenderPassHandle& renderPass = m_RenderPasses[renderPassIndex];
+            renderPass = device.CreateRenderPass();
+            renderPass->BeginBuildingRenderPass();
+
+
+            for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
+            {
+                // Define attachments for use in the render pass object
+                // TODO: Check if the attachment is used as an input attachment in another pass.
+                //       Use the render graph nodes array to look up if the pass has a consuming render pass and which attachments are being consumed
+                renderPass->DefineAttachment(localAttachment.AttachmentDescription);
+
+                TextureCreateInfo textureCreateInfo = {
+                    .Format = localAttachment.AttachmentDescription.Format,
+                    .Layout = localAttachment.AttachmentDescription.InitialLayout,
+                    .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
+                    .Dimensions = pass.GetResourceDimensions(),
+                    .ImageData = nullptr
+                };
+
+
+                // Create the texture for the attachment
+                TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
+
+                ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
+                for (size_t i = 0; i < m_FramesInFlight; i++)
+                {
+                    passResources[i].AttachmentTextures.push_back(attachmentTexture);
+                }
+            }
+
+            // Define the external attachments for the render pass
+            for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
+            {
+                PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
+                ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetAttachment(externalAttachment.Name);
+                ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
+
+                RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass.GetAttachments()[externalPassAttachmentIndex];
+                // TODO: Change the store op of the owning render pass to always be AttachmentStoreOp::Store
+                // TODO: Change the final layout of the producing render pass to always be the optimal layout of the consuming render pass
+                inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
+                inputAttachment.AttachmentDescription.InitialLayout = externalAttachment.OptimalImageLayout;
+                renderPass->DefineAttachment(inputAttachment.AttachmentDescription);
+            }
+        }
+
+
+
+
+
+
+
+        // Pass Two: Define the pass contents for all the render pass objects using the information compiled in Pass One
+
+        for (PassIndex renderPassIndex : m_ExecutionOrder)
+        {
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            RenderPassHandle& renderPass = m_RenderPasses[renderPassIndex];
+
+
+            LOG("Creating Render Pass: " << pass.GetDebugName());
+
+            renderPass->BeginBuildingSubpass();
+
+
+            const std::vector<RenderGraphPass::LocalAttachment>& passLocalAttachments = pass.GetAttachments();
+
+            for (AttachmentIndex localAttachmentIndex : pass.GetColorAttachments())
+            {
+                const RenderGraphPass::LocalAttachment& localAttachment = passLocalAttachments[localAttachmentIndex];
+                renderPass->AddColorAttachment(localAttachmentIndex, localAttachment.OptimalImageLayout);
+            }
+
+
+            {
+                AttachmentIndex localAttachmentIndex = pass.GetDepthAttachment();
+                if (localAttachmentIndex != NullAttachmentIndex)
+                {
+                    const RenderGraphPass::LocalAttachment& localAttachment = passLocalAttachments[localAttachmentIndex];
+                    renderPass->AddDepthStencilAttachment(localAttachmentIndex, localAttachment.OptimalImageLayout);
+                }
+            }
+
+
+            for (AttachmentIndex localAttachmentIndex : pass.GetResolveAttachments())
+            {
+                const RenderGraphPass::LocalAttachment& localAttachment = passLocalAttachments[localAttachmentIndex];
+                renderPass->AddResolveAttachment(localAttachmentIndex, localAttachment.OptimalImageLayout);
+            }
+
+
+            uint32 numOfLocalAttachments = passLocalAttachments.size();
+            uint32 externalPassAttachmentIndex = numOfLocalAttachments;
+            for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
+            {
+                renderPass->AddInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
+                externalPassAttachmentIndex++;
+            }
+
+
+            renderPass->EndBuildingSubpass();
+            renderPass->EndBuildingRenderPass();
+        }
+
+
+        // Create the frame buffers and add external textures for the render passes
+        for (PassIndex renderPassIndex : m_ExecutionOrder)
+        {
+            RenderPassHandle renderPass = m_RenderPasses[renderPassIndex];
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            std::vector<RenderPassResources>& passResources = m_RenderPassResources[renderPassIndex];
+            ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
+
+            for (size_t i = 0; i < m_FramesInFlight; i++)
+            {
+                passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
+
+                UVec2 passResourceDimensions = pass.GetResourceDimensions();
+                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y);
+
+                for (const TextureHandle& attachmentTexture : m_RenderPassResources[renderPassIndex][i].AttachmentTextures)
+                {
+                    passResources[i].Framebuffer->AttachTexture(attachmentTexture);
+                }
+
+
+                // Pull external attachment textures from that render pass' resources
+                for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
+                {
+                    PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
+                    ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                    const RenderPassResources& externalPassResources = m_RenderPassResources[externalPassIndex][i];
+                    AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetAttachment(externalAttachment.Name);
+                    ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
+
+                    TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
+                    ASSERT(passResources[i].Framebuffer->GetExtent() == externalAttachmentTexture->GetDimensions(), "External input texture does not match the dimensions of the target render pass!");
+
+                    passResources[i].Framebuffer->AttachTexture(externalAttachmentTexture);
+                }
+
+                passResources[i].Framebuffer->EndBuildingFramebuffer();
+            }
         }
     }
 
 
-    SubpassIndex RenderGraph::GetSubpassIndex(const RenderGraphSubpass& subpass)
+    PassIndex RenderGraph::GetRenderPassIndex(const RenderGraphPass& pass)
     {
-        for (int i = 0; i < m_Subpasses.size(); i++)
+        for (int i = 0; i < m_Passes.size(); i++)
         {
-            if (m_Subpasses[i] == subpass) { return i; }
+            if (m_Passes[i] == pass) { return i; }
         }
 
-        return NullSubpassIndex;
+        return NullRenderPassIndex;
     }
 
 }
