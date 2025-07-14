@@ -14,6 +14,7 @@
 #include <string>
 #include <filesystem>
 #include "imgui/imgui.h"
+#include "Renderer/RHI/Common/ImageSubResourceRange.h"
 
 
 namespace Astral {
@@ -36,10 +37,12 @@ namespace Astral {
         virtual int GetHeight() = 0;
         virtual UVec2 GetDimensions() = 0;
 
+        virtual ImageAspectFlags GetImageAspect() = 0;
         virtual ImageLayout GetLayout() = 0;
         virtual ImageFormat GetFormat() = 0;
 
         virtual void* GetSampler() = 0;
+        virtual void* GetNativeImage() = 0;
         virtual void* GetNativeHandle() = 0;
 
         virtual ImTextureID GetImGuiTextureID() = 0;

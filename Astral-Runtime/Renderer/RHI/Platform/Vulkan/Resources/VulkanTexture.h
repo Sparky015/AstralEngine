@@ -41,10 +41,12 @@ namespace Astral {
         int GetWidth() override { return m_ImageWidth; }
         UVec2 GetDimensions() override { return UVec2(m_ImageWidth, m_ImageHeight); }
 
+        ImageAspectFlags GetImageAspect() override { return m_ImageAspect; }
         ImageLayout GetLayout() override { return ConvertVkImageLayoutToImageLayout(m_CurrentLayout); }
         ImageFormat GetFormat() override { return ConvertVkFormatToImageFormat(m_Format); }
 
         void* GetSampler() override { return m_Sampler; }
+        void* GetNativeImage() override { return m_Image; }
         void* GetNativeHandle() override { return m_ImageView; }
 
         ImTextureID GetImGuiTextureID() override;
@@ -84,6 +86,7 @@ namespace Astral {
         VkDeviceMemory m_ImageMemory;
         VkImageView m_ImageView;
         VkSampler m_Sampler;
+        ImageAspectFlags m_ImageAspect;
 
         VkDescriptorSet m_ImGuiTextureID;
     };
