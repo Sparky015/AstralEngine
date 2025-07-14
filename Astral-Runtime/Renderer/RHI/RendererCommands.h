@@ -12,6 +12,7 @@
 #include "Resources/CommandBuffer.h"
 #include "Resources/IndexBuffer.h"
 #include "Resources/PipelineStateObject.h"
+#include "Common/PipelineBarriers.h"
 #include "Resources/RenderTarget.h"
 #include "Resources/Shader.h"
 
@@ -40,7 +41,9 @@ namespace Astral {
         virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
         virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
-        virtual void SetBlending(bool enable) = 0;
+        virtual void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) = 0;
+
+        virtual void SetBlending(bool enable) = 0; // TODO: Remove this
 
         virtual void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) = 0;
         virtual void EndLabel(CommandBufferHandle commandBufferHandle) = 0;
@@ -49,6 +52,7 @@ namespace Astral {
         virtual void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name) = 0;
         virtual void NameObject(TextureHandle textureHandle, std::string_view name) = 0;
         virtual void NameObject(ShaderHandle shaderHandle, std::string_view name) = 0;
+        virtual void NameObject(FramebufferHandle framebufferHandle, std::string_view name) = 0;
 
         virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
 

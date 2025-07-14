@@ -18,6 +18,8 @@ namespace Astral {
         void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) override;
         void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
                                 pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
+        void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) override;
+
         void SetBlending(bool enable) override;
         void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) override;
         void EndLabel(CommandBufferHandle commandBufferHandle) override;
@@ -26,6 +28,7 @@ namespace Astral {
         void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name) override;
         void NameObject(TextureHandle textureHandle, std::string_view name) override;
         void NameObject(ShaderHandle shaderHandle, std::string_view name) override;
+        void NameObject(FramebufferHandle framebufferHandle, std::string_view name) override;
 
         void CallImGuiDraws(CommandBufferHandle commandBufferHandle) override;
     };
