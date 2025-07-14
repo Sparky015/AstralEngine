@@ -1,3 +1,10 @@
+#version 460
+
+layout(location = 0) in vec3 v_WorldPosition;
+layout(location = 1) in vec3 v_Normals;
+layout(location = 2) in vec3 v_Tangents;
+layout(location = 3) in vec3 v_Bitangents;
+layout(location = 4) in vec2 v_TextureCoord;
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
@@ -17,12 +24,12 @@ layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
-layout(input_attachment_index = 0, set = 1, binding = 0) uniform subpassInput u_AlbedoInput;
-layout(input_attachment_index = 1, set = 1, binding = 1) uniform subpassInput u_MetallicInput;
-layout(input_attachment_index = 2, set = 1, binding = 2) uniform subpassInput u_RoughnessInput;
-layout(input_attachment_index = 3, set = 1, binding = 3) uniform subpassInput u_EmissionInput;
-layout(input_attachment_index = 4, set = 1, binding = 4) uniform subpassInput u_NormalInput;
-layout(input_attachment_index = 5, set = 1, binding = 5) uniform subpassInput u_DepthBufferInput;
+layout(set = 1, binding = 0) uniform sampler2D u_AlbedoInput;
+layout(set = 1, binding = 1) uniform sampler2D u_MetallicInput;
+layout(set = 1, binding = 2) uniform sampler2D u_RoughnessInput;
+layout(set = 1, binding = 3) uniform sampler2D u_EmissionInput;
+layout(set = 1, binding = 4) uniform sampler2D u_NormalInput;
+layout(set = 1, binding = 5) uniform sampler2D u_DepthBufferInput;
 
 layout(location = 0) out vec4 outColor;
 
@@ -32,7 +39,7 @@ vec3 GetWorldPosition()
     vec3 worldPosition;
 
     vec2 pixelCoords = gl_FragCoord.xy;
-    float depth = subpassLoad(u_DepthBufferInput).r;
+    float depth = texture(u_DepthBufferInput, v_TextureCoord).r;
     vec4 clipSpacePosition;
     clipSpacePosition.x = (gl_FragCoord.x / u_SceneData.screenSize.x) * 2.0 - 1.0;
     clipSpacePosition.y = (gl_FragCoord.y / u_SceneData.screenSize.y) * 2.0 - 1.0;
@@ -87,11 +94,11 @@ vec3 F(vec3 F0, vec3 V, vec3 H)
 
 void main()
 {
-    vec3 baseColor = subpassLoad(u_AlbedoInput).rgb;
-    float metallic = subpassLoad(u_MetallicInput).r;
-    float roughness = subpassLoad(u_RoughnessInput).r;
-    vec3 emission = subpassLoad(u_EmissionInput).rgb;
-    vec3 normal = subpassLoad(u_NormalInput).rgb;
+    vec3 baseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
+    float metallic = texture(u_MetallicInput, v_TextureCoord).r;
+    float roughness = texture(u_RoughnessInput, v_TextureCoord).r;
+    vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
+    vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
     normal = normal * 2.0 - 1.0;
     vec3 worldPosition = GetWorldPosition();
 
