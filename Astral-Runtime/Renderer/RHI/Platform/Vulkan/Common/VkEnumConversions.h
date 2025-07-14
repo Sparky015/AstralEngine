@@ -17,6 +17,9 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Renderer/RHI/Common/DependencyFlags.h"
+#include "Renderer/RHI/Common/ImageSubResourceRange.h"
+
 namespace Astral {
 
     VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat);
@@ -24,6 +27,8 @@ namespace Astral {
     VkAccessFlags ConvertAccessFlagsToVkAccessFlags(AccessFlags accessFlags);
     VkPipelineStageFlags ConvertPipelineStageToVkPipelineStageFlags(PipelineStageFlags pipelineStageFlags);
     VkImageUsageFlags ConvertImageUsageFlagsToVkImageUsageFlags(ImageUsageFlags imageUsageFlags);
+    VkImageAspectFlags ConvertImageAspectFlagsToVkImageAspectFlags(ImageAspectFlags imageAspectFlags);
+    VkDependencyFlags ConvertDependencyFlagsToVkDependencyFlags(DependencyFlags dependencyFlags);
 
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);
     ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);
