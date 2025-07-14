@@ -29,7 +29,7 @@ namespace Astral {
         void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
         void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
         void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage) override;
-        void AddDescriptorInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) override;
+        void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) override;
         void EndBuildingSet() override;
 
         void* GetLayout() override { return m_DescriptorSetLayout; }
