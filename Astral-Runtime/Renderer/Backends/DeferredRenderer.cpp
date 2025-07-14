@@ -15,7 +15,6 @@
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RendererManager.h"
 
-#include "stb_image.h"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Astral {
@@ -31,13 +30,14 @@ namespace Astral {
         m_CurrentFrameIndex = 0;
 
 
-        BuildRenderGraph();
 
         // Building the main render pass and the imgui render pass
         BuildRenderPasses();
 
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
+
+        BuildRenderGraph();
 
 
         m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
@@ -96,7 +96,8 @@ namespace Astral {
         if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
         {
             uint32 currentBufferAllocation = frameContext.SceneLightsBuffer->GetAllocatedSize();
-            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2); // TODO: If reallocation happens, you need to re-add to descriptor set as it is a new buffer
+            // TODO: If reallocation happens, you need to re-add to descriptor set to replace the old buffer as reallocation creates a new buffer
+            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
         }
         frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
 
@@ -207,12 +208,12 @@ namespace Astral {
         };
 
         RenderGraphPass geometryPass = RenderGraphPass(m_ViewportSize, "Geometry Pass", [&](){ GeometryPass(); });
-        geometryPass.AddColorAttachment(albedoBufferDescription, "Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(metallicBufferDescription, "Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(roughnessBufferDescription, "Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(emissionBufferDescription, "Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(normalBufferDescription, "Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddDepthStencilAttachment(depthBufferDescription, "Depth", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(albedoBufferDescription, "Geometry_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(metallicBufferDescription, "Geometry_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(roughnessBufferDescription, "Geometry_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(emissionBufferDescription, "Geometry_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddColorAttachment(normalBufferDescription, "Geometry_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.AddDepthStencilAttachment(depthBufferDescription, "Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
 
@@ -228,18 +229,28 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(m_ViewportSize, "Lighting Pass", [&](){ LightingPass(); });;
-        lightingPass.AddInputAttachment(geometryPass, "Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(geometryPass, "Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(geometryPass, "Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(geometryPass, "Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(geometryPass, "Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(geometryPass, "Depth", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Geometry_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Geometry_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Geometry_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Geometry_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Geometry_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.AddInputAttachment(geometryPass, "Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
-        lightingPass.AddColorAttachment(lightingTextureDescription, "Lighting", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        lightingPass.AddColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+
+        std::vector<TextureHandle> outputTextures;
+        constexpr int numFramesInFlight = 3;
+        outputTextures.reserve(numFramesInFlight);
+        for (int i = 0; i < numFramesInFlight; i++)
+        {
+            TextureHandle offscreenOutput = m_FrameContexts[i].OffscreenRenderTarget;
+            outputTextures.push_back(offscreenOutput);
+        }
 
         m_RenderGraph.BeginBuildingRenderGraph("Viewport");
         m_RenderGraph.AddPass(geometryPass);
-        m_RenderGraph.SetOutputPass(lightingPass);
+        m_RenderGraph.AddPass(lightingPass);
+        m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -353,10 +364,10 @@ namespace Astral {
         m_MainRenderPass->EndBuildingRenderPass();
 
         SubpassDependencyMasks subpassDependencyMasks = {
-            .SourceStageMask = PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT_BIT,
-            .DestinationStageMask = PipelineStageFlags::FRAGMENT_SHADER_BIT,
-            .SourceAccessMask = AccessFlags::SHADER_WRITE_BIT,
-            .DestinationAccessMask = AccessFlags::SHADER_READ_BIT,
+            .SourceStageMask       =  PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .DestinationStageMask  =  PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            .SourceAccessMask      =  ACCESS_FLAGS_SHADER_WRITE_BIT,
+            .DestinationAccessMask =  ACCESS_FLAGS_SHADER_READ_BIT,
         };
         m_MainRenderPass->DefineSubpassDependency(geometrySubpassIndex, lightingSubpassIndex, subpassDependencyMasks);
 
@@ -453,12 +464,12 @@ namespace Astral {
 
         outGBuffer.GBufferDescriptorSet = device.CreateDescriptorSet();
         outGBuffer.GBufferDescriptorSet->BeginBuildingSet();
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.AlbedoBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.MetallicBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.RoughnessBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.EmissionBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.NormalBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.DepthBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.AlbedoBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.MetallicBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.RoughnessBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.EmissionBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.NormalBuffer, ShaderStage::FRAGMENT);
+        outGBuffer.GBufferDescriptorSet->AddDescriptorSubpassInputAttachment(outGBuffer.DepthBuffer, ShaderStage::FRAGMENT);
         outGBuffer.GBufferDescriptorSet->EndBuildingSet();
     }
 
@@ -603,7 +614,7 @@ namespace Astral {
 
     void DeferredRenderer::GeometryPass()
     {
-        const RenderGraphExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
@@ -643,18 +654,18 @@ namespace Astral {
 
     void DeferredRenderer::LightingPass()
     {
-        const RenderGraphExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
 
-        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); // TODO: Fix quad to have the correct UVs on load (right now its flipped)
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
         frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_LightingShader;
-        material.DescriptorSet = frameContext.GBuffer.GBufferDescriptorSet;
+        material.DescriptorSet = executionContext.ReadAttachments;
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
@@ -663,7 +674,7 @@ namespace Astral {
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.GBuffer.GBufferDescriptorSet, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
@@ -704,7 +715,6 @@ namespace Astral {
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
 
-
             frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
             frameContext.OffscreenDescriptorSet->BeginBuildingSet();
             frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
@@ -723,6 +733,8 @@ namespace Astral {
             framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
             framebuffer->EndBuildingFramebuffer();
         }
+
+        // TODO: Resize the render graph and pass new offscreen textures to it for outputs
 
     }
 

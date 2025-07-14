@@ -1,5 +1,5 @@
 /**
-* @file RenderGraphSubpass.h
+* @file RenderGraphPass.h
 * @author Andrew Fagan
 * @date 7/7/2025
 */
@@ -22,24 +22,26 @@ namespace Astral {
             AttachmentDescription AttachmentDescription;
             std::string_view Name;
             ImageLayout OptimalImageLayout;
+            ImageLayout InitialLayout;
 
             bool operator==(const LocalAttachment& other) const noexcept = default;
         };
 
         struct ExternalAttachment
         {
-            const RenderGraphPass& OwningPass;
+            RenderGraphPass& OwningPass;
             std::string_view Name;
             ImageLayout OptimalImageLayout;
 
             bool operator==(const ExternalAttachment& other) const noexcept;
         };
 
-        void AddInputAttachment(const RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout);
+        void AddInputAttachment(RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout);
         void AddColorAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout);
         void AddResolveAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout);
         void AddDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout);
 
+        std::vector<LocalAttachment>& GetAttachments() { return m_Attachments; }
         const std::vector<LocalAttachment>& GetAttachments() const { return m_Attachments; }
         const std::vector<AttachmentIndex>& GetColorAttachments() const { return m_ColorAttachments; }
         const std::vector<ExternalAttachment>& GetInputAttachments() const { return m_InputAttachments; }

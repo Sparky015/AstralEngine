@@ -279,6 +279,9 @@ add_library(AstralEngine
         Renderer/RenderGraph/RenderGraphPass.h
         Core/Containers/DirectedGraph.cpp
         Core/Containers/DirectedGraph.h
+        Renderer/RHI/Common/PipelineBarriers.h
+        Renderer/RHI/Common/ImageSubResourceRange.h
+        Renderer/RHI/Common/DependencyFlags.h
 )
 
 

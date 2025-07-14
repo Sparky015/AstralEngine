@@ -17,10 +17,11 @@
 
 namespace Astral {
 
-    struct RenderGraphExecutionContext
+    struct RenderGraphPassExecutionContext
     {
         CommandBufferHandle CommandBuffer;
         RenderPassHandle RenderPass;
+        DescriptorSetHandle ReadAttachments;
     };
 
     using PassIndex = uint8;
@@ -34,11 +35,14 @@ namespace Astral {
 
         void BeginBuildingRenderGraph(const std::string_view& debugName = "Untitled Render Graph");
         void AddPass(const RenderGraphPass& pass);
-        void SetOutputPass(const RenderGraphPass& pass);
+        void SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<TextureHandle>& offscreenTargets);
+        void SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<RenderTargetHandle>& swapchainTargets);
         void EndBuildingRenderGraph();
 
         void Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex);
-        const RenderGraphExecutionContext& GetExecutionContext() const { return m_ExecutionContext; }
+        const RenderGraphPassExecutionContext& GetExecutionContext() const { return m_ExecutionContext; }
+
+        // TODO: Create method to resize all resources in render graph to new size (also pass in newly sized offscreen textures/render targets)
 
 
     private:
@@ -66,12 +70,15 @@ namespace Astral {
 
         AEDirectedGraph<PassIndex> m_RenderGraph;
         std::vector<AEDirectedGraph<PassIndex>::Vertex> m_RenderPassNodes;
-        PassIndex m_OutputRenderPassIndex {0};
 
 
         std::vector<PassIndex> m_ExecutionOrder;
-        RenderGraphExecutionContext m_ExecutionContext{};
+        RenderGraphPassExecutionContext m_ExecutionContext{};
 
+
+        PassIndex m_OutputRenderPassIndex {0};
+        std::string_view m_OutputAttachmentName;
+        std::vector<TextureHandle> m_OffscreenOutputTargets;
 
         std::string_view m_DebugName;
     };

@@ -20,12 +20,12 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddInputAttachment(const RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddInputAttachment(RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         ExternalAttachment externalAttachment = {
             .OwningPass = subpass,
             .Name = name,
-            .OptimalImageLayout = optimalImageLayout
+            .OptimalImageLayout = optimalImageLayout,
         };
 
         m_InputAttachments.push_back(externalAttachment);
@@ -37,7 +37,8 @@ namespace Astral {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
-            .OptimalImageLayout = optimalImageLayout
+            .OptimalImageLayout = optimalImageLayout,
+            .InitialLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);
@@ -52,7 +53,8 @@ namespace Astral {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
-            .OptimalImageLayout = optimalImageLayout
+            .OptimalImageLayout = optimalImageLayout,
+            .InitialLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);
@@ -67,7 +69,8 @@ namespace Astral {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
-            .OptimalImageLayout = optimalImageLayout
+            .OptimalImageLayout = optimalImageLayout,
+            .InitialLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);

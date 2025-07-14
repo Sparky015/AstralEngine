@@ -32,10 +32,25 @@ namespace Astral {
     }
 
 
-    void RenderGraph::SetOutputPass(const RenderGraphPass& pass)
+    void RenderGraph::SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<TextureHandle>& offscreenTargets)
     {
-        AddPass(pass);
-        m_OutputRenderPassIndex = m_Passes.size() - 1;
+        m_OutputAttachmentName = attachmentName;
+        m_OutputRenderPassIndex = GetRenderPassIndex(pass);
+        ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
+
+        m_OffscreenOutputTargets = offscreenTargets;
+        ASSERT(m_OffscreenOutputTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+    }
+
+
+    void RenderGraph::SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<RenderTargetHandle>& swapchainTargets)
+    {
+        m_OutputAttachmentName = attachmentName;
+        m_OutputRenderPassIndex = GetRenderPassIndex(pass);
+        ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
+
+        // m_OffscreenOutputTargets = swapchainTargets; // TODO: Make a way to use swapchain images directly
+        ASSERT(m_OffscreenOutputTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
     }
 
 
@@ -69,6 +84,7 @@ namespace Astral {
 
 
             m_ExecutionContext.RenderPass = rhiRenderPass;
+            m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
 
 
             RendererAPI::BeginLabel(commandBuffer, pass.GetDebugName(), Vec4(1.0 , 0.0, 1.0, 1.0));
@@ -76,10 +92,46 @@ namespace Astral {
 
             pass.Execute();
 
-            RendererAPI::EndLabel(commandBuffer);
-
             rhiRenderPass->EndRenderPass(commandBuffer);
+            RendererAPI::EndLabel(commandBuffer);
         }
+
+        // Transition all attachment layouts to their initial starting layout
+        PipelineBarrier pipelineBarrier = {};
+        pipelineBarrier.SourceStageMask = PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+        for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
+        {
+            PassIndex renderPassIndex = m_ExecutionOrder[i];
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
+
+            for (size_t j = 0; j < renderPassResource.AttachmentTextures.size(); j++)
+            {
+                TextureHandle attachmentTexture = renderPassResource.AttachmentTextures[j];
+
+                ImageMemoryBarrier imageMemoryBarrier = {};
+                imageMemoryBarrier.SourceAccessMask = 0;
+                imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                imageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+                imageMemoryBarrier.NewLayout = pass.GetAttachments()[j].InitialLayout;
+                imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+                imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+                imageMemoryBarrier.Image = attachmentTexture;
+                imageMemoryBarrier.ImageSubresourceRange = {
+                    .AspectMask = attachmentTexture->GetImageAspect(),
+                    .BaseMipLevel = 0,
+                    .LevelCount = 1,
+                    .BaseArrayLayer = 0,
+                    .LayerCount = 1
+                };
+
+                pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+            }
+        }
+        RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+
 
         RendererAPI::EndLabel(commandBuffer);
 
@@ -99,21 +151,35 @@ namespace Astral {
         // Add edges to all render passes with dependencies
         for (size_t i = 0; i < m_Passes.size(); i++)
         {
-            const RenderGraphPass& pass = m_Passes[i];
+            const RenderGraphPass& consumingPass = m_Passes[i];
 
-            for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
+            for (RenderGraphPass::ExternalAttachment externalAttachment : consumingPass.GetInputAttachments())
             {
                 std::string_view& inputAttachmentName = externalAttachment.Name;
-                const RenderGraphPass& owningPass = externalAttachment.OwningPass;
-                AttachmentIndex localAttachmentIndex = owningPass.GetAttachment(inputAttachmentName);
+                RenderGraphPass& producerPassScopeLocal = externalAttachment.OwningPass;
+                AttachmentIndex localAttachmentIndex = producerPassScopeLocal.GetAttachment(inputAttachmentName);
                 ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
 
-                PassIndex externalRenderPassIndex = GetRenderPassIndex(owningPass);
+                PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
                 AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
                 AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
                 userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+
+
+
+                // Match the final layout of the producing render pass to the optimal layout of the consuming render pass
+
+                // TODO: Create debug view of a render pass attachment that shows when what render passes write to it and what passes read from it
+
+                AttachmentDescription& producerAttachmentDesc = producerPassScopeLocal.GetAttachments()[localAttachmentIndex].AttachmentDescription;
+                producerAttachmentDesc.StoreOp = AttachmentStoreOp::STORE;
+                producerAttachmentDesc.FinalLayout = externalAttachment.OptimalImageLayout;
+                // TODO: Fix the two copies of the RenderGraphPass between the render graph owned copy and the input passes saved by other render passes using the local scope RenderGraphPass copy
+                AttachmentDescription& producerAttachmentDescOwned = m_Passes[externalRenderPassIndex].GetAttachments()[localAttachmentIndex].AttachmentDescription;
+                producerAttachmentDescOwned.StoreOp = AttachmentStoreOp::STORE;
+                producerAttachmentDescOwned.FinalLayout = externalAttachment.OptimalImageLayout;
             }
         }
     }
@@ -163,9 +229,12 @@ namespace Astral {
 
     void RenderGraph::BuildRenderPassObjects()
     {
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+        // Pass One: Create the resources for all the render passes ahead of building the render pass objects
+
         Device& device = RendererAPI::GetDevice();
 
-        // Pass One: Create the resources for all the render passes ahead of building the render pass objects
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
             const RenderGraphPass& pass = m_Passes[renderPassIndex];
@@ -176,58 +245,73 @@ namespace Astral {
             renderPass = device.CreateRenderPass();
             renderPass->BeginBuildingRenderPass();
 
-
             for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
             {
                 // Define attachments for use in the render pass object
-                // TODO: Check if the attachment is used as an input attachment in another pass.
-                //       Use the render graph nodes array to look up if the pass has a consuming render pass and which attachments are being consumed
                 renderPass->DefineAttachment(localAttachment.AttachmentDescription);
 
-                TextureCreateInfo textureCreateInfo = {
-                    .Format = localAttachment.AttachmentDescription.Format,
-                    .Layout = localAttachment.AttachmentDescription.InitialLayout,
-                    .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
-                    .Dimensions = pass.GetResourceDimensions(),
-                    .ImageData = nullptr
-                };
 
-
-                // Create the texture for the attachment
-                TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
-
-                ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
-                for (size_t i = 0; i < m_FramesInFlight; i++)
+                if (renderPassIndex != m_OutputRenderPassIndex && localAttachment.Name != m_OutputAttachmentName)
                 {
-                    passResources[i].AttachmentTextures.push_back(attachmentTexture);
+                    TextureCreateInfo textureCreateInfo = {
+                        .Format = localAttachment.AttachmentDescription.Format,
+                        .Layout = localAttachment.AttachmentDescription.InitialLayout,
+                        .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
+                        .Dimensions = pass.GetResourceDimensions(),
+                        .ImageData = nullptr
+                    };
+
+
+                    // Create the textures for the attachment
+
+                    ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
+                    for (size_t i = 0; i < m_FramesInFlight; i++)
+                    {
+                        TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
+                        passResources[i].AttachmentTextures.push_back(attachmentTexture);
+                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i));
+                    }
                 }
+                else
+                {
+                    for (size_t i = 0; i < m_FramesInFlight; i++)
+                    {
+                        TextureHandle attachmentTexture = m_OffscreenOutputTargets[i];
+                        passResources[i].AttachmentTextures.push_back(attachmentTexture);
+                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i));
+                    }
+                }
+
             }
+
+
+            //      Note: The render pass object doesn't need to know about inputs coming from another render pass
 
             // Define the external attachments for the render pass
-            for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
-            {
-                PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
-                ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
-
-                AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetAttachment(externalAttachment.Name);
-                ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
-
-                RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass.GetAttachments()[externalPassAttachmentIndex];
-                // TODO: Change the store op of the owning render pass to always be AttachmentStoreOp::Store
-                // TODO: Change the final layout of the producing render pass to always be the optimal layout of the consuming render pass
-                inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
-                inputAttachment.AttachmentDescription.InitialLayout = externalAttachment.OptimalImageLayout;
-                renderPass->DefineAttachment(inputAttachment.AttachmentDescription);
-            }
+            // for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
+            // {
+            //     PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
+            //     ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+            //
+            //     AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetAttachment(externalAttachment.Name);
+            //     ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
+            //
+            //     RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass.GetAttachments()[externalPassAttachmentIndex];
+            //     // TODO: Change the store op of the owning render pass to always be AttachmentStoreOp::Store
+            //     // TODO: Change the final layout of the producing render pass to always be the optimal layout of the consuming render pass
+            //     inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
+            //     inputAttachment.AttachmentDescription.InitialLayout = externalAttachment.OptimalImageLayout;
+            //     renderPass->DefineAttachment(inputAttachment.AttachmentDescription);
+            // }
         }
 
 
 
 
 
-
-
+        // ----------------------------------------------------------------------------------------------------------------------------------
         // Pass Two: Define the pass contents for all the render pass objects using the information compiled in Pass One
+
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
@@ -266,13 +350,15 @@ namespace Astral {
             }
 
 
-            uint32 numOfLocalAttachments = passLocalAttachments.size();
-            uint32 externalPassAttachmentIndex = numOfLocalAttachments;
-            for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
-            {
-                renderPass->AddInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
-                externalPassAttachmentIndex++;
-            }
+            //      Note: The render pass object doesn't need to know about inputs coming from another render pass
+
+            // uint32 numOfLocalAttachments = passLocalAttachments.size();
+            // uint32 externalPassAttachmentIndex = numOfLocalAttachments;
+            // for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
+            // {
+            //     renderPass->AddInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
+            //     externalPassAttachmentIndex++;
+            // }
 
 
             renderPass->EndBuildingSubpass();
@@ -280,7 +366,11 @@ namespace Astral {
         }
 
 
-        // Create the frame buffers and add external textures for the render passes
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+        // Build the framebuffers and descriptor sets for each render pass
+
+
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
             RenderPassHandle renderPass = m_RenderPasses[renderPassIndex];
@@ -290,6 +380,7 @@ namespace Astral {
 
             for (size_t i = 0; i < m_FramesInFlight; i++)
             {
+                // Create the framebuffers for the render pass
                 passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
 
                 UVec2 passResourceDimensions = pass.GetResourceDimensions();
@@ -300,8 +391,13 @@ namespace Astral {
                     passResources[i].Framebuffer->AttachTexture(attachmentTexture);
                 }
 
+                passResources[i].Framebuffer->EndBuildingFramebuffer();
+                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetDebugName()) + "_Framebuffer_" + std::to_string(i));
 
-                // Pull external attachment textures from that render pass' resources
+
+                // Pull external attachment textures from the producer render pass' resources and add them to a descriptor set to read from
+                passResources[i].ReadAttachmentDescriptorSet = device.CreateDescriptorSet();
+                passResources[i].ReadAttachmentDescriptorSet->BeginBuildingSet();
                 for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
                 {
                     PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
@@ -314,12 +410,15 @@ namespace Astral {
                     TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
                     ASSERT(passResources[i].Framebuffer->GetExtent() == externalAttachmentTexture->GetDimensions(), "External input texture does not match the dimensions of the target render pass!");
 
-                    passResources[i].Framebuffer->AttachTexture(externalAttachmentTexture);
+                    passResources[i].ReadAttachmentDescriptorSet->AddDescriptorImageSampler(externalAttachmentTexture, ShaderStage::FRAGMENT);
                 }
-
-                passResources[i].Framebuffer->EndBuildingFramebuffer();
+                passResources[i].ReadAttachmentDescriptorSet->EndBuildingSet();
+                RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetDebugName()) + "_ReadDescriptorSet_" + std::to_string(i));
             }
         }
+
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
     }
 
 
