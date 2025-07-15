@@ -8,7 +8,7 @@
 
 namespace Astral {
 
-    RenderGraphPass::RenderGraphPass(UVec2 resourceDimensions, const std::string_view& debugName, const std::function<void()>& callback) :
+    RenderGraphPass::RenderGraphPass(Vec2 resourceDimensions, const std::string_view& debugName, const std::function<void()>& callback) :
         m_ResourceDimensions(resourceDimensions),
         m_Callback(callback),
         m_DebugName(debugName)
@@ -20,7 +20,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddInputAttachment(RenderGraphPass& subpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::AddInputAttachment(RenderGraphPass* subpass, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         ExternalAttachment externalAttachment = {
             .OwningPass = subpass,

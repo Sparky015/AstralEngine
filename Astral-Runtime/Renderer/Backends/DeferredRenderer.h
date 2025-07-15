@@ -56,16 +56,6 @@ namespace Astral {
             uint32 NumLights;
         };
 
-        struct GBuffer
-        {
-            TextureHandle AlbedoBuffer;
-            TextureHandle MetallicBuffer;
-            TextureHandle RoughnessBuffer;
-            TextureHandle EmissionBuffer;
-            TextureHandle NormalBuffer;
-            TextureHandle DepthBuffer;
-            DescriptorSetHandle GBufferDescriptorSet;
-        };
 
         struct FrameContext
         {
@@ -73,13 +63,11 @@ namespace Astral {
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
 
-            GBuffer GBuffer;
 
             TextureHandle OffscreenRenderTarget;
             DescriptorSetHandle OffscreenDescriptorSet;
 
             CommandBufferHandle SceneCommandBuffer;
-            FramebufferHandle SceneFramebuffer;
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneDataBuffer;
             BufferHandle SceneLightsBuffer;
@@ -93,8 +81,7 @@ namespace Astral {
         };
 
         void BuildRenderGraph();
-        void BuildRenderPasses();
-        void CreateGBufferTextures(GBuffer& outGBuffer, UVec2 dimensions);
+        void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
 
         void RenderScene();

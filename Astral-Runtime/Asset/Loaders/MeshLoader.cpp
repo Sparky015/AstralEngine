@@ -36,8 +36,8 @@ namespace Astral::MeshLoader {
           aiProcess_CalcTangentSpace       |
           aiProcess_Triangulate            |
           aiProcess_JoinIdenticalVertices  |
-          aiProcess_SortByPType            |
-          aiProcess_FlipUVs
+          aiProcess_FlipWindingOrder       |
+          aiProcess_SortByPType
           );
 
         // If the import failed, report it
@@ -191,8 +191,7 @@ namespace Astral::MeshLoader {
         exporter.Export(exportScene.get(), "gltf2", outFilePath.string().c_str(), aiProcess_CalcTangentSpace       |
                                                                                                                       aiProcess_Triangulate            |
                                                                                                                       aiProcess_JoinIdenticalVertices  |
-                                                                                                                      aiProcess_SortByPType            |
-                                                                                                                      aiProcess_FlipUVs);
+                                                                                                                      aiProcess_SortByPType);
     }
 
 }

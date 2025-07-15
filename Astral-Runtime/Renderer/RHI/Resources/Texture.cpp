@@ -46,6 +46,7 @@ namespace Astral {
         }
         else
         {
+            stbi_set_flip_vertically_on_load(true);
             data = stbi_load(filePath.string().c_str(), &m_Width, &m_Height, &m_BPP, 4);
             imageFormat = ImageFormat::R8G8B8A8_UNORM;
         }
