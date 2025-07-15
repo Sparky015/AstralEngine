@@ -99,7 +99,7 @@ namespace Astral {
     {
         if (m_CameraType == CameraType::PERSPECTIVE)
         {
-            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, .1f, 1000000000.0f); //100000.0f
+            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, .1f, 100000.0f);
         }
         else if (m_CameraType == CameraType::ORTHOGRAPHIC)
         {
