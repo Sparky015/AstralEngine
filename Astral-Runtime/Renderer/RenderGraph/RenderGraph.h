@@ -42,7 +42,6 @@ namespace Astral {
         void Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex);
         const RenderGraphPassExecutionContext& GetExecutionContext() const { return m_ExecutionContext; }
 
-        // TODO: Create method to resize all resources in render graph to new size (also pass in newly sized offscreen textures/render targets)
         void ResizeResources(const std::vector<TextureHandle>& offscreenTargets);
         void ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets);
 

@@ -281,14 +281,20 @@ namespace Astral {
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
-            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            RenderGraphPass& pass = m_Passes[renderPassIndex];
             RenderPassHandle& renderPass = m_RenderPasses[renderPassIndex];
             renderPass = device.CreateRenderPass();
             renderPass->BeginBuildingRenderPass();
 
-            for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
+            for (RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
             {
                 // Define attachments for use in the render pass object
+
+                if (renderPassIndex == m_OutputRenderPassIndex && localAttachment.Name == m_OutputAttachmentName)
+                {
+                    localAttachment.AttachmentDescription.Format = m_OffscreenOutputTargets[0]->GetFormat();
+                }
+
                 renderPass->DefineAttachment(localAttachment.AttachmentDescription);
             }
 
@@ -411,7 +417,7 @@ namespace Astral {
                 // Define attachments for use in the render pass object
 
 
-                if (renderPassIndex != m_OutputRenderPassIndex && localAttachment.Name != m_OutputAttachmentName)
+                if (renderPassIndex != m_OutputRenderPassIndex || localAttachment.Name != m_OutputAttachmentName)
                 {
                     TextureCreateInfo textureCreateInfo = {
                         .Format = localAttachment.AttachmentDescription.Format,

@@ -74,10 +74,6 @@ namespace Astral {
             DescriptorSetHandle SceneDataDescriptorSet;
 
             FramebufferHandle WindowFramebuffer;
-
-            std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
-            std::vector<TextureHandle> TexturesToBeFreed;
-            uint32 FramesTillFree = 2;
         };
 
         void BuildRenderGraph();

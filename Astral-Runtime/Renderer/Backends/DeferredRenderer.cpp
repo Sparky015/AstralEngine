@@ -17,6 +17,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Debug/ImGui/ImGuiManager.h"
+
 namespace Astral {
 
     void DeferredRenderer::Init()
@@ -31,11 +33,12 @@ namespace Astral {
 
 
 
-        // Building the main render pass and the imgui render pass
+        // Building the imgui render pass
         BuildImGuiEditorRenderPass();
 
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
+
 
         BuildRenderGraph();
 
@@ -104,13 +107,6 @@ namespace Astral {
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
-
-        frameContext.FramesTillFree--;
-        if (frameContext.FramesTillFree == 0)
-        {
-            frameContext.ImGuiTexturesToBeFreed.clear();
-            frameContext.TexturesToBeFreed.clear();
-        }
     }
 
 
@@ -250,6 +246,7 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph("Viewport");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
+        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
         m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
@@ -317,7 +314,6 @@ namespace Astral {
             context.OffscreenDescriptorSet->BeginBuildingSet();
             context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
             context.OffscreenDescriptorSet->EndBuildingSet();
-            context.FramesTillFree = 2;
 
 
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
@@ -362,6 +358,33 @@ namespace Astral {
         // Viewport Rendering
         m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
 
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        }
+
 
         // ImGui Rendering
         RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
@@ -370,16 +393,44 @@ namespace Astral {
         m_ImGuiRenderPass->EndRenderPass(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
 
+
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL; // TODO: Make render pass objects update the textures' layout when the render pass automatically transitions layouts
+            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        }
+
+
         commandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = device.GetCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
-        uint32 nextOldestFrameIndex = (m_CurrentFrameIndex + 2) % 3;
+        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
         if (m_CurrentViewportTexture.size() == 0)
         {
-            m_CurrentViewportTexture.push(m_FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
+            m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
         }
     }
 
@@ -422,6 +473,7 @@ namespace Astral {
 
             material.FragmentShader = m_GeometryPassShader;
 
+            // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
             PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
@@ -485,8 +537,6 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
 
-        uint32 nextOldestFrameIndex = m_CurrentFrameIndex;
-        m_CurrentViewportTexture.push(m_FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
 
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
@@ -500,17 +550,18 @@ namespace Astral {
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };
-            m_FrameContexts[m_CurrentFrameIndex].FramesTillFree = 2;
-            m_FrameContexts[m_CurrentFrameIndex].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenDescriptorSet);
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
 
-            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet(); // TODO: Avoid creating new descriptor set handles and reuse the handle but recreate the vk descriptor set
             frameContext.OffscreenDescriptorSet->BeginBuildingSet();
             frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
             frameContext.OffscreenDescriptorSet->EndBuildingSet();
         }
 
+        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
+        m_CurrentViewportTexture.pop();
+        m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
 
         // Resizing Render Graph
 
