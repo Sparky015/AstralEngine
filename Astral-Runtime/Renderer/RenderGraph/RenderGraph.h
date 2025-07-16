@@ -38,6 +38,10 @@ namespace Astral {
     {
     public:
 
+        // TODO: Add support for writing to a texture created by another render pass
+        // TODO: Add support for adding buffers as a resource to a render pass
+        // TODO: Add support for texture aliasing
+
         /**
          * @brief Marks the beginning of calls to collect render passes and other information to build the render graph
          * @param maxFramesInFlight The max frames in flight
