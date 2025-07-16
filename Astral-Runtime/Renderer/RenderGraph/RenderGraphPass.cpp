@@ -8,10 +8,10 @@
 
 namespace Astral {
 
-    RenderGraphPass::RenderGraphPass(Vec2 resourceDimensions, const std::string_view& debugName, const std::function<void()>& callback) :
-        m_ResourceDimensions(resourceDimensions),
+    RenderGraphPass::RenderGraphPass(Vec2 resourceDimensions, const std::string_view& name, const std::function<void()>& callback) :
+        m_WriteAttachmentDimensions(resourceDimensions),
         m_Callback(callback),
-        m_DebugName(debugName)
+        m_Name(name)
     {}
 
     bool RenderGraphPass::ExternalAttachment::operator==(const ExternalAttachment& other) const noexcept
@@ -20,10 +20,10 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddInputAttachment(RenderGraphPass* subpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::LinkInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         ExternalAttachment externalAttachment = {
-            .OwningPass = subpass,
+            .OwningPass = owningSubpass,
             .Name = name,
             .OptimalImageLayout = optimalImageLayout,
         };
@@ -32,7 +32,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddColorAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::CreateColorAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -48,7 +48,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddResolveAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::CreateResolveAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -64,7 +64,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::AddDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::CreateDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         LocalAttachment localAttachment = {
             .AttachmentDescription = attachmentDescription,
@@ -80,7 +80,7 @@ namespace Astral {
     }
 
 
-    AttachmentIndex RenderGraphPass::GetAttachment(const std::string_view& name) const
+    AttachmentIndex RenderGraphPass::GetLocalAttachment(const std::string_view& name) const
     {
         for (int i = 0; i < m_Attachments.size(); i++)
         {

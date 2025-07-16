@@ -11,23 +11,38 @@
 
 #include <stack>
 #include <unordered_set>
+#include <ranges>
 
 namespace Astral {
 
-    void RenderGraph::BeginBuildingRenderGraph(const std::string_view& debugName)
+    void RenderGraph::BeginBuildingRenderGraph(uint32 maxFramesInFlight, const std::string_view& debugName)
     {
         m_DebugName = debugName;
+        m_MaxFramesInFlight = maxFramesInFlight;
+
+        AddRenderGraphResourcesToHold();
 
         m_Passes.clear();
 
+        m_RenderGraph = AEDirectedGraph<PassIndex>();
+        m_RenderPassNodes.clear();
+
+        m_ExecutionOrder.clear();
+
+        m_RenderPasses.clear();
         m_RenderPassResources.clear();
+
+        m_OutputRenderPassIndex = 0;
+        m_OutputAttachmentName = "";
+
+        m_OffscreenOutputTargets.clear();
+        m_ViewportDimensions = UVec2(0);
     }
 
 
     void RenderGraph::AddPass(const RenderGraphPass& pass)
     {
         m_Passes.push_back(pass);
-        m_RenderPasses.push_back(nullptr);
     }
 
 
@@ -38,7 +53,7 @@ namespace Astral {
         ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
         m_OffscreenOutputTargets = offscreenTargets;
-        ASSERT(m_OffscreenOutputTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
@@ -51,7 +66,7 @@ namespace Astral {
         ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
         // m_OffscreenOutputTargets = swapchainTargets; // TODO: Make a way to use swapchain images directly
-        ASSERT(m_OffscreenOutputTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
@@ -59,23 +74,18 @@ namespace Astral {
 
     void RenderGraph::EndBuildingRenderGraph()
     {
-
-        // Populates the actual graph struction
         BuildRenderGraph();
-
-        // Detects dependencies between the render passes and sorts the passes into the correct order
         SolveRenderPassExecutionOrder();
-
-
         BuildRenderPassObjects();
         BuildRenderPassResources();
-
     }
 
 
     void RenderGraph::Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex)
     {
+        UpdateRenderGraphResourcesHold();
         m_ExecutionContext.CommandBuffer = commandBuffer;
+
 
         RendererAPI::BeginLabel(commandBuffer, m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
@@ -91,18 +101,13 @@ namespace Astral {
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
 
 
-            RendererAPI::BeginLabel(commandBuffer, pass.GetDebugName(), Vec4(1.0 , 0.0, 1.0, 1.0));
+            RendererAPI::BeginLabel(commandBuffer, pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
             rhiRenderPass->BeginRenderPass(commandBuffer, renderPassResource.Framebuffer);
 
             pass.Execute();
 
             rhiRenderPass->EndRenderPass(commandBuffer);
             RendererAPI::EndLabel(commandBuffer);
-
-            if (m_FramesTillHoldClear > 0)
-                { m_FramesTillHoldClear--; }
-            else
-                { m_RenderPassResourcesHold.clear(); }
         }
 
         // Transition all attachment layouts to their initial starting layout
@@ -141,8 +146,8 @@ namespace Astral {
         }
         RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
 
-
         RendererAPI::EndLabel(commandBuffer);
+
 
         m_ExecutionContext = {};
     }
@@ -151,13 +156,12 @@ namespace Astral {
     void RenderGraph::ResizeResources(const std::vector<TextureHandle>& offscreenTargets)
     {
         m_OffscreenOutputTargets = offscreenTargets;
-        ASSERT(m_OffscreenOutputTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
 
-        Device& device = RendererAPI::GetDevice();
-        device.WaitIdle();
+        AddRenderGraphResourcesToHold();
 
-        m_RenderPassResources = std::vector<std::vector<RenderPassResources>>();
+        m_RenderPassResources.clear();
         BuildRenderPassResources();
     }
 
@@ -165,7 +169,7 @@ namespace Astral {
     void RenderGraph::ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets)
     {
         // m_OffscreenOutputTargets = swapchainTargets; // TODO: Make a way to use swapchain images directly
-        ASSERT(swapchainTargets.size() == m_FramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+        ASSERT(swapchainTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
         m_ViewportDimensions = swapchainTargets[0]->GetDimensions();
 
         BuildRenderPassResources();
@@ -201,7 +205,7 @@ namespace Astral {
             {
                 const std::string_view& inputAttachmentName = externalAttachment.Name;
                 RenderGraphPass& producerPassScopeLocal = *externalAttachment.OwningPass;
-                AttachmentIndex localAttachmentIndex = producerPassScopeLocal.GetAttachment(inputAttachmentName);
+                AttachmentIndex localAttachmentIndex = producerPassScopeLocal.GetLocalAttachment(inputAttachmentName);
                 ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
 
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
@@ -214,16 +218,9 @@ namespace Astral {
 
 
                 // Match the final layout of the producing render pass to the optimal layout of the consuming render pass
-
-                // TODO: Create debug view of a render pass attachment that shows when what render passes write to it and what passes read from it
-
                 AttachmentDescription& producerAttachmentDesc = producerPassScopeLocal.GetAttachments()[localAttachmentIndex].AttachmentDescription;
                 producerAttachmentDesc.StoreOp = AttachmentStoreOp::STORE;
                 producerAttachmentDesc.FinalLayout = externalAttachment.OptimalImageLayout;
-                // TODO: Fix the two copies of the RenderGraphPass between the render graph owned copy and the input passes saved by other render passes using the local scope RenderGraphPass copy
-                AttachmentDescription& producerAttachmentDescOwned = m_Passes[externalRenderPassIndex].GetAttachments()[localAttachmentIndex].AttachmentDescription;
-                producerAttachmentDescOwned.StoreOp = AttachmentStoreOp::STORE;
-                producerAttachmentDescOwned.FinalLayout = externalAttachment.OptimalImageLayout;
             }
         }
     }
@@ -278,6 +275,7 @@ namespace Astral {
         // Pass One: Define the attachments for all the render passes ahead of building the render pass objects
 
         Device& device = RendererAPI::GetDevice();
+        m_RenderPasses.resize(m_ExecutionOrder.size(), nullptr);
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
@@ -300,7 +298,7 @@ namespace Astral {
 
 
 
-            //      Note: The render pass object doesn't need to know about inputs coming from another render pass
+            //      Note: The rhi render pass object doesn't need to know about read inputs coming from another render pass
 
             // Define the external attachments for the render pass
             // for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
@@ -308,7 +306,7 @@ namespace Astral {
             //     PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
             //     ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
             //
-            //     AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetAttachment(externalAttachment.Name);
+            //     AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetLocalAttachment(externalAttachment.Name);
             //     ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
             //
             //     RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass.GetAttachments()[externalPassAttachmentIndex];
@@ -334,7 +332,7 @@ namespace Astral {
             RenderPassHandle& renderPass = m_RenderPasses[renderPassIndex];
 
 
-            LOG("Creating Render Pass: " << pass.GetDebugName());
+            LOG("Creating Render Pass: " << pass.GetName());
 
             renderPass->BeginBuildingSubpass();
 
@@ -365,13 +363,13 @@ namespace Astral {
             }
 
 
-            //      Note: The render pass object doesn't need to know about inputs coming from another render pass
+            //      Note: The rhi render pass object doesn't need to know about read inputs coming from another render pass
 
             // uint32 numOfLocalAttachments = passLocalAttachments.size();
             // uint32 externalPassAttachmentIndex = numOfLocalAttachments;
             // for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
             // {
-            //     renderPass->AddInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
+            //     renderPass->LinkInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
             //     externalPassAttachmentIndex++;
             // }
 
@@ -398,14 +396,14 @@ namespace Astral {
             RenderPassHandle renderPass = m_RenderPasses[renderPassIndex];
             const RenderGraphPass& pass = m_Passes[renderPassIndex];
             std::vector<RenderPassResources>& passResources = m_RenderPassResources[renderPassIndex];
-            passResources.resize(m_FramesInFlight);
-            ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
+            passResources.resize(m_MaxFramesInFlight);
+            ASSERT(passResources.size() == m_MaxFramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
 
 
 
             // Textures
 
-            Vec2 passResourceDimensions = pass.GetResourceDimensions();
+            Vec2 passResourceDimensions = pass.GetWriteAttachmentDimensions();
             if (passResourceDimensions.x < 0 && passResourceDimensions.y < 0)
             {
                 passResourceDimensions /= -1;
@@ -430,8 +428,8 @@ namespace Astral {
 
                     // Create the textures for the attachment
 
-                    ASSERT(passResources.size() == m_FramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
-                    for (size_t i = 0; i < m_FramesInFlight; i++)
+                    ASSERT(passResources.size() == m_MaxFramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
+                    for (size_t i = 0; i < m_MaxFramesInFlight; i++)
                     {
                         TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
@@ -440,7 +438,7 @@ namespace Astral {
                 }
                 else
                 {
-                    for (size_t i = 0; i < m_FramesInFlight; i++)
+                    for (size_t i = 0; i < m_MaxFramesInFlight; i++)
                     {
                         TextureHandle attachmentTexture = m_OffscreenOutputTargets[i];
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
@@ -453,7 +451,7 @@ namespace Astral {
 
             // Framebuffers
 
-            for (size_t i = 0; i < m_FramesInFlight; i++)
+            for (size_t i = 0; i < m_MaxFramesInFlight; i++)
             {
                 // Create the framebuffers for the render pass
                 passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
@@ -465,7 +463,7 @@ namespace Astral {
                 }
 
                 passResources[i].Framebuffer->EndBuildingFramebuffer();
-                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetDebugName()) + "_Framebuffer_" + std::to_string(i));
+                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetName()) + "_Framebuffer_" + std::to_string(i));
 
 
             // Descriptor Sets
@@ -479,7 +477,7 @@ namespace Astral {
                     ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
                     const RenderPassResources& externalPassResources = m_RenderPassResources[externalPassIndex][i];
-                    AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass->GetAttachment(externalAttachment.Name);
+                    AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass->GetLocalAttachment(externalAttachment.Name);
                     ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
 
                     TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
@@ -490,7 +488,7 @@ namespace Astral {
                     passResources[i].ReadAttachmentDescriptorSet->AddDescriptorImageSampler(externalAttachmentTexture, ShaderStage::FRAGMENT);
                 }
                 passResources[i].ReadAttachmentDescriptorSet->EndBuildingSet();
-                RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetDebugName()) + "_ReadDescriptorSet_" + std::to_string(i));
+                RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetName()) + "_ReadDescriptorSet_" + std::to_string(i));
             }
         }
 
@@ -506,6 +504,47 @@ namespace Astral {
         }
 
         return NullRenderPassIndex;
+    }
+
+
+    void RenderGraph::AddRenderGraphResourcesToHold()
+    {
+        ASSERT(m_RenderPassResourcesHold.size() < 20, "The render graph resources hold is not being cleared correctly!")
+
+        m_RenderPassesHold.push_back(m_RenderPasses);
+        m_RenderPassResourcesHold.push_back(m_RenderPassResources);
+        m_FramesTillClear.push_back(m_MaxFramesInFlight);
+    }
+
+
+    void RenderGraph::UpdateRenderGraphResourcesHold()
+    {
+        std::vector<uint32> indicesToRemove;
+
+        // Queueing indices to remove because if it was removed immediately, resources would be
+        // shifted and an index might be skipped and the loop would index out of bounds if a removal occured
+        for (size_t i = 0; i < m_RenderPassResourcesHold.size(); i++)
+        {
+            uint32& framesTillClear = m_FramesTillClear[i];
+
+            if (framesTillClear == 0)
+            {
+                indicesToRemove.push_back(i);
+            }
+            else
+            {
+                framesTillClear--;
+            }
+        }
+
+        // Remove indices in reverse so that the indices remain correct
+        for (uint32 indexToRemove : indicesToRemove | std::views::reverse)
+        {
+            // Remove the render graph resources from hold
+            m_RenderPassResourcesHold.erase(m_RenderPassResourcesHold.begin() + indexToRemove);
+            m_RenderPassesHold.erase(m_RenderPassesHold.begin() + indexToRemove);
+            m_FramesTillClear.erase(m_FramesTillClear.begin() + indexToRemove);
+        }
     }
 
 }
