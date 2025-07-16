@@ -2,25 +2,7 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="ClangTidy" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="clangTidyCheckOptions">
-        <list>
-          <ClangTidyCheckOption>
-            <option name="optionName" value="cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor" />
-            <option name="optionValue" value="true" />
-          </ClangTidyCheckOption>
-          <ClangTidyCheckOption>
-            <option name="optionName" value="hicpp-signed-bitwise.IgnorePositiveIntegerLiterals" />
-            <option name="optionValue" value="true" />
-          </ClangTidyCheckOption>
-          <ClangTidyCheckOption>
-            <option name="optionName" value="misc-include-cleaner.IgnoreHeaders" />
-            <option name="optionValue" value="src/Ayla/aypch.h" />
-          </ClangTidyCheckOption>
-        </list>
-      </option>
-      <option name="clangTidyChecks" value="-*,mpi-buffer-deref,mpi-type-mismatch,performance-*,modernize-*,concurrency-*,-modernize-use-trailing-return-type,-modernize-use-override,portability-*,google-*,-google-objc-avoid-throwing-exception,-google-upgrade-googletest-case,-google-objc-global-variable-declaration,-google-objc-avoid-nsobject-new,-google-readability-avoid-underscore-in-googletest-name,-google-objc-function-naming,bugprone-*,-bugprone-easily-swappable-parameters,misc-*,-misc-unused-parameters,-misc-non-private-member-variables-in-classes,readability-*,-readability-avoid-const-params-in-decls,-readability-magic-numbers,-readability-uppercase-literal-suffix,-readability-use-std-min-max,clang-analyzer-*,-clang-analyzer-core.uninitialized.UndefReturn,cppcoreguidelines-*,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-explicit-virtual-functions,-cppcoreguidelines-owning-memory,-cppcoreguidelines-avoid-magic-numbers,hicpp-*,-hicpp-uppercase-literal-suffix,-hicpp-vararg,-hicpp-special-member-functions,-hicpp-use-override,-hicpp-signed-bitwise,-hicpp-use-auto,-modernize-use-auto,fuchsia-*,-fuchsia-default-arguments-calls,-fuchsia-statically-constructed-objects,-google-readability-casting,-misc-include-cleaner,llvm-*,-llvm-header-guard,cert-*,-cert-dcl59-cpp" />
+      <option name="clangTidyChecks" value="-*,mpi-*,cert-err52-cpp,cert-err60-cpp,cert-err34-c,cert-str34-c,cert-msc50-cpp,cert-msc51-cpp,cert-dcl58-cpp,cert-flp30-c,openmp-use-default-none,portability-simd-intrinsics,clang-analyzer-*,google-build-namespaces,google-default-arguments,google-build-explicit-make-pair,google-readability-namespace-comments,google-global-names-in-headers,google-runtime-int,google-runtime-operator,google-explicit-constructor,google-build-using-namespace,concurrency-*,misc-*,-misc-unused-parameters,-misc-non-private-member-variables-in-classes,llvm-twine-local,llvm-include-order,llvm-namespace-comment,performance-*,-misc-include-cleaner,fuchsia-overloaded-operator,fuchsia-trailing-return,fuchsia-virtual-inheritance,bugprone-*,-bugprone-easily-swappable-parameters,modernize-*,-modernize-use-trailing-return-type,-modernize-avoid-c-arrays,-modernize-use-override,-modernize-use-std-numbers,-modernize-type-traits,-modernize-use-auto,readability-redundant-smartptr-get,readability-make-member-function-const,readability-string-compare,readability-delete-null-pointer,readability-static-accessed-through-instance,readability-redundant-function-ptr-dereference,readability-const-return-type,readability-misleading-indentation,readability-non-const-parameter,readability-redundant-string-cstr,readability-use-anyofallof,readability-simplify-subscript-expr,readability-uniqueptr-delete-release,readability-static-definition-in-anonymous-namespace,readability-redundant-string-init,readability-redundant-control-flow,readability-misplaced-array-index,readability-inconsistent-declaration-parameter-name,readability-container-size-empty,hicpp-*,-hicpp-uppercase-literal-suffix,-hicpp-use-noexcept,-hicpp-vararg,-hicpp-special-member-functions,-hicpp-use-override,-hicpp-use-emplace,-hicpp-avoid-c-arrays,-hicpp-no-array-decay,-hicpp-static-assert,-hicpp-use-auto,-hicpp-signed-bitwise,cppcoreguidelines-*,-cppcoreguidelines-macro-to-enum,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-explicit-virtual-functions,-cppcoreguidelines-pro-type-cstyle-cast,-cppcoreguidelines-owning-memory,-cppcoreguidelines-special-member-functions,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-pro-bounds-array-to-pointer-decay" />
     </inspection_tool>
-    <inspection_tool class="Clazy" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="OCInconsistentNaming" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   </profile>
 </component>
