@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['asanregionpermission_0',['ASANRegionPermission',['../d7/d15/_allocator_utils_8h.html#ab48091f4f96d7287cdc6a1fb3a47681e',1,'Core']]]
+  ['asanregionpermission_0',['ASANRegionPermission',['../d5/d9b/namespace_astral.html#a2f9ce0da022e6ffcbbbd9d42c700571b',1,'Astral']]]
 ];

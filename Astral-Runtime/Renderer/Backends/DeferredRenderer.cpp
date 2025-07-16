@@ -204,12 +204,12 @@ namespace Astral {
         };
 
         RenderGraphPass geometryPass = RenderGraphPass(OutputAttachmentDimensions, "GBuffer Pass", [&](){ GeometryPass(); });
-        geometryPass.AddColorAttachment(albedoBufferDescription, "GBuffer_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(metallicBufferDescription, "GBuffer_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(roughnessBufferDescription, "GBuffer_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(emissionBufferDescription, "GBuffer_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddColorAttachment(normalBufferDescription, "GBuffer_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.AddDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(albedoBufferDescription, "GBuffer_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(metallicBufferDescription, "GBuffer_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(roughnessBufferDescription, "GBuffer_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(emissionBufferDescription, "GBuffer_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(normalBufferDescription, "GBuffer_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
 
@@ -225,14 +225,14 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ LightingPass(); });
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.AddInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
-        lightingPass.AddColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
@@ -243,7 +243,10 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        m_RenderGraph.BeginBuildingRenderGraph("Viewport");
+        uint32 maxFramesInFlight = m_FrameContexts.size();
+
+
+        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
         // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);

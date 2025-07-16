@@ -1,21 +1,5 @@
 var searchData=
 [
-  ['renderer_2ecpp_0',['Renderer.cpp',['../da/d84/_renderer_8cpp.html',1,'']]],
-  ['renderer_2eh_1',['Renderer.h',['../d3/da0/_renderer_8h.html',1,'']]],
-  ['rendererapi_2ecpp_2',['RendererAPI.cpp',['../d6/dad/_renderer_a_p_i_8cpp.html',1,'']]],
-  ['rendererapi_2eh_3',['RendererAPI.h',['../d6/d22/_renderer_a_p_i_8h.html',1,'']]],
-  ['renderercommands_2ecpp_4',['RendererCommands.cpp',['../db/d30/_renderer_commands_8cpp.html',1,'']]],
-  ['renderercommands_2eh_5',['RendererCommands.h',['../db/db3/_renderer_commands_8h.html',1,'']]],
-  ['renderercomponents_2ecpp_6',['RendererComponents.cpp',['../d1/d7c/_renderer_components_8cpp.html',1,'']]],
-  ['renderercomponents_2eh_7',['RendererComponents.h',['../d9/d7f/_renderer_components_8h.html',1,'']]],
-  ['renderercontext_2ecpp_8',['RendererContext.cpp',['../df/dac/_renderer_context_8cpp.html',1,'']]],
-  ['renderercontext_2eh_9',['RendererContext.h',['../d0/dd4/_renderer_context_8h.html',1,'']]],
-  ['rendererevents_2eh_10',['RendererEvents.h',['../d2/d06/_renderer_events_8h.html',1,'']]],
-  ['renderermanager_2ecpp_11',['RendererManager.cpp',['../d7/d31/_renderer_manager_8cpp.html',1,'']]],
-  ['renderermanager_2eh_12',['RendererManager.h',['../d5/dd7/_renderer_manager_8h.html',1,'']]],
-  ['renderingsystem_2ecpp_13',['RenderingSystem.cpp',['../d2/db8/_rendering_system_8cpp.html',1,'']]],
-  ['renderingsystem_2eh_14',['RenderingSystem.h',['../da/d66/_rendering_system_8h.html',1,'']]],
-  ['rookmovegenerationtest_2ecpp_15',['RookMoveGenerationTest.cpp',['../d2/d0a/_rook_move_generation_test_8cpp.html',1,'']]],
-  ['rookmovelist_2ecpp_16',['RookMoveList.cpp',['../d7/d58/_rook_move_list_8cpp.html',1,'']]],
-  ['rookmovelist_2eh_17',['RookMoveList.h',['../d5/d8b/_rook_move_list_8h.html',1,'']]]
+  ['textureloader_2ecpp_0',['TextureLoader.cpp',['../dd/d83/_texture_loader_8cpp.html',1,'']]],
+  ['textureloader_2eh_1',['TextureLoader.h',['../d6/d11/_texture_loader_8h.html',1,'']]]
 ];

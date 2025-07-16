@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['genericwindow_0',['GenericWindow',['../de/dd4/class_window_1_1_generic_window.html',1,'Window']]],
-  ['globalallocationstorage_1',['GlobalAllocationStorage',['../df/dd1/class_core_1_1_global_allocation_storage.html',1,'Core']]],
-  ['graphextrema_2',['GraphExtrema',['../d0/da9/struct_core_1_1_graph_extrema.html',1,'Core']]]
+  ['genericregionallocator_0',['GenericRegionAllocator',['../d1/de1/class_astral_1_1_generic_region_allocator.html',1,'Astral']]],
+  ['genericwindow_1',['GenericWindow',['../d6/d48/class_astral_1_1_generic_window.html',1,'Astral']]],
+  ['globalallocationstorage_2',['GlobalAllocationStorage',['../d0/df1/class_astral_1_1_global_allocation_storage.html',1,'Astral']]],
+  ['graphextrema_3',['GraphExtrema',['../dd/dcc/struct_astral_1_1_graph_extrema.html',1,'Astral']]]
 ];

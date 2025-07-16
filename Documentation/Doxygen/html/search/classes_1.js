@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['bufferattribute_0',['BufferAttribute',['../d6/d14/struct_graphics_1_1_buffer_attribute.html',1,'Graphics']]],
-  ['bufferlayout_1',['BufferLayout',['../d2/d98/class_graphics_1_1_buffer_layout.html',1,'Graphics']]]
+  ['buffer_0',['Buffer',['../d2/d03/class_astral_1_1_buffer.html',1,'Astral']]],
+  ['buffermemorybarrier_1',['BufferMemoryBarrier',['../d4/d97/struct_astral_1_1_buffer_memory_barrier.html',1,'Astral']]]
 ];

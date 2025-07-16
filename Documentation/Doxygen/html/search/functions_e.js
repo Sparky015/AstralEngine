@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['selectfile_0',['SelectFile',['../db/d07/_load_file_component_8cpp.html#ab2a19e37ecb446edca51a1f151edda1f',1,'Core']]],
-  ['setmemoryregionaccess_1',['SetMemoryRegionAccess',['../d7/d15/_allocator_utils_8h.html#acc7ed19988fa4a05045841d3050f0451',1,'Core::AllocatorUtils']]],
-  ['setposition_2',['SetPosition',['../de/d58/class_graphics_1_1_orthographic_camera.html#a5f211ccec83dea6f0643d834c266cc02',1,'Graphics::OrthographicCamera']]],
-  ['setrotation_3',['SetRotation',['../de/d58/class_graphics_1_1_orthographic_camera.html#a3b886dd8d9436148abac07263748ea35',1,'Graphics::OrthographicCamera']]],
-  ['showdatapointinfopanel_4',['ShowDataPointInfoPanel',['../d2/da4/_data_point_info_panel_8cpp.html#a45af73c1401699f3f60a6c0b22bcedad',1,'Core']]],
-  ['showmemorydebugwindow_5',['ShowMemoryDebugWindow',['../d8/da2/class_core_1_1_memory_debug_window.html#aace07d0bfd47857f43d00ecc44060cf4',1,'Core::MemoryDebugWindow']]],
-  ['shutdown_6',['Shutdown',['../d5/dc5/class_core_1_1_memory_metrics.html#a3416a300156406f3f16d8e8ef113e6d4',1,'Core::MemoryMetrics::Shutdown()'],['../d3/d33/class_core_1_1_memory_tracker.html#af5ffa6d03855cb0272fc71395f32172e',1,'Core::MemoryTracker::Shutdown()'],['../db/de6/class_debug_1_1_console_log_file.html#aa30e51a7604e6f0306e9386d3c49dbc5',1,'Debug::ConsoleLogFile::Shutdown()']]],
-  ['startlistening_7',['StartListening',['../d1/d88/class_core_1_1_event_listener.html#aed09267e00a9f5283bc67277741e2ac5',1,'Core::EventListener']]],
-  ['stoplistening_8',['StopListening',['../d1/d88/class_core_1_1_event_listener.html#a375f14cc105e0e0b135777b6cf409719',1,'Core::EventListener']]],
-  ['swapbuffers_9',['SwapBuffers',['../d7/daf/class_core_1_1_double_buffered_allocator.html#ab602f9e74c094b98c8848907ff55c721',1,'Core::DoubleBufferedAllocator']]]
+  ['selectfile_0',['SelectFile',['../d5/d9b/namespace_astral.html#a8f6ec56a67f7e732eae28b0377ff5e8f',1,'Astral']]],
+  ['setmemoryregionaccess_1',['SetMemoryRegionAccess',['../d7/d15/_allocator_utils_8h.html#a45761e98cdcce1f63b183273b456e13d',1,'Astral::AllocatorUtils']]],
+  ['setoutputattachment_2',['SetOutputAttachment',['../d1/d89/class_astral_1_1_render_graph.html#ab1c27eeabfc69188b8c614fe5e11d774',1,'Astral::RenderGraph::SetOutputAttachment(const RenderGraphPass &amp;pass, std::string_view attachmentName, const std::vector&lt; TextureHandle &gt; &amp;offscreenTargets)'],['../d1/d89/class_astral_1_1_render_graph.html#a77168ad09a07dc5e6cfa25ca4da7fe26',1,'Astral::RenderGraph::SetOutputAttachment(const RenderGraphPass &amp;pass, std::string_view attachmentName, const std::vector&lt; RenderTargetHandle &gt; &amp;swapchainTargets)']]],
+  ['setposition_3',['SetPosition',['../d4/d4b/class_astral_1_1_camera.html#a5c6fe978890f6c265b8681743509950d',1,'Astral::Camera']]],
+  ['setrotation_4',['SetRotation',['../d4/d4b/class_astral_1_1_camera.html#aba9b343fc86e95157d5e19998c1cf203',1,'Astral::Camera']]],
+  ['showmemorydebugwindow_5',['ShowMemoryDebugWindow',['../da/de4/class_astral_1_1_memory_debug_window.html#aea47a2a31440c205d140d7470d015a99',1,'Astral::MemoryDebugWindow']]],
+  ['shutdown_6',['Shutdown',['../dc/d21/class_astral_1_1_memory_metrics.html#a5ddff5713c01a63bb4488182c3967237',1,'Astral::MemoryMetrics::Shutdown()'],['../d9/d89/class_astral_1_1_memory_tracker.html#a9f92959cfd4c908ee523f3835dbb595a',1,'Astral::MemoryTracker::Shutdown()'],['../db/d4f/class_astral_1_1_console_log_file.html#ab1da6a2b203a3b1501e630de8ae993b2',1,'Astral::ConsoleLogFile::Shutdown()'],['../d3/d91/class_astral_1_1_e_c_s.html#a9ac300bf676820e875376c1d71726499',1,'Astral::ECS::Shutdown()']]],
+  ['startlistening_7',['StartListening',['../d7/db3/class_astral_1_1_event_listener.html#a3971e1d07c38cab59f281b2c3b7613e1',1,'Astral::EventListener']]],
+  ['stoplistening_8',['StopListening',['../d7/db3/class_astral_1_1_event_listener.html#af5994eac60ffa0a98062f14359e9e3ca',1,'Astral::EventListener']]],
+  ['swapbuffers_9',['SwapBuffers',['../d2/ddb/class_astral_1_1_double_buffered_allocator.html#ae591e0ac8fa02e054648c57900fc798c',1,'Astral::DoubleBufferedAllocator']]]
 ];

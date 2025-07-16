@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7eeventpublisher_0',['~EventPublisher',['../dd/d8c/class_core_1_1_event_publisher.html#abd87f68c8b736874b7761bac9410a550',1,'Core::EventPublisher']]]
+  ['_7eeventpublisher_0',['~EventPublisher',['../d0/d57/class_astral_1_1_event_publisher.html#a0f904e057ec3e0276a5e7b9ffaa582d5',1,'Astral::EventPublisher']]]
 ];

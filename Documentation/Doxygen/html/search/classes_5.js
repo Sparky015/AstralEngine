@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['frameallocationdata_0',['FrameAllocationData',['../da/d02/struct_core_1_1_frame_allocation_data.html',1,'Core']]],
-  ['frameallocator_1',['FrameAllocator',['../d6/da7/class_core_1_1_frame_allocator.html',1,'Core']]],
-  ['functionprofiler_2',['FunctionProfiler',['../d0/da7/class_debug_1_1_function_profiler.html',1,'Debug']]]
+  ['forwardrenderer_0',['ForwardRenderer',['../de/dba/class_astral_1_1_forward_renderer.html',1,'Astral']]],
+  ['frameallocationdata_1',['FrameAllocationData',['../df/df6/struct_astral_1_1_frame_allocation_data.html',1,'Astral']]],
+  ['frameallocator_2',['FrameAllocator',['../d3/dec/class_astral_1_1_frame_allocator.html',1,'Astral']]],
+  ['framebuffer_3',['Framebuffer',['../d5/d75/class_astral_1_1_framebuffer.html',1,'Astral']]],
+  ['framebufferresizedevent_4',['FramebufferResizedEvent',['../d5/d76/struct_framebuffer_resized_event.html',1,'']]],
+  ['functionprofiler_5',['FunctionProfiler',['../d6/d0d/class_astral_1_1_function_profiler.html',1,'Astral']]]
 ];
