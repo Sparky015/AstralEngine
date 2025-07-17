@@ -14,7 +14,7 @@
 #include <string>
 #include <filesystem>
 #include "imgui/imgui.h"
-#include "Renderer/RHI/Common/ImageSubResourceRange.h"
+#include "Renderer/RHI/Common/ImageSubresourceRange.h"
 
 
 namespace Astral {

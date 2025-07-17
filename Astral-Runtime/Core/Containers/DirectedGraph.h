@@ -48,7 +48,7 @@ namespace Astral {
 
     private:
 
-        friend Edge;
+        friend Edge<DataType>;
         AEDirectedGraph<DataType>* m_OwningGraph;
         VertexIndex m_VertexIndex;
         DataType m_VertexData;
