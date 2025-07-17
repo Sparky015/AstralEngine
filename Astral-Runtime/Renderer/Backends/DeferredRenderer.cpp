@@ -15,8 +15,9 @@
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RendererManager.h"
 
-#include "stb_image.h"
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Debug/ImGui/ImGuiManager.h"
 
 namespace Astral {
 
@@ -31,11 +32,15 @@ namespace Astral {
         m_CurrentFrameIndex = 0;
 
 
-        // Building the main render pass and the imgui render pass
-        BuildRenderPasses();
+
+        // Building the imgui render pass
+        BuildImGuiEditorRenderPass();
 
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
+
+
+        BuildRenderGraph();
 
 
         m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
@@ -94,20 +99,14 @@ namespace Astral {
         if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
         {
             uint32 currentBufferAllocation = frameContext.SceneLightsBuffer->GetAllocatedSize();
-            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2); // TODO: If reallocation happens, you need to re-add to descriptor set as it is a new buffer
+            // TODO: If reallocation happens, you need to re-add to descriptor set to replace the old buffer as reallocation creates a new buffer
+            frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
         }
         frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
 
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
-
-        frameContext.FramesTillFree--;
-        if (frameContext.FramesTillFree == 0)
-        {
-            frameContext.ImGuiTexturesToBeFreed.clear();
-            frameContext.TexturesToBeFreed.clear();
-        }
     }
 
 
@@ -141,16 +140,12 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::BuildRenderPasses()
+    void DeferredRenderer::BuildRenderGraph()
     {
-        Device& device = RendererAPI::GetDevice();
-        Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
-
-        m_MainRenderPass = device.CreateRenderPass();
 
         AttachmentDescription albedoBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -160,6 +155,7 @@ namespace Astral {
 
         AttachmentDescription metallicBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -169,6 +165,7 @@ namespace Astral {
 
         AttachmentDescription roughnessBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -178,6 +175,7 @@ namespace Astral {
 
         AttachmentDescription emissionBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -187,6 +185,7 @@ namespace Astral {
 
         AttachmentDescription normalBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -196,6 +195,7 @@ namespace Astral {
 
         AttachmentDescription depthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .ImageUsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -203,8 +203,19 @@ namespace Astral {
             .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
         };
 
-        AttachmentDescription offscreenTextureDescription = {
-            .Format = renderTargets[0]->GetImageFormat(),
+        RenderGraphPass geometryPass = RenderGraphPass(OutputAttachmentDimensions, "GBuffer Pass", [&](){ GeometryPass(); });
+        geometryPass.CreateColorAttachment(albedoBufferDescription, "GBuffer_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(metallicBufferDescription, "GBuffer_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(roughnessBufferDescription, "GBuffer_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(emissionBufferDescription, "GBuffer_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateColorAttachment(normalBufferDescription, "GBuffer_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        geometryPass.CreateDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+
+
+        AttachmentDescription lightingTextureDescription = {
+            .Format = ImageFormat::B8G8R8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -212,50 +223,43 @@ namespace Astral {
             .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
         };
 
-        m_MainRenderPass->BeginBuildingRenderPass();
-        AttachmentIndex albedoTextureIndex = m_MainRenderPass->DefineAttachment(albedoBufferDescription);
-        AttachmentIndex metallicTextureIndex = m_MainRenderPass->DefineAttachment(metallicBufferDescription);
-        AttachmentIndex roughnessTextureIndex = m_MainRenderPass->DefineAttachment(roughnessBufferDescription);
-        AttachmentIndex emissionTextureIndex = m_MainRenderPass->DefineAttachment(emissionBufferDescription);
-        AttachmentIndex normalTextureIndex = m_MainRenderPass->DefineAttachment(normalBufferDescription);
 
-        AttachmentIndex depthBufferIndex = m_MainRenderPass->DefineAttachment(depthBufferDescription);
-        AttachmentIndex offscreenTextureIndex = m_MainRenderPass->DefineAttachment(offscreenTextureDescription);
+        RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ LightingPass(); });
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
-        // Geometry Pass
-        m_MainRenderPass->BeginBuildingSubpass();
+        lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
-        m_MainRenderPass->AddColorAttachment(albedoTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_MainRenderPass->AddColorAttachment(metallicTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_MainRenderPass->AddColorAttachment(roughnessTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_MainRenderPass->AddColorAttachment(emissionTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_MainRenderPass->AddColorAttachment(normalTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_MainRenderPass->AddDepthStencilAttachment(depthBufferIndex, ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        std::vector<TextureHandle> outputTextures;
+        constexpr int numFramesInFlight = 3;
+        outputTextures.reserve(numFramesInFlight);
+        for (int i = 0; i < numFramesInFlight; i++)
+        {
+            TextureHandle offscreenOutput = m_FrameContexts[i].OffscreenRenderTarget;
+            outputTextures.push_back(offscreenOutput);
+        }
 
-        SubpassIndex geometrySubpassIndex = m_MainRenderPass->EndBuildingSubpass();
+        uint32 maxFramesInFlight = m_FrameContexts.size();
 
-        // Lighting Pass
-        m_MainRenderPass->BeginBuildingSubpass();
 
-        m_MainRenderPass->AddInputAttachment(albedoTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        m_MainRenderPass->AddInputAttachment(metallicTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        m_MainRenderPass->AddInputAttachment(roughnessTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        m_MainRenderPass->AddInputAttachment(emissionTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        m_MainRenderPass->AddInputAttachment(normalTextureIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        m_MainRenderPass->AddInputAttachment(depthBufferIndex, ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
+        m_RenderGraph.AddPass(geometryPass);
+        m_RenderGraph.AddPass(lightingPass);
+        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
+        m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
+        m_RenderGraph.EndBuildingRenderGraph();
+    }
 
-        m_MainRenderPass->AddColorAttachment(offscreenTextureIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        SubpassIndex lightingSubpassIndex = m_MainRenderPass->EndBuildingSubpass();
 
-        m_MainRenderPass->EndBuildingRenderPass();
-
-        SubpassDependencyMasks subpassDependencyMasks = {
-            .SourceStageMask = PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT_BIT,
-            .DestinationStageMask = PipelineStageFlags::FRAGMENT_SHADER_BIT,
-            .SourceAccessMask = AccessFlags::SHADER_WRITE_BIT,
-            .DestinationAccessMask = AccessFlags::SHADER_READ_BIT,
-        };
-        m_MainRenderPass->DefineSubpassDependency(geometrySubpassIndex, lightingSubpassIndex, subpassDependencyMasks);
+    void DeferredRenderer::BuildImGuiEditorRenderPass()
+    {
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+        std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
 
 
         m_ImGuiRenderPass = device.CreateRenderPass();
@@ -279,86 +283,6 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::CreateGBufferTextures(GBuffer& outGBuffer, UVec2 dimensions)
-    {
-        Device& device = RendererAPI::GetDevice();
-
-        // Albedo Texture
-        TextureCreateInfo albedoTextureCreateInfo = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.AlbedoBuffer = device.CreateTexture(albedoTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.AlbedoBuffer, "Albedo Buffer");
-
-        // Metallic Texture
-        TextureCreateInfo metallicTextureCreateInfo = {
-            .Format = ImageFormat::R8_UNORM,
-            .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.MetallicBuffer = device.CreateTexture(metallicTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.MetallicBuffer, "Metallic Buffer");
-
-        // Roughness Texture
-        TextureCreateInfo roughnessTextureCreateInfo = {
-            .Format = ImageFormat::R8_UNORM,
-            .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.RoughnessBuffer = device.CreateTexture(roughnessTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.RoughnessBuffer, "Roughness Buffer");
-
-        // Emission Texture
-        TextureCreateInfo emissionTextureCreateInfo = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.EmissionBuffer = device.CreateTexture(emissionTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.EmissionBuffer, "Emission Buffer");
-
-        // Normal Texture
-        TextureCreateInfo normalTextureCreateInfo = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .Layout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.NormalBuffer = device.CreateTexture(normalTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.NormalBuffer, "Normal Buffer");
-
-        TextureCreateInfo depthBufferTextureCreateInfo = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
-            .Dimensions = dimensions,
-            .ImageData = nullptr
-        };
-        outGBuffer.DepthBuffer = device.CreateTexture(depthBufferTextureCreateInfo);
-        RendererAPI::NameObject(outGBuffer.DepthBuffer, "Depth Buffer");
-
-        outGBuffer.GBufferDescriptorSet = device.CreateDescriptorSet();
-        outGBuffer.GBufferDescriptorSet->BeginBuildingSet();
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.AlbedoBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.MetallicBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.RoughnessBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.EmissionBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.NormalBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->AddDescriptorInputAttachment(outGBuffer.DepthBuffer, ShaderStage::FRAGMENT);
-        outGBuffer.GBufferDescriptorSet->EndBuildingSet();
-    }
-
 
     void DeferredRenderer::InitializeFrameResources()
     {
@@ -376,8 +300,6 @@ namespace Astral {
             context.Transforms = std::vector<Mat4>();
 
 
-            CreateGBufferTextures(context.GBuffer, renderTargets[0]->GetDimensions());
-
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -386,6 +308,8 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            RendererAPI::NameObject(context.OffscreenRenderTarget, "Offscreen Render Target");
+
 
 
 
@@ -393,23 +317,9 @@ namespace Astral {
             context.OffscreenDescriptorSet->BeginBuildingSet();
             context.OffscreenDescriptorSet->AddDescriptorImageSampler(context.OffscreenRenderTarget, ShaderStage::FRAGMENT);
             context.OffscreenDescriptorSet->EndBuildingSet();
-            context.FramesTillFree = 2;
 
 
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
-
-            context.SceneFramebuffer = device.CreateFramebuffer(m_MainRenderPass);
-            UVec2 viewportDimensions = m_ViewportSize;
-            context.SceneFramebuffer->BeginBuildingFramebuffer(viewportDimensions.x, viewportDimensions.y);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.AlbedoBuffer);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.MetallicBuffer);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.RoughnessBuffer);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.EmissionBuffer);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.NormalBuffer);
-            context.SceneFramebuffer->AttachTexture(context.GBuffer.DepthBuffer);
-            context.SceneFramebuffer->AttachTexture(context.OffscreenRenderTarget);
-            context.SceneFramebuffer->EndBuildingFramebuffer();
-
             context.SceneRenderTarget = nullptr;
 
 
@@ -445,19 +355,38 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
-        FramebufferHandle mainFramebufferHandle = frameContext.SceneFramebuffer;
 
-        // Screen Rendering
         commandBuffer->BeginRecording();
-        RendererAPI::BeginLabel(commandBuffer, "Main Render Pass", Vec4(1.0 , 1.0, 0, 1.0));
-        m_MainRenderPass->BeginRenderPass(commandBuffer, mainFramebufferHandle);
 
-        GeometryPass();
-        LightingPass();
+        // Viewport Rendering
+        m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
 
-        m_MainRenderPass->EndRenderPass(commandBuffer);
-        RendererAPI::EndLabel(commandBuffer);
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
 
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        }
 
 
         // ImGui Rendering
@@ -467,16 +396,44 @@ namespace Astral {
         m_ImGuiRenderPass->EndRenderPass(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
 
+
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL; // TODO: Make render pass objects update the textures' layout when the render pass automatically transitions layouts
+            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        }
+
+
         commandBuffer->EndRecording();
 
         CommandQueueHandle commandQueue = device.GetCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
-        uint32 nextOldestFrameIndex = (m_CurrentFrameIndex + 2) % 3;
+        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
         if (m_CurrentViewportTexture.size() == 0)
         {
-            m_CurrentViewportTexture.push(m_FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
+            m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
         }
     }
 
@@ -503,11 +460,10 @@ namespace Astral {
 
     void DeferredRenderer::GeometryPass()
     {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
-        RenderPassHandle mainRenderPass = m_MainRenderPass;
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
-        RendererAPI::BeginLabel(commandBuffer, "Geometry Pass", Vec4(1.0 , 0.0, 1.0, 1.0));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -520,7 +476,8 @@ namespace Astral {
 
             material.FragmentShader = m_GeometryPassShader;
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
+            // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
+            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -539,41 +496,37 @@ namespace Astral {
             RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
 
-        RendererAPI::EndLabel(commandBuffer);
     }
 
 
     void DeferredRenderer::LightingPass()
     {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_MainRenderPass->NextSubpass(commandBuffer);
 
-        RendererAPI::BeginLabel(commandBuffer, "Lighting Pass", Vec4(1.0 , 0.0, 0, 1.0));
-
-        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
         frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_LightingShader;
-        material.DescriptorSet = frameContext.GBuffer.GBufferDescriptorSet;
+        material.DescriptorSet = executionContext.ReadAttachments;
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
-        PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(m_MainRenderPass, material, mesh, 1);
+        PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
         pipeline->Bind(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.GBuffer.GBufferDescriptorSet, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
-        RendererAPI::EndLabel(commandBuffer);
     }
 
 
@@ -587,15 +540,11 @@ namespace Astral {
         std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
 
-        uint32 nextOldestFrameIndex = m_CurrentFrameIndex;
-        m_CurrentViewportTexture.push(m_FrameContexts[nextOldestFrameIndex].OffscreenDescriptorSet);
 
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
             FrameContext& frameContext = m_FrameContexts[i];
-
-            CreateGBufferTextures(frameContext.GBuffer, UVec2(width, height));
 
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
@@ -604,31 +553,31 @@ namespace Astral {
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };
-            m_FrameContexts[m_CurrentFrameIndex].FramesTillFree = 2;
-            m_FrameContexts[m_CurrentFrameIndex].ImGuiTexturesToBeFreed.push_back(frameContext.OffscreenDescriptorSet);
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
 
-
-            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet();
+            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet(); // TODO: Avoid creating new descriptor set handles and reuse the handle but recreate the vk descriptor set
             frameContext.OffscreenDescriptorSet->BeginBuildingSet();
             frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
             frameContext.OffscreenDescriptorSet->EndBuildingSet();
-
-            frameContext.SceneFramebuffer = device.CreateFramebuffer(m_MainRenderPass);
-            FramebufferHandle framebuffer = frameContext.SceneFramebuffer;
-
-            framebuffer->BeginBuildingFramebuffer(width, height);
-            framebuffer->AttachTexture(frameContext.GBuffer.AlbedoBuffer);
-            framebuffer->AttachTexture(frameContext.GBuffer.MetallicBuffer);
-            framebuffer->AttachTexture(frameContext.GBuffer.RoughnessBuffer);
-            framebuffer->AttachTexture(frameContext.GBuffer.EmissionBuffer);
-            framebuffer->AttachTexture(frameContext.GBuffer.NormalBuffer);
-            framebuffer->AttachTexture(frameContext.GBuffer.DepthBuffer);
-            framebuffer->AttachTexture(frameContext.OffscreenRenderTarget);
-            framebuffer->EndBuildingFramebuffer();
         }
 
+        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
+        m_CurrentViewportTexture.pop();
+        m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
+
+        // Resizing Render Graph
+
+        std::vector<TextureHandle> outputTextures;
+        constexpr int numFramesInFlight = 3;
+        outputTextures.reserve(numFramesInFlight);
+        for (int i = 0; i < numFramesInFlight; i++)
+        {
+            TextureHandle offscreenOutput = m_FrameContexts[i].OffscreenRenderTarget;
+            outputTextures.push_back(offscreenOutput);
+        }
+
+        m_RenderGraph.ResizeResources(outputTextures);
     }
 
 } // Renderer

@@ -8,11 +8,17 @@
 
 #include "HashCombiner.h"
 
+#include "Core/FixedIntegerTypes.h"
+
 // Forward declarations for the classes we'll need for hash specializations
 namespace Astral {
     struct VertexBufferAttribute;
     class VertexBufferLayout;
     struct PipelineStateConfiguration;
+    class RenderGraphPass;
+
+    template<typename DataType>
+    class Vertex;
 }
 
 #include "Renderer/RHI/Resources/VertexBufferLayout.h"
@@ -34,6 +40,12 @@ template <>
 struct std::hash<Astral::PipelineStateConfiguration>
 {
     size_t operator()(Astral::PipelineStateConfiguration const& v) const noexcept;
+};
+
+template <>
+struct std::hash<Astral::Vertex<uint8>>
+{
+    size_t operator()(Astral::Vertex<uint8> const& v) const noexcept;
 };
 
 

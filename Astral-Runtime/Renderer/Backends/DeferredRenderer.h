@@ -17,11 +17,9 @@
 #include "../RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 #include "Renderer/Renderer.h"
-
+#include "Renderer/RenderGraph/RenderGraph.h"
 
 #include <queue>
-
-
 
 namespace Astral {
 
@@ -58,16 +56,6 @@ namespace Astral {
             uint32 NumLights;
         };
 
-        struct GBuffer
-        {
-            TextureHandle AlbedoBuffer;
-            TextureHandle MetallicBuffer;
-            TextureHandle RoughnessBuffer;
-            TextureHandle EmissionBuffer;
-            TextureHandle NormalBuffer;
-            TextureHandle DepthBuffer;
-            DescriptorSetHandle GBufferDescriptorSet;
-        };
 
         struct FrameContext
         {
@@ -75,28 +63,21 @@ namespace Astral {
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
 
-            GBuffer GBuffer;
 
             TextureHandle OffscreenRenderTarget;
             DescriptorSetHandle OffscreenDescriptorSet;
 
             CommandBufferHandle SceneCommandBuffer;
-            FramebufferHandle SceneFramebuffer;
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneDataBuffer;
             BufferHandle SceneLightsBuffer;
             DescriptorSetHandle SceneDataDescriptorSet;
 
             FramebufferHandle WindowFramebuffer;
-
-            std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
-            std::vector<TextureHandle> TexturesToBeFreed;
-            uint32 FramesTillFree = 2;
         };
 
-
-        void BuildRenderPasses();
-        void CreateGBufferTextures(GBuffer& outGBuffer, UVec2 dimensions);
+        void BuildRenderGraph();
+        void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
 
         void RenderScene();
@@ -107,6 +88,7 @@ namespace Astral {
         void LightingPass();
 
 
+        RenderGraph m_RenderGraph;
 
         std::vector<FrameContext> m_FrameContexts;
         uint32 m_CurrentFrameIndex = -1;

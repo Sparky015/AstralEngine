@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['beginscene_0',['BeginScene',['../d3/d33/class_core_1_1_memory_tracker.html#af3f5af2f4cea59b4b3691253bde1350e',1,'Core::MemoryTracker::BeginScene()'],['../de/dde/class_core_1_1_scene_metrics_exporter.html#a3328ad324d21bb6e4fb152dc8fffc34d',1,'Core::SceneMetricsExporter::BeginScene()']]]
+  ['beginbuildingrendergraph_0',['BeginBuildingRenderGraph',['../d1/d89/class_astral_1_1_render_graph.html#abe2ff41d4e6e4289ce7614f21b8ea429',1,'Astral::RenderGraph']]],
+  ['beginscene_1',['BeginScene',['../d9/d89/class_astral_1_1_memory_tracker.html#a55f2b65e907689fc61ed8d206e3168ce',1,'Astral::MemoryTracker::BeginScene()'],['../d2/d92/class_astral_1_1_scene_metrics_exporter.html#a2effefcff7384833be0a052769ab0ceb',1,'Astral::SceneMetricsExporter::BeginScene()']]]
 ];

@@ -6,14 +6,13 @@
 
 #include "VulkanRendererCommands.h"
 
-
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_core.h>
-#ifdef ASTRAL_VULKAN_AVAILABLE
-#endif
+#include "Renderer/RHI/Common/PipelineBarriers.h"
+#include "Common/VkEnumConversions.h"
 #include "Core/Engine.h"
 #include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
 #include "Renderer/RendererManager.h"
+
+#include <vulkan/vulkan_core.h>
 
 namespace Astral {
 
@@ -58,6 +57,102 @@ namespace Astral {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkPipelineLayout pipelineLayout = (VkPipelineLayout)pipelineStateObjectHandle->GetPipelineLayout();
         vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_ALL, 0, sizeInBytes, data);
+    }
+
+
+    void VulkanRendererCommands::SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+
+
+        std::vector<VkMemoryBarrier> memoryBarriers;
+        memoryBarriers.reserve(pipelineBarrier.MemoryBarriers.size());
+
+        for (const MemoryBarrier& memoryBarrier : pipelineBarrier.MemoryBarriers)
+        {
+            VkMemoryBarrier vkMemoryBarrier = {
+                .sType          =  VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+                .pNext          =  nullptr,
+                .srcAccessMask  =  ConvertAccessFlagsToVkAccessFlags(memoryBarrier.SourceAccessMask),
+                .dstAccessMask  =  ConvertAccessFlagsToVkAccessFlags(memoryBarrier.DestinationAccessMask)
+            };
+
+            memoryBarriers.push_back(vkMemoryBarrier);
+        }
+
+
+        std::vector<VkBufferMemoryBarrier> bufferMemoryBarriers;
+        bufferMemoryBarriers.reserve(pipelineBarrier.BufferMemoryBarriers.size());
+
+        for (const BufferMemoryBarrier& bufferMemoryBarrier : pipelineBarrier.BufferMemoryBarriers)
+        {
+            VkBuffer buffer = (VkBuffer)bufferMemoryBarrier.Buffer->GetNativeHandle();
+
+            VkBufferMemoryBarrier vkBufferMemoryBarrier = {
+                .sType                 =   VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+                .pNext                 =   nullptr,
+                .srcAccessMask         =   ConvertAccessFlagsToVkAccessFlags(bufferMemoryBarrier.SourceAccessMask),
+                .dstAccessMask         =   ConvertAccessFlagsToVkAccessFlags(bufferMemoryBarrier.DestinationAccessMask),
+                .srcQueueFamilyIndex   =   bufferMemoryBarrier.SourceQueueFamilyIndex,
+                .dstQueueFamilyIndex   =   bufferMemoryBarrier.DestinationQueueFamilyIndex,
+                .buffer                =   buffer,
+                .offset                =   bufferMemoryBarrier.Offset,
+                .size                  =   bufferMemoryBarrier.Size
+            };
+
+            if (vkBufferMemoryBarrier.srcQueueFamilyIndex == QueueFamilyIgnored) { vkBufferMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED; }
+            if (vkBufferMemoryBarrier.dstQueueFamilyIndex == QueueFamilyIgnored) { vkBufferMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED; }
+
+            bufferMemoryBarriers.push_back(vkBufferMemoryBarrier);
+        }
+
+
+        std::vector<VkImageMemoryBarrier> imageMemoryBarriers;
+        imageMemoryBarriers.reserve(pipelineBarrier.ImageMemoryBarriers.size());
+
+        for (const ImageMemoryBarrier& imageMemoryBarrier : pipelineBarrier.ImageMemoryBarriers)
+        {
+            VkImage image = (VkImage)imageMemoryBarrier.Image->GetNativeImage();
+
+            VkImageSubresourceRange vkImageSubresource = {
+                .aspectMask      =   ConvertImageAspectFlagsToVkImageAspectFlags(imageMemoryBarrier.ImageSubresourceRange.AspectMask),
+                .baseMipLevel    =   imageMemoryBarrier.ImageSubresourceRange.BaseMipLevel,
+                .levelCount      =   imageMemoryBarrier.ImageSubresourceRange.LevelCount,
+                .baseArrayLayer  =   imageMemoryBarrier.ImageSubresourceRange.BaseArrayLayer,
+                .layerCount      =   imageMemoryBarrier.ImageSubresourceRange.LayerCount,
+            };
+
+
+            VkImageMemoryBarrier vkImageMemoryBarrier = {
+                .sType                =  VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                .pNext                =  nullptr,
+                .srcAccessMask        =  ConvertAccessFlagsToVkAccessFlags(imageMemoryBarrier.SourceAccessMask),
+                .dstAccessMask        =  ConvertAccessFlagsToVkAccessFlags(imageMemoryBarrier.DestinationAccessMask),
+                .oldLayout            =  ConvertImageLayoutToVkImageLayout(imageMemoryBarrier.OldLayout),
+                .newLayout            =  ConvertImageLayoutToVkImageLayout(imageMemoryBarrier.NewLayout),
+                .srcQueueFamilyIndex  =  imageMemoryBarrier.SourceQueueFamilyIndex,
+                .dstQueueFamilyIndex  =  imageMemoryBarrier.DestinationQueueFamilyIndex,
+                .image                =  image,
+                .subresourceRange     =  vkImageSubresource
+            };
+
+            if (vkImageMemoryBarrier.srcQueueFamilyIndex == QueueFamilyIgnored) { vkImageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED; }
+            if (vkImageMemoryBarrier.dstQueueFamilyIndex == QueueFamilyIgnored) { vkImageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED; }
+
+            imageMemoryBarriers.push_back(vkImageMemoryBarrier);
+        }
+
+        vkCmdPipelineBarrier(commandBuffer,
+            ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.SourceStageMask),
+            ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.DestinationStageMask),
+            ConvertDependencyFlagsToVkDependencyFlags(pipelineBarrier.DependencyFlags), // TODO: Make actual conversion of the dependency flags to VkDependencyFlags
+            (uint32)memoryBarriers.size(),
+            memoryBarriers.data(),
+            (uint32)bufferMemoryBarriers.size(),
+            bufferMemoryBarriers.data(),
+            (uint32)imageMemoryBarriers.size(),
+            imageMemoryBarriers.data()
+        );
     }
 
 
@@ -184,6 +279,26 @@ namespace Astral {
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_SHADER_MODULE,
             .objectHandle = (uint64)shader,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
+    void VulkanRendererCommands::NameObject(FramebufferHandle framebufferHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+        VkFramebuffer framebuffer = (VkFramebuffer)framebufferHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_FRAMEBUFFER,
+            .objectHandle = (uint64)framebuffer,
             .pObjectName = name.data(),
         };
 

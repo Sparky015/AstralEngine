@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['beginscene_0',['BeginScene',['../d3/d33/class_core_1_1_memory_tracker.html#af3f5af2f4cea59b4b3691253bde1350e',1,'Core::MemoryTracker::BeginScene()'],['../de/dde/class_core_1_1_scene_metrics_exporter.html#a3328ad324d21bb6e4fb152dc8fffc34d',1,'Core::SceneMetricsExporter::BeginScene()']]],
-  ['branches_1',['Branches',['../index.html#autotoc_md20',1,'']]],
-  ['bufferattribute_2',['BufferAttribute',['../d6/d14/struct_graphics_1_1_buffer_attribute.html',1,'Graphics']]],
-  ['bufferlayout_3',['BufferLayout',['../d2/d98/class_graphics_1_1_buffer_layout.html',1,'Graphics']]],
-  ['build_4',['How to Build',['../index.html#autotoc_md15',1,'']]]
+  ['beginbuildingrendergraph_0',['BeginBuildingRenderGraph',['../d1/d89/class_astral_1_1_render_graph.html#abe2ff41d4e6e4289ce7614f21b8ea429',1,'Astral::RenderGraph']]],
+  ['beginscene_1',['BeginScene',['../d9/d89/class_astral_1_1_memory_tracker.html#a55f2b65e907689fc61ed8d206e3168ce',1,'Astral::MemoryTracker::BeginScene()'],['../d2/d92/class_astral_1_1_scene_metrics_exporter.html#a2effefcff7384833be0a052769ab0ceb',1,'Astral::SceneMetricsExporter::BeginScene()']]],
+  ['branches_2',['Branches',['../index.html#autotoc_md26',1,'']]],
+  ['buffer_3',['Buffer',['../d2/d03/class_astral_1_1_buffer.html',1,'Astral']]],
+  ['buffer_2eh_4',['Buffer.h',['../d7/d1b/_buffer_8h.html',1,'']]],
+  ['buffermemorybarrier_5',['BufferMemoryBarrier',['../d4/d97/struct_astral_1_1_buffer_memory_barrier.html',1,'Astral']]],
+  ['build_6',['How to Build',['../index.html#autotoc_md21',1,'']]]
 ];

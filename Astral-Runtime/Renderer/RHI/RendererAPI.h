@@ -22,7 +22,8 @@ namespace Astral {
         static void SetClearColor(float r, float g, float b, float a);
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
         static void PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes);
-        static void SetBlending(bool enable);
+        static void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier);
+        static void SetBlending(bool enable); // TODO: Remove this
         static void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
         static void EndLabel(CommandBufferHandle commandBufferHandle);
         static void InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
@@ -30,6 +31,7 @@ namespace Astral {
         static void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name);
         static void NameObject(TextureHandle textureHandle, std::string_view name);
         static void NameObject(ShaderHandle shaderHandle, std::string_view name);
+        static void NameObject(FramebufferHandle framebufferHandle, std::string_view name);
 
         static void CallImGuiDraws(CommandBufferHandle commandBufferHandle);
 

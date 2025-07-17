@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['updatedeltatime_0',['UpdateDeltaTime',['../de/dee/class_core_1_1_delta_time.html#ac34daed42d468884d3e4f0b9abc86969',1,'Core::DeltaTime']]]
+  ['updatecomponent_0',['UpdateComponent',['../d3/d91/class_astral_1_1_e_c_s.html#a4cd541a2f6a8687db7ab935fa293c755',1,'Astral::ECS']]],
+  ['updatedeltatime_1',['UpdateDeltaTime',['../df/d63/class_astral_1_1_delta_time.html#ad9ee44d60e30cbea17a25fc7623ac1ed',1,'Astral::DeltaTime']]]
 ];

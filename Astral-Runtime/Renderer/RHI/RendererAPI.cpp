@@ -50,6 +50,12 @@ namespace Astral {
     }
 
 
+    void RendererAPI::SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier)
+    {
+        s_RendererCommands->SetPipelineBarrier(commandBufferHandle, pipelineBarrier);
+    }
+
+
     void RendererAPI::SetBlending(bool enable)
     {
         s_RendererCommands->SetBlending(enable);
@@ -95,6 +101,12 @@ namespace Astral {
     void RendererAPI::NameObject(ShaderHandle shaderHandle, std::string_view name)
     {
         s_RendererCommands->NameObject(shaderHandle, name);
+    }
+
+
+    void RendererAPI::NameObject(FramebufferHandle framebufferHandle, std::string_view name)
+    {
+        s_RendererCommands->NameObject(framebufferHandle, name);
     }
 
 

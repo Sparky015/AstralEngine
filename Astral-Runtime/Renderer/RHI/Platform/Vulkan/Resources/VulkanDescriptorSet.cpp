@@ -136,7 +136,7 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorInputAttachment(TextureHandle textureHandle, ShaderStage bindStage)
+    void VulkanDescriptorSet::AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage)
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 

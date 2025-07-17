@@ -1,4 +1,15 @@
 var searchData=
 [
-  ['loadmemoryprofilebuttoncomponent_0',['LoadMemoryProfileButtonComponent',['../db/d07/_load_file_component_8cpp.html#ae1274328f415948074e1e7f34396474c',1,'Core']]]
+  ['incrementpublishercount_0',['IncrementPublisherCount',['../dc/dcd/class_astral_1_1_event_bus.html#a6e66f3b2b7d9d6a61306b7fc161e4d42',1,'Astral::EventBus']]],
+  ['init_1',['Init',['../dc/d21/class_astral_1_1_memory_metrics.html#a01b4e17c2d1e558b2ea056b12a73305f',1,'Astral::MemoryMetrics::Init()'],['../d9/d89/class_astral_1_1_memory_tracker.html#ade4bbdec10e386b840e70532ac766d3d',1,'Astral::MemoryTracker::Init()'],['../db/d4f/class_astral_1_1_console_log_file.html#a854e59e509b472e441d517904fb0bccd',1,'Astral::ConsoleLogFile::Init()'],['../d3/d91/class_astral_1_1_e_c_s.html#ad4571b0591a7d70ad84e2be493b73522',1,'Astral::ECS::Init()'],['../d6/d48/class_astral_1_1_generic_window.html#a1ea8d8c3cc99c03bd85db7de18657138',1,'Astral::GenericWindow::Init()']]],
+  ['isalignmentpoweroftwo_2',['IsAlignmentPowerOfTwo',['../d7/d15/_allocator_utils_8h.html#a44bd068c0ee81f53db0f5c2cf74ffe78',1,'Astral::AllocatorUtils']]],
+  ['isentityalive_3',['IsEntityAlive',['../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9',1,'Astral::ECS::IsEntityAlive(Entity entity)'],['../d3/d91/class_astral_1_1_e_c_s.html#a34cfa64aa163d6c697b6667bc54cb5a1',1,'Astral::ECS::IsEntityAlive(EntityID entityID)']]],
+  ['isexportfileopen_4',['IsExportFileOpen',['../d2/d92/class_astral_1_1_scene_metrics_exporter.html#a5a62a5f0c90486b3d8b465a492f14038',1,'Astral::SceneMetricsExporter']]],
+  ['isfull_5',['IsFull',['../d2/df4/class_astral_1_1_object_pool.html#ac42555b0eda6e9182b743918cfeca398',1,'Astral::ObjectPool']]],
+  ['iskeydown_6',['IsKeyDown',['../d9/dd5/class_astral_1_1_input_state.html#aadb7d45798603d133eaf3aa99e8b54ed',1,'Astral::InputState']]],
+  ['iskeyrepeating_7',['IsKeyRepeating',['../d9/dd5/class_astral_1_1_input_state.html#adf989a0f92446ac1c362c12fb4bbcbf5',1,'Astral::InputState']]],
+  ['isopen_8',['IsOpen',['../db/d4f/class_astral_1_1_console_log_file.html#a193ea3f427387433e6905d5a46699362',1,'Astral::ConsoleLogFile']]],
+  ['ispointerstored_9',['IsPointerStored',['../d0/df1/class_astral_1_1_global_allocation_storage.html#ae5f69474e54640057f3d71123f76dec0',1,'Astral::GlobalAllocationStorage']]],
+  ['issceneactive_10',['IsSceneActive',['../d9/d89/class_astral_1_1_memory_tracker.html#a396214970ba7a4ec676f227872d30f96',1,'Astral::MemoryTracker::IsSceneActive()'],['../d2/d92/class_astral_1_1_scene_metrics_exporter.html#af07143687ba87b8b3949f6953ee2a201',1,'Astral::SceneMetricsExporter::IsSceneActive()']]],
+  ['isvalid_11',['IsValid',['../d2/df4/class_astral_1_1_object_pool.html#ac39a45eb5e8358580290f85c0d8508da',1,'Astral::ObjectPool']]]
 ];

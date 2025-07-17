@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['trackallocation_0',['TrackAllocation',['../d5/dc5/class_core_1_1_memory_metrics.html#af7dc7e38782f2fea8215f29e4dcc02cb',1,'Core::MemoryMetrics']]],
-  ['trackdeallocation_1',['TrackDeallocation',['../d5/dc5/class_core_1_1_memory_metrics.html#acca022042fac1a9af3d676c330b0a529',1,'Core::MemoryMetrics']]]
+  ['trackallocation_0',['TrackAllocation',['../dc/d21/class_astral_1_1_memory_metrics.html#a4f86c78cb8e08c3d6c88bbc6e6ed918b',1,'Astral::MemoryMetrics']]],
+  ['trackdeallocation_1',['TrackDeallocation',['../dc/d21/class_astral_1_1_memory_metrics.html#a639246b6418468679dcd96de3ab13282',1,'Astral::MemoryMetrics']]]
 ];

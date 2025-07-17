@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Framebuffer.h"
+#include "CommandBuffer.h"
 #include "Renderer/RHI/Common/AccessFlags.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
@@ -33,11 +34,14 @@ namespace Astral {
     struct AttachmentDescription
     {
         ImageFormat Format;
+        ImageUsageFlags ImageUsageFlags;
         AttachmentLoadOp LoadOp;
         AttachmentStoreOp StoreOp;
         ImageLayout InitialLayout;
         ImageLayout FinalLayout;
         Vec4 ClearColor; // Only use when load op is set to clear
+
+        bool operator==(const AttachmentDescription&) const = default;
     };
 
     struct SubpassDependencyMasks
@@ -49,7 +53,9 @@ namespace Astral {
     };
 
     using AttachmentIndex = uint32;
+    static constexpr AttachmentIndex NullAttachmentIndex = -1;
     using SubpassIndex = uint8;
+    static constexpr SubpassIndex NullSubpassIndex = -1;
     static constexpr SubpassIndex SubpassExternal = -1;
 
     class RenderPass
