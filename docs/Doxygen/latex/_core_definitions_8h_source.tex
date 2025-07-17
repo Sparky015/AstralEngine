@@ -1,0 +1,46 @@
+\doxysection{Core\+Definitions.\+h}
+\hypertarget{_core_definitions_8h_source}{}\label{_core_definitions_8h_source}\index{src/Ayla/Core/CoreDefinitions.h@{src/Ayla/Core/CoreDefinitions.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Andrew\ Fagan\ on\ 4/14/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifdef\ AYLA\_PLATFORM\_WINDOWS}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ AYLA\_BUILD\_SHARED\_LIB}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ AYLA\_API\ \_\_declspec(dllexport)\ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Export}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ AYLA\_API\ \_\_declspec(dllimport)\ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Import}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#elif\ AYLA\_PLATFORM\_MACOS}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ AYLA\_BUILD\_SHARED\_LIB}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ AYLA\_API\ \_\_attribute\_\_((visibility("{}default"{})))\ \ \ \ \ \ \ }\textcolor{comment}{//\ Export}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ AYLA\_API\ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Import}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\ \ \ \ \#error\ Core/CoreDefinitions.h:\ Unsupported/Unknown\ Platform!}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifndef\ AYLA\_PLATFORM\_MACOS}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ \#ifndef\ AYLA\_PLATFORM\_WINDOWS}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ AYLA\_PLATFORM\_UNKNOWN}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ int8\ int8\_t}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ int16\ int16\_t}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ int32\ int32\_t}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ int64\ int64\_t}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ uint8\ uint8\_t}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ uint16\ uint16\_t}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ uint32\ uint32\_t}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ uint64\ uint64\_t}}
+
+\end{DoxyCode}

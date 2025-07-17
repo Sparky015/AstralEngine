@@ -1,0 +1,83 @@
+\doxysection{Ayla\+::Input\+::Input\+Layer Class Reference}
+\hypertarget{class_ayla_1_1_input_1_1_input_layer}{}\label{class_ayla_1_1_input_1_1_input_layer}\index{Ayla::Input::InputLayer@{Ayla::Input::InputLayer}}
+Inheritance diagram for Ayla\+::Input\+::Input\+Layer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_ayla_1_1_input_1_1_input_layer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_input_1_1_input_layer_ad8b5c228bc8e4044f8df7bffab6730a0}{On\+Event}} (\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Events\+::\+IEvent}} \&event) override
+\item 
+Events\+::\+EEvent\+Category \mbox{\hyperlink{class_ayla_1_1_input_1_1_input_layer_a7df37beff893a91a77e5c5cfea73e794}{Get\+Accepting\+Event\+Flags}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{Ayla\+::\+Core\+::\+Layers\+::\+ILayer}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ad20556b7c073190dddaf3595be0f5dc1}{On\+Attach}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a0c88b6a5e9e97bb5fb8616dc9b32e3e3}{On\+Detach}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a203234dde01b8b16d651a87723bb170a}{On\+Update}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aec2fc8b8d92959deda2cf6451ee05e40}{On\+Im\+Gui\+Render}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a73b75f7df3cbf21959da24fe2b5a3a9a}{Attach\+Layer}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aa463bb0cf36f2eb9c15e8c7724004e64}{Attach\+Overlay}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_acf2729a351f251289a79dfeb2e87ed35}{Detach\+Layer}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a87d415eedcc261b435d0c111c92108e7}{Detach\+Overlay}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a3d52f0aa79c39ed62d99ed71acba9f20}{Set\+Callback}} (std\+::function$<$ void(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)$>$ callback)
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a42d7c79f16502f2ffa8352efa985221c}{Is\+Enabled}} () const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ac5bc6fe18064732eefb885cd291a7cf3}{Enable}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a8d018fdb909350d35d49c08ce34cda40}{Disable}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{Ayla\+::\+Core\+::\+Layers\+::\+ILayer}}}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries m\+\_\+\+Is\+Enabled}
+\item 
+bool {\bfseries m\+\_\+\+Is\+Initialized\+In\+Tower}
+\item 
+std\+::function$<$ void(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)$>$ {\bfseries m\+\_\+\+Callback} = \mbox{[}$\,$\mbox{]}(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\&)\{\}
+\item 
+std\+::string {\bfseries m\+\_\+\+Debug\+Name}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_input_1_1_input_layer_a7df37beff893a91a77e5c5cfea73e794}\index{Ayla::Input::InputLayer@{Ayla::Input::InputLayer}!GetAcceptingEventFlags@{GetAcceptingEventFlags}}
+\index{GetAcceptingEventFlags@{GetAcceptingEventFlags}!Ayla::Input::InputLayer@{Ayla::Input::InputLayer}}
+\doxysubsubsection{\texorpdfstring{GetAcceptingEventFlags()}{GetAcceptingEventFlags()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_input_1_1_input_layer_a7df37beff893a91a77e5c5cfea73e794} 
+EEvent\+Category Ayla\+::\+Input\+::\+Input\+Layer\+::\+Get\+Accepting\+Event\+Flags (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Accepts Input flags for changing the Input\+State 
+
+Implements \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aeebc849f1e49d897c575bd579dd9a28d}{Ayla\+::\+Core\+::\+Layers\+::\+ILayer}}.
+
+\Hypertarget{class_ayla_1_1_input_1_1_input_layer_ad8b5c228bc8e4044f8df7bffab6730a0}\index{Ayla::Input::InputLayer@{Ayla::Input::InputLayer}!OnEvent@{OnEvent}}
+\index{OnEvent@{OnEvent}!Ayla::Input::InputLayer@{Ayla::Input::InputLayer}}
+\doxysubsubsection{\texorpdfstring{OnEvent()}{OnEvent()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_input_1_1_input_layer_ad8b5c228bc8e4044f8df7bffab6730a0} 
+void Ayla\+::\+Input\+::\+Input\+Layer\+::\+On\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Events\+::\+IEvent}} \&}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Passes the events to the Input\+State for adjusting the Input State. 
+
+Reimplemented from \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a162d19e604d49ff78caa6a149d7fa816}{Ayla\+::\+Core\+::\+Layers\+::\+ILayer}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Input/Input\+Layer.\+h\item 
+src/\+Ayla/\+Input/Input\+Layer.\+cpp\end{DoxyCompactItemize}

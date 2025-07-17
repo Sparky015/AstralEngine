@@ -1,0 +1,72 @@
+\doxysection{Ayla\+::Core\+::Application Class Reference}
+\hypertarget{class_ayla_1_1_core_1_1_application}{}\label{class_ayla_1_1_core_1_1_application}\index{Ayla::Core::Application@{Ayla::Core::Application}}
+
+
+{\ttfamily \#include $<$Application.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_aacdfe20823b7f1d9bdd09c579988091f}{Run}} () const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_ad3cbdbcdacfd603748259220f98ed171}{On\+Event}} (\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a5e3464f01acc700d86bc6d714f3c2082}{Set\+Client\+Loop}} (\mbox{\hyperlink{class_ayla_1_1_client_1_1_client_loop}{Client\+::\+Client\+Loop}} \texorpdfstring{$\ast$}{*}client\+Loop)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}} \& \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a3dc8634069a218b69133c971d7037121}{Get\+Window}} ()
+\item 
+static \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \& \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a39e25a8e5f9652c47963a6e839a7cbb2}{Get\+Layer\+Stack}} ()
+\item 
+static \mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}} \& \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a227681f4141da6fff582ee484561bb55}{Get}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The brain and backbone of the engine. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_core_1_1_application_a227681f4141da6fff582ee484561bb55}\index{Ayla::Core::Application@{Ayla::Core::Application}!Get@{Get}}
+\index{Get@{Get}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{Get()}{Get()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_a227681f4141da6fff582ee484561bb55} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}} \& Ayla\+::\+Core\+::\+Application\+::\+Get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Gives access to the \doxylink{class_ayla_1_1_core_1_1_application}{Application} instance. \Hypertarget{class_ayla_1_1_core_1_1_application_a39e25a8e5f9652c47963a6e839a7cbb2}\index{Ayla::Core::Application@{Ayla::Core::Application}!GetLayerStack@{GetLayerStack}}
+\index{GetLayerStack@{GetLayerStack}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{GetLayerStack()}{GetLayerStack()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_a39e25a8e5f9652c47963a6e839a7cbb2} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \& Ayla\+::\+Core\+::\+Application\+::\+Get\+Layer\+Stack (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Gives access to the Layer\+Stack instance. \Hypertarget{class_ayla_1_1_core_1_1_application_a3dc8634069a218b69133c971d7037121}\index{Ayla::Core::Application@{Ayla::Core::Application}!GetWindow@{GetWindow}}
+\index{GetWindow@{GetWindow}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{GetWindow()}{GetWindow()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_a3dc8634069a218b69133c971d7037121} 
+\mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}} \& Ayla\+::\+Core\+::\+Application\+::\+Get\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Gives access to the Window instance. \Hypertarget{class_ayla_1_1_core_1_1_application_ad3cbdbcdacfd603748259220f98ed171}\index{Ayla::Core::Application@{Ayla::Core::Application}!OnEvent@{OnEvent}}
+\index{OnEvent@{OnEvent}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{OnEvent()}{OnEvent()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_ad3cbdbcdacfd603748259220f98ed171} 
+void Ayla\+::\+Core\+::\+Application\+::\+On\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&}]{event}{}\end{DoxyParamCaption})}
+
+Passes events to the Layer\+Stack. \Hypertarget{class_ayla_1_1_core_1_1_application_aacdfe20823b7f1d9bdd09c579988091f}\index{Ayla::Core::Application@{Ayla::Core::Application}!Run@{Run}}
+\index{Run@{Run}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{Run()}{Run()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_aacdfe20823b7f1d9bdd09c579988091f} 
+void Ayla\+::\+Core\+::\+Application\+::\+Run (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Starts the application loop. \Hypertarget{class_ayla_1_1_core_1_1_application_a5e3464f01acc700d86bc6d714f3c2082}\index{Ayla::Core::Application@{Ayla::Core::Application}!SetClientLoop@{SetClientLoop}}
+\index{SetClientLoop@{SetClientLoop}!Ayla::Core::Application@{Ayla::Core::Application}}
+\doxysubsubsection{\texorpdfstring{SetClientLoop()}{SetClientLoop()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_application_a5e3464f01acc700d86bc6d714f3c2082} 
+void Ayla\+::\+Core\+::\+Application\+::\+Set\+Client\+Loop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_client_1_1_client_loop}{Client\+::\+Client\+Loop}} \texorpdfstring{$\ast$}{*}}]{client\+Loop}{}\end{DoxyParamCaption})}
+
+Lets the client link their loop to the \doxylink{class_ayla_1_1_core_1_1_application}{Application}. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Core/Application.\+h\item 
+src/\+Ayla/\+Core/Application.\+cpp\end{DoxyCompactItemize}

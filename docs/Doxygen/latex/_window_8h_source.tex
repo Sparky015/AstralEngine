@@ -1,0 +1,56 @@
+\doxysection{Window.\+h}
+\hypertarget{_window_8h_source}{}\label{_window_8h_source}\index{src/Ayla/Window/Window.h@{src/Ayla/Window/Window.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Andrew\ Fagan\ on\ 4/18/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Ayla/Events/Event.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}Ayla/aypch.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }Ayla::Windows\ \{\ \textcolor{comment}{//\ maybe\ change\ namespace\ to\ Display\ or\ Viewport\ instead\ of\ Windows?}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{using\ }EventCallback\ =\ std::function<void(Events::IEvent\&\ event)>;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_ayla_1_1_windows_1_1_window_properties}{WindowProperties}}}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ std::string\ Title;}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Width;}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Height;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_ayla_1_1_windows_1_1_window_properties}{WindowProperties}}(std::string\ title,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height)\ :}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Title(std::move(title)),}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Width(width),}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Height(height)}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00025\ \ \ \ \ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}}}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{\string~Window}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a1ba8cac5ce08955cad7c387325fc55f7}{Update}}()\ =\ 0;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_aca21b1d28d88d01813b97065d7071e98}{GetWidth}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a406ae42610441ab449a11362ab7cc946}{GetHeight}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a40f664883d821330ea1a4cacfe119903}{GetDisplayFramebufferScaleX}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a485e1ef11ecb75b1280532afe1c87d09}{GetDisplayFramebufferScaleY}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a29f35069894b849542f952e62a9b1cbf}{GetNativeWindow}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a778ea0fa23384814019f29cd042450b7}{SetEventCallback}}(\textcolor{keyword}{const}\ EventCallback\&\ callback)\ =\ 0;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}}*\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window_a46cee671455adc92c845b2593d320c75}{CreateWindow}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_ayla_1_1_windows_1_1_window_properties}{WindowProperties}}\&\ properties);}
+\DoxyCodeLine{00057\ \ \ \ \ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \}\ \textcolor{comment}{//\ namespace\ Ayla::Windows}}
+
+\end{DoxyCode}

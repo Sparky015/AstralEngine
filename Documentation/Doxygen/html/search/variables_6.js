@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['g1_0',['g1',['../db/d96/class_square_location_test.html#a6270a16f601d40176f4296a79f6733f0',1,'SquareLocationTest']]],
+  ['g4_1',['g4',['../db/d96/class_square_location_test.html#a6263129f119ec3ed28564d980dc0df7e',1,'SquareLocationTest']]],
+  ['g8_2',['g8',['../db/d96/class_square_location_test.html#a6080e47874ceacdb0ad6e0588faebfc3',1,'SquareLocationTest']]],
+  ['g_5fboardmanager_3',['g_BoardManager',['../d2/d97/namespace_game.html#ac5cc88b8f0da4f6b3246dabdaf71e1ae',1,'Game']]],
+  ['g_5fdebugmanager_4',['g_DebugManager',['../d7/ddb/namespace_debug.html#a6b2b3c5fa29782af572165e3b10ab014',1,'Debug']]],
+  ['g_5fecsmanager_5',['g_ECSManager',['../d3/dae/namespace_e_c_s.html#a7678355d9f089901c55d31448cc07510',1,'ECS']]],
+  ['g_5fgamemanager_6',['g_GameManager',['../d2/d97/namespace_game.html#af20c24f86d412105dce20d42507202a3',1,'Game']]],
+  ['g_5fimguimanager_7',['g_ImGuiManager',['../d7/ddb/namespace_debug.html#a6effb0761d332c629407c9534ba8f8c9',1,'Debug']]],
+  ['g_5fiomanager_8',['g_IOManager',['../d1/d28/namespace_i_o.html#a3e60064d5d0c5e7de328e9eb0dac6baa',1,'IO']]],
+  ['g_5frenderermanager_9',['g_RendererManager',['../d6/d9b/namespace_graphics.html#ad3dfa1f3a89d4ac0f6ed033b5db65ab2',1,'Graphics']]],
+  ['g_5fwindowmanager_10',['g_WindowManager',['../d2/d06/namespace_window.html#af7855b4fbcfcecc1fe5441ec9d81ccb8',1,'Window']]],
+  ['glprofileiscompat_11',['GlProfileIsCompat',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#a509c50b6469ce2b9a6db8b70acf49199',1,'ImGui_ImplOpenGL3_Data']]],
+  ['glprofileises2_12',['GlProfileIsES2',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#a87f73a98eed8bef47bf268113ab1e487',1,'ImGui_ImplOpenGL3_Data']]],
+  ['glprofileises3_13',['GlProfileIsES3',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#a471c9bee70d528144387b4f9dc44c240',1,'ImGui_ImplOpenGL3_Data']]],
+  ['glprofilemask_14',['GlProfileMask',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#ab4506489dfe51ddf5c978f6d072d6956',1,'ImGui_ImplOpenGL3_Data']]],
+  ['glslversionstring_15',['GlslVersionString',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#a207e0bc0e956f26b8a3279e7242707c5',1,'ImGui_ImplOpenGL3_Data']]],
+  ['glversion_16',['GlVersion',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html#ad26fc0f928dab8b5e47fc5c8d7226314',1,'ImGui_ImplOpenGL3_Data']]]
+];

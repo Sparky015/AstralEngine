@@ -2,16 +2,21 @@ cmake-build-debug
 cmake-build-default
 cmake-build-*
 
+CMakeFiles
+
 build
 build-*
 
+.vs
+.idea
+.xcodeproj
+vcs.xml
+
+out
+
 **/.DS_Store
 
-docs/Doxygen
-
-Ayla.xcodeproj
-CMakeFiles
-.vs
-
 ConsoleLogs
+Logs
+ProfilingSessions
 

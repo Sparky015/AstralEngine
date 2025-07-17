@@ -1,0 +1,53 @@
+\doxysection{Ayla\+::Core\+::Macros Namespace Reference}
+\hypertarget{namespace_ayla_1_1_core_1_1_macros}{}\label{namespace_ayla_1_1_core_1_1_macros}\index{Ayla::Core::Macros@{Ayla::Core::Macros}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_ayla_1_1_core_1_1_macros_1_1_a_y___p_r_o_f_i_l_e_r}{AY\+\_\+\+PROFILER}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a494003eaf7f523b57b76ac27cbcf48aa}{macro\+\_\+\+AY\+\_\+\+TRACE}} (const std\+::string \&\&title)
+\item 
+void \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a2c6d3c231a13bb2db7ffe064c63e3ac4}{macro\+\_\+\+AY\+\_\+\+ASSERT}} (const bool expression, const std\+::ostream \&error\+Message)
+\item 
+void \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a3bab0356fbe8f454027461fe54c8d184}{macro\+\_\+\+AY\+\_\+\+LOG}} (const std\+::string \&\&message)
+\item 
+void \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_ab81f7a113c5b728794a85ea240d45e8e}{macro\+\_\+\+AY\+\_\+\+ERROR}} (const std\+::ostream \&error\+Message)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Macro Land 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_ayla_1_1_core_1_1_macros_a2c6d3c231a13bb2db7ffe064c63e3ac4}\index{Ayla::Core::Macros@{Ayla::Core::Macros}!macro\_AY\_ASSERT@{macro\_AY\_ASSERT}}
+\index{macro\_AY\_ASSERT@{macro\_AY\_ASSERT}!Ayla::Core::Macros@{Ayla::Core::Macros}}
+\doxysubsubsection{\texorpdfstring{macro\_AY\_ASSERT()}{macro\_AY\_ASSERT()}}
+{\footnotesize\ttfamily \label{namespace_ayla_1_1_core_1_1_macros_a2c6d3c231a13bb2db7ffe064c63e3ac4} 
+void Ayla\+::\+Core\+::\+Macros\+::macro\+\_\+\+AY\+\_\+\+ASSERT (\begin{DoxyParamCaption}\item[{const bool}]{expression}{, }\item[{const std\+::ostream \&}]{error\+Message}{}\end{DoxyParamCaption})}
+
+Asserts a conditional. Throws an error if the conditional isn\textquotesingle{}t true and outputs a message (that can come in the form of an ostream) to console. \Hypertarget{namespace_ayla_1_1_core_1_1_macros_ab81f7a113c5b728794a85ea240d45e8e}\index{Ayla::Core::Macros@{Ayla::Core::Macros}!macro\_AY\_ERROR@{macro\_AY\_ERROR}}
+\index{macro\_AY\_ERROR@{macro\_AY\_ERROR}!Ayla::Core::Macros@{Ayla::Core::Macros}}
+\doxysubsubsection{\texorpdfstring{macro\_AY\_ERROR()}{macro\_AY\_ERROR()}}
+{\footnotesize\ttfamily \label{namespace_ayla_1_1_core_1_1_macros_ab81f7a113c5b728794a85ea240d45e8e} 
+void Ayla\+::\+Core\+::\+Macros\+::macro\+\_\+\+AY\+\_\+\+ERROR (\begin{DoxyParamCaption}\item[{const std\+::ostream \&}]{error\+Message}{}\end{DoxyParamCaption})}
+
+Throws an error with a message (that can come in the form of an ostream) outputted to the console. \Hypertarget{namespace_ayla_1_1_core_1_1_macros_a3bab0356fbe8f454027461fe54c8d184}\index{Ayla::Core::Macros@{Ayla::Core::Macros}!macro\_AY\_LOG@{macro\_AY\_LOG}}
+\index{macro\_AY\_LOG@{macro\_AY\_LOG}!Ayla::Core::Macros@{Ayla::Core::Macros}}
+\doxysubsubsection{\texorpdfstring{macro\_AY\_LOG()}{macro\_AY\_LOG()}}
+{\footnotesize\ttfamily \label{namespace_ayla_1_1_core_1_1_macros_a3bab0356fbe8f454027461fe54c8d184} 
+void Ayla\+::\+Core\+::\+Macros\+::macro\+\_\+\+AY\+\_\+\+LOG (\begin{DoxyParamCaption}\item[{const std\+::string \&\&}]{message}{}\end{DoxyParamCaption})}
+
+A simple log to console that standardizes which side of the string the new line character is on. \Hypertarget{namespace_ayla_1_1_core_1_1_macros_a494003eaf7f523b57b76ac27cbcf48aa}\index{Ayla::Core::Macros@{Ayla::Core::Macros}!macro\_AY\_TRACE@{macro\_AY\_TRACE}}
+\index{macro\_AY\_TRACE@{macro\_AY\_TRACE}!Ayla::Core::Macros@{Ayla::Core::Macros}}
+\doxysubsubsection{\texorpdfstring{macro\_AY\_TRACE()}{macro\_AY\_TRACE()}}
+{\footnotesize\ttfamily \label{namespace_ayla_1_1_core_1_1_macros_a494003eaf7f523b57b76ac27cbcf48aa} 
+void Ayla\+::\+Core\+::\+Macros\+::macro\+\_\+\+AY\+\_\+\+TRACE (\begin{DoxyParamCaption}\item[{const std\+::string \&\&}]{title}{}\end{DoxyParamCaption})}
+
+Outputs the message to the console with a time stamp \mbox{[}hr\+:min\+:sec\+:ms\mbox{]}. Gets the current time
+
+Calculates the elapsed milliseconds as they were not included in the std\+::tm struct
+
+Outputs the message with the time info prefixing it

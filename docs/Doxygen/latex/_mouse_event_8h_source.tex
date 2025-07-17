@@ -1,0 +1,157 @@
+\doxysection{Mouse\+Event.\+h}
+\hypertarget{_mouse_event_8h_source}{}\label{_mouse_event_8h_source}\index{src/Ayla/Events/MouseEvent.h@{src/Ayla/Events/MouseEvent.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ sparky\ on\ 4/20/2024.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Ayla/Events/Event.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }Ayla::Events\ \{}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event}{MouseButtonEvent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ [[nodiscard]]\ int8\_t\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event_a19dc504927885dff26b50a1b0c75ddb9}{GetEventCategoryFlags}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_CATEGORY\ |\ INPUT\_CATEGORY;}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event_ad7a26ddeb44d49e795caa079f4d8b275}{GetEventType}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NONE;}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event_a8c2f58eb79b88b4b9f48510bc5bfa4fa}{MouseButtonEvent}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_release_event}{MouseButtonReleaseEvent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event}{MouseButtonEvent}}}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_release_event}{MouseButtonReleaseEvent}}(\textcolor{keywordtype}{int}\ button)\ :\ m\_Button(button)\ \{\}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ [[nodiscard]]\ int8\_t\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_release_event_ae47d99cdda7419d00d39e33c1f2d7ddf}{GetEventCategoryFlags}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_BUTTON\_CATEGORY\ |\ MOUSE\_CATEGORY\ |\ INPUT\_CATEGORY;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_release_event_abedf0a11d392a4852ac7c6f5bf9cf413}{GetEventType}}()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_BUTTON\_RELEASED;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ GetButton()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Button;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m\_Button;}
+\DoxyCodeLine{00057\ \ \ \ \ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_press_event}{MouseButtonPressEvent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_event}{MouseButtonEvent}}}
+\DoxyCodeLine{00062\ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_press_event}{MouseButtonPressEvent}}(\textcolor{keywordtype}{int}\ button)\ :\ m\_Button(button)\ \{\}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ int8\_t\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_press_event_a991e3c715c031923414198919edbc3ec}{GetEventCategoryFlags}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{\ \ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_BUTTON\_CATEGORY\ |\ MOUSE\_CATEGORY\ |\ INPUT\_CATEGORY;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_button_press_event_a0d30dc77dc6b8d0b3930d9bd6c7ea3fa}{GetEventType}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_BUTTON\_PRESSED;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ GetButton()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Button;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m\_Button;}
+\DoxyCodeLine{00085\ \ \ \ \ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_scroll_event}{MouseScrollEvent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}}
+\DoxyCodeLine{00090\ \ \ \ \ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_scroll_event}{MouseScrollEvent}}(\textcolor{keywordtype}{double}\ xoffset,\ \textcolor{keywordtype}{double}\ yoffset)\ :\ m\_Xoffset(xoffset),\ m\_Yoffset(yoffset)\ \{\}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ [[nodiscard]]\ int8\_t\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_scroll_event_ac356b4eceec64911aedd60f50b291a48}{GetEventCategoryFlags}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_CATEGORY\ |\ INPUT\_CATEGORY;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_scroll_event_a23c4004f4cbd5f3b9a09eef763e1909c}{GetEventType}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00101\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_SCROLLED;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ GetXOffset()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Xoffset;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ GetYOffset()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00113\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Yoffset;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_Xoffset;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_Yoffset;}
+\DoxyCodeLine{00120\ \ \ \ \ \};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_moved_event}{MouseMovedEvent}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}}
+\DoxyCodeLine{00125\ \ \ \ \ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_moved_event}{MouseMovedEvent}}(\textcolor{keywordtype}{double}\ xpos,\ \textcolor{keywordtype}{double}\ ypos)\ :\ m\_Xpos(xpos),\ m\_Ypos(ypos)\ \{\}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ [[nodiscard]]\ int8\_t\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_moved_event_ae5b256f0a80afa5e865e706e69e20688}{GetEventCategoryFlags}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00130\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_CATEGORY\ |\ INPUT\_CATEGORY;}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_ayla_1_1_events_1_1_mouse_moved_event_a8085cf0b33bbb18dad8a6fb2d5a36243}{GetEventType}}()\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MOUSE\_CURSOR\_MOVED;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ GetXPos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00142\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Xpos;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ GetYPos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00148\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_Ypos;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_Xpos;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_Ypos;}
+\DoxyCodeLine{00155\ \ \ \ \ \};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \}\ \textcolor{comment}{//\ namespace\ Ayla::Events}}
+
+\end{DoxyCode}

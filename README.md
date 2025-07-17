@@ -1,119 +1,264 @@
+# Astral Engine
 
+---------------
+Welcome to the Astral Engine project codebase!
 
-# Solas Engine
+This project is a Work-In-Progress with no official first release.
 
-An overview of the Ayla Engine. Covers the purpose and focus of the engine, how to build it, and what the roadmap for
-the future is.
+It is continuously being updated and improved as I can get to more things.
 
----
+Project Lifetime: Late October 2024 - Present
 
-## Purpose and Focus of Solas
-
-A section to answer a few questions that state the purpose and set the focus of the engine.
-
----
-
-### Why I am building this engine?
-In short, it is a project to learn and gain experience in working with game engines and C++.
- 
- More specifically, I am building this engine for four main reasons:
- 
- - I want to find out how game engines work and why they work
- the way they do, simply because I am curious and because I can. What better way is there to learn about how something 
- works than making it?
- 
- - I want to explore my interests to see if this type of work would be a career fit for me. Building an engine
- would give me a chance to see the day-to-day work and confirm my interests in engine and graphics programming as
- a career.
- 
- - Building a game engine will allow me to develop my C++ skills, design skills, and problem-solving skills.
- The scope of a game engine is giant, so I am sure that I will fail a lot before I get the idea of what the right 
- thing to do is. However, failing will allow me to build good coding and design practices, especially in a large codebase. It 
- also gives me some experience in solving actual problems. 
- 
- - Building my own engine allows me to understand the engine completely and know what everything is and why
- it is the way it is. It lets me customize the engine to my needs and change anything I need to get my desired effect
- or output. I own the engine, so I don't need to rely on third parties to do anything for me.
-
- 
-### How I am building this engine?  (Development Process)
-
----
-
-1. Watch an introduction to the topic and/or research a topic I want to add.
-####
-2. Identify and define the problem that the topic solves OR define a problem that I have that I want to solve
-####
-3. Design a solution to the problem with the solution's constraints and expected inputs and outputs.
-####
-4. Watch Cherno's design solution to the topic.
-####
-5. Compare the two solutions. Reflect on the differences in the two solutions and note why the designs differ. Also note,
-what contributed to Cherno designing his solution the way he did over what I designed.
-####
-6. Decide if my components of my design is still good in reflection or if components of Cherno's solution is better. Redo the
-parts that are not good in reflection.
-####
-7. Implement the design.
-
- 
- 
- ### Why am I building the engine the way I am? (NOT DONE YET, TEMP)
-
----
-I've decided that I am going to have a mixed approach for building the engine. I want to maintain a level of independent
-developing this engine because I want to grow my design and problem-solving, and coding skills, but at the same time have
-a sort of guiding resource that introduces topics of game engines in bite size pieces.
-
-Two of my main goals for building this engine were learning how a game engine works and developing my coding skills, 
-design skills, problem-solving skills. 
-- It is very overwhelming with all the systems and subsystems and subsystems after that spread across graphics, tooling, and 
-core engine functions.
- - builds a solid foundation
- - I can't solve problems I didn't know were a thing
- - Trying to see common solutions or ways to solve a problem that I didn't know everyone does
- - Helps learn engine basics without wasting time 
- - Helps me get to learning more advanced and niche topics quicker
- - Helps me avoid cementing bad practices in designing and implementations
- - Creditable resources help me learn best practices from people with the experience and knowledge of expectations
- - Allows me to develop an expertise or realm of expertise quicker
- - it gives me a jumping off point, the basics to get me started before I start customizing.
-
-- constraints:
-- time, I do want to finish this within a reasonable amount of time. I want to be able to know what a thing is when
-- being talked about in game engine talks. It also frees me up to be able to learn more advanced topics and specialties
-- 
-
-
-
-## Building the Ayla Engine (NOT DONE YET, TEMP)
-
----
-
- ### Operating System Support
- Ayla supports use on macOS and Windows. There are no plans for any operating system 
- outside of that. CMake is used as for the build system to support 
- cross-platform building, which also supports creating project files for IDEs like Visual Studio
- and Xcode.
+In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
+and the environment, but there is a lot of stuff to do to get there.
 
 ###
+### Notable Features
+
+----
+
+###
+#### Custom Allocators
+
+This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
+when the situation allows for it.
+
+A list of the custom allocators follows:
+Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
+ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
+
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+
+Future allocators to be written: Slab Allocator
+
+- Note that I am still polishing this feature, but it is functionally done.
+
+###
+#### Memory Profiling Tool Suite
+
+This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
+and scope-based allocation profiling tool
+
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
+
+- Note that I am still polishing and optimizing this feature, but it is functionally done.
+
+###
+#### Visual Scope Profiler
+
+This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
+took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
+trace tool to view visually.
+
+###
+### Work-In-Progress Features
+
+----
+
+* Entity-Component-System (ECS) (70% done)
+
+I am working to make my current ECS implementation more extendable and performant. I am 
+implementing a new ECS with sparse sets.
+
+View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
+
+* Asset Manager (40% done)
+
+I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
+and memory efficiency.
+
+* Scene System (Early In-Progress)
+
+I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am
+integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.
+
+* Editor (Early In-Progress)
+
+I am working to build up an editor that I can compose new game scenes with
+and allow for saving scenes and switching to different scenes without using a
+different executable.
+
+* Renderer (Early In-Progress)
+
+I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
+supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
+use later on (I am currently using OpenGL 4.1)
+
+* Shaders and Materials (Early In-Progress)
+
+I am working on designing an extendable material system for shaders, 
+so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the
+client/user code.
 
 
-
-## Roadmap & Vision (NOT DONE YET, TEMP)
+###
+### Screenshot of Current Engine State
 
 ---
 
- ### Key Features Planned:
- * 
+
+![CurrentEngineState](Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png)
+This picture contains the Chess sample project as well as the engine debug menu. Note that the chess sample
+project is not completely finished and that there is no checks or castling.
+
+###
+### Roadmap
+
+-----
+
+1. Entity-Component-System (ECS)
+2. Asset Manager
+3. Game Scenes with serialization and deserialization
+4. Editor Integration
+5. Native Scripting
+6. Material System
+7. PBR Renderer
+8. Vulkan Renderer
+9. GPU Particle System  <--- Current dream goal
+
+###
+### How to Build
+
+-----
+
+Supported Compilers: MSVC, AppleClang, and Clang
+Supported Platforms: Windows and macOS    (Linux coming in the future)
+
+Astral uses CMake for the build system.
+
+In addition to the methods below, you can also use an IDE that supports building with CMake like CLion or Visual Studio. Before running the project,
+make sure to switch the target to your desired target that you want to run.
+
+Requirements include:
+- git
+- CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
+- A supported C++20 compiler
+- 64-bit CPU
+
+#### Windows
+
+1. Open a terminal at the root of the project
+2. Enter the following shell code to build the project
+   ```powershell
+   mkdir build
+   cd build
+   cmake -DCMAKE_BUILD_TYPE=Release ..
+   cmake --build .
+   ```
+   Note that the default build is release. If you want a debug build, change the Release
+   to a Debug in this line -> cmake -DCMAKE_BUILD_TYPE=[Desired Build Config] ..
+3. Navigate to the bin directory
+   ```powershell
+   cd bin
+   ```
+4. Choose which executable you want to run
+   ```powershell
+   dir
+   .\[enter_executable_name].exe
+   ```
+   Note that to use the executables containing unit tests, you must build them as a debug build
+
+
+#### MacOS
+
+1. Open a terminal at the root of the project
+2. Enter the following shell code to build the project
+   ```bash
+   mkdir build
+   cd build
+   cmake -DCMAKE_BUILD_TYPE=Release ..
+   cmake --build .
+   ```
+   Note that the default build is release. If you want a debug build, change the Release
+   to a Debug in this line -> cmake -DCMAKE_BUILD_TYPE=[Desired Build Config] .. 
+3. Navigate to the bin directory
+   ```bash
+   cd bin
+   ```
+4. Choose which executable you want to run
+   ```bash
+   ls
+   ./[enter_executable_name]
+   ```
+   Note that to use the executables containing unit tests, you must build them as a debug build 
 
 
 
-Remember: The goal is not to replicate existing engines but to build your knowledge and skills. 
-Use tutorials as a foundation, but don't be afraid to experiment and innovate.
+###
+### Branches
 
-## Important Practices: (NOT DONE YET, TEMP)
- - Apply what has been learned beyond the basic implementation. Change the goal around and mess with the input to get weird outputs.
+-----
+
+- main --> The branch for releases   (no actual releases have happened yet)
+- development -> All work is done in this branch or a branch based from it
+- feature-X -> Branches for feature work to be done on
+- experimental-X -> Branches for to explore the potential and limits of a new feature idea
+  - experimental-vulkan -> Branch where the vulkan renderer is being explored and written and refactors to the renderer
+                           structure.
 
 
-#### Started on April 10, 2024 during HS Senior Year (Spring 2024) initially to learn about how game engines work and operate.
+###
+### Dependencies and Third Party Libraries
+
+-----
+
+- GLFW: For a cross-platform window
+- GLAD: For loading OpenGL 
+- cpuinfo: For detecting the cpu name, amount of cores, and other info
+- glm: For math 
+- googletest: For unit testing
+- imgui: For debug menus and the editor UI
+- ImGuiFileDialog: For a file explorer to choose files (temporary, looking for cross-platform native file explorer library)
+- ImPlot: For graphing memory profiling data
+- msgpack: For serialization and deserialization
+- stb_image: For loading image files
+- cpptrace: For generating stacktraces (temporary, waiting for C++23 stacktraces to be implemented)
+
+
+###
+### Current C++ Version (C++20)
+
+-----
+
+This project is using C++20 currently and mainly for [[unlikely]], [[likely]], consteval, and constexpr improvements (maybe modules in the future).
+
+
+I am looking to switch to C++23 when the stacktraces feature is actually implemented by
+all the major compilers. Also, std::unreachable would be useful.
+
+
+###
+### Testing Environment
+
+---- 
+
+#### Tested IDEs:
+
+macOS: CLion and Xcode     
+Windows: CLion and Visual Studio   
+
+#### Hardware used for Testing: 
+
+macOS is tested using a MacBook M1 Pro       
+Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
+
+#### Tested Compiler Versions:
+
+MacOS: AppleClang 16.0.0, Clang 19.1.7      
+Windows: MSVC 19.43
+
+
+
+
+### TODOs: All Render Passes
+
+* Frustum Culling - CPU Side
+* Tiled Light Culling - Compute
+* Cascaded Shadow Maps - Vertex Heavy
+* Geometry Pass - Fragment Heavy
+* SSAO - Compute
+* Lighting Pass - Fragment Heavy
+* Transparent Objects Forward Pass - Fragment Heavy
+* Bloom - Compute
+* SMAA - Fragment Heavy
+

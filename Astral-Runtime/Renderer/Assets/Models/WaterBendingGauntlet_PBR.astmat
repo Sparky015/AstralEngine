@@ -1,0 +1,8 @@
+PBR
+Shaders/brdf.frag
+Models/WaterBendingGauntletMaps/WaterBendingGauntlet_BaseColor.png
+Models/WaterBendingGauntletMaps/WaterBendingGauntlet_Metallic.png
+Models/WaterBendingGauntletMaps/WaterBendingGauntlet_Roughness.png
+Models/WaterBendingGauntletMaps/WaterBendingGauntlet_Emission.png
+Models/WaterBendingGauntletMaps/WaterBendingGauntlet_Normal.png
+

@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['acquire_0',['Acquire',['../d2/df4/class_astral_1_1_object_pool.html#a2b0c0c964aa33ebdf04cbeff7a854600',1,'Astral::ObjectPool']]],
+  ['addallocation_1',['AddAllocation',['../d9/d89/class_astral_1_1_memory_tracker.html#a1abb9f507ed2afb69f462ed260e90f43',1,'Astral::MemoryTracker']]],
+  ['addcomponent_2',['AddComponent',['../d3/d91/class_astral_1_1_e_c_s.html#ad3c777e00ecf29c838b10293307be933',1,'Astral::ECS']]],
+  ['addlistener_3',['AddListener',['../dc/dcd/class_astral_1_1_event_bus.html#a8372edb53152ae3b555830b1bb20a9f8',1,'Astral::EventBus']]],
+  ['addpass_4',['AddPass',['../d1/d89/class_astral_1_1_render_graph.html#aed3281d0b141d0554be2400afe8a0744',1,'Astral::RenderGraph']]],
+  ['addpointer_5',['AddPointer',['../d0/df1/class_astral_1_1_global_allocation_storage.html#aac9fe994f3d5c5b049e29d309e225d77',1,'Astral::GlobalAllocationStorage']]],
+  ['alignedalloc_6',['AlignedAlloc',['../d5/d9b/namespace_astral.html#af4b28f1c818491ad3840bc28a3a7c4d2',1,'Astral']]],
+  ['allocate_7',['Allocate',['../d2/ddb/class_astral_1_1_double_buffered_allocator.html#a5926fce81f627e57629fbb253ce1a6f7',1,'Astral::DoubleBufferedAllocator::Allocate()'],['../d3/dec/class_astral_1_1_frame_allocator.html#a882a7c0bc1492589f4c8e61d153e6900',1,'Astral::FrameAllocator::Allocate()'],['../da/d10/class_astral_1_1_linear_allocator.html#ac15aea9caf756f6655b15c1f04784fbf',1,'Astral::LinearAllocator::Allocate()'],['../d8/d6f/class_astral_1_1_pool_allocator.html#ab3b0cf14f92da2157d031035e786c27f',1,'Astral::PoolAllocator::Allocate()'],['../d7/d22/class_astral_1_1_ring_allocator.html#ac406129c0ea8b05a99109d9a8ca7ec30',1,'Astral::RingAllocator::Allocate()'],['../d5/d78/class_astral_1_1_stack_allocator.html#a0f80fb8d6577286174c458f9890e61a9',1,'Astral::StackAllocator::Allocate()'],['../da/dee/class_astral_1_1_stack_based_linear_allocator.html#a09d1d838ee773a0a33076c2b6ba87c6f',1,'Astral::StackBasedLinearAllocator::Allocate()']]],
+  ['allocate_8',['allocate',['../dd/d18/class_astral_1_1_s_t_l_linear_allocator.html#a22b686df6581ceef37fb210cc6e5fca6',1,'Astral::STLLinearAllocator::allocate()'],['../da/dda/class_astral_1_1_s_t_l_stack_allocator.html#a3095146185743372110f433cd9e7baa2',1,'Astral::STLStackAllocator::allocate()'],['../d9/d84/class_astral_1_1_s_t_l_stack_based_linear_allocator.html#a2ce83befb91ea5825674e2c556af57c7',1,'Astral::STLStackBasedLinearAllocator::allocate()'],['../db/daf/class_astral_1_1_no_tracking_s_t_l_allocator.html#a96ac682a30fef7c27e59aea35679593b',1,'Astral::NoTrackingSTLAllocator::allocate()']]],
+  ['allocmaxalignedblock_9',['AllocMaxAlignedBlock',['../d7/d15/_allocator_utils_8h.html#aa9741f6fd5dd95b513a69d7a38f20151',1,'Astral::AllocatorUtils']]]
+];

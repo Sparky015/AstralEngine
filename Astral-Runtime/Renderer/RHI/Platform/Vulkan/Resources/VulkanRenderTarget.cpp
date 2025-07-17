@@ -1,0 +1,30 @@
+/**
+* @file VulkanRenderTarget.cpp
+* @author Andrew Fagan
+* @date 5/15/2025
+*/
+
+#include "VulkanRenderTarget.h"
+
+namespace Astral {
+
+    VulkanRenderTarget::VulkanRenderTarget(const VulkanRenderTargetDesc& desc) :
+        m_Image(desc.Image),
+        m_ImageView(desc.ImageView),
+        m_ImageIndex(desc.ImageIndex),
+        m_RenderCompleteSemaphore(desc.RenderCompleteSemaphore),
+        m_ImageAvailableSemaphore(desc.ImageAvailableSemaphore),
+        m_ImageFormat(desc.Format),
+        m_ImageWidth(desc.ImageWidth),
+        m_ImageHeight(desc.ImageHeight)
+    {
+
+    }
+
+
+    VulkanRenderTarget::~VulkanRenderTarget()
+    {
+
+    }
+
+}

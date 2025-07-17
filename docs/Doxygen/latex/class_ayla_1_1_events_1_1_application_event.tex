@@ -1,0 +1,77 @@
+\doxysection{Ayla\+::Events\+::Application\+Event Class Reference}
+\hypertarget{class_ayla_1_1_events_1_1_application_event}{}\label{class_ayla_1_1_events_1_1_application_event}\index{Ayla::Events::ApplicationEvent@{Ayla::Events::ApplicationEvent}}
+
+
+{\ttfamily \#include $<$Application\+Event.\+h$>$}
+
+Inheritance diagram for Ayla\+::Events\+::Application\+Event\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=10.000000cm]{class_ayla_1_1_events_1_1_application_event}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int8\+\_\+t \mbox{\hyperlink{class_ayla_1_1_events_1_1_application_event_af2fe3a26ede86771bca38ead6f50d677}{Get\+Event\+Category\+Flags}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual int \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a9812a77118f1520cd1063b6b0941e199}{Get\+Event\+Type}} () const =0
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_ad61ae901e7be29a426a895080e72a173}{Is\+In\+Category}} (const EEvent\+Category category) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a1837a85c2c986695776a3b73565e4bd0}{Is\+In\+Both\+Categories}} (const EEvent\+Category category1, const EEvent\+Category category2) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a532c05e9f0355f30ea5134eda1fedb63}{Has\+Exact\+Category\+Match}} (const EEvent\+Category category) const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_afba821f4fee920b07fcf64a760e45d9b}{Set\+Is\+Handled}} (const bool is\+Handled)
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_aed3514f2582630ce47798af8f40b14c5}{Is\+Handled}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_ayla_1_1_events_1_1_application_event_ab389ec0d0c0155e86238550ada7a929f}{Application\+Event}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries m\+\_\+\+Is\+Handled} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+General application event to derive from. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_ayla_1_1_events_1_1_application_event_ab389ec0d0c0155e86238550ada7a929f}\index{Ayla::Events::ApplicationEvent@{Ayla::Events::ApplicationEvent}!ApplicationEvent@{ApplicationEvent}}
+\index{ApplicationEvent@{ApplicationEvent}!Ayla::Events::ApplicationEvent@{Ayla::Events::ApplicationEvent}}
+\doxysubsubsection{\texorpdfstring{ApplicationEvent()}{ApplicationEvent()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_application_event_ab389ec0d0c0155e86238550ada7a929f} 
+Ayla\+::\+Events\+::\+Application\+Event\+::\+Application\+Event (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [default]}}
+
+\doxylink{class_ayla_1_1_events_1_1_application_event}{Application\+Event} is not meant to be created as a standalone event. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_events_1_1_application_event_af2fe3a26ede86771bca38ead6f50d677}\index{Ayla::Events::ApplicationEvent@{Ayla::Events::ApplicationEvent}!GetEventCategoryFlags@{GetEventCategoryFlags}}
+\index{GetEventCategoryFlags@{GetEventCategoryFlags}!Ayla::Events::ApplicationEvent@{Ayla::Events::ApplicationEvent}}
+\doxysubsubsection{\texorpdfstring{GetEventCategoryFlags()}{GetEventCategoryFlags()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_application_event_af2fe3a26ede86771bca38ead6f50d677} 
+int8\+\_\+t Ayla\+::\+Events\+::\+Application\+Event\+::\+Get\+Event\+Category\+Flags (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Retrieves the category of the event for event filtering during the dispatch of events. 
+
+Implements \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a39a7d386635b5708e91ed806de90d885}{Ayla\+::\+Events\+::\+IEvent}}.
+
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_events_1_1_app_render_event_a467a5de497ae1080c95e483eadd9c6a5}{Ayla\+::\+Events\+::\+App\+Render\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_app_tick_event_a0145f27d7432cd3cb74637fa90f86d53}{Ayla\+::\+Events\+::\+App\+Tick\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_app_update_event_aabd733019d6a811515370291fd3d917f}{Ayla\+::\+Events\+::\+App\+Update\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_window_close_event_ac8e3880278c4c69ff99b84709d36035e}{Ayla\+::\+Events\+::\+Window\+Close\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_window_gained_focus_event_ad7a9fd7cf75e9efe4ceda682868ea784}{Ayla\+::\+Events\+::\+Window\+Gained\+Focus\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_window_lost_focus_event_a51614e35b169eff6130b4622f2b3f392}{Ayla\+::\+Events\+::\+Window\+Lost\+Focus\+Event}}, \mbox{\hyperlink{class_ayla_1_1_events_1_1_window_moved_event_ae3abd31e05efe85617f94c6d67f84bb9}{Ayla\+::\+Events\+::\+Window\+Moved\+Event}}, and \mbox{\hyperlink{class_ayla_1_1_events_1_1_window_resize_event_ad3c0babe899bc5d8dcb8bd746e0f01e5}{Ayla\+::\+Events\+::\+Window\+Resize\+Event}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Events/Application\+Event.\+h\end{DoxyCompactItemize}

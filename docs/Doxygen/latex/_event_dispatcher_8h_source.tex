@@ -1,0 +1,45 @@
+\doxysection{Event\+Dispatcher.\+h}
+\hypertarget{_event_dispatcher_8h_source}{}\label{_event_dispatcher_8h_source}\index{src/Ayla/Events/EventDispatcher.h@{src/Ayla/Events/EventDispatcher.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Andrew\ Fagan\ on\ 4/17/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Ayla/Events/Event.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }Ayla::Events\{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{enum\ class}\ EEventDispatchTypes\ :\ uint8\_t}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ BACK\_TO\_FRONT,}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ FRONT\_TO\_BACK,}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ PUSH\_TO\_OVERLAY,}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ PUSH\_TO\_LAYER}
+\DoxyCodeLine{00024\ \ \ \ \ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_events_1_1_event_dispatcher}{EventDispatcher}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Refactor\ all\ of\ this.}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ addEventToQueue(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\ \&);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ dispatchAllEvents();}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ dispatchBlockingEvent(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\ \&);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr\ <IEvent>\ takeEventFromQueue();}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ dispatchEvent(\textcolor{keyword}{const}\ std::shared\_ptr\ <IEvent>\ \&);}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ PollEvent(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\ \&);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::queue\ <std::shared\_ptr<IEvent>>\ eventQueue;}
+\DoxyCodeLine{00042\ \ \ \ \ \};}
+\DoxyCodeLine{00043\ \}}
+
+\end{DoxyCode}

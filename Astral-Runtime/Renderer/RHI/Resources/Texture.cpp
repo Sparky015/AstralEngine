@@ -1,0 +1,210 @@
+//
+// Created by Andrew Fagan on 11/30/24.
+//
+
+#include "Texture.h"
+
+#include "Core/Engine.h"
+#include "Debug/Utilities/Error.h"
+#include "Renderer/RendererManager.h"
+#include "Renderer/RHI/RendererCommands.h"
+#include "Debug/Utilities/Asserts.h"
+#include "Debug/Utilities/Loggers.h"
+
+#include "stb_image.h"
+#include "gli/gli/gli.hpp"
+
+namespace Astral {
+
+    ImageFormat ConvertGliImageFormatToAstralImageFormat(gli::format imageFormat);
+
+    TextureHandle Texture::CreateTexture(const std::filesystem::path& filePath)
+    {
+        int m_Width;
+        int m_Height;
+        int m_BPP; // bytes per pixel
+        ImageFormat imageFormat;
+        unsigned char* data;
+
+
+        if (filePath.extension() == ".dds" || filePath.extension() == ".ktx")
+        {
+            gli::texture2d texture{gli::load(filePath.string().c_str())};
+
+            gli::extent2d extent = texture.extent();
+            m_Width = extent.x;
+            m_Height = extent.y;
+            data = (unsigned char*)texture[0].data();
+            gli::format gliImageFormat = texture.format();
+            if (gli::is_compressed(gliImageFormat))
+            {
+                WARN("Compressed textures are currently not supported!")
+                data = nullptr;
+            }
+            imageFormat = ConvertGliImageFormatToAstralImageFormat(gliImageFormat);
+            if (texture.empty()) { data = nullptr; }
+        }
+        else
+        {
+            stbi_set_flip_vertically_on_load(true);
+            data = stbi_load(filePath.string().c_str(), &m_Width, &m_Height, &m_BPP, 4);
+            imageFormat = ImageFormat::R8G8B8A8_UNORM;
+        }
+
+        if (!data)
+        {
+            WARN("Failed to load texture! File path: " << filePath)
+            return nullptr;
+        }
+
+        TextureHandle textureHandle = Texture::CreateTexture(data, m_Width, m_Height, imageFormat);
+
+        if (!(filePath.extension() == ".dds" || filePath.extension() == ".ktx"))
+        {
+            stbi_image_free(data);
+        }
+
+        return textureHandle;
+    }
+
+
+    GraphicsRef<Texture> Texture::CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    {
+        ASSERT(data != nullptr, "Tried to create texture with nullptr!")
+        ASSERT(width != 0, "Tried to create texture with width of zero!")
+        ASSERT(height != 0, "Tried to create texture with height of zero!")
+
+        if (!data)
+        {
+            WARN("Failed to load texture!")
+            return nullptr;
+        }
+
+        TextureCreateInfo textureCreateInfo = {
+            .Format = imageFormat,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .Dimensions = UVec2(width, height),
+            .ImageData = (unsigned char*)data,
+        };
+
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.CreateTexture(textureCreateInfo);
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
+        }
+    }
+
+
+    ImageFormat ConvertGliImageFormatToAstralImageFormat(gli::format imageFormat)
+    {
+        switch (imageFormat)
+        {
+            case gli::FORMAT_R8_UNORM_PACK8:     return ImageFormat::R8_UNORM;
+            case gli::FORMAT_R8_SNORM_PACK8:     return ImageFormat::R8_SNORM;
+            case gli::FORMAT_R8_UINT_PACK8:      return ImageFormat::R8_UINT;
+            case gli::FORMAT_R8_SINT_PACK8:      return ImageFormat::R8_SINT;
+            case gli::FORMAT_R8_SRGB_PACK8:      return ImageFormat::R8_SRGB;
+
+            // 8-bit two channel
+            case gli::FORMAT_RG8_UNORM_PACK8:    return ImageFormat::R8G8_UNORM;
+            case gli::FORMAT_RG8_SNORM_PACK8:    return ImageFormat::R8G8_SNORM;
+            case gli::FORMAT_RG8_UINT_PACK8:     return ImageFormat::R8G8_UINT;
+            case gli::FORMAT_RG8_SINT_PACK8:     return ImageFormat::R8G8_SINT;
+            case gli::FORMAT_RG8_SRGB_PACK8:     return ImageFormat::R8G8_SRGB;
+
+            // 8-bit three channel
+            case gli::FORMAT_RGB8_UNORM_PACK8:   return ImageFormat::R8G8B8_UNORM;
+            case gli::FORMAT_RGB8_SNORM_PACK8:   return ImageFormat::R8G8B8_SNORM;
+            case gli::FORMAT_RGB8_UINT_PACK8:    return ImageFormat::R8G8B8_UINT;
+            case gli::FORMAT_RGB8_SINT_PACK8:    return ImageFormat::R8G8B8_SINT;
+            case gli::FORMAT_RGB8_SRGB_PACK8:    return ImageFormat::R8G8B8_SRGB;
+
+            // 8-bit four channel
+            case gli::FORMAT_RGBA8_UNORM_PACK8:  return ImageFormat::R8G8B8A8_UNORM;
+            case gli::FORMAT_RGBA8_SNORM_PACK8:  return ImageFormat::R8G8B8A8_SNORM;
+            case gli::FORMAT_RGBA8_UINT_PACK8:   return ImageFormat::R8G8B8A8_UINT;
+            case gli::FORMAT_RGBA8_SINT_PACK8:   return ImageFormat::R8G8B8A8_SINT;
+            case gli::FORMAT_RGBA8_SRGB_PACK8:   return ImageFormat::R8G8B8A8_SRGB;
+
+            // 16-bit single channel
+            case gli::FORMAT_R16_UNORM_PACK16:   return ImageFormat::R16_UNORM;
+            case gli::FORMAT_R16_SNORM_PACK16:   return ImageFormat::R16_SNORM;
+            case gli::FORMAT_R16_UINT_PACK16:    return ImageFormat::R16_UINT;
+            case gli::FORMAT_R16_SINT_PACK16:    return ImageFormat::R16_SINT;
+            case gli::FORMAT_R16_SFLOAT_PACK16:  return ImageFormat::R16_SFLOAT;
+
+            // 16-bit two channel
+            case gli::FORMAT_RG16_UNORM_PACK16:  return ImageFormat::R16G16_UNORM;
+            case gli::FORMAT_RG16_SNORM_PACK16:  return ImageFormat::R16G16_SNORM;
+            case gli::FORMAT_RG16_UINT_PACK16:   return ImageFormat::R16G16_UINT;
+            case gli::FORMAT_RG16_SINT_PACK16:   return ImageFormat::R16G16_SINT;
+            case gli::FORMAT_RG16_SFLOAT_PACK16: return ImageFormat::R16G16_SFLOAT;
+
+            // 16-bit four channel
+            case gli::FORMAT_RGBA16_UNORM_PACK16:  return ImageFormat::R16G16B16A16_UNORM;
+            case gli::FORMAT_RGBA16_SNORM_PACK16:  return ImageFormat::R16G16B16A16_SNORM;
+            case gli::FORMAT_RGBA16_UINT_PACK16:   return ImageFormat::R16G16B16A16_UINT;
+            case gli::FORMAT_RGBA16_SINT_PACK16:   return ImageFormat::R16G16B16A16_SINT;
+            case gli::FORMAT_RGBA16_SFLOAT_PACK16: return ImageFormat::R16G16B16A16_SFLOAT;
+
+            // 32-bit single channel
+            case gli::FORMAT_R32_UINT_PACK32:     return ImageFormat::R32_UINT;
+            case gli::FORMAT_R32_SINT_PACK32:     return ImageFormat::R32_SINT;
+            case gli::FORMAT_R32_SFLOAT_PACK32:   return ImageFormat::R32_SFLOAT;
+
+            // 32-bit two channel
+            case gli::FORMAT_RG32_UINT_PACK32:    return ImageFormat::R32G32_UINT;
+            case gli::FORMAT_RG32_SINT_PACK32:    return ImageFormat::R32G32_SINT;
+            case gli::FORMAT_RG32_SFLOAT_PACK32:  return ImageFormat::R32G32_SFLOAT;
+
+            // 32-bit four channel
+            case gli::FORMAT_RGBA32_UINT_PACK32:   return ImageFormat::R32G32B32A32_UINT;
+            case gli::FORMAT_RGBA32_SINT_PACK32:   return ImageFormat::R32G32B32A32_SINT;
+            case gli::FORMAT_RGBA32_SFLOAT_PACK32: return ImageFormat::R32G32B32A32_SFLOAT;
+
+            // BC Compressed (DXTn)
+            case gli::FORMAT_RGB_DXT1_UNORM_BLOCK8:   return ImageFormat::BC1_RGB_UNORM_BLOCK;
+            case gli::FORMAT_RGB_DXT1_SRGB_BLOCK8:    return ImageFormat::BC1_RGB_SRGB_BLOCK;
+            case gli::FORMAT_RGBA_DXT1_UNORM_BLOCK8:  return ImageFormat::BC1_RGBA_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_DXT1_SRGB_BLOCK8:   return ImageFormat::BC1_RGBA_SRGB_BLOCK;
+            case gli::FORMAT_RGBA_DXT3_UNORM_BLOCK16: return ImageFormat::BC2_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_DXT3_SRGB_BLOCK16:  return ImageFormat::BC2_SRGB_BLOCK;
+            case gli::FORMAT_RGBA_DXT5_UNORM_BLOCK16: return ImageFormat::BC3_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_DXT5_SRGB_BLOCK16:  return ImageFormat::BC3_SRGB_BLOCK;
+            case gli::FORMAT_R_ATI1N_UNORM_BLOCK8:    return ImageFormat::BC4_UNORM_BLOCK;
+            case gli::FORMAT_R_ATI1N_SNORM_BLOCK8:    return ImageFormat::BC4_SNORM_BLOCK;
+            case gli::FORMAT_RG_ATI2N_UNORM_BLOCK16:  return ImageFormat::BC5_UNORM_BLOCK;
+            case gli::FORMAT_RG_ATI2N_SNORM_BLOCK16:  return ImageFormat::BC5_SNORM_BLOCK;
+            case gli::FORMAT_RGB_BP_UFLOAT_BLOCK16:   return ImageFormat::BC6H_UFLOAT_BLOCK;
+            case gli::FORMAT_RGB_BP_SFLOAT_BLOCK16:   return ImageFormat::BC6H_SFLOAT_BLOCK;
+            case gli::FORMAT_RGBA_BP_UNORM_BLOCK16:   return ImageFormat::BC7_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_BP_SRGB_BLOCK16:    return ImageFormat::BC7_SRGB_BLOCK;
+
+            // ETC2 Compressed
+            case gli::FORMAT_RGB_ETC2_UNORM_BLOCK8:   return ImageFormat::ETC2_R8G8B8_UNORM_BLOCK;
+            case gli::FORMAT_RGB_ETC2_SRGB_BLOCK8:    return ImageFormat::ETC2_R8G8B8_SRGB_BLOCK;
+            case gli::FORMAT_RGBA_ETC2_UNORM_BLOCK8:  return ImageFormat::ETC2_R8G8B8A1_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_ETC2_SRGB_BLOCK8:   return ImageFormat::ETC2_R8G8B8A1_SRGB_BLOCK;
+            case gli::FORMAT_RGBA_ETC2_UNORM_BLOCK16: return ImageFormat::ETC2_R8G8B8A8_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_ETC2_SRGB_BLOCK16:  return ImageFormat::ETC2_R8G8B8A8_SRGB_BLOCK;
+
+            // EAC Compressed
+            case gli::FORMAT_R_EAC_UNORM_BLOCK8:      return ImageFormat::EAC_R11_UNORM_BLOCK;
+            case gli::FORMAT_R_EAC_SNORM_BLOCK8:      return ImageFormat::EAC_R11_SNORM_BLOCK;
+            case gli::FORMAT_RG_EAC_UNORM_BLOCK16:    return ImageFormat::EAC_R11G11_UNORM_BLOCK;
+            case gli::FORMAT_RG_EAC_SNORM_BLOCK16:    return ImageFormat::EAC_R11G11_SNORM_BLOCK;
+
+            // ASTC Compressed
+            case gli::FORMAT_RGBA_ASTC_4X4_UNORM_BLOCK16:  return ImageFormat::ASTC_4x4_UNORM_BLOCK;
+            case gli::FORMAT_RGBA_ASTC_4X4_SRGB_BLOCK16:   return ImageFormat::ASTC_4x4_SRGB_BLOCK;
+
+        default: ASTRAL_ERROR("No image format match was found!")
+        }
+    }
+
+} // Renderer

@@ -1,0 +1,48 @@
+/**
+* @file Editor.cpp
+* @author Andrew Fagan
+* @date 3/1/2025
+*/
+
+#include "Editor.h"
+
+#include "Debug/ImGui/ImGuiManager.h"
+#include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ViewportPanel.h"
+#include "Components/MenuBarComponent.h"
+#include "Core/Engine.h"
+#include "Panels/PropertiesPanel.h"
+
+namespace Astral {
+
+    Editor::Editor()
+    {
+    }
+
+    Editor::~Editor()
+    {
+    }
+
+
+    void Editor::Init()
+    {
+        Engine::Get().GetImGuiManager().EnableViewportDockSpace();
+        m_RenderImGuiListener.StartListening();
+    }
+
+
+    void Editor::Shutdown()
+    {
+        m_RenderImGuiListener.StopListening();
+    }
+
+
+    void Editor::UpdateEditorUI()
+    {
+        SceneHierarchyPanel::Show();
+        ViewportPanel::Show();
+        MenuBarComponent();
+        PropertiesPanel();
+    }
+
+}

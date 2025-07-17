@@ -1,0 +1,57 @@
+\doxysection{Application.\+h}
+\hypertarget{_application_8h_source}{}\label{_application_8h_source}\index{src/Ayla/Core/Application.h@{src/Ayla/Core/Application.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ sparky\ on\ 4/16/2024.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Ayla/Client/UserSetup.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}Ayla/Core/CoreDefinitions.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}Ayla/Core/Layers/LayerStack.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}Ayla/Debug/DebugLayer.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}Ayla/ImGui/ImGuiLayer.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}Ayla/Window/Window.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }Ayla::Core}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{using\ namespace\ }Ayla::Windows;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//using\ Ayla::Events::IEvent;}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}}}
+\DoxyCodeLine{00022\ \ \ \ \ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}}();}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{\string~Application}}();}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_aacdfe20823b7f1d9bdd09c579988091f}{Run}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_ad3cbdbcdacfd603748259220f98ed171}{OnEvent}}(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\&);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_windows_1_1_window}{Window}}\&\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a3dc8634069a218b69133c971d7037121}{GetWindow}}();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{LayerStack}}\&\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a39e25a8e5f9652c47963a6e839a7cbb2}{GetLayerStack}}();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}}\&\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a227681f4141da6fff582ee484561bb55}{Get}}();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application_a5e3464f01acc700d86bc6d714f3c2082}{SetClientLoop}}(\mbox{\hyperlink{class_ayla_1_1_client_1_1_client_loop}{Client::ClientLoop}}*\ clientLoop);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_IsAppRunning\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_application}{Application}}*\ m\_Application;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<Window>\ m\_Window;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<LayerStack>\ m\_LayerStack;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ std::unique\_ptr<GUI::ImGuiLayer>\ m\_ImGuiLayer;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ std::unique\_ptr<Debug::DebugLayer>\ m\_DebugLayer;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_client_1_1_client_loop}{Client::ClientLoop}}*\ m\_ClientLoop;}
+\DoxyCodeLine{00054\ \ \ \ \ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \}\ \textcolor{comment}{//\ namespace\ Ayla::Core}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+
+\end{DoxyCode}
