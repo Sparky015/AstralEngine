@@ -305,7 +305,7 @@ namespace Astral {
                 TextureHandle textureHandle = m_Textures[samplerIndex];
                 samplerIndex++;
 
-                VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+                VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
                 VkSampler sampler = (VkSampler)textureHandle->GetSampler();
 
 

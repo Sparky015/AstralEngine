@@ -44,7 +44,7 @@ namespace Astral {
 
     void VulkanFramebuffer::AttachTexture(TextureHandle textureHandle)
     {
-        VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
         m_ImageViews.push_back(imageView);
         m_Textures.push_back(textureHandle);
     }

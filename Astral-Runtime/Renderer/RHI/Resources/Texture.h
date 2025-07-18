@@ -100,7 +100,7 @@ namespace Astral {
          * @return The native image view of the texture
          * @note The void pointer maps to the native image view handle of the selected renderer api backend
          */
-        virtual void* GetNativeHandle() = 0;
+        virtual void* GetNativeImageView() = 0;
 
         /**
          * @brief Creates a texture from a file path

@@ -103,7 +103,7 @@ namespace Astral {
          * @return The native image view of the texture
          * @note The void pointer maps to the native vulkan image view handle (VkImageView)
          */
-        void* GetNativeHandle() override { return m_ImageView; }
+        void* GetNativeImageView() override { return m_ImageView; }
 
     private:
 

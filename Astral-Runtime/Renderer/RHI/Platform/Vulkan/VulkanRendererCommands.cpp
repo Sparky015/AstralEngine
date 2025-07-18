@@ -259,7 +259,7 @@ namespace Astral {
         thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
         thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
         VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
-        VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
 
         VkDebugUtilsObjectNameInfoEXT nameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
