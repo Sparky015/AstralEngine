@@ -43,6 +43,7 @@ namespace Astral {
 
         ImageAspectFlags GetImageAspect() override { return m_ImageAspect; }
         ImageLayout GetLayout() override { return ConvertVkImageLayoutToImageLayout(m_CurrentLayout); }
+        void UpdateLayout(ImageLayout imageLayout) override;
         ImageFormat GetFormat() override { return ConvertVkFormatToImageFormat(m_Format); }
 
         void* GetSampler() override { return m_Sampler; }

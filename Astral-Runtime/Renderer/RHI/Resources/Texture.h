@@ -39,6 +39,7 @@ namespace Astral {
 
         virtual ImageAspectFlags GetImageAspect() = 0;
         virtual ImageLayout GetLayout() = 0;
+        virtual void UpdateLayout(ImageLayout imageLayout) = 0;
         virtual ImageFormat GetFormat() = 0;
 
         virtual void* GetSampler() = 0;

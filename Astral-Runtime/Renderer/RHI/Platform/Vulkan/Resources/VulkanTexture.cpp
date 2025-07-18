@@ -66,6 +66,12 @@ namespace Astral {
     }
 
 
+    void VulkanTexture::UpdateLayout(ImageLayout imageLayout)
+    {
+    	m_CurrentLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+    }
+
+
     ImTextureID VulkanTexture::GetImGuiTextureID()
     {
     	if (m_ImGuiTextureID == VK_NULL_HANDLE)
