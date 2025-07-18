@@ -46,8 +46,8 @@ namespace Astral {
         void* GetImageView() override { return m_ImageView; }
         void* GetNativeHandle() override { return m_Image; }
 
-        TextureHandle GetAsTexture() { return m_RenderTargetTexture; }
-        
+        TextureHandle GetAsTexture() override { return m_RenderTargetTexture; }
+
         void SetSyncPrimatives(void* renderCompleteSemaphore, void* imageAvailableSemaphore, void* fence) override
         {
             m_ImageAvailableSemaphore = (VkSemaphore)imageAvailableSemaphore;

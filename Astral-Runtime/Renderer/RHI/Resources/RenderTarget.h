@@ -28,6 +28,8 @@ namespace Astral {
         virtual void* GetImageView() = 0;
         virtual void* GetNativeHandle() = 0;
 
+        virtual TextureHandle GetAsTexture() = 0;
+
         virtual void SetSyncPrimatives(void* presentCompleteSemaphore, void* imageAvailableSemaphore, void* fence) = 0;
     };
 
