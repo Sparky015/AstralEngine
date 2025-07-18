@@ -145,7 +145,7 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer,
             ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.SourceStageMask),
             ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.DestinationStageMask),
-            ConvertDependencyFlagsToVkDependencyFlags(pipelineBarrier.DependencyFlags), // TODO: Make actual conversion of the dependency flags to VkDependencyFlags
+            ConvertDependencyFlagsToVkDependencyFlags(pipelineBarrier.DependencyFlags),
             (uint32)memoryBarriers.size(),
             memoryBarriers.data(),
             (uint32)bufferMemoryBarriers.size(),
@@ -153,6 +153,13 @@ namespace Astral {
             (uint32)imageMemoryBarriers.size(),
             imageMemoryBarriers.data()
         );
+
+        // Update texture layouts
+        for (const ImageMemoryBarrier& imageMemoryBarrier : pipelineBarrier.ImageMemoryBarriers)
+        {
+            ImageLayout newLayout = imageMemoryBarrier.NewLayout;
+            imageMemoryBarrier.Image->UpdateLayout(newLayout);
+        }
     }
 
 
