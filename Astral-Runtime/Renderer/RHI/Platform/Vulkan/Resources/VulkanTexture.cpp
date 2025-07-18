@@ -25,7 +25,8 @@ namespace Astral {
         m_Image(),
         m_ImageView(),
         m_Sampler(),
-		m_ImGuiTextureID(VK_NULL_HANDLE)
+		m_ImGuiTextureID(VK_NULL_HANDLE),
+		m_IsSwapchainOwned(false)
     {
         CreateTexture(desc.ImageUsageFlags);
     	AllocateTextureMemory();
@@ -51,6 +52,23 @@ namespace Astral {
     	}
     }
 
+    VulkanTexture::VulkanTexture(VkDevice device, VkImage image, VkImageView imageView, ImageLayout layout, ImageFormat format, uint32 width, uint32 height) :
+		m_DeviceManager(nullptr),
+		m_Device(device),
+		m_PhysicalDeviceMemoryProperties(),
+		m_ImageWidth(width),
+		m_ImageHeight(height),
+		m_Format(ConvertImageFormatToVkFormat(format)),
+		m_Image(image),
+		m_ImageView(imageView),
+		m_CurrentLayout(ConvertImageLayoutToVkImageLayout(layout)),
+		m_Sampler(),
+		m_ImGuiTextureID(VK_NULL_HANDLE),
+		m_IsSwapchainOwned(true)
+    {
+    	CreateImageSampler();
+    }
+
 
     VulkanTexture::~VulkanTexture()
     {
@@ -60,9 +78,13 @@ namespace Astral {
     	}
 
     	DestroyImageSampler();
-    	DestroyImageView();
-    	DestroyTexture();
-    	FreeTextureMemory();
+
+    	if (!m_IsSwapchainOwned)
+    	{
+    		DestroyImageView();
+    		DestroyTexture();
+    		FreeTextureMemory();
+    	}
     }
 
 
@@ -217,7 +239,7 @@ namespace Astral {
 
     void VulkanTexture::TransitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
     {
-        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkImageMemoryBarrier barrier = {
@@ -398,7 +420,7 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
@@ -407,7 +429,7 @@ namespace Astral {
     void VulkanTexture::CopyFromStagingBuffer(VulkanBuffer& stagingBuffer)
     {
         VkBuffer buffer = (VkBuffer)stagingBuffer.GetNativeHandle();
-        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
     	VkBufferImageCopy bufferImageCopy = {
@@ -429,7 +451,7 @@ namespace Astral {
 		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
@@ -464,7 +486,7 @@ namespace Astral {
 
     void VulkanTexture::DestroyImageSampler()
     {
-    	vkDestroySampler(m_Device, m_Sampler, nullptr);
+    	if (m_Sampler) { vkDestroySampler(m_Device, m_Sampler, nullptr); }
     }
 
 

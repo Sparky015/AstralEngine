@@ -20,7 +20,7 @@ namespace Astral {
 
     struct VulkanTextureDesc
     {
-        VulkanDevice& VulkanDevice;
+        VulkanDevice* VulkanDevice; // Will be valid as long as the rendering context is valid
         VkDevice Device;
         VkPhysicalDeviceMemoryProperties PhysicalDeviceMemoryProperties;
         unsigned char* ImageData;
@@ -35,6 +35,7 @@ namespace Astral {
     {
     public:
         explicit VulkanTexture(const VulkanTextureDesc& desc);
+        explicit VulkanTexture(VkDevice device, VkImage image, VkImageView imageView, ImageLayout layout, ImageFormat format, uint32 width, uint32 height);
         ~VulkanTexture() override;
 
         int GetHeight() override { return m_ImageHeight; }
@@ -75,7 +76,7 @@ namespace Astral {
         uint32 GetBytesPerTexFormat(VkFormat format);
 
 
-        VulkanDevice& m_DeviceManager;
+        VulkanDevice* m_DeviceManager;
         VkDevice m_Device;
         VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
         uint32 m_ImageWidth;
@@ -90,6 +91,8 @@ namespace Astral {
         ImageAspectFlags m_ImageAspect;
 
         VkDescriptorSet m_ImGuiTextureID;
+
+        bool m_IsSwapchainOwned;
     };
 
 }
