@@ -37,6 +37,7 @@ namespace Astral {
 
     VulkanSwapchain::~VulkanSwapchain()
     {
+        DestroyRenderTargets();
         DestroyFences();
         DestroySemaphores();
         DestroySwapchain();
@@ -284,6 +285,8 @@ namespace Astral {
 
     void VulkanSwapchain::CreateRenderTargets()
     {
+        m_RenderTargets.clear();
+        
         for (uint32 i = 0; i < m_NumberOfSwapchainImages; i++)
         {
             VulkanRenderTargetDesc renderTargetDesc = {
@@ -301,6 +304,12 @@ namespace Astral {
 
             m_RenderTargets.emplace_back(CreateGraphicsRef<VulkanRenderTarget>(renderTargetDesc));
         }
+    }
+
+
+    void VulkanSwapchain::DestroyRenderTargets()
+    {
+        m_RenderTargets.clear();
     }
 
 
