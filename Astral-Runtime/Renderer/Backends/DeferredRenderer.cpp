@@ -63,6 +63,7 @@ namespace Astral {
 
         Engine::Get().GetRendererManager().GetContext().ShutdownImGuiForAPIBackend();
         m_FrameContexts.clear();
+        m_RenderGraph.ClearResourceHold();
     }
 
 

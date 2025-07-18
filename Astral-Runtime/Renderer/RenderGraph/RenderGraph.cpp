@@ -176,6 +176,14 @@ namespace Astral {
     }
 
 
+    void RenderGraph::ClearResourceHold()
+    {
+        m_RenderPassesHold.clear();
+        m_RenderPassResourcesHold.clear();
+        m_FramesTillClear.clear();
+    }
+
+
     void RenderGraph::BuildRenderGraph()
     {
         // Converting each external attachment to all render passes to point to the render graph owned render pass instances

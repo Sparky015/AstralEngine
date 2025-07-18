@@ -113,6 +113,13 @@ namespace Astral {
          */
         void ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets);
 
+
+        /**
+         * @brief Clears any held resources from previous render graphs
+         * @pre   @ref EndBuildingRenderGraph is called first to create render graph and its resources
+         */
+        void ClearResourceHold();
+
     private:
 
         /**
