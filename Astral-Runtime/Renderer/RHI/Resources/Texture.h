@@ -40,31 +40,31 @@ namespace Astral {
         ~Texture() override = default;
 
         /**
-         * @brief Gets the image width
+         * @brief  Gets the image width
          * @return The image width
          */
         virtual int GetWidth() = 0;
 
         /**
-         * @brief Gets the image height
+         * @brief  Gets the image height
          * @return The image height
          */
         virtual int GetHeight() = 0;
 
         /**
-         * @brief Gets the image dimensions
+         * @brief  Gets the image dimensions
          * @return The image dimensions
          */
         virtual UVec2 GetDimensions() = 0;
 
         /**
-         * @brief Gets the image aspects of the texture
+         * @brief  Gets the image aspects of the texture
          * @return The image aspects of the texture
          */
         virtual ImageAspectFlags GetImageAspect() = 0;
 
         /**
-         * @brief Gets the image layout of the texture
+         * @brief  Gets the image layout of the texture
          * @return The image layout of the texture
          */
         virtual ImageLayout GetLayout() = 0;
@@ -76,40 +76,40 @@ namespace Astral {
         virtual void UpdateLayout(ImageLayout imageLayout) = 0;
 
         /**
-         * @brief Gets the image format of the texture
+         * @brief  Gets the image format of the texture
          * @return The image format of the texture
          */
         virtual ImageFormat GetFormat() = 0;
 
         /**
-         * @brief Gets the image sampler of the texture
+         * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
-         * @note The void pointer maps to the native sampler handle of the selected renderer api backend
+         * @note   The void pointer maps to the native sampler handle of the selected renderer api backend
          */
         virtual void* GetSampler() = 0;
 
         /**
-         * @brief Gets the native image handle of the texture
+         * @brief  Gets the native image handle of the texture
          * @return The native image handle of the texture
-         * @note The void pointer maps to the native image handle of the selected renderer api backend
+         * @note   The void pointer maps to the native image handle of the selected renderer api backend
          */
         virtual void* GetNativeImage() = 0;
 
         /**
-         * @brief Gets the native image view handle of the texture
+         * @brief  Gets the native image view handle of the texture
          * @return The native image view of the texture
-         * @note The void pointer maps to the native image view handle of the selected renderer api backend
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
          */
         virtual void* GetNativeImageView() = 0;
 
         /**
-         * @brief Creates a texture from a file path
+         * @brief  Creates a texture from a file path
          * @return The texture handle
          */
         static GraphicsRef<Texture> CreateTexture(const std::filesystem::path& filePath);
 
         /**
-         * @brief Creates a texture from the image data
+         * @brief  Creates a texture from the image data
          * @return The texture handle
          */
         static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat);

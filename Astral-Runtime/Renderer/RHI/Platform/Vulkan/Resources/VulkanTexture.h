@@ -43,31 +43,31 @@ namespace Astral {
         ~VulkanTexture() override;
 
         /**
-         * @brief Gets the image width
+         * @brief  Gets the image width
          * @return The image width
          */
         int GetHeight() override { return m_ImageHeight; }
 
         /**
-        * @brief Gets the image height
+        * @brief  Gets the image height
         * @return The image height
         */
         int GetWidth() override { return m_ImageWidth; }
 
         /**
-         * @brief Gets the image dimensions
+         * @brief  Gets the image dimensions
          * @return The image dimensions
          */
         UVec2 GetDimensions() override { return UVec2(m_ImageWidth, m_ImageHeight); }
 
         /**
-         * @brief Gets the image aspects of the texture
+         * @brief  Gets the image aspects of the texture
          * @return The image aspects of the texture
          */
         ImageAspectFlags GetImageAspect() override { return m_ImageAspect; }
 
         /**
-         * @brief Gets the image layout of the texture
+         * @brief  Gets the image layout of the texture
          * @return The image layout of the texture
          */
         ImageLayout GetLayout() override { return ConvertVkImageLayoutToImageLayout(m_CurrentLayout); }
@@ -79,29 +79,29 @@ namespace Astral {
         void UpdateLayout(ImageLayout imageLayout) override;
 
         /**
-         * @brief Gets the image format of the texture
+         * @brief  Gets the image format of the texture
          * @return The image format of the texture
          */
         ImageFormat GetFormat() override { return ConvertVkFormatToImageFormat(m_Format); }
 
         /**
-         * @brief Gets the image sampler of the texture
+         * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
-         * @note The void pointer maps to the native vulkan sampler handle (VkSampler)
+         * @note   The void pointer maps to the native vulkan sampler handle (VkSampler)
          */
         void* GetSampler() override { return m_Sampler; }
 
         /**
-         * @brief Gets the native image handle of the texture
+         * @brief  Gets the native image handle of the texture
          * @return The native image handle of the texture
-         * @note The void pointer maps to the native vulkan image handle (VkImage)
+         * @note   The void pointer maps to the native vulkan image handle (VkImage)
          */
         void* GetNativeImage() override { return m_Image; }
 
         /**
-         * @brief Gets the native image view handle of the texture
+         * @brief  Gets the native image view handle of the texture
          * @return The native image view of the texture
-         * @note The void pointer maps to the native vulkan image view handle (VkImageView)
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
          */
         void* GetNativeImageView() override { return m_ImageView; }
 

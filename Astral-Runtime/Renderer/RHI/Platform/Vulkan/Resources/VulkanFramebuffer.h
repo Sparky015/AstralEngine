@@ -67,8 +67,8 @@ namespace Astral {
         void EndBuildingFramebuffer() override;
 
         /**
-         * @brief Gets the attachment at the specified index
-         * @param attachmentIndex The index of the attachment
+         * @brief  Gets the attachment at the specified index
+         * @param  attachmentIndex The index of the attachment
          * @return The texture located at the specified index
          */
         TextureHandle GetAttachment(uint32 attachmentIndex) override;
@@ -80,7 +80,7 @@ namespace Astral {
 
         /**
          * @brief Gets the native framebuffer handle
-         * @note The void pointer maps to the native vulkan framebuffer handle (VkFramebuffer)
+         * @note  The void pointer maps to the native vulkan framebuffer handle (VkFramebuffer)
          */
         void* GetNativeHandle() override { return m_Framebuffer; }
 
