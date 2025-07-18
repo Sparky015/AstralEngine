@@ -11,16 +11,20 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "VulkanTexture.h"
+
 namespace Astral {
 
     struct VulkanRenderTargetDesc
     {
+        VkDevice Device;
         VkImage Image;
         VkImageView ImageView;
+        ImageFormat Format;
+        ImageLayout Layout;
         uint32 ImageIndex;
         VkSemaphore ImageAvailableSemaphore;
         VkSemaphore RenderCompleteSemaphore;
-        ImageFormat Format;
         uint32 ImageWidth;
         uint32 ImageHeight;
     };
@@ -42,7 +46,8 @@ namespace Astral {
         void* GetImageView() override { return m_ImageView; }
         void* GetNativeHandle() override { return m_Image; }
 
-
+        TextureHandle GetAsTexture() { return m_RenderTargetTexture; }
+        
         void SetSyncPrimatives(void* renderCompleteSemaphore, void* imageAvailableSemaphore, void* fence) override
         {
             m_ImageAvailableSemaphore = (VkSemaphore)imageAvailableSemaphore;
@@ -52,13 +57,18 @@ namespace Astral {
 
     private:
 
+
         VkImage m_Image;
         VkImageView m_ImageView;
+        ImageFormat m_ImageFormat;
+        ImageLayout m_ImageLayout;
+
+        TextureHandle m_RenderTargetTexture;
+
         uint32 m_ImageIndex;
         VkSemaphore m_RenderCompleteSemaphore;
         VkSemaphore m_ImageAvailableSemaphore;
         VkFence m_Fence;
-        ImageFormat m_ImageFormat;
 
         uint32 m_ImageWidth;
         uint32 m_ImageHeight;
