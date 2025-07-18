@@ -184,6 +184,23 @@ namespace Astral {
         VkResult result = vkCreateSwapchainKHR(m_Device, &swapChainCreateInfo, nullptr, &m_Swapchain);
         ASSERT(result == VK_SUCCESS, "Vulkan swapchain failed to create!");
 
+
+        // Destroys the old swapchain and its image views
+        if (swapChainCreateInfo.oldSwapchain)
+        {
+            for (const VkImageView& imageView : m_ImageViews)
+            {
+                vkDestroyImageView(m_Device, imageView, nullptr);
+            }
+
+            vkDestroySwapchainKHR(m_Device, swapChainCreateInfo.oldSwapchain, nullptr);
+
+            m_Images.clear();
+            m_ImageViews.clear();
+        }
+
+
+
         uint32 numberOfSwapchainImages = 0;
         result = vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &numberOfSwapchainImages, nullptr);
         ASSERT(result == VK_SUCCESS, "Vulkan swapchain failed to get number of images!");
@@ -286,7 +303,7 @@ namespace Astral {
     void VulkanSwapchain::CreateRenderTargets()
     {
         m_RenderTargets.clear();
-        
+
         for (uint32 i = 0; i < m_NumberOfSwapchainImages; i++)
         {
             VulkanRenderTargetDesc renderTargetDesc = {
@@ -320,7 +337,6 @@ namespace Astral {
         DestroySemaphores();
 
         CreateSwapchain(width, height);
-
         CreateSemaphores();
         CreateFences();
         CreateRenderTargets();
