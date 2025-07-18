@@ -29,7 +29,7 @@ namespace Astral {
         };
 
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkImage image = (VkImage)renderTargetHandle->GetNativeHandle();
+        VkImage image = (VkImage)renderTargetHandle->GetNativeImage();
 
         vkCmdClearColorImage(commandBuffer, image, VK_IMAGE_LAYOUT_GENERAL, &clearColor, 1, &subresourceRange);
     }
