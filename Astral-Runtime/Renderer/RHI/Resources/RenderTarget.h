@@ -10,6 +10,7 @@
 #include "Core/Math/Math.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
+#include "Texture.h"
 
 namespace Astral {
 
