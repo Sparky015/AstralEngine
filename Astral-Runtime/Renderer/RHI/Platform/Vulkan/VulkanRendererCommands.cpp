@@ -29,7 +29,7 @@ namespace Astral {
         };
 
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkImage image = (VkImage)renderTargetHandle->GetNativeHandle();
+        VkImage image = (VkImage)renderTargetHandle->GetNativeImage();
 
         vkCmdClearColorImage(commandBuffer, image, VK_IMAGE_LAYOUT_GENERAL, &clearColor, 1, &subresourceRange);
     }
@@ -145,7 +145,7 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer,
             ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.SourceStageMask),
             ConvertPipelineStageToVkPipelineStageFlags(pipelineBarrier.DestinationStageMask),
-            ConvertDependencyFlagsToVkDependencyFlags(pipelineBarrier.DependencyFlags), // TODO: Make actual conversion of the dependency flags to VkDependencyFlags
+            ConvertDependencyFlagsToVkDependencyFlags(pipelineBarrier.DependencyFlags),
             (uint32)memoryBarriers.size(),
             memoryBarriers.data(),
             (uint32)bufferMemoryBarriers.size(),
@@ -153,6 +153,13 @@ namespace Astral {
             (uint32)imageMemoryBarriers.size(),
             imageMemoryBarriers.data()
         );
+
+        // Update texture layouts
+        for (const ImageMemoryBarrier& imageMemoryBarrier : pipelineBarrier.ImageMemoryBarriers)
+        {
+            ImageLayout newLayout = imageMemoryBarrier.NewLayout;
+            imageMemoryBarrier.Image->UpdateLayout(newLayout);
+        }
     }
 
 
@@ -252,7 +259,7 @@ namespace Astral {
         thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
         thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
         VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
-        VkImageView imageView = (VkImageView)textureHandle->GetNativeHandle();
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
 
         VkDebugUtilsObjectNameInfoEXT nameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,

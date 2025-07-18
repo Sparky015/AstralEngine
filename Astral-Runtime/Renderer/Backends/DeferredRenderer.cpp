@@ -249,8 +249,8 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
-        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
-        m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
+        m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
+        // m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -361,6 +361,9 @@ namespace Astral {
         // Viewport Rendering
         m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
 
+
+        TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+        ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
         {
             PipelineBarrier pipelineBarrier = {};
             pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -371,13 +374,13 @@ namespace Astral {
             ImageMemoryBarrier imageMemoryBarrier = {};
             imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
             imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
             imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
             imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.Image =offscreenRenderTarget;
             imageMemoryBarrier.ImageSubresourceRange = {
-                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = 1,
                 .BaseArrayLayer = 0,
@@ -406,13 +409,13 @@ namespace Astral {
             ImageMemoryBarrier imageMemoryBarrier = {};
             imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
             imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.OldLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL; // TODO: Make render pass objects update the textures' layout when the render pass automatically transitions layouts
-            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            imageMemoryBarrier.NewLayout = initialLayout;
             imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+            imageMemoryBarrier.Image = offscreenRenderTarget;
             imageMemoryBarrier.ImageSubresourceRange = {
-                .AspectMask = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget->GetImageAspect(),
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = 1,
                 .BaseArrayLayer = 0,

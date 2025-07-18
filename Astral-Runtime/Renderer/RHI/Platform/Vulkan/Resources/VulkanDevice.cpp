@@ -219,7 +219,7 @@ namespace Astral {
     TextureHandle VulkanDevice::CreateTexture(const TextureCreateInfo& textureCreateInfo)
     {
         VulkanTextureDesc textureDesc = {
-            .VulkanDevice = *this,
+            .VulkanDevice = this,
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,

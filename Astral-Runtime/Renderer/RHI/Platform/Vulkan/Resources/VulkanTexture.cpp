@@ -25,7 +25,7 @@ namespace Astral {
         m_Image(),
         m_ImageView(),
         m_Sampler(),
-		m_ImGuiTextureID(VK_NULL_HANDLE)
+		m_IsSwapchainOwned(false)
     {
         CreateTexture(desc.ImageUsageFlags);
     	AllocateTextureMemory();
@@ -51,29 +51,39 @@ namespace Astral {
     	}
     }
 
-
-    VulkanTexture::~VulkanTexture()
+    VulkanTexture::VulkanTexture(VkDevice device, VkImage image, VkImageView imageView, ImageLayout layout, ImageFormat format, uint32 width, uint32 height) :
+		m_DeviceManager(nullptr),
+		m_Device(device),
+		m_PhysicalDeviceMemoryProperties(),
+		m_ImageWidth(width),
+		m_ImageHeight(height),
+		m_Format(ConvertImageFormatToVkFormat(format)),
+		m_Image(image),
+		m_ImageView(imageView),
+		m_CurrentLayout(ConvertImageLayoutToVkImageLayout(layout)),
+		m_Sampler(),
+		m_IsSwapchainOwned(true)
     {
-    	if (m_ImGuiTextureID != VK_NULL_HANDLE)
-    	{
-    		ImGui_ImplVulkan_RemoveTexture(m_ImGuiTextureID);
-    	}
-
-    	DestroyImageSampler();
-    	DestroyImageView();
-    	DestroyTexture();
-    	FreeTextureMemory();
+    	CreateImageSampler();
     }
 
 
-    ImTextureID VulkanTexture::GetImGuiTextureID()
+    VulkanTexture::~VulkanTexture()
     {
-    	if (m_ImGuiTextureID == VK_NULL_HANDLE)
-    	{
-	    	m_ImGuiTextureID = ImGui_ImplVulkan_AddTexture(m_Sampler, m_ImageView, m_CurrentLayout);
-    	}
+    	DestroyImageSampler();
 
-    	return (ImTextureID)m_ImGuiTextureID;
+    	if (!m_IsSwapchainOwned)
+    	{
+    		DestroyImageView();
+    		DestroyTexture();
+    		FreeTextureMemory();
+    	}
+    }
+
+
+    void VulkanTexture::UpdateLayout(ImageLayout imageLayout)
+    {
+    	m_CurrentLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
     }
 
 
@@ -209,9 +219,9 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::TransitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
+    void VulkanTexture::TransitionImageLayout(VkImageLayout currentLayout, VkImageLayout newLayout)
     {
-        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkImageMemoryBarrier barrier = {
@@ -219,7 +229,7 @@ namespace Astral {
             .pNext = nullptr,
             .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
             .dstAccessMask = VK_ACCESS_MEMORY_READ_BIT,
-            .oldLayout = oldLayout,
+            .oldLayout = currentLayout,
             .newLayout = newLayout,
             .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
             .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
@@ -259,7 +269,7 @@ namespace Astral {
 			m_ImageAspect = IMAGE_ASPECT_COLOR_BIT;
 		}
 
-		if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -267,7 +277,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_GENERAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_GENERAL)
 		{
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -276,7 +286,7 @@ namespace Astral {
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
 
-		if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+		if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
 			newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
@@ -285,7 +295,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 		} /* Convert back from read-only to updateable */
-		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -293,7 +303,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 		} /* Convert from updateable texture to shader read-only */
-		else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+		else if (currentLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
 			     newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -304,7 +314,7 @@ namespace Astral {
 		} /* Convert depth texture from undefined state to depth-stencil buffer */
 
 
-		else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
@@ -314,7 +324,7 @@ namespace Astral {
 		} /* Wait for render pass to complete */
 
 
-		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0; // VK_ACCESS_SHADER_READ_BIT;
 			barrier.dstAccessMask = 0;
@@ -326,7 +336,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		} /* Convert back from read-only to color attachment */
-		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
@@ -334,7 +344,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 		} /* Convert from updateable texture to shader read-only */
-		else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -342,7 +352,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		} /* Convert back from read-only to depth attachment */
-		else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
@@ -350,7 +360,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			destinationStage = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
 		} /* Convert from updateable depth texture to shader read-only */
-		else if (oldLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 		{
 			barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -358,7 +368,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+		else if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
@@ -366,7 +376,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 		}
-		else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
+		else if (currentLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
 		{
 			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			barrier.dstAccessMask = 0;
@@ -374,7 +384,7 @@ namespace Astral {
 			sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 			destinationStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 		}
-    	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    	else if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
     	{
     		barrier.srcAccessMask = 0;
     		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -392,7 +402,7 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
@@ -401,7 +411,7 @@ namespace Astral {
     void VulkanTexture::CopyFromStagingBuffer(VulkanBuffer& stagingBuffer)
     {
         VkBuffer buffer = (VkBuffer)stagingBuffer.GetNativeHandle();
-        CommandBufferHandle commandBufferHandle = m_DeviceManager.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
     	VkBufferImageCopy bufferImageCopy = {
@@ -423,7 +433,7 @@ namespace Astral {
 		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager.GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
@@ -458,7 +468,7 @@ namespace Astral {
 
     void VulkanTexture::DestroyImageSampler()
     {
-    	vkDestroySampler(m_Device, m_Sampler, nullptr);
+    	if (m_Sampler) { vkDestroySampler(m_Device, m_Sampler, nullptr); }
     }
 
 
