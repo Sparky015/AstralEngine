@@ -35,6 +35,8 @@ namespace Astral {
         void AttachTexture(TextureHandle textureHandle) override;
         void EndBuildingFramebuffer() override;
 
+        TextureHandle GetAttachment(uint32 attachmentIndex) override;
+
         void InvalidateFramebuffer() override;
 
         void* GetNativeHandle() override { return m_Framebuffer; }
@@ -49,7 +51,6 @@ namespace Astral {
 
         // Hold a ref to each image added so they will stay alive while framebuffer is alive
         std::vector<TextureHandle> m_Textures;
-        std::vector<RenderTargetHandle> m_RenderTargets;
         std::vector<VkImageView> m_ImageViews;
 
         uint32 m_FramebufferWidth;

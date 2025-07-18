@@ -38,7 +38,7 @@ namespace Astral {
     {
         VkImageView imageView = (VkImageView)renderTargetHandle->GetImageView();
         m_ImageViews.push_back(imageView);
-        m_RenderTargets.push_back(renderTargetHandle);
+        m_Textures.push_back(renderTargetHandle->GetAsTexture());
     }
 
 
@@ -56,6 +56,13 @@ namespace Astral {
     }
 
 
+    TextureHandle VulkanFramebuffer::GetAttachment(uint32 attachmentIndex)
+    {
+        ASSERT(attachmentIndex < m_Textures.size(), "Given attachment index is out of range of the textures array")
+        return m_Textures[attachmentIndex];
+    }
+
+
     void VulkanFramebuffer::InvalidateFramebuffer()
     {
         if (m_Framebuffer != VK_NULL_HANDLE)
@@ -64,7 +71,6 @@ namespace Astral {
         }
         m_ImageViews.clear();
         m_Textures.clear();
-        m_RenderTargets.clear();
     }
 
 

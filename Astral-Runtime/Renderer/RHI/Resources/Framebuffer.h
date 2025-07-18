@@ -25,6 +25,8 @@ namespace Astral {
         virtual void AttachTexture(TextureHandle textureHandle) = 0;
         virtual void EndBuildingFramebuffer() = 0;
 
+        virtual TextureHandle GetAttachment(uint32 attachmentIndex) = 0;
+
         virtual void InvalidateFramebuffer() = 0;
 
         virtual void* GetNativeHandle() = 0;
