@@ -26,7 +26,7 @@ namespace Astral {
     };
 
     /**
-     * @brief RHI Framebuffer Object
+     * @brief Vulkan Backend RHI Framebuffer Object
      */
     class VulkanFramebuffer : public Framebuffer
     {
