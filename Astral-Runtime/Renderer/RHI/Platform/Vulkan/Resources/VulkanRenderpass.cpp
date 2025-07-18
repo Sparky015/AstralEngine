@@ -189,6 +189,8 @@ namespace Astral {
 
     void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
     {
+        m_CurrentlyAttachedFramebuffer = frameBufferHandle;
+
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
         UVec2 extent = frameBufferHandle->GetExtent();
@@ -207,6 +209,9 @@ namespace Astral {
         };
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        m_CurrentSubpassIndex = 0;
+        UpdateSubpassAttachmentLayouts();
     }
 
 
@@ -214,6 +219,9 @@ namespace Astral {
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
+        m_CurrentSubpassIndex++;
+        UpdateSubpassAttachmentLayouts();
     }
 
 
@@ -221,6 +229,17 @@ namespace Astral {
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdEndRenderPass(commandBuffer);
+
+
+        // Update attachment layouts to final attachment layout
+        for (size_t i = 0; i < m_RenderPassAttachments.size(); i++)
+        {
+            const VkAttachmentDescription& attachmentDescription  = m_RenderPassAttachments[i];
+            ImageLayout finalLayout = ConvertVkImageLayoutToImageLayout(attachmentDescription.finalLayout);
+
+            TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(i);
+            texture->UpdateLayout(finalLayout);
+        }
     }
 
 
@@ -274,6 +293,49 @@ namespace Astral {
             case AttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
             case AttachmentStoreOp::DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
             default: ASTRAL_ERROR("Invalid Store Op Given!");
+        }
+    }
+
+
+    void VulkanRenderPass::UpdateSubpassAttachmentLayouts()
+    {
+        // Iterate over each attachment and update the layout to the optimal layout
+        const SubpassAttachments& subpassAttachment = m_SubpassAttachments[m_CurrentSubpassIndex];
+
+        for (const VkAttachmentReference& attachmentReference : subpassAttachment.InputAttachments)
+        {
+            uint32 attachmentIndex = attachmentReference.attachment;
+            ImageLayout nextLayout = ConvertVkImageLayoutToImageLayout(attachmentReference.layout);
+
+            TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(attachmentIndex);
+            texture->UpdateLayout(nextLayout);
+        }
+
+        for (const VkAttachmentReference& attachmentReference : subpassAttachment.ColorAttachments)
+        {
+            uint32 attachmentIndex = attachmentReference.attachment;
+            ImageLayout nextLayout = ConvertVkImageLayoutToImageLayout(attachmentReference.layout);
+
+            TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(attachmentIndex);
+            texture->UpdateLayout(nextLayout);
+        }
+
+        for (const VkAttachmentReference& attachmentReference : subpassAttachment.ResolveAttachments)
+        {
+            uint32 attachmentIndex = attachmentReference.attachment;
+            ImageLayout nextLayout = ConvertVkImageLayoutToImageLayout(attachmentReference.layout);
+
+            TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(attachmentIndex);
+            texture->UpdateLayout(nextLayout);
+        }
+
+        for (const VkAttachmentReference& attachmentReference : subpassAttachment.DepthStencilAttachment)
+        {
+            uint32 attachmentIndex = attachmentReference.attachment;
+            ImageLayout nextLayout = ConvertVkImageLayoutToImageLayout(attachmentReference.layout);
+
+            TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(attachmentIndex);
+            texture->UpdateLayout(nextLayout);
         }
     }
 

@@ -58,6 +58,8 @@ namespace Astral {
         VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
         VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
 
+        void UpdateSubpassAttachmentLayouts();
+
         struct SubpassAttachments
         {
             std::vector<VkAttachmentReference> InputAttachments;
@@ -76,6 +78,9 @@ namespace Astral {
         std::vector<VkClearValue> m_ClearValues;
 
         VkRenderPass m_RenderPass;
+
+        FramebufferHandle m_CurrentlyAttachedFramebuffer; // Updated each time a render pass is started
+        uint32 m_CurrentSubpassIndex{0}; // Updated each time a new subpass is started and reset when a render pass is started
     };
 
 }
