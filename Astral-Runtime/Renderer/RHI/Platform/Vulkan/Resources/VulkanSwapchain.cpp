@@ -176,7 +176,8 @@ namespace Astral {
             .preTransform = surfaceCapabilities.currentTransform,
             .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
             .presentMode = presentMode,
-            .clipped = VK_TRUE
+            .clipped = VK_TRUE,
+            .oldSwapchain = m_Swapchain
         };
 
         VkResult result = vkCreateSwapchainKHR(m_Device, &swapChainCreateInfo, nullptr, &m_Swapchain);
@@ -286,12 +287,14 @@ namespace Astral {
         for (uint32 i = 0; i < m_NumberOfSwapchainImages; i++)
         {
             VulkanRenderTargetDesc renderTargetDesc = {
+                .Device = m_Device,
                 .Image = m_Images[i],
                 .ImageView = m_ImageViews[i],
+                .Format = m_SwapchainImageFormat,
+                .Layout = ImageLayout::UNDEFINED,
                 .ImageIndex = i,
                 .ImageAvailableSemaphore = m_ImageAvailableSemaphores[i],
                 .RenderCompleteSemaphore = m_RenderCompleteSemaphores[i],
-                .Format = m_SwapchainImageFormat,
                 .ImageWidth = m_ImageDimensions.x,
                 .ImageHeight = m_ImageDimensions.y
             };
@@ -306,9 +309,9 @@ namespace Astral {
         m_RenderTargets.clear();
         DestroyFences();
         DestroySemaphores();
-        DestroySwapchain();
 
         CreateSwapchain(width, height);
+
         CreateSemaphores();
         CreateFences();
         CreateRenderTargets();
