@@ -151,7 +151,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         AttachmentDescription metallicBufferDescription = {
@@ -161,7 +161,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         AttachmentDescription roughnessBufferDescription = {
@@ -171,7 +171,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         AttachmentDescription emissionBufferDescription = {
@@ -181,7 +181,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         AttachmentDescription normalBufferDescription = {
@@ -191,7 +191,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         AttachmentDescription depthBufferDescription = {
@@ -201,7 +201,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 0.0)
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
         };
 
         RenderGraphPass geometryPass = RenderGraphPass(OutputAttachmentDimensions, "GBuffer Pass", [&](){ GeometryPass(); });
@@ -250,8 +250,9 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
-        // m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
+        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
+        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures);
+        m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -272,7 +273,7 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
             .FinalLayout = ImageLayout::PRESENT_SRC_KHR,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
         };
 
         imguiRenderPass->BeginBuildingRenderPass();
