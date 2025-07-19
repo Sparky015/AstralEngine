@@ -25,6 +25,8 @@ namespace Astral {
         m_Image(),
         m_ImageView(),
         m_Sampler(),
+        m_NumLayers(desc.NumLayers),
+		m_TextureType(desc.TextureType),
 		m_IsSwapchainOwned(false)
     {
         CreateTexture(desc.ImageUsageFlags);
@@ -51,6 +53,7 @@ namespace Astral {
     	}
     }
 
+
     VulkanTexture::VulkanTexture(VkDevice device, VkImage image, VkImageView imageView, ImageLayout layout, ImageFormat format, uint32 width, uint32 height) :
 		m_DeviceManager(nullptr),
 		m_Device(device),
@@ -62,6 +65,8 @@ namespace Astral {
 		m_ImageView(imageView),
 		m_CurrentLayout(ConvertImageLayoutToVkImageLayout(layout)),
 		m_Sampler(),
+        m_NumLayers(1),
+		m_TextureType(TextureType::IMAGE_2D),
 		m_IsSwapchainOwned(true)
     {
     	CreateImageSampler();
@@ -107,15 +112,17 @@ namespace Astral {
     	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags); // TODO: Make the generic ImageUsageFlags contain actual flags
         VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | userUsageFlag; // TODO: Remove the predefined flags
 
+    	VkImageCreateFlags createFlags = (m_TextureType == TextureType::CUBEMAP) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
+
         VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
             .pNext = nullptr,
-            .flags = 0,
+            .flags = createFlags,
             .imageType = VK_IMAGE_TYPE_2D,
             .format = m_Format,
             .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},
             .mipLevels = 1,
-            .arrayLayers = 1,
+            .arrayLayers = m_NumLayers,
             .samples = VK_SAMPLE_COUNT_1_BIT,
             .tiling = VK_IMAGE_TILING_OPTIMAL,
             .usage = imageUsage,
@@ -177,14 +184,20 @@ namespace Astral {
     		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
     	}
 
-
+    	VkImageViewType viewType;
+    	switch (m_TextureType)
+    	{
+    		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+		    default: viewType = VK_IMAGE_VIEW_TYPE_2D;
+    	}
 
     	VkImageViewCreateInfo imageViewCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
     		.pNext = nullptr,
     		.flags = 0,
     		.image = m_Image,
-    		.viewType = VK_IMAGE_VIEW_TYPE_2D,
+    		.viewType = viewType,
     		.format = m_Format,
     		.components = {
 				.r = VK_COMPONENT_SWIZZLE_R,
@@ -216,8 +229,7 @@ namespace Astral {
     {
         uint32 bytesPerPixel = GetBytesPerTexFormat(m_Format);
         uint32 layerSize = m_ImageWidth * m_ImageHeight * bytesPerPixel;
-        uint32 layerCount = 1;
-        uint32 imageSize = layerCount * layerSize;
+        uint32 imageSize = m_NumLayers * layerSize;
 
         VulkanBufferDesc bufferDesc = {
             .Device = m_Device,
@@ -254,7 +266,7 @@ namespace Astral {
                 .baseMipLevel = 0,
                 .levelCount = 1,
                 .baseArrayLayer = 0,
-                .layerCount = 1
+                .layerCount = m_NumLayers
             }
         };
 
@@ -437,7 +449,7 @@ namespace Astral {
 				.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
     			.mipLevel = 0,
     			.baseArrayLayer = 0,
-    			.layerCount = 1
+    			.layerCount = m_NumLayers
     		},
     		.imageOffset = {.x = 0, .y = 0, .z = 0},
     		.imageExtent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},

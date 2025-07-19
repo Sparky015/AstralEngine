@@ -44,6 +44,7 @@ namespace Astral {
         BufferHandle CreateUniformBuffer(void* data, uint32 size) override;
         DescriptorSetHandle CreateDescriptorSet() override;
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override;
+        TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
 
         void WaitIdle() override;
 
