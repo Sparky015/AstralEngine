@@ -16,6 +16,12 @@
 
 namespace Astral {
 
+    enum class TextureType : uint32
+    {
+        IMAGE_2D,
+        CUBEMAP
+    };
+
     /**
     * @brief Information to create a vulkan texture from
     */
@@ -30,6 +36,8 @@ namespace Astral {
         ImageUsageFlags ImageUsageFlags;
         uint32 ImageWidth;
         uint32 ImageHeight;
+        uint32 NumLayers;
+        TextureType TextureType;
     };
 
     /**
@@ -194,6 +202,8 @@ namespace Astral {
         VkImageView m_ImageView;
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
+        uint32 m_NumLayers;
+        TextureType m_TextureType;
 
         bool m_IsSwapchainOwned;
     };
