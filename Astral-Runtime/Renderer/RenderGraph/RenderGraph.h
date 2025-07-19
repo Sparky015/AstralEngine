@@ -214,6 +214,7 @@ namespace Astral {
 
         // Output textures and their dimensions
         std::vector<TextureHandle> m_OffscreenOutputTargets;
+        bool m_IsOutputRenderTarget{false};
         UVec2 m_ViewportDimensions{0};
 
 

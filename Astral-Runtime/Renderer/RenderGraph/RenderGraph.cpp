@@ -52,6 +52,7 @@ namespace Astral {
         m_OutputRenderPassIndex = GetRenderPassIndex(pass);
         ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
+        m_IsOutputRenderTarget = false;
         m_OffscreenOutputTargets = offscreenTargets;
         ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
@@ -66,6 +67,7 @@ namespace Astral {
         ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
         ASSERT(swapchainTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
+        m_IsOutputRenderTarget = true;
         for (RenderTargetHandle renderTarget : swapchainTargets)
         {
             m_OffscreenOutputTargets.push_back(renderTarget->GetAsTexture());
@@ -324,6 +326,11 @@ namespace Astral {
                     localAttachment.AttachmentDescription.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
                     localAttachment.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
                     localAttachment.AttachmentDescription.Format = m_OffscreenOutputTargets[0]->GetFormat();
+
+                    if (m_IsOutputRenderTarget && m_OffscreenOutputTargets[0]->GetLayout() == ImageLayout::UNDEFINED)
+                    {
+                        localAttachment.InitialLayout = ImageLayout::PRESENT_SRC_KHR;
+                    }
                 }
 
                 renderPass->DefineAttachment(localAttachment.AttachmentDescription);
