@@ -17,11 +17,11 @@ layout (push_constant) uniform ModelData {
     uint hasNormalMap;
 } u_ModelData;
 
-layout(location = 0) out vec3 albedoProp;
-layout(location = 1) out float metallicProp;
-layout(location = 2) out float roughnessProp;
-layout(location = 3) out vec3 emissionProp;
-layout(location = 4) out vec3 normalProp;
+layout(location = 0) out vec4 albedoProp;
+layout(location = 1) out vec4 metallicProp;
+layout(location = 2) out vec4 roughnessProp;
+layout(location = 3) out vec4 emissionProp;
+layout(location = 4) out vec4 normalProp;
 
 
 void main()
@@ -46,9 +46,9 @@ void main()
         normal = normalize(TBN * tangentSpaceNormal);
     }
 
-    albedoProp = baseColor;
-    metallicProp = metallic;
-    roughnessProp = roughness;
-    emissionProp = emission;
-    normalProp = (normal + 1.0f) * .5f;
+    albedoProp = vec4(baseColor, 1.0f);
+    metallicProp = vec4(metallic, 0.0f, 0.0f, 1.0f);
+    roughnessProp = vec4(roughness, 0.0f, 0.0f, 1.0f);
+    emissionProp = vec4(emission, 1.0f);
+    normalProp = vec4((normal + 1.0f) * .5f, 1.0f);
 }
