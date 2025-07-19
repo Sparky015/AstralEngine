@@ -27,13 +27,14 @@ namespace Astral {
 
         if (filePath.is_relative())
         {
-            std::string fullFilePath = m_AssetDirectoryPath.string() + filePath.string();
-            ASSERT(std::filesystem::exists(fullFilePath), "Given scene file path does not exist! (" << fullFilePath << ")")
-            SceneLoader::LoadSceneAssets(fullFilePath);
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            ASSERT(std::filesystem::exists(fullPath), "Given scene file path does not exist! (" << fullPath << ")")
+            SceneLoader::LoadSceneAssets(fullPath);
         }
         else
         {
-            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath.string() << ")")
+            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath << ")")
             SceneLoader::LoadSceneAssets(filePath);
         }
     }
