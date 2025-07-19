@@ -65,6 +65,21 @@ namespace Astral {
 		m_IsSwapchainOwned(true)
     {
     	CreateImageSampler();
+
+    	if (m_CurrentLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ||
+					(m_Format == VK_FORMAT_D16_UNORM) ||
+					(m_Format == VK_FORMAT_X8_D24_UNORM_PACK32) ||
+					(m_Format == VK_FORMAT_D32_SFLOAT) ||
+					(m_Format == VK_FORMAT_S8_UINT) ||
+					(m_Format == VK_FORMAT_D16_UNORM_S8_UINT) ||
+					(m_Format == VK_FORMAT_D24_UNORM_S8_UINT))
+    	{
+    		m_ImageAspect = IMAGE_ASPECT_DEPTH_BIT | IMAGE_ASPECT_STENCIL_BIT;
+    	}
+    	else
+    	{
+    		m_ImageAspect = IMAGE_ASPECT_COLOR_BIT;
+    	}
     }
 
 
