@@ -145,6 +145,11 @@ namespace Astral {
         void SolveRenderPassExecutionOrder();
 
         /**
+         * @brief Manages the layout transitions of attachments between render passes
+         */
+        void CompileRenderPassBarriers();
+
+        /**
          * @brief Creates the RHI render pass object for each render pass
          */
         void BuildRenderPassObjects();

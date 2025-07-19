@@ -64,9 +64,12 @@ namespace Astral {
         m_OutputAttachmentName = attachmentName;
         m_OutputRenderPassIndex = GetRenderPassIndex(pass);
         ASSERT(m_OutputRenderPassIndex != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
+        ASSERT(swapchainTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
-        // m_OffscreenOutputTargets = swapchainTargets; // TODO: Make a way to use swapchain images directly
-        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
+        for (RenderTargetHandle renderTarget : swapchainTargets)
+        {
+            m_OffscreenOutputTargets.push_back(renderTarget->GetAsTexture());
+        }
 
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
@@ -76,6 +79,7 @@ namespace Astral {
     {
         BuildRenderGraph();
         SolveRenderPassExecutionOrder();
+        CompileRenderPassBarriers();
         BuildRenderPassObjects();
         BuildRenderPassResources();
     }
@@ -168,11 +172,14 @@ namespace Astral {
 
     void RenderGraph::ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets)
     {
-        // m_OffscreenOutputTargets = swapchainTargets; // TODO: Make a way to use swapchain images directly
-        ASSERT(swapchainTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
-        m_ViewportDimensions = swapchainTargets[0]->GetDimensions();
+        std::vector<TextureHandle> renderTargetTextures;
 
-        BuildRenderPassResources();
+        for (RenderTargetHandle renderTarget : swapchainTargets)
+        {
+            renderTargetTextures.push_back(renderTarget->GetAsTexture());
+        }
+
+        ResizeResources(renderTargetTextures);
     }
 
 
@@ -222,13 +229,6 @@ namespace Astral {
                 AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
                 AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
                 userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
-
-
-
-                // Match the final layout of the producing render pass to the optimal layout of the consuming render pass
-                AttachmentDescription& producerAttachmentDesc = producerPassScopeLocal.GetAttachments()[localAttachmentIndex].AttachmentDescription;
-                producerAttachmentDesc.StoreOp = AttachmentStoreOp::STORE;
-                producerAttachmentDesc.FinalLayout = externalAttachment.OptimalImageLayout;
             }
         }
     }
@@ -276,6 +276,29 @@ namespace Astral {
     }
 
 
+    void RenderGraph::CompileRenderPassBarriers()
+    {
+        // Make the producer pass' final layout the consuming pass' optimal layout
+        for (PassIndex consumingPassIndex : m_ExecutionOrder)
+        {
+            const RenderGraphPass& consumingPass = m_Passes[consumingPassIndex];
+
+            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetInputAttachments())
+            {
+                const std::string_view& inputAttachmentName = externalAttachment.Name;
+                RenderGraphPass& producerPassScopeLocal = *externalAttachment.OwningPass;
+                AttachmentIndex localAttachmentIndex = producerPassScopeLocal.GetLocalAttachment(inputAttachmentName);
+                ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
+
+                // Match the final layout of the producing render pass to the optimal layout of the consuming render pass
+                AttachmentDescription& producerAttachmentDesc = producerPassScopeLocal.GetAttachments()[localAttachmentIndex].AttachmentDescription;
+                producerAttachmentDesc.StoreOp = AttachmentStoreOp::STORE;
+                producerAttachmentDesc.FinalLayout = externalAttachment.OptimalImageLayout;
+            }
+        }
+    }
+
+
     void RenderGraph::BuildRenderPassObjects()
     {
 
@@ -298,6 +321,8 @@ namespace Astral {
 
                 if (renderPassIndex == m_OutputRenderPassIndex && localAttachment.Name == m_OutputAttachmentName)
                 {
+                    localAttachment.AttachmentDescription.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
+                    localAttachment.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
                     localAttachment.AttachmentDescription.Format = m_OffscreenOutputTargets[0]->GetFormat();
                 }
 
