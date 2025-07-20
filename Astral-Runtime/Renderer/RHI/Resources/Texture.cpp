@@ -20,21 +20,29 @@ namespace Astral {
 
     TextureHandle Texture::CreateTexture(const std::filesystem::path& filePath)
     {
-        int m_Width;
-        int m_Height;
-        int m_BPP; // bytes per pixel
+        int width;
+        int height;
+        int bpp; // bytes per pixel
         ImageFormat imageFormat;
         unsigned char* data;
+
+        gli::texture texture; // Only used if the file extension is .dds or .ktx
 
 
         if (filePath.extension() == ".dds" || filePath.extension() == ".ktx")
         {
-            gli::texture2d texture{gli::load(filePath.string().c_str())};
+            texture = gli::load(filePath.string().c_str());
+
+            if (texture.target() != gli::TARGET_2D)
+            {
+                WARN("Loaded texture is not a 2D image!: " << filePath)
+                return nullptr;
+            }
 
             gli::extent2d extent = texture.extent();
-            m_Width = extent.x;
-            m_Height = extent.y;
-            data = (unsigned char*)texture[0].data();
+            width = extent.x;
+            height = extent.y;
+            data = (unsigned char*)texture.base_face();
             gli::format gliImageFormat = texture.format();
             if (gli::is_compressed(gliImageFormat))
             {
@@ -47,7 +55,7 @@ namespace Astral {
         else
         {
             stbi_set_flip_vertically_on_load(true);
-            data = stbi_load(filePath.string().c_str(), &m_Width, &m_Height, &m_BPP, 4);
+            data = stbi_load(filePath.string().c_str(), &width, &height, &bpp, 4);
             imageFormat = ImageFormat::R8G8B8A8_UNORM;
         }
 
@@ -57,7 +65,7 @@ namespace Astral {
             return nullptr;
         }
 
-        TextureHandle textureHandle = Texture::CreateTexture(data, m_Width, m_Height, imageFormat);
+        TextureHandle textureHandle = Texture::CreateTexture(data, width, height, imageFormat);
 
         if (!(filePath.extension() == ".dds" || filePath.extension() == ".ktx"))
         {
@@ -65,6 +73,28 @@ namespace Astral {
         }
 
         return textureHandle;
+    }
+
+
+    GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    {
+        TextureCreateInfo textureCreateInfo = {
+            .Format = imageFormat,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .Dimensions = UVec2(width, height),
+            .ImageData = (uint8*)data,
+        };
+
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
+        }
     }
 
 
