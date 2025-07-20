@@ -39,7 +39,7 @@ namespace Astral {
         AttachmentStoreOp StoreOp;
         ImageLayout InitialLayout;
         ImageLayout FinalLayout;
-        Vec4 ClearColor; // Only use when load op is set to clear
+        UVec4 ClearColor; // Only use when load op is set to clear
 
         bool operator==(const AttachmentDescription&) const = default;
     };

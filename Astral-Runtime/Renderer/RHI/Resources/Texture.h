@@ -109,6 +109,12 @@ namespace Astral {
         static GraphicsRef<Texture> CreateTexture(const std::filesystem::path& filePath);
 
         /**
+         * @brief  Creates a cubemap from a file path
+         * @return The texture handle
+         */
+        static GraphicsRef<Texture> CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
+
+        /**
          * @brief  Creates a texture from the image data
          * @return The texture handle
          */

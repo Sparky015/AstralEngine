@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/FixedIntegerTypes.h"
+#include "Debug/Utilities/Error.h"
 
 namespace Astral {
 
@@ -319,5 +320,18 @@ namespace Astral {
         R16G16_S10_5_NV,
         MAX_ENUM
     };
+
+    uint32 GetBytesPerTexel(ImageFormat imageFormat);
+
+    inline uint32 GetBytesPerTexel(ImageFormat imageFormat)
+    {
+        switch (imageFormat)
+        {
+            // TODO: Finish for rest of image formats
+            case ImageFormat::R8G8B8A8_UNORM: return 4;
+            case ImageFormat::MAX_ENUM: ASTRAL_ERROR("Unsupported format!")
+            default: ASTRAL_ERROR("Unsupported format!")
+        }
+    }
 
 }
