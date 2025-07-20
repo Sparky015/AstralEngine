@@ -198,7 +198,7 @@ namespace Astral {
         // Converting each external attachment to all render passes to point to the render graph owned render pass instances
         for (size_t renderPassIndex = 0; renderPassIndex < m_Passes.size(); renderPassIndex++)
         {
-            for (RenderGraphPass::ExternalAttachment& externalAttachment : m_Passes[renderPassIndex].GetInputAttachments())
+            for (RenderGraphPass::ExternalAttachment& externalAttachment : m_Passes[renderPassIndex].GetReadInputAttachments())
             {
                 PassIndex externalPassIndex = GetRenderPassIndex(*externalAttachment.OwningPass);
                 ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
@@ -218,7 +218,22 @@ namespace Astral {
         {
             const RenderGraphPass& consumingPass = m_Passes[i];
 
-            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetInputAttachments())
+            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetReadInputAttachments())
+            {
+                const std::string_view& inputAttachmentName = externalAttachment.Name;
+                RenderGraphPass& producerPassScopeLocal = *externalAttachment.OwningPass;
+                AttachmentIndex localAttachmentIndex = producerPassScopeLocal.GetLocalAttachment(inputAttachmentName);
+                ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
+
+                PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
+                ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
+                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+            }
+
+            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetWriteInputAttachments())
             {
                 const std::string_view& inputAttachmentName = externalAttachment.Name;
                 RenderGraphPass& producerPassScopeLocal = *externalAttachment.OwningPass;
@@ -285,7 +300,7 @@ namespace Astral {
         {
             const RenderGraphPass& consumingPass = m_Passes[consumingPassIndex];
 
-            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetInputAttachments())
+            for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetReadInputAttachments())
             {
                 const std::string_view& inputAttachmentName = externalAttachment.Name;
                 RenderGraphPass& producerPassScopeLocal = *externalAttachment.OwningPass;
@@ -340,22 +355,20 @@ namespace Astral {
 
             //      Note: The rhi render pass object doesn't need to know about read inputs coming from another render pass
 
-            // Define the external attachments for the render pass
-            // for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
-            // {
-            //     PassIndex externalPassIndex = GetRenderPassIndex(externalAttachment.OwningPass);
-            //     ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
-            //
-            //     AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass.GetLocalAttachment(externalAttachment.Name);
-            //     ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
-            //
-            //     RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass.GetAttachments()[externalPassAttachmentIndex];
-            //     // TODO: Change the store op of the owning render pass to always be AttachmentStoreOp::Store
-            //     // TODO: Change the final layout of the producing render pass to always be the optimal layout of the consuming render pass
-            //     inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
-            //     inputAttachment.AttachmentDescription.InitialLayout = externalAttachment.OptimalImageLayout;
-            //     renderPass->DefineAttachment(inputAttachment.AttachmentDescription);
-            // }
+            // Define the external write attachments for the render pass
+            for (RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetWriteInputAttachments())
+            {
+                PassIndex externalPassIndex = GetRenderPassIndex(*externalAttachment.OwningPass);
+                ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass->GetLocalAttachment(externalAttachment.Name);
+                ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
+
+                RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass->GetAttachments()[externalPassAttachmentIndex];
+                inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
+                inputAttachment.AttachmentDescription.InitialLayout = externalAttachment.OptimalImageLayout;
+                renderPass->DefineAttachment(inputAttachment.AttachmentDescription);
+            }
         }
 
 
@@ -405,14 +418,33 @@ namespace Astral {
 
             //      Note: The rhi render pass object doesn't need to know about read inputs coming from another render pass
 
-            // uint32 numOfLocalAttachments = passLocalAttachments.size();
-            // uint32 externalPassAttachmentIndex = numOfLocalAttachments;
-            // for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetInputAttachments())
-            // {
-            //     renderPass->LinkInputAttachment(externalPassAttachmentIndex, externalAttachment.OptimalImageLayout);
-            //     externalPassAttachmentIndex++;
-            // }
+            uint32 numOfLocalAttachments = passLocalAttachments.size();
+            uint32 attachmentIndex = numOfLocalAttachments;
+            for (RenderGraphPass::ExternalAttachment externalAttachment : pass.GetWriteInputAttachments())
+            {
+                PassIndex externalPassIndex = GetRenderPassIndex(*externalAttachment.OwningPass);
+                ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
+                AttachmentIndex externalPassAttachmentIndex = externalAttachment.OwningPass->GetLocalAttachment(externalAttachment.Name);
+                ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
+
+                RenderGraphPass::LocalAttachment inputAttachment = externalAttachment.OwningPass->GetAttachments()[externalPassAttachmentIndex];
+
+                if (inputAttachment.AttachmentType == AttachmentType::COLOR)
+                {
+                    renderPass->AddColorAttachment(attachmentIndex, externalAttachment.OptimalImageLayout);
+                }
+                else if (inputAttachment.AttachmentType == AttachmentType::RESOLVE)
+                {
+                    renderPass->AddResolveAttachment(attachmentIndex, externalAttachment.OptimalImageLayout);
+                }
+                else if (inputAttachment.AttachmentType == AttachmentType::DEPTH_STENCIL)
+                {
+                    renderPass->AddDepthStencilAttachment(attachmentIndex, externalAttachment.OptimalImageLayout);
+                }
+
+                attachmentIndex++;
+            }
 
             renderPass->EndBuildingSubpass();
             renderPass->EndBuildingRenderPass();
@@ -511,7 +543,7 @@ namespace Astral {
                 // Pull external attachment textures from the producer render pass' resources and add them to a descriptor set to read from
                 passResources[i].ReadAttachmentDescriptorSet = device.CreateDescriptorSet();
                 passResources[i].ReadAttachmentDescriptorSet->BeginBuildingSet();
-                for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetInputAttachments())
+                for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetReadInputAttachments())
                 {
                     PassIndex externalPassIndex = GetRenderPassIndex(*externalAttachment.OwningPass);
                     ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")

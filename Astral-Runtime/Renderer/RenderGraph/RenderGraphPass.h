@@ -15,6 +15,13 @@ namespace Astral {
     // Used to reference the dimensions of the output texture/render target of the render graph
     static constexpr Vec2 OutputAttachmentDimensions = Vec2(-1);
 
+    enum class AttachmentType
+    {
+        COLOR,
+        DEPTH_STENCIL,
+        RESOLVE
+    };
+
     /**
      * @brief Defines a render pass that can be added to a render graph
      * @warning Each instance should only be used with one render graph at a time
@@ -32,6 +39,7 @@ namespace Astral {
             std::string_view Name;
             ImageLayout OptimalImageLayout;
             ImageLayout InitialLayout;
+            AttachmentType AttachmentType;
 
             bool operator==(const LocalAttachment& other) const noexcept = default;
         };
@@ -57,13 +65,22 @@ namespace Astral {
         explicit RenderGraphPass(Vec2 resourceDimensions, const std::string_view& name, const std::function<void()>& callback);
 
         /**
+         * @brief Links an attachment from another render pass to use as read input in this render pass
+         * @param owningSubpass Subpass that owns the attachment
+         * @param name Name of the attachment from owningSubpass
+         * @param optimalImageLayout The optimal image layout to put the attachment in when this render pass is executed
+         * @post  The owningSubpass pointer should remain valid until the render graph is built (@ref RenderGraph::EndBuildingRenderGraph is called)
+         */
+        void LinkReadInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout);
+
+        /**
          * @brief Links an attachment from another render pass to use as input in this render pass
          * @param owningSubpass Subpass that owns the attachment
          * @param name Name of the attachment from owningSubpass
          * @param optimalImageLayout The optimal image layout to put the attachment in when this render pass is executed
          * @post  The owningSubpass pointer should remain valid until the render graph is built (@ref RenderGraph::EndBuildingRenderGraph is called)
          */
-        void LinkInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout);
+        void LinkWriteInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout);
 
         /**
          * @brief Creates a color attachment and adds it to the render pass
@@ -109,17 +126,30 @@ namespace Astral {
         const std::vector<AttachmentIndex>& GetColorAttachments() const { return m_ColorAttachments; }
 
         /**
-         * @brief Gets the input attachments that were linked to this render pass
-         * @return The input attachments linked to this render pass
+         * @brief Gets the read input attachments that were linked to this render pass
+         * @return The read input attachments linked to this render pass
          * @note This is left non-const so it can be modified by the render graph for memory safety reasons
          */
-        std::vector<ExternalAttachment>& GetInputAttachments() { return m_InputAttachments; }
+        std::vector<ExternalAttachment>& GetReadInputAttachments() { return m_ReadInputAttachments; }
 
         /**
-         * @brief Gets the input attachments that were linked to this render pass
-         * @return The input attachments linked to this render pass
+         * @brief Gets the read input attachments that were linked to this render pass
+         * @return The read input attachments linked to this render pass
          */
-        const std::vector<ExternalAttachment>& GetInputAttachments() const { return m_InputAttachments; }
+        const std::vector<ExternalAttachment>& GetReadInputAttachments() const { return m_ReadInputAttachments; }
+
+        /**
+         * @brief Gets the write input attachments that were linked to this render pass
+         * @return The write input attachments linked to this render pass
+         * @note This is left non-const so it can be modified by the render graph for memory safety reasons
+         */
+        std::vector<ExternalAttachment>& GetWriteInputAttachments() { return m_WriteInputAttachments; }
+
+        /**
+         * @brief Gets the write input attachments that were linked to this render pass
+         * @return The write input attachments linked to this render pass
+         */
+        const std::vector<ExternalAttachment>& GetWriteInputAttachments() const { return m_WriteInputAttachments; }
 
         /**
          * @brief Gets the resolve attachment indices that were created by this render pass
@@ -166,7 +196,8 @@ namespace Astral {
         Vec2 m_WriteAttachmentDimensions;
 
         // All attachments linked to this render pass
-        std::vector<ExternalAttachment> m_InputAttachments;
+        std::vector<ExternalAttachment> m_ReadInputAttachments;
+        std::vector<ExternalAttachment> m_WriteInputAttachments;
 
         // Indices to m_Attachments that organize attachments into their attachment types
         std::vector<AttachmentIndex> m_ColorAttachments;

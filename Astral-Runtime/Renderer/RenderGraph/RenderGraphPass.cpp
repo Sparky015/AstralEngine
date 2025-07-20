@@ -20,7 +20,7 @@ namespace Astral {
     }
 
 
-    void RenderGraphPass::LinkInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    void RenderGraphPass::LinkReadInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout)
     {
         ExternalAttachment externalAttachment = {
             .OwningPass = owningSubpass,
@@ -28,7 +28,19 @@ namespace Astral {
             .OptimalImageLayout = optimalImageLayout,
         };
 
-        m_InputAttachments.push_back(externalAttachment);
+        m_ReadInputAttachments.push_back(externalAttachment);
+    }
+
+
+    void RenderGraphPass::LinkWriteInputAttachment(RenderGraphPass* owningSubpass, const std::string_view& name, ImageLayout optimalImageLayout)
+    {
+        ExternalAttachment externalAttachment = {
+            .OwningPass = owningSubpass,
+            .Name = name,
+            .OptimalImageLayout = optimalImageLayout,
+        };
+
+        m_WriteInputAttachments.push_back(externalAttachment);
     }
 
 
@@ -38,7 +50,8 @@ namespace Astral {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
             .OptimalImageLayout = optimalImageLayout,
-            .InitialLayout = attachmentDescription.InitialLayout
+            .InitialLayout = attachmentDescription.InitialLayout,
+            .AttachmentType = AttachmentType::COLOR,
         };
 
         m_Attachments.push_back(localAttachment);
@@ -54,7 +67,8 @@ namespace Astral {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
             .OptimalImageLayout = optimalImageLayout,
-            .InitialLayout = attachmentDescription.InitialLayout
+            .InitialLayout = attachmentDescription.InitialLayout,
+            .AttachmentType = AttachmentType::RESOLVE,
         };
 
         m_Attachments.push_back(localAttachment);
@@ -70,7 +84,8 @@ namespace Astral {
             .AttachmentDescription = attachmentDescription,
             .Name = name,
             .OptimalImageLayout = optimalImageLayout,
-            .InitialLayout = attachmentDescription.InitialLayout
+            .InitialLayout = attachmentDescription.InitialLayout,
+            .AttachmentType = AttachmentType::DEPTH_STENCIL,
         };
 
         m_Attachments.push_back(localAttachment);
@@ -94,7 +109,7 @@ namespace Astral {
     bool RenderGraphPass::operator==(const RenderGraphPass& other) const noexcept
     {
         return m_Attachments == other.m_Attachments &&
-                m_InputAttachments == other.m_InputAttachments &&
+                m_ReadInputAttachments == other.m_ReadInputAttachments &&
                 m_ColorAttachments == other.m_ColorAttachments &&
                 m_ResolveAttachments == other.m_ResolveAttachments &&
                 m_DepthStencilAttachment == other.m_DepthStencilAttachment;
