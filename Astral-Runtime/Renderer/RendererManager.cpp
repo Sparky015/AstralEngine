@@ -83,6 +83,9 @@ namespace Astral {
         // Demo Scene
         registry.CreateAsset<Texture>("Cubemaps/qwantani_dusk_2_puresky_2k.hdr");
 
+
+        // Cubemap Mesh
+        registry.CreateAsset<Mesh>("Meshes/Cube.obj");
     }
 
 }

@@ -150,8 +150,7 @@ namespace Astral::MeshLoader {
         }
         else
         {
-            WARN("Unknown mesh data combination needed to pick vertex shader!")
-            return nullptr;
+            vertexShader = registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals.vert");
         }
 
         Mesh meshInstance{};
