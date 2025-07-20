@@ -7,6 +7,9 @@ layout(location = 3) in vec3 a_Bitangents;
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
+    mat4 inverseCameraView;
+    mat4 inverseCameraProjection;
+    vec2 screenSize;
     vec3 cameraPosition;
     uint numLights;
 } u_SceneData;

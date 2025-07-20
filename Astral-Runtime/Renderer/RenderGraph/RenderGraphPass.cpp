@@ -52,6 +52,7 @@ namespace Astral {
             .OptimalImageLayout = optimalImageLayout,
             .InitialLayout = attachmentDescription.InitialLayout,
             .AttachmentType = AttachmentType::COLOR,
+            .LastKnownLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);
@@ -69,6 +70,7 @@ namespace Astral {
             .OptimalImageLayout = optimalImageLayout,
             .InitialLayout = attachmentDescription.InitialLayout,
             .AttachmentType = AttachmentType::RESOLVE,
+            .LastKnownLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);
@@ -86,6 +88,7 @@ namespace Astral {
             .OptimalImageLayout = optimalImageLayout,
             .InitialLayout = attachmentDescription.InitialLayout,
             .AttachmentType = AttachmentType::DEPTH_STENCIL,
+            .LastKnownLayout = attachmentDescription.InitialLayout
         };
 
         m_Attachments.push_back(localAttachment);

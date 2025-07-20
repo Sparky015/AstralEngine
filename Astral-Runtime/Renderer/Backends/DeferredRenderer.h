@@ -86,6 +86,7 @@ namespace Astral {
 
         void GeometryPass();
         void LightingPass();
+        void CubemapPass();
 
 
         RenderGraph m_RenderGraph;
@@ -104,6 +105,7 @@ namespace Astral {
 
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
+        DescriptorSetHandle m_Cubemap;
     };
 
 }

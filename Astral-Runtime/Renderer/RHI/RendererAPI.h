@@ -32,6 +32,7 @@ namespace Astral {
         static void NameObject(TextureHandle textureHandle, std::string_view name);
         static void NameObject(ShaderHandle shaderHandle, std::string_view name);
         static void NameObject(FramebufferHandle framebufferHandle, std::string_view name);
+        static void NameObject(CommandBufferHandle commandBuffer, std::string_view name);
 
         static void CallImGuiDraws(CommandBufferHandle commandBufferHandle);
 

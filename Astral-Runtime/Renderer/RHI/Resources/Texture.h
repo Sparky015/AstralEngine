@@ -82,11 +82,17 @@ namespace Astral {
         virtual ImageFormat GetFormat() = 0;
 
         /**
+         * @brief  Gets the number of layers that the texture has
+         * @return The number of layers that the texture has
+         */
+        virtual uint32 GetNumLayers() = 0;
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native sampler handle of the selected renderer api backend
          */
-        virtual void* GetSampler() = 0;
+        virtual void* GetNativeSampler() = 0;
 
         /**
          * @brief  Gets the native image handle of the texture

@@ -38,7 +38,6 @@ namespace Astral {
     {
     public:
 
-        // TODO: Add support for writing to a texture created by another render pass
         // TODO: Add support for adding buffers as a resource to a render pass
         // TODO: Add support for texture aliasing
 
@@ -55,9 +54,15 @@ namespace Astral {
          * @brief Adds a render pass to the render graph
          * @param pass The render pass to add to the graph
          * @pre   @ref BeginBuildingRenderGraph is called first
-         * @post  @ref EndBuildingRenderGraph is called after all passes and output resources are added
          */
         void AddPass(const RenderGraphPass& pass);
+
+        /**
+         * @brief Adds a output render pass to the render graph
+         * @param pass The render pass to add to the graph
+         * @pre   @ref BeginBuildingRenderGraph is called first
+         */
+        void AddOutputPass(const RenderGraphPass& pass);
 
         /**
          * @brief Sets the output of the render graph to a specific attachment in a render pass
@@ -148,6 +153,12 @@ namespace Astral {
          * @brief Manages the layout transitions of attachments between render passes
          */
         void CompileRenderPassBarriers();
+
+        /**
+         * @brief Manages the layout transitions of read attachments during execution
+         */
+        void TransitionReadAttachmentLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32
+                                             swapchainImageIndex);
 
         /**
          * @brief Creates the RHI render pass object for each render pass

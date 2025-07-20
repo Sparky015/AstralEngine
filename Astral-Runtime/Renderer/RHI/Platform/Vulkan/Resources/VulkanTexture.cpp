@@ -210,7 +210,7 @@ namespace Astral {
 				.baseMipLevel = 0,
 				.levelCount = 1,
 				.baseArrayLayer = 0,
-				.layerCount = 1,
+				.layerCount = m_NumLayers,
     		}
     	};
 
@@ -280,7 +280,8 @@ namespace Astral {
 					(m_Format == VK_FORMAT_D32_SFLOAT) ||
 					(m_Format == VK_FORMAT_S8_UINT) ||
 					(m_Format == VK_FORMAT_D16_UNORM_S8_UINT) ||
-					(m_Format == VK_FORMAT_D24_UNORM_S8_UINT))
+					(m_Format == VK_FORMAT_D24_UNORM_S8_UINT) ||
+					(m_Format == VK_FORMAT_D32_SFLOAT_S8_UINT))
 		{
 			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 			m_ImageAspect = IMAGE_ASPECT_DEPTH_BIT | IMAGE_ASPECT_STENCIL_BIT;
