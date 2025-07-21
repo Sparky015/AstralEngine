@@ -110,6 +110,12 @@ namespace Astral {
     }
 
 
+    void RendererAPI::NameObject(CommandBufferHandle commandBuffer, std::string_view name)
+    {
+        s_RendererCommands->NameObject(commandBuffer, name);
+    }
+
+
     void RendererAPI::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         s_RendererCommands->CallImGuiDraws(commandBufferHandle);

@@ -40,6 +40,7 @@ namespace Astral {
             ImageLayout OptimalImageLayout;
             ImageLayout InitialLayout;
             AttachmentType AttachmentType;
+            ImageLayout LastKnownLayout;
 
             bool operator==(const LocalAttachment& other) const noexcept = default;
         };

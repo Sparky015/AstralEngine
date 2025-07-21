@@ -160,8 +160,8 @@ namespace Astral {
             outCubemap.emplace_back(nullptr, ImageFormat::R8G8B8A8_UNORM, faceSideLength, faceSideLength);
         }
 
-        uint32 maxPixelWidthIndex = equirectangularImageData.GetPixelWidth();
-        uint32 maxPixelHeightIndex = equirectangularImageData.GetPixelHeight();
+        uint32 maxPixelWidthIndex = equirectangularImageData.GetPixelWidth() - 1;
+        uint32 maxPixelHeightIndex = equirectangularImageData.GetPixelHeight() - 1;
 
         for (int faceIndex = 0; faceIndex < numberOfFaces; faceIndex++)
         {
@@ -203,20 +203,18 @@ namespace Astral {
 
     Vec3 TextureLoader::details::ConvertFaceCoordinatesToCartesian(uint32 x, uint32 y, uint32 faceIndex, uint32 faceSideLength)
     {
-        const float u = (static_cast<float>(x) + 0.5f) / static_cast<float>(faceSideLength);
-        const float v = (static_cast<float>(y) + 0.5f) / static_cast<float>(faceSideLength);
-        const float s = 2.0f * u - 1.0f;
-        const float t = 2.0f * v - 1.0f;
+        const float U = 2.0f * x / faceSideLength;
+        const float V = 2.0f * y / faceSideLength;
 
         Vec3 cartesianCoords;
         switch (faceIndex)
         {
-            case 0: cartesianCoords = { 1.0f, -t, -s }; break; // Positive X
-            case 1: cartesianCoords = {-1.0f, -t,  s }; break; // Negative X
-            case 2: cartesianCoords = {  s,  1.0f,  t }; break; // Positive Y
-            case 3: cartesianCoords = {  s, -1.0f, -t }; break; // Negative Y
-            case 4: cartesianCoords = {  s, -t,  1.0f }; break; // Positive Z
-            case 5: cartesianCoords = { -s, -t, -1.0f }; break; // Negative Z
+            case 0: cartesianCoords = { U - 1.0f, 1.0f, V - 1.0f }; break; // Positive X
+            case 1: cartesianCoords = {1.0f - U, -1.0f,  V - 1.0f }; break; // Negative X
+            case 2: cartesianCoords = {  1.0f - V,  U - 1.0f,  -1.0f }; break; // Positive Y (I flipped Y here for Vulkan!!)
+            case 3: cartesianCoords = {  V - 1.0f,  U - 1.0f,  1.0f }; break; // Negative Y
+            case 4: cartesianCoords = {  -1.0f, U - 1.0f,  V - 1.0f }; break; // Positive Z
+            case 5: cartesianCoords = {  1.0f, 1.0f - U,  V - 1.0f }; break; // Negative Z
             default: ASTRAL_ERROR("Unsupported face index!");
         }
         return cartesianCoords;

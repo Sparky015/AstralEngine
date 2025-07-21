@@ -259,9 +259,10 @@ namespace Astral {
         thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
         thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
         VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
-        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
 
-        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
+        // std::string imageViewName = std::string(name) + "_ImageView";
+        VkDebugUtilsObjectNameInfoEXT imageViewNameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_IMAGE_VIEW,
@@ -269,7 +270,32 @@ namespace Astral {
             .pObjectName = name.data(),
         };
 
-        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+        vkSetDebugUtilsObjectNameEXT(device, &imageViewNameInfo);
+
+        VkImage image = (VkImage)textureHandle->GetNativeImage();
+        // std::string imageName = std::string(name) + "_Image";
+        VkDebugUtilsObjectNameInfoEXT imageNameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_IMAGE,
+            .objectHandle = (uint64)image,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &imageNameInfo);
+
+
+        VkSampler sampler = (VkSampler)textureHandle->GetNativeSampler();
+        // std::string samplerName = std::string(name) + "_Sampler";
+        VkDebugUtilsObjectNameInfoEXT samplerNameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_SAMPLER,
+            .objectHandle = (uint64)sampler,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &samplerNameInfo);
     }
 
 
@@ -306,6 +332,27 @@ namespace Astral {
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_FRAMEBUFFER,
             .objectHandle = (uint64)framebuffer,
+            .pObjectName = name.data(),
+        };
+
+        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+    }
+
+
+    void VulkanRendererCommands::NameObject(CommandBufferHandle commandBufferHandle, std::string_view name)
+    {
+        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
+        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
+        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
+
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+
+        VkDebugUtilsObjectNameInfoEXT nameInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            .pNext = nullptr,
+            .objectType = VK_OBJECT_TYPE_COMMAND_BUFFER,
+            .objectHandle = (uint64)commandBuffer,
             .pObjectName = name.data(),
         };
 

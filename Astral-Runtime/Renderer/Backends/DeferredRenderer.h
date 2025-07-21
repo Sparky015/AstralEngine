@@ -49,6 +49,8 @@ namespace Astral {
         struct SceneData
         {
             Mat4 CameraViewProjection;
+            Mat4 CameraView;
+            Mat4 CameraProjection;
             Mat4 CameraInverseViewMat;
             Mat4 CameraInverseProjectionMat;
             Vec2 ScreenSize;
@@ -86,6 +88,7 @@ namespace Astral {
 
         void GeometryPass();
         void LightingPass();
+        void CubemapPass();
 
 
         RenderGraph m_RenderGraph;
@@ -104,6 +107,7 @@ namespace Astral {
 
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
+        DescriptorSetHandle m_Cubemap;
     };
 
 }

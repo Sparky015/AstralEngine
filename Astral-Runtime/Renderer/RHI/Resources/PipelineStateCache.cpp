@@ -45,7 +45,10 @@ namespace Astral {
         // Pipeline doesn't exist yet, so we create it now
         ASSERT(m_SceneDescriptorSet != nullptr, "Scene descriptor set was not given to the pipeline cache!")
         Device& device = RendererAPI::GetDevice();
-        std::vector<DescriptorSetHandle> descriptorSets{m_SceneDescriptorSet, material.DescriptorSet};
+
+        std::vector<DescriptorSetHandle> descriptorSets;
+        descriptorSets.push_back(m_SceneDescriptorSet);
+        if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
         PipelineStateObjectCreateInfo pipelineStateObjectCreateInfo = {
             .RenderPass = renderPass,

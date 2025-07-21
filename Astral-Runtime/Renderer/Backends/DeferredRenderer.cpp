@@ -50,6 +50,13 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Set_GBuffer.frag");
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
+
+        Device& device = RendererAPI::GetDevice();
+        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/charolettenbrunn_park_2k.hdr");
+        m_Cubemap = device.CreateDescriptorSet();
+        m_Cubemap->BeginBuildingSet();
+        m_Cubemap->AddDescriptorImageSampler(cubemapTexture, ShaderStage::FRAGMENT);
+        m_Cubemap->EndBuildingSet();
     }
 
 
@@ -88,6 +95,8 @@ namespace Astral {
 
         SceneData sceneData = {
             .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
+            .CameraView = sceneDescription.Camera.GetViewMatrix(),
+            .CameraProjection = sceneDescription.Camera.GetProjectionMatrix(),
             .CameraInverseViewMat = glm::inverse(sceneDescription.Camera.GetViewMatrix()),
             .CameraInverseProjectionMat = glm::inverse(sceneDescription.Camera.GetProjectionMatrix()),
             .ScreenSize = m_ViewportSize,
@@ -235,6 +244,11 @@ namespace Astral {
 
         lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
+        // TODO: Need to place barriers between the last layout and the next write
+        RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ CubemapPass(); });
+        cubemapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        cubemapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
         outputTextures.reserve(numFramesInFlight);
@@ -250,8 +264,7 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
-        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
-        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures);
+        m_RenderGraph.AddOutputPass(cubemapPass);
         m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
@@ -322,6 +335,8 @@ namespace Astral {
 
 
             context.SceneCommandBuffer = device.AllocateCommandBuffer();
+            std::string commandBufferName = std::string("Scene_Command_Buffer_") + std::to_string(i);
+            RendererAPI::NameObject(context.SceneCommandBuffer, commandBufferName);
             context.SceneRenderTarget = nullptr;
 
 
@@ -380,7 +395,7 @@ namespace Astral {
             imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
             imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image =offscreenRenderTarget;
+            imageMemoryBarrier.Image = offscreenRenderTarget;
             imageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
@@ -459,6 +474,9 @@ namespace Astral {
             framebuffer->BeginBuildingFramebuffer(width, height);
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
+
+            RendererAPI::NameObject(frameContext.WindowFramebuffer, "Window Framebuffer");
+            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), "Swapchain Render Target");
         }
     }
 
@@ -532,6 +550,37 @@ namespace Astral {
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
+    }
+
+
+    void DeferredRenderer::CubemapPass()
+    {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        // Cubemap
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
+        frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
+
+        Material cubemapMaterial{};
+        cubemapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
+        cubemapMaterial.DescriptorSet = m_Cubemap;
+
+        // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
+        PipelineStateObjectHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, cubemapMaterial, cubemapMesh, 0);
+        cubemapPipeline->Bind(commandBuffer);
+        cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+        cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubemapPipeline->BindDescriptorSet(commandBuffer, m_Cubemap, 1);
+
+        cubemapMesh.VertexBuffer->Bind(commandBuffer);
+        cubemapMesh.IndexBuffer->Bind(commandBuffer);
+        RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
     }
 
 

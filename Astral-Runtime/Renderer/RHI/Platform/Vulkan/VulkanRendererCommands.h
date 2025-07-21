@@ -29,6 +29,7 @@ namespace Astral {
         void NameObject(TextureHandle textureHandle, std::string_view name) override;
         void NameObject(ShaderHandle shaderHandle, std::string_view name) override;
         void NameObject(FramebufferHandle framebufferHandle, std::string_view name) override;
+        void NameObject(CommandBufferHandle commandBufferHandle, std::string_view name) override;
 
         void CallImGuiDraws(CommandBufferHandle commandBufferHandle) override;
     };

@@ -93,11 +93,17 @@ namespace Astral {
         ImageFormat GetFormat() override { return ConvertVkFormatToImageFormat(m_Format); }
 
         /**
+         * @brief  Gets the number of layers that the texture has
+         * @return The number of layers that the texture has
+         */
+        uint32 GetNumLayers() override { return m_NumLayers; }
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native vulkan sampler handle (VkSampler)
          */
-        void* GetSampler() override { return m_Sampler; }
+        void* GetNativeSampler() override { return m_Sampler; }
 
         /**
          * @brief  Gets the native image handle of the texture

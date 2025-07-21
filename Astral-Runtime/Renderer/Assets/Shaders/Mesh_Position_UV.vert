@@ -8,6 +8,11 @@ layout(location = 4) in vec2 a_TextureCoord;
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
+    mat4 cameraView;
+    mat4 cameraProjection;
+    mat4 inverseCameraView;
+    mat4 inverseCameraProjection;
+    vec2 screenSize;
     vec3 cameraPosition;
     uint numLights;
 } u_SceneData;

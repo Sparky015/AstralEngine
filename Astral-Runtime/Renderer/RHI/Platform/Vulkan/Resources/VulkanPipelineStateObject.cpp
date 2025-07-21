@@ -274,7 +274,7 @@ namespace Astral {
             .flags = 0,
             .depthTestEnable = true,
             .depthWriteEnable = true,
-            .depthCompareOp = VK_COMPARE_OP_LESS,
+            .depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL,
             .depthBoundsTestEnable = VK_FALSE,
             .stencilTestEnable = VK_FALSE,
             .front = {},
