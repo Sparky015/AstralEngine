@@ -7,6 +7,8 @@ layout(location = 3) in vec3 a_Bitangents;
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
+    mat4 cameraView;
+    mat4 cameraProjection;
     mat4 inverseCameraView;
     mat4 inverseCameraProjection;
     vec2 screenSize;
@@ -26,5 +28,8 @@ void main()
     v_Tangents = a_Tangents;
     v_Bitangents = a_Bitangents;
 
-    gl_Position = vec4(a_Position, 1.0f);
+    mat4 view = mat4(mat3(u_SceneData.cameraView));
+
+    vec4 position = u_SceneData.cameraProjection * view * vec4(a_Position, 1.0f);
+    gl_Position = position.xyww;
 }
