@@ -52,7 +52,7 @@ namespace Astral {
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
 
         Device& device = RendererAPI::GetDevice();
-        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/charolettenbrunn_park_2k.hdr");
+        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
         m_Cubemap = device.CreateDescriptorSet();
         m_Cubemap->BeginBuildingSet();
         m_Cubemap->AddDescriptorImageSampler(cubemapTexture, ShaderStage::FRAGMENT);
@@ -265,6 +265,7 @@ namespace Astral {
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddOutputPass(cubemapPass);
+        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
         m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
