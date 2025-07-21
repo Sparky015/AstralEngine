@@ -49,6 +49,8 @@ namespace Astral {
         struct SceneData
         {
             Mat4 CameraViewProjection;
+            Mat4 CameraView;
+            Mat4 CameraProjection;
             Mat4 CameraInverseViewMat;
             Mat4 CameraInverseProjectionMat;
             Vec2 ScreenSize;

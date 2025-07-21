@@ -52,7 +52,7 @@ namespace Astral {
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
 
         Device& device = RendererAPI::GetDevice();
-        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/qwantani_dusk_2_puresky_2k.hdr");
+        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/charolettenbrunn_park_2k.hdr");
         m_Cubemap = device.CreateDescriptorSet();
         m_Cubemap->BeginBuildingSet();
         m_Cubemap->AddDescriptorImageSampler(cubemapTexture, ShaderStage::FRAGMENT);
@@ -95,6 +95,8 @@ namespace Astral {
 
         SceneData sceneData = {
             .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
+            .CameraView = sceneDescription.Camera.GetViewMatrix(),
+            .CameraProjection = sceneDescription.Camera.GetProjectionMatrix(),
             .CameraInverseViewMat = glm::inverse(sceneDescription.Camera.GetViewMatrix()),
             .CameraInverseProjectionMat = glm::inverse(sceneDescription.Camera.GetProjectionMatrix()),
             .ScreenSize = m_ViewportSize,
@@ -393,7 +395,7 @@ namespace Astral {
             imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
             imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image =offscreenRenderTarget;
+            imageMemoryBarrier.Image = offscreenRenderTarget;
             imageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
@@ -472,6 +474,9 @@ namespace Astral {
             framebuffer->BeginBuildingFramebuffer(width, height);
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
+
+            RendererAPI::NameObject(frameContext.WindowFramebuffer, "Window Framebuffer");
+            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), "Swapchain Render Target");
         }
     }
 
