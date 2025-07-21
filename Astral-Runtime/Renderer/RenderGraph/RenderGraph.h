@@ -221,6 +221,7 @@ namespace Astral {
         // The render pass and attachment where the output textures should be used instead of creating new textures
         PassIndex m_OutputRenderPassIndex{0};
         std::string_view m_OutputAttachmentName;
+        PassIndex m_OutputAttachmentPass{0};
 
 
         // Output textures and their dimensions

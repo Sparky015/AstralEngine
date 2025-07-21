@@ -61,6 +61,9 @@ namespace Astral {
         m_OffscreenOutputTargets = offscreenTargets;
         ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
 
+        m_OutputAttachmentPass = GetRenderPassIndex(pass);
+        ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
+
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
 
@@ -75,6 +78,9 @@ namespace Astral {
         {
             m_OffscreenOutputTargets.push_back(renderTarget->GetAsTexture());
         }
+
+        m_OutputAttachmentPass = GetRenderPassIndex(pass);
+        ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
@@ -123,7 +129,7 @@ namespace Astral {
 
         // Transition all attachment layouts to their initial starting layout
         PipelineBarrier pipelineBarrier = {};
-        pipelineBarrier.SourceStageMask = PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        pipelineBarrier.SourceStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
         for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
@@ -136,10 +142,12 @@ namespace Astral {
             {
                 TextureHandle attachmentTexture = renderPassResource.AttachmentTextures[j];
 
+                if (attachmentTexture->GetLayout() == pass.GetAttachments()[j].InitialLayout) { continue; }
+
                 ImageMemoryBarrier imageMemoryBarrier = {};
-                imageMemoryBarrier.SourceAccessMask = 0;
+                imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
                 imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                imageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+                imageMemoryBarrier.OldLayout = attachmentTexture->GetLayout();
                 imageMemoryBarrier.NewLayout = pass.GetAttachments()[j].InitialLayout;
                 imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
                 imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
@@ -448,6 +456,7 @@ namespace Astral {
                 RenderGraphPass::LocalAttachment& inputAttachment = externalAttachment.OwningPass->GetAttachments()[externalPassAttachmentIndex];
 
                 // Manage layout transitions
+                inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
                 inputAttachment.AttachmentDescription.InitialLayout = inputAttachment.LastKnownLayout;
                 inputAttachment.AttachmentDescription.FinalLayout = externalAttachment.OptimalImageLayout;
                 inputAttachment.LastKnownLayout = inputAttachment.AttachmentDescription.FinalLayout;
@@ -570,7 +579,7 @@ namespace Astral {
                 // Define attachments for use in the render pass object
 
 
-                if (renderPassIndex != m_OutputRenderPassIndex || localAttachment.Name != m_OutputAttachmentName)
+                if (renderPassIndex != m_OutputAttachmentPass || localAttachment.Name != m_OutputAttachmentName)
                 {
                     TextureCreateInfo textureCreateInfo = {
                         .Format = localAttachment.AttachmentDescription.Format,
