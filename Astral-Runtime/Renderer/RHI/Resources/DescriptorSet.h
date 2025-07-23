@@ -32,6 +32,11 @@ namespace Astral {
         virtual void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) = 0;
         virtual void EndBuildingSet() = 0;
 
+        virtual void UpdateStorageBufferBinding(uint32 binding, BufferHandle bufferHandle) = 0;
+        virtual void UpdateUniformBinding(uint32 binding, BufferHandle bufferHandle) = 0;
+        virtual void UpdateImageSamplerBinding(uint32 binding, TextureHandle textureHandle) = 0;
+        virtual void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle textureHandle) = 0;
+
         virtual void* GetLayout() = 0;
         virtual void* GetNativeHandle() = 0;
 

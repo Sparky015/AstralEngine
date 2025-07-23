@@ -32,6 +32,11 @@ namespace Astral {
         void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) override;
         void EndBuildingSet() override;
 
+        void UpdateStorageBufferBinding(uint32 binding, BufferHandle newBufferHandle) override;
+        void UpdateUniformBinding(uint32 binding, BufferHandle newBufferHandle) override;
+        void UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle) override;
+        void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle newTextureHandle) override;
+
         void* GetLayout() override { return m_DescriptorSetLayout; }
         void* GetNativeHandle() override { return m_DescriptorSet; }
 

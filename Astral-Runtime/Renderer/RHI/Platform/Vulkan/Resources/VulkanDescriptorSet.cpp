@@ -175,6 +175,170 @@ namespace Astral {
     }
 
 
+    void VulkanDescriptorSet::UpdateStorageBufferBinding(uint32 binding, BufferHandle newBufferHandle)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, "Expected existing binding to be a storage buffer when updating a binding using UpdateStorageBufferBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 bufferIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
+        }
+
+        VkDescriptorBufferInfo bufferInfo = {};
+
+        m_Buffers[bufferIndex] = newBufferHandle;
+
+        VkBuffer buffer = (VkBuffer)newBufferHandle->GetNativeHandle();
+
+        bufferInfo.buffer = buffer;
+        bufferInfo.offset = 0;
+        bufferInfo.range = newBufferHandle->GetUsedSize();
+
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pBufferInfo = &bufferInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
+    void VulkanDescriptorSet::UpdateUniformBinding(uint32 binding, BufferHandle newBufferHandle)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, "Expected existing binding to be a uniform buffer when updating a binding using UpdateUniformBufferBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 bufferIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
+        }
+
+        VkDescriptorBufferInfo bufferInfo = {};
+
+        m_Buffers[bufferIndex] = newBufferHandle;
+
+        VkBuffer buffer = (VkBuffer)newBufferHandle->GetNativeHandle();
+
+        bufferInfo.buffer = buffer;
+        bufferInfo.offset = 0;
+        bufferInfo.range = newBufferHandle->GetUsedSize();
+
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pBufferInfo = &bufferInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
+    void VulkanDescriptorSet::UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "Expected existing binding to be a image sampler when updating a binding using UpdateImageSamplerBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+        }
+
+
+        m_Textures[textureIndex] = newTextureHandle;
+
+        VkDescriptorImageInfo imageInfo = {};
+        VkImageView imageView = (VkImageView)newTextureHandle->GetNativeImageView();
+        VkSampler sampler = (VkSampler)newTextureHandle->GetNativeSampler();
+
+        imageInfo.sampler = sampler;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageView = imageView;
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pImageInfo = &imageInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
+    void VulkanDescriptorSet::UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle newTextureHandle)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, "Expected existing binding to be a input attachment when updating a binding using UpdateSubpassInputAttachmentBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+        }
+
+
+        m_Textures[textureIndex] = newTextureHandle;
+
+        VkDescriptorImageInfo imageInfo = {};
+        VkImageView imageView = (VkImageView)newTextureHandle->GetNativeImageView();
+        VkSampler sampler = (VkSampler)newTextureHandle->GetNativeSampler();
+
+        imageInfo.sampler = sampler;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageView = imageView;
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pImageInfo = &imageInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
         // TODO: Find the exact usages and create the pool at VulkanDescriptorSet::EndBuildingSet
