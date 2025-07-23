@@ -143,12 +143,15 @@ namespace Astral {
         }
 
 
+        Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+
         std::vector<Light> lights;
         GetPointLightComponents(lights);
 
         SceneDescription sceneDescription = {
             .Camera = camera,
             .Lights = lights,
+            .EnvironmentMap = scene.EnvironmentMap
         };
 
 

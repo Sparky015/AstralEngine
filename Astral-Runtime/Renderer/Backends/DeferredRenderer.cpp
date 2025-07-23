@@ -50,13 +50,6 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Set_GBuffer.frag");
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
-
-        Device& device = RendererAPI::GetDevice();
-        TextureHandle cubemapTexture = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
-        m_Cubemap = device.CreateDescriptorSet();
-        m_Cubemap->BeginBuildingSet();
-        m_Cubemap->AddDescriptorImageSampler(cubemapTexture, ShaderStage::FRAGMENT);
-        m_Cubemap->EndBuildingSet();
     }
 
 
@@ -113,6 +106,11 @@ namespace Astral {
             frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
         }
         frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
+
+        if (sceneDescription.EnvironmentMap)
+        {
+            frameContext.EnvironmentMap->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap);
+        }
 
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
@@ -245,7 +243,7 @@ namespace Astral {
         lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
         // TODO: Need to place barriers between the last layout and the next write
-        RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ CubemapPass(); });
+        RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ EnvironmentMapPass(); });
         cubemapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         cubemapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
@@ -359,6 +357,13 @@ namespace Astral {
             context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
             context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
             context.WindowFramebuffer->EndBuildingFramebuffer();
+
+            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+            TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
+            context.EnvironmentMap = device.CreateDescriptorSet();
+            context.EnvironmentMap->BeginBuildingSet();
+            context.EnvironmentMap->AddDescriptorImageSampler(environmentMap, ShaderStage::FRAGMENT);
+            context.EnvironmentMap->EndBuildingSet();
         }
     }
 
@@ -554,7 +559,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::CubemapPass()
+    void DeferredRenderer::EnvironmentMapPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -567,17 +572,17 @@ namespace Astral {
         cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
         frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
-        Material cubemapMaterial{};
-        cubemapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
-        cubemapMaterial.DescriptorSet = m_Cubemap;
+        Material environmentMapMaterial{};
+        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
 
         // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
-        PipelineStateObjectHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, cubemapMaterial, cubemapMesh, 0);
+        PipelineStateObjectHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
         cubemapPipeline->Bind(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubemapPipeline->BindDescriptorSet(commandBuffer, m_Cubemap, 1);
+        cubemapPipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
 
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
