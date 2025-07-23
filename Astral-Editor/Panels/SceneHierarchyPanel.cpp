@@ -8,9 +8,9 @@
 
 #include "Core/Engine.h"
 #include "ECS/SceneManager.h"
+#include "Utilities/AssetFileHelpers.h"
 
 #include "imgui.h"
-#include "nfd.h"
 #include "Asset/AssetManager.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "Renderer/Common/Material.h"
@@ -309,78 +309,6 @@ namespace Astral {
     }
 
 
-    void GetAssetFilePath(AssetRegistry& registry, AssetID materialAssetID, char* inputBuffer, int inputBufferSize)
-    {
-        std::string filePath;
-        if (materialAssetID != NullAssetID)
-        {
-            filePath = registry.GetFilePathFromAssetID(materialAssetID).string();
-        }
-        else
-        {
-            filePath = "";
-        }
-        strncpy(inputBuffer, filePath.c_str(), inputBufferSize - 1);
-        inputBuffer[inputBufferSize - 1] = '\0'; // Ensure null-termination
-    }
 
-
-    void SelectFileFromDialog(std::string& outFilePath, std::string_view filterName, std::string_view filterSpec)
-    {
-        nfdu8char_t* outPath;
-        nfdu8filteritem_t filters[1] = { { filterName.data(), filterSpec.data() }};
-        nfdopendialogu8args_t args = {0};
-        args.filterList = filters;
-        args.filterCount = 1;
-        // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
-
-        nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
-
-        if (result == NFD_OKAY)
-        {
-            outFilePath = std::string(outPath);
-            NFD_FreePathU8(outPath);
-        }
-        else if (result == NFD_CANCEL)
-        {
-            outFilePath = "";
-            LOG("Open File Dialog Canceled")
-        }
-        else if (result == NFD_ERROR)
-        {
-            outFilePath = "";
-            WARN("NFD Error: " << NFD_GetError())
-        }
-    }
-
-
-    void SelectFileFromDialog(std::filesystem::path& outFilePath, std::string_view filterName,
-        std::string_view filterSpec)
-    {
-        nfdu8char_t* outPath;
-        nfdu8filteritem_t filters[1] = { { filterName.data(), filterSpec.data() }};
-        nfdopendialogu8args_t args = {0};
-        args.filterList = filters;
-        args.filterCount = 1;
-        // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
-
-        nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
-
-        if (result == NFD_OKAY)
-        {
-            outFilePath = std::string(outPath);
-            NFD_FreePathU8(outPath);
-        }
-        else if (result == NFD_CANCEL)
-        {
-            outFilePath = "";
-            LOG("Open File Dialog Canceled")
-        }
-        else if (result == NFD_ERROR)
-        {
-            outFilePath = "";
-            WARN("NFD Error: " << NFD_GetError())
-        }
-    }
 
 }

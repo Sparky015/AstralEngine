@@ -11,6 +11,7 @@
 #include "Panels/ViewportPanel.h"
 #include "Components/MenuBarComponent.h"
 #include "Core/Engine.h"
+#include "Panels/EnvironmentPanel.h"
 #include "Panels/PropertiesPanel.h"
 
 namespace Astral {
@@ -43,6 +44,7 @@ namespace Astral {
         ViewportPanel::Show();
         MenuBarComponent();
         PropertiesPanel();
+        EnvironmentPanel();
     }
 
 }
