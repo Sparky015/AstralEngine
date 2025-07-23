@@ -56,13 +56,15 @@ namespace Astral {
             }
 
             uint32 faceSideLength = cubemap[0].GetPixelWidth();
-            std::string stem = filePath.parent_path().string() + "/" + filePath.stem().string();
 
-            for (size_t i = 0; i < cubemap.size(); i++)
-            {
-                std::string outFilePath = stem + "_" + std::to_string(i) + ".jpg";
-                stbi_write_jpg(outFilePath.c_str(), faceSideLength, faceSideLength, 4, cubemap[i].GetData(), 100);
-            }
+            // For debugging or viewing face images
+            // std::string stem = filePath.parent_path().string() + "/" + filePath.stem().string();
+            //
+            // for (size_t i = 0; i < cubemap.size(); i++)
+            // {
+            //     std::string outFilePath = stem + "_" + std::to_string(i) + ".jpg";
+            //     stbi_write_jpg(outFilePath.c_str(), faceSideLength, faceSideLength, 4, cubemap[i].GetData(), 100);
+            // }
 
             texture = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, imageFormat);
 
