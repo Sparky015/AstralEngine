@@ -186,14 +186,6 @@ namespace Astral {
          */
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 
-        /**
-         * @brief Gets the number of bytes per texel in the format
-         * @note This only support uncompressed formats
-         * TODO: Add support for compressed formats
-         * @return The number of bytes per texel in the format
-         */
-        uint32 GetBytesPerTexFormat(VkFormat format);
-
 
         VulkanDevice* m_DeviceManager;
         VkDevice m_Device;

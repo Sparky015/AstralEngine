@@ -10,6 +10,7 @@
 #include "Debug/Utilities/Error.h"
 #include "VulkanBuffer.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
+#include "Renderer/RHI/Common/ImageFormats.h"
 
 #include "Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h"
 
@@ -109,7 +110,7 @@ namespace Astral {
 
     void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
     {
-    	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags); // TODO: Make the generic ImageUsageFlags contain actual flags
+    	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
         VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | userUsageFlag; // TODO: Remove the predefined flags
 
     	VkImageCreateFlags createFlags = (m_TextureType == TextureType::CUBEMAP) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
@@ -227,9 +228,23 @@ namespace Astral {
 
     void VulkanTexture::UploadDataToTexture(uint8* data)
     {
-        uint32 bytesPerPixel = GetBytesPerTexFormat(m_Format);
-        uint32 layerSize = m_ImageWidth * m_ImageHeight * bytesPerPixel;
-        uint32 imageSize = m_NumLayers * layerSize;
+    	uint32 imageSize = 0;
+    	if (IsCompressed(ConvertVkFormatToImageFormat(m_Format)))
+    	{
+    		uint32 bytesPerBlock = GetBytesPerTexel(ConvertVkFormatToImageFormat(m_Format));
+    		Vec2 blockExtent = GetCompressedFormatBlockExtent(ConvertVkFormatToImageFormat(m_Format));
+    		uint32 numBlocksX = (m_ImageWidth + blockExtent.x - 1) / blockExtent.x;
+    		uint32 numBlocksY = (m_ImageHeight + blockExtent.y - 1) / blockExtent.y;
+    		uint32 layerSize = numBlocksX * numBlocksY * bytesPerBlock;
+    		imageSize = m_NumLayers * layerSize;
+    	}
+    	else
+    	{
+    		uint32 bytesPerPixel = GetBytesPerTexel(ConvertVkFormatToImageFormat(m_Format));
+    		uint32 layerSize = m_ImageWidth * m_ImageHeight * bytesPerPixel;
+    		imageSize = m_NumLayers * layerSize;
+    	}
+
 
         VulkanBufferDesc bufferDesc = {
             .Device = m_Device,
@@ -514,142 +529,6 @@ namespace Astral {
         }
 
         ASTRAL_ERROR("Failed to find a suitable memory type for Buffer object!");
-    }
-
-
-    uint32 VulkanTexture::GetBytesPerTexFormat(VkFormat m_Format)
-    {
-        switch (m_Format)
-        {
-            // Single channel 8-bit
-            case VK_FORMAT_R8_UNORM: return 1;
-            case VK_FORMAT_R8_SNORM: return 1;
-            case VK_FORMAT_R8_UINT: return 1;
-            case VK_FORMAT_R8_SINT: return 1;
-            case VK_FORMAT_R8_SRGB: return 1;
-
-            // Dual channel 8-bit
-            case VK_FORMAT_R8G8_UNORM: return 2;
-            case VK_FORMAT_R8G8_SNORM: return 2;
-            case VK_FORMAT_R8G8_UINT: return 2;
-            case VK_FORMAT_R8G8_SINT: return 2;
-            case VK_FORMAT_R8G8_SRGB: return 2;
-
-            // Triple channel 8-bit
-            case VK_FORMAT_R8G8B8_UNORM: return 3;
-            case VK_FORMAT_R8G8B8_SNORM: return 3;
-            case VK_FORMAT_R8G8B8_UINT: return 3;
-            case VK_FORMAT_R8G8B8_SINT: return 3;
-            case VK_FORMAT_R8G8B8_SRGB: return 3;
-            case VK_FORMAT_B8G8R8_UNORM: return 3;
-            case VK_FORMAT_B8G8R8_SNORM: return 3;
-            case VK_FORMAT_B8G8R8_UINT: return 3;
-            case VK_FORMAT_B8G8R8_SINT: return 3;
-            case VK_FORMAT_B8G8R8_SRGB: return 3;
-
-            // Quad channel 8-bit
-            case VK_FORMAT_R8G8B8A8_UNORM: return 4;
-            case VK_FORMAT_R8G8B8A8_SNORM: return 4;
-            case VK_FORMAT_R8G8B8A8_UINT: return 4;
-            case VK_FORMAT_R8G8B8A8_SINT: return 4;
-            case VK_FORMAT_R8G8B8A8_SRGB: return 4;
-            case VK_FORMAT_B8G8R8A8_UNORM: return 4;
-            case VK_FORMAT_B8G8R8A8_SNORM: return 4;
-            case VK_FORMAT_B8G8R8A8_UINT: return 4;
-            case VK_FORMAT_B8G8R8A8_SINT: return 4;
-            case VK_FORMAT_B8G8R8A8_SRGB: return 4;
-
-            // 16-bit single channel
-            case VK_FORMAT_R16_UNORM: return 2;
-            case VK_FORMAT_R16_SNORM: return 2;
-            case VK_FORMAT_R16_UINT: return 2;
-            case VK_FORMAT_R16_SINT: return 2;
-            case VK_FORMAT_R16_SFLOAT: return 2;
-
-            // 16-bit dual channel
-            case VK_FORMAT_R16G16_UNORM: return 4;
-            case VK_FORMAT_R16G16_SNORM: return 4;
-            case VK_FORMAT_R16G16_UINT: return 4;
-            case VK_FORMAT_R16G16_SINT: return 4;
-            case VK_FORMAT_R16G16_SFLOAT: return 4;
-
-            // 16-bit triple channel
-            case VK_FORMAT_R16G16B16_UNORM: return 6;
-            case VK_FORMAT_R16G16B16_SNORM: return 6;
-            case VK_FORMAT_R16G16B16_UINT: return 6;
-            case VK_FORMAT_R16G16B16_SINT: return 6;
-            case VK_FORMAT_R16G16B16_SFLOAT: return 6;
-
-            // 16-bit quad channel (HDR textures)
-            case VK_FORMAT_R16G16B16A16_UNORM: return 8;
-            case VK_FORMAT_R16G16B16A16_SNORM: return 8;
-            case VK_FORMAT_R16G16B16A16_UINT: return 8;
-            case VK_FORMAT_R16G16B16A16_SINT: return 8;
-            case VK_FORMAT_R16G16B16A16_SFLOAT: return 8;
-
-            // 32-bit single channel
-            case VK_FORMAT_R32_UINT: return 4;
-            case VK_FORMAT_R32_SINT: return 4;
-            case VK_FORMAT_R32_SFLOAT: return 4;
-
-            // 32-bit dual channel
-            case VK_FORMAT_R32G32_UINT: return 8;
-            case VK_FORMAT_R32G32_SINT: return 8;
-            case VK_FORMAT_R32G32_SFLOAT: return 8;
-
-            // 32-bit triple channel
-            case VK_FORMAT_R32G32B32_UINT: return 12;
-            case VK_FORMAT_R32G32B32_SINT: return 12;
-            case VK_FORMAT_R32G32B32_SFLOAT: return 12;
-
-            // 32-bit quad channel
-            case VK_FORMAT_R32G32B32A32_UINT: return 16;
-            case VK_FORMAT_R32G32B32A32_SINT: return 16;
-            case VK_FORMAT_R32G32B32A32_SFLOAT: return 16;
-
-            // Packed m_Formats
-            case VK_FORMAT_R5G6B5_UNORM_PACK16: return 2;
-            case VK_FORMAT_B5G6R5_UNORM_PACK16: return 2;
-            case VK_FORMAT_R4G4B4A4_UNORM_PACK16: return 2;
-            case VK_FORMAT_B4G4R4A4_UNORM_PACK16: return 2;
-            case VK_FORMAT_R5G5B5A1_UNORM_PACK16: return 2;
-            case VK_FORMAT_B5G5R5A1_UNORM_PACK16: return 2;
-            case VK_FORMAT_A1R5G5B5_UNORM_PACK16: return 2;
-
-            // Depth/Stencil m_Formats
-            case VK_FORMAT_D16_UNORM: return 2;
-            case VK_FORMAT_D32_SFLOAT: return 4;
-            case VK_FORMAT_D24_UNORM_S8_UINT: return 4;
-            case VK_FORMAT_D32_SFLOAT_S8_UINT: return 5;  // 4 for depth + 1 for stencil
-            case VK_FORMAT_D16_UNORM_S8_UINT: return 3;   // 2 for depth + 1 for stencil
-            case VK_FORMAT_S8_UINT: return 1;
-
-        	case VK_FORMAT_BC1_RGB_UNORM_BLOCK:   return 8;   // BC1
-        	case VK_FORMAT_BC1_RGB_SRGB_BLOCK:    return 8;   // BC1 (sRGB)
-        	case VK_FORMAT_BC1_RGBA_UNORM_BLOCK:  return 8;   // BC1 (with alpha)
-        	case VK_FORMAT_BC1_RGBA_SRGB_BLOCK:   return 8;   // BC1 (sRGB)
-        	case VK_FORMAT_BC2_UNORM_BLOCK:       return 16;  // BC2
-        	case VK_FORMAT_BC2_SRGB_BLOCK:        return 16;  // BC2 (sRGB)
-        	case VK_FORMAT_BC3_UNORM_BLOCK:       return 16;  // BC3
-        	case VK_FORMAT_BC3_SRGB_BLOCK:        return 16;  // BC3 (sRGB)
-        	case VK_FORMAT_BC4_UNORM_BLOCK:       return 8;   // BC4
-        	case VK_FORMAT_BC4_SNORM_BLOCK:       return 8;   // BC4 (signed)
-        	case VK_FORMAT_BC5_UNORM_BLOCK:       return 16;  // BC5
-        	case VK_FORMAT_BC5_SNORM_BLOCK:       return 16;  // BC5 (signed)
-        	case VK_FORMAT_BC6H_UFLOAT_BLOCK:     return 16;  // BC6H (unsigned float)
-        	case VK_FORMAT_BC6H_SFLOAT_BLOCK:     return 16;  // BC6H (signed float)
-        	case VK_FORMAT_BC7_UNORM_BLOCK:       return 16;  // BC7
-        	case VK_FORMAT_BC7_SRGB_BLOCK:        return 16;  // BC7 (sRGB)
-
-            // Special Formats
-            case VK_FORMAT_B10G11R11_UFLOAT_PACK32: return 4;  // HDR without alpha
-            case VK_FORMAT_E5B9G9R9_UFLOAT_PACK32: return 4;   // Shared exponent HDR
-
-            // Undefined
-            case VK_FORMAT_UNDEFINED: ASTRAL_ERROR("Undefined m_Format cannot be applied to texture!");
-
-            default: ASTRAL_ERROR("Unsupported m_Format given to texture!");  // Unknown m_Format
-        }
     }
 
 }
