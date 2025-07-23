@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/FixedIntegerTypes.h"
+#include "Core/Math/Math.h"
 #include "Debug/Utilities/Error.h"
 
 namespace Astral {
@@ -321,17 +322,25 @@ namespace Astral {
         MAX_ENUM
     };
 
+    /**
+     * @brief Gets the number of bytes per texel in the format
+     * @param imageFormat The format of the image
+     * @return The number of bytes per texel in the format
+     */
     uint32 GetBytesPerTexel(ImageFormat imageFormat);
 
-    inline uint32 GetBytesPerTexel(ImageFormat imageFormat)
-    {
-        switch (imageFormat)
-        {
-            // TODO: Finish for rest of image formats
-            case ImageFormat::R8G8B8A8_UNORM: return 4;
-            case ImageFormat::MAX_ENUM: ASTRAL_ERROR("Unsupported format!")
-            default: ASTRAL_ERROR("Unsupported format!")
-        }
-    }
+    /**
+     * @brief Checks if a image format is a compressed format
+     * @param format The format of the image
+     * @return True if the format is a compressed format, false otherwise
+     */
+    bool IsCompressed(ImageFormat format);
+
+    /**
+     * @brief Gets the dimensions of a compressed block in pixels
+     * @param format The format of the image
+     * @return The dimensions of a compressed block in pixels
+     */
+    Vec2 GetCompressedFormatBlockExtent(ImageFormat format);
 
 }

@@ -282,6 +282,7 @@ add_library(AstralEngine
         Renderer/RHI/Common/PipelineBarriers.h
         Renderer/RHI/Common/ImageSubResourceRange.h
         Renderer/RHI/Common/DependencyFlags.h
+        Renderer/RHI/Common/ImageFormats.cpp
 )
 
 
