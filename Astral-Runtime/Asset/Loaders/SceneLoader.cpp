@@ -38,6 +38,34 @@ namespace Astral {
     TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
 
 
+    void SceneLoader::InitDefaultMaterial()
+    {
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        TextureHandle missingBaseColor = registry.CreateAsset<Texture>("Textures/MissingTexture.png");
+        TextureHandle solidBlack = registry.CreateAsset<Texture>("Textures/SolidBlack.png");
+        TextureHandle solidWhite = registry.CreateAsset<Texture>("Textures/SolidWhite.png");
+
+        SetDefaultMaterialShaderModel(ShaderModel::PBR);
+        SetDefaultMaterialTextureConvention(TextureConvention::UNPACKED);
+        SetDefaultMaterialBaseColor(missingBaseColor);
+        SetDefaultMaterialNormals(solidBlack);
+        SetDefaultMaterialRoughness(solidWhite);
+        SetDefaultMaterialMetallic(solidBlack);
+        SetDefaultMaterialEmission(solidBlack);
+    }
+
+
+    void SceneLoader::DestroyDefaultMaterial()
+    {
+        m_DefaultMaterialBaseColor = nullptr;
+        m_DefaultMaterialNormals = nullptr;
+        m_DefaultMaterialRoughness = nullptr;
+        m_DefaultMaterialMetallic = nullptr;
+        m_DefaultMaterialEmission = nullptr;
+    }
+
+
     void SceneLoader::LoadSceneAssets(const std::filesystem::path& sceneFilePath)
     {
         if (sceneFilePath.extension() != ".aescene")
@@ -711,6 +739,7 @@ namespace Astral {
         if (normalsFilePath.length != 0)
         {
             normals = GetTexture(normalsFilePath, externalTextures, sceneDir);
+            if (!normals) { normals = m_DefaultMaterialNormals; }
             materialRef->HasNormalMap = true;
         }
         else
@@ -730,7 +759,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No metallicness map! Using default!")
+            LOG("No AO-Roughness-Metallic map! Using default!")
             aoRoughnessMetallicPacked = m_DefaultMaterialRoughness;
         }
 

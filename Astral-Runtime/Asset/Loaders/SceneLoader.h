@@ -22,6 +22,9 @@ namespace Astral {
     {
     public:
 
+        static void InitDefaultMaterial();
+        static void DestroyDefaultMaterial();
+
         static void LoadSceneAssets(const std::filesystem::path& sceneFilePath);
         static void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
@@ -39,6 +42,14 @@ namespace Astral {
         static void SetDefaultMaterialRoughness(TextureHandle texture) { m_DefaultMaterialRoughness = texture; }
         static void SetDefaultMaterialMetallic(TextureHandle texture) { m_DefaultMaterialMetallic = texture; }
         static void SetDefaultMaterialEmission(TextureHandle texture) { m_DefaultMaterialEmission = texture; }
+
+        static ShaderModel GetDefaultMaterialShaderModel() { return m_DefaultMaterialShaderModal; }
+        static TextureConvention GetDefaultMaterialTextureConvention() { return m_DefaultMaterialTextureConvention; }
+        static TextureHandle GetDefaultMaterialBaseColor() { return m_DefaultMaterialBaseColor; }
+        static TextureHandle GetDefaultMaterialNormals() { return m_DefaultMaterialNormals; }
+        static TextureHandle GetDefaultMaterialRoughness() { return m_DefaultMaterialRoughness; }
+        static TextureHandle GetDefaultMaterialMetallic() { return m_DefaultMaterialMetallic; }
+        static TextureHandle GetDefaultMaterialEmission() { return m_DefaultMaterialEmission; }
 
     private:
 

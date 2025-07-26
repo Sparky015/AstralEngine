@@ -42,13 +42,8 @@ namespace Astral {
             gli::extent2d extent = texture.extent();
             width = extent.x;
             height = extent.y;
-            data = (unsigned char*)texture.base_face();
+            data = (unsigned char*)texture.data();
             gli::format gliImageFormat = texture.format();
-            if (gli::is_compressed(gliImageFormat))
-            {
-                WARN("Compressed textures are currently not supported!")
-                data = nullptr;
-            }
             imageFormat = ConvertGliImageFormatToAstralImageFormat(gliImageFormat);
             if (texture.empty()) { data = nullptr; }
         }

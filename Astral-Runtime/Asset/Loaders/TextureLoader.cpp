@@ -26,17 +26,15 @@ namespace Astral {
 
         Ref<Texture> texture;
 
-        if (filePath.extension() == ".exr" || filePath.extension() == ".hdr" || filePath.extension() == ".jpg")
+        if (filePath.extension() == ".hdr")
         {
             int width;
             int height;
             int bpp;
-            ImageFormat imageFormat;
-            unsigned char* equirectangularData;
 
             stbi_set_flip_vertically_on_load(true);
-            equirectangularData = stbi_load(filePath.string().c_str(), &width, &height, &bpp, 4);
-            imageFormat = ImageFormat::R8G8B8A8_UNORM;
+            unsigned char* equirectangularData = stbi_load(filePath.string().c_str(), &width, &height, &bpp, 4);
+            ImageFormat imageFormat = ImageFormat::R8G8B8A8_UNORM;
 
 
             // Convert the equirectangular image to a cubemap

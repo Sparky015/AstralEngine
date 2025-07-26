@@ -6,6 +6,7 @@
 
 #include "MenuBarComponent.h"
 
+#include "ExternalSceneBreakdownConfigComponent.h"
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Debug/Utilities/Loggers.h"
@@ -17,8 +18,15 @@
 
 namespace Astral {
 
-    void MenuBarComponent()
+    bool MenuBarComponent::m_ShowModal = false;
+    bool MenuBarComponent::m_LoadExternalScene = false;
+    bool MenuBarComponent::m_ShouldSerializeObjects = false;
+    std::string MenuBarComponent::m_ExternalSceneFilePath = "";
+
+    void MenuBarComponent::Show()
     {
+        m_ShowModal = false;
+
         ImGui::BeginMainMenuBar();
 
         Astral::SceneManager& sceneManager = Astral::Engine::Get().GetSceneManager();
@@ -27,6 +35,7 @@ namespace Astral {
 
         if (ImGui::BeginMenu("File"))
         {
+
             if (ImGui::MenuItem("Create Empty Scene"))
             {
                 sceneManager.CreateEmptyScene();
@@ -34,16 +43,6 @@ namespace Astral {
 
             if (ImGui::MenuItem("Load Scene"))
             {
-
-                // registry.LoadScene("Scenes/Sponza/sponza.obj");
-
-                // registry.LoadScene("Scenes/San_Miguel/san-miguel-low-poly.obj");
-
-                // registry.LoadScene("Scenes/Amazon_Lumberyard_Bistro/Interior/interior.obj");
-                // registry.LoadScene("Scenes/Amazon_Lumberyard_Bistro/Exterior/exterior.obj");
-
-                // registry.LoadScene("Scenes/Toolbox/Toolbox.fbx");
-
                 nfdu8char_t* outPath;
                 nfdu8filteritem_t filters[1] = { { "Astral Scene", "aescene" }};
                 nfdopendialogu8args_t args = {0};
@@ -114,9 +113,10 @@ namespace Astral {
 
                 if (result == NFD_OKAY)
                 {
-                    std::string outFilePath = std::string(outPath);
+                    m_ExternalSceneFilePath = outPath;
                     NFD_FreePathU8(outPath);
-                    SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(outFilePath, true);
+                    m_ShowModal = true;
+                    m_ShouldSerializeObjects = true;
                 }
                 else if (result == NFD_CANCEL)
                 {
@@ -141,9 +141,10 @@ namespace Astral {
 
                 if (result == NFD_OKAY)
                 {
-                    std::string outFilePath = std::string(outPath);
+                    m_ExternalSceneFilePath = outPath;
                     NFD_FreePathU8(outPath);
-                    SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(outFilePath, false);
+                    m_ShowModal = true;
+                    m_ShouldSerializeObjects = false;
                 }
                 else if (result == NFD_CANCEL)
                 {
@@ -158,9 +159,24 @@ namespace Astral {
             ImGui::EndMenu();
         }
 
-
-
         ImGui::EndMainMenuBar();
+
+
+
+        if (m_ShowModal)
+        {
+            ImGui::OpenPopup("3D Object Import##ExternalSceneBreakdownConfigComponent");
+        }
+
+        ExternalSceneBreakdownConfigComponent::Show();
+
+        if (m_LoadExternalScene)
+        {
+            SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(m_ExternalSceneFilePath, m_ShouldSerializeObjects);
+            m_ExternalSceneFilePath = "";
+            m_LoadExternalScene = false;
+        }
+
     }
 
 }

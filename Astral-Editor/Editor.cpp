@@ -6,6 +6,7 @@
 
 #include "Editor.h"
 
+#include "Components/ExternalSceneBreakdownConfigComponent.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ViewportPanel.h"
@@ -35,6 +36,8 @@ namespace Astral {
     void Editor::Shutdown()
     {
         m_RenderImGuiListener.StopListening();
+
+        ExternalSceneBreakdownConfigComponent::Cleanup();
     }
 
 
@@ -42,7 +45,7 @@ namespace Astral {
     {
         SceneHierarchyPanel::Show();
         ViewportPanel::Show();
-        MenuBarComponent();
+        MenuBarComponent::Show();
         PropertiesPanel();
         EnvironmentPanel();
     }

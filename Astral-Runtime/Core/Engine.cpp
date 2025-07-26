@@ -50,6 +50,7 @@ namespace Astral {
         m_ImGuiManager->Init();
         m_AssetManager->Init();
         m_RendererManager->Init();
+        m_AssetManager->InitAssetLoaderDefaults();
         InputState::Init();
         m_ECSManager->Init();
         m_ApplicationModule->Init();
