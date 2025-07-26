@@ -17,7 +17,18 @@ namespace Astral {
 
     AssetRegistry::~AssetRegistry()
     {
+    }
 
+
+    void AssetRegistry::Init()
+    {
+        SetEngineAssetDirectoryPath(ASTRAL_RENDERER_ASSETS_DIR);
+    }
+
+
+    void AssetRegistry::Shutdown()
+    {
+        SceneLoader::DestroyDefaultMaterial();
     }
 
 
@@ -185,5 +196,9 @@ namespace Astral {
     }
 
 
+    void AssetRegistry::InitAssetLoaderDefaults()
+    {
+        SceneLoader::InitDefaultMaterial();
+    }
 
 }

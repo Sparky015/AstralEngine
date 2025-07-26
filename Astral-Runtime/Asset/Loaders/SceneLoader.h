@@ -22,6 +22,9 @@ namespace Astral {
     {
     public:
 
+        static void InitDefaultMaterial();
+        static void DestroyDefaultMaterial();
+
         static void LoadSceneAssets(const std::filesystem::path& sceneFilePath);
         static void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
@@ -32,12 +35,41 @@ namespace Astral {
             static void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
         };
 
+        static void SetDefaultMaterialShaderModel(ShaderModel shaderModel) { m_DefaultMaterialShaderModal = shaderModel; }
+        static void SetDefaultMaterialTextureConvention(TextureConvention textureConvention) { m_DefaultMaterialTextureConvention = textureConvention; }
+        static void SetDefaultMaterialBaseColor(TextureHandle texture) { m_DefaultMaterialBaseColor = texture; }
+        static void SetDefaultMaterialNormals(TextureHandle texture) { m_DefaultMaterialNormals = texture; }
+        static void SetDefaultMaterialRoughness(TextureHandle texture) { m_DefaultMaterialRoughness = texture; }
+        static void SetDefaultMaterialMetallic(TextureHandle texture) { m_DefaultMaterialMetallic = texture; }
+        static void SetDefaultMaterialEmission(TextureHandle texture) { m_DefaultMaterialEmission = texture; }
+
+        static ShaderModel GetDefaultMaterialShaderModel() { return m_DefaultMaterialShaderModal; }
+        static TextureConvention GetDefaultMaterialTextureConvention() { return m_DefaultMaterialTextureConvention; }
+        static TextureHandle GetDefaultMaterialBaseColor() { return m_DefaultMaterialBaseColor; }
+        static TextureHandle GetDefaultMaterialNormals() { return m_DefaultMaterialNormals; }
+        static TextureHandle GetDefaultMaterialRoughness() { return m_DefaultMaterialRoughness; }
+        static TextureHandle GetDefaultMaterialMetallic() { return m_DefaultMaterialMetallic; }
+        static TextureHandle GetDefaultMaterialEmission() { return m_DefaultMaterialEmission; }
+
     private:
 
-        static Ref<Material> LoadMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+        static Ref<Material> LoadPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+                                          path& sceneDir);
+        static Ref<Material> LoadORMPackedPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
                                           path& sceneDir);
         static Ref<Texture> GetTexture(aiString& filePath, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
                                           path& sceneDir);
+
+
+        static ShaderModel m_DefaultMaterialShaderModal;
+        static TextureConvention m_DefaultMaterialTextureConvention;
+
+        static TextureHandle m_DefaultMaterialBaseColor;
+        static TextureHandle m_DefaultMaterialNormals;
+        static TextureHandle m_DefaultMaterialRoughness;
+        static TextureHandle m_DefaultMaterialMetallic;
+        static TextureHandle m_DefaultMaterialEmission;
+
     };
 
 

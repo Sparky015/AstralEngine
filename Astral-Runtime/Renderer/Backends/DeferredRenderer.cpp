@@ -48,7 +48,7 @@ namespace Astral {
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Set_GBuffer.frag");
+        m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
     }
 
@@ -492,7 +492,7 @@ namespace Astral {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -503,7 +503,14 @@ namespace Astral {
 
             DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
 
-            material.FragmentShader = m_GeometryPassShader;
+            if (material.TextureConvention == TextureConvention::UNPACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
+            }
+            else if (material.TextureConvention == TextureConvention::ORM_PACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_ORM_Set_GBuffer.frag");
+            }
 
             // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
             PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);

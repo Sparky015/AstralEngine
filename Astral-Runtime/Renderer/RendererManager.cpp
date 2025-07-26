@@ -56,7 +56,6 @@ namespace Astral {
     void RendererManager::LoadRendererAssets()
     {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        registry.SetEngineAssetDirectoryPath(ASTRAL_RENDERER_ASSETS_DIR);
 
         // Materials
         registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");

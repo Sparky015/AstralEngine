@@ -20,9 +20,16 @@ namespace Astral {
         PBR,
     };
 
+    enum class TextureConvention : uint8
+    {
+        UNPACKED,
+        ORM_PACKED
+    };
+
     struct Material : public Asset
     {
         ShaderModel ShaderModel;
+        TextureConvention TextureConvention;
         Ref<Shader> FragmentShader;
         std::vector<Ref<Texture>> Textures;
         DescriptorSetHandle DescriptorSet;
@@ -38,6 +45,16 @@ namespace Astral {
         {
             case ShaderModel::UNLIT: return "Unlit";
             case ShaderModel::PBR: return "PBR";
+            default: return "None";
+        }
+    }
+
+    inline std::string_view TextureConventionToString(TextureConvention textureConvention)
+    {
+        switch (textureConvention)
+        {
+            case TextureConvention::UNPACKED: return "Unpacked";
+            case TextureConvention::ORM_PACKED: return "AO-Roughness-Metallic Packed";
             default: return "None";
         }
     }

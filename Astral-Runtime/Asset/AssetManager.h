@@ -20,6 +20,8 @@ namespace Astral {
         void Init() override;
         void Shutdown() override;
 
+        void InitAssetLoaderDefaults();
+
         AssetRegistry& GetRegistry() { return *m_Registry; }
 
         AssetManager(const AssetManager&) = delete;
