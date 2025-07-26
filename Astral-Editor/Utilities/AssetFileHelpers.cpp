@@ -63,7 +63,11 @@ namespace Astral {
         nfdopendialogu8args_t args = {0};
         args.filterList = filters;
         args.filterCount = 1;
-        // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
+
+        if (filterSpec == "")
+        {
+            args.filterCount = 0;
+        }
 
         nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
 
