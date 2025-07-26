@@ -22,8 +22,11 @@ namespace Astral {
     {
      public:
 
-        AssetRegistry();
+        AssetRegistry() = default;
         ~AssetRegistry();
+
+        void Init();
+        void Shutdown();
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
@@ -56,6 +59,8 @@ namespace Astral {
         [[nodiscard]] const AssetRegistryStats& GetAssetRegistryStats() const { return m_RegistryStats; }
         const std::filesystem::path& GetAssetDirectoryPath() { return m_AssetDirectoryPath; }
         void GetRelativePath(std::filesystem::path& outfilePath); // Used to break down absolute path into relative path that is used to get assets
+
+        void InitAssetLoaderDefaults();
 
     private:
 

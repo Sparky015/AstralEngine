@@ -49,4 +49,14 @@ namespace Astral {
         }
     }
 
+    inline std::string_view TextureConventionToString(TextureConvention textureConvention)
+    {
+        switch (textureConvention)
+        {
+            case TextureConvention::UNPACKED: return "Unpacked";
+            case TextureConvention::ORM_PACKED: return "AO-Roughness-Metallic Packed";
+            default: return "None";
+        }
+    }
+
 }

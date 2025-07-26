@@ -104,7 +104,7 @@ namespace Astral {
 
         fileStream << ShaderModelToString(material->ShaderModel) << "\n";
 
-
+        // TODO: serialize the texture conventions
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         std::string fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID()).generic_string();
 
@@ -116,7 +116,7 @@ namespace Astral {
 
         if (material->ShaderModel == ShaderModel::PBR)
         {
-            ASSERT(material->Textures.size() >= 5, "Expected PBR material to have at least 5 maps!")
+            ASSERT(material->Textures.size() >= 4, "Expected PBR material to have at least 4 maps!")
             for (int i = 1; i < material->Textures.size(); i++)
             {
                 std::filesystem::path mapPath = registry.GetFilePathFromAssetID(material->Textures[i]->GetAssetID());

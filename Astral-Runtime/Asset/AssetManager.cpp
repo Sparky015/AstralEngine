@@ -17,12 +17,20 @@ namespace Astral {
     void AssetManager::Init()
     {
         m_Registry = CreateScopedPtr<AssetRegistry>();
+        m_Registry->Init();
     }
 
 
     void AssetManager::Shutdown()
     {
+        m_Registry->Shutdown();
         m_Registry.reset();
+    }
+
+
+    void AssetManager::InitAssetLoaderDefaults()
+    {
+        m_Registry->InitAssetLoaderDefaults();
     }
 
 }
