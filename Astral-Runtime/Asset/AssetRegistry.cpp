@@ -15,6 +15,22 @@
 
 namespace Astral {
 
+    AssetRegistry::AssetRegistry()
+    {
+        TextureHandle missingBaseColor = GetAsset<Texture>("Textures/MissingTexture.png");
+        TextureHandle solidBlack = GetAsset<Texture>("Textures/SolidBlack.png");
+        TextureHandle solidWhite = GetAsset<Texture>("Textures/SolidWhite.png");
+
+        SceneLoader::SetDefaultMaterialShaderModel(ShaderModel::PBR);
+        SceneLoader::SetDefaultMaterialTextureConvention(TextureConvention::ORM_PACKED);
+        SceneLoader::SetDefaultMaterialBaseColor(missingBaseColor);
+        SceneLoader::SetDefaultMaterialNormals(solidBlack);
+        SceneLoader::SetDefaultMaterialRoughness(solidWhite);
+        SceneLoader::SetDefaultMaterialMetallic(solidBlack);
+        SceneLoader::SetDefaultMaterialEmission(solidBlack);
+    }
+
+
     AssetRegistry::~AssetRegistry()
     {
 

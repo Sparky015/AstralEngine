@@ -32,12 +32,33 @@ namespace Astral {
             static void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
         };
 
+        static void SetDefaultMaterialShaderModel(ShaderModel shaderModel) { m_DefaultMaterialShaderModal = shaderModel; }
+        static void SetDefaultMaterialTextureConvention(TextureConvention textureConvention) { m_DefaultMaterialTextureConvention = textureConvention; }
+        static void SetDefaultMaterialBaseColor(TextureHandle texture) { m_DefaultMaterialBaseColor = texture; }
+        static void SetDefaultMaterialNormals(TextureHandle texture) { m_DefaultMaterialNormals = texture; }
+        static void SetDefaultMaterialRoughness(TextureHandle texture) { m_DefaultMaterialRoughness = texture; }
+        static void SetDefaultMaterialMetallic(TextureHandle texture) { m_DefaultMaterialMetallic = texture; }
+        static void SetDefaultMaterialEmission(TextureHandle texture) { m_DefaultMaterialEmission = texture; }
+
     private:
 
-        static Ref<Material> LoadMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+        static Ref<Material> LoadPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
+                                          path& sceneDir);
+        static Ref<Material> LoadORMPackedPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
                                           path& sceneDir);
         static Ref<Texture> GetTexture(aiString& filePath, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
                                           path& sceneDir);
+
+
+        static ShaderModel m_DefaultMaterialShaderModal;
+        static TextureConvention m_DefaultMaterialTextureConvention;
+
+        static TextureHandle m_DefaultMaterialBaseColor;
+        static TextureHandle m_DefaultMaterialNormals;
+        static TextureHandle m_DefaultMaterialRoughness;
+        static TextureHandle m_DefaultMaterialMetallic;
+        static TextureHandle m_DefaultMaterialEmission;
+
     };
 
 

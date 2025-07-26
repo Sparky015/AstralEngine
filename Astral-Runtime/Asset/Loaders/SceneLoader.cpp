@@ -28,6 +28,16 @@
 
 namespace Astral {
 
+    ShaderModel SceneLoader::m_DefaultMaterialShaderModal = ShaderModel::PBR;
+    TextureConvention SceneLoader::m_DefaultMaterialTextureConvention = TextureConvention::ORM_PACKED;
+
+    TextureHandle SceneLoader::m_DefaultMaterialBaseColor = nullptr;
+    TextureHandle SceneLoader::m_DefaultMaterialNormals = nullptr;
+    TextureHandle SceneLoader::m_DefaultMaterialRoughness = nullptr;
+    TextureHandle SceneLoader::m_DefaultMaterialMetallic = nullptr;
+    TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
+
+
     void SceneLoader::LoadSceneAssets(const std::filesystem::path& sceneFilePath)
     {
         if (sceneFilePath.extension() != ".aescene")
@@ -356,7 +366,22 @@ namespace Astral {
              for (int i = 0; i < scene->mNumMaterials; i++)
              {
                  aiMaterial* material = scene->mMaterials[i];
-                 Ref<Material> materialRef = LoadMaterial(material, m_ExternalTextures, sceneDir);
+                 Ref<Material> materialRef;
+
+                if (m_DefaultMaterialTextureConvention == TextureConvention::ORM_PACKED)
+                {
+                    materialRef = LoadORMPackedPBRMaterial(material, m_ExternalTextures, sceneDir);
+                }
+                else if (m_DefaultMaterialTextureConvention == TextureConvention::UNPACKED)
+                {
+                    materialRef = LoadPBRMaterial(material, m_ExternalTextures, sceneDir);
+                }
+                else
+                {
+                    ASTRAL_ERROR("Unsupported texture convention for material!")
+                }
+
+
                  m_Materials.push_back(materialRef);
 
                  if (shouldSerializeObjects)
@@ -498,10 +523,8 @@ namespace Astral {
     }
 
 
-    Ref<Material> SceneLoader::LoadMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::
-                                            path& sceneDir)
+    Ref<Material> SceneLoader::LoadPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::path& sceneDir)
     {
-        AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
         Ref<Material> materialRef = CreateRef<Material>();
 
         LOG("Material: " << material->GetName().C_Str());
@@ -519,7 +542,6 @@ namespace Astral {
         aiString normalsFilePath;
 
 
-        // Loading base color
         material->GetTexture(aiTextureType_BASE_COLOR, 0, &baseColorFilePath);
         material->GetTexture(aiTextureType_METALNESS, 0, &metallicFilePath);
         material->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &roughnessFilePath);
@@ -527,7 +549,8 @@ namespace Astral {
         material->GetTexture(aiTextureType_NORMALS, 0, &normalsFilePath);
 
 
-        // TODO: make a class that handles the generation of a Astral::Material from a aiMaterial*. Apply defaults if there is a map missing. Assert that there is a normal map though.
+        // Base Color
+
         if (baseColorFilePath.length != 0)
         {
             baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
@@ -540,48 +563,60 @@ namespace Astral {
             if (baseColorFilePath.length == 0)
             {
                 LOG("Missing base color!")
-                baseColor = assetRegistry.GetAsset<Texture>("Textures/MissingTexture.png");
+                baseColor = m_DefaultMaterialBaseColor;
             }
             else
             {
                 LOG("Diffuse found! Using diffuse instead of base color map!")
                 baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
-                if (!baseColor) { baseColor = assetRegistry.GetAsset<Texture>("Textures/MissingTexture.png");  }
+                if (!baseColor) { baseColor = m_DefaultMaterialBaseColor;  }
             }
         }
+
+
+        //  Metallic
 
         if (metallicFilePath.length != 0)
         {
             metallic = GetTexture(metallicFilePath, externalTextures, sceneDir);
-            if (!metallic) { metallic = assetRegistry.GetAsset<Texture>("Textures/SolidBlack.png"); }
+            if (!metallic) { metallic = m_DefaultMaterialMetallic; }
         }
         else
         {
             LOG("No metallicness map! Using default!")
-            metallic = assetRegistry.GetAsset<Texture>("Textures/SolidBlack.png");
+            metallic = m_DefaultMaterialMetallic;
         }
+
+
+        //  Roughness
 
         if (roughnessFilePath.length != 0)
         {
             roughness = GetTexture(roughnessFilePath, externalTextures, sceneDir);
-            if (!roughness) { roughness = assetRegistry.GetAsset<Texture>("Textures/SolidWhite.png"); }
+            if (!roughness) { roughness = m_DefaultMaterialRoughness; }
         }
         else
         {
             LOG("No roughness map! Using default!")
-            roughness = assetRegistry.GetAsset<Texture>("Textures/SolidWhite.png");
+            roughness = m_DefaultMaterialRoughness;
         }
+
+
+        //  Emission
 
         if (emissionFilePath.length != 0)
         {
             emission = GetTexture(emissionFilePath, externalTextures, sceneDir);
-            if (!emission) { emission = assetRegistry.GetAsset<Texture>("Textures/SolidBlack.png"); }
+            if (!emission) { emission = m_DefaultMaterialEmission; }
         }
         else
         {
             LOG("No emission map! Using default!")
-            emission = assetRegistry.GetAsset<Texture>("Textures/SolidBlack.png");
+            emission = m_DefaultMaterialEmission;
         }
+
+
+        //  Normals
 
         if (normalsFilePath.length != 0)
         {
@@ -591,13 +626,15 @@ namespace Astral {
         else
         {
             LOG("No normal map! Using vertex normals instead!")
-            normals = assetRegistry.GetAsset<Texture>("Textures/SolidBlack.png");
+            normals = m_DefaultMaterialNormals;
             materialRef->HasNormalMap = false;
         }
 
 
+        AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
 
         materialRef->ShaderModel = ShaderModel::PBR;
+        materialRef->TextureConvention = TextureConvention::UNPACKED;
         materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
 
         materialRef->Textures.push_back(baseColor);
@@ -618,8 +655,123 @@ namespace Astral {
         return materialRef;
     }
 
+
+    Ref<Material> SceneLoader::LoadORMPackedPBRMaterial(aiMaterial* material, std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::path& sceneDir)
+    {
+        AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
+        Ref<Material> materialRef = CreateRef<Material>();
+
+        LOG("Material: " << material->GetName().C_Str());
+
+        Ref<Texture> baseColor;
+        Ref<Texture> normals;
+        Ref<Texture> aoRoughnessMetallicPacked;
+        Ref<Texture> emission;
+
+        aiString baseColorFilePath;
+        aiString normalsFilePath;
+        aiString ormPackedFilePath;
+        aiString emissionFilePath;
+
+
+        // Loading base color
+        material->GetTexture(aiTextureType_BASE_COLOR, 0, &baseColorFilePath);
+        material->GetTexture(aiTextureType_NORMALS, 0, &normalsFilePath);
+        material->GetTexture(aiTextureType_GLTF_METALLIC_ROUGHNESS, 0, &ormPackedFilePath);
+        material->GetTexture(aiTextureType_EMISSIVE, 0, &emissionFilePath);
+
+
+        // Base Color
+
+        if (baseColorFilePath.length != 0)
+        {
+            baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
+        }
+        else
+        {
+            LOG("No base color. Trying diffuse...")
+            material->GetTexture(aiTextureType_DIFFUSE, 0, &baseColorFilePath);
+
+            if (baseColorFilePath.length == 0)
+            {
+                LOG("Missing base color!")
+                baseColor = m_DefaultMaterialBaseColor;
+            }
+            else
+            {
+                LOG("Diffuse found! Using diffuse instead of base color map!")
+                baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
+                if (!baseColor) { baseColor = m_DefaultMaterialBaseColor;  }
+            }
+        }
+
+
+        //  Normals
+
+        if (normalsFilePath.length != 0)
+        {
+            normals = GetTexture(normalsFilePath, externalTextures, sceneDir);
+            materialRef->HasNormalMap = true;
+        }
+        else
+        {
+            LOG("No normal map! Using vertex normals instead!")
+            normals = m_DefaultMaterialNormals;
+            materialRef->HasNormalMap = false;
+        }
+
+
+        // AO-Metallic-Roughness Packed
+
+        if (ormPackedFilePath.length != 0)
+        {
+            aoRoughnessMetallicPacked = GetTexture(ormPackedFilePath, externalTextures, sceneDir);
+            if (!aoRoughnessMetallicPacked) { aoRoughnessMetallicPacked = m_DefaultMaterialRoughness; }
+        }
+        else
+        {
+            LOG("No metallicness map! Using default!")
+            aoRoughnessMetallicPacked = m_DefaultMaterialRoughness;
+        }
+
+
+        //  Emission
+
+        if (emissionFilePath.length != 0)
+        {
+            emission = GetTexture(emissionFilePath, externalTextures, sceneDir);
+            if (!emission) { emission = m_DefaultMaterialEmission; }
+        }
+        else
+        {
+            LOG("No emission map! Using default!")
+            emission = m_DefaultMaterialEmission;
+        }
+
+
+        materialRef->ShaderModel = ShaderModel::PBR;
+        materialRef->TextureConvention = TextureConvention::ORM_PACKED;
+        materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
+
+        materialRef->Textures.push_back(baseColor);
+        materialRef->Textures.push_back(aoRoughnessMetallicPacked);
+        materialRef->Textures.push_back(emission);
+        materialRef->Textures.push_back(normals);
+
+        materialRef->DescriptorSet = DescriptorSet::CreateDescriptorSet();
+        materialRef->DescriptorSet->BeginBuildingSet();
+        materialRef->DescriptorSet->AddDescriptorImageSampler(baseColor, ShaderStage::FRAGMENT);
+        materialRef->DescriptorSet->AddDescriptorImageSampler(aoRoughnessMetallicPacked, ShaderStage::FRAGMENT);
+        materialRef->DescriptorSet->AddDescriptorImageSampler(emission, ShaderStage::FRAGMENT);
+        materialRef->DescriptorSet->AddDescriptorImageSampler(normals, ShaderStage::FRAGMENT);
+        materialRef->DescriptorSet->EndBuildingSet();
+
+        return materialRef;
+    }
+
+
     Ref<Texture> SceneLoader::GetTexture(aiString& filePath,
-        std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::path& sceneDir)
+                                         std::unordered_map<std::filesystem::path, Ref<Texture>>& externalTextures, std::filesystem::path& sceneDir)
     {
         AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
         Ref<Texture> textureRef;

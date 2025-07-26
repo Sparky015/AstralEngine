@@ -22,7 +22,7 @@ namespace Astral {
     {
      public:
 
-        AssetRegistry() = default;
+        AssetRegistry();
         ~AssetRegistry();
 
         template <typename AssetType>

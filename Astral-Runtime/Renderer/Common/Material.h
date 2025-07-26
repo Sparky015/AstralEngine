@@ -20,9 +20,16 @@ namespace Astral {
         PBR,
     };
 
+    enum class TextureConvention : uint8
+    {
+        UNPACKED,
+        ORM_PACKED
+    };
+
     struct Material : public Asset
     {
         ShaderModel ShaderModel;
+        TextureConvention TextureConvention;
         Ref<Shader> FragmentShader;
         std::vector<Ref<Texture>> Textures;
         DescriptorSetHandle DescriptorSet;
