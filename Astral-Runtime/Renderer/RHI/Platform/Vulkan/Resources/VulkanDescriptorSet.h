@@ -40,6 +40,8 @@ namespace Astral {
         void* GetLayout() override { return m_DescriptorSetLayout; }
         void* GetNativeHandle() override { return m_DescriptorSet; }
 
+        void Invalidate();
+
     private:
 
         void CreateDescriptorPool();
@@ -49,7 +51,7 @@ namespace Astral {
         void DestroyDescriptorSetLayout();
 
         void AllocateDescriptorSets();
-        void DestroyDescriptorSets();
+        void FreeDescriptorSet();
 
         void UpdateDescriptorSets();
 

@@ -624,7 +624,6 @@ namespace Astral {
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
 
-            frameContext.OffscreenDescriptorSet = device.CreateDescriptorSet(); // TODO: Avoid creating new descriptor set handles and reuse the handle but recreate the vk descriptor set
             frameContext.OffscreenDescriptorSet->BeginBuildingSet();
             frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
             frameContext.OffscreenDescriptorSet->EndBuildingSet();
