@@ -28,6 +28,7 @@ namespace Astral {
         std::unordered_map<std::string, SceneResource> ExternalResourceFiles;
         ECS ECS;
         TextureHandle EnvironmentMap;
+        float AmbientLightConstant = .2;
 
         void IncrementResourceRef(const std::string& filePath);
         void IncrementResourceRef(const std::filesystem::path& filePath);

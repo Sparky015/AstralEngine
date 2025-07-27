@@ -56,6 +56,7 @@ namespace Astral {
             Vec2 ScreenSize;
             alignas(16) Vec3 CameraPosition;
             uint32 NumLights;
+            float AmbientLightConstant;
         };
 
 

@@ -95,6 +95,7 @@ namespace Astral {
             .ScreenSize = m_ViewportSize,
             .CameraPosition = sceneDescription.Camera.GetPosition(),
             .NumLights = (uint32)sceneDescription.Lights.size(),
+            .AmbientLightConstant = sceneDescription.AmbientLightConstant
         };
 
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));

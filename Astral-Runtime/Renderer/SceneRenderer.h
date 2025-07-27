@@ -28,6 +28,7 @@ namespace Astral {
         Camera& Camera;
         std::vector<Light>& Lights;
         TextureHandle EnvironmentMap;
+        float AmbientLightConstant;
     };
 
     class SceneRenderer

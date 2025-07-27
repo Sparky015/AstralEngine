@@ -151,7 +151,8 @@ namespace Astral {
         SceneDescription sceneDescription = {
             .Camera = camera,
             .Lights = lights,
-            .EnvironmentMap = scene.EnvironmentMap
+            .EnvironmentMap = scene.EnvironmentMap,
+            .AmbientLightConstant = scene.AmbientLightConstant
         };
 
 
