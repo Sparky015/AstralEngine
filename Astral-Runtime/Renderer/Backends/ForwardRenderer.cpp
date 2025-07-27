@@ -79,8 +79,14 @@ namespace Astral {
 
         SceneData sceneData = {
             .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
+            .CameraView = sceneDescription.Camera.GetViewMatrix(),
+            .CameraProjection = sceneDescription.Camera.GetProjectionMatrix(),
+            .CameraInverseViewMat = glm::inverse(sceneDescription.Camera.GetViewMatrix()),
+            .CameraInverseProjectionMat = glm::inverse(sceneDescription.Camera.GetProjectionMatrix()),
+            .ScreenSize = m_ViewportSize,
             .CameraPosition = sceneDescription.Camera.GetPosition(),
             .NumLights = (uint32)sceneDescription.Lights.size(),
+            .AmbientLightConstant = sceneDescription.AmbientLightConstant
         };
 
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));

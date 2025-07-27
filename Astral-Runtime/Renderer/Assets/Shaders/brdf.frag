@@ -8,8 +8,14 @@ layout(location = 4) in vec2 v_TextureCoord;
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;
+    mat4 cameraView;
+    mat4 cameraProjection;
+    mat4 inverseCameraView;
+    mat4 inverseCameraProjection;
+    vec2 screenSize;
     vec3 cameraPosition;
     uint numLights;
+    float ambientLightConstant;
 } u_SceneData;
 
 struct Light {
@@ -36,7 +42,7 @@ layout(location = 0) out vec4 color;
 
 
 // GGX/Trowbridge-Reitz Normal Distribution Function
-float D(float alpha, vec3 N, vec3 H)
+float GGXNormalDistribution(float alpha, vec3 N, vec3 H)
 {
     float numerator = pow(alpha, 2.0f);
 
@@ -60,13 +66,13 @@ float G1(float alpha, vec3 N, vec3 X)
 }
 
 // Smith Model
-float G(float alpha, vec3 N, vec3 V, vec3 L)
+float Shadowing(float alpha, vec3 N, vec3 V, vec3 L)
 {
     return G1(alpha, N, V) * G1(alpha, N, L);
 }
 
 // Fresnel-Schlick Function
-vec3 F(vec3 F0, vec3 V, vec3 H)
+vec3 Fresnel(vec3 F0, vec3 V, vec3 H)
 {
     return F0 + (vec3(1.0) - F0) * pow(1 - max(dot(V, H), 0.0), 5.0);
 }
@@ -108,30 +114,36 @@ void main()
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
 
         // Vectors
-        vec3 N = normalize(normal);
-        vec3 V = normalize(cameraPosition - v_WorldPosition);
-        vec3 L = normalize(lightPosition - v_WorldPosition);
-        vec3 H = normalize(V + L);
+        normal = normalize(normal);
+        vec3 viewVector = normalize(cameraPosition - v_WorldPosition);
+        vec3 lightVector = normalize(lightPosition - v_WorldPosition);
+        vec3 halfwayVector = normalize(viewVector + lightVector);
+        float lightDistance = length(lightPosition - v_WorldPosition);
+        float lightAttenuation = 1.0 / (1.0 + 0.09 * lightDistance + 0.032 * (lightDistance * lightDistance)); // quadratic attenuation formula
+
 
 
         // PBR Equation in Full
-        vec3 F0 = vec3(0.04);
+        vec3 baseReflectivity = vec3(0.04);
         float alpha = pow(roughness, 2.0f);
-        F0 = mix(F0, baseColor, metallic.r); // Mix based on metallic value
-        vec3 Ks = F(F0, V, H);
-        vec3 Kd = (vec3(1.0) - Ks) * (1.0f - metallic.r);
+        baseReflectivity = mix(baseReflectivity, baseColor, metallic.r); // Mix based on metallic value
+        vec3 sepecular = Fresnel(baseReflectivity, viewVector, halfwayVector);
+        vec3 diffuse = (vec3(1.0) - sepecular) * (1.0f - metallic.r);
 
         vec3 lambert = baseColor / 3.1415;
 
-        vec3 cookTorranceNumerator = D(alpha, N, H) * G(alpha, N, V, L) * F(F0, V, H);
-        float cookTorranceDenominator = 4.0 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0);
+        vec3 cookTorranceNumerator = GGXNormalDistribution(alpha, normal, halfwayVector) * Shadowing(alpha, normal, viewVector, lightVector) * sepecular;
+        float cookTorranceDenominator = 4.0 * max(dot(viewVector, normal), 0.0) * max(dot(lightVector, normal), 0.0);
         cookTorranceDenominator = max(cookTorranceDenominator, 0.000001);
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
-        vec3 BRDF = Kd * lambert + cookTorrance;
-        vec3 outgoingLight = emission + BRDF * lightColor * max(dot(L, N), 0.0);
+        vec3 BRDF = diffuse * lambert + cookTorrance;
+        vec3 outgoingLight = BRDF * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
         finalLight += outgoingLight;
     }
+
+    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic.r);
+    finalLight += ambient + emission;
 
 
     color = vec4(finalLight, 1.0f);
