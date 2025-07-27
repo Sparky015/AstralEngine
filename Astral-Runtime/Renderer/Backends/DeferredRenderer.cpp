@@ -624,9 +624,7 @@ namespace Astral {
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
 
-            frameContext.OffscreenDescriptorSet->BeginBuildingSet();
-            frameContext.OffscreenDescriptorSet->AddDescriptorImageSampler(frameContext.OffscreenRenderTarget, ShaderStage::FRAGMENT);
-            frameContext.OffscreenDescriptorSet->EndBuildingSet();
+            frameContext.OffscreenDescriptorSet->UpdateImageSamplerBinding(0, frameContext.OffscreenRenderTarget);
         }
 
         uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
