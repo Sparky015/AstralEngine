@@ -39,6 +39,8 @@ namespace Astral {
     TextureHandle SceneLoader::m_DefaultMaterialMetallic = nullptr;
     TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
 
+    bool SceneLoader::m_IsDefaultNormalsDirectX = false;
+
 
     void SceneLoader::InitDefaultMaterial()
     {
@@ -667,6 +669,7 @@ namespace Astral {
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::UNPACKED;
         materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
+        materialRef->HasDirectXNormals = m_IsDefaultNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);
         materialRef->Textures.push_back(metallic);
@@ -784,6 +787,7 @@ namespace Astral {
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::ORM_PACKED;
         materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
+        materialRef->HasDirectXNormals = m_IsDefaultNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);
         materialRef->Textures.push_back(aoRoughnessMetallicPacked);

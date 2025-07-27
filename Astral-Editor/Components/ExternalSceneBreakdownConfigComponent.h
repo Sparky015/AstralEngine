@@ -39,6 +39,9 @@ namespace Astral {
         static TextureHandle m_SettingsMaterialRoughness;
         static TextureHandle m_SettingsMaterialMetallic;
         static TextureHandle m_SettingsMaterialEmission;
+
+        static bool m_SettingsIsNormalsDirectX;
+
     };
 
 }

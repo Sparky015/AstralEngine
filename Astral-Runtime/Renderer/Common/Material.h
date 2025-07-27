@@ -34,6 +34,7 @@ namespace Astral {
         std::vector<Ref<Texture>> Textures;
         DescriptorSetHandle DescriptorSet;
         bool HasNormalMap;
+        bool HasDirectXNormals;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::Material; }

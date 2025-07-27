@@ -520,7 +520,8 @@ namespace Astral {
 
             PushConstant pushConstant = {
                 .ModelMatrix = frameContext.Transforms[i],
-                .HasNormalMap = material.HasNormalMap
+                .HasNormalMap = material.HasNormalMap,
+                .HasDirectXNormals = material.HasDirectXNormals
             };
 
             RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstant, sizeof(PushConstant));
