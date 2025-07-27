@@ -334,7 +334,7 @@ namespace Astral {
 
     void VulkanDescriptorSet::Invalidate()
     {
-        if (m_DescriptorSet) { FreeDescriptorSet(); m_DescriptorSet = VK_NULL_HANDLE; }
+        // if (m_DescriptorSet) { FreeDescriptorSet(); m_DescriptorSet = VK_NULL_HANDLE; } // This needs to have the free set bit in the descriptor pool
         if (m_DescriptorPool) { DestroyDescriptorPool(); m_DescriptorPool = VK_NULL_HANDLE; }
         if (m_DescriptorSetLayout) { DestroyDescriptorSetLayout(); m_DescriptorSetLayout = VK_NULL_HANDLE; }
         m_DescriptorSetLayoutBindings.clear();
