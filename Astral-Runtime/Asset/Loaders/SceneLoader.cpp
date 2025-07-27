@@ -708,7 +708,7 @@ namespace Astral {
         // Loading base color
         material->GetTexture(aiTextureType_BASE_COLOR, 0, &baseColorFilePath);
         material->GetTexture(aiTextureType_NORMALS, 0, &normalsFilePath);
-        material->GetTexture(aiTextureType_GLTF_METALLIC_ROUGHNESS, 0, &ormPackedFilePath);
+        material->GetTexture(aiTextureType_SPECULAR, 0, &ormPackedFilePath); // The texture with the _specular tag contains the packed texture
         material->GetTexture(aiTextureType_EMISSIVE, 0, &emissionFilePath);
 
 
