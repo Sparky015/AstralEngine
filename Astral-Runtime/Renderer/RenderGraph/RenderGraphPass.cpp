@@ -109,6 +109,12 @@ namespace Astral {
     }
 
 
+    void RenderGraphPass::AddDependency(RenderGraphPass* renderPass)
+    {
+        m_ExplicitDependencies.push_back(renderPass);
+    }
+
+
     bool RenderGraphPass::operator==(const RenderGraphPass& other) const noexcept
     {
         return m_Attachments == other.m_Attachments &&
