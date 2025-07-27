@@ -15,6 +15,7 @@ layout (set = 1, binding = 4) uniform sampler2D u_Normals;
 layout (push_constant) uniform ModelData {
     mat4 transform;
     uint hasNormalMap;
+    uint hasDirectXNormals;
 } u_ModelData;
 
 layout(location = 0) out vec4 albedoProp;
@@ -44,6 +45,11 @@ void main()
         B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
         normal = normalize(TBN * tangentSpaceNormal);
+
+        if (u_ModelData.hasDirectXNormals != 0)
+        {
+            normal = 1.0f - normal;
+        }
     }
 
     albedoProp = vec4(baseColor, 1.0f);

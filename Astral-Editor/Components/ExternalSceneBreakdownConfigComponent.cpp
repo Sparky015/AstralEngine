@@ -34,6 +34,8 @@ namespace Astral {
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialMetallic = nullptr;
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialEmission = nullptr;
 
+    bool ExternalSceneBreakdownConfigComponent::m_SettingsIsNormalsDirectX = false;
+
 
     void ExternalSceneBreakdownConfigComponent::Show()
     {
@@ -123,6 +125,15 @@ namespace Astral {
                 ImGui::EndCombo();
             }
 
+            ImGui::Text("Normals Convention:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##ExternalSceneBreakdownConfigComponentNormalsConventionSelect", m_SettingsIsNormalsDirectX ? "DirectX" : "OpenGL/Vulkan"))
+            {
+                if (ImGui::Selectable("OpenGL/Vulkan")) { m_SettingsIsNormalsDirectX = false; }
+                if (ImGui::Selectable("DirectX")) { m_SettingsIsNormalsDirectX = true; }
+                ImGui::EndCombo();
+            }
+
 
             if (m_SettingsMaterialTextureConvention == TextureConvention::UNPACKED)
             {
@@ -142,6 +153,8 @@ namespace Astral {
 
 
 
+
+
             if (ImGui::Button("Cancel"))
             {
                 ClearCurrentTextures();
@@ -154,6 +167,7 @@ namespace Astral {
                 SceneLoader::SetDefaultMaterialShaderModel(m_SettingsMaterialShaderModel);
                 SceneLoader::SetDefaultMaterialTextureConvention(m_SettingsMaterialTextureConvention);
                 SceneLoader::SetDefaultCoordinateSystemOffset(m_SettingsRotationOffset);
+                SceneLoader::SetDefaultIsNormalsDirectX(m_SettingsIsNormalsDirectX);
 
                 if (m_SettingsMaterialBaseColor) { SceneLoader::SetDefaultMaterialBaseColor(m_SettingsMaterialBaseColor); }
                 if (m_SettingsMaterialNormals) { SceneLoader::SetDefaultMaterialNormals(m_SettingsMaterialNormals); }
