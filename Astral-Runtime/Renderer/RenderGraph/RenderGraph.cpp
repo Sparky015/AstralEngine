@@ -224,6 +224,14 @@ namespace Astral {
                 ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
                 externalAttachment.OwningPass = &m_Passes[externalPassIndex];
             }
+
+            for (RenderGraphPass*& dependentPass : m_Passes[renderPassIndex].GetExplicitDependencies())
+            {
+                PassIndex externalPassIndex = GetRenderPassIndex(*dependentPass);
+                ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+                dependentPass = &m_Passes[externalPassIndex];
+            }
+
         }
 
         // Add all the render passes as a node in the render graph
@@ -261,6 +269,16 @@ namespace Astral {
                 ASSERT(localAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << inputAttachmentName << "!")
 
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
+                ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
+                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+            }
+
+            for (RenderGraphPass* dependentPass : consumingPass.GetExplicitDependencies())
+            {
+                PassIndex externalRenderPassIndex = GetRenderPassIndex(*dependentPass);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
                 AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];

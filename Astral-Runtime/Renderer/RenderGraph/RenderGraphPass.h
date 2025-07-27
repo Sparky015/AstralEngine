@@ -108,6 +108,12 @@ namespace Astral {
         void CreateDepthStencilAttachment(const AttachmentDescription& attachmentDescription, const std::string_view& name, ImageLayout optimalImageLayout);
 
         /**
+         * @brief Adds a dependency to this render pass
+         * @param renderPass The render pass that the instance is dependent on
+         */
+        void AddDependency(RenderGraphPass* renderPass);
+
+        /**
          * @brief Gets the attachments created by this render pass
          * @return The attachments created by this render pass
          * @note This is left non-const so attachment descriptions can be modified by the render graph for automatic barrier transition
@@ -171,6 +177,19 @@ namespace Astral {
         AttachmentIndex GetLocalAttachment(const std::string_view& name) const;
 
         /**
+         * @brief Gets the explicit dependencies to this render pass
+         * @return The explicit dependencies to this render pass
+         */
+        std::vector<RenderGraphPass*> GetExplicitDependencies() const { return m_ExplicitDependencies; }
+
+        /**
+         * @brief Gets the explicit dependencies to this render pass
+         * @return The explicit dependencies to this render pass
+         * @note This is left non-const so it can be modified by the render graph for memory safety reasons
+         */
+        std::vector<RenderGraphPass*> GetExplicitDependencies() { return m_ExplicitDependencies; }
+
+        /**
          * @brief Executes the render pass' rendering code
          */
         void Execute() const { m_Callback(); }
@@ -194,6 +213,7 @@ namespace Astral {
 
         // All attachments created by this render pass
         std::vector<LocalAttachment> m_Attachments;
+        std::vector<RenderGraphPass*> m_ExplicitDependencies;
         Vec2 m_WriteAttachmentDimensions;
 
         // All attachments linked to this render pass
