@@ -15,6 +15,7 @@ layout (set = 0, binding = 0) uniform SceneData {
     vec2 screenSize;
     vec3 cameraPosition;
     uint numLights;
+    float ambientLightConstant;
 } u_SceneData;
 
 struct Light {
@@ -139,9 +140,12 @@ void main()
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
         vec3 BRDF = Kd * lambert + cookTorrance;
-        vec3 outgoingLight = emission + BRDF * lightColor * max(dot(L, N), 0.0);
+        vec3 outgoingLight = BRDF * lightColor * max(dot(L, N), 0.0);
         finalLight += outgoingLight;
     }
+
+    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic);
+    finalLight += ambient + emission;
 
     outColor = vec4(finalLight, 1.0f);
 }
