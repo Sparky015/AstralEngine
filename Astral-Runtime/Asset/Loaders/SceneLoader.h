@@ -42,6 +42,7 @@ namespace Astral {
         static void SetDefaultMaterialRoughness(TextureHandle texture) { m_DefaultMaterialRoughness = texture; }
         static void SetDefaultMaterialMetallic(TextureHandle texture) { m_DefaultMaterialMetallic = texture; }
         static void SetDefaultMaterialEmission(TextureHandle texture) { m_DefaultMaterialEmission = texture; }
+        static void SetDefaultCoordinateSystemOffset(Vec3 rotationOffset) { m_DefaultRotationOffset = rotationOffset; }
 
         static ShaderModel GetDefaultMaterialShaderModel() { return m_DefaultMaterialShaderModal; }
         static TextureConvention GetDefaultMaterialTextureConvention() { return m_DefaultMaterialTextureConvention; }
@@ -50,6 +51,8 @@ namespace Astral {
         static TextureHandle GetDefaultMaterialRoughness() { return m_DefaultMaterialRoughness; }
         static TextureHandle GetDefaultMaterialMetallic() { return m_DefaultMaterialMetallic; }
         static TextureHandle GetDefaultMaterialEmission() { return m_DefaultMaterialEmission; }
+        static Vec3 GetDefaultCoordinateSystemOffset() { return m_DefaultRotationOffset; }
+
 
     private:
 
@@ -63,6 +66,8 @@ namespace Astral {
 
         static ShaderModel m_DefaultMaterialShaderModal;
         static TextureConvention m_DefaultMaterialTextureConvention;
+
+        static Vec3 m_DefaultRotationOffset;
 
         static TextureHandle m_DefaultMaterialBaseColor;
         static TextureHandle m_DefaultMaterialNormals;

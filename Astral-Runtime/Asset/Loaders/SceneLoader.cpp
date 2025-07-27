@@ -31,6 +31,8 @@ namespace Astral {
     ShaderModel SceneLoader::m_DefaultMaterialShaderModal = ShaderModel::PBR;
     TextureConvention SceneLoader::m_DefaultMaterialTextureConvention = TextureConvention::ORM_PACKED;
 
+    Vec3 SceneLoader::m_DefaultRotationOffset = Vec3(0.0f);
+
     TextureHandle SceneLoader::m_DefaultMaterialBaseColor = nullptr;
     TextureHandle SceneLoader::m_DefaultMaterialNormals = nullptr;
     TextureHandle SceneLoader::m_DefaultMaterialRoughness = nullptr;
@@ -519,6 +521,7 @@ namespace Astral {
 
         glm::quat quat = {rotationMatrix};
         transformComponent.rotation = glm::eulerAngles(quat);
+        transformComponent.rotation += m_DefaultRotationOffset;
 
         ecs.AddComponent(entity, transformComponent);
 
