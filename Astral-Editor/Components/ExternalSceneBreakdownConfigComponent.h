@@ -28,6 +28,12 @@ namespace Astral {
         static ShaderModel m_SettingsMaterialShaderModel;
         static TextureConvention m_SettingsMaterialTextureConvention;
 
+        static Vec3 m_SettingsRotationOffset;
+
+        static std::string_view m_SettingsCoordinateSystemForwardPreview;
+        static std::string_view m_SettingsCoordinateSystemUpPreview;
+        static std::string_view m_SettingsCoordinateSystemRightPreview;
+
         static TextureHandle m_SettingsMaterialBaseColor;
         static TextureHandle m_SettingsMaterialNormals;
         static TextureHandle m_SettingsMaterialRoughness;
