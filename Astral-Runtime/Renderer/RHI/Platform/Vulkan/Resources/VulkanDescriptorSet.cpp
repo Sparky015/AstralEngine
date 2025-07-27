@@ -347,23 +347,39 @@ namespace Astral {
 
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
-        // TODO: Find the exact usages and create the pool at VulkanDescriptorSet::EndBuildingSet
+        uint32 numStorageBuffers = 0;
+        uint32 numUniformBuffers = 0;
+        uint32 numImageSamplers = 0;
+        uint32 numInputAttachmentSamplers = 0;
+
+        for (const VkDescriptorSetLayoutBinding& layoutBinding : m_DescriptorSetLayoutBindings)
+        {
+            switch (layoutBinding.descriptorType)
+            {
+                case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER: numStorageBuffers++; break;
+                case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER: numUniformBuffers++; break;
+                case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER: numImageSamplers++; break;
+                case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT: numInputAttachmentSamplers++; break;
+                default: ASTRAL_ERROR("Unsupported descriptor type!")
+            }
+        }
+
         VkDescriptorPoolSize poolSizes[4] = {
             {
                 .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-                .descriptorCount = 2
+                .descriptorCount = numStorageBuffers > 0 ? numStorageBuffers : 1
             },
             {
                 .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                .descriptorCount = 2
+                .descriptorCount = numUniformBuffers > 0 ? numUniformBuffers : 1
             },
             {
                 .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                .descriptorCount = 2
+                .descriptorCount = numImageSamplers > 0 ? numImageSamplers : 1
             },
             {
                 .type = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
-                .descriptorCount = 2
+                .descriptorCount = numInputAttachmentSamplers > 0 ? numInputAttachmentSamplers : 1
             }
         };
 
