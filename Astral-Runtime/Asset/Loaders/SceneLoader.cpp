@@ -481,18 +481,35 @@ namespace Astral {
             }
         }
 
+
+        std::unordered_map<std::string_view, aiLight*> lightNameToLight;
+        if (scene->HasLights())
+        {
+            for (int i = 0; i < scene->mNumLights; i++)
+            {
+                aiLight* light = scene->mLights[i];
+                lightNameToLight[light->mName.C_Str()] = light;
+            }
+        }
+
+
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         aiNode* rootNode = scene->mRootNode;
         std::vector<aiMatrix4x4> transforms;
 
         LOG("Total root child nodes: " << scene->mRootNode->mNumChildren)
-        Helpers::ProcessSceneNode(scene, rootNode, m_Materials, m_Meshes);
+        Helpers::ProcessSceneNode(scene, rootNode, m_Materials, m_Meshes, lightNameToLight);
+
+
     }
 
 
-    void SceneLoader::Helpers::ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes)
+    void SceneLoader::Helpers::ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes, const
+                                                std::unordered_map<std::string_view, aiLight*>& lightNameToLight)
     {
+        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
 
@@ -525,6 +542,31 @@ namespace Astral {
         transformComponent.rotation = glm::eulerAngles(quat);
         transformComponent.rotation += m_DefaultRotationOffset;
 
+
+        if (lightNameToLight.contains(node->mName.C_Str()))
+        {
+            aiLight* light = lightNameToLight.at(node->mName.C_Str());
+            transformComponent.position.x += light->mPosition.x;
+            transformComponent.position.y += light->mPosition.y;
+            transformComponent.position.z += light->mPosition.z;
+
+            if (light->mType == aiLightSource_POINT)
+            {
+                PointLightComponent pointLight;
+                pointLight.Intensity = 1;
+                pointLight.LightColor.x = light->mColorDiffuse.r / pointLight.Intensity;
+                pointLight.LightColor.y = light->mColorDiffuse.g / pointLight.Intensity;
+                pointLight.LightColor.z = light->mColorDiffuse.b / pointLight.Intensity;
+
+                ecs.AddComponent(entity, pointLight);
+            }
+            else if (light->mType == aiLightSource_AMBIENT)
+            {
+                activeScene.AmbientLightConstant = (light->mColorAmbient.r + light->mColorAmbient.g + light->mColorAmbient.b) / 3;
+            }
+        }
+
+
         ecs.AddComponent(entity, transformComponent);
 
         if (node->mNumMeshes > 0)
@@ -551,7 +593,7 @@ namespace Astral {
 
         for (int i = 0; i < node->mNumChildren; i++)
         {
-            ProcessSceneNode(scene, node->mChildren[i], materials, meshes);
+            ProcessSceneNode(scene, node->mChildren[i], materials, meshes, lightNameToLight);
         }
     }
 

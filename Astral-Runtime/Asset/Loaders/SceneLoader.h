@@ -32,7 +32,8 @@ namespace Astral {
         struct Helpers
         {
             static void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);
-            static void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes);
+            static void ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes, const
+                                         std::unordered_map<std::string_view, aiLight*>& lightNameToLight);
         };
 
         static void SetDefaultMaterialShaderModel(ShaderModel shaderModel) { m_DefaultMaterialShaderModal = shaderModel; }
