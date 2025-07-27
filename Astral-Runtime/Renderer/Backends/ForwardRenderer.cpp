@@ -283,6 +283,7 @@ namespace Astral {
 
         // TODO: Sort the meshes by material
         Device& device = RendererAPI::GetDevice();
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
@@ -301,8 +302,14 @@ namespace Astral {
 
             DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
 
-            Ref<Shader> vertexShader = mesh.VertexShader;
-            Ref<Shader> fragmentShader = material.FragmentShader;
+            if (material.TextureConvention == TextureConvention::UNPACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/brdf.frag");
+            }
+            else if (material.TextureConvention == TextureConvention::ORM_PACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
+            }
 
             PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
@@ -310,7 +317,8 @@ namespace Astral {
 
             PushConstant pushConstant = {
                 .ModelMatrix = frameContext.Transforms[i],
-                .HasNormalMap = material.HasNormalMap
+                .HasNormalMap = material.HasNormalMap,
+                .HasDirectXNormals = material.HasDirectXNormals,
             };
 
             RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstant, sizeof(PushConstant));

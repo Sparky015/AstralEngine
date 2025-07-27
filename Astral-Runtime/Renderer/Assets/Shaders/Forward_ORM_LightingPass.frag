@@ -27,36 +27,19 @@ layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
-layout(set = 1, binding = 0) uniform sampler2D u_AlbedoInput;
-layout(set = 1, binding = 1) uniform sampler2D u_MetallicInput;
-layout(set = 1, binding = 2) uniform sampler2D u_RoughnessInput;
-layout(set = 1, binding = 3) uniform sampler2D u_EmissionInput;
-layout(set = 1, binding = 4) uniform sampler2D u_NormalInput;
-layout(set = 1, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout (set = 1, binding = 0) uniform sampler2D u_BaseColor;
+layout (set = 1, binding = 1) uniform sampler2D u_AO_Roughness_Metallic;
+layout (set = 1, binding = 2) uniform sampler2D u_Emission;
+layout (set = 1, binding = 3) uniform sampler2D u_Normals;
 
-layout(location = 0) out vec4 outColor;
+layout (push_constant) uniform ModelData {
+    mat4 transform;
+    uint hasNormalMap;
+    uint hasDirectXNormals;
+} u_ModelData;
 
-// Find world position of frag from depth buffer
-vec3 GetWorldPosition()
-{
-    vec3 worldPosition;
+layout(location = 0) out vec4 color;
 
-    float depth = texture(u_DepthBufferInput, v_TextureCoord).r;
-
-    vec4 clipSpacePosition;
-    clipSpacePosition.x = (v_TextureCoord.x) * 2.0 - 1.0;
-    clipSpacePosition.y = (v_TextureCoord.y) * 2.0 - 1.0;
-    clipSpacePosition.z = depth;
-    clipSpacePosition.w = 1.0;
-
-    vec4 viewSpacePosition = u_SceneData.inverseCameraProjection * clipSpacePosition;
-    viewSpacePosition /= viewSpacePosition.w;
-
-    vec4 worldPosHomogeneous = u_SceneData.inverseCameraView * viewSpacePosition;
-    worldPosition = worldPosHomogeneous.xyz;// / worldPosHomogeneous.w;
-
-    return worldPosition;
-}
 
 // GGX/Trowbridge-Reitz Normal Distribution Function
 float GGXNormalDistribution(float alpha, vec3 N, vec3 H)
@@ -97,20 +80,38 @@ vec3 Fresnel(vec3 F0, vec3 V, vec3 H)
 
 void main()
 {
-    vec3 baseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
-    float metallic = texture(u_MetallicInput, v_TextureCoord).r;
-    float roughness = texture(u_RoughnessInput, v_TextureCoord).r;
-    vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
-    vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
-    normal = normal * 2.0 - 1.0;
-    vec3 worldPosition = GetWorldPosition();
+    vec3 baseColor = texture(u_BaseColor, v_TextureCoord).rgb;
+    vec3 aoRoughnessMetallic = texture(u_AO_Roughness_Metallic, v_TextureCoord).rgb;
+    float roughness = aoRoughnessMetallic.g;
+    float metallic = aoRoughnessMetallic.b;
+    vec3 emission = texture(u_Emission, v_TextureCoord).rgb;
+    vec3 tangentSpaceNormal = texture(u_Normals, v_TextureCoord).rgb;
+
+    vec3 normal = v_Normals;
+
+    if (u_ModelData.hasNormalMap != 0)
+    {
+        tangentSpaceNormal = normalize(tangentSpaceNormal * 2.0 - 1.0); // Convert from [0, 1] to [-1, 1] and normalize
+        vec3 N = normalize(v_Normals);
+        vec3 T = normalize(v_Tangents);
+        vec3 B = normalize(v_Bitangents);
+        T = normalize(T - N * dot(N, T));
+        B = cross(N, T);
+        mat3 TBN = mat3(T, B, N);
+        normal = normalize(TBN * tangentSpaceNormal);
+
+        if (u_ModelData.hasDirectXNormals != 0)
+        {
+            normal.g *= -1.0f;
+        }
+    }
 
     vec3 cameraPosition = u_SceneData.cameraPosition;
     vec3 finalLight = vec3(0.0f);
 
     if (u_SceneData.numLights == 0)
     {
-        outColor = vec4(emission, 1.0f);
+        color = vec4(emission, 1.0f);
     }
 
     for (int i = 0; i < u_SceneData.numLights; i++)
@@ -120,19 +121,20 @@ void main()
 
         // Vectors
         normal = normalize(normal);
-        vec3 viewVector = normalize(cameraPosition - worldPosition);
-        vec3 lightVector = normalize(lightPosition - worldPosition);
+        vec3 viewVector = normalize(cameraPosition - v_WorldPosition);
+        vec3 lightVector = normalize(lightPosition - v_WorldPosition);
         vec3 halfwayVector = normalize(viewVector + lightVector);
-        float lightDistance = length(lightPosition - worldPosition);
+        float lightDistance = length(lightPosition - v_WorldPosition);
         float lightAttenuation = 1.0 / (lightDistance * lightDistance); // quadratic attenuation formula
+
 
 
         // PBR Equation in Full
         vec3 baseReflectivity = vec3(0.04);
         float alpha = pow(roughness, 2.0f);
-        baseReflectivity = mix(baseReflectivity, baseColor, metallic.r); // Mix based on metallic value
+        baseReflectivity = mix(baseReflectivity, baseColor, metallic); // Mix based on metallic value
         vec3 specular = Fresnel(baseReflectivity, viewVector, halfwayVector);
-        vec3 diffuse = (vec3(1.0) - specular) * (1.0f - metallic.r);
+        vec3 diffuse = (vec3(1.0) - specular) * (1.0f - metallic);
 
         vec3 lambert = baseColor / 3.1415;
 
@@ -146,8 +148,9 @@ void main()
         finalLight += outgoingLight;
     }
 
-    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic.r);
+    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic);
     finalLight += ambient + emission;
 
-    outColor = vec4(finalLight, 1.0f);
+
+    color = vec4(finalLight, 1.0f);
 }

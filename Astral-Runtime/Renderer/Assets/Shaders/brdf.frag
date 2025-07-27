@@ -36,6 +36,7 @@ layout (set = 1, binding = 4) uniform sampler2D u_Normals;
 layout (push_constant) uniform ModelData {
     mat4 transform;
     uint hasNormalMap;
+    uint hasDirectXNormals;
 } u_ModelData;
 
 layout(location = 0) out vec4 color;
@@ -98,6 +99,11 @@ void main()
         B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
         normal = normalize(TBN * tangentSpaceNormal);
+
+        if (u_ModelData.hasDirectXNormals != 0)
+        {
+            normal.g *= -1.0f;
+        }
     }
 
     vec3 cameraPosition = u_SceneData.cameraPosition;
@@ -119,7 +125,7 @@ void main()
         vec3 lightVector = normalize(lightPosition - v_WorldPosition);
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - v_WorldPosition);
-        float lightAttenuation = 1.0 / (1.0 + 0.09 * lightDistance + 0.032 * (lightDistance * lightDistance)); // quadratic attenuation formula
+        float lightAttenuation = 1.0 / (lightDistance * lightDistance); // quadratic attenuation formula
 
 
 
@@ -127,12 +133,12 @@ void main()
         vec3 baseReflectivity = vec3(0.04);
         float alpha = pow(roughness, 2.0f);
         baseReflectivity = mix(baseReflectivity, baseColor, metallic.r); // Mix based on metallic value
-        vec3 sepecular = Fresnel(baseReflectivity, viewVector, halfwayVector);
-        vec3 diffuse = (vec3(1.0) - sepecular) * (1.0f - metallic.r);
+        vec3 specular = Fresnel(baseReflectivity, viewVector, halfwayVector);
+        vec3 diffuse = (vec3(1.0) - specular) * (1.0f - metallic.r);
 
         vec3 lambert = baseColor / 3.1415;
 
-        vec3 cookTorranceNumerator = GGXNormalDistribution(alpha, normal, halfwayVector) * Shadowing(alpha, normal, viewVector, lightVector) * sepecular;
+        vec3 cookTorranceNumerator = GGXNormalDistribution(alpha, normal, halfwayVector) * Shadowing(alpha, normal, viewVector, lightVector) * specular;
         float cookTorranceDenominator = 4.0 * max(dot(viewVector, normal), 0.0) * max(dot(lightVector, normal), 0.0);
         cookTorranceDenominator = max(cookTorranceDenominator, 0.000001);
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;

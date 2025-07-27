@@ -48,7 +48,7 @@ void main()
 
         if (u_ModelData.hasDirectXNormals != 0)
         {
-            normal = 1.0f - normal;
+            normal.g *= -1.0f;
         }
     }
 
