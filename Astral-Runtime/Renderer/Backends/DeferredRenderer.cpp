@@ -103,8 +103,8 @@ namespace Astral {
         if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
         {
             uint32 currentBufferAllocation = frameContext.SceneLightsBuffer->GetAllocatedSize();
-            // TODO: If reallocation happens, you need to re-add to descriptor set to replace the old buffer as reallocation creates a new buffer
             frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
+            frameContext.SceneDataDescriptorSet->UpdateStorageBufferBinding(1, frameContext.SceneLightsBuffer); // Reallocation will create a new buffer, so re-add that buffer to descriptor set
         }
         frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
 
