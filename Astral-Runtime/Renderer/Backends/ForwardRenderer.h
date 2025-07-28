@@ -16,8 +16,10 @@
 #include "Renderer/RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/SceneRenderer.h"
 
 #include <queue>
+
 
 namespace Astral {
 
@@ -34,6 +36,8 @@ namespace Astral {
 
         void Submit(Mesh& mesh, Material& material, Mat4& transform) override;
 
+        void SetRendererSettings(const RendererSettings& rendererSettings) override;
+        const RendererSettings& GetRendererSettings() override;
         DescriptorSetHandle GetViewportTexture() override;
         void ResizeViewport(uint32 width, uint32 height) override;
         UVec2 GetViewportSize() override { return m_ViewportSize; }
@@ -88,6 +92,7 @@ namespace Astral {
         void ResizeImages(uint32 width, uint32 height);
 
 
+        RendererSettings m_RendererSettings{};
 
         std::vector<FrameContext> m_FrameContexts;
         uint32 m_CurrentFrameIndex = -1;

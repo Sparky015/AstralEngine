@@ -18,8 +18,10 @@
 #include "Window/WindowEvents.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderGraph/RenderGraph.h"
+#include "Renderer/SceneRenderer.h"
 
 #include <queue>
+
 
 namespace Astral {
 
@@ -38,6 +40,8 @@ namespace Astral {
 
         void Submit(Mesh& mesh, Material& material, Mat4& transform) override;
 
+        void SetRendererSettings(const RendererSettings& rendererSettings) override;
+        const RendererSettings& GetRendererSettings() override;
         DescriptorSetHandle GetViewportTexture() override;
         void ResizeViewport(uint32 width, uint32 height) override;
         UVec2 GetViewportSize() override { return m_ViewportSize; }
@@ -87,13 +91,15 @@ namespace Astral {
 
         void RenderScene();
 
-        void ResizeImages(uint32 width, uint32 height);
+        void ResizeWindowImages(uint32 width, uint32 height);
+        void SetVSync(bool isVSyncEnabled);
 
         void GeometryPass();
         void LightingPass();
         void EnvironmentMapPass();
 
 
+        RendererSettings m_RendererSettings{};
         RenderGraph m_RenderGraph;
 
         std::vector<FrameContext> m_FrameContexts;

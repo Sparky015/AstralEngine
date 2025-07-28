@@ -8,6 +8,9 @@
 #include "Debug/ImGui/ImGuiManager.h"
 #include "RHI/RendererAPI.h"
 
+#include "Renderer/Backends/DeferredRenderer.h"
+#include "Renderer/Backends/ForwardRenderer.h"
+
 namespace Astral {
 
     GraphicsOwnedPtr<Renderer> SceneRenderer::m_Renderer{nullptr};
@@ -45,6 +48,18 @@ namespace Astral {
     void SceneRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
     {
         m_Renderer->Submit(mesh, material, transform);
+    }
+
+
+    void SceneRenderer::SetRendererSettings(const RendererSettings& rendererSettings)
+    {
+        m_Renderer->SetRendererSettings(rendererSettings);
+    }
+
+
+    const RendererSettings& SceneRenderer::GetRendererSettings()
+    {
+        return m_Renderer->GetRendererSettings();
     }
 
 
