@@ -17,34 +17,9 @@ namespace Astral {
         ImGui::Text("Window Dimensions: %d px x %d px", window.GetWidth(), window.GetHeight());
     }
 
-    void WindowVsyncStateComponent()
-    {
-        ImGui::Text("Vsync: %s", Astral::Engine::Get().GetWindowManager().GetWindow().GetVsyncSetting() == 1 ? "On" : "Off");
-    }
-
     void WindowAPIInfoComponent()
     {
         ImGui::Text("Window API: %s", Astral::Engine::Get().GetWindowManager().GetWindow().GetVersion().data());
-    }
-
-    void VsyncToggleComponent()
-    {
-        Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
-        static bool isVsyncEnabled = true;
-        if (ImGui::Checkbox("VSync", &isVsyncEnabled))
-        {
-            if (isVsyncEnabled)
-            {
-                LOG("Enabled VSync!");
-                window.EnableVSync();
-            }
-            else
-            {
-                LOG("Disabled VSync!");
-                window.DisableVSync();
-            }
-
-        };
     }
 
     void WindowFramebufferScaleComponent()
