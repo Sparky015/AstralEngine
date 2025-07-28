@@ -84,13 +84,39 @@ namespace Astral {
 
     VkPresentModeKHR VulkanSwapchain::ChoosePresentMode(const std::vector<VkPresentModeKHR>& presentModes)
     {
+        VkPresentModeKHR primaryMode;
+        VkPresentModeKHR backupMode;
+
+        if (m_IsVSyncEnabled)
+        {
+            primaryMode = VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+            backupMode = VK_PRESENT_MODE_FIFO_KHR;
+        }
+        else
+        {
+            primaryMode = VK_PRESENT_MODE_MAILBOX_KHR;
+            backupMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+        }
+
+        bool isBackupPresent = false;
+
         for (const VkPresentModeKHR& mode : presentModes)
         {
-            if (mode == VK_PRESENT_MODE_MAILBOX_KHR) // <-- vsync off   // VK_PRESENT_MODE_FIFO_KHR) // <-- vsync on
+            if (mode == primaryMode)
             {
                 return mode;
             }
+            else if (mode == backupMode)
+            {
+                isBackupPresent = true;
+            }
         }
+
+        if (isBackupPresent)
+        {
+            return backupMode;
+        }
+
 
         return VK_PRESENT_MODE_FIFO_KHR; // Always supported
     }
@@ -337,6 +363,23 @@ namespace Astral {
         DestroySemaphores();
 
         CreateSwapchain(width, height);
+        CreateSemaphores();
+        CreateFences();
+        CreateRenderTargets();
+
+        m_CurrentSemaphorePairIndex = 0;
+    }
+
+
+    void VulkanSwapchain::RecreateSwapchain(bool isVSyncEnabled)
+    {
+        m_IsVSyncEnabled = isVSyncEnabled;
+
+        m_RenderTargets.clear();
+        DestroyFences();
+        DestroySemaphores();
+
+        CreateSwapchain(m_ImageDimensions.x, m_ImageDimensions.y);
         CreateSemaphores();
         CreateFences();
         CreateRenderTargets();

@@ -64,6 +64,12 @@ namespace Astral {
         void RecreateSwapchain(uint32 width, uint32 height) override;
 
         /**
+         * @brief Recreates the swapchain with the VSync enabled or disabled
+         * @param isVSyncEnabled Whether to turn on VSync or not
+         */
+        void RecreateSwapchain(bool isVSyncEnabled) override;
+
+        /**
          * @brief  Gets the native swapchain handle
          * @return The native swapchain handle
          * @note   The void pointer maps to the native vulkan swapchain handle (VkSwapchainKHR)
@@ -159,6 +165,7 @@ namespace Astral {
         std::vector<VkImage> m_Images;
         std::vector<VkImageView> m_ImageViews;
         UVec2 m_ImageDimensions;
+        bool m_IsVSyncEnabled;
 
         std::vector<VkSemaphore> m_RenderCompleteSemaphores;
         std::vector<VkSemaphore> m_ImageAvailableSemaphores;
