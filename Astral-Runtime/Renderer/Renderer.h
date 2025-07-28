@@ -1,5 +1,5 @@
 /**
-* @file RendererBackend.h
+* @file Renderer.h
 * @author Andrew Fagan
 * @date 7/4/25
 */
@@ -9,6 +9,7 @@
 namespace Astral {
 
     struct SceneDescription; // Forward declared
+    struct RendererSettings; // Forward declared
 
     enum class RendererType : uint8
     {
@@ -29,6 +30,8 @@ namespace Astral {
 
         virtual void Submit(Mesh& mesh, Material& material, Mat4& transform) = 0;
 
+        virtual void SetRendererSettings(const RendererSettings& rendererSettings) = 0;
+        virtual const RendererSettings& GetRendererSettings() = 0;
         virtual DescriptorSetHandle GetViewportTexture() = 0;
         virtual void ResizeViewport(uint32 width, uint32 height) = 0;
         virtual UVec2 GetViewportSize() = 0;
@@ -42,6 +45,7 @@ namespace Astral {
         {
             case RendererType::DEFERRED: return "Deferred";
             case RendererType::FORWARD: return "Forward";
+            default: return "Unsupported Renderer Type";
         }
     }
 

@@ -45,6 +45,12 @@ namespace Astral {
         virtual void RecreateSwapchain(uint32 width, uint32 height) = 0;
 
         /**
+         * @brief Recreates the swapchain with the VSync enabled or disabled
+         * @param isVSyncEnabled Whether to turn on VSync or not
+         */
+        virtual void RecreateSwapchain(bool isVSyncEnabled) = 0;
+
+        /**
          * @brief  Gets the native swapchain handle
          * @return The native swapchain handle
          * @note   The void pointer maps to the native swapchain handle of the selected renderer api backend

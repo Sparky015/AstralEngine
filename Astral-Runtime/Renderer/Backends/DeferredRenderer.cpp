@@ -18,6 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Debug/ImGui/ImGuiManager.h"
+#include "Window/WindowManager.h"
 
 namespace Astral {
 
@@ -25,12 +26,11 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneRenderer::Init")
 
-        m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeImages(event.Width, event.Height); }};
+        m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeWindowImages(event.Width, event.Height); }};
         m_WindowResizedListener.StartListening();
 
         m_ViewportSize = RendererAPI::GetContext().GetFramebufferSize();
         m_CurrentFrameIndex = 0;
-
 
 
         // Building the imgui render pass
@@ -38,7 +38,6 @@ namespace Astral {
 
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
-
 
         BuildRenderGraph();
 
@@ -50,6 +49,13 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
+
+
+        // Renderer Settings
+        RendererSettings rendererSettings;
+        rendererSettings.IsVSyncEnabled = true;
+
+        SetRendererSettings(rendererSettings);
     }
 
 
@@ -138,6 +144,22 @@ namespace Astral {
         frameContext.Meshes.push_back(mesh);
         frameContext.Materials.push_back(material);
         frameContext.Transforms.push_back(transform);
+    }
+
+
+    void DeferredRenderer::SetRendererSettings(const RendererSettings& rendererSettings)
+    {
+        if (m_RendererSettings.IsVSyncEnabled != rendererSettings.IsVSyncEnabled)
+        {
+            m_RendererSettings.IsVSyncEnabled = rendererSettings.IsVSyncEnabled;
+            SetVSync(m_RendererSettings.IsVSyncEnabled);
+        }
+    }
+
+
+    const RendererSettings& DeferredRenderer::GetRendererSettings()
+    {
+        return m_RendererSettings;
     }
 
 
@@ -465,7 +487,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::ResizeImages(uint32 width, uint32 height)
+    void DeferredRenderer::ResizeWindowImages(uint32 width, uint32 height)
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
@@ -484,6 +506,34 @@ namespace Astral {
 
             RendererAPI::NameObject(frameContext.WindowFramebuffer, "Window Framebuffer");
             RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), "Swapchain Render Target");
+        }
+    }
+
+
+    void DeferredRenderer::SetVSync(bool isVSyncEnabled)
+    {
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+        device.WaitIdle();
+        swapchain.RecreateSwapchain(isVSyncEnabled);
+
+        Vec2 windowSize = Engine::Get().GetWindowManager().GetWindow().GetFramebufferDimensions();
+        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
+
+        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
+        {
+            FrameContext& frameContext = m_FrameContexts[i];
+            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
+            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
+
+            framebuffer->BeginBuildingFramebuffer(windowSize.x, windowSize.y);
+            framebuffer->AttachRenderTarget(renderTargets[i]);
+            framebuffer->EndBuildingFramebuffer();
+
+            std::string windowFramebufferName = "Window_Framebuffer_" + std::to_string(i);
+            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
+            std::string swapchainRenderTargetName = "Swapchain_Render_Target_" + std::to_string(i);
+            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTargetName);
         }
     }
 

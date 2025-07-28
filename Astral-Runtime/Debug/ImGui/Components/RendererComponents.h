@@ -13,5 +13,7 @@ namespace Astral {
     void RendererAPIValidationStatus();
     void RendererViewportSizeComponent();
     void RendererTypeSelector();
+    void VsyncToggleComponent();
+
 
 }

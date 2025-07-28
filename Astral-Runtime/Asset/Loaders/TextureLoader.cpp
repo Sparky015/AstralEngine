@@ -14,7 +14,7 @@
 #include "stb_image/stb_image.h"
 #include "stb_image_write.h"
 
-#define _USE_MATH_DEFINES
+#include <numbers>
 #include <cmath>
 
 
@@ -178,8 +178,8 @@ namespace Astral {
                     float theta = atan2f(cartesianCoords.z, rho);
 
                     // Convert Spherical to UVs
-                    float uClamped = (float)(phi + M_PI) / (2.0f * M_PI);
-                    float vClamped = (float)((M_PI / 2.0f - theta) / M_PI);
+                    float uClamped = (float)(phi + std::numbers::pi) / (2.0f * std::numbers::pi);
+                    float vClamped = (float)((std::numbers::pi / 2.0f - theta) / std::numbers::pi);
 
                     float uScaled = uClamped * equirectangularImageData.GetPixelWidth();
                     float vScaled = vClamped * equirectangularImageData.GetPixelHeight();

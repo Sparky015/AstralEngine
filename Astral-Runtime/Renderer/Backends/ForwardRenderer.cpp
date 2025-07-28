@@ -133,6 +133,17 @@ namespace Astral {
     }
 
 
+    void ForwardRenderer::SetRendererSettings(const RendererSettings& rendererSettings)
+    {
+    }
+
+
+    const RendererSettings& ForwardRenderer::GetRendererSettings()
+    {
+        return m_RendererSettings;
+    }
+
+
     DescriptorSetHandle ForwardRenderer::GetViewportTexture()
     {
         DescriptorSetHandle& descriptorSet = m_CurrentViewportTexture.front();

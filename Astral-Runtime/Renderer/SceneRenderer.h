@@ -18,8 +18,7 @@
 
 #include <queue>
 
-#include "Backends/ForwardRenderer.h"
-#include "Backends/DeferredRenderer.h"
+#include "Renderer/Renderer.h"
 
 namespace Astral {
 
@@ -29,6 +28,11 @@ namespace Astral {
         std::vector<Light>& Lights;
         TextureHandle EnvironmentMap;
         float AmbientLightConstant;
+    };
+
+    struct RendererSettings
+    {
+        bool IsVSyncEnabled;
     };
 
     class SceneRenderer
@@ -42,6 +46,8 @@ namespace Astral {
 
         static void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
+        static void SetRendererSettings(const RendererSettings& rendererSettings);
+        static const RendererSettings& GetRendererSettings();
         static DescriptorSetHandle GetViewportTexture();
         static void ResizeViewport(uint32 width, uint32 height);
         static UVec2 GetViewportSize() { return m_Renderer->GetViewportSize(); }

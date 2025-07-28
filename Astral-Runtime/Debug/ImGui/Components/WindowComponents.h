@@ -7,9 +7,7 @@
 namespace Astral {
 
     void WindowDimensionsComponent();
-    void WindowVsyncStateComponent();
     void WindowAPIInfoComponent();
-    void VsyncToggleComponent();
     void WindowFramebufferScaleComponent();
 
 }

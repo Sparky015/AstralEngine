@@ -76,8 +76,18 @@ namespace Astral {
 
             ImGui::EndCombo();
         }
+    }
 
 
+    void VsyncToggleComponent()
+    {
+        RendererSettings rendererSettings = SceneRenderer::GetRendererSettings();
+
+        ImGui::Text("VSync: ");
+        ImGui::SameLine();
+        ImGui::Checkbox("##VSyncToggle", &rendererSettings.IsVSyncEnabled);
+
+        SceneRenderer::SetRendererSettings(rendererSettings);
     }
 
 }
