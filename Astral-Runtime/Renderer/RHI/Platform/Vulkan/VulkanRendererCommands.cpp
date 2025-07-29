@@ -261,38 +261,38 @@ namespace Astral {
         VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
 
         VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
-        // std::string imageViewName = std::string(name) + "_ImageView";
+        std::string imageViewName = std::string(name) + "_ImageView";
         VkDebugUtilsObjectNameInfoEXT imageViewNameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_IMAGE_VIEW,
             .objectHandle = (uint64)imageView,
-            .pObjectName = name.data(),
+            .pObjectName = imageViewName.data(),
         };
 
         vkSetDebugUtilsObjectNameEXT(device, &imageViewNameInfo);
 
         VkImage image = (VkImage)textureHandle->GetNativeImage();
-        // std::string imageName = std::string(name) + "_Image";
+        std::string imageName = std::string(name) + "_Image";
         VkDebugUtilsObjectNameInfoEXT imageNameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_IMAGE,
             .objectHandle = (uint64)image,
-            .pObjectName = name.data(),
+            .pObjectName = imageName.data(),
         };
 
         vkSetDebugUtilsObjectNameEXT(device, &imageNameInfo);
 
 
         VkSampler sampler = (VkSampler)textureHandle->GetNativeSampler();
-        // std::string samplerName = std::string(name) + "_Sampler";
+        std::string samplerName = std::string(name) + "_Sampler";
         VkDebugUtilsObjectNameInfoEXT samplerNameInfo = {
             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_SAMPLER,
             .objectHandle = (uint64)sampler,
-            .pObjectName = name.data(),
+            .pObjectName = samplerName.data(),
         };
 
         vkSetDebugUtilsObjectNameEXT(device, &samplerNameInfo);
