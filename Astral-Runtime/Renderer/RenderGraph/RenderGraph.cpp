@@ -690,7 +690,7 @@ namespace Astral {
             }
         }
 
-
+        m_ResourceBatchNumber++;
     }
 
 
