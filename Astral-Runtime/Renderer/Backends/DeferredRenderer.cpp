@@ -363,23 +363,29 @@ namespace Astral {
 
 
             context.SceneDataBuffer = device.CreateUniformBuffer(nullptr, sizeof(SceneData));
-            RendererAPI::NameObject(context.SceneDataBuffer, "Scene Data Buffer");
+            std::string sceneDataBufferName = std::string("Scene_Data_Buffer_") + std::to_string(i);
+            RendererAPI::NameObject(context.SceneDataBuffer, sceneDataBufferName);
 
             context.SceneLightsBuffer = device.CreateStorageBuffer(nullptr, 1024);
-            RendererAPI::NameObject(context.SceneLightsBuffer, "Scene Lights Buffer");
+            std::string sceneLightsBufferName = std::string("Scene_Lights_Buffer_") + std::to_string(i);
+            RendererAPI::NameObject(context.SceneLightsBuffer, sceneLightsBufferName);
 
             context.SceneDataDescriptorSet = device.CreateDescriptorSet();
             context.SceneDataDescriptorSet->BeginBuildingSet();
             context.SceneDataDescriptorSet->AddDescriptorUniformBuffer(context.SceneDataBuffer, ShaderStage::ALL);
             context.SceneDataDescriptorSet->AddDescriptorStorageBuffer(context.SceneLightsBuffer, ShaderStage::ALL);
             context.SceneDataDescriptorSet->EndBuildingSet();
-            RendererAPI::NameObject(context.SceneDataDescriptorSet, "Scene Data");
+            std::string sceneDataDescriptorSetName = std::string("Scene_Data_Descriptor_Set_") + std::to_string(i);
+            RendererAPI::NameObject(context.SceneDataDescriptorSet, sceneDataDescriptorSetName);
 
             context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
             UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
             context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
             context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
             context.WindowFramebuffer->EndBuildingFramebuffer();
+            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
+            RendererAPI::NameObject(context.WindowFramebuffer, windowFramebufferName);
+
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
             TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
@@ -387,6 +393,10 @@ namespace Astral {
             context.EnvironmentMap->BeginBuildingSet();
             context.EnvironmentMap->AddDescriptorImageSampler(environmentMap, ShaderStage::FRAGMENT);
             context.EnvironmentMap->EndBuildingSet();
+            std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
+            RendererAPI::NameObject(context.EnvironmentMap, environmentMapDescriptorSetName);
+
+
         }
     }
 
