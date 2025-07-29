@@ -348,7 +348,7 @@ namespace Astral {
         descriptorSetLayouts.reserve(m_Description.DescriptorSets.size());
         for (DescriptorSetHandle descriptorSet : m_Description.DescriptorSets)
         {
-            descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetLayout());
+            descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetNativeLayout());
         }
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
