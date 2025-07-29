@@ -558,6 +558,8 @@ namespace Astral {
 
             renderPass->EndBuildingSubpass();
             renderPass->EndBuildingRenderPass();
+
+            RendererAPI::NameObject(renderPass, pass.GetName());
         }
 
         // ----------------------------------------------------------------------------------------------------------------------------------
@@ -615,7 +617,7 @@ namespace Astral {
                     {
                         TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
-                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i));
+                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
                     }
                 }
                 else
@@ -624,7 +626,7 @@ namespace Astral {
                     {
                         TextureHandle attachmentTexture = m_OffscreenOutputTargets[i];
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
-                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i));
+                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
                     }
                 }
             }
@@ -659,7 +661,7 @@ namespace Astral {
                 }
 
                 passResources[i].Framebuffer->EndBuildingFramebuffer();
-                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetName()) + "_Framebuffer_" + std::to_string(i));
+                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetName()) + "_Framebuffer_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
 
 
             // Descriptor Sets
@@ -684,11 +686,11 @@ namespace Astral {
                     passResources[i].ReadAttachmentDescriptorSet->AddDescriptorImageSampler(externalAttachmentTexture, ShaderStage::FRAGMENT);
                 }
                 passResources[i].ReadAttachmentDescriptorSet->EndBuildingSet();
-                RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetName()) + "_ReadDescriptorSet_" + std::to_string(i));
+                RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetName()) + "_ReadDescriptorSet_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
             }
         }
 
-
+        m_ResourceBatchNumber++;
     }
 
 

@@ -232,6 +232,7 @@ namespace Astral {
 
         // Debug name for the render graph
         std::string_view m_DebugName;
+        uint64 m_ResourceBatchNumber = 0;
     };
 
 }

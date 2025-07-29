@@ -10282,7 +10282,7 @@
                 1.0
             ],
             "extras": {
-                "PointLightComponent_Intensity": 400000.0,
+                "PointLightComponent_Intensity": 200000000.0,
                 "PointLightComponent_LightColor_X": 1.0,
                 "PointLightComponent_LightColor_Y": 1.0,
                 "PointLightComponent_LightColor_Z": 1.0
@@ -10309,7 +10309,7 @@
                 1.0
             ],
             "extras": {
-                "PointLightComponent_Intensity": 200000.0,
+                "PointLightComponent_Intensity": 400000.0,
                 "PointLightComponent_LightColor_X": 1.0,
                 "PointLightComponent_LightColor_Y": 1.0,
                 "PointLightComponent_LightColor_Z": 1.0
@@ -10336,7 +10336,7 @@
                 1.0
             ],
             "extras": {
-                "PointLightComponent_Intensity": 200000.0,
+                "PointLightComponent_Intensity": 400000.0,
                 "PointLightComponent_LightColor_X": 1.0,
                 "PointLightComponent_LightColor_Y": 1.0,
                 "PointLightComponent_LightColor_Z": 1.0
