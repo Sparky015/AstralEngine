@@ -451,7 +451,7 @@ namespace Astral {
 
         // ImGui Rendering
         RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        m_ImGuiRenderPass->BeginRenderPass(commandBuffer, frameContext.WindowFramebuffer);
+        m_ImGuiRenderPass->BeginRenderPass(commandBuffer, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
         RendererAPI::CallImGuiDraws(commandBuffer);
         m_ImGuiRenderPass->EndRenderPass(commandBuffer);
         RendererAPI::EndLabel(commandBuffer);
