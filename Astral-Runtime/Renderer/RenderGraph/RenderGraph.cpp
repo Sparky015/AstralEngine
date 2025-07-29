@@ -603,7 +603,7 @@ namespace Astral {
                 {
                     TextureCreateInfo textureCreateInfo = {
                         .Format = localAttachment.AttachmentDescription.Format,
-                        .Layout = localAttachment.AttachmentDescription.InitialLayout,
+                        .Layout = localAttachment.InitialLayout,
                         .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
                         .Dimensions = passResourceDimensions,
                         .ImageData = nullptr

@@ -32,6 +32,7 @@ namespace Astral {
 
         /**
          * @brief Describes an attachment that is created by this render pass
+         * @warning The AttachmentDescription member is modified during render graph creation. Do not rely on the image layouts, load ops, and store ops staying the same.
          */
         struct LocalAttachment
         {
