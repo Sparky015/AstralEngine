@@ -15,7 +15,7 @@ namespace Astral {
         return (RenderPass ? RenderPass->GetNativeHandle() : nullptr) == (other.RenderPass ? other.RenderPass->GetNativeHandle() : nullptr) &&
                (VertexShader ? VertexShader->GetNativeHandle() : nullptr) == (other.VertexShader ? other.VertexShader->GetNativeHandle() : nullptr) &&
                (FragmentShader ? FragmentShader->GetNativeHandle() : nullptr) == (other.FragmentShader ? other.FragmentShader->GetNativeHandle() : nullptr) &&
-               (ShaderDataLayout ? ShaderDataLayout->GetLayout() : nullptr) == (other.ShaderDataLayout ? other.ShaderDataLayout->GetLayout() : nullptr) &&
+               ShaderDataLayout.Descriptors == other.ShaderDataLayout.Descriptors &&
                VertexBufferLayout == other.VertexBufferLayout;
     }
 
@@ -34,7 +34,7 @@ namespace Astral {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
-            .ShaderDataLayout = material.DescriptorSet,
+            .ShaderDataLayout = material.DescriptorSet->GetDescriptorSetLayout(),
             .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout()
         };
 

@@ -20,7 +20,7 @@ namespace Astral {
         RenderPassHandle RenderPass;
         ShaderHandle VertexShader;
         ShaderHandle FragmentShader;
-        DescriptorSetHandle ShaderDataLayout;
+        DescriptorSetLayout ShaderDataLayout;
         VertexBufferLayout VertexBufferLayout;
 
         bool operator==(const PipelineStateConfiguration& other) const;
