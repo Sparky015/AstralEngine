@@ -79,7 +79,6 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
-        // Blocks until resources from MAX_IN_FLIGHT_FRAMES - 1 frames ago are out of use
         RenderTargetHandle renderTarget;
         {
             PROFILE_SCOPE("SceneRenderer::BeginScene::AcquireNextImage")
@@ -87,7 +86,8 @@ namespace Astral {
         }
 
         m_IsSceneStarted = true;
-        m_CurrentFrameIndex = renderTarget->GetImageIndex();
+        m_CurrentFrameIndex++;
+        if (m_CurrentFrameIndex == 3) { m_CurrentFrameIndex = 0; }
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
@@ -345,7 +345,8 @@ namespace Astral {
                 .ImageData = nullptr
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
-            RendererAPI::NameObject(context.OffscreenRenderTarget, "Offscreen Render Target");
+            std::string offscreenRenderTargetName = std::string("Offscreen_Render_Target_") + std::to_string(i);
+            RendererAPI::NameObject(context.OffscreenRenderTarget, offscreenRenderTargetName);
 
 
 
@@ -514,8 +515,11 @@ namespace Astral {
             framebuffer->AttachRenderTarget(renderTargets[i]);
             framebuffer->EndBuildingFramebuffer();
 
-            RendererAPI::NameObject(frameContext.WindowFramebuffer, "Window Framebuffer");
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), "Swapchain Render Target");
+            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
+            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
+
+            std::string swapchainRenderTarget = std::string("Swapchain_Render_Target_") + std::to_string(i);
+            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTarget);
         }
     }
 
@@ -684,6 +688,8 @@ namespace Astral {
             };
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
+            std::string offscreenRenderTargetName = std::string("Offscreen_Render_Target_") + std::to_string(i);
+            RendererAPI::NameObject(frameContext.OffscreenRenderTarget, offscreenRenderTargetName);
 
             frameContext.OffscreenDescriptorSet->UpdateImageSamplerBinding(0, frameContext.OffscreenRenderTarget);
         }
