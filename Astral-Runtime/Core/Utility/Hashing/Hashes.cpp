@@ -30,15 +30,13 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
 {
     std::size_t seed = 0;
 
-    // Hash RenderPassHandle: Hash the underlying native handle (void*)
     if (config.RenderPass)
     {
         Astral::HashCombine(seed, std::hash<void*>{}(config.RenderPass->GetNativeHandle()));
     } else {
-        Astral::HashCombine(seed, 0); // Consistent hash for null handle
+        Astral::HashCombine(seed, 0);
     }
 
-    // Hash VertexShaderHandle: Hash the underlying native handle (void*)
     if (config.VertexShader)
     {
         Astral::HashCombine(seed, std::hash<void*>{}(config.VertexShader->GetNativeHandle()));
@@ -46,7 +44,6 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
         Astral::HashCombine(seed, 0);
     }
 
-    // Hash FragmentShaderHandle: Hash the underlying native handle (void*)
     if (config.FragmentShader)
     {
         Astral::HashCombine(seed, std::hash<void*>{}(config.FragmentShader->GetNativeHandle()));
@@ -54,15 +51,13 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
         Astral::HashCombine(seed, 0);
     }
 
-    // Hash DescriptorSetHandle: Hash the underlying layout handle (void*)
-    if (config.ShaderDataLayout)
+
+    for (Astral::Descriptor descriptor : config.ShaderDataLayout.Descriptors)
     {
-        Astral::HashCombine(seed, std::hash<void*>{}(config.ShaderDataLayout->GetLayout()));
-    } else {
-        Astral::HashCombine(seed, 0);
+        Astral::HashCombine(seed, std::hash<Astral::Descriptor>{}(descriptor));
     }
 
-    // Hash VertexBufferLayout: Use the specialized std::hash for VertexBufferLayout
+
     Astral::HashCombine(seed, std::hash<Astral::VertexBufferLayout>{}(config.VertexBufferLayout));
 
     return seed;

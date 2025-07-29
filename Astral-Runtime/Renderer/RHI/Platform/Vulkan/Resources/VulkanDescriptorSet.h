@@ -37,7 +37,9 @@ namespace Astral {
         void UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle) override;
         void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle newTextureHandle) override;
 
-        void* GetLayout() override { return m_DescriptorSetLayout; }
+        const DescriptorSetLayout& GetDescriptorSetLayout() override { return m_DescriptorSetLayout; }
+
+        void* GetNativeLayout() override { return m_VkDescriptorSetLayout; }
         void* GetNativeHandle() override { return m_DescriptorSet; }
 
         void Invalidate();
@@ -65,7 +67,9 @@ namespace Astral {
 
         VkDescriptorPool m_DescriptorPool;
         VkDescriptorSet m_DescriptorSet;
-        VkDescriptorSetLayout m_DescriptorSetLayout;
+        VkDescriptorSetLayout m_VkDescriptorSetLayout;
+
+        DescriptorSetLayout m_DescriptorSetLayout;
     };
 
 }

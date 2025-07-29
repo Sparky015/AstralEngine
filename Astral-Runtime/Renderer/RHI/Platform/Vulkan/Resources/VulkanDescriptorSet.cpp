@@ -18,7 +18,7 @@ namespace Astral {
         m_Textures(),
         m_DescriptorPool(VK_NULL_HANDLE),
         m_DescriptorSet(VK_NULL_HANDLE),
-        m_DescriptorSetLayout(VK_NULL_HANDLE)
+        m_VkDescriptorSetLayout(VK_NULL_HANDLE)
     {
     }
 
@@ -65,6 +65,7 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(storageBufferDescriptorLayoutBinding);
         m_Buffers.push_back(bufferHandle);
+        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_BUFFER);
     }
 
 
@@ -94,6 +95,7 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(uniformBufferDescriptorLayoutBinding);
         m_Buffers.push_back(bufferHandle);
+        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::UNIFORM_BUFFER);
     }
 
 
@@ -125,6 +127,7 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(imageSamplerDescriptorLayoutBinding);
         m_Textures.push_back(textureHandle);
+        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::IMAGE_SAMPLER);
     }
 
 
@@ -156,6 +159,7 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(inputAttachmentDescriptorLayoutBinding);
         m_Textures.push_back(textureHandle);
+        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::SUBPASS_INPUT_ATTACHMENT);
     }
 
 
@@ -336,7 +340,7 @@ namespace Astral {
     {
         // if (m_DescriptorSet) { FreeDescriptorSet(); m_DescriptorSet = VK_NULL_HANDLE; } // This needs to have the free set bit in the descriptor pool
         if (m_DescriptorPool) { DestroyDescriptorPool(); m_DescriptorPool = VK_NULL_HANDLE; }
-        if (m_DescriptorSetLayout) { DestroyDescriptorSetLayout(); m_DescriptorSetLayout = VK_NULL_HANDLE; }
+        if (m_VkDescriptorSetLayout) { DestroyDescriptorSetLayout(); m_VkDescriptorSetLayout = VK_NULL_HANDLE; }
         m_DescriptorSetLayoutBindings.clear();
 
         m_Buffers.clear();
@@ -414,15 +418,15 @@ namespace Astral {
             .pBindings = m_DescriptorSetLayoutBindings.data(),
         };
 
-        VkResult result = vkCreateDescriptorSetLayout(m_Device, &descriptorSetLayoutCreateInfo, nullptr, &m_DescriptorSetLayout);
+        VkResult result = vkCreateDescriptorSetLayout(m_Device, &descriptorSetLayoutCreateInfo, nullptr, &m_VkDescriptorSetLayout);
         ASSERT(result == VK_SUCCESS, "Failed to create descriptor set layout!");
     }
 
 
     void VulkanDescriptorSet::DestroyDescriptorSetLayout()
     {
-        vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
-        m_DescriptorSetLayout = VK_NULL_HANDLE;
+        vkDestroyDescriptorSetLayout(m_Device, m_VkDescriptorSetLayout, nullptr);
+        m_VkDescriptorSetLayout = VK_NULL_HANDLE;
     }
 
 
@@ -433,7 +437,7 @@ namespace Astral {
             .pNext = nullptr,
             .descriptorPool = m_DescriptorPool,
             .descriptorSetCount = 1,
-            .pSetLayouts = &m_DescriptorSetLayout
+            .pSetLayouts = &m_VkDescriptorSetLayout
         };
 
         VkResult result = vkAllocateDescriptorSets(m_Device, &descriptorSetAllocateInfo, &m_DescriptorSet);

@@ -20,6 +20,19 @@ namespace Astral {
         ALL
     };
 
+    enum class Descriptor
+    {
+        STORAGE_BUFFER,
+        UNIFORM_BUFFER,
+        IMAGE_SAMPLER,
+        SUBPASS_INPUT_ATTACHMENT
+    };
+
+    struct DescriptorSetLayout
+    {
+        std::vector<Descriptor> Descriptors;
+    };
+
     class DescriptorSet
     {
     public:
@@ -37,10 +50,13 @@ namespace Astral {
         virtual void UpdateImageSamplerBinding(uint32 binding, TextureHandle textureHandle) = 0;
         virtual void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle textureHandle) = 0;
 
-        virtual void* GetLayout() = 0;
+        virtual const DescriptorSetLayout& GetDescriptorSetLayout() = 0;
+
+        virtual void* GetNativeLayout() = 0;
         virtual void* GetNativeHandle() = 0;
 
         static GraphicsRef<DescriptorSet> CreateDescriptorSet();
+
     };
 
     using DescriptorSetHandle = GraphicsRef<DescriptorSet>;
