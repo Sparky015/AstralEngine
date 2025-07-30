@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "Debug/MemoryTracking/GenericRegionAllocator.h"
+#include "Asset/Ref.h"
 
 namespace Astral {
 
