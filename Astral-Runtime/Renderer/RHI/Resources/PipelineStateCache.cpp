@@ -35,7 +35,8 @@ namespace Astral {
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
             .ShaderDataLayout = material.DescriptorSet->GetDescriptorSetLayout(),
-            .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout()
+            .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout(),
+            .IsAlphaBlended = material.IsAlphaBlended
         };
 
         // If the pipeline was created already, return it
@@ -56,7 +57,8 @@ namespace Astral {
             .FragmentShader = material.FragmentShader,
             .DescriptorSets = descriptorSets,
             .BufferLayout = mesh.VertexBuffer->GetBufferLayout(),
-            .SubpassIndex = subpassIndex
+            .SubpassIndex = subpassIndex,
+            .IsAlphaBlended = material.IsAlphaBlended
         };
 
         PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);

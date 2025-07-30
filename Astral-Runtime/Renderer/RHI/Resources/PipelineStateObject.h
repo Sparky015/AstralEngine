@@ -33,6 +33,7 @@ namespace Astral {
         const std::vector<DescriptorSetHandle>& DescriptorSets;
         const VertexBufferLayout& BufferLayout;
         uint32 SubpassIndex;
+        bool IsAlphaBlended;
     };
 
     class PipelineStateObject

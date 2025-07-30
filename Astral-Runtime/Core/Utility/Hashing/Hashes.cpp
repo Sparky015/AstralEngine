@@ -57,8 +57,9 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
         Astral::HashCombine(seed, std::hash<Astral::Descriptor>{}(descriptor));
     }
 
-
     Astral::HashCombine(seed, std::hash<Astral::VertexBufferLayout>{}(config.VertexBufferLayout));
+
+    Astral::HashCombine(seed, std::hash<bool>{}(config.IsAlphaBlended));
 
     return seed;
 }
