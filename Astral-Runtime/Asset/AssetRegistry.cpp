@@ -181,6 +181,8 @@ namespace Astral {
 
     void AssetRegistry::GetRelativePath(std::filesystem::path& outfilePath)
     {
+        if (outfilePath.string().find("Temp://") != std::string::npos) { return; } // If path has "Temp://", it means it is a runtime created resource
+
         if (IsInDirectory(m_AssetDirectoryPath, outfilePath))
         {
             // Path is contained in assets directory
