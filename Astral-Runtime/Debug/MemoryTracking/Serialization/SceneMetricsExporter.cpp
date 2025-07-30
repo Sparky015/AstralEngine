@@ -110,12 +110,11 @@ namespace Astral {
         auto now = std::chrono::system_clock::now();
         std::time_t now_c = std::chrono::system_clock::to_time_t(now);
         std::tm localTime = *std::localtime(&now_c);
-
         char yearMonthBuffer[8];
         char dayBuffer[7];
         char timeBuffer[10];
 
-        std::strftime(yearMonthBuffer, sizeof(yearMonthBuffer), "%Y-%m", &localTime);
+        snprintf(yearMonthBuffer, sizeof(yearMonthBuffer), "%d-%d", localTime.tm_year + 1900, localTime.tm_mon + 1);
         std::strftime(dayBuffer, sizeof(dayBuffer), "Day-%d", &localTime);
         std::strftime(timeBuffer, sizeof(timeBuffer), "%H-%M-%S", &localTime);
 
