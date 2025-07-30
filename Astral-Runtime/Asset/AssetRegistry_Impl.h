@@ -124,6 +124,35 @@ namespace Astral {
 
     template <typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
+    void AssetRegistry::RegisterRuntimeAsset(Ref<AssetType> alreadyLoadedAsset, const std::string& uniqueIdentifier)
+    {
+        if (alreadyLoadedAsset == nullptr || uniqueIdentifier == "") { return; }
+        PROFILE_SCOPE("AssetRegistry::RegisterRuntimeAsset")
+
+        std::string filePath = "Temp://" + uniqueIdentifier;
+
+        // Check if the asset is already loaded first, if it is, cancel registration
+        if (m_FilePathToAssetID.contains(filePath)) { return; }
+
+
+        // If the file has never been loaded, assign a new AssetID
+        AssetID assetID = AssignNextAvailableAssetID();
+
+        m_RegistryStats.NumberOfLoadsMade++;
+        m_RegistryStats.NumberOfLoadedAssets++;
+        m_RegistryStats.LoadedAssetsByType[AssetType::GetStaticAssetType()] += 1;
+
+        // Now add the asset to storage
+        m_FilePathToAssetID[filePath] = assetID;
+        m_AssetIDToFilePath[assetID] = filePath;
+        m_AssetIDToAsset[assetID] = alreadyLoadedAsset;
+
+        alreadyLoadedAsset->SetAssetID(assetID);
+    }
+
+
+    template <typename AssetType>
+        requires std::is_base_of_v<Asset, AssetType>
     Ref<AssetType> AssetRegistry::GetAsset(AssetID assetID)
     {
         ASSERT(assetID != NullAssetID, "Asset ID is null!");
