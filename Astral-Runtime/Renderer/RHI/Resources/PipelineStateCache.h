@@ -22,6 +22,7 @@ namespace Astral {
         ShaderHandle FragmentShader;
         DescriptorSetLayout ShaderDataLayout;
         VertexBufferLayout VertexBufferLayout;
+        bool IsAlphaBlended;
 
         bool operator==(const PipelineStateConfiguration& other) const;
     };

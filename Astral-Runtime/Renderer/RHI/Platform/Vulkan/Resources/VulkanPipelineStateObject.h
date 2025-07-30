@@ -26,6 +26,7 @@ namespace Astral {
         std::vector<DescriptorSetHandle> DescriptorSets;
         VertexBufferLayout VertexBufferLayout;
         uint32 SubpassIndex;
+        bool IsAlphaBlended;
     };
 
     class VulkanPipelineStateObject : public PipelineStateObject

@@ -35,6 +35,7 @@ namespace Astral {
         DescriptorSetHandle DescriptorSet;
         bool HasNormalMap;
         bool HasDirectXNormals;
+        bool IsAlphaBlended;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::Material; }

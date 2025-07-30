@@ -136,7 +136,8 @@ namespace Astral {
             .FragmentShader = pipelineStateObjectCreateInfo.FragmentShader,
             .DescriptorSets = pipelineStateObjectCreateInfo.DescriptorSets,
             .VertexBufferLayout = pipelineStateObjectCreateInfo.BufferLayout,
-            .SubpassIndex = pipelineStateObjectCreateInfo.SubpassIndex
+            .SubpassIndex = pipelineStateObjectCreateInfo.SubpassIndex,
+            .IsAlphaBlended = pipelineStateObjectCreateInfo.IsAlphaBlended
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
