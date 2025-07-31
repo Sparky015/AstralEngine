@@ -32,6 +32,7 @@ namespace Astral {
         TextureConvention TextureConvention;
         Ref<Shader> FragmentShader;
         std::vector<Ref<Texture>> Textures;
+        std::vector<float> ParameterValues;
         DescriptorSetHandle DescriptorSet;
         bool HasNormalMap;
         bool HasDirectXNormals;
