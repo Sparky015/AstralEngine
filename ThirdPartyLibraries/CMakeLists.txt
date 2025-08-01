@@ -14,3 +14,5 @@ add_subdirectory(nativefiledialog-extended)
 add_subdirectory(assimp)
 add_subdirectory(gli)
 add_subdirectory(ImGuizmo)
+add_subdirectory(yaml-cpp)
+
