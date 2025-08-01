@@ -52,6 +52,13 @@ namespace Astral {
         }
     }
 
+    inline ShaderModel StringToShaderModel(std::string_view shaderModel)
+    {
+        if (shaderModel == "Unlit") return ShaderModel::UNLIT;
+        if (shaderModel == "PBR") return ShaderModel::PBR;
+        ASTRAL_ERROR("Unsupported shader model string given!");
+    }
+
     inline std::string_view TextureConventionToString(TextureConvention textureConvention)
     {
         switch (textureConvention)
@@ -60,6 +67,13 @@ namespace Astral {
             case TextureConvention::ORM_PACKED: return "AO-Roughness-Metallic Packed";
             default: return "None";
         }
+    }
+
+    inline TextureConvention StringToTextureConvention(std::string_view textureConvention)
+    {
+        if (textureConvention == "Unpacked") return TextureConvention::UNPACKED;
+        if (textureConvention == "AO-Roughness-Metallic Packed") return TextureConvention::ORM_PACKED;
+        ASTRAL_ERROR("Unsupported texture convention string given!");
     }
 
 }
