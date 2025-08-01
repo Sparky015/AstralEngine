@@ -308,6 +308,9 @@ target_link_libraries(AstralEngine PRIVATE nfd)
 target_link_libraries(AstralEngine PUBLIC msgpack-cxx)
 target_link_libraries(AstralEngine PUBLIC assimp)
 target_link_libraries(AstralEngine PUBLIC gli)
+target_link_libraries(AstralEngine PRIVATE yaml-cpp)
+
+
 
 
 target_link_libraries(AstralEngine PRIVATE cpptrace::cpptrace)
@@ -327,6 +330,7 @@ add_dependencies(AstralEngine
         assimp
         nfd
         gli
+        yaml-cpp
 )
 
 if (APPLE)
@@ -390,6 +394,8 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/nativefiledialog-extended/src/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/assimp/include")
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/gli/")
+target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/yaml-cpp/")
+
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
