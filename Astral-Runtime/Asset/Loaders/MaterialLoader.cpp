@@ -16,7 +16,7 @@
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-#include <fstream>
+#include "yaml-cpp/yaml.h"
 
 namespace Astral {
 
@@ -26,72 +26,66 @@ namespace Astral {
         if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
 
         std::ifstream fileStream = std::ifstream(filePath);
-
         ASSERT(!fileStream.eof(), "Material file is empty!")
-
-        Ref<Material> material = CreateRef<Material>();
-
-        std::string shaderModel;
-        std::getline(fileStream, shaderModel);
-
-        material->ShaderModel = shaderModel == "PBR" ? ShaderModel::PBR : ShaderModel::UNLIT;
-
-        std::string fragmentShaderPath;
-        std::getline(fileStream, fragmentShaderPath);
-        std::replace(fragmentShaderPath.begin(), fragmentShaderPath.end(), '\\', '/');
-        std::string texturePath;
-        std::getline(fileStream, texturePath);
-        std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
+        YAML::Node file = YAML::Load(fileStream);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        Ref<Shader> fragmentShader = registry.CreateAsset<Shader>(fragmentShaderPath);
-        Ref<Texture> texture = registry.CreateAsset<Texture>(texturePath);
-        if (!texture) { texture = registry.GetAsset<Texture>("Textures/MissingTexture.png"); }
+        Ref<Material> material = CreateRef<Material>();
 
-        std::string optional_metallic;
-        std::string optional_roughness;
-        std::string optional_emission;
-        std::string optional_normals;
-        Ref<Texture> texture_metallic;
-        Ref<Texture> texture_roughness;
-        Ref<Texture> texture_emission;
-        Ref<Texture> texture_normals;
-        if (!fileStream.eof())
-        {
-            std::getline(fileStream, optional_metallic);
-            std::replace(optional_metallic.begin(), optional_metallic.end(), '\\', '/');
-            std::getline(fileStream, optional_roughness);
-            std::replace(optional_roughness.begin(), optional_roughness.end(), '\\', '/');
-            std::getline(fileStream, optional_emission);
-            std::replace(optional_emission.begin(), optional_emission.end(), '\\', '/');
-            std::getline(fileStream, optional_normals);
-            std::replace(optional_normals.begin(), optional_normals.end(), '\\', '/');
+        try {
+            std::string shaderModel = file["Shader Model"].as<std::string>();
+            material->ShaderModel = StringToShaderModel(shaderModel);
 
-            texture_metallic = registry.CreateAsset<Texture>(optional_metallic);
-            texture_roughness = registry.CreateAsset<Texture>(optional_roughness);
-            texture_emission = registry.CreateAsset<Texture>(optional_emission);
-            texture_normals = registry.CreateAsset<Texture>(optional_normals);
+            std::string shaderPath = file["Shader"].as<std::string>();
+            std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
+            material->FragmentShader = registry.CreateAsset<Shader>(shaderPath);
+
+            std::string textureConvention = file["Texture Convention"].as<std::string>();
+            material->TextureConvention = StringToTextureConvention(textureConvention);
+
+            std::string normalsConvention = file["Normals Convention"].as<std::string>();
+            material->HasDirectXNormals = normalsConvention == "DirectX";
+
+            material->IsAlphaBlended = file["Is Alpha Blended"].as<bool>();
+
+
+            DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
+            descriptorSetHandle->BeginBuildingSet();
+
+            const YAML::Node& textureMaps = file["Texture Maps"];
+            for (const auto& map : textureMaps)
+            {
+                std::string textureMapPath = map.begin()->second.as<std::string>();
+                std::replace(textureMapPath.begin(), textureMapPath.end(), '\\', '/');
+
+                if (map.begin()->first.as<std::string>() == "Normals")
+                {
+                    if (textureMapPath == "")
+                    {
+                        material->HasNormalMap = false;
+                        textureMapPath = "Textures/SolidWhite.png";
+                    }
+                }
+
+                TextureHandle textureMap = registry.CreateAsset<Texture>(textureMapPath);
+                material->Textures.push_back(textureMap);
+                descriptorSetHandle->AddDescriptorImageSampler(textureMap, ShaderStage::FRAGMENT);
+            }
+
+            descriptorSetHandle->EndBuildingSet();
+            RendererAPI::NameObject(descriptorSetHandle, filePath.filename().generic_string().data());
+            material->DescriptorSet = descriptorSetHandle;
         }
-
-
-        DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
-        descriptorSetHandle->BeginBuildingSet();
-        descriptorSetHandle->AddDescriptorImageSampler(texture, ShaderStage::FRAGMENT);
-        if (optional_metallic != "")
+        catch (const YAML::Exception& e)
         {
-            descriptorSetHandle->AddDescriptorImageSampler(texture_metallic, ShaderStage::FRAGMENT);
-            descriptorSetHandle->AddDescriptorImageSampler(texture_roughness, ShaderStage::FRAGMENT);
-            descriptorSetHandle->AddDescriptorImageSampler(texture_emission, ShaderStage::FRAGMENT);
-            descriptorSetHandle->AddDescriptorImageSampler(texture_normals, ShaderStage::FRAGMENT);
+            ASTRAL_ERROR("Error during material loading! Error: " << e.what())
+            return nullptr;
         }
-        descriptorSetHandle->EndBuildingSet();
-
-        RendererAPI::NameObject(descriptorSetHandle, filePath.filename().generic_string().data());
-
-        material->FragmentShader = fragmentShader;
-        material->Textures.push_back(texture);
-        material->DescriptorSet = descriptorSetHandle;
-        material->HasNormalMap = false; // TODO: Write this to the material file or have a normal map field with no file path assigned
+        catch (...)
+        {
+            ASTRAL_ERROR("Error during material loading!")
+            return nullptr;
+        }
 
         return material;
     }
@@ -101,28 +95,92 @@ namespace Astral {
     {
         outFilePath.replace_extension(".astmat");
         std::ofstream fileStream = std::ofstream(outFilePath);
+        YAML::Emitter out{fileStream};
 
-        fileStream << ShaderModelToString(material->ShaderModel) << "\n";
-
-        // TODO: serialize the texture conventions
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
-        std::string fragmentShaderPath = registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID()).generic_string();
 
-        fileStream << fragmentShaderPath << "\n";
 
-        ASSERT(!material->Textures.empty(), "Expected material to have at least 1 texture!")
-        std::filesystem::path baseColorPath = registry.GetFilePathFromAssetID(material->Textures[0]->GetAssetID());
-        fileStream << baseColorPath.generic_string() << "\n";
+        out << YAML::BeginMap;
+
+        out << YAML::Key << "Shader Model";
+        out << YAML::Value << ShaderModelToString(material->ShaderModel).data();
+
+        out << YAML::Key << "Shader";
+        out << YAML::Value << registry.GetFilePathFromAssetID(material->FragmentShader->GetAssetID()).generic_string();
+
+        out << YAML::Key << "Texture Convention";
+        out << YAML::Value << TextureConventionToString(material->TextureConvention).data();
+
+        out << YAML::Key << "Normals Convention";
+        out << YAML::Value << (material->HasDirectXNormals ? "DirectX" : "Vulkan/OpenGL");
+
+        out << YAML::Key << "Is Alpha Blended";
+        out << YAML::Value << material->IsAlphaBlended;
+
+
+        out << YAML::Key << "Texture Maps";
+        out << YAML::Value << YAML::BeginSeq;
 
         if (material->ShaderModel == ShaderModel::PBR)
         {
-            ASSERT(material->Textures.size() >= 4, "Expected PBR material to have at least 4 maps!")
-            for (int i = 1; i < material->Textures.size(); i++)
+            if (material->TextureConvention == TextureConvention::UNPACKED)
             {
-                std::filesystem::path mapPath = registry.GetFilePathFromAssetID(material->Textures[i]->GetAssetID());
-                fileStream << mapPath.generic_string() << "\n";
+                ASSERT(material->Textures.size() == 5, "Expected PBR material with unpacked texture convention to have at least 5 maps!")
+                static constexpr std::array<std::string_view, 5> textureNames = {"Base Color", "Metallic", "Roughness", "Emission", "Normals"};
+
+                for (size_t i = 0; i < material->Textures.size(); i++)
+                {
+                    AssetID textureAssetID = material->Textures[i]->GetAssetID();
+                    std::filesystem::path mapPath = registry.GetFilePathFromAssetID(textureAssetID);
+
+                    if (i == 4) // Normals texture
+                    {
+                        if (!material->HasNormalMap) { mapPath = ""; }
+                    }
+
+                    out << YAML::BeginMap;
+                    out << YAML::Key << textureNames[i].data();
+                    out << YAML::Value << mapPath.generic_string();
+                    out << YAML::EndMap;
+                }
+            }
+            else if (material->TextureConvention == TextureConvention::ORM_PACKED)
+            {
+                ASSERT(material->Textures.size() == 4, "Expected PBR material with ao-roughness-metallic packed texture convention to have at least 4 maps!")
+                static constexpr std::array<std::string_view, 4> textureNames = {"Base Color", "AO-Roughness-Metallic", "Emission", "Normals"};
+
+                for (size_t i = 0; i < material->Textures.size(); i++)
+                {
+                    AssetID textureAssetID = material->Textures[i]->GetAssetID();
+                    std::filesystem::path mapPath = registry.GetFilePathFromAssetID(textureAssetID);
+
+                    if (i == 3) // Normals texture
+                    {
+                        if (!material->HasNormalMap) { mapPath = ""; }
+                    }
+
+                    out << YAML::BeginMap;
+                    out << YAML::Key << textureNames[i].data();
+                    out << YAML::Value << mapPath.generic_string();
+                    out << YAML::EndMap;
+                }
             }
         }
+        else if (material->ShaderModel == ShaderModel::UNLIT)
+        {
+            ASSERT(material->Textures.size() == 1, "Expected Unlit material to have 1 texture!")
+            AssetID textureAssetID = material->Textures[0]->GetAssetID();
+            std::filesystem::path mapPath = registry.GetFilePathFromAssetID(textureAssetID);
+            out << YAML::BeginMap;
+            out << YAML::Key << "Base Color";
+            out << YAML::Value << mapPath.generic_string();
+            out << YAML::EndMap;
+        }
+
+        out << YAML::EndSeq;
+        out << YAML::EndMap;
+
+        fileStream.close();
     }
 
 }
