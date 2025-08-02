@@ -45,6 +45,7 @@ namespace Astral {
         DescriptorSetHandle CreateDescriptorSet() override;
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
+        TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
 
         void WaitIdle() override;
 

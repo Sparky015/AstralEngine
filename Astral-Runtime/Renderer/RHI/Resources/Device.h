@@ -39,6 +39,8 @@ namespace Astral {
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
         virtual TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) = 0;
+        virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
+
 
         virtual void WaitIdle() = 0;
 

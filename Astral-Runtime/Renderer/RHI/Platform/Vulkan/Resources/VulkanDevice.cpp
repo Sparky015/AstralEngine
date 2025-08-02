@@ -257,6 +257,26 @@ namespace Astral {
     }
 
 
+    TextureHandle VulkanDevice::Create3DTexture(const TextureCreateInfo& textureCreateInfo)
+    {
+        VulkanTextureDesc textureDesc = {
+            .VulkanDevice = this,
+            .Device = m_Device,
+            .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageLayout = textureCreateInfo.Layout,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = 1,
+            .TextureType = TextureType::IMAGE_3D
+        };
+
+        return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
     void VulkanDevice::WaitIdle()
     {
         vkDeviceWaitIdle(m_Device);
