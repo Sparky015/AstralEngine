@@ -115,11 +115,21 @@ namespace Astral {
 
     	VkImageCreateFlags createFlags = (m_TextureType == TextureType::CUBEMAP) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
 
+		VkImageType imageType;
+    	switch (m_TextureType)
+    	{
+    		case TextureType::IMAGE_2D: imageType = VK_IMAGE_TYPE_2D; break;
+    		case TextureType::IMAGE_3D: imageType = VK_IMAGE_TYPE_3D; break;
+    		case TextureType::CUBEMAP: imageType = VK_IMAGE_TYPE_2D; break;
+    		default: imageType = VK_IMAGE_TYPE_2D;
+    	}
+
+
         VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
             .pNext = nullptr,
             .flags = createFlags,
-            .imageType = VK_IMAGE_TYPE_2D,
+            .imageType = imageType,
             .format = m_Format,
             .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},
             .mipLevels = 1,
@@ -189,6 +199,7 @@ namespace Astral {
     	switch (m_TextureType)
     	{
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
 		    default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
