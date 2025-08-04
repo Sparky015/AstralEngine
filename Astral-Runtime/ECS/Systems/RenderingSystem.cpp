@@ -39,7 +39,7 @@ namespace Astral {
         static DeltaTime deltaTime;
 
         deltaTime.UpdateDeltaTime();
-        magnitude = 800 * deltaTime.GetSeconds();
+        magnitude = 8 * deltaTime.GetSeconds();
 
         if (InputState::IsKeyDown(KEY_LEFT_CLICK))
         {
