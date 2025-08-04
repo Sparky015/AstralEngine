@@ -6,6 +6,8 @@
 
 #include "SceneLoader.h"
 
+#include <numbers>
+
 #include "Debug/Utilities/Loggers.h"
 
 #include <assimp/Importer.hpp>
@@ -25,6 +27,10 @@
 #include "Renderer/Common/Material.h"
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/RHI/Resources/Texture.h"
+
+#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Astral {
 
@@ -349,6 +355,23 @@ namespace Astral {
         LOG("Loading Scene: " << scene->mName.C_Str());
         LOG("Scene has " << scene->mNumLights << " lights!")
 
+        for (int i = 0; i < scene->mMetaData->mNumProperties; i++)
+        {
+            aiString* key = &scene->mMetaData->mKeys[i];
+            aiMetadataEntry* entry = &scene->mMetaData->mValues[i];
+
+            std::string entryValue;
+            if (entry->mType == AI_INT32)
+            {
+                entryValue = std::to_string(*(int*)entry->mData);
+            }
+            if (entry->mType == AI_AISTRING)
+            {
+                entryValue = std::string(((aiString*)entry->mData)->C_Str());
+            }
+            LOG(i << ": " << key->C_Str() << " -> " << entryValue);
+        }
+
         // Create directory for new files to go into for better organization
         std::filesystem::path destinationDir{};
         if (shouldSerializeObjects)
@@ -526,20 +549,40 @@ namespace Astral {
         }
 
 
+        // Assume this is your row-major matrix from another source
+        glm::mat4 glmMatrix(
+            transformMatrix.a1, transformMatrix.b1, transformMatrix.c1, transformMatrix.d1,
+            transformMatrix.a2, transformMatrix.b2, transformMatrix.c2, transformMatrix.d2,
+            transformMatrix.a3, transformMatrix.b3, transformMatrix.c3, transformMatrix.d3,
+            transformMatrix.a4, transformMatrix.b4, transformMatrix.c4, transformMatrix.d4
+        );
+        // Transpose the matrix to convert it to column-major
+
+        // Now decompose the column-major matrix
+        glm::vec3 scale;
+        glm::quat orientation;
+        glm::vec3 translation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+
+        glm::decompose(glmMatrix, scale, orientation, translation, skew, perspective);
+
         TransformComponent transformComponent{};
-        transformComponent.position = {transformMatrix.a4, transformMatrix.b4, transformMatrix.c4};
-        Vec3 scaleX = {transformMatrix.a1, transformMatrix.b1, transformMatrix.c1};
-        Vec3 scaleY = {transformMatrix.a2, transformMatrix.b2, transformMatrix.c2};
-        Vec3 scaleZ = {transformMatrix.a3, transformMatrix.b3, transformMatrix.c3};
-        transformComponent.scale = {scaleX.length(), scaleY.length(), scaleZ.length()};
+        // transformComponent.position = {transformMatrix.a4, transformMatrix.b4, transformMatrix.c4};
+        // Vec3 scaleX = {transformMatrix.a1, transformMatrix.b1, transformMatrix.c1};
+        // Vec3 scaleY = {transformMatrix.a2, transformMatrix.b2, transformMatrix.c2};
+        // Vec3 scaleZ = {transformMatrix.a3, transformMatrix.b3, transformMatrix.c3};
+        // transformComponent.scale = {glm::length(scaleX), glm::length(scaleY), glm::length(scaleZ)};
+        // glm::mat3x3 rotationMatrix(
+        // transformMatrix.a1 / transformComponent.scale.x, transformMatrix.a2 / transformComponent.scale.y, transformMatrix.a3 / transformComponent.scale.z,
+        // transformMatrix.b1 / transformComponent.scale.x, transformMatrix.b2 / transformComponent.scale.y, transformMatrix.b3 / transformComponent.scale.z,
+        // transformMatrix.c1 / transformComponent.scale.x, transformMatrix.c2 / transformComponent.scale.y, transformMatrix.c3 / transformComponent.scale.z);
+        //
+        // glm::quat quat = glm::quat_cast(rotationMatrix);
+        transformComponent.position = translation;
+        transformComponent.scale = scale;
+        transformComponent.rotation = glm::degrees(glm::eulerAngles(orientation));
 
-        glm::mat3x3 rotationMatrix(
-        transformMatrix.a1 / transformComponent.scale.x, transformMatrix.a2 / transformComponent.scale.y, transformMatrix.a3 / transformComponent.scale.z,
-        transformMatrix.b1 / transformComponent.scale.x, transformMatrix.b2 / transformComponent.scale.y, transformMatrix.b3 / transformComponent.scale.z,
-        transformMatrix.c1 / transformComponent.scale.x, transformMatrix.c2 / transformComponent.scale.y, transformMatrix.c3 / transformComponent.scale.z);
-
-        glm::quat quat = {rotationMatrix};
-        transformComponent.rotation = glm::eulerAngles(quat);
         transformComponent.rotation += m_DefaultRotationOffset;
 
 
@@ -549,6 +592,7 @@ namespace Astral {
             transformComponent.position.x += light->mPosition.x;
             transformComponent.position.y += light->mPosition.y;
             transformComponent.position.z += light->mPosition.z;
+
 
             if (light->mType == aiLightSource_POINT)
             {
