@@ -31,6 +31,7 @@
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
+#include "glm/gtx/euler_angles.hpp"
 
 namespace Astral {
 
@@ -330,20 +331,19 @@ namespace Astral {
     }
 
 
-    // TODO: Add a hashmap of already loaded aiMesh's as keys and their serialized file path as the value to prevent creating duplicates of the same mesh
     void SceneLoader::Helpers::LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects)
     {
         std::filesystem::path sceneDir = sceneFilePath.parent_path();
 
         Assimp::Importer importer;
 
+
         const aiScene* scene = importer.ReadFile( sceneFilePath.string(),
         aiProcess_CalcTangentSpace       |
         aiProcess_Triangulate            |
         aiProcess_JoinIdenticalVertices  |
         aiProcess_SortByPType            |
-        aiProcess_FlipUVs
-        );
+        aiProcess_FlipUVs );
 
         // If the import failed, report it
         if (nullptr == scene)
@@ -364,6 +364,26 @@ namespace Astral {
             if (entry->mType == AI_INT32)
             {
                 entryValue = std::to_string(*(int*)entry->mData);
+            }
+            if (entry->mType == AI_FLOAT)
+            {
+                entryValue = std::to_string(*(float*)entry->mData);
+            }
+            if (entry->mType == AI_DOUBLE)
+            {
+                entryValue = std::to_string(*(double*)entry->mData);
+            }
+            if (entry->mType == AI_UINT64)
+            {
+                entryValue = std::to_string(*(uint64*)entry->mData);
+            }
+            if (entry->mType == AI_INT64)
+            {
+                entryValue = std::to_string(*(int64*)entry->mData);
+            }
+            if (entry->mType == AI_UINT32)
+            {
+                entryValue = std::to_string(*(uint32*)entry->mData);
             }
             if (entry->mType == AI_AISTRING)
             {
@@ -529,7 +549,7 @@ namespace Astral {
     }
 
 
-    void SceneLoader::Helpers::ProcessSceneNode(const aiScene* scene, const aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes, const
+    void SceneLoader::Helpers::ProcessSceneNode(const aiScene* scene, aiNode* node, const std::vector<Ref<Material>>& materials, const std::vector<Ref<Mesh>>& meshes, const
                                                 std::unordered_map<std::string_view, aiLight*>& lightNameToLight)
     {
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
@@ -539,53 +559,31 @@ namespace Astral {
         Entity entity = ecs.CreateEntity(node->mName.C_Str());
 
         // Transform
-        aiMatrix4x4 transformMatrix = node->mTransformation;
-
-        const aiNode* currentParentNode = node;
-        while (currentParentNode != scene->mRootNode)
+        if (node->mParent)
         {
-            currentParentNode = currentParentNode->mParent;
-            transformMatrix = currentParentNode->mTransformation * transformMatrix;
+            node->mTransformation = node->mParent->mTransformation * node->mTransformation;
         }
 
 
-        // Assume this is your row-major matrix from another source
-        glm::mat4 glmMatrix(
-            transformMatrix.a1, transformMatrix.b1, transformMatrix.c1, transformMatrix.d1,
-            transformMatrix.a2, transformMatrix.b2, transformMatrix.c2, transformMatrix.d2,
-            transformMatrix.a3, transformMatrix.b3, transformMatrix.c3, transformMatrix.d3,
-            transformMatrix.a4, transformMatrix.b4, transformMatrix.c4, transformMatrix.d4
-        );
-        // Transpose the matrix to convert it to column-major
+        Mat4 glmMatrix = glm::make_mat4(&node->mTransformation.a1);
+        glmMatrix = glm::transpose(glmMatrix);
 
         // Now decompose the column-major matrix
-        glm::vec3 scale;
         glm::quat orientation;
-        glm::vec3 translation;
         glm::vec3 skew;
         glm::vec4 perspective;
 
-        glm::decompose(glmMatrix, scale, orientation, translation, skew, perspective);
-
         TransformComponent transformComponent{};
-        // transformComponent.position = {transformMatrix.a4, transformMatrix.b4, transformMatrix.c4};
-        // Vec3 scaleX = {transformMatrix.a1, transformMatrix.b1, transformMatrix.c1};
-        // Vec3 scaleY = {transformMatrix.a2, transformMatrix.b2, transformMatrix.c2};
-        // Vec3 scaleZ = {transformMatrix.a3, transformMatrix.b3, transformMatrix.c3};
-        // transformComponent.scale = {scaleX.length(), scaleY.length(), scaleZ.length()}; <---- Old
-        // transformComponent.scale = {glm::length(scaleX), glm::length(scaleY), glm::length(scaleZ)}; <---- New
-        // glm::mat3x3 rotationMatrix(
-        // transformMatrix.a1 / transformComponent.scale.x, transformMatrix.a2 / transformComponent.scale.y, transformMatrix.a3 / transformComponent.scale.z,
-        // transformMatrix.b1 / transformComponent.scale.x, transformMatrix.b2 / transformComponent.scale.y, transformMatrix.b3 / transformComponent.scale.z,
-        // transformMatrix.c1 / transformComponent.scale.x, transformMatrix.c2 / transformComponent.scale.y, transformMatrix.c3 / transformComponent.scale.z);
-        //
-        // glm::quat quat = glm::quat_cast(rotationMatrix);
-        transformComponent.position = translation;
-        transformComponent.scale = scale;
-        transformComponent.rotation = glm::degrees(glm::eulerAngles(orientation));
 
+        glm::decompose(glmMatrix, transformComponent.scale, orientation, transformComponent.position, skew, perspective);
+
+        float x, y, z;
+        glm::extractEulerAngleXYZ(glmMatrix, x, y, z);
+
+
+
+        transformComponent.rotation = glm::degrees(Vec3(x,y,z));
         transformComponent.rotation += m_DefaultRotationOffset;
-
 
         if (lightNameToLight.contains(node->mName.C_Str()))
         {
