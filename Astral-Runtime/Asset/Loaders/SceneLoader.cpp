@@ -572,7 +572,8 @@ namespace Astral {
         // Vec3 scaleX = {transformMatrix.a1, transformMatrix.b1, transformMatrix.c1};
         // Vec3 scaleY = {transformMatrix.a2, transformMatrix.b2, transformMatrix.c2};
         // Vec3 scaleZ = {transformMatrix.a3, transformMatrix.b3, transformMatrix.c3};
-        // transformComponent.scale = {glm::length(scaleX), glm::length(scaleY), glm::length(scaleZ)};
+        // transformComponent.scale = {scaleX.length(), scaleY.length(), scaleZ.length()}; <---- Old
+        // transformComponent.scale = {glm::length(scaleX), glm::length(scaleY), glm::length(scaleZ)}; <---- New
         // glm::mat3x3 rotationMatrix(
         // transformMatrix.a1 / transformComponent.scale.x, transformMatrix.a2 / transformComponent.scale.y, transformMatrix.a3 / transformComponent.scale.z,
         // transformMatrix.b1 / transformComponent.scale.x, transformMatrix.b2 / transformComponent.scale.y, transformMatrix.b3 / transformComponent.scale.z,
