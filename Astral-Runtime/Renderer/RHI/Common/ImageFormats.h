@@ -330,6 +330,13 @@ namespace Astral {
     uint32 GetBytesPerTexel(ImageFormat imageFormat);
 
     /**
+     * @brief Gets the number of components in the format
+     * @param imageFormat The format of the image
+     * @return The number of components in the format
+     */
+    uint32 GetNumComponents(ImageFormat imageFormat);
+
+    /**
      * @brief Checks if a image format is a compressed format
      * @param format The format of the image
      * @return True if the format is a compressed format, false otherwise
