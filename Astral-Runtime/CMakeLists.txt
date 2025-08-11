@@ -284,6 +284,8 @@ add_library(AstralEngine
         Renderer/RHI/Common/DependencyFlags.h
         Renderer/RHI/Common/ImageFormats.cpp
         Asset/Ref.h
+        Core/Containers/Bitmap.h
+        Core/Containers/Bitmap_Impl.h
 )
 
 
