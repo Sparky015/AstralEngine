@@ -143,6 +143,8 @@ namespace Astral {
             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED
         };
 
+    	if (m_TextureType == TextureType::IMAGE_3D) { imageCreateInfo.extent.depth = m_ImageWidth; }
+
         VkResult result = vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image);
         ASSERT(result == VK_SUCCESS, "Failed to create image!");
     }
