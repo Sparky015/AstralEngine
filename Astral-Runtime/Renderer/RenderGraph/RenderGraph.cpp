@@ -256,9 +256,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                AEDirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
             for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetWriteInputAttachments())
@@ -271,9 +271,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                AEDirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
             for (RenderGraphPass* dependentPass : consumingPass.GetExplicitDependencies())
@@ -281,9 +281,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(*dependentPass);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                AEDirectedGraph<PassIndex>::Vertex& earlierPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                AEDirectedGraph<PassIndex>::Vertex& dependentPassNode = m_RenderPassNodes[i];
+                dependentPassNode.AddEdge(earlierPassNode, externalRenderPassIndex); // User node depends on origin node
             }
         }
     }
@@ -291,6 +291,7 @@ namespace Astral {
 
     void RenderGraph::SolveRenderPassExecutionOrder()
     {
+        
         std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> visitedPassNodes;
         std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> childPushedNodes;
         std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> processedPassNodes;
@@ -322,7 +323,7 @@ namespace Astral {
             {
                 AEDirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
                 nodesToVisit.push(dependentNode);
-                ASSERT(!(visitedPassNodes.contains(dependentNode) && !processedPassNodes.contains(dependentNode)), "Cycle detected in render graph!")
+                ASSERT(processedPassNodes.contains(dependentNode) || !visitedPassNodes.contains(dependentNode), "Cycle detected in render graph!")
                 visitedPassNodes.insert(dependentNode);
             }
 
@@ -405,7 +406,7 @@ namespace Astral {
         // Pass One: Define the attachments for all the render passes ahead of building the render pass objects
 
         Device& device = RendererAPI::GetDevice();
-        m_RenderPasses.resize(m_ExecutionOrder.size(), nullptr);
+        m_RenderPasses.resize(m_Passes.size(), nullptr); // TODO: Change this to resize to the amount in execution order and change indexing of the vector to reflect that
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
@@ -573,7 +574,7 @@ namespace Astral {
 
         Device& device = RendererAPI::GetDevice();
 
-        m_RenderPassResources.resize(m_ExecutionOrder.size());
+        m_RenderPassResources.resize(m_Passes.size()); // TODO: Change this to resize to the amount in execution order and change indexing of the vector to reflect that
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
