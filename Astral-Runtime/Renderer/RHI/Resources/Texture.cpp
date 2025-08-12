@@ -93,6 +93,28 @@ namespace Astral {
     }
 
 
+    GraphicsRef<Texture> Texture::CreateLUT(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    {
+        TextureCreateInfo textureCreateInfo = {
+            .Format = imageFormat,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
+            .ImageData = (uint8*)data,
+        };
+
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.Create3DTexture(textureCreateInfo);
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
+        }
+    }
+
+
     GraphicsRef<Texture> Texture::CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
     {
         ASSERT(data != nullptr, "Tried to create texture with nullptr!")

@@ -26,7 +26,7 @@ namespace Astral {
 
         Ref<Texture> texture;
 
-        if (filePath.extension() == ".hdr")
+        if (filePath.extension() == ".hdr") // Load cubemap
         {
             int width;
             int height;
@@ -70,7 +70,44 @@ namespace Astral {
             stbi_image_free(equirectangularData);
             delete cubemapData;
         }
-        else
+        else if (filePath.extension() == ".cube") // Load LUT (Look Up Table)
+        {
+            int size = 0;
+            std::vector<Vec3> lut;
+
+            std::ifstream file(filePath);
+            if (!file.is_open()) { return nullptr; }
+
+            std::string line;
+            while (std::getline(file, line)) {
+                if (line.empty() || line[0] == '#') continue;
+
+                std::istringstream iss(line);
+                std::string key;
+                iss >> key;
+
+                if (key == "LUT_3D_SIZE")
+                {
+                    iss >> size;
+                    lut.reserve(size * size * size);
+                }
+                else if (isdigit(key[0]) || key[0] == '-' || key[0] == '.')
+                {
+                    // This is a LUT entry
+                    iss.clear();
+                    iss.str(line);
+                    float r, g, b;
+                    if (iss >> r >> g >> b)
+                        lut.push_back({r, g, b});
+                }
+            }
+
+            if (lut.size() != size * size * size) { return nullptr; }
+
+            texture = Texture::CreateLUT(lut.data(), size, size, ImageFormat::R8G8B8_UNORM);
+            return texture;
+        }
+        else // Load regular 2D texture
         {
             texture = Texture::CreateTexture(filePath.string());
         }
