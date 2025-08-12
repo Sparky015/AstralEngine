@@ -85,6 +85,9 @@ namespace Astral {
 
         // Cubemap Mesh
         registry.CreateAsset<Mesh>("Meshes/Cube.obj");
+
+
+        registry.CreateAsset<Texture>("LUTs/acescg_to_rec709_linear.cube");
     }
 
 }
