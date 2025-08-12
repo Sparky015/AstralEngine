@@ -197,8 +197,8 @@ namespace Astral {
 
 
         // The graph used to figure out dependencies between render graph and to cull non-contributing render passes
-        AEDirectedGraph<PassIndex> m_RenderGraph;
-        std::vector<AEDirectedGraph<PassIndex>::Vertex> m_RenderPassNodes;
+        DirectedGraph<PassIndex> m_RenderGraph;
+        std::vector<DirectedGraph<PassIndex>::Vertex> m_RenderPassNodes;
 
 
         // Contains the order of render passes to execute in such that dependencies are ran first

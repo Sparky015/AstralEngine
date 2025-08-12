@@ -24,7 +24,7 @@ namespace Astral {
 
         m_Passes.clear();
 
-        m_RenderGraph = AEDirectedGraph<PassIndex>();
+        m_RenderGraph = DirectedGraph<PassIndex>();
         m_RenderPassNodes.clear();
 
         m_ExecutionOrder.clear();
@@ -237,7 +237,7 @@ namespace Astral {
         // Add all the render passes as a node in the render graph
         for (size_t renderPassIndex = 0; renderPassIndex < m_Passes.size(); renderPassIndex++)
         {
-            AEDirectedGraph<PassIndex>::Vertex renderPassNode = m_RenderGraph.AddVertex(renderPassIndex);
+            DirectedGraph<PassIndex>::Vertex renderPassNode = m_RenderGraph.AddVertex(renderPassIndex);
             m_RenderPassNodes.push_back(renderPassNode);
         }
 
@@ -256,8 +256,8 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                DirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
                 consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
@@ -271,8 +271,8 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                DirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
                 consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
@@ -281,8 +281,8 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(*dependentPass);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& earlierPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& dependentPassNode = m_RenderPassNodes[i];
+                DirectedGraph<PassIndex>::Vertex& earlierPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& dependentPassNode = m_RenderPassNodes[i];
                 dependentPassNode.AddEdge(earlierPassNode, externalRenderPassIndex); // User node depends on origin node
             }
         }
@@ -291,19 +291,18 @@ namespace Astral {
 
     void RenderGraph::SolveRenderPassExecutionOrder()
     {
-        
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> visitedPassNodes;
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> childPushedNodes;
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> processedPassNodes;
+        std::unordered_set<DirectedGraph<PassIndex>::Vertex> visitedPassNodes;
+        std::unordered_set<DirectedGraph<PassIndex>::Vertex> childPushedNodes;
+        std::unordered_set<DirectedGraph<PassIndex>::Vertex> processedPassNodes;
 
-        std::stack<AEDirectedGraph<PassIndex>::Vertex> nodesToVisit;
+        std::stack<DirectedGraph<PassIndex>::Vertex> nodesToVisit;
 
-        AEDirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
+        DirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
         nodesToVisit.push(outputNode);
 
         while (!nodesToVisit.empty())
         {
-            AEDirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
+            DirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
             nodesToVisit.pop();
 
             if (processedPassNodes.contains(currentNode)) { continue; }
@@ -319,9 +318,9 @@ namespace Astral {
                 nodesToVisit.push(currentNode);
             }
 
-            for (AEDirectedGraph<PassIndex>::Edge edge : currentNode)
+            for (DirectedGraph<PassIndex>::Edge edge : currentNode)
             {
-                AEDirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
+                DirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
                 nodesToVisit.push(dependentNode);
                 ASSERT(processedPassNodes.contains(dependentNode) || !visitedPassNodes.contains(dependentNode), "Cycle detected in render graph!")
                 visitedPassNodes.insert(dependentNode);

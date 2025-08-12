@@ -21,7 +21,7 @@ namespace Astral {
 
 
     template <typename DataType>
-    class AEDirectedGraph;
+    class DirectedGraph;
 
     template <typename DataType>
     struct Edge;
@@ -30,7 +30,7 @@ namespace Astral {
     class Vertex
     {
     public:
-        explicit Vertex(AEDirectedGraph<DataType>* owningGraph, VertexIndex vertexIndex, DataType data) : m_OwningGraph(owningGraph), m_VertexIndex(vertexIndex), m_VertexData(data) {}
+        explicit Vertex(DirectedGraph<DataType>* owningGraph, VertexIndex vertexIndex, DataType data) : m_OwningGraph(owningGraph), m_VertexIndex(vertexIndex), m_VertexData(data) {}
 
         void AddEdge(Vertex& vertex, const DataType& edgeData);
 
@@ -49,7 +49,7 @@ namespace Astral {
     private:
 
         friend Edge<DataType>;
-        AEDirectedGraph<DataType>* m_OwningGraph;
+        DirectedGraph<DataType>* m_OwningGraph;
         VertexIndex m_VertexIndex;
         DataType m_VertexData;
     };
@@ -60,7 +60,7 @@ namespace Astral {
     struct Edge
     {
     public:
-        explicit Edge(AEDirectedGraph<DataType>* owningGraph) : m_OwningGraph(owningGraph) {}
+        explicit Edge(DirectedGraph<DataType>* owningGraph) : m_OwningGraph(owningGraph) {}
 
         Vertex<DataType> GetLeftVertex() const { return Vertex(m_OwningGraph, m_LeftVertex, m_OwningGraph->m_VerticeData[m_LeftVertex]); }
         Vertex<DataType> GetRightVertex() const { return Vertex(m_OwningGraph, m_RightVertex, m_OwningGraph->m_VerticeData[m_RightVertex]); }
@@ -74,7 +74,7 @@ namespace Astral {
 
     private:
 
-        AEDirectedGraph<DataType>* m_OwningGraph;
+        DirectedGraph<DataType>* m_OwningGraph;
         VertexIndex m_LeftVertex{};
         VertexIndex m_RightVertex{};
         DataType m_EdgeData;
@@ -83,7 +83,7 @@ namespace Astral {
 
 
     template <typename DataType>
-    class AEDirectedGraph
+    class DirectedGraph
     {
     public:
 
