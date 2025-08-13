@@ -38,7 +38,7 @@ namespace Astral {
         InitializeFrameResources();
 
 
-        m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
+        m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);

@@ -30,12 +30,14 @@ namespace Astral {
     class PipelineStateCache
     {
     public:
-        void SetSceneDescriptorSet(DescriptorSetHandle sceneDescriptorSet);
+        void SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet);
+        void SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets);
+
         PipelineStateObjectHandle GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex);
 
     private:
 
-        DescriptorSetHandle m_SceneDescriptorSet{nullptr};
+        std::vector<DescriptorSetHandle> m_DescriptorSetStack{};
         std::unordered_map<PipelineStateConfiguration, PipelineStateObjectHandle> m_PipelineCache;
     };
 

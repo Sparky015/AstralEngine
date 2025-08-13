@@ -20,9 +20,16 @@ namespace Astral {
     }
 
 
-    void PipelineStateCache::SetSceneDescriptorSet(DescriptorSetHandle sceneDescriptorSet)
+    void PipelineStateCache::SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet)
     {
-        m_SceneDescriptorSet = sceneDescriptorSet;
+        m_DescriptorSetStack = std::vector<DescriptorSetHandle>();
+        m_DescriptorSetStack.push_back(descriptorSet);
+    }
+
+
+    void PipelineStateCache::SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets)
+    {
+        m_DescriptorSetStack = descriptorSets;
     }
 
 
@@ -43,12 +50,12 @@ namespace Astral {
         if (m_PipelineCache.contains(pipelineStateConfiguration)) { return m_PipelineCache[pipelineStateConfiguration]; }
 
 
-        // Pipeline doesn't exist yet, so we create it now
-        ASSERT(m_SceneDescriptorSet != nullptr, "Scene descriptor set was not given to the pipeline cache!")
         Device& device = RendererAPI::GetDevice();
 
-        std::vector<DescriptorSetHandle> descriptorSets;
-        descriptorSets.push_back(m_SceneDescriptorSet);
+        // Pipeline doesn't exist yet, so we create it now
+
+        // Set up descriptor set layouts of the pipeline
+        std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
         if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
         PipelineStateObjectCreateInfo pipelineStateObjectCreateInfo = {
