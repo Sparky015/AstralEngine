@@ -42,10 +42,12 @@ struct std::hash<Astral::PipelineStateConfiguration>
     size_t operator()(Astral::PipelineStateConfiguration const& v) const noexcept;
 };
 
-template <>
-struct std::hash<Astral::Vertex<uint8>>
+template <typename DataType>
+struct std::hash<Astral::Vertex<DataType>>
 {
-    size_t operator()(Astral::Vertex<uint8> const& v) const noexcept;
+    size_t operator()(Astral::Vertex<DataType> const& v) const noexcept
+    {
+        return std::hash<DataType>()(v.GetData());
+    }
 };
-
 
