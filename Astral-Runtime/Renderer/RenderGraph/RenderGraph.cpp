@@ -291,11 +291,15 @@ namespace Astral {
 
     void RenderGraph::SolveRenderPassExecutionOrder()
     {
-        std::unordered_set<DirectedGraph<PassIndex>::Vertex> visitedPassNodes;
-        std::unordered_set<DirectedGraph<PassIndex>::Vertex> childPushedNodes;
-        std::unordered_set<DirectedGraph<PassIndex>::Vertex> processedPassNodes;
+        // NOTE: For this render graph, number of out degrees equals number of dependencies
 
+        // First a DFS to find all the nodes with 0 out degrees
         std::stack<DirectedGraph<PassIndex>::Vertex> nodesToVisit;
+        std::unordered_set<DirectedGraph<PassIndex>::Vertex> visitedNodes;
+
+        std::unordered_map<DirectedGraph<PassIndex>::Vertex, uint32> outDegreesOfNodes;
+        std::unordered_map<DirectedGraph<PassIndex>::Vertex, std::vector<DirectedGraph<PassIndex>::Vertex>> directDependentsOfNode;
+        std::queue<DirectedGraph<PassIndex>::Vertex> nodesWithZeroOutDegrees;
 
         DirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
         nodesToVisit.push(outputNode);
@@ -305,29 +309,43 @@ namespace Astral {
             DirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
             nodesToVisit.pop();
 
-            if (processedPassNodes.contains(currentNode)) { continue; }
+            if (visitedNodes.contains(currentNode)) { continue; }
+            visitedNodes.insert(currentNode);
 
-            if (childPushedNodes.contains(currentNode))
-            {
-                m_ExecutionOrder.push_back(currentNode.GetData());
-                processedPassNodes.insert(currentNode);
-            }
-            else
-            {
-                childPushedNodes.insert(currentNode);
-                nodesToVisit.push(currentNode);
-            }
-
+            // Push all nodes that share an edge with the current node and count the out degrees
+            uint32 outDegrees = 0;
             for (DirectedGraph<PassIndex>::Edge edge : currentNode)
             {
-                DirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
-                nodesToVisit.push(dependentNode);
-                ASSERT(processedPassNodes.contains(dependentNode) || !visitedPassNodes.contains(dependentNode), "Cycle detected in render graph!")
-                visitedPassNodes.insert(dependentNode);
-            }
+                DirectedGraph<PassIndex>::Vertex dependencyPassNode = edge.GetRightVertex();
+                nodesToVisit.push(dependencyPassNode);
+                outDegrees++;
 
+                directDependentsOfNode[dependencyPassNode].push_back(currentNode);
+            }
+            if (outDegrees == 0) { nodesWithZeroOutDegrees.push(currentNode); }
+            outDegreesOfNodes[currentNode] = outDegrees;
         }
 
+
+
+        // Kahn's Algorithm for the Topological Sort
+
+        while (!nodesWithZeroOutDegrees.empty())
+        {
+            DirectedGraph<PassIndex>::Vertex currentNode = nodesWithZeroOutDegrees.front();
+            nodesWithZeroOutDegrees.pop();
+
+            m_ExecutionOrder.push_back(currentNode.GetData());
+
+            // Decrement the out degrees for in degrees of the current node
+            for (DirectedGraph<PassIndex>::Vertex& dependentNode : directDependentsOfNode[currentNode])
+            {
+                outDegreesOfNodes[dependentNode]--;
+                if (outDegreesOfNodes[dependentNode] <= 0) { nodesWithZeroOutDegrees.push(dependentNode); }
+            }
+        }
+
+        ASSERT(m_ExecutionOrder.size() == m_RenderGraph.NumOfVertices(), "Cycle detected in render graph!")
     }
 
 
@@ -581,9 +599,6 @@ namespace Astral {
             const RenderGraphPass& pass = m_Passes[renderPassIndex];
             std::vector<RenderPassResources>& passResources = m_RenderPassResources[renderPassIndex];
             passResources.resize(m_MaxFramesInFlight);
-            ASSERT(passResources.size() == m_MaxFramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
-
-
 
             // Textures
 
@@ -633,8 +648,14 @@ namespace Astral {
 
 
 
-            // Framebuffers
+            // Note:
+            // The textures that are being used in the framebuffers and descriptor sets should already be created
+            // even though we are creating the frame buffers and descriptor sets at the same time as the textures
+            // because the order of creation is in the order of the execution of the render passes. Therefore, the
+            // resources used in this render pass should have been created in an earlier loop.
 
+
+            // Framebuffers
             for (size_t i = 0; i < m_MaxFramesInFlight; i++)
             {
                 // Create the framebuffers for the render pass
