@@ -42,13 +42,19 @@ namespace Astral {
         BuildRenderGraph();
 
 
-        m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
+        m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
         m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
+
+        TextureHandle toneMappingLUT = registry.CreateAsset<Texture>("LUTs/acescg_to_rec709_linear_no_shaper.cube");
+        m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+        m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
+        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT, ShaderStage::FRAGMENT);
+        m_ToneMappingLUTDescriptorSet->EndBuildingSet();
 
 
         // Renderer Settings
@@ -265,10 +271,28 @@ namespace Astral {
 
         lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
-        // TODO: Need to place barriers between the last layout and the next write
+
         RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ EnvironmentMapPass(); });
         cubemapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         cubemapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+
+        AttachmentDescription outputTextureDescription = {
+            .Format = ImageFormat::B8G8R8A8_UNORM,
+            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+        };
+
+        RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
+        tonemappingPass.LinkReadInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        tonemappingPass.CreateColorAttachment(outputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        tonemappingPass.AddDependency(&cubemapPass);
+
+
 
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
@@ -282,12 +306,12 @@ namespace Astral {
         uint32 maxFramesInFlight = m_FrameContexts.size();
 
 
-        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "Viewport");
+        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddOutputPass(cubemapPass);
-        // m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures);
-        m_RenderGraph.SetOutputAttachment(lightingPass, "Deferred_Lighting_Buffer", outputTextures);
+        m_RenderGraph.AddPass(cubemapPass);
+        m_RenderGraph.AddOutputPass(tonemappingPass);
+        m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -577,7 +601,6 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_ORM_Set_GBuffer.frag");
             }
 
-            // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
             PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
@@ -649,7 +672,6 @@ namespace Astral {
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
 
-        // TODO: Refactor pipeline cache to store descriptor set layouts instead of actual descriptor set handles (its causing a memory leak on the gpu)
         PipelineStateObjectHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
         cubemapPipeline->Bind(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
@@ -660,6 +682,40 @@ namespace Astral {
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
+    }
+
+
+    void DeferredRenderer::ToneMappingPass()
+    {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
+
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
+
+        Material toneMapperMaterial{};
+        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Tone_Mapping.frag");
+        toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
+
+        PipelineStateObjectHandle toneMappingPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        toneMappingPipeline->Bind(commandBuffer);
+        toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
+
+        quadMesh.VertexBuffer->Bind(commandBuffer);
+        quadMesh.IndexBuffer->Bind(commandBuffer);
+        RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
+
+        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
     }
 
 
