@@ -193,6 +193,7 @@ namespace Astral {
         VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
         uint32 m_ImageWidth;
         uint32 m_ImageHeight;
+        uint32 m_ImageDepth;
         VkFormat m_Format;
         VkImageLayout m_CurrentLayout;
 

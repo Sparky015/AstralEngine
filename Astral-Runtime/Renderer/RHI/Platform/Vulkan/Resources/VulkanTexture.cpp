@@ -124,6 +124,16 @@ namespace Astral {
     		default: imageType = VK_IMAGE_TYPE_2D;
     	}
 
+    	if (m_TextureType == TextureType::IMAGE_3D)
+    	{
+    		m_ImageDepth = m_ImageWidth;
+    	}
+    	else
+    	{
+    		m_ImageDepth = 1;
+    	}
+
+
 
         VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -131,7 +141,7 @@ namespace Astral {
             .flags = createFlags,
             .imageType = imageType,
             .format = m_Format,
-            .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},
+            .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = m_ImageDepth},
             .mipLevels = 1,
             .arrayLayers = m_NumLayers,
             .samples = VK_SAMPLE_COUNT_1_BIT,
@@ -143,7 +153,6 @@ namespace Astral {
             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED
         };
 
-    	if (m_TextureType == TextureType::IMAGE_3D) { imageCreateInfo.extent.depth = m_ImageWidth; }
 
         VkResult result = vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image);
         ASSERT(result == VK_SUCCESS, "Failed to create image!");
@@ -254,7 +263,7 @@ namespace Astral {
     	else
     	{
     		uint32 bytesPerPixel = GetBytesPerTexel(ConvertVkFormatToImageFormat(m_Format));
-    		uint32 layerSize = m_ImageWidth * m_ImageHeight * bytesPerPixel;
+    		uint32 layerSize = m_ImageWidth * m_ImageHeight * m_ImageDepth * bytesPerPixel;
     		imageSize = m_NumLayers * layerSize;
     	}
 
@@ -481,7 +490,7 @@ namespace Astral {
     			.layerCount = m_NumLayers
     		},
     		.imageOffset = {.x = 0, .y = 0, .z = 0},
-    		.imageExtent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = 1},
+    		.imageExtent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = m_ImageDepth},
     	};
 
         commandBufferHandle->BeginRecording();
