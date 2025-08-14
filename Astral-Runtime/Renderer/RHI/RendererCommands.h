@@ -11,7 +11,7 @@
 #include "Core/Math/Math.h"
 #include "Resources/CommandBuffer.h"
 #include "Resources/IndexBuffer.h"
-#include "Resources/PipelineStateObject.h"
+#include "Resources/PipelineState.h"
 #include "Common/PipelineBarriers.h"
 #include "Resources/RenderTarget.h"
 #include "Resources/Shader.h"
@@ -39,7 +39,7 @@ namespace Astral {
         virtual void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) = 0;
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
-        virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
+        virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
         virtual void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) = 0;
 

@@ -8,6 +8,7 @@
 
 #include "VulkanRenderTarget.h"
 #include "Debug/Utilities/Asserts.h"
+#include "Debug/Utilities/Loggers.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
@@ -125,7 +126,7 @@ namespace Astral {
     {
         for (const VkSurfaceFormatKHR& availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_B8G8R8_SRGB &&
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                 {
                     m_SwapchainImageFormat = ConvertVkFormatToImageFormat(availableFormat.format);
@@ -133,6 +134,7 @@ namespace Astral {
                 }
         }
 
+        WARN("Swapchain format and color space defaulted to the first choice! Preferred format or color space is not available!");
         m_SwapchainImageFormat = ConvertVkFormatToImageFormat(availableFormats[0].format);
         return availableFormats[0];
     }

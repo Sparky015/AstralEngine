@@ -14,7 +14,7 @@
 #include "VulkanRenderpass.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanFramebuffer.h"
-#include "VulkanPipelineStateObject.h"
+#include "VulkanPipelineState.h"
 #include "VulkanShader.h"
 #include "VulkanVertexBuffer.h"
 
@@ -127,22 +127,22 @@ namespace Astral {
     }
 
 
-    PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(const PipelineStateObjectCreateInfo& pipelineStateObjectCreateInfo)
+    PipelineStateHandle VulkanDevice::CreatePipelineState(const PipelineStateCreateInfo& pipelineStateCreateInfo)
     {
-        VulkanPipelineStateObjectDesc pipelineStateObjectDesc = {
+        VulkanPipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
-            .RenderPass = pipelineStateObjectCreateInfo.RenderPass,
-            .VertexShader = pipelineStateObjectCreateInfo.VertexShader,
-            .FragmentShader = pipelineStateObjectCreateInfo.FragmentShader,
-            .DescriptorSets = pipelineStateObjectCreateInfo.DescriptorSets,
-            .VertexBufferLayout = pipelineStateObjectCreateInfo.BufferLayout,
-            .SubpassIndex = pipelineStateObjectCreateInfo.SubpassIndex,
-            .IsAlphaBlended = pipelineStateObjectCreateInfo.IsAlphaBlended
+            .RenderPass = pipelineStateCreateInfo.RenderPass,
+            .VertexShader = pipelineStateCreateInfo.VertexShader,
+            .FragmentShader = pipelineStateCreateInfo.FragmentShader,
+            .DescriptorSets = pipelineStateCreateInfo.DescriptorSets,
+            .VertexBufferLayout = pipelineStateCreateInfo.BufferLayout,
+            .SubpassIndex = pipelineStateCreateInfo.SubpassIndex,
+            .IsAlphaBlended = pipelineStateCreateInfo.IsAlphaBlended
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
 
-        return CreateGraphicsRef<VulkanPipelineStateObject>(pipelineStateObjectDesc);
+        return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
     }
 
 

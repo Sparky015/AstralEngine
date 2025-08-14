@@ -24,7 +24,7 @@ namespace Astral {
 
         m_Passes.clear();
 
-        m_RenderGraph = AEDirectedGraph<PassIndex>();
+        m_RenderGraph = DirectedGraph<PassIndex>();
         m_RenderPassNodes.clear();
 
         m_ExecutionOrder.clear();
@@ -237,7 +237,7 @@ namespace Astral {
         // Add all the render passes as a node in the render graph
         for (size_t renderPassIndex = 0; renderPassIndex < m_Passes.size(); renderPassIndex++)
         {
-            AEDirectedGraph<PassIndex>::Vertex renderPassNode = m_RenderGraph.AddVertex(renderPassIndex);
+            DirectedGraph<PassIndex>::Vertex renderPassNode = m_RenderGraph.AddVertex(renderPassIndex);
             m_RenderPassNodes.push_back(renderPassNode);
         }
 
@@ -256,9 +256,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                DirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
             for (const RenderGraphPass::ExternalAttachment& externalAttachment : consumingPass.GetWriteInputAttachments())
@@ -271,9 +271,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(producerPassScopeLocal);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                DirectedGraph<PassIndex>::Vertex& producingPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& consumingPassNode = m_RenderPassNodes[i];
+                consumingPassNode.AddEdge(producingPassNode, externalRenderPassIndex); // User node depends on origin node
             }
 
             for (RenderGraphPass* dependentPass : consumingPass.GetExplicitDependencies())
@@ -281,9 +281,9 @@ namespace Astral {
                 PassIndex externalRenderPassIndex = GetRenderPassIndex(*dependentPass);
                 ASSERT(externalRenderPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
 
-                AEDirectedGraph<PassIndex>::Vertex& originPassNode = m_RenderPassNodes[externalRenderPassIndex];
-                AEDirectedGraph<PassIndex>::Vertex& userPassNode = m_RenderPassNodes[i];
-                userPassNode.AddEdge(originPassNode, externalRenderPassIndex); // User node depends on origin node
+                DirectedGraph<PassIndex>::Vertex& earlierPassNode = m_RenderPassNodes[externalRenderPassIndex];
+                DirectedGraph<PassIndex>::Vertex& dependentPassNode = m_RenderPassNodes[i];
+                dependentPassNode.AddEdge(earlierPassNode, externalRenderPassIndex); // User node depends on origin node
             }
         }
     }
@@ -291,43 +291,61 @@ namespace Astral {
 
     void RenderGraph::SolveRenderPassExecutionOrder()
     {
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> visitedPassNodes;
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> childPushedNodes;
-        std::unordered_set<AEDirectedGraph<PassIndex>::Vertex> processedPassNodes;
+        // NOTE: For this render graph, number of out degrees equals number of dependencies
 
-        std::stack<AEDirectedGraph<PassIndex>::Vertex> nodesToVisit;
+        // First a DFS to find all the nodes with 0 out degrees
+        std::stack<DirectedGraph<PassIndex>::Vertex> nodesToVisit;
+        std::unordered_set<DirectedGraph<PassIndex>::Vertex> visitedNodes;
 
-        AEDirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
+        std::unordered_map<DirectedGraph<PassIndex>::Vertex, uint32> outDegreesOfNodes;
+        std::unordered_map<DirectedGraph<PassIndex>::Vertex, std::vector<DirectedGraph<PassIndex>::Vertex>> directDependentsOfNode;
+        std::queue<DirectedGraph<PassIndex>::Vertex> nodesWithZeroOutDegrees;
+
+        DirectedGraph<PassIndex>::Vertex outputNode = m_RenderPassNodes[m_OutputRenderPassIndex];
         nodesToVisit.push(outputNode);
 
         while (!nodesToVisit.empty())
         {
-            AEDirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
+            DirectedGraph<PassIndex>::Vertex currentNode = nodesToVisit.top();
             nodesToVisit.pop();
 
-            if (processedPassNodes.contains(currentNode)) { continue; }
+            if (visitedNodes.contains(currentNode)) { continue; }
+            visitedNodes.insert(currentNode);
 
-            if (childPushedNodes.contains(currentNode))
+            // Push all nodes that share an edge with the current node and count the out degrees
+            uint32 outDegrees = 0;
+            for (DirectedGraph<PassIndex>::Edge edge : currentNode)
             {
-                m_ExecutionOrder.push_back(currentNode.GetData());
-                processedPassNodes.insert(currentNode);
-            }
-            else
-            {
-                childPushedNodes.insert(currentNode);
-                nodesToVisit.push(currentNode);
-            }
+                DirectedGraph<PassIndex>::Vertex dependencyPassNode = edge.GetRightVertex();
+                nodesToVisit.push(dependencyPassNode);
+                outDegrees++;
 
-            for (AEDirectedGraph<PassIndex>::Edge edge : currentNode)
-            {
-                AEDirectedGraph<PassIndex>::Vertex dependentNode = edge.GetRightVertex();
-                nodesToVisit.push(dependentNode);
-                ASSERT(!(visitedPassNodes.contains(dependentNode) && !processedPassNodes.contains(dependentNode)), "Cycle detected in render graph!")
-                visitedPassNodes.insert(dependentNode);
+                directDependentsOfNode[dependencyPassNode].push_back(currentNode);
             }
-
+            if (outDegrees == 0) { nodesWithZeroOutDegrees.push(currentNode); }
+            outDegreesOfNodes[currentNode] = outDegrees;
         }
 
+
+
+        // Kahn's Algorithm for the Topological Sort
+
+        while (!nodesWithZeroOutDegrees.empty())
+        {
+            DirectedGraph<PassIndex>::Vertex currentNode = nodesWithZeroOutDegrees.front();
+            nodesWithZeroOutDegrees.pop();
+
+            m_ExecutionOrder.push_back(currentNode.GetData());
+
+            // Decrement the out degrees for in degrees of the current node
+            for (DirectedGraph<PassIndex>::Vertex& dependentNode : directDependentsOfNode[currentNode])
+            {
+                outDegreesOfNodes[dependentNode]--;
+                if (outDegreesOfNodes[dependentNode] <= 0) { nodesWithZeroOutDegrees.push(dependentNode); }
+            }
+        }
+
+        ASSERT(m_ExecutionOrder.size() == m_RenderGraph.NumOfVertices(), "Cycle detected in render graph!")
     }
 
 
@@ -405,7 +423,7 @@ namespace Astral {
         // Pass One: Define the attachments for all the render passes ahead of building the render pass objects
 
         Device& device = RendererAPI::GetDevice();
-        m_RenderPasses.resize(m_ExecutionOrder.size(), nullptr);
+        m_RenderPasses.resize(m_Passes.size(), nullptr); // TODO: Change this to resize to the amount in execution order and change indexing of the vector to reflect that
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
@@ -573,7 +591,7 @@ namespace Astral {
 
         Device& device = RendererAPI::GetDevice();
 
-        m_RenderPassResources.resize(m_ExecutionOrder.size());
+        m_RenderPassResources.resize(m_Passes.size()); // TODO: Change this to resize to the amount in execution order and change indexing of the vector to reflect that
 
         for (PassIndex renderPassIndex : m_ExecutionOrder)
         {
@@ -581,9 +599,6 @@ namespace Astral {
             const RenderGraphPass& pass = m_Passes[renderPassIndex];
             std::vector<RenderPassResources>& passResources = m_RenderPassResources[renderPassIndex];
             passResources.resize(m_MaxFramesInFlight);
-            ASSERT(passResources.size() == m_MaxFramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
-
-
 
             // Textures
 
@@ -633,8 +648,14 @@ namespace Astral {
 
 
 
-            // Framebuffers
+            // Note:
+            // The textures that are being used in the framebuffers and descriptor sets should already be created
+            // even though we are creating the frame buffers and descriptor sets at the same time as the textures
+            // because the order of creation is in the order of the execution of the render passes. Therefore, the
+            // resources used in this render pass should have been created in an earlier loop.
 
+
+            // Framebuffers
             for (size_t i = 0; i < m_MaxFramesInFlight; i++)
             {
                 // Create the framebuffers for the render pass

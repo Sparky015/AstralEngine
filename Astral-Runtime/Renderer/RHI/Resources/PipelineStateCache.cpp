@@ -20,13 +20,20 @@ namespace Astral {
     }
 
 
-    void PipelineStateCache::SetSceneDescriptorSet(DescriptorSetHandle sceneDescriptorSet)
+    void PipelineStateCache::SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet)
     {
-        m_SceneDescriptorSet = sceneDescriptorSet;
+        m_DescriptorSetStack = std::vector<DescriptorSetHandle>();
+        m_DescriptorSetStack.push_back(descriptorSet);
     }
 
 
-    PipelineStateObjectHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
+    void PipelineStateCache::SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets)
+    {
+        m_DescriptorSetStack = descriptorSets;
+    }
+
+
+    PipelineStateHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
     {
         // Build pipeline configuration struct
 
@@ -43,15 +50,15 @@ namespace Astral {
         if (m_PipelineCache.contains(pipelineStateConfiguration)) { return m_PipelineCache[pipelineStateConfiguration]; }
 
 
-        // Pipeline doesn't exist yet, so we create it now
-        ASSERT(m_SceneDescriptorSet != nullptr, "Scene descriptor set was not given to the pipeline cache!")
         Device& device = RendererAPI::GetDevice();
 
-        std::vector<DescriptorSetHandle> descriptorSets;
-        descriptorSets.push_back(m_SceneDescriptorSet);
+        // Pipeline doesn't exist yet, so we create it now
+
+        // Set up descriptor set layouts of the pipeline
+        std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
         if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
-        PipelineStateObjectCreateInfo pipelineStateObjectCreateInfo = {
+        PipelineStateCreateInfo pipelineStateObjectCreateInfo = {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
@@ -61,7 +68,7 @@ namespace Astral {
             .IsAlphaBlended = material.IsAlphaBlended
         };
 
-        PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);
+        PipelineStateHandle pipelineStateObject = device.CreatePipelineState(pipelineStateObjectCreateInfo);
         m_PipelineCache[pipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;

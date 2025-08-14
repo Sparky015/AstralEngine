@@ -12,78 +12,15 @@
 #include "Core/FixedIntegerTypes.h"
 #include "Core/Utility/Hashing/Hashes.h"
 
+#include "DirectedGraphEdge.h"
+#include "DirectedGraphVertex.h"
+
 #include <vector>
 
 namespace Astral {
 
-
-    using VertexIndex = uint32;
-
-
     template <typename DataType>
-    class AEDirectedGraph;
-
-    template <typename DataType>
-    struct Edge;
-
-    template <typename DataType>
-    class Vertex
-    {
-    public:
-        explicit Vertex(AEDirectedGraph<DataType>* owningGraph, VertexIndex vertexIndex, DataType data) : m_OwningGraph(owningGraph), m_VertexIndex(vertexIndex), m_VertexData(data) {}
-
-        void AddEdge(Vertex& vertex, const DataType& edgeData);
-
-
-        void SetData(const DataType& data) { m_VertexData = data; m_OwningGraph->m_VerticeData[m_VertexIndex] = data; }
-        const DataType& GetData() const { return m_VertexData; }
-        VertexIndex GetVertexIndex() const { return m_VertexIndex; }
-
-        typename std::vector<Edge<DataType>>::iterator begin() { return m_OwningGraph->m_Vertices[*this].begin(); }
-        typename std::vector<Edge<DataType>>::iterator end() { return m_OwningGraph->m_Vertices[*this].end(); }
-        typename std::vector<Edge<DataType>>::reverse_iterator rbegin() { return m_OwningGraph->m_Vertices[*this].rbegin(); }
-        typename std::vector<Edge<DataType>>::reverse_iterator rend() { return m_OwningGraph->m_Vertices[*this].rend(); }
-
-        bool operator==(const Vertex& other) const { return m_OwningGraph == other.m_OwningGraph && m_VertexIndex == other.m_VertexIndex && m_VertexData == other.m_VertexData; }
-
-    private:
-
-        friend Edge<DataType>;
-        AEDirectedGraph<DataType>* m_OwningGraph;
-        VertexIndex m_VertexIndex;
-        DataType m_VertexData;
-    };
-
-
-
-    template <typename DataType>
-    struct Edge
-    {
-    public:
-        explicit Edge(AEDirectedGraph<DataType>* owningGraph) : m_OwningGraph(owningGraph) {}
-
-        Vertex<DataType> GetLeftVertex() const { return Vertex(m_OwningGraph, m_LeftVertex, m_OwningGraph->m_VerticeData[m_LeftVertex]); }
-        Vertex<DataType> GetRightVertex() const { return Vertex(m_OwningGraph, m_RightVertex, m_OwningGraph->m_VerticeData[m_RightVertex]); }
-        DataType GetData() const { return m_EdgeData; }
-
-        void SetLeftVertex(const Vertex<DataType>& vertex) { m_LeftVertex = vertex.m_VertexIndex; }
-        void SetRightVertex(const Vertex<DataType>& vertex) { m_RightVertex = vertex.m_VertexIndex; }
-        void SetData(const DataType& data) { m_EdgeData = data; }
-
-        bool operator==(const Edge& other) const { return m_OwningGraph == other.m_OwningGraph && m_LeftVertex == other.m_LeftVertex && m_RightVertex == other.m_RightVertex; }
-
-    private:
-
-        AEDirectedGraph<DataType>* m_OwningGraph;
-        VertexIndex m_LeftVertex{};
-        VertexIndex m_RightVertex{};
-        DataType m_EdgeData;
-    };
-
-
-
-    template <typename DataType>
-    class AEDirectedGraph
+    class DirectedGraph
     {
     public:
 
@@ -98,6 +35,8 @@ namespace Astral {
             m_Vertices[vertex] = std::vector<Edge>();
             return vertex;
         }
+
+        uint32 NumOfVertices() const { return m_Vertices.size(); }
 
     private:
 

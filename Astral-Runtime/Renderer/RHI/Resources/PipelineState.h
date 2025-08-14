@@ -1,5 +1,5 @@
 /**
-* @file PipelineStateObject.h
+* @file PipelineState.h
 * @author Andrew Fagan
 * @date 5/13/25
 */
@@ -15,17 +15,9 @@
 
 namespace Astral {
 
-    struct PushConstant
-    {
-        Mat4 ModelMatrix;
-        uint32 HasNormalMap;
-        uint32 HasDirectXNormals;
-    };
-    static_assert(sizeof(PushConstant) <= 128, "Push constant can not be greater than 128 bytes in size");
+    static constexpr uint32 MaxPushConstantRange = 128;
 
-
-
-    struct PipelineStateObjectCreateInfo
+    struct PipelineStateCreateInfo
     {
         RenderPassHandle RenderPass;
         ShaderHandle VertexShader;
@@ -36,10 +28,10 @@ namespace Astral {
         bool IsAlphaBlended;
     };
 
-    class PipelineStateObject
+    class PipelineState
     {
     public:
-        virtual ~PipelineStateObject() = default;
+        virtual ~PipelineState() = default;
 
         virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
         virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
@@ -50,6 +42,6 @@ namespace Astral {
         virtual void* GetHandleHandle() = 0;
     };
 
-    using PipelineStateObjectHandle = GraphicsRef<PipelineStateObject>;
+    using PipelineStateHandle = GraphicsRef<PipelineState>;
 
 }

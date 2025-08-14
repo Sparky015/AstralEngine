@@ -16,7 +16,7 @@ namespace Astral {
         void Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle) override;
         void SetClearColor(float r, float g, float b, float a) override;
         void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) override;
-        void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle
+        void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
                                 pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
         void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) override;
 

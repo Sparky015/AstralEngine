@@ -199,7 +199,7 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
         Renderer/RHI/Resources/Sampler.h
-        Renderer/RHI/Resources/PipelineStateObject.h
+        Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
         Renderer/RHI/Resources/Framebuffer.h
         Renderer/RHI/Resources/DescriptorSetLayout.h
@@ -230,8 +230,8 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineStateObject.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineStateObject.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.cpp
@@ -286,6 +286,8 @@ add_library(AstralEngine
         Asset/Ref.h
         Core/Containers/Bitmap.h
         Core/Containers/Bitmap_Impl.h
+        Core/Containers/DirectedGraphVertex.h
+        Core/Containers/DirectedGraphEdge.h
 )
 
 

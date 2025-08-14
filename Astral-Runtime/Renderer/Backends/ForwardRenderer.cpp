@@ -38,7 +38,7 @@ namespace Astral {
         InitializeFrameResources();
 
 
-        m_PipelineStateCache.SetSceneDescriptorSet(m_FrameContexts[0].SceneDataDescriptorSet);
+        m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
@@ -288,6 +288,16 @@ namespace Astral {
     }
 
 
+    struct ForwardPassPushData
+    {
+        Mat4 ModelMatrix;
+        uint32 HasNormalMap;
+        uint32 HasDirectXNormals;
+    };
+    static_assert(sizeof(ForwardPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
+
+
+
     void ForwardRenderer::RenderScene()
     {
         PROFILE_SCOPE("SceneRenderer::RenderScene")
@@ -322,17 +332,17 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
             }
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-            PushConstant pushConstant = {
+            ForwardPassPushData forwardPassPushData = {
                 .ModelMatrix = frameContext.Transforms[i],
                 .HasNormalMap = material.HasNormalMap,
                 .HasDirectXNormals = material.HasDirectXNormals,
             };
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstant, sizeof(PushConstant));
+            RendererAPI::PushConstants(commandBuffer, pipeline, &forwardPassPushData, sizeof(ForwardPassPushData));
 
             pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
             pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);

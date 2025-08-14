@@ -29,6 +29,7 @@ namespace Astral {
         ECS ECS;
         TextureHandle EnvironmentMap;
         float AmbientLightConstant = .2;
+        float Exposure = 0.0f;
 
         void IncrementResourceRef(const std::string& filePath);
         void IncrementResourceRef(const std::filesystem::path& filePath);

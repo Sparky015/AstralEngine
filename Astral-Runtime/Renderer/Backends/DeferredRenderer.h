@@ -97,6 +97,7 @@ namespace Astral {
         void GeometryPass();
         void LightingPass();
         void EnvironmentMapPass();
+        void ToneMappingPass();
 
 
         RendererSettings m_RendererSettings{};
@@ -116,6 +117,8 @@ namespace Astral {
 
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
+        DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        float m_SceneExposure{};
     };
 
 }
