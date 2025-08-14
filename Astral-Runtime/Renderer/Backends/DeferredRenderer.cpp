@@ -576,6 +576,15 @@ namespace Astral {
     }
 
 
+    struct GeometryPassPushData
+    {
+        Mat4 ModelMatrix;
+        uint32 HasNormalMap;
+        uint32 HasDirectXNormals;
+    };
+    static_assert(sizeof(GeometryPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
+
+
     void DeferredRenderer::GeometryPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -605,13 +614,13 @@ namespace Astral {
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-            PushConstant pushConstant = {
+            GeometryPassPushData pushConstantData = {
                 .ModelMatrix = frameContext.Transforms[i],
                 .HasNormalMap = material.HasNormalMap,
                 .HasDirectXNormals = material.HasDirectXNormals
             };
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstant, sizeof(PushConstant));
+            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstantData, sizeof(GeometryPassPushData));
 
             pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
             pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
