@@ -22,7 +22,7 @@ vec3 ACESFit(vec3 pixelColor)
 
 vec3 toneMapACES(vec3 pixelColor)
 {
-    pixelColor = max(pixelColor, 0.0);
+    pixelColor = clamp(pixelColor, 0, 0x7F7FFFFF); // Clamp to the max float value to avoid INF values going through the fit
     pixelColor = ACESFit(pixelColor);
     return clamp(pixelColor, 0.0, 1.0);
 }
