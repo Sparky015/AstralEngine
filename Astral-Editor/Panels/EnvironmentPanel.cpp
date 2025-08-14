@@ -30,6 +30,10 @@ namespace Astral {
         ImGui::SameLine();
         ImGui::InputFloat("##AmbientLightInput", &scene.AmbientLightConstant, .05, .1);
 
+        ImGui::Text("Exposure: ");
+        ImGui::SameLine();
+        ImGui::InputFloat("##ExposureInput", &scene.Exposure, .05, .1);
+
         ImGui::End();
     }
 

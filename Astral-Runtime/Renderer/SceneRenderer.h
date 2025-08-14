@@ -28,6 +28,7 @@ namespace Astral {
         std::vector<Light>& Lights;
         TextureHandle EnvironmentMap;
         float AmbientLightConstant;
+        float Exposure;
     };
 
     struct RendererSettings

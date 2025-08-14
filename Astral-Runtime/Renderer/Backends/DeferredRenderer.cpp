@@ -128,6 +128,8 @@ namespace Astral {
         frameContext.Meshes.clear();
         frameContext.Materials.clear();
         frameContext.Transforms.clear();
+
+        m_SceneExposure = sceneDescription.Exposure;
     }
 
 
@@ -719,6 +721,8 @@ namespace Astral {
         toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
         toneMappingPipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
         toneMappingPipeline->BindDescriptorSet(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
+
+        RendererAPI::PushConstants(commandBuffer, toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
 
         quadMesh.VertexBuffer->Bind(commandBuffer);
         quadMesh.IndexBuffer->Bind(commandBuffer);

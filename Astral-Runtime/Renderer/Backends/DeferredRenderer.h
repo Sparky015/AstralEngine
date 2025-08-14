@@ -118,6 +118,7 @@ namespace Astral {
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        float m_SceneExposure{};
     };
 
 }

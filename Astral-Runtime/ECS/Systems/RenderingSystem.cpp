@@ -152,7 +152,8 @@ namespace Astral {
             .Camera = camera,
             .Lights = lights,
             .EnvironmentMap = scene.EnvironmentMap,
-            .AmbientLightConstant = scene.AmbientLightConstant
+            .AmbientLightConstant = scene.AmbientLightConstant,
+            .Exposure = scene.Exposure
         };
 
 
