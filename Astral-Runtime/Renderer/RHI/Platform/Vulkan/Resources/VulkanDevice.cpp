@@ -14,7 +14,7 @@
 #include "VulkanRenderpass.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanFramebuffer.h"
-#include "VulkanPipelineStateObject.h"
+#include "VulkanPipelineState.h"
 #include "VulkanShader.h"
 #include "VulkanVertexBuffer.h"
 
@@ -127,9 +127,9 @@ namespace Astral {
     }
 
 
-    PipelineStateObjectHandle VulkanDevice::CreatePipelineStateObject(const PipelineStateObjectCreateInfo& pipelineStateObjectCreateInfo)
+    PipelineStateHandle VulkanDevice::CreatePipelineStateObject(const PipelineStateCreateInfo& pipelineStateObjectCreateInfo)
     {
-        VulkanPipelineStateObjectDesc pipelineStateObjectDesc = {
+        VulkanPipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
             .RenderPass = pipelineStateObjectCreateInfo.RenderPass,
             .VertexShader = pipelineStateObjectCreateInfo.VertexShader,
@@ -142,7 +142,7 @@ namespace Astral {
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
 
-        return CreateGraphicsRef<VulkanPipelineStateObject>(pipelineStateObjectDesc);
+        return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
     }
 
 

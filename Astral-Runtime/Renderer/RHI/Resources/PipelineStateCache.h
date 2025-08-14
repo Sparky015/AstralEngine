@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "PipelineStateObject.h"
+#include "PipelineState.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/Common/Material.h"
@@ -33,12 +33,12 @@ namespace Astral {
         void SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet);
         void SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets);
 
-        PipelineStateObjectHandle GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex);
+        PipelineStateHandle GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex);
 
     private:
 
         std::vector<DescriptorSetHandle> m_DescriptorSetStack{};
-        std::unordered_map<PipelineStateConfiguration, PipelineStateObjectHandle> m_PipelineCache;
+        std::unordered_map<PipelineStateConfiguration, PipelineStateHandle> m_PipelineCache;
     };
 
 }

@@ -51,7 +51,7 @@ namespace Astral {
     }
 
 
-    void VulkanRendererCommands::PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateObjectHandle pipelineStateObjectHandle,
+    void VulkanRendererCommands::PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle pipelineStateObjectHandle,
                                                     void* data, uint32 sizeInBytes)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();

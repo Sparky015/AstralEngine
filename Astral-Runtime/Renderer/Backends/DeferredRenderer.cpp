@@ -601,7 +601,7 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_ORM_Set_GBuffer.frag");
             }
 
-            PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -641,7 +641,7 @@ namespace Astral {
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
-        PipelineStateObjectHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
+        PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
         pipeline->Bind(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -672,7 +672,7 @@ namespace Astral {
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
 
-        PipelineStateObjectHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
         cubemapPipeline->Bind(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -703,7 +703,7 @@ namespace Astral {
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Tone_Mapping.frag");
         toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
 
-        PipelineStateObjectHandle toneMappingPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
         toneMappingPipeline->Bind(commandBuffer);
         toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 

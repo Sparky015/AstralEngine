@@ -1,5 +1,5 @@
 /**
-* @file VulkanPipelineStateObject.h
+* @file VulkanPipelineState.h
 * @author Andrew Fagan
 * @date 5/17/2025
 */
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Renderer/RHI/Resources/PipelineStateObject.h"
+#include "Renderer/RHI/Resources/PipelineState.h"
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/VertexBufferLayout.h"
 
@@ -15,7 +15,7 @@
 
 namespace Astral {
 
-    struct VulkanPipelineStateObjectDesc
+    struct VulkanPipelineStateDesc
     {
         VkDevice Device;
         RenderPassHandle RenderPass;
@@ -29,11 +29,11 @@ namespace Astral {
         bool IsAlphaBlended;
     };
 
-    class VulkanPipelineStateObject : public PipelineStateObject
+    class VulkanPipelineState : public PipelineState
     {
     public:
-        explicit VulkanPipelineStateObject(const VulkanPipelineStateObjectDesc& desc);
-        ~VulkanPipelineStateObject() override;
+        explicit VulkanPipelineState(const VulkanPipelineStateDesc& desc);
+        ~VulkanPipelineState() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
@@ -61,7 +61,7 @@ namespace Astral {
         void CreatePipelineLayout();
         void DestroyPipelineLayout();
 
-        VulkanPipelineStateObjectDesc m_Description;
+        VulkanPipelineStateDesc m_Description;
 
         struct PipelineCreateInfos
         {

@@ -1,10 +1,10 @@
 /**
-* @file VulkanPipelineStateObject.cpp
+* @file VulkanPipelineState.cpp
 * @author Andrew Fagan
 * @date 5/17/2025
 */
 
-#include "VulkanPipelineStateObject.h"
+#include "VulkanPipelineState.h"
 
 #include "VulkanVertexBuffer.h"
 #include "Debug/Utilities/Asserts.h"
@@ -12,7 +12,7 @@
 
 namespace Astral {
 
-    VulkanPipelineStateObject::VulkanPipelineStateObject(const VulkanPipelineStateObjectDesc& desc) :
+    VulkanPipelineState::VulkanPipelineState(const VulkanPipelineStateDesc& desc) :
         m_Description(desc),
         m_ViewportDimensions()
     {
@@ -20,21 +20,21 @@ namespace Astral {
     }
 
 
-    VulkanPipelineStateObject::~VulkanPipelineStateObject()
+    VulkanPipelineState::~VulkanPipelineState()
     {
         DestroyPipelineLayout();
         DestroyPipelineStateObject();
     }
 
 
-    void VulkanPipelineStateObject::Bind(CommandBufferHandle commandBufferHandle)
+    void VulkanPipelineState::Bind(CommandBufferHandle commandBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
     }
 
 
-    void VulkanPipelineStateObject::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
+    void VulkanPipelineState::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
                                                       DescriptorSetHandle descriptorSetHandle, uint32 binding)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
@@ -44,7 +44,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions)
+    void VulkanPipelineState::SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkViewport viewport = {
@@ -65,7 +65,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::CreatePipelineStateObject()
+    void VulkanPipelineState::CreatePipelineStateObject()
     {
         SetShaderStages();
         SetVertexInputState();
@@ -106,13 +106,13 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::DestroyPipelineStateObject()
+    void VulkanPipelineState::DestroyPipelineStateObject()
     {
         vkDestroyPipeline(m_Description.Device, m_Pipeline, nullptr);
     }
 
 
-    void VulkanPipelineStateObject::SetShaderStages()
+    void VulkanPipelineState::SetShaderStages()
     {
         ASSERT(m_Description.VertexShader, "Vertex shader can't be null!")
         ASSERT(m_Description.FragmentShader, "Fragment shader can't be null!")
@@ -157,7 +157,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetVertexInputState()
+    void VulkanPipelineState::SetVertexInputState()
     {
         VkVertexInputBindingDescription bindingDescription = {
             .binding = 0,
@@ -196,7 +196,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetInputAssemblyState()
+    void VulkanPipelineState::SetInputAssemblyState()
     {
         VkPipelineInputAssemblyStateCreateInfo inputAssembly = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
@@ -208,7 +208,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetViewportState()
+    void VulkanPipelineState::SetViewportState()
     {
         VkViewport viewport = {
             .x = 0.0f,
@@ -239,7 +239,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetRasterizerState()
+    void VulkanPipelineState::SetRasterizerState()
     {
         VkPipelineRasterizationStateCreateInfo rasterizer = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
@@ -253,7 +253,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetMultisampleState()
+    void VulkanPipelineState::SetMultisampleState()
     {
         VkPipelineMultisampleStateCreateInfo multisample = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
@@ -266,7 +266,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetDepthStencilState()
+    void VulkanPipelineState::SetDepthStencilState()
     {
         VkPipelineDepthStencilStateCreateInfo depthStencilState = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
@@ -287,7 +287,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetColorBlendState()
+    void VulkanPipelineState::SetColorBlendState()
     {
         VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
             .blendEnable = m_Description.IsAlphaBlended == true ? VK_TRUE : VK_FALSE,
@@ -320,7 +320,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::SetDynamicState()
+    void VulkanPipelineState::SetDynamicState()
     {
         m_PipelineCreateInfos.DynamicStateSpecs[0] = VK_DYNAMIC_STATE_VIEWPORT;
         m_PipelineCreateInfos.DynamicStateSpecs[1] = VK_DYNAMIC_STATE_SCISSOR;
@@ -337,7 +337,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::CreatePipelineLayout()
+    void VulkanPipelineState::CreatePipelineLayout()
     {
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
         descriptorSetLayouts.reserve(m_Description.DescriptorSets.size());
@@ -364,7 +364,7 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineStateObject::DestroyPipelineLayout()
+    void VulkanPipelineState::DestroyPipelineLayout()
     {
         vkDestroyPipelineLayout(m_Description.Device, m_PipelineLayout, nullptr);
     }

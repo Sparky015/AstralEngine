@@ -33,7 +33,7 @@ namespace Astral {
     }
 
 
-    PipelineStateObjectHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
+    PipelineStateHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
     {
         // Build pipeline configuration struct
 
@@ -58,7 +58,7 @@ namespace Astral {
         std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
         if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
-        PipelineStateObjectCreateInfo pipelineStateObjectCreateInfo = {
+        PipelineStateCreateInfo pipelineStateObjectCreateInfo = {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
@@ -68,7 +68,7 @@ namespace Astral {
             .IsAlphaBlended = material.IsAlphaBlended
         };
 
-        PipelineStateObjectHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);
+        PipelineStateHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);
         m_PipelineCache[pipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;

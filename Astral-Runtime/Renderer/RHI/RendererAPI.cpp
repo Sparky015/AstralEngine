@@ -44,7 +44,7 @@ namespace Astral {
     }
 
 
-    void RendererAPI::PushConstants(CommandBufferHandle commandBuffer, PipelineStateObjectHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
+    void RendererAPI::PushConstants(CommandBufferHandle commandBuffer, PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
     {
         s_RendererCommands->PushConstants(commandBuffer, pipelineStateObjectHandle, data, sizeInBytes);
     }

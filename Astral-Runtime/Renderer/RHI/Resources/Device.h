@@ -9,7 +9,7 @@
 #include "CommandQueue.h"
 #include "Framebuffer.h"
 #include "IndexBuffer.h"
-#include "PipelineStateObject.h"
+#include "PipelineState.h"
 #include "Renderpass.h"
 #include "Shader.h"
 #include "Swapchain.h"
@@ -30,7 +30,7 @@ namespace Astral {
         virtual RenderPassHandle CreateRenderPass() = 0;
         virtual FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) = 0;
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
-        virtual PipelineStateObjectHandle CreatePipelineStateObject(const PipelineStateObjectCreateInfo& pipelineStateObjectCreateInfo
+        virtual PipelineStateHandle CreatePipelineStateObject(const PipelineStateCreateInfo& pipelineStateObjectCreateInfo
         ) = 0;
         virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout) = 0;
         virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes) = 0;
