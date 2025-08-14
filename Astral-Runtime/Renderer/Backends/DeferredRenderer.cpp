@@ -251,7 +251,7 @@ namespace Astral {
 
 
         AttachmentDescription lightingTextureDescription = {
-            .Format = ImageFormat::B8G8R8A8_UNORM,
+            .Format = ImageFormat::R16G16B16A16_SFLOAT,
             .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
