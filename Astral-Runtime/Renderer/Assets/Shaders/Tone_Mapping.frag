@@ -31,7 +31,11 @@ void main()
 {
     vec3 scenePixelData = texture(u_SceneRender, v_TextureCoord).rgb;
     scenePixelData *= exp2(u_PushConstantData.exposure);
+
     vec3 toneMappedData = toneMapACES(scenePixelData);
+
+    toneMappedData = pow(toneMappedData, vec3(1.0f / 2.2f));
+
     color = vec4(toneMappedData, 1.0);
 }
 
