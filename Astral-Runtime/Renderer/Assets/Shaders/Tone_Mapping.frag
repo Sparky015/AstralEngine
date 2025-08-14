@@ -1,19 +1,43 @@
 #version 460
 
-layout(location = 0) in vec3 v_WorldPosition;
-layout(location = 1) in vec3 v_Normals;
-layout(location = 2) in vec3 v_Tangents;
-layout(location = 3) in vec3 v_Bitangents;
 layout(location = 4) in vec2 v_TextureCoord;
 
 layout (set = 1, binding = 0) uniform sampler2D u_SceneRender;
 layout (set = 2, binding = 0) uniform sampler3D u_ToneMapLut; // LUT is ACES baked lut converting ACEScg to rec709 linear
 
+layout (push_constant) uniform PushConstantData {
+    float exposure;
+} u_PushConstantData;
+
 layout(location = 0) out vec4 color;
+
+
+// ACES (Narkowicz)
+vec3 ACESFit(vec3 pixelColor)
+{
+    vec3 a = pixelColor * (pixelColor + 0.0245786) - 0.000090537;
+    vec3 b = pixelColor * (0.983729 * pixelColor + 0.4329510) + 0.238081;
+    return a / b;
+}
+
+vec3 toneMapACES(vec3 pixelColor)
+{
+    pixelColor = max(pixelColor, 0.0);
+    pixelColor = ACESFit(pixelColor);
+    return clamp(pixelColor, 0.0, 1.0);
+}
 
 void main()
 {
-    vec3 renderedColors = texture(u_SceneRender, v_TextureCoord).rgb;
-    color = texture(u_ToneMapLut, renderedColors);
-    color = vec4(renderedColors, 1.0f);
+    vec3 scenePixelData = texture(u_SceneRender, v_TextureCoord).rgb;
+    scenePixelData *= exp2(u_PushConstantData.exposure);
+    vec3 toneMappedData = toneMapACES(scenePixelData);
+    color = vec4(toneMappedData, 1.0);
 }
+
+
+//void main()
+//{
+//    vec3 renderedColors = texture(u_SceneRender, v_TextureCoord).rgb;
+//    color = texture(u_ToneMapLut, renderedColors);
+//}
