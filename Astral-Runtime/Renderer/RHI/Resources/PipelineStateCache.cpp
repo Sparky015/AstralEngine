@@ -68,7 +68,7 @@ namespace Astral {
             .IsAlphaBlended = material.IsAlphaBlended
         };
 
-        PipelineStateHandle pipelineStateObject = device.CreatePipelineStateObject(pipelineStateObjectCreateInfo);
+        PipelineStateHandle pipelineStateObject = device.CreatePipelineState(pipelineStateObjectCreateInfo);
         m_PipelineCache[pipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;
