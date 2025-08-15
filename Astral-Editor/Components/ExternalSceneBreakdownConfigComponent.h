@@ -41,6 +41,7 @@ namespace Astral {
         static TextureHandle m_SettingsMaterialEmission;
 
         static bool m_SettingsIsNormalsDirectX;
+        static float m_SettingsScaleMultiplier;
 
     };
 

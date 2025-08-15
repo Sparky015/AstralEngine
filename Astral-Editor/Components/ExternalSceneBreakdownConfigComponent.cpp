@@ -35,6 +35,7 @@ namespace Astral {
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialEmission = nullptr;
 
     bool ExternalSceneBreakdownConfigComponent::m_SettingsIsNormalsDirectX = false;
+    float ExternalSceneBreakdownConfigComponent::m_SettingsScaleMultiplier = 1.0f;
 
 
     void ExternalSceneBreakdownConfigComponent::Show()
@@ -53,6 +54,9 @@ namespace Astral {
                 m_SettingsMaterialRoughness = SceneLoader::GetDefaultMaterialRoughness();
                 m_SettingsMaterialMetallic = SceneLoader::GetDefaultMaterialMetallic();
                 m_SettingsMaterialEmission = SceneLoader::GetDefaultMaterialEmission();
+
+                m_SettingsIsNormalsDirectX = SceneLoader::GetDefaultIsNormalsDirectX();
+                m_SettingsScaleMultiplier = SceneLoader::GetDefaultScaleMultiplier();
 
                 m_IsNewShow = false;
             }
@@ -101,6 +105,10 @@ namespace Astral {
                 if (ImGui::Selectable("-Y")) { m_SettingsRotationOffset.z = -90.0f;m_SettingsCoordinateSystemRightPreview = "-Y"; }
                 ImGui::EndCombo();
             }
+
+            ImGui::Text("Scale Multiplier: ");
+            ImGui::SameLine();
+            ImGui::InputFloat("##ExternalSceneBreakdownConfigComponentScaleMultiplier", &m_SettingsScaleMultiplier, .05, .1);
 
 
             ImGui::Text("Material Defaults");
@@ -168,6 +176,7 @@ namespace Astral {
                 SceneLoader::SetDefaultMaterialTextureConvention(m_SettingsMaterialTextureConvention);
                 SceneLoader::SetDefaultCoordinateSystemOffset(m_SettingsRotationOffset);
                 SceneLoader::SetDefaultIsNormalsDirectX(m_SettingsIsNormalsDirectX);
+                SceneLoader::SetDefaultScaleMultiplier(m_SettingsScaleMultiplier);
 
                 if (m_SettingsMaterialBaseColor) { SceneLoader::SetDefaultMaterialBaseColor(m_SettingsMaterialBaseColor); }
                 if (m_SettingsMaterialNormals) { SceneLoader::SetDefaultMaterialNormals(m_SettingsMaterialNormals); }

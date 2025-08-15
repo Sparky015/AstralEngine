@@ -47,6 +47,7 @@ namespace Astral {
     TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
 
     bool SceneLoader::m_IsDefaultNormalsDirectX = false;
+    float SceneLoader::m_ScaleMultiplier = 1.0f;
 
 
     void SceneLoader::InitDefaultMaterial()
@@ -581,6 +582,7 @@ namespace Astral {
         glm::extractEulerAngleXYZ(glmMatrix, x, y, z);
 
 
+        transformComponent.scale *= m_ScaleMultiplier;
 
         transformComponent.rotation = glm::degrees(Vec3(x,y,z));
         transformComponent.rotation += m_DefaultRotationOffset;
