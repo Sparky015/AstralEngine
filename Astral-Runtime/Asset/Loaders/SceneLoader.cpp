@@ -47,6 +47,7 @@ namespace Astral {
     TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
 
     bool SceneLoader::m_IsDefaultNormalsDirectX = false;
+    float SceneLoader::m_ScaleMultiplier = 1.0f;
 
 
     void SceneLoader::InitDefaultMaterial()
@@ -582,9 +583,6 @@ namespace Astral {
 
 
 
-        transformComponent.rotation = glm::degrees(Vec3(x,y,z));
-        transformComponent.rotation += m_DefaultRotationOffset;
-
         if (lightNameToLight.contains(node->mName.C_Str()))
         {
             aiLight* light = lightNameToLight.at(node->mName.C_Str());
@@ -608,6 +606,12 @@ namespace Astral {
                 activeScene.AmbientLightConstant = (light->mColorAmbient.r + light->mColorAmbient.g + light->mColorAmbient.b) / 3;
             }
         }
+
+        transformComponent.position *= m_ScaleMultiplier;
+        transformComponent.scale *= m_ScaleMultiplier;
+
+        transformComponent.rotation = glm::degrees(Vec3(x,y,z));
+        transformComponent.rotation += m_DefaultRotationOffset;
 
 
         ecs.AddComponent(entity, transformComponent);
