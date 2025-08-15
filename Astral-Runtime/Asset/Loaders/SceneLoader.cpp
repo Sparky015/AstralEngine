@@ -582,10 +582,6 @@ namespace Astral {
         glm::extractEulerAngleXYZ(glmMatrix, x, y, z);
 
 
-        transformComponent.scale *= m_ScaleMultiplier;
-
-        transformComponent.rotation = glm::degrees(Vec3(x,y,z));
-        transformComponent.rotation += m_DefaultRotationOffset;
 
         if (lightNameToLight.contains(node->mName.C_Str()))
         {
@@ -610,6 +606,12 @@ namespace Astral {
                 activeScene.AmbientLightConstant = (light->mColorAmbient.r + light->mColorAmbient.g + light->mColorAmbient.b) / 3;
             }
         }
+
+        transformComponent.position *= m_ScaleMultiplier;
+        transformComponent.scale *= m_ScaleMultiplier;
+
+        transformComponent.rotation = glm::degrees(Vec3(x,y,z));
+        transformComponent.rotation += m_DefaultRotationOffset;
 
 
         ecs.AddComponent(entity, transformComponent);
