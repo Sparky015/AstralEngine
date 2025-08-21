@@ -56,6 +56,12 @@ namespace Astral {
     }
 
 
+    void RendererAPI::ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback)
+    {
+        s_RendererCommands->ExecuteOneTimeAndBlock(callback);
+    }
+
+
     void RendererAPI::SetBlending(bool enable)
     {
         s_RendererCommands->SetBlending(enable);

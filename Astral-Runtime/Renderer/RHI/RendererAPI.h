@@ -23,6 +23,7 @@ namespace Astral {
         static void DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer);
         static void PushConstants(CommandBufferHandle commandBuffer, PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes);
         static void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier);
+        static void ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback);
         static void SetBlending(bool enable); // TODO: Remove this
         static void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color);
         static void EndLabel(CommandBufferHandle commandBufferHandle);

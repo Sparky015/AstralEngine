@@ -42,6 +42,7 @@ namespace Astral {
         virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
         virtual void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) = 0;
+        virtual void ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback) = 0;
 
         virtual void SetBlending(bool enable) = 0; // TODO: Remove this
 
