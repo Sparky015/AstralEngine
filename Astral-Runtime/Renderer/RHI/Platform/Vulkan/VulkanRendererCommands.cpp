@@ -14,6 +14,8 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Renderer/RHI/RendererAPI.h"
+
 namespace Astral {
 
     void VulkanRendererCommands::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
@@ -160,6 +162,20 @@ namespace Astral {
             ImageLayout newLayout = imageMemoryBarrier.NewLayout;
             imageMemoryBarrier.Image->UpdateLayout(newLayout);
         }
+    }
+
+
+    void VulkanRendererCommands::ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback)
+    {
+        CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
+
+        commandBufferHandle->BeginRecording();
+        callback(commandBufferHandle);
+        commandBufferHandle->EndRecording();
+
+        CommandQueueHandle queueHandle = RendererAPI::GetDevice().GetAsyncCommandQueue();
+        queueHandle->SubmitSync(commandBufferHandle);
+        queueHandle->WaitIdle();
     }
 
 

@@ -80,7 +80,7 @@ namespace Astral {
     }
 
 
-    GraphicsRef<CommandQueue> VulkanDevice::GetCommandQueue()
+    GraphicsRef<CommandQueue> VulkanDevice::GetPrimaryCommandQueue()
     {
         VulkanCommandQueueDesc commandQueueDesc = {
             .Device = m_Device,
@@ -89,6 +89,21 @@ namespace Astral {
             .QueueIndex = 0
         };
 
+        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+    }
+
+
+    CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
+    {
+        uint32 asyncQueueIndex = 1;
+        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount < asyncQueueIndex) { asyncQueueIndex--; }
+
+        VulkanCommandQueueDesc commandQueueDesc = {
+            .Device = m_Device,
+            .Swapchain = *m_Swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = asyncQueueIndex
+        };
         return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
     }
 
@@ -285,15 +300,15 @@ namespace Astral {
 
     void VulkanDevice::CreateDevice()
     {
-        float priorities[] = { 1.0f };
+        float priorities[] = { 1.0f, 0.5f };
 
         VkDeviceQueueCreateInfo deviceQueueCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
             .queueFamilyIndex = m_QueueFamilyIndex,
-            .queueCount = 1,
-            .pQueuePriorities = &priorities[0]
+            .queueCount = 2,
+            .pQueuePriorities = priorities
         };
 
         std::vector<const char*> devExts = {

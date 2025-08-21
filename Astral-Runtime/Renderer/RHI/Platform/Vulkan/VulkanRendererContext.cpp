@@ -238,7 +238,7 @@ namespace Astral {
             .PhysicalDevice = m_PhysicalDevices.SelectedDevice().physicalDevice,
             .Device = (VkDevice)m_Device->GetNativeHandle(),
             .QueueFamily = m_QueueFamilyIndex,
-            .Queue = (VkQueue)m_Device->GetCommandQueue()->GetNativeHandle(),
+            .Queue = (VkQueue)m_Device->GetPrimaryCommandQueue()->GetNativeHandle(),
             .RenderPass = renderPass,
             .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),

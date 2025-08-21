@@ -26,7 +26,8 @@ namespace Astral {
 
         virtual Swapchain& GetSwapchain() = 0;
         virtual CommandBufferHandle AllocateCommandBuffer() = 0;
-        virtual CommandQueueHandle GetCommandQueue() = 0;
+        virtual CommandQueueHandle GetPrimaryCommandQueue() = 0;
+        virtual CommandQueueHandle GetAsyncCommandQueue() = 0;
         virtual RenderPassHandle CreateRenderPass() = 0;
         virtual FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) = 0;
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;

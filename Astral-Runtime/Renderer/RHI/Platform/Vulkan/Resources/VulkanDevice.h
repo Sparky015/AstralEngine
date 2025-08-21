@@ -33,7 +33,8 @@ namespace Astral {
 
         Swapchain& GetSwapchain() override { return *m_Swapchain; }
         CommandBufferHandle AllocateCommandBuffer() override;
-        CommandQueueHandle GetCommandQueue() override;
+        CommandQueueHandle GetPrimaryCommandQueue() override;
+        CommandQueueHandle GetAsyncCommandQueue() override;
         RenderPassHandle CreateRenderPass() override;
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override;
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;

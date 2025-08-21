@@ -19,6 +19,7 @@ namespace Astral {
         void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
                                 pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
         void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) override;
+        void ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback) override;
 
         void SetBlending(bool enable) override;
         void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) override;
