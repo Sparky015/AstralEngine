@@ -111,7 +111,7 @@ namespace Astral {
     void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
     {
     	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
-        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | userUsageFlag; // TODO: Remove the predefined flags
+        VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | userUsageFlag; // TODO: Remove the predefined flags
 
     	VkImageCreateFlags createFlags = (m_TextureType == TextureType::CUBEMAP) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
 
@@ -197,11 +197,11 @@ namespace Astral {
     {
     	VkImageAspectFlags aspectFlags{};
 
-    	if (imageUsageFlags == ImageUsageFlags::COLOR_ATTACHMENT_BIT || imageUsageFlags == ImageUsageFlags::SAMPLED_BIT)
+    	if (imageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || imageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT)
     	{
     		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
     	}
-    	else if (imageUsageFlags == ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT)
+    	else if (imageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
     	{
     		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
     	}
@@ -322,11 +322,6 @@ namespace Astral {
 		{
 			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 			m_ImageAspect = IMAGE_ASPECT_DEPTH_BIT | IMAGE_ASPECT_STENCIL_BIT;
-
-			// if (HasStencilComponent(m_Format))
-			// {
-			// 	barrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-			// }
 		}
 		else
 		{
@@ -467,7 +462,7 @@ namespace Astral {
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetPrimaryCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
@@ -498,7 +493,7 @@ namespace Astral {
 		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
 
         commandBufferHandle->EndRecording();
-        CommandQueueHandle queueHandle = m_DeviceManager->GetCommandQueue();
+        CommandQueueHandle queueHandle = m_DeviceManager->GetPrimaryCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
         queueHandle->WaitIdle();
     }
