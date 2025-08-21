@@ -100,6 +100,18 @@ namespace Astral {
         uint32 GetNumLayers() override { return m_NumLayers; }
 
         /**
+         * @brief  Gets the native image view of a specific layer in the texture
+         * @return The native image view of a specific layer in the texture or nullptr if the layer num is not valid
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        void* GetLayerNativeImageView(uint32 layer) override
+        {
+            if (layer > m_NumLayers) { return nullptr; }
+            if (m_NumLayers == 1) { return m_ImageView; }
+            return m_Layer2DImageViews[layer];
+        }
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native vulkan sampler handle (VkSampler)
@@ -200,6 +212,7 @@ namespace Astral {
         VkImage m_Image;
         VkDeviceMemory m_ImageMemory;
         VkImageView m_ImageView;
+        std::vector<VkImageView> m_Layer2DImageViews;
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
         uint32 m_NumLayers;

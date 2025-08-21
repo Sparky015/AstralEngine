@@ -88,6 +88,13 @@ namespace Astral {
         virtual uint32 GetNumLayers() = 0;
 
         /**
+         * @brief  Gets the native image view of a specific layer in the texture
+         * @return The native image view of a specific layer in the texture
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        virtual void* GetLayerNativeImageView(uint32 layer) = 0;
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native sampler handle of the selected renderer api backend

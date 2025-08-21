@@ -239,6 +239,31 @@ namespace Astral {
 
     	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_ImageView);
     	ASSERT(result == VK_SUCCESS, "Failed to create image view!");
+
+
+
+    	// Create image views for image layers
+    	if (m_NumLayers > 1)
+    	{
+    		switch (m_TextureType)
+    		{
+    			case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    			case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
+    			case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    			default: viewType = VK_IMAGE_VIEW_TYPE_2D;
+    		}
+    		imageViewCreateInfo.viewType = viewType;
+    		imageViewCreateInfo.subresourceRange.layerCount = 1;
+    		m_Layer2DImageViews.resize(m_NumLayers);
+
+    		for (uint32 i = 0; i < m_NumLayers; i++)
+    		{
+    			imageViewCreateInfo.subresourceRange.baseArrayLayer = i;
+
+    			result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_Layer2DImageViews[i]);
+    			ASSERT(result == VK_SUCCESS, "Failed to create image view!");
+    		}
+    	}
     }
 
 
