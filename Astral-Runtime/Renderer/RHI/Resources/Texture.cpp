@@ -60,7 +60,7 @@ namespace Astral {
             return nullptr;
         }
 
-        TextureHandle textureHandle = Texture::CreateTexture(data, width, height, imageFormat);
+        TextureHandle textureHandle = Texture::CreateTexture(data, width, height, imageFormat, 0);
 
         if (!(filePath.extension() == ".dds" || filePath.extension() == ".ktx"))
         {
@@ -71,12 +71,12 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | imageUsageFlags,
             .Dimensions = UVec2(width, height),
             .ImageData = (uint8*)data,
         };
@@ -98,7 +98,7 @@ namespace Astral {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
         };
@@ -115,7 +115,7 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags)
     {
         ASSERT(data != nullptr, "Tried to create texture with nullptr!")
         ASSERT(width != 0, "Tried to create texture with width of zero!")
@@ -130,7 +130,7 @@ namespace Astral {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | imageUsageFlags,
             .Dimensions = UVec2(width, height),
             .ImageData = (unsigned char*)data,
         };

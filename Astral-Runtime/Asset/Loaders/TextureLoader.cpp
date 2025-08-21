@@ -65,7 +65,7 @@ namespace Astral {
             //     stbi_write_hdr(outFilePath.c_str(), faceSideLength, faceSideLength, 4, (float*)cubemap[i].GetData());
             // }
 
-            texture = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, ImageFormat::R16G16B16A16_SFLOAT);
+            texture = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, ImageFormat::R16G16B16A16_SFLOAT, 0);
 
 
             stbi_image_free(equirectangularData);

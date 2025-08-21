@@ -118,7 +118,7 @@ namespace Astral {
          * @brief  Creates a cubemap from a file path
          * @return The texture handle
          */
-        static GraphicsRef<Texture> CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
+        static GraphicsRef<Texture> CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags);
 
         /**
          * @brief  Creates a lut from a file path
@@ -130,7 +130,7 @@ namespace Astral {
          * @brief  Creates a texture from the image data
          * @return The texture handle
          */
-        static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
+        static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags);
 
         AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Texture; }

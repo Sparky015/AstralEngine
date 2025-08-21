@@ -429,7 +429,7 @@ namespace Astral {
                  Ref<Texture> textureRef;
                  aiTexture* texture = scene->mTextures[i];
                  // TODO: Convert the format hint to a image format
-                 textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM);
+                 textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM, 0);
                  WARN("Loading an embedded texture! This probably won't work!")
                  m_EmbeddedTextures.push_back(textureRef);
              }
