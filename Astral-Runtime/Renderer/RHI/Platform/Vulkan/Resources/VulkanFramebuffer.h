@@ -61,6 +61,12 @@ namespace Astral {
         void AttachTexture(TextureHandle textureHandle) override;
 
         /**
+         * @brief Attaches a layer of a texture to the framebuffer
+         * @param textureHandle The texture to attach to the framebuffer
+         */
+        void AttachTexture(TextureHandle textureHandle, uint32 layer) override;
+
+        /**
          * @brief Ends the building of a framebuffer and creates the framebuffer
          * @pre   @ref BeginBuildingFramebuffer should be called to create the framebuffer
          */

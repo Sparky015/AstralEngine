@@ -42,10 +42,16 @@ namespace Astral {
         virtual void AttachRenderTarget(RenderTargetHandle renderTargetHandle) = 0;
 
         /**
-         * @brief Attaches a render target to the framebuffer
+         * @brief Attaches a texture to the framebuffer
          * @param textureHandle The texture to attach to the framebuffer
          */
         virtual void AttachTexture(TextureHandle textureHandle) = 0;
+
+        /**
+         * @brief Attaches a layer of a texture to the framebuffer
+         * @param textureHandle The texture to attach to the framebuffer
+         */
+        virtual void AttachTexture(TextureHandle textureHandle, uint32 layer) = 0;
 
         /**
          * @brief Ends the building of a framebuffer and creates the framebuffer
