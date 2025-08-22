@@ -36,6 +36,26 @@ namespace Astral {
         // Building the imgui render pass
         BuildImGuiEditorRenderPass();
 
+
+        AttachmentDescription irradianceAttachmentDescription = {
+            .Format = ImageFormat::R16G16B16A16_SFLOAT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = UVec4(0, 0, 0, 1.0f)
+        };
+
+        m_IrradianceCalcPass = RendererAPI::GetDevice().CreateRenderPass();
+        m_IrradianceCalcPass->BeginBuildingRenderPass();
+        m_IrradianceCalcPass->BeginBuildingSubpass();
+        AttachmentIndex irradianceAttachment = m_IrradianceCalcPass->DefineAttachment(irradianceAttachmentDescription);
+        m_IrradianceCalcPass->AddColorAttachment(irradianceAttachment, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        m_IrradianceCalcPass->EndBuildingSubpass();
+        m_IrradianceCalcPass->EndBuildingRenderPass();
+
+
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
 
@@ -55,6 +75,8 @@ namespace Astral {
         m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
         m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT, ShaderStage::FRAGMENT);
         m_ToneMappingLUTDescriptorSet->EndBuildingSet();
+
+
 
 
         // Renderer Settings
@@ -122,6 +144,7 @@ namespace Astral {
 
         if (sceneDescription.EnvironmentMap)
         {
+            // TODO: Add irradiance map
             frameContext.EnvironmentMap->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap);
         }
 
@@ -184,7 +207,7 @@ namespace Astral {
 
         AttachmentDescription albedoBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -194,7 +217,7 @@ namespace Astral {
 
         AttachmentDescription metallicBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -204,7 +227,7 @@ namespace Astral {
 
         AttachmentDescription roughnessBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -214,7 +237,7 @@ namespace Astral {
 
         AttachmentDescription emissionBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -224,7 +247,7 @@ namespace Astral {
 
         AttachmentDescription normalBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -234,7 +257,7 @@ namespace Astral {
 
         AttachmentDescription depthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -254,7 +277,7 @@ namespace Astral {
 
         AttachmentDescription lightingTextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -281,7 +304,7 @@ namespace Astral {
 
         AttachmentDescription outputTextureDescription = {
             .Format = ImageFormat::B8G8R8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -366,7 +389,7 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
                 .ImageData = nullptr
             };
@@ -415,15 +438,31 @@ namespace Astral {
 
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
+            TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/pretoria_gardens_4k.hdr");
+            TextureHandle irradianceMap = Texture::CreateCubemap(nullptr, 32, 32, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+            std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
+            RendererAPI::NameObject(irradianceMap, irradianceMapName);
+
+
             context.EnvironmentMap = device.CreateDescriptorSet();
             context.EnvironmentMap->BeginBuildingSet();
             context.EnvironmentMap->AddDescriptorImageSampler(environmentMap, ShaderStage::FRAGMENT);
+            context.EnvironmentMap->AddDescriptorImageSampler(irradianceMap, ShaderStage::FRAGMENT);
             context.EnvironmentMap->EndBuildingSet();
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.EnvironmentMap, environmentMapDescriptorSetName);
 
+            constexpr uint32 numFaces = 6;
+            context.IrradianceMapPassFramebuffers.resize(numFaces);
+            for (int j = 0; j < numFaces; j++)
+            {
+                context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
+                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(32, 32);
+                context.IrradianceMapPassFramebuffers[j]->AttachTexture(irradianceMap, j);
+                context.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
+            }
 
+            context.IsIrradianceMapCalculationNeeded = true;
         }
     }
 
@@ -512,7 +551,7 @@ namespace Astral {
 
         commandBuffer->EndRecording();
 
-        CommandQueueHandle commandQueue = device.GetCommandQueue();
+        CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
@@ -642,6 +681,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMap});
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
@@ -657,12 +697,14 @@ namespace Astral {
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMap, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
     }
 
 
@@ -671,6 +713,13 @@ namespace Astral {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        // TODO: Compute the irradiance map
+        if (frameContext.IsIrradianceMapCalculationNeeded)
+        {
+            RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
+            frameContext.IsIrradianceMapCalculationNeeded = false;
+        }
 
         // Cubemap
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
@@ -732,6 +781,70 @@ namespace Astral {
     }
 
 
+    struct ComputeIrradianceMapViewProjection
+    {
+        Mat4 FaceProjection;
+        Mat4 FaceView;
+    };
+    static_assert(sizeof(ComputeIrradianceMapViewProjection) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
+
+
+    void DeferredRenderer::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
+    {
+        RendererAPI::BeginLabel(commandBuffer, "IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+        glm::mat4 captureViews[] =
+        {
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+         };
+
+        Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
+        frameContext.Meshes.push_back(cubeMesh); // Hold onto reference so it is not destroyed early
+
+        Material environmentMapMaterial{};
+        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.frag");
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
+
+        PipelineStateHandle cubePipeline = m_PipelineStateCache.GetPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
+        cubePipeline->Bind(commandBuffer);
+        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(32, 32));
+
+        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+
+        cubeMesh.VertexBuffer->Bind(commandBuffer);
+        cubeMesh.IndexBuffer->Bind(commandBuffer);
+
+        ComputeIrradianceMapViewProjection computeIrradianceMapViewProjection;
+        computeIrradianceMapViewProjection.FaceProjection = captureProjection;
+
+        constexpr uint32 numFaces = 6;
+        for (uint32 i = 0; i < numFaces; i++)
+        {
+            const FramebufferHandle& faceFramebuffer = frameContext.IrradianceMapPassFramebuffers[i];
+            m_IrradianceCalcPass->BeginRenderPass(commandBuffer, faceFramebuffer);
+
+            computeIrradianceMapViewProjection.FaceView = captureViews[i];
+            RendererAPI::PushConstants(commandBuffer, cubePipeline, &computeIrradianceMapViewProjection, sizeof(ComputeIrradianceMapViewProjection));
+            RendererAPI::DrawElementsIndexed(commandBuffer, cubeMesh.IndexBuffer);
+
+            m_IrradianceCalcPass->EndRenderPass(commandBuffer);
+        }
+
+        RendererAPI::EndLabel(commandBuffer);
+    }
+
+
     void DeferredRenderer::ResizeViewport(uint32 width, uint32 height)
     {
         m_ViewportSize = UVec2(width, height);
@@ -751,7 +864,7 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };

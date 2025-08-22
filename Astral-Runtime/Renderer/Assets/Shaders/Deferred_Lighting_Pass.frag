@@ -27,12 +27,15 @@ layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
-layout(set = 1, binding = 0) uniform sampler2D u_AlbedoInput;
-layout(set = 1, binding = 1) uniform sampler2D u_MetallicInput;
-layout(set = 1, binding = 2) uniform sampler2D u_RoughnessInput;
-layout(set = 1, binding = 3) uniform sampler2D u_EmissionInput;
-layout(set = 1, binding = 4) uniform sampler2D u_NormalInput;
-layout(set = 1, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout (set = 1, binding = 0) uniform samplerCube u_Cubemap;
+layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
+
+layout(set = 2, binding = 0) uniform sampler2D u_AlbedoInput;
+layout(set = 2, binding = 1) uniform sampler2D u_MetallicInput;
+layout(set = 2, binding = 2) uniform sampler2D u_RoughnessInput;
+layout(set = 2, binding = 3) uniform sampler2D u_EmissionInput;
+layout(set = 2, binding = 4) uniform sampler2D u_NormalInput;
+layout(set = 2, binding = 5) uniform sampler2D u_DepthBufferInput;
 
 layout(location = 0) out vec4 outColor;
 
@@ -146,8 +149,9 @@ void main()
         finalLight += outgoingLight;
     }
 
-    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic.r);
-    finalLight += ambient + emission;
+//    vec3 irradiance = texture(u_Irradiance, normal).rgb;
+//    vec3 ambient = u_SceneData.ambientLightConstant * irradiance * baseColor;
+//    finalLight += ambient + emission;
 
     outColor = vec4(finalLight, 1.0f);
 }
