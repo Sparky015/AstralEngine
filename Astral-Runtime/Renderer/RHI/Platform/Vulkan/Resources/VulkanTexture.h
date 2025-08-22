@@ -108,7 +108,7 @@ namespace Astral {
         {
             if (layer > m_NumLayers) { return nullptr; }
             if (m_NumLayers == 1) { return m_ImageView; }
-            return m_Layer2DImageViews[layer];
+            return m_LayerImageViews[layer];
         }
 
         /**
@@ -212,7 +212,7 @@ namespace Astral {
         VkImage m_Image;
         VkDeviceMemory m_ImageMemory;
         VkImageView m_ImageView;
-        std::vector<VkImageView> m_Layer2DImageViews;
+        std::vector<VkImageView> m_LayerImageViews;
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
         uint32 m_NumLayers;

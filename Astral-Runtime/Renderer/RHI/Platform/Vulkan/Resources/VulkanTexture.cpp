@@ -254,13 +254,13 @@ namespace Astral {
     		}
     		imageViewCreateInfo.viewType = viewType;
     		imageViewCreateInfo.subresourceRange.layerCount = 1;
-    		m_Layer2DImageViews.resize(m_NumLayers);
+    		m_LayerImageViews.resize(m_NumLayers);
 
     		for (uint32 i = 0; i < m_NumLayers; i++)
     		{
     			imageViewCreateInfo.subresourceRange.baseArrayLayer = i;
 
-    			result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_Layer2DImageViews[i]);
+    			result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_LayerImageViews[i]);
     			ASSERT(result == VK_SUCCESS, "Failed to create image view!");
     		}
     	}
@@ -270,6 +270,12 @@ namespace Astral {
     void VulkanTexture::DestroyImageView()
     {
     	vkDestroyImageView(m_Device, m_ImageView, nullptr);
+
+    	for (VkImageView layerImageView : m_LayerImageViews)
+    	{
+    		if (layerImageView == nullptr) { continue; }
+    		vkDestroyImageView(m_Device, layerImageView, nullptr);
+    	}
     }
 
 
@@ -533,9 +539,9 @@ namespace Astral {
     		.magFilter = VK_FILTER_LINEAR,
     		.minFilter = VK_FILTER_LINEAR,
     		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-    		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    		.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+    		.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+    		.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
     		.mipLodBias = 0.0f,
     		.anisotropyEnable = VK_FALSE,
     		.compareEnable = VK_FALSE,
