@@ -29,6 +29,10 @@ namespace Astral {
         ImageUsageFlags UsageFlags;
         UVec2 Dimensions;
         uint8* ImageData;
+        uint32 ImageDataLength;
+        uint32 LayerCount;
+        uint32 MipMapCount;
+        bool GenerateMipMaps;
     };
 
     /**
@@ -88,6 +92,12 @@ namespace Astral {
         virtual uint32 GetNumLayers() = 0;
 
         /**
+         * @brief  Gets the number of mipmaps that the texture has
+         * @return The number of mipmaps that the texture has
+         */
+        virtual uint32 GetNumMipLevels() = 0;
+
+        /**
          * @brief  Gets the native image view of a specific layer in the texture
          * @return The native image view of a specific layer in the texture
          * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
@@ -116,6 +126,25 @@ namespace Astral {
         virtual void* GetNativeImageView() = 0;
 
         /**
+         * @brief  Calculates the number of mip map levels needed for a texture of the given dimensions
+         * @param  width The width of the base texture
+         * @param  height THe height of the base texture
+         * @return The number of mip map levels needed for a texture of the given dimensions
+         */
+        static uint32 CalculateMipMapLevels(uint32 width, uint32 height);
+
+        /**
+         * @brief  Calculates the size of a mip map level based on the given dimensions
+         * @param  imageFormat The format of the texture
+         * @param  width The width of the base texture
+         * @param  height The height of the base texture
+         * @param  depth The height of the base texture
+         * @param  numLayers The number of layers the texture has
+         * @return The size of a mip map level based on the given dimensions
+         */
+        static uint32 CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers);
+
+        /**
          * @brief  Creates a texture from a file path
          * @return The texture handle
          */
@@ -137,7 +166,7 @@ namespace Astral {
          * @brief  Creates a texture from the image data
          * @return The texture handle
          */
-        static GraphicsRef<Texture> CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags);
+        static GraphicsRef<Texture> CreateTexture(const TextureCreateInfo& textureCreateInfo);
 
         AssetType GetAssetType() override { return Texture::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Texture; }

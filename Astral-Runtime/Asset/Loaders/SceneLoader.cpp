@@ -429,7 +429,21 @@ namespace Astral {
                  Ref<Texture> textureRef;
                  aiTexture* texture = scene->mTextures[i];
                  // TODO: Convert the format hint to a image format
-                 textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM, 0);
+                 // textureRef = Texture::CreateTexture(texture->pcData, texture->mWidth, texture->mHeight, ImageFormat::R8G8B8A8_UNORM, 0);
+
+                 TextureCreateInfo textureCreateInfo;
+                 textureCreateInfo.Format = ImageFormat::R8G8B8A8_UNORM;
+                 textureCreateInfo.Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+                 textureCreateInfo.ImageData = (uint8*)texture->pcData;
+                 textureCreateInfo.ImageDataLength = texture->mWidth * texture->mHeight * 4;
+                 textureCreateInfo.UsageFlags = IMAGE_USAGE_SAMPLED_BIT;
+                 textureCreateInfo.Dimensions.x = texture->mWidth;
+                 textureCreateInfo.Dimensions.x = texture->mHeight;
+                 textureCreateInfo.LayerCount = 1;
+                 textureCreateInfo.MipMapCount = Texture::CalculateMipMapLevels(texture->mWidth, texture->mHeight);
+                 textureCreateInfo.GenerateMipMaps = true;
+
+                 textureRef = Texture::CreateTexture(textureCreateInfo);
                  WARN("Loading an embedded texture! This probably won't work!")
                  m_EmbeddedTextures.push_back(textureRef);
              }

@@ -42,6 +42,8 @@ namespace Astral {
         virtual TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
 
+        virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
+
 
         virtual void WaitIdle() = 0;
 

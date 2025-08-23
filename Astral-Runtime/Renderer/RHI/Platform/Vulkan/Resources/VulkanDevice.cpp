@@ -239,12 +239,14 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
-            .NumLayers = 1,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .TextureType = TextureType::IMAGE_2D
         };
 
@@ -259,12 +261,14 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
             .NumLayers = 6,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .TextureType = TextureType::CUBEMAP
         };
 
@@ -279,16 +283,30 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
-            .NumLayers = 1,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_3D
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
+    bool VulkanDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
+    {
+        VkFormat format = ConvertImageFormatToVkFormat(imageFormat);
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice.physicalDevice, format, &formatProperties);
+
+        return (formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
+               (formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT);
     }
 
 

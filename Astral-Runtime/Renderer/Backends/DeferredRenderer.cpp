@@ -391,7 +391,9 @@ namespace Astral {
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
-                .ImageData = nullptr
+                .ImageData = nullptr,
+                .LayerCount = 1,
+                .MipMapCount = 1,
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
             std::string offscreenRenderTargetName = std::string("Offscreen_Render_Target_") + std::to_string(i);
@@ -504,9 +506,9 @@ namespace Astral {
             imageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
-                .LevelCount = 1,
+                .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
                 .BaseArrayLayer = 0,
-                .LayerCount = 1
+                .LayerCount = offscreenRenderTarget->GetNumLayers()
             };
             pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
 
@@ -866,7 +868,9 @@ namespace Astral {
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
-                .ImageData = nullptr
+                .ImageData = nullptr,
+                .LayerCount = 1,
+                .MipMapCount = 1,
             };
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);

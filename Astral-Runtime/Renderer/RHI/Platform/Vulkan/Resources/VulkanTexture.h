@@ -32,12 +32,15 @@ namespace Astral {
         VkDevice Device;
         VkPhysicalDeviceMemoryProperties PhysicalDeviceMemoryProperties;
         unsigned char* ImageData;
+        uint32 ImageDataLength;
         ImageFormat ImageFormat;
         ImageLayout ImageLayout;
         ImageUsageFlags ImageUsageFlags;
         uint32 ImageWidth;
         uint32 ImageHeight;
         uint32 NumLayers;
+        uint32 NumMipLevels;
+        bool GenerateMipMaps;
         TextureType TextureType;
     };
 
@@ -98,6 +101,12 @@ namespace Astral {
          * @return The number of layers that the texture has
          */
         uint32 GetNumLayers() override { return m_NumLayers; }
+
+        /**
+         * @brief  Gets the number of mipmaps that the texture has
+         * @return The number of mipmaps that the texture has
+         */
+        uint32 GetNumMipLevels() override { return m_NumMipLevels; }
 
         /**
          * @brief  Gets the native image view of a specific layer in the texture
@@ -168,8 +177,10 @@ namespace Astral {
         /**
          * @brief Uploads data to the device local texture through a staging buffer
          * @param data The data to upload
+         * @param dataLength
+         * @param generateMipMaps
          */
-        void UploadDataToTexture(uint8* data);
+        void UploadDataToTexture(uint8* data, uint32 dataLength, bool generateMipMaps);
 
         /**
          * @brief Transitions the current layout to the new specified layout
@@ -181,8 +192,9 @@ namespace Astral {
         /**
          * @brief Copies the texture data from the staging buffer to the device local texture
          * @param stagingBuffer The staging buffer that contains the texture data
+         * @param generateMipMaps
          */
-        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer);
+        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer, bool generateMipMaps);
 
         /**
          * @brief Creates the VkImageSampler for the texture
@@ -211,11 +223,13 @@ namespace Astral {
 
         VkImage m_Image;
         VkDeviceMemory m_ImageMemory;
+        uint32 m_AllocationSize;
         VkImageView m_ImageView;
         std::vector<VkImageView> m_LayerImageViews;
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
         uint32 m_NumLayers;
+        uint32 m_NumMipLevels;
         TextureType m_TextureType;
 
         bool m_IsSwapchainOwned;

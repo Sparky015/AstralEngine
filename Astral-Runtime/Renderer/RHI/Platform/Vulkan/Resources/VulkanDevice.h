@@ -48,6 +48,8 @@ namespace Astral {
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
 
+        bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
+
         void WaitIdle() override;
 
         void* GetNativeHandle() override { return m_Device; }
