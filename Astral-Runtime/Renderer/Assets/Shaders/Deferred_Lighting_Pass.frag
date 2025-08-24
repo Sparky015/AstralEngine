@@ -106,9 +106,11 @@ void main()
     vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
     vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
     normal = normal * 2.0 - 1.0;
-    vec3 worldPosition = GetWorldPosition();
 
+    vec3 worldPosition = GetWorldPosition();
     vec3 cameraPosition = u_SceneData.cameraPosition;
+    vec3 viewVector = normalize(cameraPosition - worldPosition);
+
     vec3 finalLight = vec3(0.0f);
 
     if (u_SceneData.numLights == 0)
@@ -123,7 +125,6 @@ void main()
 
         // Vectors
         normal = normalize(normal);
-        vec3 viewVector = normalize(cameraPosition - worldPosition);
         vec3 lightVector = normalize(lightPosition - worldPosition);
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - worldPosition);
@@ -149,8 +150,12 @@ void main()
         finalLight += outgoingLight;
     }
 
+    vec3 F0 = mix(vec3(0.04), baseColor, metallic);
+    vec3 kS = Fresnel(F0, normal, viewVector);
+    vec3 kD = (1.0 - kS) * (1.0 - metallic);
+
     vec3 irradiance = texture(u_Irradiance, normal).rgb;
-    vec3 ambient = u_SceneData.ambientLightConstant * irradiance * baseColor;
+    vec3 ambient = u_SceneData.ambientLightConstant * kD * irradiance * baseColor;
     finalLight += ambient + emission;
 //    finalLight += emission;
 
