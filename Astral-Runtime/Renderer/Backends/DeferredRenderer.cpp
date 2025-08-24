@@ -441,7 +441,7 @@ namespace Astral {
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
             TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/pretoria_gardens_4k.hdr");
-            TextureHandle irradianceMap = Texture::CreateCubemap(nullptr, 32, 32, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+            TextureHandle irradianceMap = Texture::CreateCubemap(nullptr, 64, 64, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
             std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
             RendererAPI::NameObject(irradianceMap, irradianceMapName);
 
@@ -459,7 +459,7 @@ namespace Astral {
             for (int j = 0; j < numFaces; j++)
             {
                 context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
-                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(32, 32);
+                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(64, 64);
                 context.IrradianceMapPassFramebuffers[j]->AttachTexture(irradianceMap, j);
                 context.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
             }
@@ -819,7 +819,7 @@ namespace Astral {
 
         PipelineStateHandle cubePipeline = m_PipelineStateCache.GetPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
         cubePipeline->Bind(commandBuffer);
-        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(32, 32));
+        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(64, 64));
 
         cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
         cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
