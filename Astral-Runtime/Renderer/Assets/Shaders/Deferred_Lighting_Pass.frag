@@ -149,9 +149,11 @@ void main()
         finalLight += outgoingLight;
     }
 
-//    vec3 irradiance = texture(u_Irradiance, normal).rgb;
-//    vec3 ambient = u_SceneData.ambientLightConstant * irradiance * baseColor;
-//    finalLight += ambient + emission;
+    vec3 irradiance = texture(u_Irradiance, normal).rgb;
+    vec3 ambient = u_SceneData.ambientLightConstant * irradiance * baseColor;
+    finalLight += ambient + emission;
+//    finalLight += emission;
+
 
     outColor = vec4(finalLight, 1.0f);
 }
