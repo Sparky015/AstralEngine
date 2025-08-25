@@ -96,7 +96,7 @@ namespace Astral {
     CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
     {
         uint32 asyncQueueIndex = 1;
-        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount < asyncQueueIndex) { asyncQueueIndex--; }
+        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
 
         VulkanCommandQueueDesc commandQueueDesc = {
             .Device = m_Device,
@@ -320,12 +320,15 @@ namespace Astral {
     {
         float priorities[] = { 1.0f, 0.5f };
 
+        uint32 queueCount = m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount;
+        LOG("Queue family has " << queueCount << " queue(s)!")
+
         VkDeviceQueueCreateInfo deviceQueueCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
             .queueFamilyIndex = m_QueueFamilyIndex,
-            .queueCount = 2,
+            .queueCount = queueCount >= 2 ? 2u : 1u,
             .pQueuePriorities = priorities
         };
 
