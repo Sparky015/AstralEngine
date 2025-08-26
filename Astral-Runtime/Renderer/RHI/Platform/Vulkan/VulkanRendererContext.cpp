@@ -219,6 +219,7 @@ namespace Astral {
         };
 
         m_Device = CreateGraphicsOwnedPtr<VulkanDevice>(desc);
+        m_Device->Init();
     }
 
 

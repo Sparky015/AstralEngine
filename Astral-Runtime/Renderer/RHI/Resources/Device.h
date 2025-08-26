@@ -24,6 +24,8 @@ namespace Astral {
     public:
         virtual ~Device() = default;
 
+        virtual void Init() = 0;
+
         virtual Swapchain& GetSwapchain() = 0;
         virtual CommandBufferHandle AllocateCommandBuffer() = 0;
         virtual CommandQueueHandle GetPrimaryCommandQueue() = 0;
@@ -43,6 +45,8 @@ namespace Astral {
         virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
 
         virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
+        virtual bool IsAnisotropySupported() = 0;
+        virtual float GetMaxAnisotropySupported() = 0;
 
 
         virtual void WaitIdle() = 0;

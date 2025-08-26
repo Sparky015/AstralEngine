@@ -35,9 +35,6 @@ namespace Astral {
             m_CommandPool(VK_NULL_HANDLE),
             m_Swapchain(nullptr)
     {
-        CreateDevice();
-        CreateCommandPool();
-        m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
 
@@ -46,6 +43,14 @@ namespace Astral {
         DestroySwapchain();
         DestroyMemoryPool();
         DestroyDevice();
+    }
+
+
+    void VulkanDevice::Init()
+    {
+        CreateDevice();
+        CreateCommandPool();
+        m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
 
@@ -247,6 +252,7 @@ namespace Astral {
             .ImageHeight = textureCreateInfo.Dimensions.y,
             .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_2D
         };
 
@@ -269,6 +275,7 @@ namespace Astral {
             .ImageHeight = textureCreateInfo.Dimensions.y,
             .NumLayers = 6,
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::CUBEMAP
         };
 
@@ -310,6 +317,22 @@ namespace Astral {
     }
 
 
+    bool VulkanDevice::IsAnisotropySupported()
+    {
+        VkPhysicalDeviceFeatures physicalDeviceFeatures;
+        vkGetPhysicalDeviceFeatures(m_PhysicalDevice.physicalDevice, &physicalDeviceFeatures);
+        return physicalDeviceFeatures.samplerAnisotropy;
+    }
+
+
+    float VulkanDevice::GetMaxAnisotropySupported()
+    {
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(m_PhysicalDevice.physicalDevice, &physicalDeviceProperties);
+        return physicalDeviceProperties.limits.maxSamplerAnisotropy;
+    }
+
+
     void VulkanDevice::WaitIdle()
     {
         vkDeviceWaitIdle(m_Device);
@@ -340,14 +363,31 @@ namespace Astral {
         VkPhysicalDeviceFeatures deviceFeatures = { 0 };
 
         if (m_PhysicalDevice.features.geometryShader == VK_FALSE)
-        { LOG("Vulkan: Geometry Shader is not supported!") }
+        {
+            LOG("Vulkan: Geometry Shader is not supported!")
+        }
         else
-        { deviceFeatures.geometryShader = VK_TRUE; }
+        {
+            deviceFeatures.geometryShader = VK_TRUE;
+        }
 
         if (m_PhysicalDevice.features.tessellationShader == VK_FALSE)
-        { LOG("Vulkan: Tessellation Shader is not supported!") }
+        {
+            LOG("Vulkan: Tessellation Shader is not supported!")
+        }
         else
-        { deviceFeatures.tessellationShader = VK_TRUE; }
+        {
+            deviceFeatures.tessellationShader = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features.samplerAnisotropy == VK_FALSE)
+        {
+            LOG("Vulkan: Sampler Anisotropy is not supported!")
+        }
+        else
+        {
+            deviceFeatures.samplerAnisotropy = VK_TRUE;
+        }
 
         VkDeviceCreateInfo deviceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,

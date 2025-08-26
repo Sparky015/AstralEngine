@@ -31,6 +31,8 @@ namespace Astral {
         explicit VulkanDevice(const VulkanDeviceDesc& desc);
         ~VulkanDevice() override;
 
+        void Init() override;
+
         Swapchain& GetSwapchain() override { return *m_Swapchain; }
         CommandBufferHandle AllocateCommandBuffer() override;
         CommandQueueHandle GetPrimaryCommandQueue() override;
@@ -49,6 +51,8 @@ namespace Astral {
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
 
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
+        bool IsAnisotropySupported() override;
+        float GetMaxAnisotropySupported() override;
 
         void WaitIdle() override;
 
