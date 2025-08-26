@@ -107,6 +107,7 @@ namespace Astral {
         textureCreateInfo.Dimensions.x = width;
         textureCreateInfo.Dimensions.y = height;
         textureCreateInfo.ImageData = data;
+        textureCreateInfo.GenerateMipMaps = true;
 
 
         TextureHandle textureHandle = Texture::CreateTexture(textureCreateInfo);
