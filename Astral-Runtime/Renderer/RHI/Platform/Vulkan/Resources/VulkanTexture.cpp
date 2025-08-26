@@ -525,6 +525,9 @@ namespace Astral {
 
         		vkCmdCopyBufferToImage(commandBuffer, buffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferImageCopy);
 
+
+        		// Calculate memory usage info for next mipmap to see the image buffer has data for the next mipmap
+
         		uint32 mipmapLevelSize = Texture::CalculateMipMapLevelSize(ConvertVkFormatToImageFormat(m_Format), mipWidth,
 																			mipHeight, mipDepth, m_NumLayers);
         		usedBuffer += mipmapLevelSize;
@@ -568,7 +571,7 @@ namespace Astral {
 						.baseArrayLayer = 0,
 						.layerCount = m_NumLayers
 					}
-    			}; // TODO: See if this format supports blit commands
+    			};
     			vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
     				0, nullptr,
     				0, nullptr,
@@ -633,7 +636,8 @@ namespace Astral {
     		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
     		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
     		.mipLodBias = 0.0f,
-    		.anisotropyEnable = VK_FALSE,
+    		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported(),
+    		.maxAnisotropy = RendererAPI::GetDevice().GetMaxAnisotropySupported(),
     		.compareEnable = VK_FALSE,
     		.compareOp = VK_COMPARE_OP_ALWAYS,
     		.minLod = 0.0f,
