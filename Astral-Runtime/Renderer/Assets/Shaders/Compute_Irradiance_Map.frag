@@ -23,7 +23,7 @@ void main()
     vec3 right = normalize(cross(up, normal));
     up         = normalize(cross(normal, right));
 
-    float sampleDelta = 0.005;
+    float sampleDelta = 0.05;
     float nrSamples = 0.0;
     for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
     {
@@ -36,12 +36,12 @@ void main()
             vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
 
             vec3 cubemapSample = texture(u_Cubemap, sampleVec).rgb * cos(theta) * sin(theta);
+            cubemapSample = clamp(cubemapSample, 0, 0x7F7FFFFF); // Clamp to the max float value to avoid INF values
             irradiance += cubemapSample;
             nrSamples++;
         }
     }
-//    irradiance = PI * irradiance * (1.0 / float(nrSamples));
-    irradiance = irradiance * (1.0 / float(nrSamples));
+    irradiance = PI * irradiance * (1.0 / float(nrSamples));
 
     irradiance = clamp(irradiance, 0, 0x7F7FFFFF); // Clamp to the max float value to avoid INF values
     color = vec4(irradiance, 1.0f);
