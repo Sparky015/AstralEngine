@@ -6,7 +6,6 @@ layout(location = 2) in vec3 v_Tangents;
 layout(location = 3) in vec3 v_Bitangents;
 
 layout (set = 1, binding = 0) uniform samplerCube u_Cubemap;
-layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 
 layout(location = 0) out vec4 color;
 
@@ -23,7 +22,7 @@ void main()
     vec3 right = normalize(cross(up, normal));
     up         = normalize(cross(normal, right));
 
-    float sampleDelta = 0.05;
+    float sampleDelta = 0.02;
     float nrSamples = 0.0;
     for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
     {
