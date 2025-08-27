@@ -35,11 +35,11 @@ void main()
             vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
 
             vec3 cubemapSample = texture(u_Cubemap, sampleVec).rgb * cos(theta) * sin(theta);
-            cubemapSample = clamp(cubemapSample, vec3(0), vec3(0x7F7FFFFF)); // Clamp to the max float value to avoid INF values
-            if (cubemapSample.x == 0x7F7FFFFF) { cubemapSample.x = 0; } // Remove the INFs influence on the irradiance calcs
-            if (cubemapSample.y == 0x7F7FFFFF) { cubemapSample.y = 0; }
-            if (cubemapSample.z == 0x7F7FFFFF) { cubemapSample.z = 0; }
 
+            if (any(isnan(cubemapSample)) || any(isinf(cubemapSample)))
+            {
+                continue; // Skip this sample
+            }
 
             irradiance += cubemapSample;
             nrSamples++;
