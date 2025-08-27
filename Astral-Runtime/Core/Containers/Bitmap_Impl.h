@@ -10,9 +10,11 @@
 #include "Debug/Utilities/Error.h"
 #include "Half/half.hpp"
 
+#include <numbers>
+
 namespace Astral {
 
-    Bitmap::Bitmap(void* data, ImageFormat imageFormat, uint32 width, uint32 height) :
+   inline Bitmap::Bitmap(void* data, ImageFormat imageFormat, uint32 width, uint32 height) :
         m_MapData(),
         m_Width(width),
         m_Height(height),
@@ -30,7 +32,7 @@ namespace Astral {
     }
 
     template <typename T>
-    Vec4 Bitmap::GetPixel(uint32 x, uint32 y) const
+    inline Vec4 Bitmap::GetPixel(uint32 x, uint32 y) const
     {
         if (x >= m_Width)
         {
@@ -56,7 +58,7 @@ namespace Astral {
 
 
     template <typename T>
-    void Bitmap::SetPixel(uint32 x, uint32 y, const Vec4& pixelData)
+    inline void Bitmap::SetPixel(uint32 x, uint32 y, const Vec4& pixelData)
     {
         if (x >= m_Width)
         {
@@ -80,7 +82,7 @@ namespace Astral {
     }
 
 
-    void ConvertEquirectangularToCubemap(const Bitmap& equirectangularImageData, std::vector<Bitmap>& outCubemap)
+    inline void ConvertEquirectangularToCubemap(const Bitmap& equirectangularImageData, std::vector<Bitmap>& outCubemap)
     {
         uint32 faceSideLength = equirectangularImageData.GetPixelWidth() / 4;
 
@@ -133,7 +135,7 @@ namespace Astral {
     }
 
 
-    Vec3 ConvertFaceCoordinatesToCartesian(uint32 x, uint32 y, uint32 faceIndex, uint32 faceSideLength)
+    inline Vec3 ConvertFaceCoordinatesToCartesian(uint32 x, uint32 y, uint32 faceIndex, uint32 faceSideLength)
     {
         const float U = 2.0f * x / faceSideLength;
         const float V = 2.0f * y / faceSideLength;
