@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ECS/ECS.h"
+#include "Renderer/Common/EnvironmentMap.h"
 
 namespace Astral {
 
@@ -27,7 +28,7 @@ namespace Astral {
 
         std::unordered_map<std::string, SceneResource> ExternalResourceFiles;
         ECS ECS;
-        TextureHandle EnvironmentMap;
+        Ref<EnvironmentMap> EnvironmentMap;
         float AmbientLightConstant = .2;
         float Exposure = 0.0f;
 

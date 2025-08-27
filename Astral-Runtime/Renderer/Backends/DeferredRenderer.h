@@ -82,7 +82,7 @@ namespace Astral {
 
             FramebufferHandle WindowFramebuffer;
 
-            DescriptorSetHandle EnvironmentMap;
+            DescriptorSetHandle EnvironmentMapDescriptorSet;
             bool IsIrradianceMapCalculationNeeded;
             std::vector<FramebufferHandle> IrradianceMapPassFramebuffers;
         };

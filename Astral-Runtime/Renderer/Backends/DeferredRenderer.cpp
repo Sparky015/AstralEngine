@@ -101,6 +101,8 @@ namespace Astral {
     }
 
 
+    static constexpr uint32 EnvironmentMapIrradianceSize = 16;
+
     void DeferredRenderer::BeginScene(const SceneDescription& sceneDescription)
     {
         PROFILE_SCOPE("SceneRenderer::BeginScene")
@@ -144,8 +146,27 @@ namespace Astral {
 
         if (sceneDescription.EnvironmentMap)
         {
-            // TODO: Add irradiance map
-            frameContext.EnvironmentMap->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap);
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->Environment);
+
+            if (!sceneDescription.EnvironmentMap->Irradiance)
+            {
+                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+                // std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance");
+                // RendererAPI::NameObject(sceneDescription.EnvironmentMap->Irradiance, irradianceMapName);
+
+                uint32 numFaces = 6;
+                for (int j = 0; j < numFaces; j++)
+                {
+                    frameContext.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
+                    frameContext.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
+                    frameContext.IrradianceMapPassFramebuffers[j]->AttachTexture(sceneDescription.EnvironmentMap->Irradiance, j);
+                    frameContext.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
+                }
+
+                frameContext.IsIrradianceMapCalculationNeeded = true;
+            }
+
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance);
         }
 
         frameContext.Meshes.clear();
@@ -440,27 +461,31 @@ namespace Astral {
 
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/pretoria_gardens_4k.hdr");
-            TextureHandle irradianceMap = Texture::CreateCubemap(nullptr, 16, 16, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-            std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
-            RendererAPI::NameObject(irradianceMap, irradianceMapName);
+            Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
+
+            if (!environmentMap->Irradiance)
+            {
+                environmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+                std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
+                RendererAPI::NameObject(environmentMap->Irradiance, irradianceMapName);
+            }
 
 
-            context.EnvironmentMap = device.CreateDescriptorSet();
-            context.EnvironmentMap->BeginBuildingSet();
-            context.EnvironmentMap->AddDescriptorImageSampler(environmentMap, ShaderStage::FRAGMENT);
-            context.EnvironmentMap->AddDescriptorImageSampler(irradianceMap, ShaderStage::FRAGMENT);
-            context.EnvironmentMap->EndBuildingSet();
+            context.EnvironmentMapDescriptorSet = device.CreateDescriptorSet();
+            context.EnvironmentMapDescriptorSet->BeginBuildingSet();
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Environment, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->EndBuildingSet();
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
-            RendererAPI::NameObject(context.EnvironmentMap, environmentMapDescriptorSetName);
+            RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
             constexpr uint32 numFaces = 6;
             context.IrradianceMapPassFramebuffers.resize(numFaces);
             for (int j = 0; j < numFaces; j++)
             {
                 context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
-                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(16, 16);
-                context.IrradianceMapPassFramebuffers[j]->AttachTexture(irradianceMap, j);
+                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
+                context.IrradianceMapPassFramebuffers[j]->AttachTexture(environmentMap->Irradiance, j);
                 context.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
             }
 
@@ -481,6 +506,14 @@ namespace Astral {
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
         commandBuffer->BeginRecording();
+
+        // Irradiance Map calculation if empty
+        if (frameContext.IsIrradianceMapCalculationNeeded)
+        {
+            RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
+            frameContext.IsIrradianceMapCalculationNeeded = false;
+        }
+
 
         // Viewport Rendering
         m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
@@ -683,7 +716,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMap});
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
@@ -699,7 +732,7 @@ namespace Astral {
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMap, 1);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
         pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
 
         mesh.VertexBuffer->Bind(commandBuffer);
@@ -716,13 +749,6 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
-        // TODO: Compute the irradiance map
-        if (frameContext.IsIrradianceMapCalculationNeeded)
-        {
-            RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
-            frameContext.IsIrradianceMapCalculationNeeded = false;
-        }
-
         // Cubemap
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
@@ -732,7 +758,7 @@ namespace Astral {
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
         cubemapPipeline->Bind(commandBuffer);
@@ -811,15 +837,14 @@ namespace Astral {
 
         Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
-        frameContext.Meshes.push_back(cubeMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateHandle cubePipeline = m_PipelineStateCache.GetPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
         cubePipeline->Bind(commandBuffer);
-        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(16, 16));
+        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize));
 
         cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
         cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);

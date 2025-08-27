@@ -6,6 +6,7 @@
 
 #include "TextureLoader.h"
 
+#include "Core/Containers/Bitmap.h"
 #include "Core/SmartPointers.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
@@ -17,7 +18,6 @@
 #include <numbers>
 #include <cmath>
 
-#include "Core/Containers/Bitmap.h"
 
 namespace Astral {
 
