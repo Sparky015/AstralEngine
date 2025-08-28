@@ -12,5 +12,5 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-    color = texture(u_Cubemap, v_Position);
+    color = textureLod(u_Cubemap, v_Position, 0.0f);
 }

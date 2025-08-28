@@ -34,7 +34,7 @@ void main()
             // tangent space to world
             vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
 
-            vec3 cubemapSample = texture(u_Cubemap, sampleVec).rgb * cos(theta) * sin(theta);
+            vec3 cubemapSample = textureLod(u_Cubemap, sampleVec, 0.0f).rgb * cos(theta) * sin(theta);
 
             if (any(isnan(cubemapSample)) || any(isinf(cubemapSample)))
             {

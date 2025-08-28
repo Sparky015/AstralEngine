@@ -151,14 +151,20 @@ namespace Astral {
         static GraphicsRef<Texture> CreateTexture(const std::filesystem::path& filePath);
 
         /**
-         * @brief  Creates a cubemap from a file path
-         * @return The texture handle
+         * @brief  Creates a cubemap from the given texture create info
+         * @return The cubemap texture handle
+         */
+        static GraphicsRef<Texture> CreateCubemap(const TextureCreateInfo& textureCreateInfo);
+
+        /**
+         * @brief  Creates a cubemap from the given data
+         * @return The cubemap texture handle
          */
         static GraphicsRef<Texture> CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags);
 
         /**
-         * @brief  Creates a lut from a file path
-         * @return The texture handle
+         * @brief  Creates a lut from the given data
+         * @return The lut texture handle
          */
         static GraphicsRef<Texture> CreateLUT(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
 

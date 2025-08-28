@@ -30,11 +30,11 @@ namespace Astral::EnvironmentMapLoader {
 
             stbi_set_flip_vertically_on_load(true);
             float* equirectangularData = stbi_loadf(filePath.string().c_str(), &width, &height, &bpp, 4);
-            ImageFormat imageFormat = ImageFormat::R32G32B32A32_SFLOAT;
+            ImageFormat fileImageFormat = ImageFormat::R32G32B32A32_SFLOAT;
 
 
             // Convert the equirectangular image to a cubemap
-            Bitmap equirectangularImage = Bitmap(equirectangularData, imageFormat, width, height);
+            Bitmap equirectangularImage = Bitmap(equirectangularData, fileImageFormat, width, height);
             std::vector<Bitmap> cubemap;
 
             ConvertEquirectangularToCubemap(equirectangularImage, cubemap);
@@ -60,7 +60,18 @@ namespace Astral::EnvironmentMapLoader {
             //     stbi_write_hdr(outFilePath.c_str(), faceSideLength, faceSideLength, 4, (float*)cubemap[i].GetData());
             // }
 
-             environmentMap.Environment = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, ImageFormat::R16G16B16A16_SFLOAT, 0);
+            TextureCreateInfo textureCreateInfo = {
+                .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                .UsageFlags = IMAGE_USAGE_SAMPLED_BIT,
+                .Dimensions = UVec2(faceSideLength, faceSideLength),
+                .ImageData = (uint8*)cubemapData,
+                .ImageDataLength = totalCubemapSize,
+                .MipMapCount = Texture::CalculateMipMapLevels(faceSideLength, faceSideLength), // Create mips for specular IBL
+                .GenerateMipMaps = false
+            };
+
+             environmentMap.Environment = Texture::CreateCubemap(textureCreateInfo);
 
 
             stbi_image_free(equirectangularData);

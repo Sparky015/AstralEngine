@@ -121,6 +121,20 @@ namespace Astral {
     }
 
 
+    GraphicsRef<Texture> Texture::CreateCubemap(const TextureCreateInfo& textureCreateInfo)
+    {
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
+        }
+    }
+
+
     GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags)
     {
         TextureCreateInfo textureCreateInfo = {
