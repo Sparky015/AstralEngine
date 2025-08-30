@@ -7,6 +7,7 @@
 #include "VulkanDescriptorSet.h"
 
 #include "Debug/Utilities/Asserts.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
@@ -183,7 +184,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
             if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
         }
 
@@ -224,7 +225,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
             if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
         }
 
@@ -254,7 +255,7 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle)
+    void VulkanDescriptorSet::UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle, ImageLayout imageLayout)
     {
         ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
         const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
@@ -265,7 +266,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
             if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
         }
 
@@ -277,7 +278,48 @@ namespace Astral {
         VkSampler sampler = (VkSampler)newTextureHandle->GetNativeSampler();
 
         imageInfo.sampler = sampler;
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+        imageInfo.imageView = imageView;
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pImageInfo = &imageInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
+    void VulkanDescriptorSet::UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "Expected existing binding to be a image sampler when updating a binding using UpdateImageSamplerBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+        }
+
+
+        m_Textures[textureIndex] = newTextureHandle;
+
+        VkDescriptorImageInfo imageInfo = {};
+        VkImageView imageView = (VkImageView)newTextureHandle->GetNativeMipMapImageView(mipLevel);
+        VkSampler sampler = (VkSampler)newTextureHandle->GetNativeSampler();
+
+        imageInfo.sampler = sampler;
+        imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
         imageInfo.imageView = imageView;
 
         VkWriteDescriptorSet descriptorSetWrite = {
@@ -306,7 +348,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
             if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
         }
 
