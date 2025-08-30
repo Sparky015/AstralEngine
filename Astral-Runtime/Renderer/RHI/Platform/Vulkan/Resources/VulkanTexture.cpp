@@ -6,6 +6,8 @@
 
 #include "VulkanTexture.h"
 
+#include <ranges>
+
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 #include "VulkanBuffer.h"
@@ -26,6 +28,7 @@ namespace Astral {
 		m_Format(ConvertImageFormatToVkFormat(desc.ImageFormat)),
         m_Image(),
         m_ImageView(),
+		m_ImageUsageFlags(desc.ImageUsageFlags),
         m_Sampler(),
         m_NumLayers(desc.NumLayers),
 		m_NumMipLevels(desc.NumMipLevels),
@@ -110,10 +113,138 @@ namespace Astral {
     }
 
 
+    void* VulkanTexture::GetNativeMipMapImageView(uint32 mipLevel)
+    {
+		ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
+
+		if (m_LayerMipImageViews.contains({-1, mipLevel})) { return m_LayerMipImageViews[{-1, mipLevel}]; }
+
+
+    	// Image view does not exist yet so create it
+
+    	VkImageAspectFlags aspectFlags{};
+
+    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
+    	}
+    	else if (m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
+    	}
+
+    	VkImageViewType viewType;
+    	switch (m_TextureType)
+    	{
+    		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
+    		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
+    	}
+
+    	VkImageViewCreateInfo imageViewCreateInfo = {
+    		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+			.pNext = nullptr,
+			.flags = 0,
+			.image = m_Image,
+			.viewType = viewType,
+			.format = m_Format,
+			.components = {
+    			.r = VK_COMPONENT_SWIZZLE_R,
+				.g = VK_COMPONENT_SWIZZLE_G,
+				.b = VK_COMPONENT_SWIZZLE_B,
+				.a = VK_COMPONENT_SWIZZLE_A,
+			},
+			.subresourceRange = {
+    			.aspectMask = aspectFlags,
+				.baseMipLevel = mipLevel,
+				.levelCount = 1,
+				.baseArrayLayer = 0,
+				.layerCount = m_NumLayers,
+			}
+    	};
+
+    	VkImageView layerMipLevelImageView = VK_NULL_HANDLE;
+    	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &layerMipLevelImageView);
+    	ASSERT(result == VK_SUCCESS, "Failed to create layer mip level image view!");
+
+    	m_LayerMipImageViews[{-1, mipLevel}] = layerMipLevelImageView;
+    	return layerMipLevelImageView;
+    }
+
+
+    void* VulkanTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
+    {
+    	ASSERT(layer < m_NumLayers, "Specified layer does not exist in the texture!")
+    	ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
+
+    	if (m_LayerMipImageViews.contains({layer, mipLevel})) { return m_LayerMipImageViews[{layer, mipLevel}]; }
+
+
+    	// Image view does not exist yet so create it
+
+    	VkImageAspectFlags aspectFlags{};
+
+    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
+    	}
+    	else if (m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+    	{
+    		aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
+    	}
+
+    	VkImageViewType viewType;
+    	switch (m_TextureType)
+    	{
+    		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
+    		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
+    	}
+
+    	VkImageViewCreateInfo imageViewCreateInfo = {
+    		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+			.pNext = nullptr,
+			.flags = 0,
+			.image = m_Image,
+			.viewType = viewType,
+			.format = m_Format,
+			.components = {
+    			.r = VK_COMPONENT_SWIZZLE_R,
+				.g = VK_COMPONENT_SWIZZLE_G,
+				.b = VK_COMPONENT_SWIZZLE_B,
+				.a = VK_COMPONENT_SWIZZLE_A,
+			},
+			.subresourceRange = {
+    			.aspectMask = aspectFlags,
+				.baseMipLevel = mipLevel,
+				.levelCount = 1,
+				.baseArrayLayer = layer,
+				.layerCount = 1,
+			}
+    	};
+
+		VkImageView layerMipLevelImageView = VK_NULL_HANDLE;
+    	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &layerMipLevelImageView);
+    	ASSERT(result == VK_SUCCESS, "Failed to create layer mip level image view!");
+
+    	m_LayerMipImageViews[{layer, mipLevel}] = layerMipLevelImageView;
+    	return layerMipLevelImageView;
+    }
+
+
     void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
     {
+    	m_ImageUsageFlags |= imageUsageFlags;
     	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
         VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | userUsageFlag; // TODO: Remove the predefined flags
+
+		if (m_NumMipLevels > 1)
+		{
+			m_ImageUsageFlags |= IMAGE_USAGE_COLOR_ATTACHMENT_BIT; // For the possibility to populate mip maps via shaders
+			imageUsage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		}
 
     	VkImageCreateFlags createFlags = (m_TextureType == TextureType::CUBEMAP) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
 
@@ -279,6 +410,12 @@ namespace Astral {
     	{
     		if (layerImageView == nullptr) { continue; }
     		vkDestroyImageView(m_Device, layerImageView, nullptr);
+    	}
+
+    	for (auto imageView: m_LayerMipImageViews | std::views::values)
+    	{
+    		if (imageView == nullptr) { continue; }
+    		vkDestroyImageView(m_Device, imageView, nullptr);
     	}
     }
 

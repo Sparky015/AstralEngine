@@ -98,13 +98,6 @@ namespace Astral {
         virtual uint32 GetNumMipLevels() = 0;
 
         /**
-         * @brief  Gets the native image view of a specific layer in the texture
-         * @return The native image view of a specific layer in the texture
-         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
-         */
-        virtual void* GetLayerNativeImageView(uint32 layer) = 0;
-
-        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native sampler handle of the selected renderer api backend
@@ -124,6 +117,29 @@ namespace Astral {
          * @note   The void pointer maps to the native image view handle of the selected renderer api backend
          */
         virtual void* GetNativeImageView() = 0;
+
+        /**
+         * @brief  Gets the native image view of a specific layer in the texture
+         * @return The native image view of a specific layer in the texture
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        virtual void* GetNativeLayerImageView(uint32 layer) = 0;
+
+        /**
+         * @brief  Gets the native image view of a specific mip level in the texture
+         * @return The native image view of a specific mip level in the texture
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        virtual void* GetNativeMipMapImageView(uint32 mipLevel) = 0;
+
+        /**
+         * @brief  Gets the native image view handle of the texture at a specific layer and mip level
+         * @param layer The layer to view the image at
+         * @param mipLevel The mip level to view the image at
+         * @return The native image view of the texture
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
+         */
+        virtual void* GetNativeImageView(uint32 layer, uint32 mipLevel) = 0;
 
         /**
          * @brief  Calculates the number of mip map levels needed for a texture of the given dimensions

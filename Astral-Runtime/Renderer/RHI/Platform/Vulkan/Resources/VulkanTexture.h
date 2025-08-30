@@ -113,12 +113,29 @@ namespace Astral {
          * @return The native image view of a specific layer in the texture or nullptr if the layer num is not valid
          * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
          */
-        void* GetLayerNativeImageView(uint32 layer) override
+        void* GetNativeLayerImageView(uint32 layer) override
         {
             if (layer > m_NumLayers) { return nullptr; }
             if (m_NumLayers == 1) { return m_ImageView; }
             return m_LayerImageViews[layer];
         }
+
+        /**
+         * @brief  Gets the native image view of a specific mip level in the texture
+         * @return The native image view of a specific mip level in the texture
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        void* GetNativeMipMapImageView(uint32 mipLevel) override;
+
+        /**
+         * @brief  Gets the native image view handle of the texture at a specific layer and mip level
+         * @param layer The layer to view the image at
+         * @param mipLevel The mip level to view the image at
+         * @return The native image view of the texture
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
+         */
+        void* GetNativeImageView(uint32 layer, uint32 mipLevel) override;
+
 
         /**
          * @brief  Gets the image sampler of the texture
@@ -225,7 +242,10 @@ namespace Astral {
         VkDeviceMemory m_ImageMemory;
         uint32 m_AllocationSize;
         VkImageView m_ImageView;
-        std::vector<VkImageView> m_LayerImageViews;
+        ImageUsageFlags m_ImageUsageFlags;
+        std::vector<VkImageView> m_LayerImageViews; // All layer image views are at mip 0
+        std::map<std::pair<uint32, uint32>, VkImageView> m_LayerMipImageViews;
+
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
         uint32 m_NumLayers;
