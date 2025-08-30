@@ -39,12 +39,15 @@ namespace Astral {
 
         ImGui::Text(selectionName.data());
         ImGui::SameLine();
+        ImVec2 availableSpace = ImGui::GetContentRegionAvail();
+        ImGui::SetNextItemWidth(availableSpace.x - 40);
         if (ImGui::InputText("##AssetSelectionInputText", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
         {
             Ref<AssetType> newAsset = registry.CreateAsset<AssetType>(inputBuffer);
             if (newAsset) { outAsset = newAsset; }
         }
         ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
         if (ImGui::Button("...##AssetSelectionButton"))
         {
             std::filesystem::path selectedFilePath;
