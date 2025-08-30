@@ -28,11 +28,19 @@ namespace Astral {
 
         ImGui::Text("Ambient Light: ");
         ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
         ImGui::InputFloat("##AmbientLightInput", &scene.AmbientLightConstant, .05, .1);
 
         ImGui::Text("Exposure: ");
         ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
         ImGui::InputFloat("##ExposureInput", &scene.Exposure, .05, .1);
+
+        ImGui::Text("Environment Blur: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::SliderFloat("##EnvironmentMapBlurInput", &scene.EnvironmentMapBlur, 0, 1);
+
 
         ImGui::End();
     }
