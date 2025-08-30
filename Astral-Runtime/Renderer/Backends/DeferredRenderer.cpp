@@ -18,6 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Debug/ImGui/ImGuiManager.h"
+#include "ECS/SceneManager.h"
 #include "Window/WindowManager.h"
 
 namespace Astral {
@@ -146,6 +147,7 @@ namespace Astral {
 
         if (sceneDescription.EnvironmentMap)
         {
+            frameContext.EnvironmentMap = sceneDescription.EnvironmentMap;
             frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->Environment);
 
             if (!sceneDescription.EnvironmentMap->Irradiance)
@@ -157,10 +159,18 @@ namespace Astral {
                 uint32 numFaces = 6;
                 for (int j = 0; j < numFaces; j++)
                 {
-                    frameContext.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
+                    frameContext.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass);
                     frameContext.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                    frameContext.IrradianceMapPassFramebuffers[j]->AttachTexture(sceneDescription.EnvironmentMap->Irradiance, j);
+                    frameContext.IrradianceMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->Irradiance, j);
                     frameContext.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
+                }
+                frameContext.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
+                for (int j = 0; j < numFaces; j++)
+                {
+                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
+                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
+                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->Environment, j);
+                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
                 }
 
                 frameContext.IsIrradianceMapCalculationNeeded = true;
@@ -462,6 +472,7 @@ namespace Astral {
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
             Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
+            context.EnvironmentMap = environmentMap;
 
             if (!environmentMap->Irradiance)
             {
@@ -471,10 +482,13 @@ namespace Astral {
             }
 
 
+            TextureHandle brdfLut = registry.CreateAsset<Texture>("LUTs/ibl_brdf_lut.dds");
+
             context.EnvironmentMapDescriptorSet = device.CreateDescriptorSet();
             context.EnvironmentMapDescriptorSet->BeginBuildingSet();
             context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Environment, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(brdfLut, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->EndBuildingSet();
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
@@ -483,11 +497,12 @@ namespace Astral {
             context.IrradianceMapPassFramebuffers.resize(numFaces);
             for (int j = 0; j < numFaces; j++)
             {
-                context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The imgui render pass has the same definition needed here
+                context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass);
                 context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                context.IrradianceMapPassFramebuffers[j]->AttachTexture(environmentMap->Irradiance, j);
+                context.IrradianceMapPassFramebuffers[j]->AttachTextureLayer(environmentMap->Irradiance, j);
                 context.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
             }
+            context.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
 
             context.IsIrradianceMapCalculationNeeded = true;
         }
@@ -511,6 +526,18 @@ namespace Astral {
         if (frameContext.IsIrradianceMapCalculationNeeded)
         {
             RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
+
+            uint32 totalMipLevels = frameContext.EnvironmentMap->Environment->GetNumMipLevels();
+            uint32 mipWidth = frameContext.EnvironmentMap->Environment->GetWidth();
+            uint32 mipHeight = frameContext.EnvironmentMap->Environment->GetHeight();
+
+            for (uint32 mipLevel = 1; mipLevel < totalMipLevels; mipLevel++)
+            {
+                if (mipWidth > 1)  { mipWidth /= 2; }
+                if (mipHeight > 1) { mipHeight /= 2; }
+                UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
+                RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
+            }
             frameContext.IsIrradianceMapCalculationNeeded = false;
         }
 
@@ -751,6 +778,7 @@ namespace Astral {
 
         // Cubemap
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
         Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
@@ -769,6 +797,8 @@ namespace Astral {
 
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
+
+        RendererAPI::PushConstants(commandBuffer, cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
         RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
     }
 
@@ -867,6 +897,103 @@ namespace Astral {
 
             m_IrradianceCalcPass->EndRenderPass(commandBuffer);
         }
+
+        RendererAPI::EndLabel(commandBuffer);
+    }
+
+
+    struct ComputePrefilteredEnvironmentMapUniformData
+    {
+        Mat4 FaceProjection;
+        Mat4 FaceView;
+    };
+
+
+    void DeferredRenderer::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
+    {
+        RendererAPI::BeginLabel(commandBuffer, "PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+        glm::mat4 captureViews[] =
+        {
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+         };
+
+
+        float roughness = 0.0f;
+        m_PrefilteredEnvironmentPassUniformData = RendererAPI::GetDevice().CreateUniformBuffer(&roughness, sizeof(roughness));
+        m_PrefilteredEnvironmentPassDataDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+        m_PrefilteredEnvironmentPassDataDescriptorSet->BeginBuildingSet();
+        m_PrefilteredEnvironmentPassDataDescriptorSet->AddDescriptorUniformBuffer(m_PrefilteredEnvironmentPassUniformData, ShaderStage::FRAGMENT);
+        m_PrefilteredEnvironmentPassDataDescriptorSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::FRAGMENT);
+        m_PrefilteredEnvironmentPassDataDescriptorSet->EndBuildingSet();
+
+        m_PrefilteredEnvironmentPassDataDescriptorSet->UpdateImageSamplerBinding(1, frameContext.EnvironmentMap->Environment, 0);
+
+
+
+        Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
+
+        Material environmentMapMaterial{};
+        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Compute_Prefiltered_Environment_Map.frag");
+        environmentMapMaterial.DescriptorSet = m_PrefilteredEnvironmentPassDataDescriptorSet;
+
+
+        PipelineStateHandle cubePipeline = m_PipelineStateCache.GetPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
+        cubePipeline->Bind(commandBuffer);
+
+        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+
+
+        cubeMesh.VertexBuffer->Bind(commandBuffer);
+        cubeMesh.IndexBuffer->Bind(commandBuffer);
+
+
+        ComputePrefilteredEnvironmentMapUniformData computePrefilteredEnvironmentMapUniformData;
+        computePrefilteredEnvironmentMapUniformData.FaceProjection = captureProjection;
+
+        uint32 mipWidth = mipDimensions.x;
+        uint32 mipHeight = mipDimensions.y;
+
+        constexpr uint32 numFaces = 6;
+        float totalMipLevels = frameContext.EnvironmentMap->Environment->GetNumMipLevels();
+
+        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(mipWidth, mipHeight));
+        for (int j = 0; j < numFaces; j++)
+        {
+            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = RendererAPI::GetDevice().CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
+            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(mipWidth, mipHeight);
+            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureMipMap(frameContext.EnvironmentMap->Environment, mipLevel, j);
+            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
+        }
+
+        roughness = mipLevel / totalMipLevels;
+        m_PrefilteredEnvironmentPassUniformData->CopyDataToBuffer(&roughness, sizeof(roughness));
+
+        for (uint32 i = 0; i < numFaces; i++)
+        {
+            const FramebufferHandle& faceFramebuffer = frameContext.PrefilteredEnvironmentMapPassFramebuffers[i];
+            m_IrradianceCalcPass->BeginRenderPass(commandBuffer, faceFramebuffer);
+
+            computePrefilteredEnvironmentMapUniformData.FaceView = captureViews[i];
+
+            RendererAPI::PushConstants(commandBuffer, cubePipeline, &computePrefilteredEnvironmentMapUniformData, sizeof(computePrefilteredEnvironmentMapUniformData));
+
+            RendererAPI::DrawElementsIndexed(commandBuffer, cubeMesh.IndexBuffer);
+
+            m_IrradianceCalcPass->EndRenderPass(commandBuffer);
+        }
+
 
         RendererAPI::EndLabel(commandBuffer);
     }
