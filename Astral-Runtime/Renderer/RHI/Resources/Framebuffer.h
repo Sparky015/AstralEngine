@@ -51,7 +51,13 @@ namespace Astral {
          * @brief Attaches a layer of a texture to the framebuffer
          * @param textureHandle The texture to attach to the framebuffer
          */
-        virtual void AttachTexture(TextureHandle textureHandle, uint32 layer) = 0;
+        virtual void AttachTextureLayer(TextureHandle textureHandle, uint32 layer) = 0;
+
+        /**
+         * @brief Attaches a layer of a texture to the framebuffer
+         * @param textureHandle The texture to attach to the framebuffer
+         */
+        virtual void AttachTextureMipMap(TextureHandle textureHandle, uint32 mipLevel, uint32 layer = 0) = 0;
 
         /**
          * @brief Ends the building of a framebuffer and creates the framebuffer
