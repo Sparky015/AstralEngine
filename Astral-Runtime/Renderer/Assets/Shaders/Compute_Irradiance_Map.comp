@@ -15,25 +15,22 @@ const float PI = 3.14159265359;
 void main()
 {
     uvec2 pixelCoords = gl_GlobalInvocationID.xy;
-    vec2 uv = (vec2(pixelCoords.xy) + 0.5) / irradianceFaceLength;
+    vec2 uv = (vec2(pixelCoords) + 0.5) / irradianceFaceLength;
+    uv = uv * 2.0 - 1.0; // Move from [0, 1] to [-1, 1]
 
     vec3 normal;
     int faceIndex = int(u_PushConstantData.faceIndex);
-//    if (faceIndex == 0)      { normal = vec3( 1.0, -uv.y, -uv.x); } // +X
-//    else if (faceIndex == 1) { normal = vec3(-1.0, -uv.y,  uv.x); } // -X
-//    else if (faceIndex == 2) { normal = vec3( uv.x,  1.0,  uv.y); } // +Y
-//    else if (faceIndex == 3) { normal = vec3( uv.x, -1.0, -uv.y); } // -Y
-//    else if (faceIndex == 4) { normal = vec3( uv.x, -uv.y,  1.0); } // +Z
-//    else if (faceIndex == 5) { normal = vec3( uv.x, -uv.y, -1.0); } // -Z
+
     switch (faceIndex)
     {
-        case 0: normal = vec3( uv.x - 1.0f, 1.0f, uv.y - 1.0f );  break; // Positive X
-        case 1: normal = vec3(1.0f - uv.x, -1.0f,  uv.y - 1.0f );    break; // Negative X
-        case 2: normal = vec3(  1.0f - uv.y,  uv.x - 1.0f,  -1.0f ); break; // Positive Y (I flipped Y here for Vulkan!!)
-        case 3: normal = vec3(  uv.y - 1.0f,  uv.x - 1.0f,  1.0f );  break; // Negative Y
-        case 4: normal = vec3(  -1.0f, uv.x - 1.0f,  uv.y - 1.0f );  break; // Positive Z
-        case 5: normal = vec3(  1.0f, 1.0f - uv.x,  uv.y - 1.0f );   break; // Negative Z
+        case 0: normal = vec3( 1.0, -uv.y, -uv.x); break; // +X
+        case 1: normal = vec3(-1.0, -uv.y,  uv.x); break; // -X
+        case 2: normal = vec3( uv.x,  1.0,  uv.y); break; // +Y
+        case 3: normal = vec3( uv.x, -1.0, -uv.y); break; // -Y
+        case 4: normal = vec3( uv.x, -uv.y,  1.0); break; // +Z
+        case 5: normal = vec3(-uv.x, -uv.y, -1.0); break; // -Z
     }
+
     normal = normalize(normal);
 
     vec3 irradiance = vec3(0.0);
