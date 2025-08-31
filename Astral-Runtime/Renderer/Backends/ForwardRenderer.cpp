@@ -332,7 +332,7 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
             }
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(mainRenderPass, material, mesh, 0);
             pipeline->Bind(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 

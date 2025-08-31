@@ -26,7 +26,7 @@ std::size_t std::hash<Astral::VertexBufferLayout>::operator()(const Astral::Vert
     return seed;
 }
 
-size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::PipelineStateConfiguration& config) const noexcept
+size_t std::hash<Astral::GraphicsPipelineStateConfiguration>::operator()(const Astral::GraphicsPipelineStateConfiguration& config) const noexcept
 {
     std::size_t seed = 0;
 
@@ -60,6 +60,25 @@ size_t std::hash<Astral::PipelineStateConfiguration>::operator()(const Astral::P
     Astral::HashCombine(seed, std::hash<Astral::VertexBufferLayout>{}(config.VertexBufferLayout));
 
     Astral::HashCombine(seed, std::hash<bool>{}(config.IsAlphaBlended));
+
+    return seed;
+}
+
+size_t std::hash<Astral::ComputePipelineStateConfiguration>::operator()(Astral::ComputePipelineStateConfiguration const& config) const noexcept
+{
+    std::size_t seed = 0;
+
+    if (config.ComputeShader)
+    {
+        Astral::HashCombine(seed, std::hash<void*>{}(config.ComputeShader->GetNativeHandle()));
+    } else {
+        Astral::HashCombine(seed, 0);
+    }
+
+    for (Astral::Descriptor descriptor : config.ShaderDataLayout.Descriptors)
+    {
+        Astral::HashCombine(seed, std::hash<Astral::Descriptor>{}(descriptor));
+    }
 
     return seed;
 }

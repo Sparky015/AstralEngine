@@ -14,7 +14,8 @@
 namespace Astral {
     struct VertexBufferAttribute;
     class VertexBufferLayout;
-    struct PipelineStateConfiguration;
+    struct GraphicsPipelineStateConfiguration;
+    struct ComputePipelineStateConfiguration;
     class RenderGraphPass;
 
     template<typename DataType>
@@ -37,9 +38,15 @@ struct std::hash<Astral::VertexBufferLayout>
 };
 
 template <>
-struct std::hash<Astral::PipelineStateConfiguration>
+struct std::hash<Astral::GraphicsPipelineStateConfiguration>
 {
-    size_t operator()(Astral::PipelineStateConfiguration const& v) const noexcept;
+    size_t operator()(Astral::GraphicsPipelineStateConfiguration const& config) const noexcept;
+};
+
+template <>
+struct std::hash<Astral::ComputePipelineStateConfiguration>
+{
+    size_t operator()(Astral::ComputePipelineStateConfiguration const& config) const noexcept;
 };
 
 template <typename DataType>
