@@ -39,6 +39,7 @@ namespace Astral {
         virtual void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) = 0;
         virtual void SetClearColor(float r, float g, float b, float a) = 0;
         virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
+        virtual void Dispatch(CommandBufferHandle commandBufferHandle, uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) = 0;
         virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
                                         pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
         virtual void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) = 0;

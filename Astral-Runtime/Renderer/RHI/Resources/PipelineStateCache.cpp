@@ -10,13 +10,20 @@
 
 namespace Astral {
 
-    bool PipelineStateConfiguration::operator==(const PipelineStateConfiguration& other) const
+    bool GraphicsPipelineStateConfiguration::operator==(const GraphicsPipelineStateConfiguration& other) const
     {
         return (RenderPass ? RenderPass->GetNativeHandle() : nullptr) == (other.RenderPass ? other.RenderPass->GetNativeHandle() : nullptr) &&
                (VertexShader ? VertexShader->GetNativeHandle() : nullptr) == (other.VertexShader ? other.VertexShader->GetNativeHandle() : nullptr) &&
                (FragmentShader ? FragmentShader->GetNativeHandle() : nullptr) == (other.FragmentShader ? other.FragmentShader->GetNativeHandle() : nullptr) &&
                ShaderDataLayout.Descriptors == other.ShaderDataLayout.Descriptors &&
                VertexBufferLayout == other.VertexBufferLayout;
+    }
+
+
+    bool ComputePipelineStateConfiguration::operator==(const ComputePipelineStateConfiguration& other) const
+    {
+        return (ComputeShader ? ComputeShader->GetNativeHandle() : nullptr) == (other.ComputeShader ? other.ComputeShader->GetNativeHandle() : nullptr) &&
+               ShaderDataLayout.Descriptors == other.ShaderDataLayout.Descriptors;
     }
 
 
@@ -33,11 +40,11 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle PipelineStateCache::GetPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
+    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
     {
         // Build pipeline configuration struct
 
-        PipelineStateConfiguration pipelineStateConfiguration = {
+        GraphicsPipelineStateConfiguration pipelineStateConfiguration = {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
@@ -47,7 +54,7 @@ namespace Astral {
         };
 
         // If the pipeline was created already, return it
-        if (m_PipelineCache.contains(pipelineStateConfiguration)) { return m_PipelineCache[pipelineStateConfiguration]; }
+        if (m_GraphicsPipelineCache.contains(pipelineStateConfiguration)) { return m_GraphicsPipelineCache[pipelineStateConfiguration]; }
 
 
         Device& device = RendererAPI::GetDevice();
@@ -58,7 +65,7 @@ namespace Astral {
         std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
         if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
-        PipelineStateCreateInfo pipelineStateObjectCreateInfo = {
+        GraphicsPipelineStateCreateInfo pipelineStateObjectCreateInfo = {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
@@ -68,10 +75,41 @@ namespace Astral {
             .IsAlphaBlended = material.IsAlphaBlended
         };
 
-        PipelineStateHandle pipelineStateObject = device.CreatePipelineState(pipelineStateObjectCreateInfo);
-        m_PipelineCache[pipelineStateConfiguration] = pipelineStateObject;
+        PipelineStateHandle pipelineStateObject = device.CreateGraphicsPipelineState(pipelineStateObjectCreateInfo);
+        m_GraphicsPipelineCache[pipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;
     }
 
+    PipelineStateHandle PipelineStateCache::GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet)
+    {
+        // Build compute pipeline configuration struct
+
+        ComputePipelineStateConfiguration pipelineStateConfiguration = {
+            .ComputeShader = computeShader,
+            .ShaderDataLayout = descriptorSet->GetDescriptorSetLayout(),
+        };
+
+        // If the pipeline was created already, return it
+        if (m_ComputePipelineCache.contains(pipelineStateConfiguration)) { return m_ComputePipelineCache[pipelineStateConfiguration]; }
+
+
+        Device& device = RendererAPI::GetDevice();
+
+        // Pipeline doesn't exist yet, so we create it now
+
+        // Set up descriptor set layouts of the pipeline
+        std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
+        if (descriptorSet) { descriptorSets.push_back(descriptorSet); }
+
+        ComputePipelineStateCreateInfo pipelineStateObjectCreateInfo = {
+            .ComputeShader = computeShader,
+            .DescriptorSets = descriptorSets,
+        };
+
+        PipelineStateHandle pipelineStateObject = device.CreateComputePipelineState(pipelineStateObjectCreateInfo);
+        m_ComputePipelineCache[pipelineStateConfiguration] = pipelineStateObject;
+
+        return pipelineStateObject;
+    }
 }

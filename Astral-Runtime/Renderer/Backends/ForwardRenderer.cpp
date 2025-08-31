@@ -332,8 +332,8 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
             }
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
-            pipeline->Bind(commandBuffer);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(mainRenderPass, material, mesh, 0);
+            pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             ForwardPassPushData forwardPassPushData = {
