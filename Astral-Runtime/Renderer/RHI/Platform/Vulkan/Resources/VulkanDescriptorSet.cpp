@@ -38,23 +38,7 @@ namespace Astral {
 
     void VulkanDescriptorSet::AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
-        VkShaderStageFlags stageFlags;
-        if (bindStage == ShaderStage::VERTEX)
-        {
-            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        }
-        else if (bindStage == ShaderStage::FRAGMENT)
-        {
-            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-        else if (bindStage == ShaderStage::ALL)
-        {
-            stageFlags = VK_SHADER_STAGE_ALL;
-        }
-        else
-        {
-            stageFlags = VK_SHADER_STAGE_ALL;
-        }
+        VkShaderStageFlags stageFlags = GetVkShaderStageFromShaderStage(bindStage);
 
         VkDescriptorSetLayoutBinding storageBufferDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
@@ -72,19 +56,7 @@ namespace Astral {
 
     void VulkanDescriptorSet::AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
-        VkShaderStageFlags stageFlags;
-        if (bindStage == ShaderStage::VERTEX)
-        {
-            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        }
-        else if (bindStage == ShaderStage::FRAGMENT)
-        {
-            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-        else
-        {
-            stageFlags = VK_SHADER_STAGE_ALL;
-        }
+        VkShaderStageFlags stageFlags = GetVkShaderStageFromShaderStage(bindStage);
 
         VkDescriptorSetLayoutBinding uniformBufferDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
@@ -104,19 +76,7 @@ namespace Astral {
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 
-        VkShaderStageFlags stageFlags;
-        if (bindStage == ShaderStage::VERTEX)
-        {
-            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        }
-        else if (bindStage == ShaderStage::FRAGMENT)
-        {
-            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-        else
-        {
-            stageFlags = VK_SHADER_STAGE_ALL;
-        }
+        VkShaderStageFlags stageFlags = GetVkShaderStageFromShaderStage(bindStage);
 
         VkDescriptorSetLayoutBinding imageSamplerDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
@@ -132,23 +92,31 @@ namespace Astral {
     }
 
 
+    void VulkanDescriptorSet::AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage)
+    {
+        ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
+
+        VkShaderStageFlags stageFlags = GetVkShaderStageFromShaderStage(bindStage);
+
+        VkDescriptorSetLayoutBinding storageImageDescriptorLayoutBinding = {
+            .binding = m_NumberOfBindings,
+            .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+            .descriptorCount = 1,
+            .stageFlags = stageFlags,
+        };
+        m_NumberOfBindings++;
+
+        m_DescriptorSetLayoutBindings.push_back(storageImageDescriptorLayoutBinding);
+        m_Textures.push_back(textureHandle);
+        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_IMAGE);
+    }
+
+
     void VulkanDescriptorSet::AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage)
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 
-       VkShaderStageFlags stageFlags;
-        if (bindStage == ShaderStage::VERTEX)
-        {
-            stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        }
-        else if (bindStage == ShaderStage::FRAGMENT)
-        {
-            stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-        else
-        {
-            stageFlags = VK_SHADER_STAGE_ALL;
-        }
+        VkShaderStageFlags stageFlags = GetVkShaderStageFromShaderStage(bindStage);
 
         VkDescriptorSetLayoutBinding inputAttachmentDescriptorLayoutBinding = {
             .binding = m_NumberOfBindings,
@@ -267,7 +235,10 @@ namespace Astral {
         for (size_t i = 0; i < binding; i++)
         {
             const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
-            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
         }
 
 
@@ -308,7 +279,54 @@ namespace Astral {
         for (size_t i = 0; i < binding; i++)
         {
             const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
-            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
+        }
+
+
+        m_Textures[textureIndex] = newTextureHandle;
+
+        VkDescriptorImageInfo imageInfo = {};
+        VkImageView imageView = (VkImageView)newTextureHandle->GetNativeMipMapImageView(mipLevel);
+        VkSampler sampler = (VkSampler)newTextureHandle->GetNativeSampler();
+
+        imageInfo.sampler = sampler;
+        imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+        imageInfo.imageView = imageView;
+
+        VkWriteDescriptorSet descriptorSetWrite = {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_DescriptorSet,
+            .dstBinding = binding,
+            .dstArrayElement = 0,
+            .descriptorCount = 1,
+            .descriptorType = descriptorType,
+            .pImageInfo = &imageInfo
+        };
+
+        vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
+    }
+
+
+    void VulkanDescriptorSet::UpdateStorageImageBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, "Expected existing binding to be a storage image when updating a binding using UpdateStorageImageBinding")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
         }
 
 
@@ -349,7 +367,10 @@ namespace Astral {
         for (size_t i = 0; i < binding; i++)
         {
             const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
-            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT) { textureIndex++; }
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
         }
 
 
@@ -391,11 +412,28 @@ namespace Astral {
     }
 
 
+    VkShaderStageFlags VulkanDescriptorSet::GetVkShaderStageFromShaderStage(ShaderStage shaderStage)
+    {
+        VkShaderStageFlags stageFlags;
+
+        switch (shaderStage)
+        {
+            case ShaderStage::VERTEX: stageFlags = VK_SHADER_STAGE_VERTEX_BIT; break;
+            case ShaderStage::FRAGMENT: stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+            case ShaderStage::COMPUTE: stageFlags = VK_SHADER_STAGE_COMPUTE_BIT; break;
+            default: stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
+        return stageFlags;
+    }
+
+
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
         uint32 numStorageBuffers = 0;
         uint32 numUniformBuffers = 0;
         uint32 numImageSamplers = 0;
+        uint32 numStorageImages = 0;
         uint32 numInputAttachmentSamplers = 0;
 
         for (const VkDescriptorSetLayoutBinding& layoutBinding : m_DescriptorSetLayoutBindings)
@@ -405,12 +443,13 @@ namespace Astral {
                 case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER: numStorageBuffers++; break;
                 case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER: numUniformBuffers++; break;
                 case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER: numImageSamplers++; break;
+                case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE: numStorageImages++; break;
                 case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT: numInputAttachmentSamplers++; break;
                 default: ASTRAL_ERROR("Unsupported descriptor type!")
             }
         }
 
-        VkDescriptorPoolSize poolSizes[4] = {
+        VkDescriptorPoolSize poolSizes[5] = {
             {
                 .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                 .descriptorCount = numStorageBuffers > 0 ? numStorageBuffers : 1
@@ -424,6 +463,10 @@ namespace Astral {
                 .descriptorCount = numImageSamplers > 0 ? numImageSamplers : 1
             },
             {
+                .type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+                .descriptorCount = numStorageImages > 0 ? numStorageImages : 1
+            },
+            {
                 .type = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
                 .descriptorCount = numInputAttachmentSamplers > 0 ? numInputAttachmentSamplers : 1
             }
@@ -434,7 +477,7 @@ namespace Astral {
             .pNext = nullptr,
             .flags = 0,
             .maxSets = 1,
-            .poolSizeCount = 4,
+            .poolSizeCount = 5,
             .pPoolSizes = poolSizes
         };
 
@@ -530,7 +573,9 @@ namespace Astral {
 
                 vkUpdateDescriptorSets(m_Device, 1, &descriptorSetWrite, 0, nullptr);
             }
-            else if (descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER || descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            else if (descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                    descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                    descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
             {
                 VkDescriptorImageInfo imageInfo = {};
 
