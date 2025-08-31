@@ -34,19 +34,23 @@ namespace Astral {
         const std::vector<DescriptorSetHandle>& DescriptorSets;
     };
 
+    enum class PipelineType
+    {
+        GRAPHICS,
+        COMPUTE
+    };
+
     class PipelineState
     {
     public:
         virtual ~PipelineState() = default;
 
-        virtual void BindGraphicsPipeline(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void BindDescriptorSetGraphics(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
-
-        virtual void BindComputePipeline(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void BindDescriptorSetCompute(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
+        virtual void BindPipeline(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
 
         virtual void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) = 0;
 
+        virtual PipelineType GetPipelineType() = 0;
         virtual void* GetPipelineLayout() = 0;
         virtual void* GetHandleHandle() = 0;
     };

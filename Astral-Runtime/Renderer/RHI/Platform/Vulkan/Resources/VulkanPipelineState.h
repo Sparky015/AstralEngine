@@ -29,29 +29,20 @@ namespace Astral {
         bool IsAlphaBlended;
     };
 
-    struct VulkanComputePipelineStateDesc
-    {
-        VkDevice Device;
-        ShaderHandle ComputeShader;
-        std::vector<DescriptorSetHandle> DescriptorSets;
-    };
-
     class VulkanPipelineState : public PipelineState
     {
     public:
         explicit VulkanPipelineState(const VulkanGraphicsPipelineStateDesc& desc);
-        explicit VulkanPipelineState(const VulkanComputePipelineStateDesc& desc);
         ~VulkanPipelineState() override;
 
-        void BindGraphicsPipeline(CommandBufferHandle commandBufferHandle) override;
-        void BindDescriptorSetGraphics(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
+        void BindPipeline(CommandBufferHandle commandBufferHandle) override;
+        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
 
-        void BindComputePipeline(CommandBufferHandle commandBufferHandle) override;
-        void BindDescriptorSetCompute(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
 
         void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
 
-        void* GetPipelineLayout() override {return m_PipelineLayout; }
+        PipelineType GetPipelineType() override { return PipelineType::GRAPHICS; }
+        void* GetPipelineLayout() override { return m_PipelineLayout; }
         void* GetHandleHandle() override { return m_Pipeline; }
 
     private:
@@ -66,20 +57,16 @@ namespace Astral {
         void SetColorBlendState();
         void SetDynamicState();
 
-        void SetComputeShaderStage();
 
         void CreateGraphicsPipelineLayout();
-        void CreateComputePipelineLayout();
         void DestroyPipelineLayout();
 
         void CreateGraphicsPipelineStateObject();
-        void CreateComputePipelineStateObject();
         void DestroyPipelineState();
 
 
         VkDevice m_Device;
         VulkanGraphicsPipelineStateDesc m_GraphicsDescription;
-        VulkanComputePipelineStateDesc m_ComputeDescription;
 
         struct PipelineCreateInfos
         {

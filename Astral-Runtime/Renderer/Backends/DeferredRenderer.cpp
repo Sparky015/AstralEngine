@@ -709,7 +709,7 @@ namespace Astral {
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
-            pipeline->BindGraphicsPipeline(commandBuffer);
+            pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             GeometryPassPushData pushConstantData = {
@@ -720,8 +720,8 @@ namespace Astral {
 
             RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstantData, sizeof(GeometryPassPushData));
 
-            pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-            pipeline->BindDescriptorSetGraphics(commandBuffer, materialDescriptorSet, 1);
+            pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+            pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);
@@ -750,12 +750,12 @@ namespace Astral {
         Ref<Shader> vertexShader = mesh.VertexShader;
 
         PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
-        pipeline->BindGraphicsPipeline(commandBuffer);
+        pipeline->BindPipeline(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
-        pipeline->BindDescriptorSetGraphics(commandBuffer, executionContext.ReadAttachments, 2);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
@@ -784,11 +784,11 @@ namespace Astral {
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
-        cubemapPipeline->BindGraphicsPipeline(commandBuffer);
+        cubemapPipeline->BindPipeline(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        cubemapPipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubemapPipeline->BindDescriptorSetGraphics(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+        cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubemapPipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
 
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
@@ -817,12 +817,12 @@ namespace Astral {
         toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
-        toneMappingPipeline->BindGraphicsPipeline(commandBuffer);
+        toneMappingPipeline->BindPipeline(commandBuffer);
         toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, executionContext.ReadAttachments, 1);
-        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
 
         RendererAPI::PushConstants(commandBuffer, toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
 
@@ -853,8 +853,8 @@ namespace Astral {
         ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.comp");
         ;
         PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
-        computePipeline->BindComputePipeline(commandBuffer);
-        computePipeline->BindDescriptorSetCompute(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
+        computePipeline->BindPipeline(commandBuffer);
+        computePipeline->BindDescriptorSet(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
 
 
         ComputeIrradianceMapPushConstants computeIrradianceMapPushConstants;
@@ -922,10 +922,10 @@ namespace Astral {
 
 
         PipelineStateHandle cubePipeline = m_PipelineStateCache.GetGraphicsPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
-        cubePipeline->BindGraphicsPipeline(commandBuffer);
+        cubePipeline->BindPipeline(commandBuffer);
 
-        cubePipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubePipeline->BindDescriptorSetGraphics(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
 
 
         cubeMesh.VertexBuffer->Bind(commandBuffer);

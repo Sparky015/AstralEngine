@@ -333,7 +333,7 @@ namespace Astral {
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(mainRenderPass, material, mesh, 0);
-            pipeline->BindGraphicsPipeline(commandBuffer);
+            pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             ForwardPassPushData forwardPassPushData = {
@@ -344,8 +344,8 @@ namespace Astral {
 
             RendererAPI::PushConstants(commandBuffer, pipeline, &forwardPassPushData, sizeof(ForwardPassPushData));
 
-            pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-            pipeline->BindDescriptorSetGraphics(commandBuffer, materialDescriptorSet, 1);
+            pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+            pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);

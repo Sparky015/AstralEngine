@@ -290,6 +290,7 @@ add_library(AstralEngine
         Core/Containers/DirectedGraphEdge.h
         Asset/Loaders/EnvironmentMapLoader.h
         Asset/Loaders/EnvironmentMapLoader.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
 )
 
 

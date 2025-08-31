@@ -15,6 +15,7 @@
 #include "VulkanDescriptorSet.h"
 #include "VulkanFramebuffer.h"
 #include "VulkanPipelineState.h"
+#include "VulkanComputePipelineState.h"
 #include "VulkanShader.h"
 #include "VulkanVertexBuffer.h"
 
@@ -174,7 +175,7 @@ namespace Astral {
             .DescriptorSets = computePipelineStateCreateInfo.DescriptorSets,
         };
 
-        return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
+        return CreateGraphicsRef<VulkanComputePipelineState>(pipelineStateObjectDesc);
     }
 
 
