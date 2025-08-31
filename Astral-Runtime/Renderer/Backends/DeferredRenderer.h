@@ -85,7 +85,6 @@ namespace Astral {
             Ref<EnvironmentMap> EnvironmentMap;
             DescriptorSetHandle EnvironmentMapDescriptorSet;
             bool IsIrradianceMapCalculationNeeded;
-            std::vector<FramebufferHandle> IrradianceMapPassFramebuffers;
             std::vector<FramebufferHandle> PrefilteredEnvironmentMapPassFramebuffers;
         };
 
@@ -126,6 +125,7 @@ namespace Astral {
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
         DescriptorSetHandle m_PrefilteredEnvironmentPassDataDescriptorSet;
         BufferHandle m_PrefilteredEnvironmentPassUniformData;
         float m_SceneExposure{};

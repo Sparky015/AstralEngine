@@ -152,18 +152,11 @@ namespace Astral {
 
             if (!sceneDescription.EnvironmentMap->Irradiance)
             {
-                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT | IMAGE_USAGE_STORAGE_BIT);
                 // std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance");
                 // RendererAPI::NameObject(sceneDescription.EnvironmentMap->Irradiance, irradianceMapName);
 
                 uint32 numFaces = 6;
-                for (int j = 0; j < numFaces; j++)
-                {
-                    frameContext.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass);
-                    frameContext.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                    frameContext.IrradianceMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->Irradiance, j);
-                    frameContext.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
-                }
                 frameContext.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
                 for (int j = 0; j < numFaces; j++)
                 {
@@ -407,6 +400,7 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
         const std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
@@ -470,13 +464,12 @@ namespace Astral {
             RendererAPI::NameObject(context.WindowFramebuffer, windowFramebufferName);
 
 
-            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
             Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
             context.EnvironmentMap = environmentMap;
 
             if (!environmentMap->Irradiance)
             {
-                environmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+                environmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT | IMAGE_USAGE_STORAGE_BIT);
                 std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
                 RendererAPI::NameObject(environmentMap->Irradiance, irradianceMapName);
             }
@@ -494,18 +487,20 @@ namespace Astral {
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
             constexpr uint32 numFaces = 6;
-            context.IrradianceMapPassFramebuffers.resize(numFaces);
-            for (int j = 0; j < numFaces; j++)
-            {
-                context.IrradianceMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass);
-                context.IrradianceMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                context.IrradianceMapPassFramebuffers[j]->AttachTextureLayer(environmentMap->Irradiance, j);
-                context.IrradianceMapPassFramebuffers[j]->EndBuildingFramebuffer();
-            }
             context.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
 
             context.IsIrradianceMapCalculationNeeded = true;
         }
+
+
+        FrameContext& context = m_FrameContexts[0];
+        TextureHandle brdfLut = registry.CreateAsset<Texture>("LUTs/ibl_brdf_lut.dds");
+        m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
+        m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
+        m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(context.EnvironmentMap->Environment, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->Irradiance, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(brdfLut, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->EndBuildingSet();
     }
 
 
@@ -714,7 +709,7 @@ namespace Astral {
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
-            pipeline->Bind(commandBuffer);
+            pipeline->BindGraphicsPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             GeometryPassPushData pushConstantData = {
@@ -725,8 +720,8 @@ namespace Astral {
 
             RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstantData, sizeof(GeometryPassPushData));
 
-            pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-            pipeline->BindDescriptorSet(commandBuffer, materialDescriptorSet, 1);
+            pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+            pipeline->BindDescriptorSetGraphics(commandBuffer, materialDescriptorSet, 1);
 
             mesh.VertexBuffer->Bind(commandBuffer);
             mesh.IndexBuffer->Bind(commandBuffer);
@@ -755,12 +750,12 @@ namespace Astral {
         Ref<Shader> vertexShader = mesh.VertexShader;
 
         PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
-        pipeline->Bind(commandBuffer);
+        pipeline->BindGraphicsPipeline(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
-        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
+        pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        pipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
+        pipeline->BindDescriptorSetGraphics(commandBuffer, executionContext.ReadAttachments, 2);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
@@ -789,11 +784,11 @@ namespace Astral {
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
-        cubemapPipeline->Bind(commandBuffer);
+        cubemapPipeline->BindGraphicsPipeline(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubemapPipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+        cubemapPipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubemapPipeline->BindDescriptorSetGraphics(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
 
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
@@ -822,12 +817,12 @@ namespace Astral {
         toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
-        toneMappingPipeline->Bind(commandBuffer);
+        toneMappingPipeline->BindGraphicsPipeline(commandBuffer);
         toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
-        toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        toneMappingPipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
-        toneMappingPipeline->BindDescriptorSet(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
+        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, executionContext.ReadAttachments, 1);
+        toneMappingPipeline->BindDescriptorSetGraphics(commandBuffer, toneMapperMaterial.DescriptorSet, 2);
 
         RendererAPI::PushConstants(commandBuffer, toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
 
@@ -839,12 +834,11 @@ namespace Astral {
     }
 
 
-    struct ComputeIrradianceMapViewProjection
+    struct ComputeIrradianceMapPushConstants
     {
-        Mat4 FaceProjection;
-        Mat4 FaceView;
+        float FaceIndex;
     };
-    static_assert(sizeof(ComputeIrradianceMapViewProjection) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
+    static_assert(sizeof(ComputeIrradianceMapPushConstants) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
 
 
     void DeferredRenderer::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
@@ -854,49 +848,28 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-        glm::mat4 captureViews[] =
-        {
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-         };
+        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
-        Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
-        cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
+        ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.comp");
+        ;
+        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
+        computePipeline->BindComputePipeline(commandBuffer);
+        computePipeline->BindDescriptorSetCompute(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
 
-        Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubePipeline = m_PipelineStateCache.GetGraphicsPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
-        cubePipeline->Bind(commandBuffer);
-        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize));
-
-        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
-
-        cubeMesh.VertexBuffer->Bind(commandBuffer);
-        cubeMesh.IndexBuffer->Bind(commandBuffer);
-
-        ComputeIrradianceMapViewProjection computeIrradianceMapViewProjection;
-        computeIrradianceMapViewProjection.FaceProjection = captureProjection;
+        ComputeIrradianceMapPushConstants computeIrradianceMapPushConstants;
 
         constexpr uint32 numFaces = 6;
         for (uint32 i = 0; i < numFaces; i++)
         {
-            const FramebufferHandle& faceFramebuffer = frameContext.IrradianceMapPassFramebuffers[i];
-            m_IrradianceCalcPass->BeginRenderPass(commandBuffer, faceFramebuffer);
+            computeIrradianceMapPushConstants.FaceIndex = i;
+            RendererAPI::PushConstants(commandBuffer, computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
 
-            computeIrradianceMapViewProjection.FaceView = captureViews[i];
-            RendererAPI::PushConstants(commandBuffer, cubePipeline, &computeIrradianceMapViewProjection, sizeof(ComputeIrradianceMapViewProjection));
-            RendererAPI::DrawElementsIndexed(commandBuffer, cubeMesh.IndexBuffer);
-
-            m_IrradianceCalcPass->EndRenderPass(commandBuffer);
+            // Dispatching 2x2 blocks as the local layout is 8x8 and the irradiance faces are 16x16
+            RendererAPI::Dispatch(commandBuffer, 2, 2, 1);
         }
+
+        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         RendererAPI::EndLabel(commandBuffer);
     }
@@ -949,10 +922,10 @@ namespace Astral {
 
 
         PipelineStateHandle cubePipeline = m_PipelineStateCache.GetGraphicsPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
-        cubePipeline->Bind(commandBuffer);
+        cubePipeline->BindGraphicsPipeline(commandBuffer);
 
-        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+        cubePipeline->BindDescriptorSetGraphics(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubePipeline->BindDescriptorSetGraphics(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
 
 
         cubeMesh.VertexBuffer->Bind(commandBuffer);

@@ -1,0 +1,73 @@
+#version 460
+
+layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+layout (set = 0, binding = 0) uniform samplerCube u_EnvironmentMap;
+layout (set = 0, binding = 1, rgba16f) uniform imageCube u_IrradianceMap;
+
+layout (push_constant) uniform PushConstantData {
+    float faceIndex;
+} u_PushConstantData;
+
+const float irradianceFaceLength = 16;
+const float PI = 3.14159265359;
+
+void main()
+{
+    uvec2 pixelCoords = gl_GlobalInvocationID.xy;
+    vec2 uv = (vec2(pixelCoords.xy) + 0.5) / irradianceFaceLength;
+
+    vec3 normal;
+    int faceIndex = int(u_PushConstantData.faceIndex);
+//    if (faceIndex == 0)      { normal = vec3( 1.0, -uv.y, -uv.x); } // +X
+//    else if (faceIndex == 1) { normal = vec3(-1.0, -uv.y,  uv.x); } // -X
+//    else if (faceIndex == 2) { normal = vec3( uv.x,  1.0,  uv.y); } // +Y
+//    else if (faceIndex == 3) { normal = vec3( uv.x, -1.0, -uv.y); } // -Y
+//    else if (faceIndex == 4) { normal = vec3( uv.x, -uv.y,  1.0); } // +Z
+//    else if (faceIndex == 5) { normal = vec3( uv.x, -uv.y, -1.0); } // -Z
+    switch (faceIndex)
+    {
+        case 0: normal = vec3( uv.x - 1.0f, 1.0f, uv.y - 1.0f );  break; // Positive X
+        case 1: normal = vec3(1.0f - uv.x, -1.0f,  uv.y - 1.0f );    break; // Negative X
+        case 2: normal = vec3(  1.0f - uv.y,  uv.x - 1.0f,  -1.0f ); break; // Positive Y (I flipped Y here for Vulkan!!)
+        case 3: normal = vec3(  uv.y - 1.0f,  uv.x - 1.0f,  1.0f );  break; // Negative Y
+        case 4: normal = vec3(  -1.0f, uv.x - 1.0f,  uv.y - 1.0f );  break; // Positive Z
+        case 5: normal = vec3(  1.0f, 1.0f - uv.x,  uv.y - 1.0f );   break; // Negative Z
+    }
+    normal = normalize(normal);
+
+    vec3 irradiance = vec3(0.0);
+
+    vec3 up    = vec3(0.0, 1.0, 0.0);
+    vec3 right = normalize(cross(up, normal));
+    up         = normalize(cross(normal, right));
+
+    float sampleDelta = 0.02;
+    float nrSamples = 0.0;
+    for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
+    {
+        for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
+        {
+            // spherical to cartesian (in tangent space)
+            vec3 tangentSample = vec3(sin(theta) * cos(phi),  sin(theta) * sin(phi), cos(theta));
+
+            // tangent space to world
+            vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
+
+            vec3 cubemapSample = textureLod(u_EnvironmentMap, sampleVec, 0.0f).rgb * cos(theta) * sin(theta);
+
+            if (any(isnan(cubemapSample)) || any(isinf(cubemapSample)))
+            {
+                continue; // Skip this sample
+            }
+
+            irradiance += cubemapSample;
+            nrSamples++;
+        }
+    }
+    irradiance = PI * irradiance * (1.0 / float(nrSamples));
+
+    irradiance = clamp(irradiance, 0, 0x7F7FFFFF); // Clamp to the max float value to avoid INF values
+
+    imageStore(u_IrradianceMap, ivec3(pixelCoords, faceIndex), vec4(irradiance, 1.0));
+}
