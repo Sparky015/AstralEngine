@@ -17,7 +17,7 @@ namespace Astral {
 
     static constexpr uint32 MaxPushConstantRange = 128;
 
-    struct PipelineStateCreateInfo
+    struct GraphicsPipelineStateCreateInfo
     {
         RenderPassHandle RenderPass;
         ShaderHandle VertexShader;
@@ -26,6 +26,12 @@ namespace Astral {
         const VertexBufferLayout& BufferLayout;
         uint32 SubpassIndex;
         bool IsAlphaBlended;
+    };
+
+    struct ComputePipelineStateCreateInfo
+    {
+        ShaderHandle ComputeShader;
+        const std::vector<DescriptorSetHandle>& DescriptorSets;
     };
 
     class PipelineState

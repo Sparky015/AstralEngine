@@ -147,9 +147,9 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle VulkanDevice::CreatePipelineState(const PipelineStateCreateInfo& pipelineStateCreateInfo)
+    PipelineStateHandle VulkanDevice::CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo)
     {
-        VulkanPipelineStateDesc pipelineStateObjectDesc = {
+        VulkanGraphicsPipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
             .RenderPass = pipelineStateCreateInfo.RenderPass,
             .VertexShader = pipelineStateCreateInfo.VertexShader,
@@ -161,6 +161,18 @@ namespace Astral {
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
+
+        return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
+    }
+
+
+    PipelineStateHandle VulkanDevice::CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo)
+    {
+        VulkanComputePipelineStateDesc pipelineStateObjectDesc = {
+            .Device = m_Device,
+            .ComputeShader = computePipelineStateCreateInfo.ComputeShader,
+            .DescriptorSets = computePipelineStateCreateInfo.DescriptorSets,
+        };
 
         return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
     }

@@ -15,7 +15,7 @@
 
 namespace Astral {
 
-    struct VulkanPipelineStateDesc
+    struct VulkanGraphicsPipelineStateDesc
     {
         VkDevice Device;
         RenderPassHandle RenderPass;
@@ -29,10 +29,18 @@ namespace Astral {
         bool IsAlphaBlended;
     };
 
+    struct VulkanComputePipelineStateDesc
+    {
+        VkDevice Device;
+        ShaderHandle ComputeShader;
+        std::vector<DescriptorSetHandle> DescriptorSets;
+    };
+
     class VulkanPipelineState : public PipelineState
     {
     public:
-        explicit VulkanPipelineState(const VulkanPipelineStateDesc& desc);
+        explicit VulkanPipelineState(const VulkanGraphicsPipelineStateDesc& desc);
+        explicit VulkanPipelineState(const VulkanComputePipelineStateDesc& desc);
         ~VulkanPipelineState() override;
 
         void Bind(CommandBufferHandle commandBufferHandle) override;
@@ -45,10 +53,7 @@ namespace Astral {
 
     private:
 
-        void CreatePipelineStateObject();
-        void DestroyPipelineStateObject();
-
-        void SetShaderStages();
+        void SetGraphicsShaderStages();
         void SetVertexInputState();
         void SetInputAssemblyState();
         void SetViewportState();
@@ -58,10 +63,20 @@ namespace Astral {
         void SetColorBlendState();
         void SetDynamicState();
 
-        void CreatePipelineLayout();
+        void SetComputeShaderStage();
+
+        void CreateGraphicsPipelineLayout();
+        void CreateComputePipelineLayout();
         void DestroyPipelineLayout();
 
-        VulkanPipelineStateDesc m_Description;
+        void CreateGraphicsPipelineStateObject();
+        void CreateComputePipelineStateObject();
+        void DestroyPipelineState();
+
+
+        VkDevice m_Device;
+        VulkanGraphicsPipelineStateDesc m_GraphicsDescription;
+        VulkanComputePipelineStateDesc m_ComputeDescription;
 
         struct PipelineCreateInfos
         {
