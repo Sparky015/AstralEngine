@@ -43,8 +43,11 @@ namespace Astral {
         explicit VulkanPipelineState(const VulkanComputePipelineStateDesc& desc);
         ~VulkanPipelineState() override;
 
-        void Bind(CommandBufferHandle commandBufferHandle) override;
-        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
+        void BindGraphicsPipeline(CommandBufferHandle commandBufferHandle) override;
+        void BindDescriptorSetGraphics(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
+
+        void BindComputePipeline(CommandBufferHandle commandBufferHandle) override;
+        void BindDescriptorSetCompute(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
 
         void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
 

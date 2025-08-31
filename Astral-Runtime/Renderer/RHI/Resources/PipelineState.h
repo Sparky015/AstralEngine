@@ -39,8 +39,11 @@ namespace Astral {
     public:
         virtual ~PipelineState() = default;
 
-        virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
+        virtual void BindGraphicsPipeline(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BindDescriptorSetGraphics(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
+
+        virtual void BindComputePipeline(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BindDescriptorSetCompute(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
 
         virtual void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) = 0;
 

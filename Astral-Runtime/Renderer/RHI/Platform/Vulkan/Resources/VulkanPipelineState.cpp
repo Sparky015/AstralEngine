@@ -37,19 +37,35 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineState::Bind(CommandBufferHandle commandBufferHandle)
+    void VulkanPipelineState::BindGraphicsPipeline(CommandBufferHandle commandBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
     }
 
 
-    void VulkanPipelineState::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
+    void VulkanPipelineState::BindDescriptorSetGraphics(CommandBufferHandle commandBufferHandle,
                                                       DescriptorSetHandle descriptorSetHandle, uint32 binding)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout,
+                    binding, 1, &descriptorSet, 0, nullptr);
+    }
+
+
+    void VulkanPipelineState::BindComputePipeline(CommandBufferHandle commandBufferHandle)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_Pipeline);
+    }
+
+
+    void VulkanPipelineState::BindDescriptorSetCompute(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_PipelineLayout,
                     binding, 1, &descriptorSet, 0, nullptr);
     }
 
