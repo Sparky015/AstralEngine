@@ -29,7 +29,7 @@ namespace Astral {
         std::unordered_map<std::string, SceneResource> ExternalResourceFiles;
         ECS ECS;
         Ref<EnvironmentMap> EnvironmentMap;
-        float AmbientLightConstant = .2;
+        float AmbientLightConstant = 1.0f;
         float Exposure = 0.0f;
         float EnvironmentMapBlur = 0.0f;
 
