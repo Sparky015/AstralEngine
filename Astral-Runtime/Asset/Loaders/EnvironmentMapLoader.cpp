@@ -81,7 +81,7 @@ namespace Astral::EnvironmentMapLoader {
 
             TextureCreateInfo prefilteredEnvironmentCreateInfo = {
                 .Format = ImageFormat::R16G16B16A16_SFLOAT,
-                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                .Layout = ImageLayout::GENERAL,
                 .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
                 .Dimensions = UVec2(faceSideLength, faceSideLength),
                 .ImageData = (uint8*)nullptr,

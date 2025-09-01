@@ -148,35 +148,33 @@ namespace Astral {
         if (sceneDescription.EnvironmentMap)
         {
             frameContext.EnvironmentMap = sceneDescription.EnvironmentMap;
-            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->PrefilteredEnvironment);
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->PrefilteredEnvironment, ImageLayout::GENERAL);
 
             if (!sceneDescription.EnvironmentMap->Irradiance)
             {
-                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT | IMAGE_USAGE_STORAGE_BIT);
+                TextureCreateInfo irradianceTextureCreateInfo = {
+                    .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                    .Layout = ImageLayout::GENERAL,
+                    .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
+                    .Dimensions = UVec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize),
+                    .ImageData = (uint8*)nullptr,
+                };
+
+                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(irradianceTextureCreateInfo);
                 // std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance");
                 // RendererAPI::NameObject(sceneDescription.EnvironmentMap->Irradiance, irradianceMapName);
-
-                uint32 numFaces = 6;
-                frameContext.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
-                for (int j = 0; j < numFaces; j++)
-                {
-                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
-                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->PrefilteredEnvironment, j);
-                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
-                }
 
                 m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
                 m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
                 m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::COMPUTE);
-                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->Irradiance, ShaderStage::COMPUTE);
-                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->Irradiance, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE, ImageLayout::GENERAL);
                 m_EnvironmentMapStorageImagesSet->EndBuildingSet();
 
                 frameContext.IsIrradianceMapCalculationNeeded = true;
             }
 
-            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance);
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance, ImageLayout::GENERAL);
         }
 
         frameContext.Meshes.clear();
@@ -476,7 +474,15 @@ namespace Astral {
 
             if (!environmentMap->Irradiance)
             {
-                environmentMap->Irradiance = Texture::CreateCubemap(nullptr, EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize, ImageFormat::R16G16B16A16_SFLOAT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT | IMAGE_USAGE_STORAGE_BIT);
+                TextureCreateInfo irradianceTextureCreateInfo = {
+                    .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                    .Layout = ImageLayout::GENERAL,
+                    .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
+                    .Dimensions = UVec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize),
+                    .ImageData = (uint8*)nullptr,
+                };
+
+                environmentMap->Irradiance = Texture::CreateCubemap(irradianceTextureCreateInfo);
                 std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
                 RendererAPI::NameObject(environmentMap->Irradiance, irradianceMapName);
             }
@@ -486,15 +492,12 @@ namespace Astral {
 
             context.EnvironmentMapDescriptorSet = device.CreateDescriptorSet();
             context.EnvironmentMapDescriptorSet->BeginBuildingSet();
-            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->PrefilteredEnvironment, ShaderStage::FRAGMENT);
-            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->PrefilteredEnvironment, ShaderStage::FRAGMENT, ImageLayout::GENERAL);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT, ImageLayout::GENERAL);
             context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(brdfLut, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->EndBuildingSet();
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
-
-            constexpr uint32 numFaces = 6;
-            context.PrefilteredEnvironmentMapPassFramebuffers.resize(numFaces);
 
             context.IsIrradianceMapCalculationNeeded = true;
         }
@@ -504,8 +507,8 @@ namespace Astral {
         m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
         m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
         m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(context.EnvironmentMap->Environment, ShaderStage::COMPUTE);
-        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->Irradiance, ShaderStage::COMPUTE);
-        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->Irradiance, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE, ImageLayout::GENERAL);
         m_EnvironmentMapStorageImagesSet->EndBuildingSet();
     }
 
@@ -534,7 +537,7 @@ namespace Astral {
 
             for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
             {
-                m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel);
+                m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, ImageLayout::GENERAL);
                 UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
                 RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
                 if (mipWidth > 1)  { mipWidth /= 2; }
