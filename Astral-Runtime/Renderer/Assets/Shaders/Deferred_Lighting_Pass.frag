@@ -18,9 +18,13 @@ layout (set = 0, binding = 0) uniform SceneData {
     float ambientLightConstant;
 } u_SceneData;
 
+const uint LIGHT_TYPE_POINT = 0;
+const uint LIGHT_TYPE_DIRECTIONAL = 1;
+
 struct Light {
     vec3 lightPosition;
     vec3 lightColor;
+    uint lightType;
 };
 
 layout (set = 0, binding = 1) readonly buffer Lights {
@@ -131,15 +135,20 @@ void main()
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
+        uint lightType = u_SceneLights.lights[i].lightType;
 
         // Vectors
-        vec3 lightVector = normalize(lightPosition - worldPosition);
+        vec3 lightVector;
+        if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
+        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(lightPosition); } // Light position is direction for directional lights
+
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - worldPosition);
         float lightAttenuation = 1.0 / (lightDistance * lightDistance); // quadratic attenuation formula
 
+        if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightAttenuation = 1; } // No attenuation for directional lights
 
-        // PBR Equation in Full
+            // PBR Equation in Full
         vec3 baseReflectivity = vec3(0.04);
         float alpha = pow(roughness, 2.0f);
         baseReflectivity = mix(baseReflectivity, baseColor, metallic.r); // Mix based on metallic value

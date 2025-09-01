@@ -15,6 +15,7 @@
 #include "Components/MeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "ECSErrorHandling.h"
+#include "Components/DirectionalLightComponent.h"
 
 namespace Astral {
 
@@ -132,7 +133,7 @@ namespace Astral {
 
         /// This ComponentPoolSet will have all the types registered listed here. If you need to add a component type,
         /// add it here.
-        ComponentPoolSet<TransformComponent, SpriteComponent, MeshComponent, PointLightComponent> m_ComponentPoolSet;
+        ComponentPoolSet<TransformComponent, SpriteComponent, MeshComponent, PointLightComponent, DirectionalLightComponent> m_ComponentPoolSet;
 
     };
 
