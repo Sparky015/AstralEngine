@@ -507,7 +507,7 @@ namespace Astral {
 			destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		}
 
-		if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+		else if (currentLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
 			newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 		{
 			barrier.srcAccessMask = 0;
