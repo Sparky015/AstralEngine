@@ -28,9 +28,9 @@ namespace Astral {
         void BeginBuildingSet() override;
         void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
         void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage) override;
-        void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage) override;
-        void AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage) override;
-        void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) override;
+        void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) override;
+        void AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) override;
+        void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) override;
         void EndBuildingSet() override;
 
         void UpdateStorageBufferBinding(uint32 binding, BufferHandle newBufferHandle) override;
@@ -64,6 +64,7 @@ namespace Astral {
 
         VkDevice m_Device;
 
+        std::vector<ImageLayout> m_ImageDescriptorLayouts;
         std::vector<VkDescriptorSetLayoutBinding> m_DescriptorSetLayoutBindings;
         uint32 m_NumberOfBindings;
 

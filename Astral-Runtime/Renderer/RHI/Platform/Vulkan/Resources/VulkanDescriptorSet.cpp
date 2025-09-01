@@ -72,7 +72,7 @@ namespace Astral {
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage)
+    void VulkanDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 
@@ -88,11 +88,12 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(imageSamplerDescriptorLayoutBinding);
         m_Textures.push_back(textureHandle);
+        m_ImageDescriptorLayouts.push_back(imageLayout);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::IMAGE_SAMPLER);
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage)
+    void VulkanDescriptorSet::AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 
@@ -108,11 +109,12 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(storageImageDescriptorLayoutBinding);
         m_Textures.push_back(textureHandle);
+        m_ImageDescriptorLayouts.push_back(imageLayout);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_IMAGE);
     }
 
 
-    void VulkanDescriptorSet::AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage)
+    void VulkanDescriptorSet::AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
     {
         ASSERT(textureHandle != nullptr, "A null texture can not be added to a descriptor set!")
 
@@ -128,6 +130,7 @@ namespace Astral {
 
         m_DescriptorSetLayoutBindings.push_back(inputAttachmentDescriptorLayoutBinding);
         m_Textures.push_back(textureHandle);
+        m_ImageDescriptorLayouts.push_back(imageLayout);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::SUBPASS_INPUT_ATTACHMENT);
     }
 
@@ -580,6 +583,7 @@ namespace Astral {
                 VkDescriptorImageInfo imageInfo = {};
 
                 TextureHandle textureHandle = m_Textures[samplerIndex];
+                ImageLayout imageLayout = m_ImageDescriptorLayouts[samplerIndex];
                 samplerIndex++;
 
                 VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView();
@@ -587,7 +591,7 @@ namespace Astral {
 
 
                 imageInfo.sampler = sampler;
-                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                imageInfo.imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
                 imageInfo.imageView = imageView;
 
                 VkWriteDescriptorSet descriptorSetWrite = {
