@@ -9,13 +9,15 @@ layout (push_constant) uniform PushConstantData {
     float faceIndex;
 } u_PushConstantData;
 
-const float irradianceFaceLength = 64;
 const float PI = 3.14159265359;
 
 void main()
 {
+    ivec2 outputSize = imageSize(u_IrradianceMap);
     uvec2 pixelCoords = gl_GlobalInvocationID.xy;
-    vec2 uv = (vec2(pixelCoords) + 0.5) / irradianceFaceLength;
+    if (pixelCoords.x >= outputSize.x || pixelCoords.y >= outputSize.y) { return; }
+
+    vec2 uv = (vec2(pixelCoords) + 0.5) / outputSize.x;
     uv = uv * 2.0 - 1.0; // Move from [0, 1] to [-1, 1]
 
     vec3 normal;
