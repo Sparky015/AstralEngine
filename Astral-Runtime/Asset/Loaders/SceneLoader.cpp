@@ -46,7 +46,8 @@ namespace Astral {
     TextureHandle SceneLoader::m_DefaultMaterialMetallic = nullptr;
     TextureHandle SceneLoader::m_DefaultMaterialEmission = nullptr;
 
-    bool SceneLoader::m_IsDefaultNormalsDirectX = false;
+    bool SceneLoader::m_DefaultIsNormalsDirectX = false;
+    bool SceneLoader::m_DefaultFlipUVs = false;
     float SceneLoader::m_ScaleMultiplier = 1.0f;
 
 
@@ -338,13 +339,17 @@ namespace Astral {
 
         Assimp::Importer importer;
 
+        uint32 sceneImportFlags = aiProcess_CalcTangentSpace       |
+                       aiProcess_Triangulate            |
+                       aiProcess_JoinIdenticalVertices  |
+                       aiProcess_SortByPType;
 
-        const aiScene* scene = importer.ReadFile( sceneFilePath.string(),
-        aiProcess_CalcTangentSpace       |
-        aiProcess_Triangulate            |
-        aiProcess_JoinIdenticalVertices  |
-        aiProcess_SortByPType            |
-        aiProcess_FlipUVs );
+        if (m_DefaultFlipUVs)
+        {
+            sceneImportFlags |= aiProcess_FlipUVs;
+        }
+
+        const aiScene* scene = importer.ReadFile( sceneFilePath.string(), sceneImportFlags);
 
         // If the import failed, report it
         if (nullptr == scene)
@@ -861,7 +866,7 @@ namespace Astral {
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::UNPACKED;
         materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
-        materialRef->HasDirectXNormals = m_IsDefaultNormalsDirectX;
+        materialRef->HasDirectXNormals = m_DefaultIsNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);
         materialRef->Textures.push_back(metallic);
@@ -979,7 +984,7 @@ namespace Astral {
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::ORM_PACKED;
         materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
-        materialRef->HasDirectXNormals = m_IsDefaultNormalsDirectX;
+        materialRef->HasDirectXNormals = m_DefaultIsNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);
         materialRef->Textures.push_back(aoRoughnessMetallicPacked);

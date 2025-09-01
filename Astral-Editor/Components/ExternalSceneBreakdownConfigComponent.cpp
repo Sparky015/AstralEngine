@@ -35,6 +35,7 @@ namespace Astral {
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialEmission = nullptr;
 
     bool ExternalSceneBreakdownConfigComponent::m_SettingsIsNormalsDirectX = false;
+    bool ExternalSceneBreakdownConfigComponent::m_SettingsFlipUVs = false;
     float ExternalSceneBreakdownConfigComponent::m_SettingsScaleMultiplier = 1.0f;
 
 
@@ -57,6 +58,7 @@ namespace Astral {
 
                 m_SettingsIsNormalsDirectX = SceneLoader::GetDefaultIsNormalsDirectX();
                 m_SettingsScaleMultiplier = SceneLoader::GetDefaultScaleMultiplier();
+                m_SettingsFlipUVs = SceneLoader::GetDefaultFlipUVs();
 
                 m_IsNewShow = false;
             }
@@ -142,6 +144,15 @@ namespace Astral {
                 ImGui::EndCombo();
             }
 
+            ImGui::Text("Flip UVs:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##ExternalSceneBreakdownConfigComponentFlipUVsSelect", m_SettingsFlipUVs ? "True" : "False"))
+            {
+                if (ImGui::Selectable("True")) { m_SettingsFlipUVs = true; }
+                if (ImGui::Selectable("False")) { m_SettingsFlipUVs = false; }
+                ImGui::EndCombo();
+            }
+
 
             if (m_SettingsMaterialTextureConvention == TextureConvention::UNPACKED)
             {
@@ -176,6 +187,7 @@ namespace Astral {
                 SceneLoader::SetDefaultMaterialTextureConvention(m_SettingsMaterialTextureConvention);
                 SceneLoader::SetDefaultCoordinateSystemOffset(m_SettingsRotationOffset);
                 SceneLoader::SetDefaultIsNormalsDirectX(m_SettingsIsNormalsDirectX);
+                SceneLoader::SetDefaultFlipUVs(m_SettingsFlipUVs);
                 SceneLoader::SetDefaultScaleMultiplier(m_SettingsScaleMultiplier);
 
                 if (m_SettingsMaterialBaseColor) { SceneLoader::SetDefaultMaterialBaseColor(m_SettingsMaterialBaseColor); }
