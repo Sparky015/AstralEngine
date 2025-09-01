@@ -164,7 +164,7 @@ void main()
 
     // Indirect Specular
     vec3 reflectionVector = reflect(-viewVector, normal);
-    float totalMips = textureQueryLevels(u_PrefilteredEnvironment);
+    float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
     vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
     vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
     viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.

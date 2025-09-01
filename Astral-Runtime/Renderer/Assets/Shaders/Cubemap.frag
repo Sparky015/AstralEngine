@@ -15,7 +15,7 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-    float totalMips = textureQueryLevels(u_Cubemap);
+    float totalMips = textureQueryLevels(u_Cubemap) - 1;
     float lodLevel = clamp(u_PushConstant.environmentMapBlur, 0, 1) * totalMips;
     color = textureLod(u_Cubemap, v_Position, lodLevel);
 }
