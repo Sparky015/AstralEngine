@@ -16,8 +16,8 @@ namespace Astral {
 
     enum class ShaderModel : uint8
     {
-        UNLIT,
         PBR,
+        UNLIT
     };
 
     enum class TextureConvention : uint8

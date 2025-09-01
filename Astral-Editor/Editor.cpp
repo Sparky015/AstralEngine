@@ -13,6 +13,7 @@
 #include "Components/MenuBarComponent.h"
 #include "Core/Engine.h"
 #include "Panels/EnvironmentPanel.h"
+#include "Panels/MaterialEditorPanel.h"
 #include "Panels/PropertiesPanel.h"
 
 namespace Astral {
@@ -48,6 +49,7 @@ namespace Astral {
         MenuBarComponent::Show();
         PropertiesPanel();
         EnvironmentPanel();
+        MaterialEditorPanel::Show();
     }
 
 }

@@ -37,7 +37,7 @@ namespace Astral {
         ImGui::PushID(textureAssetID);
 
 
-        ImGui::Text(selectionName.data());
+        ImGui::Text("%s", selectionName.data());
         ImGui::SameLine();
         ImVec2 availableSpace = ImGui::GetContentRegionAvail();
         ImGui::SetNextItemWidth(availableSpace.x - 40);
