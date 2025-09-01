@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Math/Math.h"
+#include "Core/FixedIntegerTypes.h"
 
 namespace Astral {
 
@@ -17,11 +18,18 @@ namespace Astral {
         float Intensity;
     };
 
+    enum class LightType : uint32
+    {
+        POINT,
+        DIRECTIONAL
+    };
+
     // Defined for renderer use
     struct Light
     {
         alignas(16) Vec3 Position;
         alignas(16) Vec3 LightColor;
+        LightType LightType;
     };
 
 }

@@ -49,6 +49,11 @@ namespace Astral {
             ShowPointLightComponent(ecs, selectedEntity);
         }
 
+        if (ecs.HasComponent<DirectionalLightComponent>(selectedEntity))
+        {
+            ShowDirectionalLightComponent(ecs, selectedEntity);
+        }
+
 
 
         // Add Components
@@ -101,6 +106,16 @@ namespace Astral {
                 }
             }
 
+            if (!ecs.HasComponent<PointLightComponent>(selectedEntity))
+            {
+                canAddAComponent = true;
+                if (ImGui::MenuItem("Directional Light"))
+                {
+                    DirectionalLightComponent directionalLight{};
+                    ecs.AddComponent(selectedEntity, directionalLight);
+                }
+            }
+
             if (!canAddAComponent)
             {
                 ImGui::Text("(All Component Types Used Already)");
@@ -131,6 +146,33 @@ namespace Astral {
             ImGui::InputFloat("##IntensityInput", &pointLight.Intensity);
 
             ecs.AddComponent(entity, pointLight);
+
+            ImGui::TreePop();
+        }
+    }
+
+
+    void ShowDirectionalLightComponent(ECS& ecs, Entity& entity)
+    {
+        if (ImGui::TreeNodeEx("Directional Light##DirectionalLightComponentSceneHierarchy", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            DirectionalLightComponent directionalLight;
+            ECS_Result result = ecs.GetComponent(entity, directionalLight);
+            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
+
+            ImGui::Text("Direction: ");
+            ImGui::SameLine();
+            ImGui::InputFloat3("##DirectionInput", glm::value_ptr(directionalLight.Direction));
+
+            ImGui::Text("Light Color: ");
+            ImGui::SameLine();
+            ImGui::InputFloat3("##LightColorInput", glm::value_ptr(directionalLight.LightColor));
+
+            ImGui::Text("Intensity: ");
+            ImGui::SameLine();
+            ImGui::InputFloat("##IntensityInput", &directionalLight.Intensity);
+
+            ecs.AddComponent(entity, directionalLight);
 
             ImGui::TreePop();
         }

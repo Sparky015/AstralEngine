@@ -15,5 +15,6 @@ namespace Astral {
     void PropertiesPanel();
 
     void ShowPointLightComponent(ECS& ecs, Entity& entity);
+    void ShowDirectionalLightComponent(ECS& ecs, Entity& entity);
 
 }

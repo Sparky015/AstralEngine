@@ -695,7 +695,6 @@ namespace Astral {
             transformComponent.position.y += light->mPosition.y;
             transformComponent.position.z += light->mPosition.z;
 
-
             if (light->mType == aiLightSource_POINT)
             {
                 PointLightComponent pointLight;
@@ -707,6 +706,20 @@ namespace Astral {
                 pointLight.LightColor = calculatedColor;
 
                 ecs.AddComponent(entity, pointLight);
+            }
+            if (light->mType == aiLightSource_DIRECTIONAL)
+            {
+                DirectionalLightComponent directionalLight;
+                Vec3 radiance(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b);
+                float calculatedIntensity = glm::length(radiance);
+                Vec3 calculatedColor = glm::normalize(radiance);
+
+                directionalLight.Intensity = calculatedIntensity;
+                directionalLight.LightColor = calculatedColor;
+
+                directionalLight.Direction = Vec3(light->mDirection.x, light->mDirection.y, light->mDirection.z);
+
+                ecs.AddComponent(entity, directionalLight);
             }
             else if (light->mType == aiLightSource_AMBIENT)
             {

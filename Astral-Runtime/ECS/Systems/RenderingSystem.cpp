@@ -146,7 +146,7 @@ namespace Astral {
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
 
         std::vector<Light> lights;
-        GetPointLightComponents(lights);
+        GetLightComponents(lights);
 
         SceneDescription sceneDescription = {
             .Camera = camera,
@@ -222,27 +222,52 @@ namespace Astral {
         }
     }
 
-    void RenderingSystem::GetPointLightComponents(std::vector<Light>& outLights)
+    void RenderingSystem::GetLightComponents(std::vector<Light>& outLights)
     {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
         const ECS::ComponentView<PointLightComponent>& pointLightDisplay = ecs.GetView<PointLightComponent>();
+        const ECS::ComponentView<DirectionalLightComponent>& directionalLightDisplay = ecs.GetView<DirectionalLightComponent>();
 
         for (Entity entity : ecs)
         {
-            if (!ecs.HasComponent<PointLightComponent>(entity)) { continue; }
             EntityID entityID = entity.GetID();
 
-            const TransformComponent& transformComponent = transformDisplay[entityID];
-            const PointLightComponent& pointLightComponent = pointLightDisplay[entityID];
+            if (ecs.HasComponent<PointLightComponent>(entity))
+            {
 
-            if (pointLightComponent.Intensity == 0) { continue; }
-            if (pointLightComponent.LightColor == Vec3(0.0f)) { continue; }
+                const TransformComponent& transformComponent = transformDisplay[entityID];
+                const PointLightComponent& pointLightComponent = pointLightDisplay[entityID];
 
-            Light light{};
-            light.Position = transformComponent.position;
-            light.LightColor = pointLightComponent.LightColor * pointLightComponent.Intensity;
-            outLights.push_back(light);
+                if (pointLightComponent.Intensity == 0) { continue; }
+                if (pointLightComponent.LightColor == Vec3(0.0f)) { continue; }
+
+                Light light{};
+                light.Position = transformComponent.position;
+                light.LightColor = pointLightComponent.LightColor * pointLightComponent.Intensity;
+                light.LightType = LightType::POINT;
+                outLights.push_back(light);
+            }
+            else if (ecs.HasComponent<DirectionalLightComponent>(entity))
+            {
+                const TransformComponent& transformComponent = transformDisplay[entityID];
+                const DirectionalLightComponent& directionalLightComponent = directionalLightDisplay[entityID];
+
+                if (directionalLightComponent.Intensity == 0) { continue; }
+                if (directionalLightComponent.LightColor == Vec3(0.0f)) { continue; }
+
+                Light light{};
+
+                Vec3 rotationInRadians = glm::radians(transformComponent.rotation);
+                Mat4 rotationMatrix = glm::eulerAngleXYZ(rotationInRadians.x, rotationInRadians.y, rotationInRadians.z);
+                Vec4 directionVec4 = Vec4(directionalLightComponent.Direction, 1.0f);
+                light.Position = glm::normalize(directionVec4 * rotationMatrix);
+
+                light.LightColor = directionalLightComponent.LightColor * directionalLightComponent.Intensity;
+                light.LightType = LightType::DIRECTIONAL;
+                outLights.push_back(light);
+            }
+
         }
     }
 
