@@ -9,7 +9,7 @@ layout (push_constant) uniform PushConstantData {
     float faceIndex;
 } u_PushConstantData;
 
-const float irradianceFaceLength = 16;
+const float irradianceFaceLength = 64;
 const float PI = 3.14159265359;
 
 void main()
@@ -51,7 +51,7 @@ void main()
             // tangent space to world
             vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
 
-            vec3 cubemapSample = textureLod(u_EnvironmentMap, sampleVec, 0.0f).rgb * cos(theta) * sin(theta);
+            vec3 cubemapSample = textureLod(u_EnvironmentMap, sampleVec, 3.0f).rgb * cos(theta) * sin(theta);
 
             if (any(isnan(cubemapSample)) || any(isinf(cubemapSample)))
             {
@@ -68,3 +68,94 @@ void main()
 
     imageStore(u_IrradianceMap, ivec3(pixelCoords, faceIndex), vec4(irradiance, 1.0));
 }
+
+// Helper function to get low discrepancy samples
+float RadicalInverse_VdC(uint bits)
+{
+    bits = (bits << 16u) | (bits >> 16u);
+    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+    return float(bits) * 2.3283064365386963e-10; // / 0x100000000
+}
+
+// Function to get low discrepancy samples
+vec2 Hammersley(uint i, uint N)
+{
+    return vec2(float(i)/float(N), RadicalInverse_VdC(i));
+}
+
+//// --- NEW SAMPLING FUNCTION ---
+//// Generates a sample vector L with a cosine-weighted distribution,
+//// which is optimal for diffuse irradiance.
+vec3 ImportanceSampleCosine(vec2 Xi, vec3 N)
+{
+    // Generate a sample on a disk
+    float r = sqrt(Xi.x);
+    float phi = 2.0 * PI * Xi.y;
+
+    vec3 sampleVec;
+    sampleVec.x = r * cos(phi);
+    sampleVec.y = r * sin(phi);
+    sampleVec.z = sqrt(max(0.0, 1.0 - Xi.x));
+
+    // Transform sample from tangent space to world space
+    vec3 up        = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+    vec3 tangent   = normalize(cross(up, N));
+    vec3 bitangent = cross(N, tangent);
+
+    return tangent * sampleVec.x + bitangent * sampleVec.y + N * sampleVec.z;
+}
+
+//void main()
+//{
+//    uvec2 pixelCoords = gl_GlobalInvocationID.xy;
+//    vec2 uv = (vec2(pixelCoords) + 0.5) / irradianceFaceLength;
+//    uv = uv * 2.0 - 1.0; // Move from [0, 1] to [-1, 1]
+//
+//    vec3 normal;
+//    int faceIndex = int(u_PushConstantData.faceIndex);
+//
+//    switch (faceIndex)
+//    {
+//        case 0: normal = vec3( 1.0, -uv.y, -uv.x); break; // +X
+//        case 1: normal = vec3(-1.0, -uv.y,  uv.x); break; // -X
+//        case 2: normal = vec3( uv.x,  1.0,  uv.y); break; // +Y
+//        case 3: normal = vec3( uv.x, -1.0, -uv.y); break; // -Y
+//        case 4: normal = vec3( uv.x, -uv.y,  1.0); break; // +Z
+//        case 5: normal = vec3(-uv.x, -uv.y, -1.0); break; // -Z
+//    }
+//
+//    normal = normalize(normal);
+//    vec3 N = normal;
+//
+//    const uint SAMPLE_COUNT = 4096u;
+//    vec3 irradiance = vec3(0.0);
+//
+//    for(uint i = 0u; i < SAMPLE_COUNT; ++i)
+//    {
+//        vec2 Xi = Hammersley(i, SAMPLE_COUNT);
+//        vec3 L  = normalize(ImportanceSampleCosine(Xi, N));
+//
+//        float NdotL = max(dot(N, L), 0.0);
+//        if(NdotL > 0.0)
+//        {
+//            // For cosine-weighted importance sampling, the NdotL term in the integral
+//            // and the NdotL in the PDF cancel out, simplifying the calculation.
+//            vec3 cubemapSample = textureLod(u_EnvironmentMap, L, 2.0f).rgb;
+//
+//            if (any(isnan(cubemapSample)) || any(isinf(cubemapSample)))
+//            {
+//                continue; // Skip this sample
+//            }
+//
+//            irradiance += cubemapSample;
+//        }
+//    }
+//
+//    // The final result is the average of the samples scaled by PI.
+//    irradiance = irradiance * PI / float(SAMPLE_COUNT);
+//
+//    imageStore(u_IrradianceMap, ivec3(pixelCoords, faceIndex), vec4(irradiance, 1.0));
+//}
