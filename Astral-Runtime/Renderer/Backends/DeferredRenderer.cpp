@@ -166,6 +166,13 @@ namespace Astral {
                     frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
                 }
 
+                m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
+                m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
+                m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::COMPUTE);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->Irradiance, ShaderStage::COMPUTE);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE);
+                m_EnvironmentMapStorageImagesSet->EndBuildingSet();
+
                 frameContext.IsIrradianceMapCalculationNeeded = true;
             }
 
@@ -494,12 +501,11 @@ namespace Astral {
 
 
         FrameContext& context = m_FrameContexts[0];
-        TextureHandle brdfLut = registry.CreateAsset<Texture>("LUTs/ibl_brdf_lut.dds");
         m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
         m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
         m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(context.EnvironmentMap->Environment, ShaderStage::COMPUTE);
         m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->Irradiance, ShaderStage::COMPUTE);
-        m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(brdfLut, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE);
         m_EnvironmentMapStorageImagesSet->EndBuildingSet();
     }
 
