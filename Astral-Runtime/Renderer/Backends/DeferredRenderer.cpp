@@ -534,6 +534,7 @@ namespace Astral {
 
             for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
             {
+                m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel);
                 UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
                 RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
                 if (mipWidth > 1)  { mipWidth /= 2; }
@@ -882,10 +883,10 @@ namespace Astral {
     }
 
 
-    struct ComputePrefilteredEnvironmentMapUniformData
+    struct ComputePrefilteredEnvironmentMapPushData
     {
-        Mat4 FaceProjection;
-        Mat4 FaceView;
+        uint32 FaceIndex;
+        float Roughness;
     };
 
 
@@ -896,81 +897,36 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-        glm::mat4 captureViews[] =
-        {
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-            glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-         };
+        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
+        ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Prefiltered_Environment_Map.comp");
 
-        float roughness = 0.0f;
-        m_PrefilteredEnvironmentPassUniformData = RendererAPI::GetDevice().CreateUniformBuffer(&roughness, sizeof(roughness));
-        m_PrefilteredEnvironmentPassDataDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_PrefilteredEnvironmentPassDataDescriptorSet->BeginBuildingSet();
-        m_PrefilteredEnvironmentPassDataDescriptorSet->AddDescriptorUniformBuffer(m_PrefilteredEnvironmentPassUniformData, ShaderStage::FRAGMENT);
-        m_PrefilteredEnvironmentPassDataDescriptorSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::FRAGMENT);
-        m_PrefilteredEnvironmentPassDataDescriptorSet->EndBuildingSet();
-
-
-        Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
-        cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
-
-        Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Compute_Prefiltered_Environment_Map.frag");
-        environmentMapMaterial.DescriptorSet = m_PrefilteredEnvironmentPassDataDescriptorSet;
-
-
-        PipelineStateHandle cubePipeline = m_PipelineStateCache.GetGraphicsPipeline(m_IrradianceCalcPass, environmentMapMaterial, cubeMesh, 0);
-        cubePipeline->BindPipeline(commandBuffer);
-
-        cubePipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        cubePipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
-
-
-        cubeMesh.VertexBuffer->Bind(commandBuffer);
-        cubeMesh.IndexBuffer->Bind(commandBuffer);
-
-
-        ComputePrefilteredEnvironmentMapUniformData computePrefilteredEnvironmentMapUniformData;
-        computePrefilteredEnvironmentMapUniformData.FaceProjection = captureProjection;
+        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
+        computePipeline->BindPipeline(commandBuffer);
+        computePipeline->BindDescriptorSet(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
 
         uint32 mipWidth = mipDimensions.x;
         uint32 mipHeight = mipDimensions.y;
 
-        constexpr uint32 numFaces = 6;
         float totalMipLevels = frameContext.EnvironmentMap->Environment->GetNumMipLevels();
+        float roughness = mipLevel / totalMipLevels;
 
-        cubePipeline->SetViewportAndScissor(commandBuffer, Vec2(mipWidth, mipHeight));
-        for (int j = 0; j < numFaces; j++)
-        {
-            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = RendererAPI::GetDevice().CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
-            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(mipWidth, mipHeight);
-            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureMipMap(frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, j);
-            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
-        }
+        ComputePrefilteredEnvironmentMapPushData prefilteredEnvironmentMapPushData;
+        prefilteredEnvironmentMapPushData.Roughness = roughness;
 
-        roughness = mipLevel / totalMipLevels;
-        m_PrefilteredEnvironmentPassUniformData->CopyDataToBuffer(&roughness, sizeof(roughness));
-
+        constexpr uint32 numFaces = 6;
         for (uint32 i = 0; i < numFaces; i++)
         {
-            const FramebufferHandle& faceFramebuffer = frameContext.PrefilteredEnvironmentMapPassFramebuffers[i];
-            m_IrradianceCalcPass->BeginRenderPass(commandBuffer, faceFramebuffer);
+            prefilteredEnvironmentMapPushData.FaceIndex = i;
 
-            computePrefilteredEnvironmentMapUniformData.FaceView = captureViews[i];
+            RendererAPI::PushConstants(commandBuffer, computePipeline, &prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
 
-            RendererAPI::PushConstants(commandBuffer, cubePipeline, &computePrefilteredEnvironmentMapUniformData, sizeof(computePrefilteredEnvironmentMapUniformData));
-
-            RendererAPI::DrawElementsIndexed(commandBuffer, cubeMesh.IndexBuffer);
-
-            m_IrradianceCalcPass->EndRenderPass(commandBuffer);
+            uint32 groupSizeX = std::max(mipWidth / 32, 1u);
+            uint32 groupSizeY = std::max(mipHeight / 32, 1u);
+            RendererAPI::Dispatch(commandBuffer, groupSizeX, groupSizeY, 1);
         }
 
+        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         RendererAPI::EndLabel(commandBuffer);
     }
