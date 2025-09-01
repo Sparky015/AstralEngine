@@ -21,6 +21,7 @@ namespace Astral::EnvironmentMapLoader {
         EnvironmentMap environmentMap;
         environmentMap.Environment = nullptr;
         environmentMap.Irradiance = nullptr;
+        environmentMap.PrefilteredEnvironment = nullptr;
 
         if (filePath.extension() == ".hdr") // Load cubemap
         {
@@ -60,23 +61,38 @@ namespace Astral::EnvironmentMapLoader {
             //     stbi_write_hdr(outFilePath.c_str(), faceSideLength, faceSideLength, 4, (float*)cubemap[i].GetData());
             // }
 
-            TextureCreateInfo textureCreateInfo = {
+            TextureCreateInfo environmentTextureCreateInfo = {
                 .Format = ImageFormat::R16G16B16A16_SFLOAT,
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
                 .Dimensions = UVec2(faceSideLength, faceSideLength),
                 .ImageData = (uint8*)cubemapData,
                 .ImageDataLength = totalCubemapSize,
-                .MipMapCount = Texture::CalculateMipMapLevels(faceSideLength, faceSideLength), // Create mips for specular IBL
-                .GenerateMipMaps = false
+                .MipMapCount = Texture::CalculateMipMapLevels(faceSideLength, faceSideLength), // Create mips to help generate irradiance and prefiltered environment
+                .GenerateMipMaps = true
             };
 
-             environmentMap.Environment = Texture::CreateCubemap(textureCreateInfo);
+             environmentMap.Environment = Texture::CreateCubemap(environmentTextureCreateInfo);
 
 
             stbi_image_free(equirectangularData);
             delete cubemapData;
+
+
+            TextureCreateInfo prefilteredEnvironmentCreateInfo = {
+                .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
+                .Dimensions = UVec2(faceSideLength, faceSideLength),
+                .ImageData = (uint8*)nullptr,
+                .ImageDataLength = totalCubemapSize,
+                .MipMapCount = Texture::CalculateMipMapLevels(faceSideLength, faceSideLength), // Create mips for specular IBL
+                .GenerateMipMaps = true
+            };
+
+             environmentMap.PrefilteredEnvironment = Texture::CreateCubemap(prefilteredEnvironmentCreateInfo);
         }
+
 
         if (environmentMap.Environment == nullptr) { return nullptr; }
 

@@ -15,6 +15,7 @@ namespace Astral {
     {
         TextureHandle Environment;
         TextureHandle Irradiance;
+        TextureHandle PrefilteredEnvironment;
 
         AssetType GetAssetType() override { return GetStaticAssetType(); };
         static AssetType GetStaticAssetType() { return AssetType::EnvironmentMap; }

@@ -58,6 +58,19 @@ vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)
     return normalize(sampleVec);
 }
 
+float NdfGGX_Pdf(float NdotH, float roughness)
+{
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH2 = NdotH * NdotH;
+
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / denom;
+}
+
 
 void main()
 {
@@ -65,9 +78,15 @@ void main()
     vec3 R = N;
     vec3 V = R;
 
-    const uint SAMPLE_COUNT = 4096u;
+    const uint SAMPLE_COUNT = 1024;
     float totalWeight = 0.0;
     vec3 prefilteredColor = vec3(0.0);
+
+    float totalMips = textureQueryLevels(u_EnvironmentMap) - 1;
+    float lodLevel = u_Data.roughness * totalMips + 2.5;
+    lodLevel = clamp(lodLevel, 0, totalMips);
+    vec2 inputSize = vec2(textureSize(u_EnvironmentMap, 0));
+    float texelSolidAngle = 4.0 * PI / (6.0 * inputSize.x * inputSize.y);
 
     for(uint i = 0u; i < SAMPLE_COUNT; ++i)
     {
@@ -78,11 +97,20 @@ void main()
         float NdotL = max(dot(N, L), 0.0);
         if(NdotL > 0.0)
         {
-            vec3 environmentSample = texture(u_EnvironmentMap, L).rgb * NdotL;
+            float NdotH = max(dot(N, H), 0.0);
+            float VdotH = max(dot(V, H), 0.0);
+            float lodRoughness = max(u_Data.roughness, 0.04); // Use a slightly larger roughness for LOD calc
 
-            if (any(isnan(prefilteredColor)) || any(isinf(prefilteredColor)))
+            float pdf = NdfGGX_Pdf(NdotH, lodRoughness) * 0.25;
+            float sampleSolidAngle = 1.0 / (float(SAMPLE_COUNT) * pdf);
+            float mipLevel = 0.5 * log2(sampleSolidAngle / texelSolidAngle) + 1;
+
+            vec3 environmentSample = textureLod(u_EnvironmentMap, L, mipLevel).rgb * NdotL;
+            environmentSample = clamp(environmentSample, 0, 65000.0f); // Clamp to the max half float value to avoid INF values
+
+            if (any(isnan(environmentSample)) || any(isinf(environmentSample)))
             {
-                continue; // Skip this sample
+                continue;
             }
 
             prefilteredColor += environmentSample;

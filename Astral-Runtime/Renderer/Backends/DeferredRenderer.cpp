@@ -102,7 +102,7 @@ namespace Astral {
     }
 
 
-    static constexpr uint32 EnvironmentMapIrradianceSize = 16;
+    static constexpr uint32 EnvironmentMapIrradianceSize = 64;
 
     void DeferredRenderer::BeginScene(const SceneDescription& sceneDescription)
     {
@@ -148,7 +148,7 @@ namespace Astral {
         if (sceneDescription.EnvironmentMap)
         {
             frameContext.EnvironmentMap = sceneDescription.EnvironmentMap;
-            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->Environment);
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->PrefilteredEnvironment);
 
             if (!sceneDescription.EnvironmentMap->Irradiance)
             {
@@ -162,7 +162,7 @@ namespace Astral {
                 {
                     frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = device.CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
                     frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize);
-                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->Environment, j);
+                    frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureLayer(sceneDescription.EnvironmentMap->PrefilteredEnvironment, j);
                     frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
                 }
 
@@ -479,7 +479,7 @@ namespace Astral {
 
             context.EnvironmentMapDescriptorSet = device.CreateDescriptorSet();
             context.EnvironmentMapDescriptorSet->BeginBuildingSet();
-            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Environment, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->PrefilteredEnvironment, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(brdfLut, ShaderStage::FRAGMENT);
             context.EnvironmentMapDescriptorSet->EndBuildingSet();
@@ -522,16 +522,16 @@ namespace Astral {
         {
             RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
 
-            uint32 totalMipLevels = frameContext.EnvironmentMap->Environment->GetNumMipLevels();
-            uint32 mipWidth = frameContext.EnvironmentMap->Environment->GetWidth();
-            uint32 mipHeight = frameContext.EnvironmentMap->Environment->GetHeight();
+            uint32 totalMipLevels = frameContext.EnvironmentMap->PrefilteredEnvironment->GetNumMipLevels();
+            uint32 mipWidth = frameContext.EnvironmentMap->PrefilteredEnvironment->GetWidth();
+            uint32 mipHeight = frameContext.EnvironmentMap->PrefilteredEnvironment->GetHeight();
 
-            for (uint32 mipLevel = 1; mipLevel < totalMipLevels; mipLevel++)
+            for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
             {
-                if (mipWidth > 1)  { mipWidth /= 2; }
-                if (mipHeight > 1) { mipHeight /= 2; }
                 UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
                 RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
+                if (mipWidth > 1)  { mipWidth /= 2; }
+                if (mipHeight > 1) { mipHeight /= 2; }
             }
             frameContext.IsIrradianceMapCalculationNeeded = false;
         }
@@ -866,7 +866,8 @@ namespace Astral {
             RendererAPI::PushConstants(commandBuffer, computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
 
             // Dispatching 2x2 blocks as the local layout is 8x8 and the irradiance faces are 16x16
-            RendererAPI::Dispatch(commandBuffer, 2, 2, 1);
+            uint32 groupCountSize = EnvironmentMapIrradianceSize / 8;
+            RendererAPI::Dispatch(commandBuffer, groupCountSize, groupCountSize, 1);
         }
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
@@ -909,9 +910,6 @@ namespace Astral {
         m_PrefilteredEnvironmentPassDataDescriptorSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::FRAGMENT);
         m_PrefilteredEnvironmentPassDataDescriptorSet->EndBuildingSet();
 
-        m_PrefilteredEnvironmentPassDataDescriptorSet->UpdateImageSamplerBinding(1, frameContext.EnvironmentMap->Environment, 0);
-
-
 
         Mesh& cubeMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubeMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap_Write.vert");
@@ -946,7 +944,7 @@ namespace Astral {
         {
             frameContext.PrefilteredEnvironmentMapPassFramebuffers[j] = RendererAPI::GetDevice().CreateFramebuffer(m_IrradianceCalcPass); // The irradiance render pass has the same definition needed here
             frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->BeginBuildingFramebuffer(mipWidth, mipHeight);
-            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureMipMap(frameContext.EnvironmentMap->Environment, mipLevel, j);
+            frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->AttachTextureMipMap(frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, j);
             frameContext.PrefilteredEnvironmentMapPassFramebuffers[j]->EndBuildingFramebuffer();
         }
 
