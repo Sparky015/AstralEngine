@@ -37,7 +37,14 @@ void main()
 
     if (u_ModelData.hasNormalMap != 0)
     {
-        tangentSpaceNormal = normalize(tangentSpaceNormal * 2.0 - 1.0); // Convert from [0, 1] to [-1, 1] and normalize
+        tangentSpaceNormal = tangentSpaceNormal * 2.0 - 1.0;
+
+        if (u_ModelData.hasDirectXNormals != 0)
+        {
+            tangentSpaceNormal.g = tangentSpaceNormal.g * -1.0f;
+        }
+        tangentSpaceNormal = normalize(tangentSpaceNormal);
+
         vec3 N = normalize(v_Normals);
         vec3 T = normalize(v_Tangents);
         vec3 B = normalize(v_Bitangents);
@@ -48,7 +55,7 @@ void main()
 
         if (u_ModelData.hasDirectXNormals != 0)
         {
-            normal.g *= -1.0f;
+            normal = normal * -1;
         }
     }
 

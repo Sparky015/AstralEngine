@@ -4,6 +4,8 @@ layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normals;
 layout(location = 2) in vec3 a_Tangents;
 layout(location = 3) in vec3 a_Bitangents;
+layout(location = 4) in vec2 a_UVs;
+
 
 layout (set = 0, binding = 0) uniform SceneData {
     mat4 cameraViewProjection;

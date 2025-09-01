@@ -17,7 +17,8 @@ namespace Astral {
         Texture,
         Material,
         Shader,
-        Mesh
+        Mesh,
+        EnvironmentMap
     };
 
     using AssetID = size_t;
@@ -46,6 +47,7 @@ namespace Astral {
             case AssetType::Material: return "Material";
             case AssetType::Shader: return "Shader";
             case AssetType::Mesh: return "Mesh";
+            case AssetType::EnvironmentMap: return "Environment Map";
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }

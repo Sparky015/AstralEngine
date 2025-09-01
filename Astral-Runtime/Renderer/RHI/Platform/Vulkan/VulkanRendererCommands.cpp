@@ -14,6 +14,8 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Renderer/RHI/RendererAPI.h"
+
 namespace Astral {
 
     void VulkanRendererCommands::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
@@ -51,8 +53,15 @@ namespace Astral {
     }
 
 
+    void VulkanRendererCommands::Dispatch(CommandBufferHandle commandBufferHandle, uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
+    {
+        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
+        vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
+    }
+
+
     void VulkanRendererCommands::PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle pipelineStateObjectHandle,
-                                                    void* data, uint32 sizeInBytes)
+                                               void* data, uint32 sizeInBytes)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkPipelineLayout pipelineLayout = (VkPipelineLayout)pipelineStateObjectHandle->GetPipelineLayout();
@@ -160,6 +169,20 @@ namespace Astral {
             ImageLayout newLayout = imageMemoryBarrier.NewLayout;
             imageMemoryBarrier.Image->UpdateLayout(newLayout);
         }
+    }
+
+
+    void VulkanRendererCommands::ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback)
+    {
+        CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
+
+        commandBufferHandle->BeginRecording();
+        callback(commandBufferHandle);
+        commandBufferHandle->EndRecording();
+
+        CommandQueueHandle queueHandle = RendererAPI::GetDevice().GetAsyncCommandQueue();
+        queueHandle->SubmitSync(commandBufferHandle);
+        queueHandle->WaitIdle();
     }
 
 

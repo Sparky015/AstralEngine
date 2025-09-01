@@ -31,13 +31,17 @@ namespace Astral {
         explicit VulkanDevice(const VulkanDeviceDesc& desc);
         ~VulkanDevice() override;
 
+        void Init() override;
+
         Swapchain& GetSwapchain() override { return *m_Swapchain; }
         CommandBufferHandle AllocateCommandBuffer() override;
-        CommandQueueHandle GetCommandQueue() override;
+        CommandQueueHandle GetPrimaryCommandQueue() override;
+        CommandQueueHandle GetAsyncCommandQueue() override;
         RenderPassHandle CreateRenderPass() override;
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override;
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
-        PipelineStateHandle CreatePipelineState(const PipelineStateCreateInfo& pipelineStateCreateInfo) override;
+        PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo) override;
+        PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override;
         VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout) override;
         IndexBufferHandle CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes) override;
         BufferHandle CreateStorageBuffer(void* data, uint32 size) override;
@@ -46,6 +50,10 @@ namespace Astral {
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
+
+        bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
+        bool IsAnisotropySupported() override;
+        float GetMaxAnisotropySupported() override;
 
         void WaitIdle() override;
 

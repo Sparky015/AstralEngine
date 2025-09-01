@@ -17,7 +17,7 @@ namespace Astral {
 
     static constexpr uint32 MaxPushConstantRange = 128;
 
-    struct PipelineStateCreateInfo
+    struct GraphicsPipelineStateCreateInfo
     {
         RenderPassHandle RenderPass;
         ShaderHandle VertexShader;
@@ -28,16 +28,29 @@ namespace Astral {
         bool IsAlphaBlended;
     };
 
+    struct ComputePipelineStateCreateInfo
+    {
+        ShaderHandle ComputeShader;
+        const std::vector<DescriptorSetHandle>& DescriptorSets;
+    };
+
+    enum class PipelineType
+    {
+        GRAPHICS,
+        COMPUTE
+    };
+
     class PipelineState
     {
     public:
         virtual ~PipelineState() = default;
 
-        virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BindPipeline(CommandBufferHandle commandBufferHandle) = 0;
         virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
 
         virtual void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) = 0;
 
+        virtual PipelineType GetPipelineType() = 0;
         virtual void* GetPipelineLayout() = 0;
         virtual void* GetHandleHandle() = 0;
     };

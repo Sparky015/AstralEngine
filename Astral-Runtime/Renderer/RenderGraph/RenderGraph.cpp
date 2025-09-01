@@ -155,9 +155,9 @@ namespace Astral {
                 imageMemoryBarrier.ImageSubresourceRange = {
                     .AspectMask = attachmentTexture->GetImageAspect(),
                     .BaseMipLevel = 0,
-                    .LevelCount = 1,
+                    .LevelCount = attachmentTexture->GetNumMipLevels(),
                     .BaseArrayLayer = 0,
-                    .LayerCount = 1
+                    .LayerCount = attachmentTexture->GetNumLayers()
                 };
 
                 pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
@@ -404,7 +404,7 @@ namespace Astral {
             imageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = externalAttachmentTexture->GetImageAspect(),
                 .BaseMipLevel = 0,
-                .LevelCount = 1,
+                .LevelCount = externalAttachmentTexture->GetNumMipLevels(),
                 .BaseArrayLayer = 0,
                 .LayerCount = externalAttachmentTexture->GetNumLayers()
             };
@@ -621,7 +621,9 @@ namespace Astral {
                         .Layout = localAttachment.InitialLayout,
                         .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
                         .Dimensions = passResourceDimensions,
-                        .ImageData = nullptr
+                        .ImageData = nullptr,
+                        .LayerCount = 1,
+                        .MipMapCount = 1,
                     };
 
 

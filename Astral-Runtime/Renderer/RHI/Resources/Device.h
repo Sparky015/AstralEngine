@@ -24,14 +24,17 @@ namespace Astral {
     public:
         virtual ~Device() = default;
 
+        virtual void Init() = 0;
+
         virtual Swapchain& GetSwapchain() = 0;
         virtual CommandBufferHandle AllocateCommandBuffer() = 0;
-        virtual CommandQueueHandle GetCommandQueue() = 0;
+        virtual CommandQueueHandle GetPrimaryCommandQueue() = 0;
+        virtual CommandQueueHandle GetAsyncCommandQueue() = 0;
         virtual RenderPassHandle CreateRenderPass() = 0;
         virtual FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) = 0;
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
-        virtual PipelineStateHandle CreatePipelineState(const PipelineStateCreateInfo& pipelineStateObjectCreateInfo
-        ) = 0;
+        virtual PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) = 0;
+        virtual PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) = 0;
         virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout) = 0;
         virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes) = 0;
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
@@ -40,6 +43,10 @@ namespace Astral {
         virtual TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
+
+        virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
+        virtual bool IsAnisotropySupported() = 0;
+        virtual float GetMaxAnisotropySupported() = 0;
 
 
         virtual void WaitIdle() = 0;

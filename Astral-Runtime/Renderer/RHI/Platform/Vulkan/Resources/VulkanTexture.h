@@ -32,12 +32,15 @@ namespace Astral {
         VkDevice Device;
         VkPhysicalDeviceMemoryProperties PhysicalDeviceMemoryProperties;
         unsigned char* ImageData;
+        uint32 ImageDataLength;
         ImageFormat ImageFormat;
         ImageLayout ImageLayout;
         ImageUsageFlags ImageUsageFlags;
         uint32 ImageWidth;
         uint32 ImageHeight;
         uint32 NumLayers;
+        uint32 NumMipLevels;
+        bool GenerateMipMaps;
         TextureType TextureType;
     };
 
@@ -100,6 +103,41 @@ namespace Astral {
         uint32 GetNumLayers() override { return m_NumLayers; }
 
         /**
+         * @brief  Gets the number of mipmaps that the texture has
+         * @return The number of mipmaps that the texture has
+         */
+        uint32 GetNumMipLevels() override { return m_NumMipLevels; }
+
+        /**
+         * @brief  Gets the native image view of a specific layer in the texture
+         * @return The native image view of a specific layer in the texture or nullptr if the layer num is not valid
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        void* GetNativeLayerImageView(uint32 layer) override
+        {
+            if (layer > m_NumLayers) { return nullptr; }
+            if (m_NumLayers == 1) { return m_ImageView; }
+            return m_LayerImageViews[layer];
+        }
+
+        /**
+         * @brief  Gets the native image view of a specific mip level in the texture
+         * @return The native image view of a specific mip level in the texture
+         * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
+         */
+        void* GetNativeMipMapImageView(uint32 mipLevel) override;
+
+        /**
+         * @brief  Gets the native image view handle of the texture at a specific layer and mip level
+         * @param layer The layer to view the image at
+         * @param mipLevel The mip level to view the image at
+         * @return The native image view of the texture
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
+         */
+        void* GetNativeImageView(uint32 layer, uint32 mipLevel) override;
+
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native vulkan sampler handle (VkSampler)
@@ -156,8 +194,10 @@ namespace Astral {
         /**
          * @brief Uploads data to the device local texture through a staging buffer
          * @param data The data to upload
+         * @param dataLength
+         * @param generateMipMaps
          */
-        void UploadDataToTexture(uint8* data);
+        void UploadDataToTexture(uint8* data, uint32 dataLength, bool generateMipMaps);
 
         /**
          * @brief Transitions the current layout to the new specified layout
@@ -169,8 +209,9 @@ namespace Astral {
         /**
          * @brief Copies the texture data from the staging buffer to the device local texture
          * @param stagingBuffer The staging buffer that contains the texture data
+         * @param generateMipMaps
          */
-        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer);
+        void CopyFromStagingBuffer(VulkanBuffer& stagingBuffer, bool generateMipMaps);
 
         /**
          * @brief Creates the VkImageSampler for the texture
@@ -199,10 +240,16 @@ namespace Astral {
 
         VkImage m_Image;
         VkDeviceMemory m_ImageMemory;
+        uint32 m_AllocationSize;
         VkImageView m_ImageView;
+        ImageUsageFlags m_ImageUsageFlags;
+        std::vector<VkImageView> m_LayerImageViews; // All layer image views are at mip 0
+        std::map<std::pair<uint32, uint32>, VkImageView> m_LayerMipImageViews;
+
         VkSampler m_Sampler;
         ImageAspectFlags m_ImageAspect;
         uint32 m_NumLayers;
+        uint32 m_NumMipLevels;
         TextureType m_TextureType;
 
         bool m_IsSwapchainOwned;

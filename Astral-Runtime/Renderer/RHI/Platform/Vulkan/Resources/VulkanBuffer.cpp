@@ -89,7 +89,7 @@ namespace Astral {
         vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_PrimaryBuffer, 1, &bufferCopy);
         commandBufferHandle->EndRecording();
 
-        CommandQueueHandle commandQueueHandle = device.GetCommandQueue();
+        CommandQueueHandle commandQueueHandle = device.GetPrimaryCommandQueue();
         commandQueueHandle->SubmitSync(commandBufferHandle);
         commandQueueHandle->WaitIdle();
     }

@@ -82,7 +82,9 @@ namespace Astral {
 
             FramebufferHandle WindowFramebuffer;
 
-            DescriptorSetHandle EnvironmentMap;
+            Ref<EnvironmentMap> EnvironmentMap;
+            DescriptorSetHandle EnvironmentMapDescriptorSet;
+            bool IsIrradianceMapCalculationNeeded;
         };
 
         void BuildRenderGraph();
@@ -99,6 +101,9 @@ namespace Astral {
         void EnvironmentMapPass();
         void ToneMappingPass();
 
+        void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
+        void ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions);
+
 
         RendererSettings m_RendererSettings{};
         RenderGraph m_RenderGraph;
@@ -107,6 +112,7 @@ namespace Astral {
         uint32 m_CurrentFrameIndex = -1;
         RenderPassHandle m_MainRenderPass;
         RenderPassHandle m_ImGuiRenderPass;
+        RenderPassHandle m_IrradianceCalcPass;
         EventListener<FramebufferResizedEvent> m_WindowResizedListener{[](FramebufferResizedEvent){}};
         EventPublisher<ViewportResizedEvent> m_ViewportResizedPublisher;
         bool m_IsSceneStarted = false;
@@ -118,6 +124,7 @@ namespace Astral {
         ShaderHandle m_GeometryPassShader;
         ShaderHandle m_LightingShader;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
         float m_SceneExposure{};
     };
 

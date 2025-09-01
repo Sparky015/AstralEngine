@@ -10,6 +10,7 @@
 #include "Renderer/RHI/RendererCommands.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 #include "stb_image.h"
 #include "gli/gli/gli.hpp"
@@ -17,6 +18,37 @@
 namespace Astral {
 
     ImageFormat ConvertGliImageFormatToAstralImageFormat(gli::format imageFormat);
+
+
+    uint32 Texture::CalculateMipMapLevels(uint32 width, uint32 height)
+    {
+        if (width == 0 || height == 0) return 1;
+        return static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
+    }
+
+
+    uint32 Texture::CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers)
+    {
+        uint32 levelSize = 0;
+        if (IsCompressed(imageFormat))
+        {
+            uint32 bytesPerBlock = GetBytesPerTexel(imageFormat);
+            Vec2 blockExtent = GetCompressedFormatBlockExtent(imageFormat);
+            uint32 numBlocksX = (width + blockExtent.x - 1) / blockExtent.x;
+            uint32 numBlocksY = (height + blockExtent.y - 1) / blockExtent.y;
+            uint32 layerSize = numBlocksX * numBlocksY * bytesPerBlock;
+            levelSize = numLayers * layerSize;
+        }
+        else
+        {
+            uint32 bytesPerPixel = GetBytesPerTexel(imageFormat);
+            uint32 layerSize = width * height * depth * bytesPerPixel;
+            levelSize = numLayers * layerSize;
+        }
+
+        return levelSize;
+    }
+
 
     TextureHandle Texture::CreateTexture(const std::filesystem::path& filePath)
     {
@@ -26,6 +58,7 @@ namespace Astral {
         ImageFormat imageFormat;
         unsigned char* data;
 
+        TextureCreateInfo textureCreateInfo;
         gli::texture texture; // Only used if the file extension is .dds or .ktx
 
 
@@ -46,12 +79,20 @@ namespace Astral {
             gli::format gliImageFormat = texture.format();
             imageFormat = ConvertGliImageFormatToAstralImageFormat(gliImageFormat);
             if (texture.empty()) { data = nullptr; }
+
+            textureCreateInfo.ImageDataLength = texture.size();
+            textureCreateInfo.LayerCount = texture.layers();
+            textureCreateInfo.MipMapCount = texture.levels();
         }
         else
         {
             stbi_set_flip_vertically_on_load(true);
             data = stbi_load(filePath.string().c_str(), &width, &height, &bpp, 4);
             imageFormat = ImageFormat::R8G8B8A8_SRGB;
+
+            textureCreateInfo.ImageDataLength = width * height * bpp;
+            textureCreateInfo.LayerCount = 1;
+            textureCreateInfo.MipMapCount = Texture::CalculateMipMapLevels(width, height);
         }
 
         if (!data)
@@ -60,7 +101,16 @@ namespace Astral {
             return nullptr;
         }
 
-        TextureHandle textureHandle = Texture::CreateTexture(data, width, height, imageFormat);
+        textureCreateInfo.Format = imageFormat;
+        textureCreateInfo.Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+        textureCreateInfo.UsageFlags = IMAGE_USAGE_SAMPLED_BIT;
+        textureCreateInfo.Dimensions.x = width;
+        textureCreateInfo.Dimensions.y = height;
+        textureCreateInfo.ImageData = data;
+        textureCreateInfo.GenerateMipMaps = true;
+
+
+        TextureHandle textureHandle = Texture::CreateTexture(textureCreateInfo);
 
         if (!(filePath.extension() == ".dds" || filePath.extension() == ".ktx"))
         {
@@ -71,12 +121,26 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::CreateCubemap(const TextureCreateInfo& textureCreateInfo)
+    {
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
+            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
+            default: ASTRAL_ERROR("Invalid Renderer API");
+        }
+    }
+
+
+    GraphicsRef<Texture> Texture::CreateCubemap(void* data, uint32 width, uint32 height, ImageFormat imageFormat, ImageUsageFlags imageUsageFlags)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | imageUsageFlags,
             .Dimensions = UVec2(width, height),
             .ImageData = (uint8*)data,
         };
@@ -98,7 +162,7 @@ namespace Astral {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
+            .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
         };
@@ -115,25 +179,18 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::CreateTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::CreateTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        ASSERT(data != nullptr, "Tried to create texture with nullptr!")
-        ASSERT(width != 0, "Tried to create texture with width of zero!")
-        ASSERT(height != 0, "Tried to create texture with height of zero!")
+        ASSERT(textureCreateInfo.ImageData != nullptr, "Tried to create texture with nullptr!")
+        ASSERT(textureCreateInfo.Dimensions.x != 0, "Tried to create texture with width of zero!")
+        ASSERT(textureCreateInfo.Dimensions.y != 0, "Tried to create texture with height of zero!")
 
-        if (!data)
+        if (!textureCreateInfo.ImageData)
         {
             WARN("Failed to load texture!")
             return nullptr;
         }
 
-        TextureCreateInfo textureCreateInfo = {
-            .Format = imageFormat,
-            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .UsageFlags = ImageUsageFlags::SAMPLED_BIT,
-            .Dimensions = UVec2(width, height),
-            .ImageData = (unsigned char*)data,
-        };
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 

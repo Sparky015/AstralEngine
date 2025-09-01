@@ -6,6 +6,7 @@
 
 #include "TextureLoader.h"
 
+#include "Core/Containers/Bitmap.h"
 #include "Core/SmartPointers.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
@@ -17,7 +18,6 @@
 #include <numbers>
 #include <cmath>
 
-#include "Core/Containers/Bitmap.h"
 
 namespace Astral {
 
@@ -35,11 +35,11 @@ namespace Astral {
 
             stbi_set_flip_vertically_on_load(true);
             float* equirectangularData = stbi_loadf(filePath.string().c_str(), &width, &height, &bpp, 4);
-            ImageFormat imageFormat = ImageFormat::R32G32B32A32_SFLOAT;
+            ImageFormat fileImageFormat = ImageFormat::R32G32B32A32_SFLOAT;
 
 
             // Convert the equirectangular image to a cubemap
-            Bitmap equirectangularImage = Bitmap(equirectangularData, imageFormat, width, height);
+            Bitmap equirectangularImage = Bitmap(equirectangularData, fileImageFormat, width, height);
             std::vector<Bitmap> cubemap;
 
             ConvertEquirectangularToCubemap(equirectangularImage, cubemap);
@@ -65,11 +65,11 @@ namespace Astral {
             //     stbi_write_hdr(outFilePath.c_str(), faceSideLength, faceSideLength, 4, (float*)cubemap[i].GetData());
             // }
 
-            texture = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, ImageFormat::R16G16B16A16_SFLOAT);
+            texture = Texture::CreateCubemap(cubemapData, faceSideLength, faceSideLength, ImageFormat::R16G16B16A16_SFLOAT, 0);
 
 
             stbi_image_free(equirectangularData);
-            delete cubemapData;
+            delete[] cubemapData;
         }
         else if (filePath.extension() == ".cube") // Load LUT (Look Up Table)
         {

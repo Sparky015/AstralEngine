@@ -15,7 +15,7 @@
 
 namespace Astral {
 
-    struct VulkanPipelineStateDesc
+    struct VulkanGraphicsPipelineStateDesc
     {
         VkDevice Device;
         RenderPassHandle RenderPass;
@@ -32,23 +32,22 @@ namespace Astral {
     class VulkanPipelineState : public PipelineState
     {
     public:
-        explicit VulkanPipelineState(const VulkanPipelineStateDesc& desc);
+        explicit VulkanPipelineState(const VulkanGraphicsPipelineStateDesc& desc);
         ~VulkanPipelineState() override;
 
-        void Bind(CommandBufferHandle commandBufferHandle) override;
+        void BindPipeline(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
+
 
         void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
 
-        void* GetPipelineLayout() override {return m_PipelineLayout; }
+        PipelineType GetPipelineType() override { return PipelineType::GRAPHICS; }
+        void* GetPipelineLayout() override { return m_PipelineLayout; }
         void* GetHandleHandle() override { return m_Pipeline; }
 
     private:
 
-        void CreatePipelineStateObject();
-        void DestroyPipelineStateObject();
-
-        void SetShaderStages();
+        void SetGraphicsShaderStages();
         void SetVertexInputState();
         void SetInputAssemblyState();
         void SetViewportState();
@@ -58,10 +57,16 @@ namespace Astral {
         void SetColorBlendState();
         void SetDynamicState();
 
-        void CreatePipelineLayout();
+
+        void CreateGraphicsPipelineLayout();
         void DestroyPipelineLayout();
 
-        VulkanPipelineStateDesc m_Description;
+        void CreateGraphicsPipelineStateObject();
+        void DestroyPipelineState();
+
+
+        VkDevice m_Device;
+        VulkanGraphicsPipelineStateDesc m_GraphicsDescription;
 
         struct PipelineCreateInfos
         {

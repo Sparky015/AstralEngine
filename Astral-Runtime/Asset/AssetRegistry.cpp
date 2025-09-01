@@ -7,6 +7,7 @@
 #include "AssetRegistry.h"
 
 #include "Debug/Utilities/Error.h"
+#include "Loaders/EnvironmentMapLoader.h"
 #include "Loaders/TextureLoader.h"
 #include "Loaders/MaterialLoader.h"
 #include "Loaders/MeshLoader.h"
@@ -97,6 +98,7 @@ namespace Astral {
             case AssetType::Material: return MaterialLoader::LoadAsset(filePath);
             case AssetType::Shader: return ShaderLoader::LoadAsset(filePath);
             case AssetType::Mesh: return MeshLoader::LoadAsset(filePath);
+            case AssetType::EnvironmentMap: return EnvironmentMapLoader::LoadAsset(filePath);
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }

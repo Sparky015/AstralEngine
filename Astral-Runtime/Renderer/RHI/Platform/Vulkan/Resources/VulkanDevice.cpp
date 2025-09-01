@@ -15,6 +15,7 @@
 #include "VulkanDescriptorSet.h"
 #include "VulkanFramebuffer.h"
 #include "VulkanPipelineState.h"
+#include "VulkanComputePipelineState.h"
 #include "VulkanShader.h"
 #include "VulkanVertexBuffer.h"
 
@@ -35,9 +36,6 @@ namespace Astral {
             m_CommandPool(VK_NULL_HANDLE),
             m_Swapchain(nullptr)
     {
-        CreateDevice();
-        CreateCommandPool();
-        m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
 
@@ -46,6 +44,14 @@ namespace Astral {
         DestroySwapchain();
         DestroyMemoryPool();
         DestroyDevice();
+    }
+
+
+    void VulkanDevice::Init()
+    {
+        CreateDevice();
+        CreateCommandPool();
+        m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
 
@@ -80,7 +86,7 @@ namespace Astral {
     }
 
 
-    GraphicsRef<CommandQueue> VulkanDevice::GetCommandQueue()
+    GraphicsRef<CommandQueue> VulkanDevice::GetPrimaryCommandQueue()
     {
         VulkanCommandQueueDesc commandQueueDesc = {
             .Device = m_Device,
@@ -89,6 +95,21 @@ namespace Astral {
             .QueueIndex = 0
         };
 
+        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+    }
+
+
+    CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
+    {
+        uint32 asyncQueueIndex = 1;
+        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
+
+        VulkanCommandQueueDesc commandQueueDesc = {
+            .Device = m_Device,
+            .Swapchain = *m_Swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = asyncQueueIndex
+        };
         return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
     }
 
@@ -127,9 +148,9 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle VulkanDevice::CreatePipelineState(const PipelineStateCreateInfo& pipelineStateCreateInfo)
+    PipelineStateHandle VulkanDevice::CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo)
     {
-        VulkanPipelineStateDesc pipelineStateObjectDesc = {
+        VulkanGraphicsPipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
             .RenderPass = pipelineStateCreateInfo.RenderPass,
             .VertexShader = pipelineStateCreateInfo.VertexShader,
@@ -143,6 +164,18 @@ namespace Astral {
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
 
         return CreateGraphicsRef<VulkanPipelineState>(pipelineStateObjectDesc);
+    }
+
+
+    PipelineStateHandle VulkanDevice::CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo)
+    {
+        VulkanComputePipelineStateDesc pipelineStateObjectDesc = {
+            .Device = m_Device,
+            .ComputeShader = computePipelineStateCreateInfo.ComputeShader,
+            .DescriptorSets = computePipelineStateCreateInfo.DescriptorSets,
+        };
+
+        return CreateGraphicsRef<VulkanComputePipelineState>(pipelineStateObjectDesc);
     }
 
 
@@ -224,12 +257,15 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
-            .NumLayers = 1,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_2D
         };
 
@@ -244,12 +280,15 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
             .NumLayers = 6,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::CUBEMAP
         };
 
@@ -264,16 +303,46 @@ namespace Astral {
             .Device = m_Device,
             .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
             .ImageFormat = textureCreateInfo.Format,
             .ImageLayout = textureCreateInfo.Layout,
             .ImageUsageFlags = textureCreateInfo.UsageFlags,
             .ImageWidth = textureCreateInfo.Dimensions.x,
             .ImageHeight = textureCreateInfo.Dimensions.y,
-            .NumLayers = 1,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_3D
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
+    bool VulkanDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
+    {
+        VkFormat format = ConvertImageFormatToVkFormat(imageFormat);
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice.physicalDevice, format, &formatProperties);
+
+        return (formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
+               (formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT);
+    }
+
+
+    bool VulkanDevice::IsAnisotropySupported()
+    {
+        VkPhysicalDeviceFeatures physicalDeviceFeatures;
+        vkGetPhysicalDeviceFeatures(m_PhysicalDevice.physicalDevice, &physicalDeviceFeatures);
+        return physicalDeviceFeatures.samplerAnisotropy;
+    }
+
+
+    float VulkanDevice::GetMaxAnisotropySupported()
+    {
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(m_PhysicalDevice.physicalDevice, &physicalDeviceProperties);
+        return physicalDeviceProperties.limits.maxSamplerAnisotropy;
     }
 
 
@@ -285,15 +354,18 @@ namespace Astral {
 
     void VulkanDevice::CreateDevice()
     {
-        float priorities[] = { 1.0f };
+        float priorities[] = { 1.0f, 0.5f };
+
+        uint32 queueCount = m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount;
+        LOG("Queue family has " << queueCount << " queue(s)!")
 
         VkDeviceQueueCreateInfo deviceQueueCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
             .queueFamilyIndex = m_QueueFamilyIndex,
-            .queueCount = 1,
-            .pQueuePriorities = &priorities[0]
+            .queueCount = queueCount >= 2 ? 2u : 1u,
+            .pQueuePriorities = priorities
         };
 
         std::vector<const char*> devExts = {
@@ -304,14 +376,31 @@ namespace Astral {
         VkPhysicalDeviceFeatures deviceFeatures = { 0 };
 
         if (m_PhysicalDevice.features.geometryShader == VK_FALSE)
-        { LOG("Vulkan: Geometry Shader is not supported!") }
+        {
+            LOG("Vulkan: Geometry Shader is not supported!")
+        }
         else
-        { deviceFeatures.geometryShader = VK_TRUE; }
+        {
+            deviceFeatures.geometryShader = VK_TRUE;
+        }
 
         if (m_PhysicalDevice.features.tessellationShader == VK_FALSE)
-        { LOG("Vulkan: Tessellation Shader is not supported!") }
+        {
+            LOG("Vulkan: Tessellation Shader is not supported!")
+        }
         else
-        { deviceFeatures.tessellationShader = VK_TRUE; }
+        {
+            deviceFeatures.tessellationShader = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features.samplerAnisotropy == VK_FALSE)
+        {
+            LOG("Vulkan: Sampler Anisotropy is not supported!")
+        }
+        else
+        {
+            deviceFeatures.samplerAnisotropy = VK_TRUE;
+        }
 
         VkDeviceCreateInfo deviceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,

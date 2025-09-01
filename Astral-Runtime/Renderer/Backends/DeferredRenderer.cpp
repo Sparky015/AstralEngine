@@ -18,6 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Debug/ImGui/ImGuiManager.h"
+#include "ECS/SceneManager.h"
 #include "Window/WindowManager.h"
 
 namespace Astral {
@@ -35,6 +36,26 @@ namespace Astral {
 
         // Building the imgui render pass
         BuildImGuiEditorRenderPass();
+
+
+        AttachmentDescription irradianceAttachmentDescription = {
+            .Format = ImageFormat::R16G16B16A16_SFLOAT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = UVec4(0, 0, 0, 1.0f)
+        };
+
+        m_IrradianceCalcPass = RendererAPI::GetDevice().CreateRenderPass();
+        m_IrradianceCalcPass->BeginBuildingRenderPass();
+        m_IrradianceCalcPass->BeginBuildingSubpass();
+        AttachmentIndex irradianceAttachment = m_IrradianceCalcPass->DefineAttachment(irradianceAttachmentDescription);
+        m_IrradianceCalcPass->AddColorAttachment(irradianceAttachment, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        m_IrradianceCalcPass->EndBuildingSubpass();
+        m_IrradianceCalcPass->EndBuildingRenderPass();
+
 
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
@@ -55,6 +76,8 @@ namespace Astral {
         m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
         m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT, ShaderStage::FRAGMENT);
         m_ToneMappingLUTDescriptorSet->EndBuildingSet();
+
+
 
 
         // Renderer Settings
@@ -78,6 +101,8 @@ namespace Astral {
         m_RenderGraph.ClearResourceHold();
     }
 
+
+    static constexpr uint32 EnvironmentMapIrradianceSize = 64;
 
     void DeferredRenderer::BeginScene(const SceneDescription& sceneDescription)
     {
@@ -122,7 +147,34 @@ namespace Astral {
 
         if (sceneDescription.EnvironmentMap)
         {
-            frameContext.EnvironmentMap->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap);
+            frameContext.EnvironmentMap = sceneDescription.EnvironmentMap;
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(0, sceneDescription.EnvironmentMap->PrefilteredEnvironment, ImageLayout::GENERAL);
+
+            if (!sceneDescription.EnvironmentMap->Irradiance)
+            {
+                TextureCreateInfo irradianceTextureCreateInfo = {
+                    .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                    .Layout = ImageLayout::GENERAL,
+                    .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
+                    .Dimensions = UVec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize),
+                    .ImageData = (uint8*)nullptr,
+                };
+
+                sceneDescription.EnvironmentMap->Irradiance = Texture::CreateCubemap(irradianceTextureCreateInfo);
+                // std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance");
+                // RendererAPI::NameObject(sceneDescription.EnvironmentMap->Irradiance, irradianceMapName);
+
+                m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
+                m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
+                m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(frameContext.EnvironmentMap->Environment, ShaderStage::COMPUTE);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->Irradiance, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+                m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+                m_EnvironmentMapStorageImagesSet->EndBuildingSet();
+
+                frameContext.IsIrradianceMapCalculationNeeded = true;
+            }
+
+            frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance, ImageLayout::GENERAL);
         }
 
         frameContext.Meshes.clear();
@@ -184,7 +236,7 @@ namespace Astral {
 
         AttachmentDescription albedoBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -194,7 +246,7 @@ namespace Astral {
 
         AttachmentDescription metallicBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -204,7 +256,7 @@ namespace Astral {
 
         AttachmentDescription roughnessBufferDescription = {
             .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -214,7 +266,7 @@ namespace Astral {
 
         AttachmentDescription emissionBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -224,7 +276,7 @@ namespace Astral {
 
         AttachmentDescription normalBufferDescription = {
             .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -234,7 +286,7 @@ namespace Astral {
 
         AttachmentDescription depthBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -254,7 +306,7 @@ namespace Astral {
 
         AttachmentDescription lightingTextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -281,7 +333,7 @@ namespace Astral {
 
         AttachmentDescription outputTextureDescription = {
             .Format = ImageFormat::B8G8R8A8_UNORM,
-            .ImageUsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
@@ -353,6 +405,7 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
         const std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
@@ -366,9 +419,11 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
-                .ImageData = nullptr
+                .ImageData = nullptr,
+                .LayerCount = 1,
+                .MipMapCount = 1,
             };
             context.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);
             std::string offscreenRenderTargetName = std::string("Offscreen_Render_Target_") + std::to_string(i);
@@ -414,17 +469,47 @@ namespace Astral {
             RendererAPI::NameObject(context.WindowFramebuffer, windowFramebufferName);
 
 
-            AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            TextureHandle environmentMap = registry.CreateAsset<Texture>("Cubemaps/little_paris_eiffel_tower_4k.hdr");
-            context.EnvironmentMap = device.CreateDescriptorSet();
-            context.EnvironmentMap->BeginBuildingSet();
-            context.EnvironmentMap->AddDescriptorImageSampler(environmentMap, ShaderStage::FRAGMENT);
-            context.EnvironmentMap->EndBuildingSet();
+            Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
+            context.EnvironmentMap = environmentMap;
+
+            if (!environmentMap->Irradiance)
+            {
+                TextureCreateInfo irradianceTextureCreateInfo = {
+                    .Format = ImageFormat::R16G16B16A16_SFLOAT,
+                    .Layout = ImageLayout::GENERAL,
+                    .UsageFlags = IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_STORAGE_BIT,
+                    .Dimensions = UVec2(EnvironmentMapIrradianceSize, EnvironmentMapIrradianceSize),
+                    .ImageData = (uint8*)nullptr,
+                };
+
+                environmentMap->Irradiance = Texture::CreateCubemap(irradianceTextureCreateInfo);
+                std::string irradianceMapName = std::string("Cubemaps/pretoria_gardens_4k.hdr_Irradiance_") + std::to_string(i);
+                RendererAPI::NameObject(environmentMap->Irradiance, irradianceMapName);
+            }
+
+
+            TextureHandle brdfLut = registry.CreateAsset<Texture>("LUTs/ibl_brdf_lut.dds");
+
+            context.EnvironmentMapDescriptorSet = device.CreateDescriptorSet();
+            context.EnvironmentMapDescriptorSet->BeginBuildingSet();
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->PrefilteredEnvironment, ShaderStage::FRAGMENT, ImageLayout::GENERAL);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(environmentMap->Irradiance, ShaderStage::FRAGMENT, ImageLayout::GENERAL);
+            context.EnvironmentMapDescriptorSet->AddDescriptorImageSampler(brdfLut, ShaderStage::FRAGMENT);
+            context.EnvironmentMapDescriptorSet->EndBuildingSet();
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
-            RendererAPI::NameObject(context.EnvironmentMap, environmentMapDescriptorSetName);
+            RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
-
+            context.IsIrradianceMapCalculationNeeded = true;
         }
+
+
+        FrameContext& context = m_FrameContexts[0];
+        m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
+        m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
+        m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(context.EnvironmentMap->Environment, ShaderStage::COMPUTE);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->Irradiance, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+        m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(context.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE, ImageLayout::GENERAL);
+        m_EnvironmentMapStorageImagesSet->EndBuildingSet();
     }
 
 
@@ -440,6 +525,27 @@ namespace Astral {
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
         commandBuffer->BeginRecording();
+
+        // Irradiance Map calculation if empty
+        if (frameContext.IsIrradianceMapCalculationNeeded)
+        {
+            RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
+
+            uint32 totalMipLevels = frameContext.EnvironmentMap->PrefilteredEnvironment->GetNumMipLevels();
+            uint32 mipWidth = frameContext.EnvironmentMap->PrefilteredEnvironment->GetWidth();
+            uint32 mipHeight = frameContext.EnvironmentMap->PrefilteredEnvironment->GetHeight();
+
+            for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
+            {
+                m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, ImageLayout::GENERAL);
+                UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
+                RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
+                if (mipWidth > 1)  { mipWidth /= 2; }
+                if (mipHeight > 1) { mipHeight /= 2; }
+            }
+            frameContext.IsIrradianceMapCalculationNeeded = false;
+        }
+
 
         // Viewport Rendering
         m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
@@ -465,9 +571,9 @@ namespace Astral {
             imageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
-                .LevelCount = 1,
+                .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
                 .BaseArrayLayer = 0,
-                .LayerCount = 1
+                .LayerCount = offscreenRenderTarget->GetNumLayers()
             };
             pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
 
@@ -512,7 +618,7 @@ namespace Astral {
 
         commandBuffer->EndRecording();
 
-        CommandQueueHandle commandQueue = device.GetCommandQueue();
+        CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
@@ -612,8 +718,8 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_ORM_Set_GBuffer.frag");
             }
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
-            pipeline->Bind(commandBuffer);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             GeometryPassPushData pushConstantData = {
@@ -642,6 +748,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
@@ -652,17 +759,19 @@ namespace Astral {
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
-        PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, material, mesh, 0);
-        pipeline->Bind(commandBuffer);
+        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+        pipeline->BindPipeline(commandBuffer);
         pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
 
         mesh.VertexBuffer->Bind(commandBuffer);
         mesh.IndexBuffer->Bind(commandBuffer);
         RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
     }
 
 
@@ -674,6 +783,7 @@ namespace Astral {
 
         // Cubemap
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
         Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
@@ -681,10 +791,10 @@ namespace Astral {
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMap;
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
-        cubemapPipeline->Bind(commandBuffer);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
+        cubemapPipeline->BindPipeline(commandBuffer);
         cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
@@ -692,6 +802,8 @@ namespace Astral {
 
         cubemapMesh.VertexBuffer->Bind(commandBuffer);
         cubemapMesh.IndexBuffer->Bind(commandBuffer);
+
+        RendererAPI::PushConstants(commandBuffer, cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
         RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
     }
 
@@ -714,8 +826,8 @@ namespace Astral {
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Tone_Mapping.frag");
         toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
 
-        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
-        toneMappingPipeline->Bind(commandBuffer);
+        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        toneMappingPipeline->BindPipeline(commandBuffer);
         toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
         toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
@@ -729,6 +841,97 @@ namespace Astral {
         RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+    }
+
+
+    struct ComputeIrradianceMapPushConstants
+    {
+        float FaceIndex;
+    };
+    static_assert(sizeof(ComputeIrradianceMapPushConstants) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
+
+
+    void DeferredRenderer::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
+    {
+        RendererAPI::BeginLabel(commandBuffer, "IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
+
+        ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.comp");
+        ;
+        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
+        computePipeline->BindPipeline(commandBuffer);
+        computePipeline->BindDescriptorSet(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
+
+
+        ComputeIrradianceMapPushConstants computeIrradianceMapPushConstants;
+
+        constexpr uint32 numFaces = 6;
+        for (uint32 i = 0; i < numFaces; i++)
+        {
+            computeIrradianceMapPushConstants.FaceIndex = i;
+            RendererAPI::PushConstants(commandBuffer, computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
+
+            // Dispatching 2x2 blocks as the local layout is 8x8 and the irradiance faces are 16x16
+            uint32 groupCountSize = EnvironmentMapIrradianceSize / 8;
+            RendererAPI::Dispatch(commandBuffer, groupCountSize, groupCountSize, 1);
+        }
+
+        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+
+        RendererAPI::EndLabel(commandBuffer);
+    }
+
+
+    struct ComputePrefilteredEnvironmentMapPushData
+    {
+        uint32 FaceIndex;
+        float Roughness;
+    };
+
+
+    void DeferredRenderer::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
+    {
+        RendererAPI::BeginLabel(commandBuffer, "PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
+
+        ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Prefiltered_Environment_Map.comp");
+
+        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
+        computePipeline->BindPipeline(commandBuffer);
+        computePipeline->BindDescriptorSet(commandBuffer, m_EnvironmentMapStorageImagesSet, 0);
+
+        uint32 mipWidth = mipDimensions.x;
+        uint32 mipHeight = mipDimensions.y;
+
+        float totalMipLevels = frameContext.EnvironmentMap->Environment->GetNumMipLevels();
+        float roughness = mipLevel / totalMipLevels;
+
+        ComputePrefilteredEnvironmentMapPushData prefilteredEnvironmentMapPushData;
+        prefilteredEnvironmentMapPushData.Roughness = roughness;
+
+        constexpr uint32 numFaces = 6;
+        for (uint32 i = 0; i < numFaces; i++)
+        {
+            prefilteredEnvironmentMapPushData.FaceIndex = i;
+
+            RendererAPI::PushConstants(commandBuffer, computePipeline, &prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
+
+            uint32 groupSizeX = std::max(mipWidth / 32, 1u);
+            uint32 groupSizeY = std::max(mipHeight / 32, 1u);
+            RendererAPI::Dispatch(commandBuffer, groupSizeX, groupSizeY, 1);
+        }
+
+        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+
+        RendererAPI::EndLabel(commandBuffer);
     }
 
 
@@ -751,9 +954,11 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
-                .ImageData = nullptr
+                .ImageData = nullptr,
+                .LayerCount = 1,
+                .MipMapCount = 1,
             };
 
             frameContext.OffscreenRenderTarget = device.CreateTexture(textureCreateInfo);

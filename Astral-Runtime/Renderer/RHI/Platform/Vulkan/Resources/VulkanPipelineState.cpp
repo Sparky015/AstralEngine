@@ -12,22 +12,23 @@
 
 namespace Astral {
 
-    VulkanPipelineState::VulkanPipelineState(const VulkanPipelineStateDesc& desc) :
-        m_Description(desc),
+    VulkanPipelineState::VulkanPipelineState(const VulkanGraphicsPipelineStateDesc& desc) :
+        m_GraphicsDescription(desc),
+        m_Device(desc.Device),
         m_ViewportDimensions()
     {
-        CreatePipelineStateObject();
+        CreateGraphicsPipelineStateObject();
     }
 
 
     VulkanPipelineState::~VulkanPipelineState()
     {
         DestroyPipelineLayout();
-        DestroyPipelineStateObject();
+        DestroyPipelineState();
     }
 
 
-    void VulkanPipelineState::Bind(CommandBufferHandle commandBufferHandle)
+    void VulkanPipelineState::BindPipeline(CommandBufferHandle commandBufferHandle)
     {
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
@@ -65,9 +66,11 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineState::CreatePipelineStateObject()
+    void VulkanPipelineState::CreateGraphicsPipelineStateObject()
     {
-        SetShaderStages();
+        CreateGraphicsPipelineLayout();
+
+        SetGraphicsShaderStages();
         SetVertexInputState();
         SetInputAssemblyState();
         SetViewportState();
@@ -75,11 +78,10 @@ namespace Astral {
         SetMultisampleState();
         SetDepthStencilState();
         SetColorBlendState();
-        CreatePipelineLayout();
         SetDynamicState();
 
 
-        VkRenderPass renderPass = (VkRenderPass)m_Description.RenderPass->GetNativeHandle();
+        VkRenderPass renderPass = (VkRenderPass)m_GraphicsDescription.RenderPass->GetNativeHandle();
 
         VkGraphicsPipelineCreateInfo pipelineCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
@@ -95,30 +97,30 @@ namespace Astral {
             .pDynamicState = &m_PipelineCreateInfos.DynamicState,
             .layout = m_PipelineLayout,
             .renderPass = renderPass,
-            .subpass = m_Description.SubpassIndex,
+            .subpass = m_GraphicsDescription.SubpassIndex,
             .basePipelineHandle = VK_NULL_HANDLE,
             .basePipelineIndex = -1
         };
 
-        VkResult result = vkCreateGraphicsPipelines(m_Description.Device, VK_NULL_HANDLE, 1, &pipelineCreateInfo,
+        VkResult result = vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &pipelineCreateInfo,
                                                 nullptr, &m_Pipeline);
         ASSERT(result == VK_SUCCESS, "Failed to create graphics pipeline!");
     }
 
 
-    void VulkanPipelineState::DestroyPipelineStateObject()
+    void VulkanPipelineState::DestroyPipelineState()
     {
-        vkDestroyPipeline(m_Description.Device, m_Pipeline, nullptr);
+        vkDestroyPipeline(m_Device, m_Pipeline, nullptr);
     }
 
 
-    void VulkanPipelineState::SetShaderStages()
+    void VulkanPipelineState::SetGraphicsShaderStages()
     {
-        ASSERT(m_Description.VertexShader, "Vertex shader can't be null!")
-        ASSERT(m_Description.FragmentShader, "Fragment shader can't be null!")
+        ASSERT(m_GraphicsDescription.VertexShader, "Vertex shader can't be null!")
+        ASSERT(m_GraphicsDescription.FragmentShader, "Fragment shader can't be null!")
 
-        VkShaderModule vertexShaderModule = (VkShaderModule)m_Description.VertexShader->GetNativeHandle();
-        VkShaderModule fragmentShaderModule = (VkShaderModule)m_Description.FragmentShader->GetNativeHandle();
+        VkShaderModule vertexShaderModule = (VkShaderModule)m_GraphicsDescription.VertexShader->GetNativeHandle();
+        VkShaderModule fragmentShaderModule = (VkShaderModule)m_GraphicsDescription.FragmentShader->GetNativeHandle();
 
         VkPipelineShaderStageCreateInfo shaderStageCreateInfo[2] = {
          {
@@ -140,7 +142,7 @@ namespace Astral {
     }
 
 
-    VkFormat ConvertShaderDataTypeToVkFormat(ShaderDataType type)
+    static VkFormat ConvertShaderDataTypeToVkFormat(ShaderDataType type)
     {
         switch (type)
         {
@@ -161,7 +163,7 @@ namespace Astral {
     {
         VkVertexInputBindingDescription bindingDescription = {
             .binding = 0,
-            .stride = m_Description.VertexBufferLayout.GetStride(),
+            .stride = m_GraphicsDescription.VertexBufferLayout.GetStride(),
             .inputRate = VK_VERTEX_INPUT_RATE_VERTEX
         };
         m_PipelineCreateInfos.VertexBindingDescription = bindingDescription;
@@ -170,7 +172,7 @@ namespace Astral {
         uint32 location = 0;
         uint32 offset = 0;
 
-        for (VertexBufferAttribute& attribute : m_Description.VertexBufferLayout)
+        for (VertexBufferAttribute& attribute : m_GraphicsDescription.VertexBufferLayout)
         {
             VkVertexInputAttributeDescription attributeDescription = {
                 .location = location,
@@ -213,15 +215,15 @@ namespace Astral {
         VkViewport viewport = {
             .x = 0.0f,
             .y = 0.0f,
-            .width = (float)m_Description.WindowWidth,
-            .height = (float)m_Description.WindowHeight,
+            .width = (float)m_GraphicsDescription.WindowWidth,
+            .height = (float)m_GraphicsDescription.WindowHeight,
             .minDepth = 0.0f,
             .maxDepth = 1.0f
         };
 
         VkRect2D scissor = {
             .offset = {0, 0},
-            .extent = {(uint32)m_Description.WindowWidth, (uint32)m_Description.WindowHeight}
+            .extent = {(uint32)m_GraphicsDescription.WindowWidth, (uint32)m_GraphicsDescription.WindowHeight}
         };
 
         m_PipelineCreateInfos.Viewport = viewport;
@@ -290,7 +292,7 @@ namespace Astral {
     void VulkanPipelineState::SetColorBlendState()
     {
         VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
-            .blendEnable = m_Description.IsAlphaBlended == true ? VK_TRUE : VK_FALSE,
+            .blendEnable = m_GraphicsDescription.IsAlphaBlended == true ? VK_TRUE : VK_FALSE,
             .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,
             .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
             .colorBlendOp = VK_BLEND_OP_ADD,
@@ -300,7 +302,7 @@ namespace Astral {
             .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT, // <--- Enable writing to Alpha channel
         };
 
-        uint32 numColorAttachments = m_Description.RenderPass->GetNumColorAttachments(m_Description.SubpassIndex);
+        uint32 numColorAttachments = m_GraphicsDescription.RenderPass->GetNumColorAttachments(m_GraphicsDescription.SubpassIndex);
         m_PipelineCreateInfos.ColorBlendAttachmentStates.reserve(numColorAttachments);
 
         for (int i = 0; i < numColorAttachments; i++)
@@ -337,18 +339,18 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineState::CreatePipelineLayout()
+    void VulkanPipelineState::CreateGraphicsPipelineLayout()
     {
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-        descriptorSetLayouts.reserve(m_Description.DescriptorSets.size());
-        for (DescriptorSetHandle descriptorSet : m_Description.DescriptorSets)
+        descriptorSetLayouts.reserve(m_GraphicsDescription.DescriptorSets.size());
+        for (DescriptorSetHandle descriptorSet : m_GraphicsDescription.DescriptorSets)
         {
             descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetNativeLayout());
         }
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
         m_PushConstantRange.offset = 0;
-        m_PushConstantRange.size = sizeof(MaxPushConstantRange);
+        m_PushConstantRange.size = MaxPushConstantRange;
 
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
@@ -359,14 +361,14 @@ namespace Astral {
             .pPushConstantRanges = &m_PushConstantRange,
         };
 
-        VkResult result = vkCreatePipelineLayout(m_Description.Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout);
+        VkResult result = vkCreatePipelineLayout(m_Device, &pipelineLayoutCreateInfo, nullptr, &m_PipelineLayout);
         ASSERT(result == VK_SUCCESS, "Failed to create pipeline layout!");
     }
 
 
     void VulkanPipelineState::DestroyPipelineLayout()
     {
-        vkDestroyPipelineLayout(m_Description.Device, m_PipelineLayout, nullptr);
+        vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
     }
 
 }

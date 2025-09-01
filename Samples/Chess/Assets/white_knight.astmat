@@ -1,3 +1,7 @@
-Unlit
-Shaders/Sample_Image.frag
-white_knight.png
+Shader Model: Unlit
+Shader: Shaders/Sample_Image.frag
+Texture Convention: Unpacked
+Normals Convention: OpenGL/Vulkan
+Is Alpha Blended: false
+Texture Maps:
+  - Base Color: white_knight.png

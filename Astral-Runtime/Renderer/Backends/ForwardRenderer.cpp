@@ -229,7 +229,7 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
                 .ImageData = nullptr
             };
@@ -239,7 +239,7 @@ namespace Astral {
             TextureCreateInfo depthBufferTextureCreateInfo = {
                 .Format = ImageFormat::D32_SFLOAT_S8_UINT,
                 .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
                 .Dimensions = renderTargets[0]->GetDimensions(),
                 .ImageData = nullptr
             };
@@ -332,8 +332,8 @@ namespace Astral {
                 material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
             }
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetPipeline(mainRenderPass, material, mesh, 0);
-            pipeline->Bind(commandBuffer);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(mainRenderPass, material, mesh, 0);
+            pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
             ForwardPassPushData forwardPassPushData = {
@@ -362,7 +362,7 @@ namespace Astral {
 
         commandBuffer->EndRecording();
 
-        CommandQueueHandle commandQueue = device.GetCommandQueue();
+        CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
 
@@ -415,7 +415,7 @@ namespace Astral {
             TextureCreateInfo textureCreateInfo = {
                 .Format = renderTargets[0]->GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::COLOR_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };
@@ -428,7 +428,7 @@ namespace Astral {
             TextureCreateInfo depthBufferTextureCreateInfo = {
                 .Format = ImageFormat::D32_SFLOAT_S8_UINT,
                 .Layout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-                .UsageFlags = ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT_BIT,
+                .UsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
                 .ImageData = nullptr
             };

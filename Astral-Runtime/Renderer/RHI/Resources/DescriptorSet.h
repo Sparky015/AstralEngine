@@ -17,6 +17,7 @@ namespace Astral {
     {
         VERTEX,
         FRAGMENT,
+        COMPUTE,
         ALL
     };
 
@@ -25,7 +26,8 @@ namespace Astral {
         STORAGE_BUFFER,
         UNIFORM_BUFFER,
         IMAGE_SAMPLER,
-        SUBPASS_INPUT_ATTACHMENT
+        SUBPASS_INPUT_ATTACHMENT,
+        STORAGE_IMAGE
     };
 
     struct DescriptorSetLayout
@@ -41,13 +43,16 @@ namespace Astral {
         virtual void BeginBuildingSet() = 0;
         virtual void AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
         virtual void AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage shaderStage) = 0;
-        virtual void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage) = 0;
-        virtual void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage) = 0;
+        virtual void AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
+        virtual void AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
+        virtual void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
         virtual void EndBuildingSet() = 0;
 
         virtual void UpdateStorageBufferBinding(uint32 binding, BufferHandle bufferHandle) = 0;
         virtual void UpdateUniformBinding(uint32 binding, BufferHandle bufferHandle) = 0;
-        virtual void UpdateImageSamplerBinding(uint32 binding, TextureHandle textureHandle) = 0;
+        virtual void UpdateImageSamplerBinding(uint32 binding, TextureHandle textureHandle, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
+        virtual void UpdateImageSamplerBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
+        virtual void UpdateStorageImageBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
         virtual void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle textureHandle) = 0;
 
         virtual const DescriptorSetLayout& GetDescriptorSetLayout() = 0;

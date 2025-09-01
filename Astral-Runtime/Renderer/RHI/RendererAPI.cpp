@@ -44,6 +44,12 @@ namespace Astral {
     }
 
 
+    void RendererAPI::Dispatch(CommandBufferHandle commandBuffer, uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
+    {
+        s_RendererCommands->Dispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
+    }
+
+
     void RendererAPI::PushConstants(CommandBufferHandle commandBuffer, PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
     {
         s_RendererCommands->PushConstants(commandBuffer, pipelineStateObjectHandle, data, sizeInBytes);
@@ -53,6 +59,12 @@ namespace Astral {
     void RendererAPI::SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier)
     {
         s_RendererCommands->SetPipelineBarrier(commandBufferHandle, pipelineBarrier);
+    }
+
+
+    void RendererAPI::ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback)
+    {
+        s_RendererCommands->ExecuteOneTimeAndBlock(callback);
     }
 
 

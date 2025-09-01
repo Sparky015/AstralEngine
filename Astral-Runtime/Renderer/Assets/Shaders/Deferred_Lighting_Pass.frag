@@ -27,12 +27,17 @@ layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
-layout(set = 1, binding = 0) uniform sampler2D u_AlbedoInput;
-layout(set = 1, binding = 1) uniform sampler2D u_MetallicInput;
-layout(set = 1, binding = 2) uniform sampler2D u_RoughnessInput;
-layout(set = 1, binding = 3) uniform sampler2D u_EmissionInput;
-layout(set = 1, binding = 4) uniform sampler2D u_NormalInput;
-layout(set = 1, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
+layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
+layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
+
+
+layout(set = 2, binding = 0) uniform sampler2D u_AlbedoInput;
+layout(set = 2, binding = 1) uniform sampler2D u_MetallicInput;
+layout(set = 2, binding = 2) uniform sampler2D u_RoughnessInput;
+layout(set = 2, binding = 3) uniform sampler2D u_EmissionInput;
+layout(set = 2, binding = 4) uniform sampler2D u_NormalInput;
+layout(set = 2, binding = 5) uniform sampler2D u_DepthBufferInput;
 
 layout(location = 0) out vec4 outColor;
 
@@ -94,6 +99,11 @@ vec3 Fresnel(vec3 F0, vec3 V, vec3 H)
     return F0 + (vec3(1.0) - F0) * pow(1 - max(dot(V, H), 0.0), 5.0);
 }
 
+vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
 
 void main()
 {
@@ -103,9 +113,13 @@ void main()
     vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
     vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
     normal = normal * 2.0 - 1.0;
-    vec3 worldPosition = GetWorldPosition();
+    normal = normalize(normal);
 
+
+    vec3 worldPosition = GetWorldPosition();
     vec3 cameraPosition = u_SceneData.cameraPosition;
+    vec3 viewVector = normalize(cameraPosition - worldPosition);
+
     vec3 finalLight = vec3(0.0f);
 
     if (u_SceneData.numLights == 0)
@@ -119,8 +133,6 @@ void main()
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
 
         // Vectors
-        normal = normalize(normal);
-        vec3 viewVector = normalize(cameraPosition - worldPosition);
         vec3 lightVector = normalize(lightPosition - worldPosition);
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - worldPosition);
@@ -146,7 +158,30 @@ void main()
         finalLight += outgoingLight;
     }
 
-    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic.r);
+
+    vec3 F0 = mix(vec3(0.04), baseColor, metallic);
+    vec3 F = IBLFresnelSchlickRoughness(max(dot(normal, viewVector), 0.0), F0, roughness);
+
+    // Indirect Specular
+    vec3 reflectionVector = reflect(-viewVector, normal);
+    float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
+    vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
+    vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
+    viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
+    clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);
+
+    vec2 envBRDF  = texture(u_BRDFLut, viewAngleRoughnessInput).rg;
+    vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+
+    // Indirect Diffuse
+    vec3 kS = F;
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+
+    vec3 irradiance = texture(u_Irradiance, normal).rgb;
+    vec3 diffuse = irradiance * baseColor;
+
+    vec3 ambient = u_SceneData.ambientLightConstant * (kD * diffuse + specular);
     finalLight += ambient + emission;
 
     outColor = vec4(finalLight, 1.0f);

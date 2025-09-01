@@ -50,6 +50,22 @@ namespace Astral {
     }
 
 
+    void VulkanFramebuffer::AttachTextureLayer(TextureHandle textureHandle, uint32 layer)
+    {
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeLayerImageView(layer);
+        m_ImageViews.push_back(imageView);
+        m_Textures.push_back(textureHandle);
+    }
+
+
+    void VulkanFramebuffer::AttachTextureMipMap(TextureHandle textureHandle, uint32 mipLevel, uint32 layer)
+    {
+        VkImageView imageView = (VkImageView)textureHandle->GetNativeImageView(layer, mipLevel);
+        m_ImageViews.push_back(imageView);
+        m_Textures.push_back(textureHandle);
+    }
+
+
     void VulkanFramebuffer::EndBuildingFramebuffer()
     {
         CreateFramebuffer();

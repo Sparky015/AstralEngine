@@ -18,6 +18,7 @@
 
 #include <queue>
 
+#include "Common/EnvironmentMap.h"
 #include "Renderer/Renderer.h"
 
 namespace Astral {
@@ -26,7 +27,7 @@ namespace Astral {
     {
         Camera& Camera;
         std::vector<Light>& Lights;
-        TextureHandle EnvironmentMap;
+        Ref<EnvironmentMap> EnvironmentMap;
         float AmbientLightConstant;
         float Exposure;
     };

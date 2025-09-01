@@ -61,6 +61,20 @@ namespace Astral {
         void AttachTexture(TextureHandle textureHandle) override;
 
         /**
+         * @brief Attaches a layer of a texture to the framebuffer
+         * @param textureHandle The texture to attach to the framebuffer
+         */
+        void AttachTextureLayer(TextureHandle textureHandle, uint32 layer) override;
+
+        /**
+         * @brief Attaches a mipmap of a layer of a texture to the framebuffer
+         * @param textureHandle The texture to attach to the framebuffer
+         * @param mipLevel The mip level to attach
+         * @param layer The layer of the mip map to attach
+         */
+        void AttachTextureMipMap(TextureHandle textureHandle, uint32 mipLevel, uint32 layer) override;
+
+        /**
          * @brief Ends the building of a framebuffer and creates the framebuffer
          * @pre   @ref BeginBuildingFramebuffer should be called to create the framebuffer
          */
