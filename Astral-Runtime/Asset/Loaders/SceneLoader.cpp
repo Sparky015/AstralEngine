@@ -599,6 +599,92 @@ namespace Astral {
 
         if (lightNameToLight.contains(node->mName.C_Str()))
         {
+            for (int i = 0; i < node->mMetaData->mNumProperties; i++)
+            {
+                aiString* key = &node->mMetaData->mKeys[i];
+                aiMetadataEntry* entry = &node->mMetaData->mValues[i];
+
+                std::string entryValue;
+                if (entry->mType == AI_INT32)
+                {
+                    entryValue = std::to_string(*(int*)entry->mData);
+                }
+                if (entry->mType == AI_FLOAT)
+                {
+                    entryValue = std::to_string(*(float*)entry->mData);
+                }
+                if (entry->mType == AI_DOUBLE)
+                {
+                    entryValue = std::to_string(*(double*)entry->mData);
+                }
+                if (entry->mType == AI_BOOL)
+                {
+                    entryValue = *(bool*)entry->mData == false ? "false" : "true";
+                }
+                if (entry->mType == AI_UINT64)
+                {
+                    entryValue = std::to_string(*(uint64*)entry->mData);
+                }
+                if (entry->mType == AI_INT64)
+                {
+                    entryValue = std::to_string(*(int64*)entry->mData);
+                }
+                if (entry->mType == AI_UINT32)
+                {
+                    entryValue = std::to_string(*(uint32*)entry->mData);
+                }
+                if (entry->mType == AI_AISTRING)
+                {
+                    entryValue = std::string(((aiString*)entry->mData)->C_Str());
+                }
+                if (entry->mType == AI_AIVECTOR3D)
+                {
+                    aiVector3D* v = (aiVector3D*)entry->mData;
+                    entryValue = std::string(std::format("({}, {}, {})", (float)v->x, (float)v->y, (float)v->z));
+                }
+                if (entry->mType == AI_AIMETADATA)
+                {
+                    aiMetadata* insideMetaData = (aiMetadata*)entry->mData;
+                    for (int j = 0; j < insideMetaData->mNumProperties; j++)
+                    {
+                        aiString* insideKey = &insideMetaData->mKeys[j];
+                        aiMetadataEntry* insideEntry = &insideMetaData->mValues[j];
+
+                        std::string insideEntryValue;
+                        if (insideEntry->mType == AI_INT32)
+                        {
+                            insideEntryValue = std::to_string(*(int*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_FLOAT)
+                        {
+                            insideEntryValue = std::to_string(*(float*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_DOUBLE)
+                        {
+                            insideEntryValue = std::to_string(*(double*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_UINT64)
+                        {
+                            insideEntryValue = std::to_string(*(uint64*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_INT64)
+                        {
+                            insideEntryValue = std::to_string(*(int64*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_UINT32)
+                        {
+                            insideEntryValue = std::to_string(*(uint32*)insideEntry->mData);
+                        }
+                        if (insideEntry->mType == AI_AISTRING)
+                        {
+                            insideEntryValue = std::string(((aiString*)insideEntry->mData)->C_Str());
+                        }
+                        LOG("Light " << node->mName.C_Str() << " (Inside) : " << insideKey->C_Str() << " -> " << insideEntryValue);
+                    }
+                }
+                LOG("Light " << node->mName.C_Str() << ": " << key->C_Str() << " -> " << entryValue);
+            }
+
             aiLight* light = lightNameToLight.at(node->mName.C_Str());
             transformComponent.position.x += light->mPosition.x;
             transformComponent.position.y += light->mPosition.y;
@@ -608,16 +694,19 @@ namespace Astral {
             if (light->mType == aiLightSource_POINT)
             {
                 PointLightComponent pointLight;
-                pointLight.Intensity = 1;
-                pointLight.LightColor.x = light->mColorDiffuse.r / pointLight.Intensity;
-                pointLight.LightColor.y = light->mColorDiffuse.g / pointLight.Intensity;
-                pointLight.LightColor.z = light->mColorDiffuse.b / pointLight.Intensity;
+                Vec3 radiance(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b);
+                float calculatedIntensity = glm::length(radiance);
+                Vec3 calculatedColor = glm::normalize(radiance);
+
+                pointLight.Intensity = calculatedIntensity;
+                pointLight.LightColor = calculatedColor;
 
                 ecs.AddComponent(entity, pointLight);
             }
             else if (light->mType == aiLightSource_AMBIENT)
             {
-                activeScene.AmbientLightConstant = (light->mColorAmbient.r + light->mColorAmbient.g + light->mColorAmbient.b) / 3;
+                Vec3 radiance(light->mColorAmbient.r, light->mColorAmbient.g, light->mColorAmbient.b);
+                activeScene.AmbientLightConstant = glm::length(radiance);
             }
         }
 
