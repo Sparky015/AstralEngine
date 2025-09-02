@@ -100,6 +100,7 @@ namespace Astral {
         void LightingPass();
         void EnvironmentMapPass();
         void ToneMappingPass();
+        void FXAAPass();
 
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
         void ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions);

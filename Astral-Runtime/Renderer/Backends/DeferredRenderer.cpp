@@ -331,8 +331,8 @@ namespace Astral {
         cubemapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
-        AttachmentDescription outputTextureDescription = {
-            .Format = ImageFormat::B8G8R8A8_UNORM,
+        AttachmentDescription toneMappingOutputTextureDescription = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
             .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
@@ -343,9 +343,22 @@ namespace Astral {
 
         RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
         tonemappingPass.LinkReadInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        tonemappingPass.CreateColorAttachment(outputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         tonemappingPass.AddDependency(&cubemapPass);
 
+        AttachmentDescription fxaaOutputTextureDescription = {
+            .Format = ImageFormat::B8G8R8A8_UNORM,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+        };
+
+        RenderGraphPass fxaaPass = RenderGraphPass(OutputAttachmentDimensions, "FXAA Pass", [&](){ FXAAPass(); });
+        fxaaPass.LinkReadInputAttachment(&tonemappingPass, "Tonemapping_Output_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        fxaaPass.CreateColorAttachment(fxaaOutputTextureDescription, "FXAA_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
 
         std::vector<TextureHandle> outputTextures;
@@ -364,8 +377,9 @@ namespace Astral {
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(cubemapPass);
-        m_RenderGraph.AddOutputPass(tonemappingPass);
-        m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
+        m_RenderGraph.AddPass(tonemappingPass);
+        m_RenderGraph.AddOutputPass(fxaaPass);
+        m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -841,6 +855,35 @@ namespace Astral {
         RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+    }
+
+
+    void DeferredRenderer::FXAAPass()
+    {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
+
+        Material toneMapperMaterial{};
+        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/FXAAPass.frag");
+        toneMapperMaterial.DescriptorSet = executionContext.ReadAttachments;
+
+        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        toneMappingPipeline->BindPipeline(commandBuffer);
+        toneMappingPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        toneMappingPipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 1);
+
+        quadMesh.VertexBuffer->Bind(commandBuffer);
+        quadMesh.IndexBuffer->Bind(commandBuffer);
+        RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
     }
 
 
