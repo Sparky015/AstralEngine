@@ -64,11 +64,7 @@ namespace Astral {
 
     private:
 
-        static void UpdateRendererType();
-
         static GraphicsOwnedPtr<Renderer> m_Renderer;
-        static bool m_IsRendererTypeUpdateNeeded;
-        static RendererType m_NewRendererType;
     };
 
 } // Astral

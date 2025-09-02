@@ -1,12 +1,12 @@
 /**
-* @file DeferredRenderer.cpp
+* @file SceneRendererImpl.cpp
 * @author Andrew Fagan
 * @date 7/1/2025
 */
 
-#include "DeferredRenderer.h"
+#include "SceneRendererImpl.h"
 
-#include "../RHI/RendererAPI.h"
+#include "RHI/RendererAPI.h"
 
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
@@ -23,7 +23,7 @@
 
 namespace Astral {
 
-    void DeferredRenderer::Init()
+    void SceneRendererImpl::Init()
     {
         PROFILE_SCOPE("SceneRenderer::Init")
 
@@ -89,7 +89,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::Shutdown()
+    void SceneRendererImpl::Shutdown()
     {
         PROFILE_SCOPE("SceneRenderer::Shutdown")
         m_WindowResizedListener.StopListening();
@@ -105,7 +105,7 @@ namespace Astral {
 
     static constexpr uint32 EnvironmentMapIrradianceSize = 64;
 
-    void DeferredRenderer::BeginScene(const SceneDescription& sceneDescription)
+    void SceneRendererImpl::BeginScene(const SceneDescription& sceneDescription)
     {
         PROFILE_SCOPE("SceneRenderer::BeginScene")
         Device& device = RendererAPI::GetDevice();
@@ -186,7 +186,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::EndScene()
+    void SceneRendererImpl::EndScene()
     {
         {
             PROFILE_SCOPE("SceneRenderer::EndScene")
@@ -197,7 +197,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
+    void SceneRendererImpl::Submit(Mesh& mesh, Material& material, Mat4& transform)
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -208,7 +208,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::SetRendererSettings(const RendererSettings& rendererSettings)
+    void SceneRendererImpl::SetRendererSettings(const RendererSettings& rendererSettings)
     {
         if (m_RendererSettings.RendererType != rendererSettings.RendererType)
         {
@@ -232,13 +232,13 @@ namespace Astral {
     }
 
 
-    const RendererSettings& DeferredRenderer::GetRendererSettings()
+    const RendererSettings& SceneRendererImpl::GetRendererSettings()
     {
         return m_RendererSettings;
     }
 
 
-    DescriptorSetHandle DeferredRenderer::GetViewportTexture()
+    DescriptorSetHandle SceneRendererImpl::GetViewportTexture()
     {
         DescriptorSetHandle& descriptorSet = m_CurrentViewportTexture.front();
         m_CurrentViewportTexture.pop();
@@ -246,7 +246,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::BuildRenderGraphForDeferred()
+    void SceneRendererImpl::BuildRenderGraphForDeferred()
     {
 
         AttachmentDescription albedoBufferDescription = {
@@ -399,7 +399,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::BuildRenderGraphForForward()
+    void SceneRendererImpl::BuildRenderGraphForForward()
     {
 
         AttachmentDescription depthBufferDescription = {
@@ -493,7 +493,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::BuildImGuiEditorRenderPass()
+    void SceneRendererImpl::BuildImGuiEditorRenderPass()
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
@@ -522,7 +522,7 @@ namespace Astral {
 
 
 
-    void DeferredRenderer::InitializeFrameResources()
+    void SceneRendererImpl::InitializeFrameResources()
     {
         RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
@@ -636,7 +636,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::RenderScene()
+    void SceneRendererImpl::RenderScene()
     {
         PROFILE_SCOPE("SceneRenderer::RenderScene")
 
@@ -753,7 +753,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::ResizeWindowImages(uint32 width, uint32 height)
+    void SceneRendererImpl::ResizeWindowImages(uint32 width, uint32 height)
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
@@ -779,7 +779,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::SetVSync(bool isVSyncEnabled)
+    void SceneRendererImpl::SetVSync(bool isVSyncEnabled)
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
@@ -807,7 +807,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::DepthPrePass()
+    void SceneRendererImpl::DepthPrePass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -845,7 +845,7 @@ namespace Astral {
 
 
 
-    void DeferredRenderer::ForwardLightingPass()
+    void SceneRendererImpl::ForwardLightingPass()
     {
         struct ForwardLightingPassPushData
         {
@@ -911,7 +911,7 @@ namespace Astral {
 
 
 
-    void DeferredRenderer::GeometryPass()
+    void SceneRendererImpl::GeometryPass()
     {
         struct GeometryPassPushData
         {
@@ -968,7 +968,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::DeferredLightingPass()
+    void SceneRendererImpl::DeferredLightingPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1002,7 +1002,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::EnvironmentMapPass()
+    void SceneRendererImpl::EnvironmentMapPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1035,7 +1035,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::ToneMappingPass()
+    void SceneRendererImpl::ToneMappingPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1071,7 +1071,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::FXAAPass()
+    void SceneRendererImpl::FXAAPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1107,7 +1107,7 @@ namespace Astral {
     static_assert(sizeof(ComputeIrradianceMapPushConstants) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
 
 
-    void DeferredRenderer::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
+    void SceneRendererImpl::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
     {
         RendererAPI::BeginLabel(commandBuffer, "IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
@@ -1149,7 +1149,7 @@ namespace Astral {
     };
 
 
-    void DeferredRenderer::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
+    void SceneRendererImpl::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
     {
         RendererAPI::BeginLabel(commandBuffer, "PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
@@ -1191,7 +1191,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::ResizeViewport(uint32 width, uint32 height)
+    void SceneRendererImpl::ResizeViewport(uint32 width, uint32 height)
     {
         m_ViewportSize = UVec2(width, height);
         m_ViewportResizedPublisher.PublishEvent(ViewportResizedEvent(width, height));

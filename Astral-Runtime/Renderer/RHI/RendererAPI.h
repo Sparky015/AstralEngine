@@ -8,7 +8,6 @@
 #include "../SceneRenderer.h"
 #include "RendererCommands.h"
 #include "RendererContext.h"
-#include "../Backends/ForwardRenderer.h"
 #include "Resources/Device.h"
 
 namespace Astral {

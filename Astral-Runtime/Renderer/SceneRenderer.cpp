@@ -8,19 +8,16 @@
 #include "Debug/ImGui/ImGuiManager.h"
 #include "RHI/RendererAPI.h"
 
-#include "Renderer/Backends/DeferredRenderer.h"
-#include "Renderer/Backends/ForwardRenderer.h"
+#include "SceneRendererImpl.h"
 
 namespace Astral {
 
     GraphicsOwnedPtr<Renderer> SceneRenderer::m_Renderer{nullptr};
-    bool SceneRenderer::m_IsRendererTypeUpdateNeeded{};
-    RendererType SceneRenderer::m_NewRendererType{};
 
 
     void SceneRenderer::Init()
     {
-        m_Renderer = CreateGraphicsOwnedPtr<DeferredRenderer>();
+        m_Renderer = CreateGraphicsOwnedPtr<SceneRendererImpl>();
         m_Renderer->Init();
     }
 
@@ -34,7 +31,6 @@ namespace Astral {
 
     void SceneRenderer::BeginScene(const SceneDescription& sceneDescription)
     {
-        if (m_IsRendererTypeUpdateNeeded) { UpdateRendererType(); }
         m_Renderer->BeginScene(sceneDescription);
     }
 
@@ -97,29 +93,6 @@ namespace Astral {
         RendererSettings rendererSettings = SceneRenderer::GetRendererSettings();
         rendererSettings.RendererType = rendererType;
         SceneRenderer::SetRendererSettings(rendererSettings);
-    }
-
-
-    void SceneRenderer::UpdateRendererType()
-    {
-        WARN("Changing renderer type!")
-
-        m_Renderer->Shutdown();
-        m_Renderer.reset();
-
-        Engine::Get().GetImGuiManager().Shutdown();
-
-        switch (m_NewRendererType)
-        {
-           case RendererType::DEFERRED: m_Renderer = CreateGraphicsOwnedPtr<DeferredRenderer>(); break;
-           case RendererType::FORWARD: m_Renderer = CreateGraphicsOwnedPtr<ForwardRenderer>(); break;
-        }
-
-        Engine::Get().GetImGuiManager().Init();
-
-        m_Renderer->Init();
-
-        m_IsRendererTypeUpdateNeeded = false;
     }
 
 } // Astral

@@ -1,21 +1,23 @@
 /**
-* @file ForwardRenderer.h
+* @file SceneRendererImpl.h
 * @author Andrew Fagan
-* @date 6/29/25
+* @date 7/1/2025
 */
+
 
 #pragma once
 
-#include "Renderer/Common/Material.h"
-#include "Renderer/Common/Mesh.h"
+#include "Common/Material.h"
+#include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
 #include "Renderer/Cameras/Camera.h"
-#include "Renderer/RHI/RendererCommands.h"
-#include "Renderer/RHI/Resources/Framebuffer.h"
-#include "Renderer/RHI/Resources/Renderpass.h"
-#include "Renderer/RHI/Resources/PipelineStateCache.h"
+#include "RHI/RendererCommands.h"
+#include "RHI/Resources/Framebuffer.h"
+#include "RHI/Resources/Renderpass.h"
+#include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/RenderGraph/RenderGraph.h"
 #include "Renderer/SceneRenderer.h"
 
 #include <queue>
@@ -23,11 +25,13 @@
 
 namespace Astral {
 
-    struct SceneDescription;
+    struct SceneDescription; // Forward declared
 
-    class ForwardRenderer : public Renderer
+    class SceneRendererImpl : public Renderer
     {
     public:
+        ~SceneRendererImpl() override = default;
+
         void Init() override;
         void Shutdown() override;
 
@@ -42,7 +46,7 @@ namespace Astral {
         void ResizeViewport(uint32 width, uint32 height) override;
         UVec2 GetViewportSize() override { return m_ViewportSize; }
 
-        RendererType GetType() override { return RendererType::FORWARD; }
+        RendererType GetType() override { return m_RendererSettings.RendererType; }
 
     private:
 
@@ -59,18 +63,18 @@ namespace Astral {
             float AmbientLightConstant;
         };
 
+
         struct FrameContext
         {
             std::vector<Mesh> Meshes;
             std::vector<Material> Materials;
             std::vector<Mat4> Transforms;
 
+
             TextureHandle OffscreenRenderTarget;
-            TextureHandle OffscreenDepthBuffer;
             DescriptorSetHandle OffscreenDescriptorSet;
 
             CommandBufferHandle SceneCommandBuffer;
-            FramebufferHandle SceneFramebuffer;
             RenderTargetHandle SceneRenderTarget;
             BufferHandle SceneDataBuffer;
             BufferHandle SceneLightsBuffer;
@@ -78,26 +82,46 @@ namespace Astral {
 
             FramebufferHandle WindowFramebuffer;
 
-            std::vector<DescriptorSetHandle> ImGuiTexturesToBeFreed;
-            std::vector<TextureHandle> TexturesToBeFreed;
-            uint32 FramesTillFree = 2;
+            Ref<EnvironmentMap> EnvironmentMap;
+            DescriptorSetHandle EnvironmentMapDescriptorSet;
+            bool IsIrradianceMapCalculationNeeded;
         };
 
-
-        void BuildRenderPasses();
+        void BuildRenderGraphForDeferred();
+        void BuildRenderGraphForForward();
+        void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
 
         void RenderScene();
 
-        void ResizeImages(uint32 width, uint32 height);
+        void ResizeWindowImages(uint32 width, uint32 height);
+        void SetVSync(bool isVSyncEnabled);
+
+        // Forward
+        void DepthPrePass();
+        void ForwardLightingPass();
+
+        // Deferred
+        void GeometryPass();
+        void DeferredLightingPass();
+
+        // Both
+        void EnvironmentMapPass();
+        void ToneMappingPass();
+        void FXAAPass();
+
+        void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
+        void ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions);
 
 
         RendererSettings m_RendererSettings{};
+        RenderGraph m_RenderGraph;
 
         std::vector<FrameContext> m_FrameContexts;
         uint32 m_CurrentFrameIndex = -1;
         RenderPassHandle m_MainRenderPass;
         RenderPassHandle m_ImGuiRenderPass;
+        RenderPassHandle m_IrradianceCalcPass;
         EventListener<FramebufferResizedEvent> m_WindowResizedListener{[](FramebufferResizedEvent){}};
         EventPublisher<ViewportResizedEvent> m_ViewportResizedPublisher;
         bool m_IsSceneStarted = false;
@@ -105,6 +129,12 @@ namespace Astral {
 
         UVec2 m_ViewportSize{};
         PipelineStateCache m_PipelineStateCache;
+
+        ShaderHandle m_GeometryPassShader;
+        ShaderHandle m_LightingShader;
+        DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
+        float m_SceneExposure{};
     };
 
 }
