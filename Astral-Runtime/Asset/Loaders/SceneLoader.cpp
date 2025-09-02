@@ -878,7 +878,7 @@ namespace Astral {
 
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::UNPACKED;
-        materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
+        materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
         materialRef->HasDirectXNormals = m_DefaultIsNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);
@@ -996,7 +996,7 @@ namespace Astral {
 
         materialRef->ShaderModel = ShaderModel::PBR;
         materialRef->TextureConvention = TextureConvention::ORM_PACKED;
-        materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/brdf.frag");
+        materialRef->FragmentShader = assetRegistry.GetAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
         materialRef->HasDirectXNormals = m_DefaultIsNormalsDirectX;
 
         materialRef->Textures.push_back(baseColor);

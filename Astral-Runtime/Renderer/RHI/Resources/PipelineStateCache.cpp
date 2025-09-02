@@ -48,7 +48,7 @@ namespace Astral {
             .RenderPass = renderPass,
             .VertexShader = mesh.VertexShader,
             .FragmentShader = material.FragmentShader,
-            .ShaderDataLayout = material.DescriptorSet->GetDescriptorSetLayout(),
+            .ShaderDataLayout = material.DescriptorSet ? material.DescriptorSet->GetDescriptorSetLayout() : DescriptorSetLayout(),
             .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout(),
             .IsAlphaBlended = material.IsAlphaBlended
         };

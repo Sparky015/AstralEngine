@@ -43,7 +43,7 @@ void main()
     float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
     float lumaRange = lumaMax - lumaMin;
 
-    if (lumaRange < max(qualityEdgeThresholdMin, lumaMax * qualityEdgeThreshold))
+    if (lumaRange < max(FXAA_EDGE_THRESHOLD_MIN, lumaMax * FXAA_EDGE_THRESHOLD))
     {
         color = vec4(rgbM, 1.0);
         return;
