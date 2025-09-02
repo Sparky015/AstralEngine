@@ -34,6 +34,7 @@ namespace Astral {
 
     struct RendererSettings
     {
+        RendererType RendererType;
         bool IsVSyncEnabled;
     };
 

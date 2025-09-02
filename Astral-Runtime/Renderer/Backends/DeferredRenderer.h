@@ -46,7 +46,7 @@ namespace Astral {
         void ResizeViewport(uint32 width, uint32 height) override;
         UVec2 GetViewportSize() override { return m_ViewportSize; }
 
-        RendererType GetType() override { return RendererType::DEFERRED; }
+        RendererType GetType() override { return m_RendererSettings.RendererType; }
 
     private:
 

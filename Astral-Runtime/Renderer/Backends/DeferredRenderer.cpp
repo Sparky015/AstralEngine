@@ -82,6 +82,7 @@ namespace Astral {
 
         // Renderer Settings
         RendererSettings rendererSettings;
+        rendererSettings.RendererType = RendererType::FORWARD;
         rendererSettings.IsVSyncEnabled = true;
 
         SetRendererSettings(rendererSettings);
@@ -209,6 +210,20 @@ namespace Astral {
 
     void DeferredRenderer::SetRendererSettings(const RendererSettings& rendererSettings)
     {
+        if (m_RendererSettings.RendererType != rendererSettings.RendererType)
+        {
+            m_RendererSettings.RendererType = rendererSettings.RendererType;
+
+            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
+            {
+                BuildRenderGraphForDeferred();
+            }
+            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
+            {
+                BuildRenderGraphForForward();
+            }
+        }
+
         if (m_RendererSettings.IsVSyncEnabled != rendererSettings.IsVSyncEnabled)
         {
             m_RendererSettings.IsVSyncEnabled = rendererSettings.IsVSyncEnabled;
@@ -469,9 +484,11 @@ namespace Astral {
         m_RenderGraph.AddPass(depthPrePass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(cubemapPass);
-        m_RenderGraph.AddPass(tonemappingPass);
-        m_RenderGraph.AddOutputPass(fxaaPass);
-        m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
+        m_RenderGraph.AddOutputPass(tonemappingPass);
+        m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
+        // m_RenderGraph.AddPass(tonemappingPass);
+        // m_RenderGraph.AddOutputPass(fxaaPass);
+        // m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 

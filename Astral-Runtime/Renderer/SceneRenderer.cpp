@@ -94,10 +94,9 @@ namespace Astral {
 
     void SceneRenderer::SetRendererType(RendererType rendererType)
     {
-        if (m_Renderer->GetType() == rendererType) { return; }
-
-        m_NewRendererType = rendererType;
-        m_IsRendererTypeUpdateNeeded = true;
+        RendererSettings rendererSettings = SceneRenderer::GetRendererSettings();
+        rendererSettings.RendererType = rendererType;
+        SceneRenderer::SetRendererSettings(rendererSettings);
     }
 
 
