@@ -96,8 +96,15 @@ namespace Astral {
         void ResizeWindowImages(uint32 width, uint32 height);
         void SetVSync(bool isVSyncEnabled);
 
+        // Forward
+        void DepthPrePass();
+        void ForwardLightingPass();
+
+        // Deferred
         void GeometryPass();
-        void LightingPass();
+        void DeferredLightingPass();
+
+        // Both
         void EnvironmentMapPass();
         void ToneMappingPass();
         void FXAAPass();

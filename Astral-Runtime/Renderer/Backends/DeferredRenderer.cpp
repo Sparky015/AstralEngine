@@ -698,8 +698,29 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::DepthPass()
+    void DeferredRenderer::DepthPrePass()
     {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+
+        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        {
+            Mesh& mesh = frameContext.Meshes[i];
+            Material material = frameContext.Materials[i];
+            material.DescriptorSet = nullptr;
+            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
+
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            pipeline->BindPipeline(commandBuffer);
+            pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+            mesh.VertexBuffer->Bind(commandBuffer);
+            mesh.IndexBuffer->Bind(commandBuffer);
+            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+        }
 
     }
 
@@ -713,34 +734,34 @@ namespace Astral {
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
 
-        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
-        Material material{};
-        material.DescriptorSet = executionContext.ReadAttachments;
-
-        if (material.TextureConvention == TextureConvention::UNPACKED)
+        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+            Mesh& mesh = frameContext.Meshes[i];
+            Material& material = frameContext.Materials[i];
+
+            if (material.TextureConvention == TextureConvention::UNPACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+            }
+            else if (material.TextureConvention == TextureConvention::ORM_PACKED)
+            {
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
+            }
+
+            Ref<Shader> vertexShader = mesh.VertexShader;
+
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            pipeline->BindPipeline(commandBuffer);
+            pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+            pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+            pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
+            pipeline->BindDescriptorSet(commandBuffer, material.DescriptorSet, 2);
+
+            mesh.VertexBuffer->Bind(commandBuffer);
+            mesh.IndexBuffer->Bind(commandBuffer);
+            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
         }
-        else if (material.TextureConvention == TextureConvention::ORM_PACKED)
-        {
-            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
-        }
-
-        Ref<Shader> vertexShader = mesh.VertexShader;
-
-        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
-        pipeline->BindPipeline(commandBuffer);
-        pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
-
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
-        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
-        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
-
-        mesh.VertexBuffer->Bind(commandBuffer);
-        mesh.IndexBuffer->Bind(commandBuffer);
-        RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
     }
