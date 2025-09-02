@@ -1,0 +1,11 @@
+Shader Model: PBR
+Shader: Shaders/brdf.frag
+Texture Convention: Unpacked
+Normals Convention: Vulkan/OpenGL
+Is Alpha Blended: false
+Texture Maps:
+  - Base Color: Textures/MissingTexture.png
+  - Metallic: Textures/SolidBlack.png
+  - Roughness: Textures/SolidWhite.png
+  - Emission: Textures/SolidBlack.png
+  - Normals: ""
