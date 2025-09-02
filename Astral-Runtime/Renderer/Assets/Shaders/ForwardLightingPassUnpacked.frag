@@ -18,20 +18,28 @@ layout (set = 0, binding = 0) uniform SceneData {
     float ambientLightConstant;
 } u_SceneData;
 
+const uint LIGHT_TYPE_POINT = 0;
+const uint LIGHT_TYPE_DIRECTIONAL = 1;
+
 struct Light {
     vec3 lightPosition;
     vec3 lightColor;
+    uint lightType;
 };
 
 layout (set = 0, binding = 1) readonly buffer Lights {
     Light[] lights;
 } u_SceneLights;
 
-layout (set = 1, binding = 0) uniform sampler2D u_BaseColor;
-layout (set = 1, binding = 1) uniform sampler2D u_Metallic;
-layout (set = 1, binding = 2) uniform sampler2D u_Roughness;
-layout (set = 1, binding = 3) uniform sampler2D u_Emission;
-layout (set = 1, binding = 4) uniform sampler2D u_Normals;
+layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
+layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
+layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
+
+layout (set = 2, binding = 0) uniform sampler2D u_BaseColor;
+layout (set = 2, binding = 1) uniform sampler2D u_Metallic;
+layout (set = 2, binding = 2) uniform sampler2D u_Roughness;
+layout (set = 2, binding = 3) uniform sampler2D u_Emission;
+layout (set = 2, binding = 4) uniform sampler2D u_Normals;
 
 layout (push_constant) uniform ModelData {
     mat4 transform;
@@ -78,6 +86,10 @@ vec3 Fresnel(vec3 F0, vec3 V, vec3 H)
     return F0 + (vec3(1.0) - F0) * pow(1 - max(dot(V, H), 0.0), 5.0);
 }
 
+vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
 
 void main()
 {
@@ -99,7 +111,6 @@ void main()
         }
         tangentSpaceNormal = normalize(tangentSpaceNormal);
 
-
         vec3 N = normalize(v_Normals);
         vec3 T = normalize(v_Tangents);
         vec3 B = normalize(v_Bitangents);
@@ -114,7 +125,10 @@ void main()
         }
     }
 
+    vec3 worldPosition = v_WorldPosition;
     vec3 cameraPosition = u_SceneData.cameraPosition;
+    vec3 viewVector = normalize(cameraPosition - worldPosition);
+
     vec3 finalLight = vec3(0.0f);
 
     if (u_SceneData.numLights == 0)
@@ -126,15 +140,21 @@ void main()
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
+        uint lightType = u_SceneLights.lights[i].lightType;
 
         // Vectors
         normal = normalize(normal);
         vec3 viewVector = normalize(cameraPosition - v_WorldPosition);
-        vec3 lightVector = normalize(lightPosition - v_WorldPosition);
+
+        vec3 lightVector;
+        if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
+        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(lightPosition); } // Light position is direction for directional lights
+
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - v_WorldPosition);
         float lightAttenuation = 1.0 / (lightDistance * lightDistance); // quadratic attenuation formula
 
+        if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightAttenuation = 1; } // No attenuation for directional lights
 
 
         // PBR Equation in Full
@@ -156,9 +176,30 @@ void main()
         finalLight += outgoingLight;
     }
 
-    vec3 ambient = u_SceneData.ambientLightConstant * baseColor * (1.0 - metallic.r);
-    finalLight += ambient + emission;
+    vec3 F0 = mix(vec3(0.04), baseColor, metallic);
+    vec3 F = IBLFresnelSchlickRoughness(max(dot(normal, viewVector), 0.0), F0, roughness);
 
+    // Indirect Specular
+    vec3 reflectionVector = reflect(-viewVector, normal);
+    float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
+    vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
+    vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
+    viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
+    clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);
+
+    vec2 envBRDF  = texture(u_BRDFLut, viewAngleRoughnessInput).rg;
+    vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+
+    // Indirect Diffuse
+    vec3 kS = F;
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+
+    vec3 irradiance = texture(u_Irradiance, normal).rgb;
+    vec3 diffuse = irradiance * baseColor;
+
+    vec3 ambient = u_SceneData.ambientLightConstant * (kD * diffuse + specular);
+    finalLight += ambient + emission;
 
     color = vec4(finalLight, 1.0f);
 }
