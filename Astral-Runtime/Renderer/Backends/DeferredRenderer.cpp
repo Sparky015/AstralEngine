@@ -68,8 +68,8 @@ namespace Astral {
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
-        m_LightingShader = registry.CreateAsset<Shader>("Shaders/Deferred_Lighting_Pass.frag");
+        m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
+        m_LightingShader = registry.CreateAsset<Shader>("Shaders/DeferredLightingPass.frag");
 
         TextureHandle toneMappingLUT = registry.CreateAsset<Texture>("LUTs/acescg_to_rec709_linear_no_shaper.cube");
         m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
@@ -315,7 +315,7 @@ namespace Astral {
         };
 
 
-        RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ LightingPass(); });
+        RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ DeferredLightingPass(); });
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
@@ -698,6 +698,54 @@ namespace Astral {
     }
 
 
+    void DeferredRenderer::DepthPass()
+    {
+
+    }
+
+
+    void DeferredRenderer::ForwardLightingPass()
+    {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
+
+        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
+        Material material{};
+        material.DescriptorSet = executionContext.ReadAttachments;
+
+        if (material.TextureConvention == TextureConvention::UNPACKED)
+        {
+            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+        }
+        else if (material.TextureConvention == TextureConvention::ORM_PACKED)
+        {
+            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
+        }
+
+        Ref<Shader> vertexShader = mesh.VertexShader;
+
+        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+        pipeline->BindPipeline(commandBuffer);
+        pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        pipeline->BindDescriptorSet(commandBuffer, frameContext.EnvironmentMapDescriptorSet, 1);
+        pipeline->BindDescriptorSet(commandBuffer, executionContext.ReadAttachments, 2);
+
+        mesh.VertexBuffer->Bind(commandBuffer);
+        mesh.IndexBuffer->Bind(commandBuffer);
+        RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
+    }
+
+
     struct GeometryPassPushData
     {
         Mat4 ModelMatrix;
@@ -725,11 +773,11 @@ namespace Astral {
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_Unpacked_Set_GBuffer.frag");
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Deferred_ORM_Set_GBuffer.frag");
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassORM.frag");
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
@@ -755,7 +803,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderer::LightingPass()
+    void DeferredRenderer::DeferredLightingPass()
     {
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -765,7 +813,7 @@ namespace Astral {
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
-        mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_LightingShader;
@@ -804,7 +852,7 @@ namespace Astral {
         frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Cubemap.frag");
+        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
@@ -831,13 +879,13 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
 
         Material toneMapperMaterial{};
-        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/Tone_Mapping.frag");
+        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
         toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
@@ -867,7 +915,7 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Lighting_Pass_No_Transform.vert");
+        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         Material toneMapperMaterial{};
@@ -903,7 +951,7 @@ namespace Astral {
 
         m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
-        ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Irradiance_Map.comp");
+        ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/ComputeIrradianceMap.comp");
         ;
         PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
         computePipeline->BindPipeline(commandBuffer);
@@ -945,7 +993,7 @@ namespace Astral {
 
         m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
-        ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/Compute_Prefiltered_Environment_Map.comp");
+        ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/ComputePrefilteredEnvironmentMap.comp");
 
         PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
         computePipeline->BindPipeline(commandBuffer);

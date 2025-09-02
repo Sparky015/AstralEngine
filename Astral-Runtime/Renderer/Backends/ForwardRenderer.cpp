@@ -325,11 +325,11 @@ namespace Astral {
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/brdf.frag");
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/Forward_ORM_LightingPass.frag");
+                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(mainRenderPass, material, mesh, 0);
