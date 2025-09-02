@@ -87,7 +87,8 @@ namespace Astral {
             bool IsIrradianceMapCalculationNeeded;
         };
 
-        void BuildRenderGraph();
+        void BuildRenderGraphForDeferred();
+        void BuildRenderGraphForForward();
         void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
 
