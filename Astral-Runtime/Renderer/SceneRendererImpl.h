@@ -16,37 +16,37 @@
 #include "RHI/Resources/Renderpass.h"
 #include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
-#include "Renderer/Renderer.h"
 #include "Renderer/RenderGraph/RenderGraph.h"
-#include "Renderer/SceneRenderer.h"
+#include "ECS/Components/PointLightComponent.h"
+#include "Renderer/Common/SceneRendererTypes.h"
 
 #include <queue>
 
 
+
 namespace Astral {
 
-    struct SceneDescription; // Forward declared
 
-    class SceneRendererImpl : public Renderer
+    class SceneRendererImpl
     {
     public:
-        ~SceneRendererImpl() override = default;
+        ~SceneRendererImpl() = default;
 
-        void Init() override;
-        void Shutdown() override;
+        void Init();
+        void Shutdown();
 
-        void BeginScene(const SceneDescription& sceneDescription) override;
-        void EndScene() override;
+        void BeginScene(const SceneDescription& sceneDescription);
+        void EndScene();
 
-        void Submit(Mesh& mesh, Material& material, Mat4& transform) override;
+        void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
-        void SetRendererSettings(const RendererSettings& rendererSettings) override;
-        const RendererSettings& GetRendererSettings() override;
-        DescriptorSetHandle GetViewportTexture() override;
-        void ResizeViewport(uint32 width, uint32 height) override;
-        UVec2 GetViewportSize() override { return m_ViewportSize; }
+        void SetRendererSettings(const RendererSettings& rendererSettings);
+        const RendererSettings& GetRendererSettings();
+        DescriptorSetHandle GetViewportTexture();
+        void ResizeViewport(uint32 width, uint32 height);
+        UVec2 GetViewportSize() { return m_ViewportSize; }
 
-        RendererType GetType() override { return m_RendererSettings.RendererType; }
+        RendererType GetType();
 
     private:
 

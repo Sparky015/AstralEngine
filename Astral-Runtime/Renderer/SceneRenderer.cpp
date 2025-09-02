@@ -12,7 +12,7 @@
 
 namespace Astral {
 
-    GraphicsOwnedPtr<Renderer> SceneRenderer::m_Renderer{nullptr};
+    GraphicsOwnedPtr<SceneRendererImpl> SceneRenderer::m_Renderer{nullptr};
 
 
     void SceneRenderer::Init()

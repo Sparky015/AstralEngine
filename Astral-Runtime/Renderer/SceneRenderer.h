@@ -4,39 +4,9 @@
 
 #pragma once
 
-#include "Common/Material.h"
-#include "Common/Mesh.h"
-#include "Core/Events/EventPublisher.h"
-#include "Renderer/RHI/Resources/VertexBuffer.h"
-#include "Renderer/Cameras/Camera.h"
-#include "RHI/RendererCommands.h"
-#include "RHI/Resources/Framebuffer.h"
-#include "RHI/Resources/Renderpass.h"
-#include "RHI/Resources/PipelineStateCache.h"
-#include "Window/WindowEvents.h"
-#include "ECS/Components/PointLightComponent.h"
-
-#include <queue>
-
-#include "Common/EnvironmentMap.h"
-#include "Renderer/Renderer.h"
+#include "SceneRendererImpl.h"
 
 namespace Astral {
-
-    struct SceneDescription
-    {
-        Camera& Camera;
-        std::vector<Light>& Lights;
-        Ref<EnvironmentMap> EnvironmentMap;
-        float AmbientLightConstant;
-        float Exposure;
-    };
-
-    struct RendererSettings
-    {
-        RendererType RendererType;
-        bool IsVSyncEnabled;
-    };
 
     class SceneRenderer
     {
@@ -64,7 +34,7 @@ namespace Astral {
 
     private:
 
-        static GraphicsOwnedPtr<Renderer> m_Renderer;
+        static GraphicsOwnedPtr<SceneRendererImpl> m_Renderer;
     };
 
 } // Astral

@@ -1242,4 +1242,10 @@ namespace Astral {
         m_RenderGraph.ResizeResources(outputTextures);
     }
 
+
+    RendererType SceneRendererImpl::GetType()
+    {
+        return m_RendererSettings.RendererType;
+    }
+
 } // Renderer
