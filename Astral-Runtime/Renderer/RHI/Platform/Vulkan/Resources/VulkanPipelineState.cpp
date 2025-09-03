@@ -9,6 +9,7 @@
 #include "VulkanVertexBuffer.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
@@ -257,10 +258,13 @@ namespace Astral {
 
     void VulkanPipelineState::SetMultisampleState()
     {
+        bool shouldEnableMSAA = m_GraphicsDescription.MSAASamples != SampleCount::SAMPLE_1_BIT;
+        VkSampleCountFlagBits msaaSamples = ConvertSampleCountToVkSampleCountBit(m_GraphicsDescription.MSAASamples);
+
         VkPipelineMultisampleStateCreateInfo multisample = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
-            .rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
-            .sampleShadingEnable = VK_FALSE,
+            .rasterizationSamples = msaaSamples,
+            .sampleShadingEnable = shouldEnableMSAA,
             .minSampleShading = 1.0f
         };
 

@@ -27,6 +27,7 @@ namespace Astral {
         VertexBufferLayout VertexBufferLayout;
         uint32 SubpassIndex;
         bool IsAlphaBlended;
+        SampleCount MSAASamples;
     };
 
     class VulkanPipelineState : public PipelineState
@@ -37,7 +38,6 @@ namespace Astral {
 
         void BindPipeline(CommandBufferHandle commandBufferHandle) override;
         void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
-
 
         void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
 
