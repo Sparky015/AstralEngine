@@ -61,6 +61,9 @@ size_t std::hash<Astral::GraphicsPipelineStateConfiguration>::operator()(const A
 
     Astral::HashCombine(seed, std::hash<bool>{}(config.IsAlphaBlended));
 
+    Astral::HashCombine(seed, std::hash<Astral::SampleCount>{}(config.MSAASampleCount));
+
+
     return seed;
 }
 

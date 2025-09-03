@@ -491,6 +491,11 @@ namespace Astral {
 
                 RenderGraphPass::LocalAttachment& inputAttachment = externalAttachment.OwningPass->GetAttachments()[externalPassAttachmentIndex];
 
+                if (inputAttachment.AttachmentType == AttachmentType::RESOLVE)
+                {
+                    inputAttachment.AttachmentType = AttachmentType::COLOR; // Force color attachment when using LinkWriteInputAttachment
+                }
+                
                 // Manage layout transitions
                 inputAttachment.AttachmentDescription.LoadOp = AttachmentLoadOp::LOAD;
                 inputAttachment.AttachmentDescription.InitialLayout = inputAttachment.LastKnownLayout;
@@ -624,6 +629,7 @@ namespace Astral {
                         .ImageData = nullptr,
                         .LayerCount = 1,
                         .MipMapCount = 1,
+                        .MSAASampleCount = localAttachment.AttachmentDescription.MSAASamples
                     };
 
 

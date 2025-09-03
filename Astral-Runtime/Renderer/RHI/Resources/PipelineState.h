@@ -26,6 +26,7 @@ namespace Astral {
         const VertexBufferLayout& BufferLayout;
         uint32 SubpassIndex;
         bool IsAlphaBlended;
+        SampleCount MSAASamples;
     };
 
     struct ComputePipelineStateCreateInfo

@@ -492,6 +492,26 @@ namespace Astral {
     }
 
 
+    VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount)
+    {
+        VkSampleCountFlagBits vkSampleCount;
+
+        switch (sampleCount)
+        {
+            case SampleCount::SAMPLE_1_BIT:   vkSampleCount = VK_SAMPLE_COUNT_1_BIT;   break;
+            case SampleCount::SAMPLE_2_BIT:   vkSampleCount = VK_SAMPLE_COUNT_2_BIT;   break;
+            case SampleCount::SAMPLE_4_BIT:   vkSampleCount = VK_SAMPLE_COUNT_4_BIT;   break;
+            case SampleCount::SAMPLE_8_BIT:   vkSampleCount = VK_SAMPLE_COUNT_8_BIT;   break;
+            case SampleCount::SAMPLE_16_BIT:  vkSampleCount = VK_SAMPLE_COUNT_16_BIT;  break;
+            case SampleCount::SAMPLE_32_BIT:  vkSampleCount = VK_SAMPLE_COUNT_32_BIT;  break;
+            case SampleCount::SAMPLE_64_BIT:  vkSampleCount = VK_SAMPLE_COUNT_64_BIT;  break;
+            default: vkSampleCount = VK_SAMPLE_COUNT_1_BIT; break;
+        }
+
+        return vkSampleCount;
+    }
+
+
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout)
     {
         switch (imageLayout)

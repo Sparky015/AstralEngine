@@ -23,6 +23,7 @@ namespace Astral {
         DescriptorSetLayout ShaderDataLayout;
         VertexBufferLayout VertexBufferLayout;
         bool IsAlphaBlended;
+        SampleCount MSAASampleCount;
 
         bool operator==(const GraphicsPipelineStateConfiguration& other) const;
     };
@@ -47,9 +48,11 @@ namespace Astral {
          * @param material A material that contains the fragment shader being used and the descriptor set being used
          * @param mesh A mesh that contains the vertex shader being used and the vertex buffer layout being used
          * @param subpassIndex The index of the subpass the pipeline is being used in
+         * @param msaaSampleCount
          * @warning The material's descriptor set will be added on top of the PipelineStateCache's descriptor set stack
          */
-        PipelineStateHandle GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex);
+        PipelineStateHandle GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex,
+                    SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.

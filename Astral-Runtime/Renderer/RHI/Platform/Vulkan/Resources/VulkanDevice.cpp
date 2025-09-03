@@ -158,7 +158,8 @@ namespace Astral {
             .DescriptorSets = pipelineStateCreateInfo.DescriptorSets,
             .VertexBufferLayout = pipelineStateCreateInfo.BufferLayout,
             .SubpassIndex = pipelineStateCreateInfo.SubpassIndex,
-            .IsAlphaBlended = pipelineStateCreateInfo.IsAlphaBlended
+            .IsAlphaBlended = pipelineStateCreateInfo.IsAlphaBlended,
+            .MSAASamples = pipelineStateCreateInfo.MSAASamples
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
@@ -266,7 +267,8 @@ namespace Astral {
             .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
-            .TextureType = TextureType::IMAGE_2D
+            .TextureType = TextureType::IMAGE_2D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -289,7 +291,8 @@ namespace Astral {
             .NumLayers = 6,
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
-            .TextureType = TextureType::CUBEMAP
+            .TextureType = TextureType::CUBEMAP,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -312,7 +315,8 @@ namespace Astral {
             .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
-            .TextureType = TextureType::IMAGE_3D
+            .TextureType = TextureType::IMAGE_3D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -400,6 +404,15 @@ namespace Astral {
         else
         {
             deviceFeatures.samplerAnisotropy = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features.sampleRateShading == VK_FALSE)
+        {
+            LOG("Vulkan: Sampler Anisotropy is not supported!")
+        }
+        else
+        {
+            deviceFeatures.sampleRateShading = VK_TRUE;
         }
 
         VkDeviceCreateInfo deviceCreateInfo = {

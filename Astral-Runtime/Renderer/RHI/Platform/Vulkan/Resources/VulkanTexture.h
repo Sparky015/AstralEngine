@@ -42,6 +42,7 @@ namespace Astral {
         uint32 NumMipLevels;
         bool GenerateMipMaps;
         TextureType TextureType;
+        SampleCount MSAASampleCount;
     };
 
     /**
@@ -162,9 +163,9 @@ namespace Astral {
 
         /**
          * @brief Creates the VkImage for the texture
-         * @param imageUsageFlags The image usage flags for the texture
+         * @param desc The image usage flags for the texture
          */
-        void CreateTexture(ImageUsageFlags imageUsageFlags);
+        void CreateTexture(const VulkanTextureDesc& desc);
 
         /**
          * @brief Destroys the VkImage for the texture

@@ -19,6 +19,7 @@
 
 #include "Renderer/RHI/Common/DependencyFlags.h"
 #include "Renderer/RHI/Common/ImageSubResourceRange.h"
+#include "Renderer/RHI/Resources/Renderpass.h"
 
 namespace Astral {
 
@@ -30,7 +31,8 @@ namespace Astral {
     VkImageAspectFlags ConvertImageAspectFlagsToVkImageAspectFlags(ImageAspectFlags imageAspectFlags);
     VkDependencyFlags ConvertDependencyFlagsToVkDependencyFlags(DependencyFlags dependencyFlags);
 
+    VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
+
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);
     ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);
-
 }

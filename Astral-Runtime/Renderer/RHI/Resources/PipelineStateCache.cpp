@@ -40,7 +40,7 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex)
+    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, SampleCount msaaSampleCount)
     {
         // Build pipeline configuration struct
 
@@ -50,7 +50,8 @@ namespace Astral {
             .FragmentShader = material.FragmentShader,
             .ShaderDataLayout = material.DescriptorSet ? material.DescriptorSet->GetDescriptorSetLayout() : DescriptorSetLayout(),
             .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout(),
-            .IsAlphaBlended = material.IsAlphaBlended
+            .IsAlphaBlended = material.IsAlphaBlended,
+            .MSAASampleCount = msaaSampleCount,
         };
 
         // If the pipeline was created already, return it
@@ -72,7 +73,8 @@ namespace Astral {
             .DescriptorSets = descriptorSets,
             .BufferLayout = mesh.VertexBuffer->GetBufferLayout(),
             .SubpassIndex = subpassIndex,
-            .IsAlphaBlended = material.IsAlphaBlended
+            .IsAlphaBlended = material.IsAlphaBlended,
+            .MSAASamples = pipelineStateConfiguration.MSAASampleCount
         };
 
         PipelineStateHandle pipelineStateObject = device.CreateGraphicsPipelineState(pipelineStateObjectCreateInfo);

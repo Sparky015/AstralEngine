@@ -341,9 +341,9 @@ namespace Astral {
         lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
 
 
-        RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ EnvironmentMapPass(); });
-        cubemapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        cubemapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](){ EnvironmentMapPass(); });
+        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        environmentMapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
         AttachmentDescription toneMappingOutputTextureDescription = {
@@ -359,7 +359,7 @@ namespace Astral {
         RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
         tonemappingPass.LinkReadInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&cubemapPass);
+        tonemappingPass.AddDependency(&environmentMapPass);
 
         AttachmentDescription fxaaOutputTextureDescription = {
             .Format = ImageFormat::B8G8R8A8_UNORM,
@@ -391,51 +391,65 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(geometryPass);
         m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(cubemapPass);
+        m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddPass(tonemappingPass);
         m_RenderGraph.AddOutputPass(fxaaPass);
         m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
+    static constexpr SampleCount ForwardMSAASampleCount = SampleCount::SAMPLE_4_BIT;
 
     void SceneRendererImpl::BuildRenderGraphForForward()
     {
 
-        AttachmentDescription depthBufferDescription = {
+        AttachmentDescription depthMSAABufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
             .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
+            .MSAASamples = ForwardMSAASampleCount
         };
 
         RenderGraphPass depthPrePass = RenderGraphPass(OutputAttachmentDimensions, "Depth Pre-Pass", [&](){ DepthPrePass(); });
-        depthPrePass.CreateDepthStencilAttachment(depthBufferDescription, "Forward_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
 
-        AttachmentDescription lightingTextureDescription = {
+        AttachmentDescription lightingMSAATextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
             .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
             .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
+            .MSAASamples = ForwardMSAASampleCount,
         };
 
 
         RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ ForwardLightingPass(); });
-        lightingPass.CreateColorAttachment(lightingTextureDescription, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        lightingPass.CreateColorAttachment(lightingMSAATextureDescription, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
+        AttachmentDescription lightingResolveTextureDescription = {
+            .Format = ImageFormat::R16G16B16A16_SFLOAT,
+            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::DONT_CARE,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
+        };
 
-        RenderGraphPass cubemapPass = RenderGraphPass(OutputAttachmentDimensions, "Cubemap Pass", [&](){ EnvironmentMapPass(); });
-        cubemapPass.LinkWriteInputAttachment(&lightingPass, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        cubemapPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](){ MSAAEnvironmentPass(); });
+        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        environmentMapPass.CreateResolveAttachment(lightingResolveTextureDescription, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        environmentMapPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
 
 
         AttachmentDescription toneMappingOutputTextureDescription = {
@@ -449,23 +463,9 @@ namespace Astral {
         };
 
         RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
-        tonemappingPass.LinkReadInputAttachment(&lightingPass, "Forward_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        tonemappingPass.LinkReadInputAttachment(&environmentMapPass, "Forward_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&cubemapPass);
-
-        AttachmentDescription fxaaOutputTextureDescription = {
-            .Format = ImageFormat::B8G8R8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass fxaaPass = RenderGraphPass(OutputAttachmentDimensions, "FXAA Pass", [&](){ FXAAPass(); });
-        fxaaPass.LinkReadInputAttachment(&tonemappingPass, "Tonemapping_Output_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        fxaaPass.CreateColorAttachment(fxaaOutputTextureDescription, "FXAA_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        tonemappingPass.AddDependency(&environmentMapPass);
 
 
         std::vector<TextureHandle> outputTextures;
@@ -483,12 +483,9 @@ namespace Astral {
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(depthPrePass);
         m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(cubemapPass);
+        m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddOutputPass(tonemappingPass);
         m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
-        // m_RenderGraph.AddPass(tonemappingPass);
-        // m_RenderGraph.AddOutputPass(fxaaPass);
-        // m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
         m_RenderGraph.EndBuildingRenderGraph();
     }
 
@@ -827,7 +824,7 @@ namespace Astral {
 
             material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, SampleCount::SAMPLE_4_BIT);
             pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -883,7 +880,7 @@ namespace Astral {
 
             Ref<Shader> vertexShader = mesh.VertexShader;
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, SampleCount::SAMPLE_4_BIT);
             pipeline->BindPipeline(commandBuffer);
             pipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
 
@@ -909,6 +906,37 @@ namespace Astral {
     }
 
 
+    void SceneRendererImpl::MSAAEnvironmentPass()
+    {
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        // Cubemap
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
+
+        Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
+        frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
+
+        Material environmentMapMaterial{};
+        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
+        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
+
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, ForwardMSAASampleCount);
+        cubemapPipeline->BindPipeline(commandBuffer);
+        cubemapPipeline->SetViewportAndScissor(commandBuffer, m_ViewportSize);
+
+        cubemapPipeline->BindDescriptorSet(commandBuffer, frameContext.SceneDataDescriptorSet, 0);
+        cubemapPipeline->BindDescriptorSet(commandBuffer, environmentMapMaterial.DescriptorSet, 1);
+
+        cubemapMesh.VertexBuffer->Bind(commandBuffer);
+        cubemapMesh.IndexBuffer->Bind(commandBuffer);
+
+        RendererAPI::PushConstants(commandBuffer, cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
+        RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
+    }
 
 
     void SceneRendererImpl::GeometryPass()
