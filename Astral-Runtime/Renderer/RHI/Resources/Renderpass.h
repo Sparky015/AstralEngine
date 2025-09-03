@@ -13,6 +13,8 @@
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/PipelineStageFlags.h"
+#include "Renderer/RHI/Common/SampleCount.h"
+
 
 namespace Astral {
 
@@ -40,6 +42,7 @@ namespace Astral {
         ImageLayout InitialLayout;
         ImageLayout FinalLayout;
         UVec4 ClearColor; // Only use when load op is set to clear
+        SampleCount MSAASamples = SampleCount::SAMPLE_1_BIT;
 
         bool operator==(const AttachmentDescription&) const = default;
     };

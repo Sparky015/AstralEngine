@@ -38,11 +38,12 @@ namespace Astral {
         VkImageLayout finalLayout = ConvertImageLayoutToVkImageLayout(attachmentDescription.FinalLayout);
         VkAttachmentLoadOp loadOp = ConvertToVkLoadOp(attachmentDescription.LoadOp);
         VkAttachmentStoreOp storeOp = ConvertToVkStoreOp(attachmentDescription.StoreOp);
+        VkSampleCountFlagBits msaaSampleCount = ConvertSampleCountToVkSampleCountBit(attachmentDescription.MSAASamples);
 
         VkAttachmentDescription vkAttachmentDescription = {
             .flags = 0,
             .format = format,
-            .samples = VK_SAMPLE_COUNT_1_BIT,
+            .samples = msaaSampleCount,
             .loadOp = loadOp,
             .storeOp = storeOp,
             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
