@@ -100,6 +100,7 @@ namespace Astral {
         // Forward
         void DepthPrePass();
         void ForwardLightingPass();
+        void MSAAEnvironmentPass();
 
         // Deferred
         void GeometryPass();
