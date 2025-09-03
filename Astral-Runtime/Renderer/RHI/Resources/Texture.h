@@ -11,6 +11,7 @@
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/ImageSubresourceRange.h"
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
+#include "Renderer/RHI/Common/SampleCount.h"
 
 #include "imgui/imgui.h"
 
@@ -28,11 +29,12 @@ namespace Astral {
         ImageLayout Layout;
         ImageUsageFlags UsageFlags;
         UVec2 Dimensions;
-        uint8* ImageData;
-        uint32 ImageDataLength;
-        uint32 LayerCount;
-        uint32 MipMapCount;
-        bool GenerateMipMaps;
+        uint8* ImageData = nullptr;
+        uint32 ImageDataLength = 0;
+        uint32 LayerCount = 1;
+        uint32 MipMapCount = 1;
+        bool GenerateMipMaps = false;
+        SampleCount MSAASampleCount = SampleCount::SAMPLE_1_BIT;
     };
 
     /**

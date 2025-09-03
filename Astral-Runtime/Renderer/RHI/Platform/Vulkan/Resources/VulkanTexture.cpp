@@ -35,7 +35,7 @@ namespace Astral {
 		m_TextureType(desc.TextureType),
 		m_IsSwapchainOwned(false)
     {
-        CreateTexture(desc.ImageUsageFlags);
+        CreateTexture(desc);
     	AllocateTextureMemory();
     	CreateImageView(desc.ImageUsageFlags);
     	CreateImageSampler();
@@ -234,10 +234,10 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateTexture(ImageUsageFlags imageUsageFlags)
+    void VulkanTexture::CreateTexture(const VulkanTextureDesc& desc)
     {
-    	m_ImageUsageFlags |= imageUsageFlags;
-    	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(imageUsageFlags);
+    	m_ImageUsageFlags |= desc.ImageUsageFlags;
+    	VkImageUsageFlags userUsageFlag = ConvertImageUsageFlagsToVkImageUsageFlags(desc.ImageUsageFlags);
         VkImageUsageFlags imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | userUsageFlag; // TODO: Remove the predefined flags
 
 		if (m_NumMipLevels > 1)
@@ -266,6 +266,8 @@ namespace Astral {
     		m_ImageDepth = 1;
     	}
 
+    	VkSampleCountFlagBits msaaSampleCount = ConvertSampleCountToVkSampleCountBit(desc.MSAASampleCount);
+
 
 
         VkImageCreateInfo imageCreateInfo = {
@@ -277,7 +279,7 @@ namespace Astral {
             .extent = {.width = m_ImageWidth, .height = m_ImageHeight, .depth = m_ImageDepth},
             .mipLevels = m_NumMipLevels,
             .arrayLayers = m_NumLayers,
-            .samples = VK_SAMPLE_COUNT_1_BIT,
+            .samples = msaaSampleCount,
             .tiling = VK_IMAGE_TILING_OPTIMAL,
             .usage = imageUsage,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
