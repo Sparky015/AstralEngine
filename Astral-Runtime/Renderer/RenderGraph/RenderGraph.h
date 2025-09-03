@@ -9,6 +9,7 @@
 #include "Core/Containers/DirectedGraph.h"
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/RHI/Resources/DescriptorSet.h"
+#include "Renderer/RHI/Resources/CommandBuffer.h"
 #include "RenderGraphPass.h"
 
 #include <vector>

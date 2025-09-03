@@ -23,14 +23,6 @@ namespace Astral {
     }
 
 
-    void VulkanIndexBuffer::Bind(CommandBufferHandle commandBufferHandle)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkBuffer indexBuffer = (VkBuffer)m_IndexBuffer.GetNativeHandle();
-        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-    }
-
-
     void VulkanIndexBuffer::CreateIndexBuffer(const VulkanIndexBufferDesc& desc)
     {
         VulkanBufferDesc stagingBufferDesc = {

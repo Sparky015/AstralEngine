@@ -13,6 +13,12 @@
 
 namespace Astral {
 
+    bool DescriptorSetLayout::operator==(const DescriptorSetLayout& other) const
+    {
+        return Descriptors == other.Descriptors;
+    }
+
+
     GraphicsRef<DescriptorSet> DescriptorSet::CreateDescriptorSet()
     {
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();

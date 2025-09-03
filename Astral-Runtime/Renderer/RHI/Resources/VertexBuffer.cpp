@@ -10,8 +10,8 @@
 #include "Renderer/RHI/RendererCommands.h"
 
 namespace Astral {
-    VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size,
-                                                        VertexBufferLayout& bufferLayout)
+
+    VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertices, unsigned int size, VertexBufferLayout& bufferLayout)
     {
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 

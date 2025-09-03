@@ -31,12 +31,23 @@ namespace Astral {
 
         void BindPipeline(PipelineStateHandle pipeline) override;
         void BindDescriptorSet(DescriptorSetHandle descriptorSet, uint32 binding) override;
+        void BindVertexBuffer(VertexBufferHandle vertexBuffer) override;
+        void BindIndexBuffer(IndexBufferHandle indexBuffer) override;
 
         void SetViewportAndScissor(UVec2 dimensions) override;
 
-        void BeginRenderPass(FramebufferHandle frameBufferHandle) override;
+        void BeginRenderPass(RenderPassHandle renderPassHandle, FramebufferHandle frameBufferHandle) override;
         void NextSubpass() override;
         void EndRenderPass() override;
+
+        void DrawElementsIndexed(IndexBufferHandle indexBufferHandle) override;
+        void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) override;
+        void PushConstants(PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
+        void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) override;
+
+        void BeginLabel(std::string_view label, Vec4 color) override;
+        void EndLabel() override;
+        void InsertMarker(std::string_view label, Vec4 color) override;
 
         void* GetNativeHandle() override { return m_CommandBuffer; }
 
@@ -51,6 +62,9 @@ namespace Astral {
 
         PipelineStateHandle m_BoundPipeline{nullptr};
         std::vector<DescriptorSetHandle> m_BoundDescriptorSets;
+        VertexBufferHandle m_BoundVertexBuffer{nullptr};
+        IndexBufferHandle m_BoundIndexBuffer{nullptr};
+        RenderPassHandle m_ActiveRenderPass{nullptr};
     };
 
 }

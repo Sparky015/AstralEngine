@@ -34,13 +34,11 @@ namespace Astral {
         explicit VulkanVertexBuffer(const VulkanVertexBufferDesc& desc);
         ~VulkanVertexBuffer() override;
 
-        void Bind(CommandBufferHandle commandBufferHandle) override;
-
         void* GetVerticeData() override { return m_VerticeData; }
         uint32 GetSize() override { return m_SizeInBytes; }
         VertexBufferLayout& GetBufferLayout() override { return m_BufferLayout; }
 
-        void* GetNativeHande() override { return m_VertexBuffer.GetNativeHandle(); }
+        void* GetNativeHandle() override { return m_VertexBuffer.GetNativeHandle(); }
 
     private:
 

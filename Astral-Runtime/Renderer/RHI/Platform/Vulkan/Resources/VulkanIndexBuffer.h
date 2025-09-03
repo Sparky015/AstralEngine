@@ -27,9 +27,9 @@ namespace Astral {
         explicit VulkanIndexBuffer(const VulkanIndexBufferDesc& desc);
         ~VulkanIndexBuffer() override;
 
-        void Bind(CommandBufferHandle commandBufferHandle) override;
-
         uint32 GetCount() const override { return m_SizeInBytes / sizeof(uint32); }
+
+        void* GetNativeHandle() override { return m_IndexBuffer.GetNativeHandle(); }
 
     private:
 

@@ -102,7 +102,7 @@ namespace Astral {
         m_ExecutionContext.CommandBuffer = commandBuffer;
 
 
-        RendererAPI::BeginLabel(commandBuffer, m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
+        commandBuffer->BeginLabel(m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
         for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
         {
@@ -118,13 +118,13 @@ namespace Astral {
             TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
 
 
-            RendererAPI::BeginLabel(commandBuffer, pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
-            rhiRenderPass->BeginRenderPass(commandBuffer, renderPassResource.Framebuffer);
+            commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
+            commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.Framebuffer);
 
             pass.Execute();
 
-            rhiRenderPass->EndRenderPass(commandBuffer);
-            RendererAPI::EndLabel(commandBuffer);
+            commandBuffer->EndRenderPass();
+            commandBuffer->EndLabel();
         }
 
         // Transition all attachment layouts to their initial starting layout
@@ -163,10 +163,9 @@ namespace Astral {
                 pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
             }
         }
-        RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        commandBuffer->SetPipelineBarrier(pipelineBarrier);
 
-        RendererAPI::EndLabel(commandBuffer);
-
+        commandBuffer->EndLabel();
 
         m_ExecutionContext = {};
     }
@@ -412,7 +411,7 @@ namespace Astral {
             pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
         }
 
-        RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+        commandBuffer->SetPipelineBarrier(pipelineBarrier);
     }
 
 

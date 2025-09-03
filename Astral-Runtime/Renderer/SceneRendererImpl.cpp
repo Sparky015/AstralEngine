@@ -697,16 +697,16 @@ namespace Astral {
             };
             pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
 
-            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+            commandBuffer->SetPipelineBarrier(pipelineBarrier);
         }
 
 
         // ImGui Rendering
-        RendererAPI::BeginLabel(commandBuffer, "ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        m_ImGuiRenderPass->BeginRenderPass(commandBuffer, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
+        commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
         RendererAPI::CallImGuiDraws(commandBuffer);
-        m_ImGuiRenderPass->EndRenderPass(commandBuffer);
-        RendererAPI::EndLabel(commandBuffer);
+        commandBuffer->EndRenderPass();
+        commandBuffer->EndLabel();
 
 
         {
@@ -732,7 +732,7 @@ namespace Astral {
             };
             pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
 
-            RendererAPI::SetPipelineBarrier(commandBuffer, pipelineBarrier);
+            commandBuffer->SetPipelineBarrier(pipelineBarrier);
         }
 
 
@@ -830,12 +830,12 @@ namespace Astral {
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
 
-            mesh.VertexBuffer->Bind(commandBuffer);
-            mesh.IndexBuffer->Bind(commandBuffer);
+            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, &frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
+            commandBuffer->PushConstants(pipeline, &frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
 
-            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
 
     }
@@ -888,8 +888,8 @@ namespace Astral {
             commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
             commandBuffer->BindDescriptorSet(material.DescriptorSet, 2);
 
-            mesh.VertexBuffer->Bind(commandBuffer);
-            mesh.IndexBuffer->Bind(commandBuffer);
+            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
             ForwardLightingPassPushData pushConstantData = {
                 .ModelMatrix = frameContext.Transforms[i],
@@ -897,9 +897,9 @@ namespace Astral {
                 .HasDirectXNormals = material.HasDirectXNormals
             };
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstantData, sizeof(ForwardLightingPassPushData));
+            commandBuffer->PushConstants(pipeline, &pushConstantData, sizeof(ForwardLightingPassPushData));
 
-            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
@@ -931,11 +931,12 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
 
-        cubemapMesh.VertexBuffer->Bind(commandBuffer);
-        cubemapMesh.IndexBuffer->Bind(commandBuffer);
+        commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
 
-        RendererAPI::PushConstants(commandBuffer, cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
+
+        commandBuffer->PushConstants(cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
+        commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
     }
 
 
@@ -983,14 +984,15 @@ namespace Astral {
                 .HasDirectXNormals = material.HasDirectXNormals
             };
 
-            RendererAPI::PushConstants(commandBuffer, pipeline, &pushConstantData, sizeof(GeometryPassPushData));
+            commandBuffer->PushConstants(pipeline, &pushConstantData, sizeof(GeometryPassPushData));
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(materialDescriptorSet, 1);
 
-            mesh.VertexBuffer->Bind(commandBuffer);
-            mesh.IndexBuffer->Bind(commandBuffer);
-            RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+
+            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
 
     }
@@ -1022,9 +1024,10 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
 
-        mesh.VertexBuffer->Bind(commandBuffer);
-        mesh.IndexBuffer->Bind(commandBuffer);
-        RendererAPI::DrawElementsIndexed(commandBuffer, mesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+
+        commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
     }
@@ -1055,11 +1058,11 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
 
-        cubemapMesh.VertexBuffer->Bind(commandBuffer);
-        cubemapMesh.IndexBuffer->Bind(commandBuffer);
+        commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
 
-        RendererAPI::PushConstants(commandBuffer, cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        RendererAPI::DrawElementsIndexed(commandBuffer, cubemapMesh.IndexBuffer);
+        commandBuffer->PushConstants(cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
+        commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
     }
 
 
@@ -1089,11 +1092,12 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
         commandBuffer->BindDescriptorSet(toneMapperMaterial.DescriptorSet, 2);
 
-        RendererAPI::PushConstants(commandBuffer, toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
+        commandBuffer->PushConstants(toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
 
-        quadMesh.VertexBuffer->Bind(commandBuffer);
-        quadMesh.IndexBuffer->Bind(commandBuffer);
-        RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
+
+        commandBuffer->DrawElementsIndexed(quadMesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
     }
@@ -1121,9 +1125,10 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
 
-        quadMesh.VertexBuffer->Bind(commandBuffer);
-        quadMesh.IndexBuffer->Bind(commandBuffer);
-        RendererAPI::DrawElementsIndexed(commandBuffer, quadMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
+
+        commandBuffer->DrawElementsIndexed(quadMesh.IndexBuffer);
     }
 
 
@@ -1136,7 +1141,7 @@ namespace Astral {
 
     void SceneRendererImpl::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
     {
-        RendererAPI::BeginLabel(commandBuffer, "IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+        commandBuffer->BeginLabel("IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
@@ -1156,16 +1161,16 @@ namespace Astral {
         for (uint32 i = 0; i < numFaces; i++)
         {
             computeIrradianceMapPushConstants.FaceIndex = i;
-            RendererAPI::PushConstants(commandBuffer, computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
+            commandBuffer->PushConstants(computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
 
             // Dispatching 2x2 blocks as the local layout is 8x8 and the irradiance faces are 16x16
             uint32 groupCountSize = EnvironmentMapIrradianceSize / 8;
-            RendererAPI::Dispatch(commandBuffer, groupCountSize, groupCountSize, 1);
+            commandBuffer->Dispatch(groupCountSize, groupCountSize, 1);
         }
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
-        RendererAPI::EndLabel(commandBuffer);
+        commandBuffer->EndLabel();
     }
 
 
@@ -1178,7 +1183,7 @@ namespace Astral {
 
     void SceneRendererImpl::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
     {
-        RendererAPI::BeginLabel(commandBuffer, "PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+        commandBuffer->BeginLabel("PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
@@ -1205,16 +1210,16 @@ namespace Astral {
         {
             prefilteredEnvironmentMapPushData.FaceIndex = i;
 
-            RendererAPI::PushConstants(commandBuffer, computePipeline, &prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
+            commandBuffer->PushConstants(computePipeline, &prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
 
             uint32 groupSizeX = std::max(mipWidth / 32, 1u);
             uint32 groupSizeY = std::max(mipHeight / 32, 1u);
-            RendererAPI::Dispatch(commandBuffer, groupSizeX, groupSizeY, 1);
+            commandBuffer->Dispatch(groupSizeX, groupSizeY, 1);
         }
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
-        RendererAPI::EndLabel(commandBuffer);
+        commandBuffer->EndLabel();
     }
 
 
@@ -1270,7 +1275,7 @@ namespace Astral {
     }
 
 
-    RendererType SceneRendererImpl::GetType()
+    RendererType SceneRendererImpl::GetType() const
     {
         return m_RendererSettings.RendererType;
     }

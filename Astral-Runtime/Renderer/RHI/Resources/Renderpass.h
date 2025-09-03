@@ -7,7 +7,6 @@
 #pragma once
 
 #include "Framebuffer.h"
-#include "CommandBuffer.h"
 #include "Renderer/RHI/Common/AccessFlags.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
@@ -41,7 +40,7 @@ namespace Astral {
         AttachmentStoreOp StoreOp;
         ImageLayout InitialLayout;
         ImageLayout FinalLayout;
-        UVec4 ClearColor; // Only use when load op is set to clear
+        Vec4 ClearColor; // Only use when load op is set to clear
         SampleCount MSAASamples = SampleCount::SAMPLE_1_BIT;
 
         bool operator==(const AttachmentDescription&) const = default;
@@ -61,6 +60,10 @@ namespace Astral {
     static constexpr SubpassIndex NullSubpassIndex = -1;
     static constexpr SubpassIndex SubpassExternal = -1;
 
+    /**
+     * @brief Defines the RHI RenderPass object
+     * @warning The current implementation only supports single threaded recording
+     */
     class RenderPass
     {
     public:
@@ -80,12 +83,13 @@ namespace Astral {
 
         virtual void Invalidate() = 0;
 
-        virtual void BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle) = 0;
-        virtual void NextSubpass(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void EndRenderPass(CommandBufferHandle commandBufferHandle) = 0;
+        virtual void BeginRenderPass(FramebufferHandle frameBufferHandle) = 0;
+        virtual void NextSubpass() = 0;
+        virtual void EndRenderPass() = 0;
 
         virtual uint32 GetNumberOfSubpasses() = 0;
         virtual uint32 GetNumColorAttachments(SubpassIndex subpassIndex) = 0;
+        virtual const std::vector<Vec4>& GetClearColors() const = 0;
 
         virtual void* GetNativeHandle() = 0;
     };

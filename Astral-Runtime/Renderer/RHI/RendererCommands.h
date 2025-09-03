@@ -36,20 +36,8 @@ namespace Astral {
 
         static inline API GetAPI() { return s_RendererAPI; }
 
-        virtual void Clear(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget) = 0;
-        virtual void SetClearColor(float r, float g, float b, float a) = 0;
-        virtual void DrawElementsIndexed(CommandBufferHandle commandBufferHandle, IndexBufferHandle indexBufferHandle) = 0;
-        virtual void Dispatch(CommandBufferHandle commandBufferHandle, uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) = 0;
-        virtual void PushConstants(CommandBufferHandle commandBufferHandle, PipelineStateHandle
-                                        pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
-        virtual void SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier) = 0;
         virtual void ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback) = 0;
 
-        virtual void SetBlending(bool enable) = 0; // TODO: Remove this
-
-        virtual void BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) = 0;
-        virtual void EndLabel(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color) = 0;
         virtual void NameObject(BufferHandle bufferHandle, std::string_view name) = 0;
         virtual void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name) = 0;
         virtual void NameObject(TextureHandle textureHandle, std::string_view name) = 0;
@@ -60,7 +48,8 @@ namespace Astral {
 
         virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
 
-        RendererDebugStats GetNumberOfDrawCalls() { return m_DebugStatsLastFrame; }
+        const RendererDebugStats& GetRendererDebugStats() const { return m_DebugStatsLastFrame; }
+        RendererDebugStats& GetInProgressRendererDebugStats() { return m_DebugStatsThisFrame; }
 
     protected:
         RendererDebugStats m_DebugStatsThisFrame = {};
