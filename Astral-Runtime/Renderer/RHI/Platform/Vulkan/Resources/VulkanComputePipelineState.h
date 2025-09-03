@@ -27,12 +27,8 @@ namespace Astral {
         explicit VulkanComputePipelineState(const VulkanComputePipelineStateDesc& desc);
         ~VulkanComputePipelineState() override;
 
-        void BindPipeline(CommandBufferHandle commandBufferHandle) override;
-        void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) override;
-
-        void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) override;
-
         PipelineType GetPipelineType() override { return PipelineType::COMPUTE; }
+        const std::vector<DescriptorSetLayout>& GetDescriptorSetLayout() const override { return m_DescriptorSetLayout; }
         void* GetPipelineLayout() override {return m_PipelineLayout; }
         void* GetHandleHandle() override { return m_Pipeline; }
 
@@ -60,6 +56,7 @@ namespace Astral {
 
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;
+        std::vector<DescriptorSetLayout> m_DescriptorSetLayout;
         VkPushConstantRange m_PushConstantRange;
 
         UVec2 m_ViewportDimensions;

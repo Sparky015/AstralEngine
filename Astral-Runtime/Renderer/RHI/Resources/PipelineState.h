@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "CommandBuffer.h"
 #include "DescriptorSet.h"
 #include "Shader.h"
 #include "VertexBufferLayout.h"
@@ -46,12 +45,8 @@ namespace Astral {
     public:
         virtual ~PipelineState() = default;
 
-        virtual void BindPipeline(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding) = 0;
-
-        virtual void SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions) = 0;
-
         virtual PipelineType GetPipelineType() = 0;
+        virtual const std::vector<DescriptorSetLayout>& GetDescriptorSetLayout() const = 0;
         virtual void* GetPipelineLayout() = 0;
         virtual void* GetHandleHandle() = 0;
     };

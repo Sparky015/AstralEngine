@@ -28,28 +28,6 @@ namespace Astral {
     }
 
 
-    void VulkanComputePipelineState::BindPipeline(CommandBufferHandle commandBufferHandle)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_Pipeline);
-    }
-
-
-    void VulkanComputePipelineState::BindDescriptorSet(CommandBufferHandle commandBufferHandle, DescriptorSetHandle descriptorSetHandle, uint32 binding)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, m_PipelineLayout,
-                    binding, 1, &descriptorSet, 0, nullptr);
-    }
-
-
-    void VulkanComputePipelineState::SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions)
-    {
-
-    }
-
-
     void VulkanComputePipelineState::CreateComputePipelineStateObject()
     {
         SetComputeShaderStage();
@@ -96,9 +74,11 @@ namespace Astral {
     {
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
         descriptorSetLayouts.reserve(m_ComputeDescription.DescriptorSets.size());
+        m_DescriptorSetLayout.reserve(m_ComputeDescription.DescriptorSets.size());
         for (DescriptorSetHandle descriptorSet : m_ComputeDescription.DescriptorSets)
         {
             descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetNativeLayout());
+            m_DescriptorSetLayout.push_back(descriptorSet->GetDescriptorSetLayout());
         }
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;

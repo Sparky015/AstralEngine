@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "PipelineState.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {
@@ -19,8 +20,14 @@ namespace Astral {
         virtual void EndRecording() = 0;
         virtual void Reset() = 0;
 
-        virtual void BindPipeline() = 0;
-        virtual void BindDescriptorSet() = 0;
+        virtual void BindPipeline(PipelineStateHandle pipeline) = 0;
+        virtual void BindDescriptorSet(DescriptorSetHandle descriptorSet, uint32 binding) = 0;
+
+        virtual void SetViewportAndScissor(UVec2 dimensions) = 0;
+
+        virtual void BeginRenderPass( FramebufferHandle frameBufferHandle) = 0;
+        virtual void NextSubpass() = 0;
+        virtual void EndRenderPass() = 0;
 
         virtual void* GetNativeHandle() = 0;
 

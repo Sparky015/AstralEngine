@@ -29,8 +29,14 @@ namespace Astral {
         void EndRecording() override;
         void Reset() override;
 
-        void BindPipeline() override;
-        void BindDescriptorSet() override;
+        void BindPipeline(PipelineStateHandle pipeline) override;
+        void BindDescriptorSet(DescriptorSetHandle descriptorSet, uint32 binding) override;
+
+        void SetViewportAndScissor(UVec2 dimensions) override;
+
+        void BeginRenderPass(FramebufferHandle frameBufferHandle) override;
+        void NextSubpass() override;
+        void EndRenderPass() override;
 
         void* GetNativeHandle() override { return m_CommandBuffer; }
 
@@ -42,6 +48,9 @@ namespace Astral {
         VkDevice m_Device;
         VkCommandPool m_CommandPool;
         VkCommandBuffer m_CommandBuffer;
+
+        PipelineStateHandle m_BoundPipeline{nullptr};
+        std::vector<DescriptorSetHandle> m_BoundDescriptorSets;
     };
 
 }
