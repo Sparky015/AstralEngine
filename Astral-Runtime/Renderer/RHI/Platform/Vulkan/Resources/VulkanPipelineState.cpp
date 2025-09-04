@@ -29,44 +29,6 @@ namespace Astral {
     }
 
 
-    void VulkanPipelineState::BindPipeline(CommandBufferHandle commandBufferHandle)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
-    }
-
-
-    void VulkanPipelineState::BindDescriptorSet(CommandBufferHandle commandBufferHandle,
-                                                      DescriptorSetHandle descriptorSetHandle, uint32 binding)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkDescriptorSet descriptorSet = (VkDescriptorSet)descriptorSetHandle->GetNativeHandle();
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout,
-                    binding, 1, &descriptorSet, 0, nullptr);
-    }
-
-
-    void VulkanPipelineState::SetViewportAndScissor(CommandBufferHandle commandBufferHandle, UVec2 dimensions)
-    {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkViewport viewport = {
-            .x = 0.0f,
-            .y = 0.0f,
-            .width = (float)dimensions.x,
-            .height = (float)dimensions.y,
-            .minDepth = 0.0f,
-            .maxDepth = 1.0f,
-        };
-        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-        VkRect2D rect = {
-            .offset = {0, 0},
-            .extent = {dimensions.x, dimensions.y},
-        };
-        vkCmdSetScissor(commandBuffer, 0, 1, &rect);
-    }
-
-
     void VulkanPipelineState::CreateGraphicsPipelineStateObject()
     {
         CreateGraphicsPipelineLayout();
@@ -347,9 +309,11 @@ namespace Astral {
     {
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
         descriptorSetLayouts.reserve(m_GraphicsDescription.DescriptorSets.size());
+        m_DescriptorSetLayout.reserve(m_GraphicsDescription.DescriptorSets.size());
         for (DescriptorSetHandle descriptorSet : m_GraphicsDescription.DescriptorSets)
         {
             descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetNativeLayout());
+            m_DescriptorSetLayout.push_back(descriptorSet->GetDescriptorSetLayout());
         }
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;

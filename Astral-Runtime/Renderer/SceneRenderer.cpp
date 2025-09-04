@@ -73,7 +73,7 @@ namespace Astral {
 
     RendererDebugStats SceneRenderer::GetRendererDebugStats()
     {
-        return RendererAPI::s_RendererCommands->GetNumberOfDrawCalls();
+        return RendererAPI::s_RendererCommands->GetRendererDebugStats();
     }
 
     RendererType SceneRenderer::GetRendererType()

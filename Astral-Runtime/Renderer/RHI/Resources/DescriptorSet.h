@@ -33,6 +33,7 @@ namespace Astral {
     struct DescriptorSetLayout
     {
         std::vector<Descriptor> Descriptors;
+        bool operator==(const DescriptorSetLayout&) const;
     };
 
     class DescriptorSet

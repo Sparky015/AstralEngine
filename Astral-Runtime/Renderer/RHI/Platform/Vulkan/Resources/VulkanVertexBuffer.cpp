@@ -26,15 +26,6 @@ namespace Astral {
     }
 
 
-    void VulkanVertexBuffer::Bind(CommandBufferHandle commandBufferHandle)
-    {
-        VkBuffer buffer = (VkBuffer)m_VertexBuffer.GetNativeHandle();
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkDeviceSize offsets[] = {0};
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &buffer, offsets);
-    }
-
-
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
         VulkanBufferDesc stagingBufferDesc = {

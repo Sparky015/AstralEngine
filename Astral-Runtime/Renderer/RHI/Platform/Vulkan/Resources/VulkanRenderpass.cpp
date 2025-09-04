@@ -54,9 +54,7 @@ namespace Astral {
 
         if (attachmentDescription.LoadOp == AttachmentLoadOp::CLEAR)
         {
-            Vec4 color = attachmentDescription.ClearColor;
-            VkClearValue clearColor = {{color.r, color.g, color.b, color.a}};
-            m_ClearValues.push_back(clearColor);
+            m_ClearValues.push_back(attachmentDescription.ClearColor);
         }
 
         m_RenderPassAttachments.push_back(vkAttachmentDescription);
@@ -188,50 +186,23 @@ namespace Astral {
     }
 
 
-    void VulkanRenderPass::BeginRenderPass(CommandBufferHandle commandBufferHandle, FramebufferHandle frameBufferHandle)
+    void VulkanRenderPass::BeginRenderPass(FramebufferHandle frameBufferHandle)
     {
         m_CurrentlyAttachedFramebuffer = frameBufferHandle;
-
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
-        UVec2 extent = frameBufferHandle->GetExtent();
-
-        VkRenderPassBeginInfo renderPassBeginInfo = {
-            .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-            .pNext = nullptr,
-            .renderPass = m_RenderPass,
-            .framebuffer = framebuffer,
-            .renderArea = {
-                .offset = {0,0},
-                .extent = {extent.x, extent.y}
-            },
-            .clearValueCount = (uint32)m_ClearValues.size(),
-            .pClearValues = m_ClearValues.data(),
-        };
-
-        vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
         m_CurrentSubpassIndex = 0;
         UpdateSubpassAttachmentLayouts();
     }
 
 
-    void VulkanRenderPass::NextSubpass(CommandBufferHandle commandBufferHandle)
+    void VulkanRenderPass::NextSubpass()
     {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-
         m_CurrentSubpassIndex++;
         UpdateSubpassAttachmentLayouts();
     }
 
 
-    void VulkanRenderPass::EndRenderPass(CommandBufferHandle commandBufferHandle)
+    void VulkanRenderPass::EndRenderPass()
     {
-        VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
-        vkCmdEndRenderPass(commandBuffer);
-
-
         // Update attachment layouts to final attachment layout
         for (size_t i = 0; i < m_RenderPassAttachments.size(); i++)
         {

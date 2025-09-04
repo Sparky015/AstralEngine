@@ -26,69 +26,9 @@ namespace Astral {
     }
 
 
-    void RendererAPI::Clear(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
-    {
-        s_RendererCommands->Clear(commandBufferHandle, renderTargetHandle);
-    }
-
-
-    void RendererAPI::SetClearColor(float r, float g, float b, float a)
-    {
-        s_RendererCommands->SetClearColor(r, g, b, a);
-    }
-
-
-    void RendererAPI::DrawElementsIndexed(CommandBufferHandle commandBuffer, IndexBufferHandle indexBuffer)
-    {
-        s_RendererCommands->DrawElementsIndexed(commandBuffer, indexBuffer);
-    }
-
-
-    void RendererAPI::Dispatch(CommandBufferHandle commandBuffer, uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
-    {
-        s_RendererCommands->Dispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
-    }
-
-
-    void RendererAPI::PushConstants(CommandBufferHandle commandBuffer, PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
-    {
-        s_RendererCommands->PushConstants(commandBuffer, pipelineStateObjectHandle, data, sizeInBytes);
-    }
-
-
-    void RendererAPI::SetPipelineBarrier(CommandBufferHandle commandBufferHandle, const PipelineBarrier& pipelineBarrier)
-    {
-        s_RendererCommands->SetPipelineBarrier(commandBufferHandle, pipelineBarrier);
-    }
-
-
     void RendererAPI::ExecuteOneTimeAndBlock(const std::function<void(CommandBufferHandle)>& callback)
     {
         s_RendererCommands->ExecuteOneTimeAndBlock(callback);
-    }
-
-
-    void RendererAPI::SetBlending(bool enable)
-    {
-        s_RendererCommands->SetBlending(enable);
-    }
-
-
-    void RendererAPI::BeginLabel(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
-    {
-        s_RendererCommands->BeginLabel(commandBufferHandle, label, color);
-    }
-
-
-    void RendererAPI::EndLabel(CommandBufferHandle commandBufferHandle)
-    {
-        s_RendererCommands->EndLabel(commandBufferHandle);
-    }
-
-
-    void RendererAPI::InsertMarker(CommandBufferHandle commandBufferHandle, std::string_view label, Vec4 color)
-    {
-        s_RendererCommands->InsertMarker(commandBufferHandle, label, color);
     }
 
 
@@ -137,6 +77,18 @@ namespace Astral {
     void RendererAPI::CallImGuiDraws(CommandBufferHandle commandBufferHandle)
     {
         s_RendererCommands->CallImGuiDraws(commandBufferHandle);
+    }
+
+
+    const RendererDebugStats& RendererAPI::GetRendererDebugStats()
+    {
+        return s_RendererCommands->GetRendererDebugStats();
+    }
+
+
+    RendererDebugStats& RendererAPI::GetInProgressRendererDebugStats()
+    {
+        return s_RendererCommands->GetInProgressRendererDebugStats();
     }
 
 }

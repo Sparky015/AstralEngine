@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "CommandBuffer.h"
 #include "Core/FixedIntegerTypes.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
@@ -14,10 +13,10 @@ namespace Astral {
     {
     public:
         virtual ~IndexBuffer() = default;
-        virtual void Bind(CommandBufferHandle commandBufferHandle) = 0;
-        virtual void Unbind() const {};
 
-        [[nodiscard]] virtual uint32 GetCount() const { return 0; };
+        [[nodiscard]] virtual uint32 GetCount() const = 0;
+
+        virtual void* GetNativeHandle() = 0;
 
         static GraphicsRef<IndexBuffer> CreateIndexBuffer(uint32* data, uint32 count);
     };
