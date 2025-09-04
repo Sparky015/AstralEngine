@@ -11,6 +11,11 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include "Astral.h"
+#include "Astral.h"
+#include "Astral.h"
+#include "Astral.h"
+
 namespace Astral {
 
     struct VulkanCommandBufferDesc
@@ -29,25 +34,25 @@ namespace Astral {
         void EndRecording() override;
         void Reset() override;
 
-        void BindPipeline(PipelineStateHandle pipeline) override;
-        void BindDescriptorSet(DescriptorSetHandle descriptorSet, uint32 binding) override;
-        void BindVertexBuffer(VertexBufferHandle vertexBuffer) override;
-        void BindIndexBuffer(IndexBufferHandle indexBuffer) override;
+        void BindPipeline(const PipelineStateHandle& pipeline) override;
+        void BindDescriptorSet(const DescriptorSetHandle& descriptorSet, uint32 binding) override;
+        void BindVertexBuffer(const VertexBufferHandle& vertexBuffer) override;
+        void BindIndexBuffer(const IndexBufferHandle& indexBuffer) override;
 
         void SetViewportAndScissor(UVec2 dimensions) override;
 
-        void BeginRenderPass(RenderPassHandle renderPassHandle, FramebufferHandle frameBufferHandle) override;
+        void BeginRenderPass(const RenderPassHandle& renderPassHandle, const FramebufferHandle& frameBufferHandle) override;
         void NextSubpass() override;
         void EndRenderPass() override;
 
-        void DrawElementsIndexed(IndexBufferHandle indexBufferHandle) override;
+        void DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle) override;
         void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) override;
         void PushConstants(void* data, uint32 sizeInBytes) override;
         void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) override;
 
-        void BeginLabel(std::string_view label, Vec4 color) override;
+        void BeginLabel(const ::std::string_view& label, Vec4 color) override;
         void EndLabel() override;
-        void InsertMarker(std::string_view label, Vec4 color) override;
+        void InsertMarker(const ::std::string_view& label, Vec4 color) override;
 
         void* GetNativeHandle() override { return m_CommandBuffer; }
 

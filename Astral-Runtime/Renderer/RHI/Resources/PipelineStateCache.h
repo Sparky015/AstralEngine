@@ -51,8 +51,8 @@ namespace Astral {
          * @param msaaSampleCount
          * @warning The material's descriptor set will be added on top of the PipelineStateCache's descriptor set stack
          */
-        PipelineStateHandle GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex,
-                    SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
+        PipelineStateHandle GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex,
+                                                SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.

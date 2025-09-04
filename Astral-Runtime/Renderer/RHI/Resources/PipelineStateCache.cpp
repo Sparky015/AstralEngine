@@ -40,7 +40,7 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(RenderPassHandle renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, SampleCount msaaSampleCount)
+    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, SampleCount msaaSampleCount)
     {
         // Build pipeline configuration struct
 

@@ -6,6 +6,10 @@
 
 #include "VulkanCommandBuffer.h"
 
+#include "Astral.h"
+#include "Astral.h"
+#include "Astral.h"
+#include "Astral.h"
 #include "Core/Engine.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
@@ -69,7 +73,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BindPipeline(PipelineStateHandle pipeline)
+    void VulkanCommandBuffer::BindPipeline(const PipelineStateHandle& pipeline)
     {
         if (!pipeline)
         {
@@ -88,7 +92,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BindDescriptorSet(DescriptorSetHandle descriptorSet, uint32 binding)
+    void VulkanCommandBuffer::BindDescriptorSet(const DescriptorSetHandle& descriptorSet, uint32 binding)
     {
         if (!descriptorSet)
         {
@@ -115,7 +119,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BindVertexBuffer(VertexBufferHandle vertexBuffer)
+    void VulkanCommandBuffer::BindVertexBuffer(const VertexBufferHandle& vertexBuffer)
     {
         if (!vertexBuffer)
         {
@@ -139,7 +143,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BindIndexBuffer(IndexBufferHandle indexBuffer)
+    void VulkanCommandBuffer::BindIndexBuffer(const IndexBufferHandle& indexBuffer)
     {
         if (!indexBuffer)
         {
@@ -192,7 +196,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BeginRenderPass(RenderPassHandle renderPassHandle, FramebufferHandle frameBufferHandle)
+    void VulkanCommandBuffer::BeginRenderPass(const RenderPassHandle& renderPassHandle, const FramebufferHandle& frameBufferHandle)
     {
         m_ActiveRenderPass = renderPassHandle;
 
@@ -234,7 +238,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::DrawElementsIndexed(IndexBufferHandle indexBufferHandle)
+    void VulkanCommandBuffer::DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle)
     {
         vkCmdDrawIndexed(m_CommandBuffer, indexBufferHandle->GetCount(), 1, 0, 0, 0);
 
@@ -363,7 +367,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BeginLabel(std::string_view label, Vec4 color)
+    void VulkanCommandBuffer::BeginLabel(const ::std::string_view& label, Vec4 color)
     {
         thread_local VkInstance instance = (VkInstance)Engine::Get().GetRendererManager().GetContext().GetInstanceHandle();
         thread_local PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdBeginDebugUtilsLabelEXT");
@@ -388,7 +392,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::InsertMarker(std::string_view label, Vec4 color)
+    void VulkanCommandBuffer::InsertMarker(const ::std::string_view& label, Vec4 color)
     {
         thread_local VkInstance instance = (VkInstance)Engine::Get().GetRendererManager().GetContext().GetInstanceHandle();
         thread_local PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT = (PFN_vkCmdInsertDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdInsertDebugUtilsLabelEXT");
