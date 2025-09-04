@@ -85,9 +85,10 @@ namespace Astral {
 
 
         // Renderer Settings
-        RendererSettings rendererSettings;
+        RendererSettings rendererSettings{};
         rendererSettings.RendererType = RendererType::FORWARD;
         rendererSettings.IsVSyncEnabled = true;
+        rendererSettings.IsFrustumCullingEnabled = true;
 
         SetRendererSettings(rendererSettings);
     }
@@ -187,6 +188,7 @@ namespace Astral {
         frameContext.Transforms.clear();
 
         m_SceneExposure = sceneDescription.Exposure;
+        m_SceneViewProjection = sceneDescription.Camera.GetProjectionViewMatrix();
     }
 
 
@@ -205,6 +207,11 @@ namespace Astral {
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+
+        if (m_RendererSettings.IsFrustumCullingEnabled)
+        {
+            if (ShouldCullMesh(mesh, transform)) { return; }
+        }
 
         frameContext.Meshes.push_back(mesh);
         frameContext.Materials.push_back(material);
@@ -233,6 +240,8 @@ namespace Astral {
             m_RendererSettings.IsVSyncEnabled = rendererSettings.IsVSyncEnabled;
             SetVSync(m_RendererSettings.IsVSyncEnabled);
         }
+
+        m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
     }
 
 
@@ -1224,6 +1233,73 @@ namespace Astral {
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
+    }
+
+
+    static bool IsBoundingSphereOutsidePlane(Vec4 plane, const BoundingSphere& boundingSphere)
+    {
+        float distance = glm::dot(Vec3(plane), boundingSphere.Center) + plane.w;
+        return distance <= -boundingSphere.Radius;
+    }
+
+
+    bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
+    {
+        std::array<Vec4, 6> frustum;
+        BoundingSphere worldSpaceBoundingSphere;
+        worldSpaceBoundingSphere.Center = modelTransform * glm::vec4(mesh.BoundingSphere.Center, 1.0f);
+
+        Vec3 scale;
+        scale.x = glm::length(Vec3(modelTransform[0]));
+        scale.y = glm::length(Vec3(modelTransform[1]));
+        scale.z = glm::length(Vec3(modelTransform[2]));
+        float biggestScale = std::max(std::max(scale.x, scale.y), scale.z);
+        worldSpaceBoundingSphere.Radius = biggestScale * mesh.BoundingSphere.Radius * 1.01f;
+
+        // Right Plane
+        frustum[0].x = m_SceneViewProjection[0][3] - m_SceneViewProjection[0][0];
+        frustum[0].y = m_SceneViewProjection[1][3] - m_SceneViewProjection[1][0];
+        frustum[0].z = m_SceneViewProjection[2][3] - m_SceneViewProjection[2][0];
+        frustum[0].w = m_SceneViewProjection[3][3] - m_SceneViewProjection[3][0];
+
+        // Left Plane
+        frustum[1].x = m_SceneViewProjection[0][3] + m_SceneViewProjection[0][0];
+        frustum[1].y = m_SceneViewProjection[1][3] + m_SceneViewProjection[1][0];
+        frustum[1].z = m_SceneViewProjection[2][3] + m_SceneViewProjection[2][0];
+        frustum[1].w = m_SceneViewProjection[3][3] + m_SceneViewProjection[3][0];
+
+        // Top Plane
+        frustum[2].x = m_SceneViewProjection[0][3] - m_SceneViewProjection[0][1];
+        frustum[2].y = m_SceneViewProjection[1][3] - m_SceneViewProjection[1][1];
+        frustum[2].z = m_SceneViewProjection[2][3] - m_SceneViewProjection[2][1];
+        frustum[2].w = m_SceneViewProjection[3][3] - m_SceneViewProjection[3][1];
+
+        // Bottom Plane
+        frustum[3].x = m_SceneViewProjection[0][3] + m_SceneViewProjection[0][1];
+        frustum[3].y = m_SceneViewProjection[1][3] + m_SceneViewProjection[1][1];
+        frustum[3].z = m_SceneViewProjection[2][3] + m_SceneViewProjection[2][1];
+        frustum[3].w = m_SceneViewProjection[3][3] + m_SceneViewProjection[3][1];
+
+        // Far Plane
+        frustum[4].x = m_SceneViewProjection[0][3] - m_SceneViewProjection[0][2];
+        frustum[4].y = m_SceneViewProjection[1][3] - m_SceneViewProjection[1][2];
+        frustum[4].z = m_SceneViewProjection[2][3] - m_SceneViewProjection[2][2];
+        frustum[4].w = m_SceneViewProjection[3][3] - m_SceneViewProjection[3][2];
+
+        // Near Plane
+        frustum[5].x = m_SceneViewProjection[0][3] + m_SceneViewProjection[0][2];
+        frustum[5].y = m_SceneViewProjection[1][3] + m_SceneViewProjection[1][2];
+        frustum[5].z = m_SceneViewProjection[2][3] + m_SceneViewProjection[2][2];
+        frustum[5].w = m_SceneViewProjection[3][3] + m_SceneViewProjection[3][2];
+
+        for (Vec4& plane : frustum)
+        {
+            float normalLength = glm::length(Vec3(plane));
+            plane /= normalLength;
+            if (IsBoundingSphereOutsidePlane(plane, worldSpaceBoundingSphere)) { return true; }
+        }
+
+        return false;
     }
 
 

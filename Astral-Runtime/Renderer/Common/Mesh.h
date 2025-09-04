@@ -15,11 +15,18 @@
 
 namespace Astral {
 
+    struct BoundingSphere
+    {
+        float Radius;
+        Vec3 Center;
+    };
+
     struct Mesh : Asset
     {
         VertexBufferHandle VertexBuffer;
         IndexBufferHandle IndexBuffer;
         Ref<Shader> VertexShader;
+        BoundingSphere BoundingSphere;
 
         AssetType GetAssetType() override { return Mesh::GetStaticAssetType(); }
         static AssetType GetStaticAssetType() { return AssetType::Mesh; }

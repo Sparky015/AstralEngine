@@ -90,4 +90,16 @@ namespace Astral {
         SceneRenderer::SetRendererSettings(rendererSettings);
     }
 
+
+    void FrustumCullingToggleComponent()
+    {
+        RendererSettings rendererSettings = SceneRenderer::GetRendererSettings();
+
+        ImGui::Text("Frustum Culling: ");
+        ImGui::SameLine();
+        ImGui::Checkbox("##FrustumCullingToggle", &rendererSettings.IsFrustumCullingEnabled);
+
+        SceneRenderer::SetRendererSettings(rendererSettings);
+    }
+
 }

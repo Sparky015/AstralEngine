@@ -37,7 +37,8 @@ namespace Astral::MeshLoader {
           aiProcess_Triangulate            |
           aiProcess_JoinIdenticalVertices  |
           aiProcess_FlipWindingOrder       |
-          aiProcess_SortByPType
+          aiProcess_SortByPType            |
+          aiProcess_GenBoundingBoxes
           );
 
         // If the import failed, report it
@@ -133,6 +134,12 @@ namespace Astral::MeshLoader {
             }
         }
 
+        BoundingSphere boundingSphere;
+        aiVector3f boundingSphereCenter = (mesh->mAABB.mMax + mesh->mAABB.mMin) / 2.0f;
+        boundingSphere.Center = Vec3(boundingSphereCenter.x, boundingSphereCenter.y, boundingSphereCenter.z);
+        Vec3 aabbCorner = Vec3(mesh->mAABB.mMax.x, mesh->mAABB.mMax.y, mesh->mAABB.mMax.z);
+        float boundingSphereRadius = glm::distance(boundingSphere.Center, aabbCorner);
+        boundingSphere.Radius = boundingSphereRadius;
 
         IndexBufferHandle indexBuffer = IndexBuffer::CreateIndexBuffer(indiceData.data(), indiceData.size());
         VertexBufferHandle vertexBuffer = VertexBuffer::CreateVertexBuffer(vertexData.data(), vertexData.size() * sizeof(float), bufferLayout);
@@ -157,6 +164,7 @@ namespace Astral::MeshLoader {
         meshInstance.VertexBuffer = vertexBuffer;
         meshInstance.IndexBuffer = indexBuffer;
         meshInstance.VertexShader = vertexShader;
+        meshInstance.BoundingSphere = boundingSphere;
 
 
         return CreateRef<Mesh>(meshInstance);
