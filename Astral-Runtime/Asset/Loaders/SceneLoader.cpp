@@ -342,7 +342,8 @@ namespace Astral {
         uint32 sceneImportFlags = aiProcess_CalcTangentSpace       |
                        aiProcess_Triangulate            |
                        aiProcess_JoinIdenticalVertices  |
-                       aiProcess_SortByPType;
+                       aiProcess_SortByPType            |
+                       aiProcess_GenBoundingBoxes;
 
         if (m_DefaultFlipUVs)
         {

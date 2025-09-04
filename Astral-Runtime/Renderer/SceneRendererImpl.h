@@ -114,6 +114,8 @@ namespace Astral {
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
         void ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions);
 
+        bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform);
+
 
         RendererSettings m_RendererSettings{};
         RenderGraph m_RenderGraph;
@@ -140,6 +142,8 @@ namespace Astral {
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
         float m_SceneExposure{};
+
+        Mat4 m_SceneViewProjection{};
     };
 
 }
