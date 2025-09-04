@@ -68,8 +68,12 @@ namespace Astral {
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        m_GeometryPassShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
-        m_LightingShader = registry.CreateAsset<Shader>("Shaders/DeferredLightingPass.frag");
+        m_DeferredGeometryPassUnpackedShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
+        m_DeferredGeometryPassORMShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassORM.frag");
+        m_DeferredLightingShader = registry.CreateAsset<Shader>("Shaders/DeferredLightingPass.frag");
+        m_ForwardUnpackedLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+        m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
+        m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
 
         TextureHandle toneMappingLUT = registry.CreateAsset<Texture>("LUTs/acescg_to_rec709_linear_no_shaper.cube");
         m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
@@ -822,7 +826,7 @@ namespace Astral {
             if (material.DescriptorSet == nullptr) { continue; }
             material.DescriptorSet = nullptr;
 
-            material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
+            material.FragmentShader = m_DepthWriteOnlyShader;
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, SampleCount::SAMPLE_4_BIT);
             commandBuffer->BindPipeline(pipeline);
@@ -871,11 +875,11 @@ namespace Astral {
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+                material.FragmentShader = m_ForwardUnpackedLightingShader;
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
+                material.FragmentShader = m_ForwardORMLightingShader;
             }
 
             Ref<Shader> vertexShader = mesh.VertexShader;
@@ -967,11 +971,11 @@ namespace Astral {
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
+                material.FragmentShader = m_DeferredGeometryPassUnpackedShader;
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassORM.frag");
+                material.FragmentShader = m_DeferredGeometryPassORMShader;
             }
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
@@ -1011,7 +1015,7 @@ namespace Astral {
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
-        material.FragmentShader = m_LightingShader;
+        material.FragmentShader = m_DeferredLightingShader;
         material.DescriptorSet = executionContext.ReadAttachments;
 
         Ref<Shader> vertexShader = mesh.VertexShader;

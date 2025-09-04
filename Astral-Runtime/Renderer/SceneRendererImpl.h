@@ -131,8 +131,12 @@ namespace Astral {
         UVec2 m_ViewportSize{};
         PipelineStateCache m_PipelineStateCache;
 
-        ShaderHandle m_GeometryPassShader;
-        ShaderHandle m_LightingShader;
+        ShaderHandle m_DeferredGeometryPassUnpackedShader;
+        ShaderHandle m_DeferredGeometryPassORMShader;
+        ShaderHandle m_DeferredLightingShader;
+        ShaderHandle m_ForwardUnpackedLightingShader;
+        ShaderHandle m_ForwardORMLightingShader;
+        ShaderHandle m_DepthWriteOnlyShader;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
         float m_SceneExposure{};
