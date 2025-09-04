@@ -42,7 +42,7 @@ namespace Astral {
 
         void DrawElementsIndexed(IndexBufferHandle indexBufferHandle) override;
         void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) override;
-        void PushConstants(PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes) override;
+        void PushConstants(void* data, uint32 sizeInBytes) override;
         void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) override;
 
         void BeginLabel(std::string_view label, Vec4 color) override;

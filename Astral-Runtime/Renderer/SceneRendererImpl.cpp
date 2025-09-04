@@ -833,7 +833,7 @@ namespace Astral {
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
-            commandBuffer->PushConstants(pipeline, &frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
+            commandBuffer->PushConstants(&frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
 
             commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
@@ -897,7 +897,7 @@ namespace Astral {
                 .HasDirectXNormals = material.HasDirectXNormals
             };
 
-            commandBuffer->PushConstants(pipeline, &pushConstantData, sizeof(ForwardLightingPassPushData));
+            commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
 
             commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
@@ -935,7 +935,7 @@ namespace Astral {
         commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
 
 
-        commandBuffer->PushConstants(cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
+        commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
         commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
     }
 
@@ -984,7 +984,7 @@ namespace Astral {
                 .HasDirectXNormals = material.HasDirectXNormals
             };
 
-            commandBuffer->PushConstants(pipeline, &pushConstantData, sizeof(GeometryPassPushData));
+            commandBuffer->PushConstants(&pushConstantData, sizeof(GeometryPassPushData));
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(materialDescriptorSet, 1);
@@ -1061,7 +1061,7 @@ namespace Astral {
         commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
 
-        commandBuffer->PushConstants(cubemapPipeline, &activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
+        commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
         commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
     }
 
@@ -1092,7 +1092,7 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
         commandBuffer->BindDescriptorSet(toneMapperMaterial.DescriptorSet, 2);
 
-        commandBuffer->PushConstants(toneMappingPipeline, &m_SceneExposure, sizeof(m_SceneExposure));
+        commandBuffer->PushConstants(&m_SceneExposure, sizeof(m_SceneExposure));
 
         commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
@@ -1161,7 +1161,7 @@ namespace Astral {
         for (uint32 i = 0; i < numFaces; i++)
         {
             computeIrradianceMapPushConstants.FaceIndex = i;
-            commandBuffer->PushConstants(computePipeline, &computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
+            commandBuffer->PushConstants(&computeIrradianceMapPushConstants, sizeof(computeIrradianceMapPushConstants));
 
             // Dispatching 2x2 blocks as the local layout is 8x8 and the irradiance faces are 16x16
             uint32 groupCountSize = EnvironmentMapIrradianceSize / 8;
@@ -1210,7 +1210,7 @@ namespace Astral {
         {
             prefilteredEnvironmentMapPushData.FaceIndex = i;
 
-            commandBuffer->PushConstants(computePipeline, &prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
+            commandBuffer->PushConstants(&prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
 
             uint32 groupSizeX = std::max(mipWidth / 32, 1u);
             uint32 groupSizeY = std::max(mipHeight / 32, 1u);

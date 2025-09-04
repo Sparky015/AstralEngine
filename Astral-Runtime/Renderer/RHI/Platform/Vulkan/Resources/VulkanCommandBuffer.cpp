@@ -240,9 +240,15 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::PushConstants(PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes)
+    void VulkanCommandBuffer::PushConstants(void* data, uint32 sizeInBytes)
     {
-        VkPipelineLayout pipelineLayout = (VkPipelineLayout)pipelineStateObjectHandle->GetPipelineLayout();
+        if (!m_BoundPipeline)
+        {
+            WARN("Tried to push constants with no bound pipeline!");
+            return;
+        }
+
+        VkPipelineLayout pipelineLayout = (VkPipelineLayout)m_BoundPipeline->GetPipelineLayout();
         vkCmdPushConstants(m_CommandBuffer, pipelineLayout, VK_SHADER_STAGE_ALL, 0, sizeInBytes, data);
     }
 

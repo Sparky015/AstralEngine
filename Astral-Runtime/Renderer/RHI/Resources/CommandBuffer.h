@@ -36,7 +36,7 @@ namespace Astral {
 
         virtual void DrawElementsIndexed(IndexBufferHandle indexBufferHandle) = 0;
         virtual void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) = 0;
-        virtual void PushConstants(PipelineStateHandle pipelineStateObjectHandle, void* data, uint32 sizeInBytes) = 0;
+        virtual void PushConstants(void* data, uint32 sizeInBytes) = 0;
         virtual void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) = 0;
 
         virtual void BeginLabel(std::string_view label, Vec4 color) = 0;
