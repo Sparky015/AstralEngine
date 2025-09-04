@@ -65,6 +65,7 @@ namespace Astral {
 
         m_BoundPipeline = nullptr;
         m_BoundDescriptorSets.clear();
+        m_PipelineDynamicStateViewportAndScissor = UVec2{-1, -1};
     }
 
 
@@ -83,6 +84,7 @@ namespace Astral {
         VkPipelineBindPoint bindPoint = pipeline->GetPipelineType() == PipelineType::GRAPHICS ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
         vkCmdBindPipeline(m_CommandBuffer, bindPoint, vkPipeline);
         m_BoundPipeline = pipeline;
+        m_PipelineDynamicStateViewportAndScissor = UVec2{-1, -1};
     }
 
 
@@ -132,6 +134,8 @@ namespace Astral {
         VkBuffer buffer = (VkBuffer)vertexBuffer->GetNativeHandle();
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(m_CommandBuffer, 0, 1, &buffer, offsets);
+
+        m_BoundVertexBuffer = vertexBuffer;
     }
 
 
@@ -153,6 +157,8 @@ namespace Astral {
 
         VkBuffer buffer = (VkBuffer)indexBuffer->GetNativeHandle();
         vkCmdBindIndexBuffer(m_CommandBuffer, buffer, 0, VK_INDEX_TYPE_UINT32);
+
+        m_BoundIndexBuffer = indexBuffer;
     }
 
 
@@ -163,6 +169,8 @@ namespace Astral {
             WARN("Tried to set viewport and scissor with no bound pipeline!");
             return;
         }
+
+        if (m_PipelineDynamicStateViewportAndScissor == dimensions) { return; } // Prevent redundant command call
 
         VkViewport viewport = {
             .x = 0.0f,
@@ -179,6 +187,8 @@ namespace Astral {
             .extent = {dimensions.x, dimensions.y},
         };
         vkCmdSetScissor(m_CommandBuffer, 0, 1, &rect);
+
+        m_PipelineDynamicStateViewportAndScissor= dimensions;
     }
 
 

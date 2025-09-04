@@ -65,6 +65,7 @@ namespace Astral {
         VertexBufferHandle m_BoundVertexBuffer{nullptr};
         IndexBufferHandle m_BoundIndexBuffer{nullptr};
         RenderPassHandle m_ActiveRenderPass{nullptr};
+        UVec2 m_PipelineDynamicStateViewportAndScissor{-1, -1};
     };
 
 }
