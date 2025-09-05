@@ -33,7 +33,7 @@ namespace Astral {
         scene.ECS = ECS();
         scene.ECS.Init();
 
-        m_Scenes["Engine:\\BaseScene.fbx"] = CreateScopedPtr<Scene>(std::move(scene));
+        m_Scenes["Engine:\\BaseScene.fbx"] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes["Engine:\\BaseScene.fbx"].get();;
         m_ActiveSceneExists = true;
 
@@ -64,7 +64,7 @@ namespace Astral {
         scene.ECS = ECS();
         scene.ECS.Init();
 
-        m_Scenes[""] = CreateScopedPtr<Scene>(std::move(scene));
+        m_Scenes[""] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[""].get();
         m_ActiveSceneExists = true;
     }
@@ -84,7 +84,7 @@ namespace Astral {
         scene.ECS = ECS();
         scene.ECS.Init();
 
-        m_Scenes[filePath] = CreateScopedPtr<Scene>(std::move(scene));
+        m_Scenes[filePath] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes[filePath].get();
         m_ActiveSceneExists = true;
 

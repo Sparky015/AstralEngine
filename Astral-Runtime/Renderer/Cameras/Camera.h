@@ -65,10 +65,10 @@ namespace Astral {
         const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
         const Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
-        Camera(const Camera&) = delete;
+        Camera(const Camera&);
         Camera& operator=(const Camera&) = delete;
-        Camera(Camera&&) noexcept = default;
-        Camera& operator=(Camera&&) noexcept = default;
+        Camera(Camera&&) noexcept = delete;
+        Camera& operator=(Camera&&) noexcept = delete;
 
     private:
 
