@@ -21,9 +21,6 @@ namespace Astral {
 
         // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
         static float magnitude = 2;
-        static Vec2 initialMousePos{};
-        static Vec3 initialRotation{};
-        static bool isReadyToTrack = true;
         static DeltaTime deltaTime;
 
         deltaTime.UpdateDeltaTime();
@@ -34,47 +31,39 @@ namespace Astral {
             magnitude *= 20;
         }
 
-
-        float rotationSpeed = 1;
-        float rotationSpeedX = 0;
-        float rotationSpeedY = 0;
+        static Vec2 lastMousePosition{};
+        static Vec2 rotationSpeed = Vec2{0};
+        static float rotationDrag = .92;
+        static bool wasKeyJustPressed = true;
+        static float sensitivity = .5;
         if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
         {
-            Vec2 lastMousePosition = InputState::MousePosition();
+            if (wasKeyJustPressed)
+            {
+                lastMousePosition = InputState::MousePosition();
+                wasKeyJustPressed = false;
+            }
             Vec2 currentMousePos = InputState::MousePosition();
 
-            rotationSpeedX = (lastMousePosition.x - currentMousePos.x) * 500;
-            rotationSpeedY = (lastMousePosition.y - currentMousePos.y) * 500;
-        }
+            rotationSpeed.x += (lastMousePosition.x - currentMousePos.x) * sensitivity;
+            rotationSpeed.y += (lastMousePosition.y - currentMousePos.y) * sensitivity;
 
-        if (rotationSpeed > 0)
+            lastMousePosition = currentMousePos;
+        }
+        else
         {
-            Vec3 currentRotation = primaryCamera.GetRotation(); // Position
-            Vec3 newRotation = {currentRotation.x - rotationSpeedY, currentRotation.y + rotationSpeedX, currentRotation.z};
-            primaryCamera.SetRotation(newRotation);
+            wasKeyJustPressed = true;
         }
 
+        Vec3 currentRotation = primaryCamera.GetRotation(); // Position
+        Vec3 newRotation = {currentRotation.x - rotationSpeed.y, currentRotation.y + rotationSpeed.x, currentRotation.z};
+        primaryCamera.SetRotation(newRotation);
 
-        // if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
-        // {
-        //     if (isReadyToTrack)
-        //     {
-        //         initialMousePos = InputState::MousePosition();
-        //         initialRotation = camera.GetRotation();
-        //         isReadyToTrack = false;
-        //     }
-        //
-        //     Vec2 currentMousePos = InputState::MousePosition();
-        //     xDelta = (initialMousePos.x - currentMousePos.x) * .5;
-        //     yDelta = (initialMousePos.y - currentMousePos.y) * .5;
-        //
-        //     Vec3 newRotation = {initialRotation.x - yDelta, initialRotation.y + xDelta, initialRotation.z};
-        //     camera.SetRotation(newRotation);
-        // }
-        // else
-        // {
-        //     isReadyToTrack = true;
-        // }
+        rotationSpeed *= rotationDrag;
+
+
+
+        Vec3 initialPosition = primaryCamera.GetPosition(); // For tracking camera velocity
 
         if (InputState::IsKeyDown(KEY_W))
         {
@@ -150,6 +139,34 @@ namespace Astral {
             const float zoom = primaryCamera.GetZoomLevel();
             primaryCamera.SetZoom(zoom - 5);
         }
+
+        ImGui::Begin("Camera Controller##EditorCameraController");
+
+        Vec3 cameraPosition = scene.PrimaryCamera.GetPosition();
+        ImGui::Text("Camera Position: (%.3f, %.3f, %.3f)", cameraPosition.x, cameraPosition.y, cameraPosition.z);
+        ImGui::Text("Camera Velocity: %.3f m/s", glm::length(initialPosition - cameraPosition));
+
+        Vec3 cameraRotation = scene.PrimaryCamera.GetRotation();
+        ImGui::Text("Camera Rotation: (%.3f, %.3f, %.3f)", cameraRotation.x, cameraRotation.y, cameraRotation.z);
+        ImGui::Text("Camera Rotation Speed: (%.3f, %.3f)", rotationSpeed.x, rotationSpeed.y);
+
+        ImGui::Text("Camera Speed: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##CameraSpeedInput", &magnitude);
+
+        ImGui::Text("Mouse Sensitivity: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##MouseSensitivityInput", &sensitivity);
+
+        ImGui::Text("Camera Drag Factor: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##CameraDragFactorInput", &rotationDrag);
+
+
+        ImGui::End();
     }
 
 }
