@@ -5,6 +5,7 @@
 #include "RendererManager.h"
 
 #include "Asset/AssetManager.h"
+#include "Common/CubeLUT.h"
 #include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
@@ -78,9 +79,6 @@ namespace Astral {
         // Demo Models
         // registry.RegisterAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
         // registry.RegisterAsset<Material>("Models/WaterBendingGauntlet.astmat");
-
-        // Demo Scene
-        registry.CreateAsset<Texture>("Cubemaps/qwantani_dusk_2_puresky_2k.hdr");
 
 
         // Cubemap Mesh
