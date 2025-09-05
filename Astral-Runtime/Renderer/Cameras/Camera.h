@@ -65,6 +65,11 @@ namespace Astral {
         const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
         const Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
+        Camera(const Camera&) = delete;
+        Camera& operator=(const Camera&) = delete;
+        Camera(Camera&&) noexcept = default;
+        Camera& operator=(Camera&&) noexcept = default;
+
     private:
 
         void RecreateProjectionMatrix();
@@ -86,11 +91,16 @@ namespace Astral {
             float m_POV; // Perspective
         };
 
-        EventListener<ViewportResizedEvent> m_ViewportResizedListener{[this](ViewportResizedEvent e)
+        void ResizeCamera(const ViewportResizedEvent& e)
         {
             m_AspectRatio = (float)e.Width / (float)e.Height;
             RecreateProjectionMatrix();
             CalculateProjectionViewMatrix();
+        }
+
+        EventListener<ViewportResizedEvent> m_ViewportResizedListener{[this](ViewportResizedEvent e)
+        {
+            ResizeCamera(e);
         }};
     };
 

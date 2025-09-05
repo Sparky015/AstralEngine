@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ECS/ECS.h"
+#include "Renderer/Cameras/Camera.h"
 #include "Renderer/Common/EnvironmentMap.h"
 
 namespace Astral {
@@ -27,6 +28,7 @@ namespace Astral {
         ~Scene() = default;
 
         std::unordered_map<std::string, SceneResource> ExternalResourceFiles;
+        Camera PrimaryCamera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
         ECS ECS;
         Ref<EnvironmentMap> EnvironmentMap;
         float AmbientLightConstant = 1.0f;
@@ -41,6 +43,11 @@ namespace Astral {
         void DecrementResourceRef(const char* filePath);
 
         SceneResourceID NextSceneResourceID = 0;
+
+        Scene(const Scene&) = delete;
+        Scene& operator=(const Scene&) = delete;
+        Scene(Scene&&) noexcept = default;
+        Scene& operator=(Scene&&) noexcept = default;
     };
 
 
@@ -82,4 +89,5 @@ namespace Astral {
     {
         DecrementResourceRef(std::string(filePath));
     }
+
 }

@@ -18,7 +18,6 @@ namespace Astral {
     public:
 
         static void RenderEntities();
-        static Camera& GetCamera();
 
     private:
 
