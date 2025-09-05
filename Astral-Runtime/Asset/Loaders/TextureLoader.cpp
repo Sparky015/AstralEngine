@@ -106,7 +106,7 @@ namespace Astral {
 
             if (lut.size() != size * size * size) { return nullptr; }
 
-            texture = Texture::CreateLUT(lut.data(), size, size, ImageFormat::R16G16B16A16_SFLOAT);
+            texture = Texture::Create3DTexture(lut.data(), size, size, ImageFormat::R16G16B16A16_SFLOAT);
             return texture;
         }
         else // Load regular 2D texture

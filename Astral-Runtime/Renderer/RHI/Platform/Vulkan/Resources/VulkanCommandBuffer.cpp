@@ -89,6 +89,8 @@ namespace Astral {
         vkCmdBindPipeline(m_CommandBuffer, bindPoint, vkPipeline);
         m_BoundPipeline = pipeline;
         m_PipelineDynamicStateViewportAndScissor = UVec2{-1, -1};
+        m_BoundIndexBuffer = nullptr;
+        m_BoundVertexBuffer = nullptr;
     }
 
 

@@ -7,6 +7,7 @@
 #include "AssetRegistry.h"
 
 #include "Debug/Utilities/Error.h"
+#include "Loaders/CubeLUTLoader.h"
 #include "Loaders/EnvironmentMapLoader.h"
 #include "Loaders/TextureLoader.h"
 #include "Loaders/MaterialLoader.h"
@@ -99,6 +100,7 @@ namespace Astral {
             case AssetType::Shader: return ShaderLoader::LoadAsset(filePath);
             case AssetType::Mesh: return MeshLoader::LoadAsset(filePath);
             case AssetType::EnvironmentMap: return EnvironmentMapLoader::LoadAsset(filePath);
+            case AssetType::CubeLUT: return CubeLUTLoader::LoadAsset(filePath);
             default: ASTRAL_ERROR("Invalid asset type value given!");
         }
     }

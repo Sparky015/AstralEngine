@@ -139,6 +139,7 @@ namespace Astral {
         ShaderHandle m_ForwardUnpackedLightingShader;
         ShaderHandle m_ForwardORMLightingShader;
         ShaderHandle m_DepthWriteOnlyShader;
+        DescriptorSetHandle m_InputLUTDescriptorSet;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
         float m_SceneExposure{};
