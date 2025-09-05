@@ -136,6 +136,7 @@ namespace Astral {
     	VkImageViewType viewType;
     	switch (m_TextureType)
     	{
+    		case TextureType::IMAGE_1D: viewType = VK_IMAGE_VIEW_TYPE_1D; break;
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
@@ -197,6 +198,7 @@ namespace Astral {
     	VkImageViewType viewType;
     	switch (m_TextureType)
     	{
+    		case TextureType::IMAGE_1D: viewType = VK_IMAGE_VIEW_TYPE_1D; break;
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
@@ -251,6 +253,7 @@ namespace Astral {
 		VkImageType imageType;
     	switch (m_TextureType)
     	{
+    		case TextureType::IMAGE_1D: imageType = VK_IMAGE_TYPE_1D; break;
     		case TextureType::IMAGE_2D: imageType = VK_IMAGE_TYPE_2D; break;
     		case TextureType::IMAGE_3D: imageType = VK_IMAGE_TYPE_3D; break;
     		case TextureType::CUBEMAP: imageType = VK_IMAGE_TYPE_2D; break;
@@ -260,6 +263,11 @@ namespace Astral {
     	if (m_TextureType == TextureType::IMAGE_3D)
     	{
     		m_ImageDepth = m_ImageWidth;
+    	}
+    	else if (m_TextureType == TextureType::IMAGE_1D)
+    	{
+    		m_ImageHeight = 1;
+    		m_ImageDepth = 1;
     	}
     	else
     	{
@@ -346,6 +354,7 @@ namespace Astral {
     	VkImageViewType viewType;
     	switch (m_TextureType)
     	{
+    		case TextureType::IMAGE_1D: viewType = VK_IMAGE_VIEW_TYPE_1D; break;
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
@@ -384,6 +393,7 @@ namespace Astral {
     	{
     		switch (m_TextureType)
     		{
+    			case TextureType::IMAGE_1D: viewType = VK_IMAGE_VIEW_TYPE_1D; break;
     			case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     			case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;

@@ -18,6 +18,7 @@ namespace Astral {
 
     enum class TextureType : uint32
     {
+        IMAGE_1D,
         IMAGE_2D,
         IMAGE_3D,
         CUBEMAP

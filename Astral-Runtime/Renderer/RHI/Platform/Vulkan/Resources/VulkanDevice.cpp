@@ -323,6 +323,30 @@ namespace Astral {
     }
 
 
+    TextureHandle VulkanDevice::Create1DTexture(const TextureCreateInfo& textureCreateInfo)
+    {
+        VulkanTextureDesc textureDesc = {
+            .VulkanDevice = this,
+            .Device = m_Device,
+            .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageLayout = textureCreateInfo.Layout,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_1D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+        };
+
+        return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
     bool VulkanDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
     {
         VkFormat format = ConvertImageFormatToVkFormat(imageFormat);
