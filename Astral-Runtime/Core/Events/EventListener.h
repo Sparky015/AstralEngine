@@ -53,11 +53,12 @@ namespace Astral {
     template<typename T>
     EventListener<T>::EventListener(EventListener&& other) noexcept
     {
+        m_IsListening = std::move(other.m_IsListening);
         other.StopListening();
         m_Callback = std::move(other.m_Callback);
-        m_IsListening = std::move(other.m_IsListening);
-        StartListening();
-        other.m_Callback = nullptr;
+        if (m_IsListening) { StartListening(); }
+
+        other.m_Callback = std::function<void(T)>();
         other.m_IsListening = false;
     }
 
@@ -67,12 +68,12 @@ namespace Astral {
     {
         if (this != &other)
         {
+            m_IsListening = std::move(other.m_IsListening);
             StopListening();
             other.StopListening();
             m_Callback = std::move(other.m_Callback);
-            m_IsListening = std::move(other.m_IsListening);
-            StartListening();
-            other.m_Callback = nullptr;
+            if (m_IsListening) { StartListening(); }
+            other.m_Callback = std::function<void(T)>();;
             other.m_IsListening = false;
         }
         return *this;
