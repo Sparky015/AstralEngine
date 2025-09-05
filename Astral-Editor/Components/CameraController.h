@@ -9,5 +9,6 @@
 namespace Astral {
 
     void CameraControllerComponent();
+    void CameraPropertiesComponent();
 
 }

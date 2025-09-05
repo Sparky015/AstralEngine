@@ -14,6 +14,13 @@
 
 namespace Astral {
 
+    static Vec3 initialPosition;
+    static Vec2 rotationSpeed = Vec2{0};
+    static float sensitivity = .5;
+    static float rotationDrag = .85;
+    static float baseSpeed = 8;
+
+
     void CameraControllerComponent()
     {
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
@@ -24,7 +31,7 @@ namespace Astral {
         static DeltaTime deltaTime;
 
         deltaTime.UpdateDeltaTime();
-        magnitude = 8 * deltaTime.GetSeconds();
+        magnitude = baseSpeed * deltaTime.GetSeconds();
 
         if (InputState::IsKeyDown(KEY_LEFT_CLICK))
         {
@@ -32,10 +39,7 @@ namespace Astral {
         }
 
         static Vec2 lastMousePosition{};
-        static Vec2 rotationSpeed = Vec2{0};
-        static float rotationDrag = .92;
         static bool wasKeyJustPressed = true;
-        static float sensitivity = .5;
         if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
         {
             if (wasKeyJustPressed)
@@ -63,7 +67,7 @@ namespace Astral {
 
 
 
-        Vec3 initialPosition = primaryCamera.GetPosition(); // For tracking camera velocity
+        initialPosition = primaryCamera.GetPosition(); // For tracking camera velocity
 
         if (InputState::IsKeyDown(KEY_W))
         {
@@ -140,6 +144,13 @@ namespace Astral {
             primaryCamera.SetZoom(zoom - 5);
         }
 
+        CameraPropertiesComponent();
+    }
+
+    void CameraPropertiesComponent()
+    {
+        Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+
         ImGui::Begin("Camera Controller##EditorCameraController");
 
         Vec3 cameraPosition = scene.PrimaryCamera.GetPosition();
@@ -150,10 +161,10 @@ namespace Astral {
         ImGui::Text("Camera Rotation: (%.3f, %.3f, %.3f)", cameraRotation.x, cameraRotation.y, cameraRotation.z);
         ImGui::Text("Camera Rotation Speed: (%.3f, %.3f)", rotationSpeed.x, rotationSpeed.y);
 
-        ImGui::Text("Camera Speed: ");
+        ImGui::Text("Camera Base Speed: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);
-        ImGui::InputFloat("##CameraSpeedInput", &magnitude);
+        ImGui::InputFloat("##CameraSpeedInput", &baseSpeed);
 
         ImGui::Text("Mouse Sensitivity: ");
         ImGui::SameLine();
