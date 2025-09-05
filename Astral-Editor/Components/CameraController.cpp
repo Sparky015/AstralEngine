@@ -142,7 +142,7 @@ namespace Astral {
         ImGui::Text("Camera Position: (%.3f, %.3f, %.3f)", cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
         float framesPerSecond = 1 / deltaTime.GetSeconds();
-        Vec3 positionDelta = initialPosition - cameraPosition;
+        Vec3 positionDelta = cameraPosition - initialPosition;
         Vec3 cameraVelocity = positionDelta * framesPerSecond;
         ImGui::Text("Camera Velocity: (%.3f, %.3f, %.3f)", cameraVelocity.x, cameraVelocity.y, cameraVelocity.z);
 
