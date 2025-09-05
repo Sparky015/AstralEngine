@@ -15,7 +15,6 @@
 #include "Window/WindowManager.h"
 #include "Renderer/SceneRenderer.h"
 
-#include "Input/InputState.h"
 
 #include <cmath>
 
@@ -25,123 +24,9 @@
 
 namespace Astral {
 
-    static Camera camera = Camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
-
     void RenderingSystem::RenderEntities()
     {
         PROFILE_SCOPE("RenderingSystem::RenderEntities");
-
-        // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        static float magnitude = 2;
-        static Vec2 initialMousePos{};
-        static Vec3 initialRotation{};
-        static bool isReadyToTrack = true;
-        static DeltaTime deltaTime;
-
-        deltaTime.UpdateDeltaTime();
-        magnitude = 8 * deltaTime.GetSeconds();
-
-        if (InputState::IsKeyDown(KEY_LEFT_CLICK))
-        {
-            magnitude *= 20;
-        }
-
-        if (InputState::IsKeyDown(KEY_RIGHT_CLICK))
-        {
-            if (isReadyToTrack)
-            {
-                initialMousePos = InputState::MousePosition();
-                initialRotation = camera.GetRotation();
-                isReadyToTrack = false;
-            }
-
-            Vec2 currentMousePos = InputState::MousePosition();
-            float xDiff = (initialMousePos.x - currentMousePos.x) * .5;
-            float yDiff = (initialMousePos.y - currentMousePos.y) * .5;
-
-            Vec3 newRotation = {initialRotation.x - yDiff, initialRotation.y + xDiff, initialRotation.z};
-            camera.SetRotation(newRotation);
-        }
-        else
-        {
-            isReadyToTrack = true;
-        }
-
-        if (InputState::IsKeyDown(KEY_W))
-        {
-
-            Vec3 forwardVec = camera.GetForwardVector();
-            forwardVec *= magnitude;
-            const Vec3& position = camera.GetPosition();
-            Vec3 newPosition = position + forwardVec;
-
-            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
-        }
-        if (InputState::IsKeyDown(KEY_S))
-        {
-            Vec3 forwardVec = camera.GetForwardVector();
-            forwardVec *= magnitude;
-            const Vec3& position = camera.GetPosition();
-            Vec3 newPosition = position - forwardVec;
-
-            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
-        }
-        if (InputState::IsKeyDown(KEY_A))
-        {
-            Vec3 leftVec = camera.GetLeftVector();
-            leftVec *= magnitude;
-            const Vec3& position = camera.GetPosition();
-            Vec3 newPosition = position + leftVec;
-
-            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
-        }
-        if (InputState::IsKeyDown(KEY_D))
-        {
-            Vec3 leftVec = camera.GetLeftVector();
-            leftVec *= magnitude;
-            const Vec3& position = camera.GetPosition();
-            Vec3 newPosition = position - leftVec;
-
-            camera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
-        }
-        if (InputState::IsKeyDown(KEY_LEFT_SHIFT) || InputState::IsKeyDown(KEY_RIGHT_SHIFT))
-        {
-            const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
-        }
-        if (InputState::IsKeyDown(KEY_SPACE))
-        {
-            const Vec3& position = camera.GetPosition();
-            camera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
-        }
-
-
-        if (InputState::IsKeyDown(KEY_H))
-        {
-            Vec3 rotation = camera.GetRotation();
-            rotation.z += 1;
-            camera.SetRotation(rotation);
-        }
-
-        if (InputState::IsKeyDown(KEY_G))
-        {
-            Vec3 rotation = camera.GetRotation();
-            rotation.z -= 1;
-            camera.SetRotation(rotation);
-        }
-
-        if (InputState::IsKeyDown(KEY_T))
-        {
-            const float zoom = camera.GetZoomLevel();
-            camera.SetZoom(zoom + 5);
-        }
-
-        if (InputState::IsKeyDown(KEY_Y))
-        {
-            const float zoom = camera.GetZoomLevel();
-            camera.SetZoom(zoom - 5);
-        }
-
 
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
 
@@ -149,7 +34,7 @@ namespace Astral {
         GetLightComponents(lights);
 
         SceneDescription sceneDescription = {
-            .Camera = camera,
+            .Camera = scene.PrimaryCamera,
             .Lights = lights,
             .EnvironmentMap = scene.EnvironmentMap,
             .AmbientLightConstant = scene.AmbientLightConstant,
@@ -163,12 +48,6 @@ namespace Astral {
         SubmitSpriteComponents();
 
         SceneRenderer::EndScene();
-    }
-
-
-    Camera& RenderingSystem::GetCamera()
-    {
-        return camera;
     }
 
 

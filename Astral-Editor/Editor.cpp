@@ -6,6 +6,7 @@
 
 #include "Editor.h"
 
+#include "Components/CameraController.h"
 #include "Components/ExternalSceneBreakdownConfigComponent.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Panels/SceneHierarchyPanel.h"
@@ -50,6 +51,7 @@ namespace Astral {
         PropertiesPanel();
         EnvironmentPanel();
         MaterialEditorPanel::Show();
+        CameraControllerComponent();
     }
 
 }

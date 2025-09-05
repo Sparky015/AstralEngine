@@ -57,6 +57,7 @@ namespace Astral {
 
     void ViewportPanel::ShowGizmo()
     {
+        Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         Entity selectedEntity = SceneHierarchyPanel::GetSelectedEntity();
 
@@ -72,7 +73,7 @@ namespace Astral {
             ImGuizmo::SetDrawlist();
             ImGuizmo::Enable(true);
 
-            Camera& camera = RenderingSystem::GetCamera();
+            Camera& camera = scene.PrimaryCamera;
             ImVec2 windowPos = ImGui::GetWindowPos();
             ImGuizmo::SetRect(windowPos.x, windowPos.y, m_ContentRegionSize.x, m_ContentRegionSize.y);
             Mat4 yUpProjection = camera.GetProjectionMatrix();

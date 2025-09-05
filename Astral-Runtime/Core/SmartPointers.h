@@ -21,7 +21,7 @@ namespace Astral {
     {
         GenericRegionAllocator<T> allocator{MemoryRegion::CORE};
         T* pointer = allocator.allocate(1);
-        allocator.construct(pointer, args...);
+        allocator.construct(pointer, std::forward<Args>(args)...);
 
         // No need to provide custom deleter as unique_ptr will default to the overridden ::delete which tracks frees
         return std::unique_ptr<T>(pointer);
