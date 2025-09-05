@@ -17,6 +17,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "ECS/SceneManager.h"
 #include "Window/WindowManager.h"
@@ -75,11 +76,20 @@ namespace Astral {
         m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
         m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
 
-        TextureHandle toneMappingLUT = registry.CreateAsset<Texture>("LUTs/acescg_to_rec709_linear_no_shaper.cube");
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
         m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
         m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
-        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT, ShaderStage::FRAGMENT);
+        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
+        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
         m_ToneMappingLUTDescriptorSet->EndBuildingSet();
+
+
+        Ref<CubeLUT> inputLUT = registry.CreateAsset<CubeLUT>("LUTs/rec709_linear_to_acescg.cube");
+        m_InputLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+        m_InputLUTDescriptorSet->BeginBuildingSet();
+        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->LUT3D, ShaderStage::FRAGMENT);
+        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->Shaper1D, ShaderStage::FRAGMENT);
+        m_InputLUTDescriptorSet->EndBuildingSet();
 
 
 
@@ -947,7 +957,6 @@ namespace Astral {
         commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
 
-
         commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
         commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
     }
@@ -1081,11 +1090,18 @@ namespace Astral {
 
     void SceneRendererImpl::ToneMappingPass()
     {
+        struct ToneMappingPassPushConstants
+        {
+            float Exposure;
+            Vec2 ShaperInputRange;
+        };
+
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
@@ -1105,7 +1121,10 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
         commandBuffer->BindDescriptorSet(toneMapperMaterial.DescriptorSet, 2);
 
-        commandBuffer->PushConstants(&m_SceneExposure, sizeof(m_SceneExposure));
+        ToneMappingPassPushConstants toneMappingPushConstants;
+        toneMappingPushConstants.Exposure = m_SceneExposure;
+        toneMappingPushConstants.ShaperInputRange = toneMappingLUT->ShaperInputRange;
+        commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
 
         commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
