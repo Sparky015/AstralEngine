@@ -11,6 +11,8 @@
 
 namespace Astral {
 
+    // TODO: Refactor the Event bus to not use static memory
+
     /** @brief Holds function callbacks for when an event needs to be propagated. */
     template<typename T>
     class EventBus
