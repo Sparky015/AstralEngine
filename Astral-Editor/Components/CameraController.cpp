@@ -19,6 +19,7 @@ namespace Astral {
     static float sensitivity = .5;
     static float rotationDrag = .85;
     static float baseSpeed = 8;
+    static DeltaTime deltaTime;
 
 
     void CameraControllerComponent()
@@ -26,9 +27,7 @@ namespace Astral {
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
         Camera& primaryCamera = scene.PrimaryCamera;
 
-        // TODO Make a templated iterator that does the below checking on iterations and holds the state of which ID it is at
-        static float magnitude = 2;
-        static DeltaTime deltaTime;
+        static float magnitude = 0;
 
         deltaTime.UpdateDeltaTime();
         magnitude = baseSpeed * deltaTime.GetSeconds();
@@ -65,56 +64,36 @@ namespace Astral {
 
         rotationSpeed *= rotationDrag;
 
-
-
         initialPosition = primaryCamera.GetPosition(); // For tracking camera velocity
+        Vec3 movingDirection = Vec3(0.0f);
 
         if (InputState::IsKeyDown(KEY_W))
         {
-
             Vec3 forwardVec = primaryCamera.GetForwardVector();
-            forwardVec *= magnitude;
-            const Vec3& position = primaryCamera.GetPosition();
-            Vec3 newPosition = position + forwardVec;
-
-            primaryCamera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+            movingDirection += forwardVec;
         }
         if (InputState::IsKeyDown(KEY_S))
         {
             Vec3 forwardVec = primaryCamera.GetForwardVector();
-            forwardVec *= magnitude;
-            const Vec3& position = primaryCamera.GetPosition();
-            Vec3 newPosition = position - forwardVec;
-
-            primaryCamera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+            movingDirection -= forwardVec;
         }
         if (InputState::IsKeyDown(KEY_A))
         {
             Vec3 leftVec = primaryCamera.GetLeftVector();
-            leftVec *= magnitude;
-            const Vec3& position = primaryCamera.GetPosition();
-            Vec3 newPosition = position + leftVec;
-
-            primaryCamera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+            movingDirection += leftVec;
         }
         if (InputState::IsKeyDown(KEY_D))
         {
             Vec3 leftVec = primaryCamera.GetLeftVector();
-            leftVec *= magnitude;
-            const Vec3& position = primaryCamera.GetPosition();
-            Vec3 newPosition = position - leftVec;
-
-            primaryCamera.SetPosition(Vec3(newPosition.x, position.y, newPosition.z));
+            movingDirection -= leftVec;
         }
         if (InputState::IsKeyDown(KEY_LEFT_SHIFT) || InputState::IsKeyDown(KEY_RIGHT_SHIFT))
         {
-            const Vec3& position = primaryCamera.GetPosition();
-            primaryCamera.SetPosition(Vec3(position.x, position.y - magnitude, position.z));
+            movingDirection.y -= 1.0f;
         }
         if (InputState::IsKeyDown(KEY_SPACE))
         {
-            const Vec3& position = primaryCamera.GetPosition();
-            primaryCamera.SetPosition(Vec3(position.x, position.y + magnitude, position.z));
+            movingDirection.y += 1.0f;
         }
 
 
@@ -144,6 +123,12 @@ namespace Astral {
             primaryCamera.SetZoom(zoom - 5);
         }
 
+        if (movingDirection != Vec3(0.0f))
+        {
+            Vec3 positionDelta = glm::normalize(movingDirection) * magnitude;
+            primaryCamera.SetPosition(initialPosition + positionDelta);
+        }
+
         CameraPropertiesComponent();
     }
 
@@ -155,7 +140,11 @@ namespace Astral {
 
         Vec3 cameraPosition = scene.PrimaryCamera.GetPosition();
         ImGui::Text("Camera Position: (%.3f, %.3f, %.3f)", cameraPosition.x, cameraPosition.y, cameraPosition.z);
-        ImGui::Text("Camera Velocity: %.3f m/s", glm::length(initialPosition - cameraPosition));
+
+        float framesPerSecond = 1 / deltaTime.GetSeconds();
+        Vec3 positionDelta = initialPosition - cameraPosition;
+        Vec3 cameraVelocity = positionDelta * framesPerSecond;
+        ImGui::Text("Camera Velocity: (%.3f, %.3f, %.3f)", cameraVelocity.x, cameraVelocity.y, cameraVelocity.z);
 
         Vec3 cameraRotation = scene.PrimaryCamera.GetRotation();
         ImGui::Text("Camera Rotation: (%.3f, %.3f, %.3f)", cameraRotation.x, cameraRotation.y, cameraRotation.z);
