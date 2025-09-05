@@ -13,8 +13,8 @@ namespace Astral {
     class EventListener
     {
     public:
-        explicit EventListener(const std::function<void(T)>& callback) : m_Callback(callback), m_IsListening(false) {};
-        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback)), m_IsListening(false) {};
+        explicit EventListener(const std::function<void(T)>& callback) : m_Callback(std::function<void(T)>(callback)), m_IsListening(false) {};
+        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::function<void(T)>(std::move(callback))), m_IsListening(false) {};
 
         ~EventListener()
         {
@@ -53,8 +53,12 @@ namespace Astral {
     template<typename T>
     EventListener<T>::EventListener(EventListener&& other) noexcept
     {
+        other.StopListening();
         m_Callback = std::move(other.m_Callback);
         m_IsListening = std::move(other.m_IsListening);
+        StartListening();
+        other.m_Callback = nullptr;
+        other.m_IsListening = false;
     }
 
 
@@ -63,8 +67,13 @@ namespace Astral {
     {
         if (this != &other)
         {
+            StopListening();
+            other.StopListening();
             m_Callback = std::move(other.m_Callback);
             m_IsListening = std::move(other.m_IsListening);
+            StartListening();
+            other.m_Callback = nullptr;
+            other.m_IsListening = false;
         }
         return *this;
     }
