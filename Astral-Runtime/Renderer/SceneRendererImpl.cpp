@@ -251,6 +251,16 @@ namespace Astral {
             SetVSync(m_RendererSettings.IsVSyncEnabled);
         }
 
+        if (m_RendererSettings.DebugView != rendererSettings.DebugView)
+        {
+            m_RendererSettings.DebugView = rendererSettings.DebugView;
+
+            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
+            {
+                BuildRenderGraphForDeferred();
+            }
+        }
+
         m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
     }
 
@@ -417,7 +427,19 @@ namespace Astral {
         m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddPass(tonemappingPass);
         m_RenderGraph.AddOutputPass(fxaaPass);
-        m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures);
+
+        switch (m_RendererSettings.DebugView)
+        {
+            case RendererDebugView::NONE: m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures); break;
+            case RendererDebugView::GBUFFER_ALBEDO: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures); break;
+            case RendererDebugView::GBUFFER_ROUGHNESS: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputTextures); break;
+            case RendererDebugView::GBUFFER_METALLIC: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputTextures); break;
+            case RendererDebugView::GBUFFER_EMISSION: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputTextures); break;
+            case RendererDebugView::GBUFFER_NORMAL: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures); break;
+            case RendererDebugView::DEPTH: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputTextures); break;
+            default: m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures); break;
+        }
+
         m_RenderGraph.EndBuildingRenderGraph();
     }
 

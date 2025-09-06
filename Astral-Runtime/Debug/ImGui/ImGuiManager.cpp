@@ -82,11 +82,17 @@ namespace Astral {
                 RendererViewportSizeComponent();
 
                 ImGui::Spacing();
+
                 VsyncToggleComponent();
                 FrustumCullingToggleComponent();
                 RendererTypeSelector();
+                RendererDebugViewComponent();
+
+                ImGui::Spacing();
+
                 RendererAPIComponent();
                 RendererAPIValidationStatus();
+
 
                 ImGui::Spacing();
                 ImGui::TreePop();

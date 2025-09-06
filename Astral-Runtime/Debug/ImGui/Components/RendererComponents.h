@@ -15,6 +15,8 @@ namespace Astral {
     void RendererTypeSelector();
     void VsyncToggleComponent();
     void FrustumCullingToggleComponent();
+    void RendererDebugViewComponent();
+
 
 
 }

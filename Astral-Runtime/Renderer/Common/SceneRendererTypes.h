@@ -30,11 +30,23 @@ namespace Astral {
         DEFERRED
     };
 
+    enum class RendererDebugView
+    {
+        NONE,
+        GBUFFER_ALBEDO,
+        GBUFFER_ROUGHNESS,
+        GBUFFER_METALLIC,
+        GBUFFER_EMISSION,
+        GBUFFER_NORMAL,
+        DEPTH
+    };
+
     struct RendererSettings
     {
         RendererType RendererType;
         bool IsVSyncEnabled;
         bool IsFrustumCullingEnabled;
+        RendererDebugView DebugView;
     };
 
 
@@ -46,7 +58,22 @@ namespace Astral {
             case RendererType::FORWARD: return "Forward";
             default: return "Unsupported Renderer Type";
         }
-}
+    }
+
+    inline std::string_view RendererDebugViewToString(RendererDebugView debugView)
+    {
+        switch (debugView)
+        {
+            case RendererDebugView::NONE: return "None";
+            case RendererDebugView::GBUFFER_ALBEDO: return "GBuffer-Albedo";
+            case RendererDebugView::GBUFFER_ROUGHNESS: return "GBuffer-Roughness";
+            case RendererDebugView::GBUFFER_METALLIC: return "GBuffer-Metallic";
+            case RendererDebugView::GBUFFER_EMISSION: return "GBuffer-Emission";
+            case RendererDebugView::GBUFFER_NORMAL: return "GBuffer-Normal";
+            case RendererDebugView::DEPTH: return "Depth";
+            default: return "Unsupported Renderer Type";
+        }
+    }
 
 
 }
