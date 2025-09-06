@@ -4,8 +4,29 @@ on:
   
   push:
     branches: [ "main", "development" ]
+    paths-ignore:
+      - 'Documentation/**'
+      - 'docs/**'
+      - '.gitignore'
+      - '.gitmodules'
+      - 'Doxygen'
+      - 'README.md'
+      - 'GenerateVisualStudioProject.bat'
+      - 'GenerateXcodeProject.sh'
+      - 'LICENSE'
+      
   pull_request:
     branches: [ "development" ]
+    paths-ignore:
+      - 'Documentation/**'
+      - 'docs/**'
+      - '.gitignore'
+      - '.gitmodules'
+      - 'Doxygen'
+      - 'README.md'
+      - 'GenerateVisualStudioProject.bat'
+      - 'GenerateXcodeProject.sh'
+      - 'LICENSE'
 
 jobs:
   build:
