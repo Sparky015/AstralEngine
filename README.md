@@ -1,5 +1,7 @@
 # Astral Engine
 
+[![CI Build](https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform.yml)
+
 ---------------
 Welcome to the Astral Engine project codebase!
 
