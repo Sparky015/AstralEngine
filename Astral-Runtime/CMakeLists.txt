@@ -279,7 +279,7 @@ add_library(AstralEngine
         Core/Containers/DirectedGraph.cpp
         Core/Containers/DirectedGraph.h
         Renderer/RHI/Common/PipelineBarriers.h
-        Renderer/RHI/Common/ImageSubResourceRange.h
+        Renderer/RHI/Common/ImageSubresourceRange.h
         Renderer/RHI/Common/DependencyFlags.h
         Renderer/RHI/Common/ImageFormats.cpp
         Asset/Ref.h

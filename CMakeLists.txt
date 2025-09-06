@@ -19,7 +19,5 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_subdirectory(ThirdPartyLibraries)
 add_subdirectory(Astral-Runtime)
 add_subdirectory(Astral-Editor)
-add_subdirectory(Samples/Chess)
-add_subdirectory(Samples/VulkanPlayground)
 
 add_subdirectory(Tests)
