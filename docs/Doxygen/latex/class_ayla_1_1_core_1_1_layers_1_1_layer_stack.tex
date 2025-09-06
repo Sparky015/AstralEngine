@@ -1,0 +1,129 @@
+\doxysection{Ayla\+::Core\+::Layers\+::Layer\+Stack Class Reference}
+\hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{}\label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+
+
+{\ttfamily \#include $<$Layer\+Stack.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a916a4a52571f91206410c9090718ec5a}{Layer\+Stack}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aaf13c31a543f7f99fb1c891bf9e72fa7}{Append\+Layer}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}layer)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae6f9c95b23694f203fd9641de611a480}{Insert\+Layer}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}, int position)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a542df96eb5076fbe784465d50c79baae}{Remove\+Layer}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}layer)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae2a0a17a4aa646ab7c27b3fcc755d89c}{Append\+Overlay}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}layer)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a6e9d8010dbd4e4b9c9e8f8400972fe2b}{Insert\+Overlay}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}layer, int position)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a67c4911304e36ad1556752eb6c8ee23c}{Remove\+Overlay}} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}layer)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a8c24c2c90e52afddbc67154cc7bd387a}{Dispatch\+Event\+From\+Front\+To\+Back}} (\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&event)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae89f8cf83f35d39de25fb9ce0fae4532}{Dispatch\+Event\+Back\+To\+Front}} (\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&event)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_af1074db44c457b55bc7acd589da6acb9}{Update}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aebc862e723abf5edf94ec4656a1802f6}{Render\+Im\+Gui}} ()
+\item 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a9df3c8d90d6766eea4fbb69f3016e33d}{Layer\+Stack}} (const \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ac9ab0c8293b3d787429e323dc2c4d709}\label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ac9ab0c8293b3d787429e323dc2c4d709} 
+{\bfseries Layer\+Stack} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \&\&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a895e3ec11452f6cad24311062aa7508d}\label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a895e3ec11452f6cad24311062aa7508d} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a01a2c49714022837191f6261aabcfac4}\label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a01a2c49714022837191f6261aabcfac4} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \& {\bfseries operator=} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \&\&)=delete
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores the all layers in a centralized location for easy access to call Layer\textquotesingle{}s Update and Render\+Im\+Gui functions 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a916a4a52571f91206410c9090718ec5a}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!LayerStack@{LayerStack}}
+\index{LayerStack@{LayerStack}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{LayerStack()}{LayerStack()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a916a4a52571f91206410c9090718ec5a} 
+Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Layer\+Stack (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Constructor/\+Destructor \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a9df3c8d90d6766eea4fbb69f3016e33d}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!LayerStack@{LayerStack}}
+\index{LayerStack@{LayerStack}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{LayerStack()}{LayerStack()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a9df3c8d90d6766eea4fbb69f3016e33d} 
+Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Layer\+Stack (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_layer_stack}{Layer\+Stack}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Disallow copy and move constructors and operators. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aaf13c31a543f7f99fb1c891bf9e72fa7}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!AppendLayer@{AppendLayer}}
+\index{AppendLayer@{AppendLayer}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{AppendLayer()}{AppendLayer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aaf13c31a543f7f99fb1c891bf9e72fa7} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Append\+Layer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{}\end{DoxyParamCaption})}
+
+Adds a layer to the layer stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae2a0a17a4aa646ab7c27b3fcc755d89c}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!AppendOverlay@{AppendOverlay}}
+\index{AppendOverlay@{AppendOverlay}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{AppendOverlay()}{AppendOverlay()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae2a0a17a4aa646ab7c27b3fcc755d89c} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Append\+Overlay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{}\end{DoxyParamCaption})}
+
+Adds a layer to the overlays stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae89f8cf83f35d39de25fb9ce0fae4532}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!DispatchEventBackToFront@{DispatchEventBackToFront}}
+\index{DispatchEventBackToFront@{DispatchEventBackToFront}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{DispatchEventBackToFront()}{DispatchEventBackToFront()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae89f8cf83f35d39de25fb9ce0fae4532} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Dispatch\+Event\+Back\+To\+Front (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&}]{event}{}\end{DoxyParamCaption})}
+
+Dispatches an event to the layer stack and then the overlay stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a8c24c2c90e52afddbc67154cc7bd387a}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!DispatchEventFromFrontToBack@{DispatchEventFromFrontToBack}}
+\index{DispatchEventFromFrontToBack@{DispatchEventFromFrontToBack}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{DispatchEventFromFrontToBack()}{DispatchEventFromFrontToBack()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a8c24c2c90e52afddbc67154cc7bd387a} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Dispatch\+Event\+From\+Front\+To\+Back (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&}]{event}{}\end{DoxyParamCaption})}
+
+Dispatches an event to the overlay stack and then the layer stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae6f9c95b23694f203fd9641de611a480}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!InsertLayer@{InsertLayer}}
+\index{InsertLayer@{InsertLayer}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{InsertLayer()}{InsertLayer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_ae6f9c95b23694f203fd9641de611a480} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Insert\+Layer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{, }\item[{int}]{position}{}\end{DoxyParamCaption})}
+
+Inserts a layer in the position given in the layer stack \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a6e9d8010dbd4e4b9c9e8f8400972fe2b}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!InsertOverlay@{InsertOverlay}}
+\index{InsertOverlay@{InsertOverlay}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{InsertOverlay()}{InsertOverlay()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a6e9d8010dbd4e4b9c9e8f8400972fe2b} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Insert\+Overlay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{, }\item[{int}]{position}{}\end{DoxyParamCaption})}
+
+Inserts a layer in the position given in the overlay stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a542df96eb5076fbe784465d50c79baae}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!RemoveLayer@{RemoveLayer}}
+\index{RemoveLayer@{RemoveLayer}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{RemoveLayer()}{RemoveLayer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a542df96eb5076fbe784465d50c79baae} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Remove\+Layer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{}\end{DoxyParamCaption})}
+
+Removes a layer from the layer stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a67c4911304e36ad1556752eb6c8ee23c}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!RemoveOverlay@{RemoveOverlay}}
+\index{RemoveOverlay@{RemoveOverlay}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{RemoveOverlay()}{RemoveOverlay()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_a67c4911304e36ad1556752eb6c8ee23c} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Remove\+Overlay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{ILayer}} \texorpdfstring{$\ast$}{*}}]{layer}{}\end{DoxyParamCaption})}
+
+Removes a layer from the overlay stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aebc862e723abf5edf94ec4656a1802f6}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!RenderImGui@{RenderImGui}}
+\index{RenderImGui@{RenderImGui}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{RenderImGui()}{RenderImGui()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_aebc862e723abf5edf94ec4656a1802f6} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Render\+Im\+Gui (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Calls the On\+Im\+Gui\+Render function on every layer in the layer stack and overlay stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_af1074db44c457b55bc7acd589da6acb9}\index{Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}!Update@{Update}}
+\index{Update@{Update}!Ayla::Core::Layers::LayerStack@{Ayla::Core::Layers::LayerStack}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_layer_stack_af1074db44c457b55bc7acd589da6acb9} 
+void Ayla\+::\+Core\+::\+Layers\+::\+Layer\+Stack\+::\+Update (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Calls the On\+Update function on every layer in the layer stack and overlay stack. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Core/\+Layers/Layer\+Stack.\+h\item 
+src/\+Ayla/\+Core/\+Layers/Layer\+Stack.\+cpp\end{DoxyCompactItemize}

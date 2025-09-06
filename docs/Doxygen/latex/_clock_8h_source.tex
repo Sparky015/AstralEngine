@@ -1,0 +1,55 @@
+\doxysection{Clock.\+h}
+\hypertarget{_clock_8h_source}{}\label{_clock_8h_source}\index{src/Ayla/Core/Time/Clock.h@{src/Ayla/Core/Time/Clock.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Andrew\ Fagan\ on\ 6/25/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TimeLiterals.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}FTimer.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }Ayla::Core::Time}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\ final}
+\DoxyCodeLine{00017\ \ \ \ \ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a758fc915799d64e4f4272be2ad98c34c}{Init}}();}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_aef7d131fd6508b218b1a16c037f91a43}{Get}}();}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ [[nodiscard]]\ TimeStamp\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a99c7faf09d529f976b1bc311f307d4be}{GetCurrentTimeStamp}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a27f287bd04363e29d4b538a23dbef9c4}{UpdateDeltaTime}}();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a399be2984e227c59957b444ccf955c5e}{CheckTimers}}();}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a526883e9336af42e396989a4f262e507}{GetDeltaTime}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_afda6b48c6db004cb69e9dff1ab2bc9cf}{GetStopwatchTime}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_afc4661b1daa5e81c5219a7dd6b0126e8}{ResetStopwatch}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a416e7bbcdefc1f420997e14d6f174fc8}{AddTimer}}(\textcolor{keywordtype}{float}\ amountOfTime,\ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}()>\&\ callback);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}(\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&\ operator=(\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}();}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{\string~Clock}}();}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}}*\ m\_Instance;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ TimeDuration\ m\_DeltaTime;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ TimeStamp\ m\_PreviousTimeStamp;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ TimeStamp\ m\_ClockStartingTimeStamp;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ std::vector<FTimer>\ m\_Timers;}
+\DoxyCodeLine{00066\ \ \ \ \ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \}}
+
+\end{DoxyCode}

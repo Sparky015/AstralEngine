@@ -1,0 +1,5 @@
+
+add_executable(VulkanPlayground VulkanPlaygroundModule.cpp)
+
+target_link_libraries(VulkanPlayground AstralEngine)
+target_link_libraries(VulkanPlayground ImGui)

@@ -1,0 +1,84 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.b447485c)"
+    },
+    "extensionsUsed": [
+        "FB_ngon_encoding"
+    ],
+    "buffers": [
+        {
+            "byteLength": 0,
+            "uri": "PBR_Testing.aescene.bin"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node",
+            "children": [
+                1,
+                2
+            ]
+        },
+        {
+            "name": "WaterBendingGauntlet",
+            "matrix": [
+                9.792396545410156,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                800.0,
+                -45.0,
+                0.0,
+                309.1148681640625,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Mesh_MeshData": "Models/WaterBendingGauntlet.fbx",
+                "Mesh_Material": "Models/WaterBendingGauntlet_PBR.astmat"
+            }
+        },
+        {
+            "name": "Top Light",
+            "matrix": [
+                -56.088539123535156,
+                1.0,
+                0.0,
+                0.0,
+                178.5124053955078,
+                1.0,
+                -0.0,
+                0.0,
+                290.7921447753906,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "PointLightComponent_Intensity": 5.0,
+                "PointLightComponent_LightColor_X": 1.0,
+                "PointLightComponent_LightColor_Y": 1.0,
+                "PointLightComponent_LightColor_Z": 1.0
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

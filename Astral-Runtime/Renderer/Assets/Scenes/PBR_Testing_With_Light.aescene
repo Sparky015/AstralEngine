@@ -1,0 +1,84 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.fb375dd8)"
+    },
+    "extensionsUsed": [
+        "FB_ngon_encoding"
+    ],
+    "buffers": [
+        {
+            "byteLength": 0,
+            "uri": "PBR_Testing_With_Light.aescene.bin"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node",
+            "children": [
+                1,
+                2
+            ]
+        },
+        {
+            "name": "WaterBendingGauntlet",
+            "matrix": [
+                9.792396545410156,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                800.0,
+                -45.0,
+                0.0,
+                309.1148681640625,
+                800.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Mesh_MeshData": "Models/WaterBendingGauntlet.fbx",
+                "Mesh_Material": "Models/WaterBendingGauntlet_PBR.astmat"
+            }
+        },
+        {
+            "name": "Light",
+            "matrix": [
+                -278.7655029296875,
+                1.0,
+                0.0,
+                0.0,
+                1671.899169921875,
+                1.0,
+                -0.0,
+                0.0,
+                791.763427734375,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "PointLightComponent_Intensity": 7.0,
+                "PointLightComponent_LightColor_X": 1.0,
+                "PointLightComponent_LightColor_Y": 1.0,
+                "PointLightComponent_LightColor_Z": 1.0
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

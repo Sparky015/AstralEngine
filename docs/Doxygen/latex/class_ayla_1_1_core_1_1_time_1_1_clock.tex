@@ -1,0 +1,121 @@
+\doxysection{Ayla\+::Core\+::Time\+::Clock Class Reference}
+\hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock}{}\label{class_ayla_1_1_core_1_1_time_1_1_clock}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+
+
+{\ttfamily \#include $<$Clock.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Time\+Stamp \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a99c7faf09d529f976b1bc311f307d4be}{Get\+Current\+Time\+Stamp}} () const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a27f287bd04363e29d4b538a23dbef9c4}{Update\+Delta\+Time}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a399be2984e227c59957b444ccf955c5e}{Check\+Timers}} ()
+\item 
+long long \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a526883e9336af42e396989a4f262e507}{Get\+Delta\+Time}} () const
+\item 
+long long \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_afda6b48c6db004cb69e9dff1ab2bc9cf}{Get\+Stopwatch\+Time}} () const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_afc4661b1daa5e81c5219a7dd6b0126e8}{Reset\+Stopwatch}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a416e7bbcdefc1f420997e14d6f174fc8}{Add\+Timer}} (float amount\+Of\+Time, const std\+::function$<$ void()$>$ \&callback)
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_ac44ca5adafc1884e308dfd004912e076}\label{class_ayla_1_1_core_1_1_time_1_1_clock_ac44ca5adafc1884e308dfd004912e076} 
+{\bfseries Clock} (const \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_ac0818a5b3d430eba2a3d72db3d970380}\label{class_ayla_1_1_core_1_1_time_1_1_clock_ac0818a5b3d430eba2a3d72db3d970380} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_aef6a40ae45a213133714830627b009e2}\label{class_ayla_1_1_core_1_1_time_1_1_clock_aef6a40ae45a213133714830627b009e2} 
+{\bfseries Clock} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \&\&)=delete
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a93ac2106ea169692c34733c749a7059d}\label{class_ayla_1_1_core_1_1_time_1_1_clock_a93ac2106ea169692c34733c749a7059d} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \& {\bfseries operator=} (\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_a758fc915799d64e4f4272be2ad98c34c}{Init}} ()
+\item 
+static \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \& \mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock_aef7d131fd6508b218b1a16c037f91a43}{Get}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides delta time as well as a stopwatch for a way to measure how much time has passed between things or events. \begin{DoxyNote}{Note}
+\doxylink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock} is a singleton, so there is only one clock that is engine-\/wide. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a416e7bbcdefc1f420997e14d6f174fc8}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!AddTimer@{AddTimer}}
+\index{AddTimer@{AddTimer}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{AddTimer()}{AddTimer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a416e7bbcdefc1f420997e14d6f174fc8} 
+void Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Add\+Timer (\begin{DoxyParamCaption}\item[{float}]{amount\+Of\+Time}{, }\item[{const std\+::function$<$ void()$>$ \&}]{callback}{}\end{DoxyParamCaption})}
+
+Adds a timer that has a callback for tracking time across function calls \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a399be2984e227c59957b444ccf955c5e}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!CheckTimers@{CheckTimers}}
+\index{CheckTimers@{CheckTimers}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{CheckTimers()}{CheckTimers()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a399be2984e227c59957b444ccf955c5e} 
+void Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Check\+Timers (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Checks the timers to see if any have elapsed. \begin{DoxyNote}{Note}
+May need to be called more than once a frame to keep the timers precise 
+\end{DoxyNote}
+\Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_aef7d131fd6508b218b1a16c037f91a43}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!Get@{Get}}
+\index{Get@{Get}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{Get()}{Get()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_aef7d131fd6508b218b1a16c037f91a43} 
+\mbox{\hyperlink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock}} \& Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Gives access to the \doxylink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock} singleton. \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a99c7faf09d529f976b1bc311f307d4be}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!GetCurrentTimeStamp@{GetCurrentTimeStamp}}
+\index{GetCurrentTimeStamp@{GetCurrentTimeStamp}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{GetCurrentTimeStamp()}{GetCurrentTimeStamp()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a99c7faf09d529f976b1bc311f307d4be} 
+Time\+Stamp Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Get\+Current\+Time\+Stamp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Retrieves the current time stamp \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a526883e9336af42e396989a4f262e507}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!GetDeltaTime@{GetDeltaTime}}
+\index{GetDeltaTime@{GetDeltaTime}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{GetDeltaTime()}{GetDeltaTime()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a526883e9336af42e396989a4f262e507} 
+long long Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Get\+Delta\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Returns the delta time.
+
+Returns the time in milliseconds. \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_afda6b48c6db004cb69e9dff1ab2bc9cf}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!GetStopwatchTime@{GetStopwatchTime}}
+\index{GetStopwatchTime@{GetStopwatchTime}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{GetStopwatchTime()}{GetStopwatchTime()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_afda6b48c6db004cb69e9dff1ab2bc9cf} 
+long long Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Get\+Stopwatch\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Returns the current stopwatch time.
+
+Returns the time in milliseconds. \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a758fc915799d64e4f4272be2ad98c34c}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!Init@{Init}}
+\index{Init@{Init}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a758fc915799d64e4f4272be2ad98c34c} 
+void Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Gives access to the \doxylink{class_ayla_1_1_core_1_1_time_1_1_clock}{Clock} singleton. \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_afc4661b1daa5e81c5219a7dd6b0126e8}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!ResetStopwatch@{ResetStopwatch}}
+\index{ResetStopwatch@{ResetStopwatch}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{ResetStopwatch()}{ResetStopwatch()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_afc4661b1daa5e81c5219a7dd6b0126e8} 
+void Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Reset\+Stopwatch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Resets the stopwatch. \Hypertarget{class_ayla_1_1_core_1_1_time_1_1_clock_a27f287bd04363e29d4b538a23dbef9c4}\index{Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}!UpdateDeltaTime@{UpdateDeltaTime}}
+\index{UpdateDeltaTime@{UpdateDeltaTime}!Ayla::Core::Time::Clock@{Ayla::Core::Time::Clock}}
+\doxysubsubsection{\texorpdfstring{UpdateDeltaTime()}{UpdateDeltaTime()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_time_1_1_clock_a27f287bd04363e29d4b538a23dbef9c4} 
+void Ayla\+::\+Core\+::\+Time\+::\+Clock\+::\+Update\+Delta\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Calculates the delta time value. \begin{DoxyNote}{Note}
+Needs to be called every frame. 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Core/\+Time/Clock.\+h\item 
+src/\+Ayla/\+Core/\+Time/Clock.\+cpp\end{DoxyCompactItemize}

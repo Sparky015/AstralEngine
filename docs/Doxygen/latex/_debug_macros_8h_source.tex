@@ -1,0 +1,48 @@
+\doxysection{Debug\+Macros.\+h}
+\hypertarget{_debug_macros_8h_source}{}\label{_debug_macros_8h_source}\index{src/Ayla/Core/DebugMacros.h@{src/Ayla/Core/DebugMacros.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ Andrew\ Fagan\ on\ 7/12/24.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}Ayla/aypch.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ AY\_TRACE(title)\ Ayla::Core::Macros::macro\_AY\_TRACE(title)}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ AY\_ASSERT(expression,\ errorMessage)\ \{\ std::stringstream\ ss;\ Ayla::Core::Macros::macro\_AY\_ASSERT(expression,\ ss\ <<\ errorMessage);\ \}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ AY\_LOG(message)\ Ayla::Core::Macros::macro\_AY\_LOG(message)}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ AY\_ERROR(errorMessage)\ \{\ std::stringstream\ ss;\ Ayla::Core::Macros::macro\_AY\_ERROR(ss\ <<\ errorMessage);\ \}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ AY\_PROFILE\_SCOPE(title)\ Ayla::Core::Macros::AY\_PROFILER(title)}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros}{Ayla::Core::Macros}}\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a494003eaf7f523b57b76ac27cbcf48aa}{macro\_AY\_TRACE}}(\textcolor{keyword}{const}\ std::string\&\&\ title);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a2c6d3c231a13bb2db7ffe064c63e3ac4}{macro\_AY\_ASSERT}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ expression,\ \textcolor{keyword}{const}\ std::ostream\&\ errorMessage);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_a3bab0356fbe8f454027461fe54c8d184}{macro\_AY\_LOG}}(\textcolor{keyword}{const}\ std::string\&\&\ message);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespace_ayla_1_1_core_1_1_macros_ab81f7a113c5b728794a85ea240d45e8e}{macro\_AY\_ERROR}}(\textcolor{keyword}{const}\ std::ostream\&\ errorMessage);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ayla_1_1_core_1_1_macros_1_1_a_y___p_r_o_f_i_l_e_r}{AY\_PROFILER}}\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_ayla_1_1_core_1_1_macros_1_1_a_y___p_r_o_f_i_l_e_r}{AY\_PROFILER}}(std::string\&\&\ title\ =\ \textcolor{stringliteral}{"{}Profiler"{}});}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ayla_1_1_core_1_1_macros_1_1_a_y___p_r_o_f_i_l_e_r}{\string~AY\_PROFILER}}();}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::chrono::time\_point<std::chrono::steady\_clock>\ m\_startTime;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ std::chrono::time\_point<std::chrono::steady\_clock>\ m\_endTime;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ std::string\ m\_title;}
+\DoxyCodeLine{00050\ \ \ \ \ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \}\ \textcolor{comment}{//\ namespace\ Ayla::Core::Macros}}
+\DoxyCodeLine{00053\ }
+
+\end{DoxyCode}

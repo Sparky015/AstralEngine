@@ -1,0 +1,80 @@
+\doxysection{Ayla\+::Events\+::Key\+Typed\+Event Class Reference}
+\hypertarget{class_ayla_1_1_events_1_1_key_typed_event}{}\label{class_ayla_1_1_events_1_1_key_typed_event}\index{Ayla::Events::KeyTypedEvent@{Ayla::Events::KeyTypedEvent}}
+
+
+{\ttfamily \#include $<$Key\+Event.\+h$>$}
+
+Inheritance diagram for Ayla\+::Events\+::Key\+Typed\+Event\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_ayla_1_1_events_1_1_key_typed_event}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ayla_1_1_events_1_1_key_typed_event_a1cd776d30a283db1f02f5b056815a851}\label{class_ayla_1_1_events_1_1_key_typed_event_a1cd776d30a283db1f02f5b056815a851} 
+{\bfseries Key\+Typed\+Event} (unsigned int keycode)
+\item 
+int8\+\_\+t \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_typed_event_a54216d008a90c73d04712636ebc90d6b}{Get\+Event\+Category\+Flags}} () const override
+\item 
+int \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_typed_event_a0ca7c6f1a80816d03af5018ea0ffde96}{Get\+Event\+Type}} () const override
+\item 
+\Hypertarget{class_ayla_1_1_events_1_1_key_typed_event_a9dac1a5ed391d2b76893088ddc798868}\label{class_ayla_1_1_events_1_1_key_typed_event_a9dac1a5ed391d2b76893088ddc798868} 
+unsigned int {\bfseries Get\+Keycode} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_ad61ae901e7be29a426a895080e72a173}{Is\+In\+Category}} (const EEvent\+Category category) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a1837a85c2c986695776a3b73565e4bd0}{Is\+In\+Both\+Categories}} (const EEvent\+Category category1, const EEvent\+Category category2) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a532c05e9f0355f30ea5134eda1fedb63}{Has\+Exact\+Category\+Match}} (const EEvent\+Category category) const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_afba821f4fee920b07fcf64a760e45d9b}{Set\+Is\+Handled}} (const bool is\+Handled)
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_aed3514f2582630ce47798af8f40b14c5}{Is\+Handled}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event}{Ayla\+::\+Events\+::\+Key\+Event}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_a6e54a30084d3dccb0734e8354dd8956f}{Key\+Event}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries m\+\_\+\+Is\+Handled} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Event for when typing is occurring. (includes more specific characters for typing like capital letters, etc.) 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_events_1_1_key_typed_event_a54216d008a90c73d04712636ebc90d6b}\index{Ayla::Events::KeyTypedEvent@{Ayla::Events::KeyTypedEvent}!GetEventCategoryFlags@{GetEventCategoryFlags}}
+\index{GetEventCategoryFlags@{GetEventCategoryFlags}!Ayla::Events::KeyTypedEvent@{Ayla::Events::KeyTypedEvent}}
+\doxysubsubsection{\texorpdfstring{GetEventCategoryFlags()}{GetEventCategoryFlags()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_key_typed_event_a54216d008a90c73d04712636ebc90d6b} 
+int8\+\_\+t Ayla\+::\+Events\+::\+Key\+Typed\+Event\+::\+Get\+Event\+Category\+Flags (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Retrieves the category of the event for event filtering during the dispatch of events. 
+
+Reimplemented from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_a4e17dce8e495836606f434c0f84f41e2}{Ayla\+::\+Events\+::\+Key\+Event}}.
+
+\Hypertarget{class_ayla_1_1_events_1_1_key_typed_event_a0ca7c6f1a80816d03af5018ea0ffde96}\index{Ayla::Events::KeyTypedEvent@{Ayla::Events::KeyTypedEvent}!GetEventType@{GetEventType}}
+\index{GetEventType@{GetEventType}!Ayla::Events::KeyTypedEvent@{Ayla::Events::KeyTypedEvent}}
+\doxysubsubsection{\texorpdfstring{GetEventType()}{GetEventType()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_key_typed_event_a0ca7c6f1a80816d03af5018ea0ffde96} 
+int Ayla\+::\+Events\+::\+Key\+Typed\+Event\+::\+Get\+Event\+Type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. 
+
+Reimplemented from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_aef01a3a943f247e7a420dfd3b935523d}{Ayla\+::\+Events\+::\+Key\+Event}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Events/Key\+Event.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,186 @@
+\doxysection{Ayla\+::Core\+::Layers\+::ILayer Class Reference}
+\hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer}{}\label{class_ayla_1_1_core_1_1_layers_1_1_i_layer}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+
+
+{\ttfamily \#include $<$Layer.\+h$>$}
+
+Inheritance diagram for Ayla\+::Core\+::Layers\+::ILayer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.876047cm]{class_ayla_1_1_core_1_1_layers_1_1_i_layer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual EEvent\+Category \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aeebc849f1e49d897c575bd579dd9a28d}{Get\+Accepting\+Event\+Flags}} ()=0
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ad20556b7c073190dddaf3595be0f5dc1}{On\+Attach}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a0c88b6a5e9e97bb5fb8616dc9b32e3e3}{On\+Detach}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a203234dde01b8b16d651a87723bb170a}{On\+Update}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aec2fc8b8d92959deda2cf6451ee05e40}{On\+Im\+Gui\+Render}} ()
+\item 
+virtual void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a162d19e604d49ff78caa6a149d7fa816}{On\+Event}} (\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&event)
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a73b75f7df3cbf21959da24fe2b5a3a9a}{Attach\+Layer}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aa463bb0cf36f2eb9c15e8c7724004e64}{Attach\+Overlay}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_acf2729a351f251289a79dfeb2e87ed35}{Detach\+Layer}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a87d415eedcc261b435d0c111c92108e7}{Detach\+Overlay}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a3d52f0aa79c39ed62d99ed71acba9f20}{Set\+Callback}} (std\+::function$<$ void(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)$>$ callback)
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a42d7c79f16502f2ffa8352efa985221c}{Is\+Enabled}} () const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ac5bc6fe18064732eefb885cd291a7cf3}{Enable}} ()
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a8d018fdb909350d35d49c08ce34cda40}{Disable}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a6c02fa825ac6448446f6bd433322eace}\label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a6c02fa825ac6448446f6bd433322eace} 
+bool {\bfseries m\+\_\+\+Is\+Enabled}
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a143f47db0e6baacd1e2ee34a5c06c947}\label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a143f47db0e6baacd1e2ee34a5c06c947} 
+bool {\bfseries m\+\_\+\+Is\+Initialized\+In\+Tower}
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a6064784882f90d2f47c26ebc22bcbd32}\label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a6064784882f90d2f47c26ebc22bcbd32} 
+std\+::function$<$ void(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)$>$ {\bfseries m\+\_\+\+Callback} = \mbox{[}$\,$\mbox{]}(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}}\&)\{\}
+\item 
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a12fcc007d9f30bf58067ee15b80c66e1}\label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a12fcc007d9f30bf58067ee15b80c66e1} 
+std\+::string {\bfseries m\+\_\+\+Debug\+Name}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Allows systems a way to receive and send data to each other through events without explicitly linking to each other. \begin{DoxyNote}{Note}
+Systems own the layer that they operate. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a73b75f7df3cbf21959da24fe2b5a3a9a}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!AttachLayer@{AttachLayer}}
+\index{AttachLayer@{AttachLayer}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{AttachLayer()}{AttachLayer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a73b75f7df3cbf21959da24fe2b5a3a9a} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Attach\+Layer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Allows a system to send events to the Layer Stack to be sent to other systems. Adds the layer as a layer to the Layer Stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aa463bb0cf36f2eb9c15e8c7724004e64}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!AttachOverlay@{AttachOverlay}}
+\index{AttachOverlay@{AttachOverlay}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{AttachOverlay()}{AttachOverlay()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aa463bb0cf36f2eb9c15e8c7724004e64} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Attach\+Overlay (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Adds the layer as an overlay to the Layer Stack \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_acf2729a351f251289a79dfeb2e87ed35}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!DetachLayer@{DetachLayer}}
+\index{DetachLayer@{DetachLayer}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{DetachLayer()}{DetachLayer()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_acf2729a351f251289a79dfeb2e87ed35} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Detach\+Layer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Removes the layer as a layer from the Layer Stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a87d415eedcc261b435d0c111c92108e7}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!DetachOverlay@{DetachOverlay}}
+\index{DetachOverlay@{DetachOverlay}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{DetachOverlay()}{DetachOverlay()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a87d415eedcc261b435d0c111c92108e7} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Detach\+Overlay (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Removes the layer as a overlay from the Layer Stack. \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a8d018fdb909350d35d49c08ce34cda40}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!Disable@{Disable}}
+\index{Disable@{Disable}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{Disable()}{Disable()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a8d018fdb909350d35d49c08ce34cda40} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Disable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Disables the layer in the Layer Stack (it will stop receiving events and calls to the Update function) \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ac5bc6fe18064732eefb885cd291a7cf3}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!Enable@{Enable}}
+\index{Enable@{Enable}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{Enable()}{Enable()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ac5bc6fe18064732eefb885cd291a7cf3} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Enable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Enables the layer in the Layer Stack (it will start receiving events and calls to the Update function) \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aeebc849f1e49d897c575bd579dd9a28d}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!GetAcceptingEventFlags@{GetAcceptingEventFlags}}
+\index{GetAcceptingEventFlags@{GetAcceptingEventFlags}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{GetAcceptingEventFlags()}{GetAcceptingEventFlags()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aeebc849f1e49d897c575bd579dd9a28d} 
+virtual EEvent\+Category Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Get\+Accepting\+Event\+Flags (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Returns a layer or systems event flags that it wants to receive in order to filter unwanted events out. 
+
+Implemented in \mbox{\hyperlink{class_ayla_1_1_core_1_1_debug_1_1_debug_layer_afd62732b36fd9cd6d5cfa67295c809ab}{Ayla\+::\+Core\+::\+Debug\+::\+Debug\+Layer}}, \mbox{\hyperlink{class_ayla_1_1_g_u_i_1_1_im_gui_layer_a5ba52af2bdfaea08550382bd9dcd5298}{Ayla\+::\+GUI\+::\+Im\+Gui\+Layer}}, and \mbox{\hyperlink{class_ayla_1_1_input_1_1_input_layer_a7df37beff893a91a77e5c5cfea73e794}{Ayla\+::\+Input\+::\+Input\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a42d7c79f16502f2ffa8352efa985221c}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!IsEnabled@{IsEnabled}}
+\index{IsEnabled@{IsEnabled}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{IsEnabled()}{IsEnabled()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a42d7c79f16502f2ffa8352efa985221c} 
+bool Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Is\+Enabled (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Allows for a check to see if the layer is enabled \Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ad20556b7c073190dddaf3595be0f5dc1}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!OnAttach@{OnAttach}}
+\index{OnAttach@{OnAttach}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{OnAttach()}{OnAttach()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_ad20556b7c073190dddaf3595be0f5dc1} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+On\+Attach (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Executes the function code when a layer is added to the Layer Stack for a system to initialize anything before the layer\textquotesingle{}s update function gets called. Default definition for when layers don\textquotesingle{}t need to use this function. ~\newline
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_g_u_i_1_1_im_gui_layer_a8daa04219645f2e990333afb08f1cce6}{Ayla\+::\+GUI\+::\+Im\+Gui\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a0c88b6a5e9e97bb5fb8616dc9b32e3e3}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!OnDetach@{OnDetach}}
+\index{OnDetach@{OnDetach}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{OnDetach()}{OnDetach()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a0c88b6a5e9e97bb5fb8616dc9b32e3e3} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+On\+Detach (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Executes the function code when a layer is removed from the Layer Stack to allow a system to destruct anything needed before the system/layer will stop being updated. Default definition for when layers don\textquotesingle{}t need to use this function. ~\newline
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_g_u_i_1_1_im_gui_layer_a2d822382273bb5ec3d365811653888a9}{Ayla\+::\+GUI\+::\+Im\+Gui\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a162d19e604d49ff78caa6a149d7fa816}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!OnEvent@{OnEvent}}
+\index{OnEvent@{OnEvent}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{OnEvent()}{OnEvent()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a162d19e604d49ff78caa6a149d7fa816} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+On\+Event (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Executes the function code whenever a system receives an event to give a chance for a system or layer to store or act on any data received from the event. Empty definition for when layers don\textquotesingle{}t need to use this function. ~\newline
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_input_1_1_input_layer_ad8b5c228bc8e4044f8df7bffab6730a0}{Ayla\+::\+Input\+::\+Input\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aec2fc8b8d92959deda2cf6451ee05e40}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!OnImGuiRender@{OnImGuiRender}}
+\index{OnImGuiRender@{OnImGuiRender}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{OnImGuiRender()}{OnImGuiRender()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_aec2fc8b8d92959deda2cf6451ee05e40} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+On\+Im\+Gui\+Render (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Allows a system to interact with and create Im\+Gui windows. Empty definition for when layers don\textquotesingle{}t need use this function. ~\newline
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_core_1_1_debug_1_1_debug_layer_a1cdc7d84cbe5c9afd9f1c367f1fa41f6}{Ayla\+::\+Core\+::\+Debug\+::\+Debug\+Layer}}, and \mbox{\hyperlink{class_ayla_1_1_g_u_i_1_1_im_gui_layer_a7fdabb2430411f894a2cc823fe42227e}{Ayla\+::\+GUI\+::\+Im\+Gui\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a203234dde01b8b16d651a87723bb170a}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!OnUpdate@{OnUpdate}}
+\index{OnUpdate@{OnUpdate}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{OnUpdate()}{OnUpdate()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a203234dde01b8b16d651a87723bb170a} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+On\+Update (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Executes the function code every tick (occurs every time the engine completes a loop) to give a system the chance to run anything it needs to. Empty definition for when layers don\textquotesingle{}t need to use this function. ~\newline
+
+
+Reimplemented in \mbox{\hyperlink{class_ayla_1_1_core_1_1_debug_1_1_debug_layer_a4d2b60528eb187953986c406984bd7fb}{Ayla\+::\+Core\+::\+Debug\+::\+Debug\+Layer}}.
+
+\Hypertarget{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a3d52f0aa79c39ed62d99ed71acba9f20}\index{Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}!SetCallback@{SetCallback}}
+\index{SetCallback@{SetCallback}!Ayla::Core::Layers::ILayer@{Ayla::Core::Layers::ILayer}}
+\doxysubsubsection{\texorpdfstring{SetCallback()}{SetCallback()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_core_1_1_layers_1_1_i_layer_a3d52f0aa79c39ed62d99ed71acba9f20} 
+void Ayla\+::\+Core\+::\+Layers\+::\+ILayer\+::\+Set\+Callback (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(\mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{IEvent}} \&)$>$}]{callback}{}\end{DoxyParamCaption})}
+
+Allows a system to set a callback from the layer in order for systems to be able to react to events. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Core/\+Layers/Layer.\+h\item 
+src/\+Ayla/\+Core/\+Layers/Layer.\+cpp\end{DoxyCompactItemize}

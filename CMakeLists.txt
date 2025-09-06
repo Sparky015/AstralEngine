@@ -1,44 +1,23 @@
-
-
 cmake_minimum_required(VERSION 3.28)
-project(Solas)
 
+project(Astral-Runtime)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
-
-# Set platform macros
-if (WIN32)
-    add_definitions(-DAYLA_PLATFORM_WINDOWS)
-elseif (APPLE)
-    add_definitions(-DAYLA_PLATFORM_MACOS)
+if (APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")#-fsanitize=address
 else ()
-    add_definitions(-DAYLA_PLATFORM_UNKNOWN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+add_subdirectory(ThirdPartyLibraries)
+add_subdirectory(Astral-Runtime)
+add_subdirectory(Astral-Editor)
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    add_definitions(-DAYLA_DEBUG_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    add_definitions(-DAYLA_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    add_definitions(-DAYLA_MINIMUM_SIZE_RELEASE_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    add_definitions(-DAYLA_RELEASE_WITH_DEBUG_INFO_BUILD)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")
-    add_definitions(-DAYLA_RELEASE_WITH_DEBUG_INFO_BUILD)
-endif()
-
-
-
-#       ### Sub Directories ###
-add_subdirectory(vendor/GLAD)
-add_subdirectory(vendor/ImGui)
-add_subdirectory(vendor/glm)
-add_subdirectory(source/Solas)
-add_subdirectory(example-user-project)
-
-
+add_subdirectory(Tests)

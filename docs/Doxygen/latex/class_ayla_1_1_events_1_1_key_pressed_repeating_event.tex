@@ -1,0 +1,80 @@
+\doxysection{Ayla\+::Events\+::Key\+Pressed\+Repeating\+Event Class Reference}
+\hypertarget{class_ayla_1_1_events_1_1_key_pressed_repeating_event}{}\label{class_ayla_1_1_events_1_1_key_pressed_repeating_event}\index{Ayla::Events::KeyPressedRepeatingEvent@{Ayla::Events::KeyPressedRepeatingEvent}}
+
+
+{\ttfamily \#include $<$Key\+Event.\+h$>$}
+
+Inheritance diagram for Ayla\+::Events\+::Key\+Pressed\+Repeating\+Event\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_ayla_1_1_events_1_1_key_pressed_repeating_event}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a7b6a9fb89ece4a6082f56b9b01afc6af}\label{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a7b6a9fb89ece4a6082f56b9b01afc6af} 
+{\bfseries Key\+Pressed\+Repeating\+Event} (int keycode)
+\item 
+int8\+\_\+t \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a7da6aaaa93f7488e655bbcb7b6170a26}{Get\+Event\+Category\+Flags}} () const override
+\item 
+int \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a0db53e5cc2920830cff47655cbfb47e7}{Get\+Event\+Type}} () const override
+\item 
+\Hypertarget{class_ayla_1_1_events_1_1_key_pressed_repeating_event_aebb00cf3e3b7187cb69c348ad48bfb95}\label{class_ayla_1_1_events_1_1_key_pressed_repeating_event_aebb00cf3e3b7187cb69c348ad48bfb95} 
+int {\bfseries Get\+Keycode} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_ad61ae901e7be29a426a895080e72a173}{Is\+In\+Category}} (const EEvent\+Category category) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a1837a85c2c986695776a3b73565e4bd0}{Is\+In\+Both\+Categories}} (const EEvent\+Category category1, const EEvent\+Category category2) const
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_a532c05e9f0355f30ea5134eda1fedb63}{Has\+Exact\+Category\+Match}} (const EEvent\+Category category) const
+\item 
+void \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_afba821f4fee920b07fcf64a760e45d9b}{Set\+Is\+Handled}} (const bool is\+Handled)
+\item 
+bool \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event_aed3514f2582630ce47798af8f40b14c5}{Is\+Handled}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event}{Ayla\+::\+Events\+::\+Key\+Event}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_a6e54a30084d3dccb0734e8354dd8956f}{Key\+Event}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_ayla_1_1_events_1_1_i_event}{Ayla\+::\+Events\+::\+IEvent}}}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries m\+\_\+\+Is\+Handled} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Event for when a key sends a repeating signal (when the key is being pressed down continuously). 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a7da6aaaa93f7488e655bbcb7b6170a26}\index{Ayla::Events::KeyPressedRepeatingEvent@{Ayla::Events::KeyPressedRepeatingEvent}!GetEventCategoryFlags@{GetEventCategoryFlags}}
+\index{GetEventCategoryFlags@{GetEventCategoryFlags}!Ayla::Events::KeyPressedRepeatingEvent@{Ayla::Events::KeyPressedRepeatingEvent}}
+\doxysubsubsection{\texorpdfstring{GetEventCategoryFlags()}{GetEventCategoryFlags()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a7da6aaaa93f7488e655bbcb7b6170a26} 
+int8\+\_\+t Ayla\+::\+Events\+::\+Key\+Pressed\+Repeating\+Event\+::\+Get\+Event\+Category\+Flags (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Retrieves the category of the event for event filtering during the dispatch of events. 
+
+Reimplemented from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_a4e17dce8e495836606f434c0f84f41e2}{Ayla\+::\+Events\+::\+Key\+Event}}.
+
+\Hypertarget{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a0db53e5cc2920830cff47655cbfb47e7}\index{Ayla::Events::KeyPressedRepeatingEvent@{Ayla::Events::KeyPressedRepeatingEvent}!GetEventType@{GetEventType}}
+\index{GetEventType@{GetEventType}!Ayla::Events::KeyPressedRepeatingEvent@{Ayla::Events::KeyPressedRepeatingEvent}}
+\doxysubsubsection{\texorpdfstring{GetEventType()}{GetEventType()}}
+{\footnotesize\ttfamily \label{class_ayla_1_1_events_1_1_key_pressed_repeating_event_a0db53e5cc2920830cff47655cbfb47e7} 
+int Ayla\+::\+Events\+::\+Key\+Pressed\+Repeating\+Event\+::\+Get\+Event\+Type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Retrieves the type of the event for dynamic casting of events and event filtering during the dispatch of events. 
+
+Reimplemented from \mbox{\hyperlink{class_ayla_1_1_events_1_1_key_event_aef01a3a943f247e7a420dfd3b935523d}{Ayla\+::\+Events\+::\+Key\+Event}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\+Ayla/\+Events/Key\+Event.\+h\end{DoxyCompactItemize}

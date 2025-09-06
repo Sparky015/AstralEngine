@@ -1,0 +1,68 @@
+/**
+* @file CommandBuffer.h
+* @author Andrew Fagan
+* @date 5/13/25
+*/
+
+#pragma once
+
+#include "IndexBuffer.h"
+#include "PipelineState.h"
+#include "VertexBuffer.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/PipelineBarriers.h"
+
+namespace Astral {
+
+    class CommandBuffer
+    {
+    public:
+        virtual ~CommandBuffer() = default;
+
+        virtual void BeginRecording() = 0;
+        virtual void EndRecording() = 0;
+        virtual void Reset() = 0;
+
+        virtual void BindPipeline(const PipelineStateHandle& pipeline) = 0;
+        virtual void BindDescriptorSet(const DescriptorSetHandle& descriptorSet, uint32 binding) = 0;
+        virtual void BindVertexBuffer(const VertexBufferHandle& vertexBuffer) = 0;
+        virtual void BindIndexBuffer(const IndexBufferHandle& indexBuffer) = 0;
+
+        virtual void SetViewportAndScissor(UVec2 dimensions) = 0;
+
+        virtual void BeginRenderPass(const RenderPassHandle& renderPassHandle, const FramebufferHandle& frameBufferHandle) = 0;
+        virtual void NextSubpass() = 0;
+        virtual void EndRenderPass() = 0;
+
+        virtual void DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle) = 0;
+        virtual void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) = 0;
+        virtual void PushConstants(void* data, uint32 sizeInBytes) = 0;
+        virtual void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) = 0;
+
+        virtual void BeginLabel(const std::string_view& label, Vec4 color) = 0;
+        virtual void EndLabel() = 0;
+        virtual void InsertMarker(const std::string_view& label, Vec4 color) = 0;
+
+        virtual void* GetNativeHandle() = 0;
+
+        bool IsValid() { return m_IsValid; }
+        bool IsRecording() { return m_State == State::RECORDING; }
+        bool IsRecorded() { return m_State == State::RECORDED; }
+        bool IsEmpty() { return m_State == State::EMPTY; }
+
+    protected:
+
+        enum class State
+        {
+            EMPTY,
+            RECORDING,
+            RECORDED
+        };
+
+        State m_State = State::EMPTY;
+        bool m_IsValid = false;
+    };
+
+    using CommandBufferHandle = GraphicsRef<CommandBuffer>;
+
+}
