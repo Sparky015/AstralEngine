@@ -95,6 +95,26 @@ namespace Astral {
     }
 
 
+    Camera::Camera(const Camera& other) :
+        m_CameraType(other.m_CameraType),
+        m_ProjectionMatrix(other.m_ProjectionMatrix),
+        m_ViewMatrix(other.m_ViewMatrix),
+        m_ProjectionViewMatrix(other.m_ProjectionViewMatrix),
+        m_Position(other.m_Position),
+        m_Rotation(other.m_Rotation),
+        m_AspectRatio(other.m_AspectRatio),
+        m_POV(other.m_POV),
+        m_ViewportResizedListener([this](ViewportResizedEvent e)
+        {
+            ResizeCamera(e);
+        })
+    {
+        RecreateProjectionMatrix();
+        CalculateProjectionViewMatrix();
+        m_ViewportResizedListener.StartListening();
+    }
+
+
     void Camera::RecreateProjectionMatrix()
     {
         if (m_CameraType == CameraType::PERSPECTIVE)

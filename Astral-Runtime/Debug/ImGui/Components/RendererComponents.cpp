@@ -102,4 +102,51 @@ namespace Astral {
         SceneRenderer::SetRendererSettings(rendererSettings);
     }
 
+
+    void RendererDebugViewComponent()
+    {
+        RendererSettings rendererSettings = SceneRenderer::GetRendererSettings();
+
+        ImGui::Text("Debug View: ");
+        ImGui::SetNextItemWidth(-1);
+        ImGui::SameLine();
+
+        if (ImGui::BeginCombo("##DebugMenuRendererDebugViewSelector", RendererDebugViewToString(rendererSettings.DebugView).data()))
+        {
+
+            if (ImGui::Selectable("None"))
+            {
+                rendererSettings.DebugView = RendererDebugView::NONE;
+            }
+            if (ImGui::Selectable("GBuffer-Albedo"))
+            {
+                rendererSettings.DebugView = RendererDebugView::GBUFFER_ALBEDO;
+            }
+            if (ImGui::Selectable("GBuffer-Roughness"))
+            {
+                rendererSettings.DebugView = RendererDebugView::GBUFFER_ROUGHNESS;
+            }
+            if (ImGui::Selectable("GBuffer-Metallic"))
+            {
+                rendererSettings.DebugView = RendererDebugView::GBUFFER_METALLIC;
+            }
+            if (ImGui::Selectable("GBuffer-Emission"))
+            {
+                rendererSettings.DebugView = RendererDebugView::GBUFFER_EMISSION;
+            }
+            if (ImGui::Selectable("GBuffer-Normal"))
+            {
+                rendererSettings.DebugView = RendererDebugView::GBUFFER_NORMAL;
+            }
+            // if (ImGui::Selectable("Depth")) 
+            // {
+            //     rendererSettings.DebugView = RendererDebugView::DEPTH;
+            // }
+
+            ImGui::EndCombo();
+        }
+
+        SceneRenderer::SetRendererSettings(rendererSettings);
+    }
+
 }

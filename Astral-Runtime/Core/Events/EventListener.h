@@ -8,13 +8,15 @@
 
 namespace Astral {
 
+    // TODO: Refactor the Event listener to not use raw stack pointers
+
     /** Manages the listener callback with the event bus. */
     template<typename T>
     class EventListener
     {
     public:
-        explicit EventListener(const std::function<void(T)>& callback) : m_Callback(callback), m_IsListening(false) {};
-        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::move(callback)), m_IsListening(false) {};
+        explicit EventListener(const std::function<void(T)>& callback) : m_Callback(std::function<void(T)>(callback)), m_IsListening(false) {};
+        explicit EventListener(std::function<void(T)>&& callback) : m_Callback(std::function<void(T)>(std::move(callback))), m_IsListening(false) {};
 
         ~EventListener()
         {
@@ -41,32 +43,13 @@ namespace Astral {
 
         EventListener(const EventListener&) = delete;
         EventListener& operator=(const EventListener&) = delete;
-        EventListener(EventListener&&) noexcept;
-        EventListener& operator=(EventListener&&) noexcept;
+        EventListener(EventListener&&) noexcept = default;
+        EventListener& operator=(EventListener&&) noexcept = default;
 
     private:
         std::function<void(T)> m_Callback;
         bool m_IsListening;
     };
 
-
-    template<typename T>
-    EventListener<T>::EventListener(EventListener&& other) noexcept
-    {
-        m_Callback = std::move(other.m_Callback);
-        m_IsListening = std::move(other.m_IsListening);
-    }
-
-
-    template<typename T>
-    EventListener<T>& EventListener<T>::operator=(EventListener&& other) noexcept
-    {
-        if (this != &other)
-        {
-            m_Callback = std::move(other.m_Callback);
-            m_IsListening = std::move(other.m_IsListening);
-        }
-        return *this;
-    }
 
 } // namespace Event

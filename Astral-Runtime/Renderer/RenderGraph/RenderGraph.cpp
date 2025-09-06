@@ -438,7 +438,7 @@ namespace Astral {
                 localAttachment.AttachmentDescription.InitialLayout = localAttachment.LastKnownLayout;
                 localAttachment.AttachmentDescription.FinalLayout = localAttachment.OptimalImageLayout;
 
-                if (renderPassIndex == m_OutputRenderPassIndex && localAttachment.Name == m_OutputAttachmentName)
+                if (renderPassIndex == m_OutputAttachmentPass && localAttachment.Name == m_OutputAttachmentName)
                 {
                     localAttachment.AttachmentDescription.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
                     localAttachment.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();

@@ -44,10 +44,10 @@ namespace Astral {
 
         SceneResourceID NextSceneResourceID = 0;
 
-        Scene(const Scene&) = delete;
+        Scene(const Scene&) = default;
         Scene& operator=(const Scene&) = delete;
-        Scene(Scene&&) noexcept = default;
-        Scene& operator=(Scene&&) noexcept = default;
+        Scene(Scene&&) noexcept = delete;
+        Scene& operator=(Scene&&) noexcept = delete;
     };
 
 
