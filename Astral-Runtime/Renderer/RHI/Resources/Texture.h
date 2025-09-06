@@ -9,7 +9,7 @@
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
-#include "Renderer/RHI/Common/ImageSubresourceRange.h"
+#include "Renderer/RHI/Common/ImageSubResourceRange.h"
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
 #include "Renderer/RHI/Common/SampleCount.h"
 

@@ -32,7 +32,7 @@ namespace Astral {
         uint32 SourceQueueFamilyIndex;
         uint32 DestinationQueueFamilyIndex;
         TextureHandle Image;
-        ImageSubresourceRange ImageSubresourceRange;
+        ImageSubResourceRange ImageSubresourceRange;
     };
 
     struct BufferMemoryBarrier

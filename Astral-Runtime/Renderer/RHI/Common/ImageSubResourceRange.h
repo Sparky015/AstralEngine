@@ -23,7 +23,7 @@ namespace Astral {
 
     using ImageAspectFlags = uint32;
 
-    struct ImageSubresourceRange
+    struct ImageSubResourceRange
     {
         ImageAspectFlags AspectMask;
         uint32 BaseMipLevel;
