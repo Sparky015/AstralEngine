@@ -7,7 +7,7 @@ This project is a Work-In-Progress with no official first release.
 
 It is continuously being updated and improved as I can get to more things.
 
-Project Lifetime: Late October 2024 - Present
+Project Lifetime: April 2024 - Present
 
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
@@ -17,8 +17,52 @@ and the environment, but there is a lot of stuff to do to get there.
 
 ----
 
+* Physically-Based Vulkan HDR Renderer 
+
+Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image
+Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
+of a pre depth pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
+geometry pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
+deferred uses FXAA (looking into TAA in the future).
+
+* Frame/Render Graph
+
+Designed and implemented Frame/Render Graph to manage render pass resources and execution as well as memory barriers for 
+synchronization. The Frame Graph allows the user to define any render passes and attachment specs for each render pass, and
+the Frame Graph will create all the necessary textures, render passes, frame buffers, and descriptor sets for each render pass,
+and facilitate the synchronization needed between render passes. It also culls any render passes that don't contribute
+to the final output image. The user can also recreate the Render Graph as many times as they want during rendering
+and the render graph will manage the creation of new resources the user requested as well as making sure the resources 
+being used on the GPU do not get deleted.
+
+* Renderer Hardware Interface (RHI)
+
+Created an abstraction layer to manage renderer API usage in order to support multiple rendering APIs in the future
+(looking into implemented DX12 in the future) and allow for easy API usage for higher level systems while allowing for
+switching APIs without any diverging code in the high level systems.
+
+* Editor 
+
+Built an editor that I can compose new game scenes with and allow for saving scenes and switching to different scenes without using a
+different executable. Users can compose scenes by adding and removing entities, adding components to entities and changing
+entity component data, changing environment settings like the environment map, exposure and ambient light modifier, changing 
+camera properties, and more!
+
+* Scene System 
+
+Designed and implemented a scene system that will allow users to compose scenes with entities, environment maps, and more 
+and save the scene to a file and load scenes from files. Right now it is loading whole scenes at a time and storing them
+in the asset cache, but in the future, I will implement a way to unload scenes from the asset cache.
+
+* Asset Manager 
+
+Created an asset manager that can load in assets from files and cache their data to improve loading times
+and memory efficiency. Currently, the asset loads are single threaded, but in the future, I want to look into 
+multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a 
+smooth UI/UX.
+
 ###
-#### Custom Allocators
+#### Custom Allocators (Experimental Proof of Concept)
 
 This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
 when the situation allows for it.
@@ -34,14 +78,14 @@ Future allocators to be written: Slab Allocator
 - Note that I am still polishing this feature, but it is functionally done.
 
 ###
-#### Memory Profiling Tool Suite
+#### Memory Profiling Tool Suite (Experimental)
 
 This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
-and scope-based allocation profiling tool
+and scope-based allocation profiling tool.
 
 You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
 
-- Note that I am still polishing and optimizing this feature, but it is functionally done.
+- Note that this is only available in debug builds, and that I am still polishing and optimizing this feature, but it is functionally done.
 
 ###
 #### Visual Scope Profiler
@@ -51,44 +95,13 @@ took place in the scope. It then outputs this data to a json file that can be lo
 trace tool to view visually.
 
 ###
-### Work-In-Progress Features
+#### Entity-Component-System (ECS) 
 
-----
-
-* Entity-Component-System (ECS) (70% done)
-
-I am working to make my current ECS implementation more extendable and performant. I am 
-implementing a new ECS with sparse sets.
+Created a entity component system to compose scenes with entities that you can attach data components to, and every frame,
+a system will operate on entities with certain component types. Right now, it is a basic implementation to get things up 
+and running, but in the future, I want to implement sparse sets into the ECS for better performance when it is necessary.
 
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
-
-* Asset Manager (40% done)
-
-I am working to create an asset manager that can load in assets from files and cache their data to improve loading times
-and memory efficiency.
-
-* Scene System (Early In-Progress)
-
-I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am
-integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.
-
-* Editor (Early In-Progress)
-
-I am working to build up an editor that I can compose new game scenes with
-and allow for saving scenes and switching to different scenes without using a
-different executable.
-
-* Renderer (Early In-Progress)
-
-I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only
-supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for 
-use later on (I am currently using OpenGL 4.1)
-
-* Shaders and Materials (Early In-Progress)
-
-I am working on designing an extendable material system for shaders, 
-so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the
-client/user code.
 
 
 ###
@@ -98,23 +111,33 @@ client/user code.
 
 
 ![CurrentEngineState](Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png)
-This picture contains the Chess sample project as well as the engine debug menu. Note that the chess sample
-project is not completely finished and that there is no checks or castling.
+This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 ###
 ### Roadmap
 
 -----
 
-1. Entity-Component-System (ECS)
-2. Asset Manager
-3. Game Scenes with serialization and deserialization
-4. Editor Integration
-5. Native Scripting
-6. Material System
-7. PBR Renderer
-8. Vulkan Renderer
-9. GPU Particle System  <--- Current dream goal
+1. The below TODO Render Passes
+2. Native Scripting
+3. Multithreaded Asset System
+4. Rendering Thread
+5. GPU Particle System
+6. Volumetric Lighting
+
+
+### TODO Render Passes
+
+* Cascaded Shadow Maps
+* SSAO
+* Omni-Directional Shadow Maps
+* Transparent Objects Forward Pass
+* Bloom
+* SMAA
+* TAA
+* Tiled Light Culling
+
+
 
 ###
 ### How to Build
@@ -193,8 +216,7 @@ Requirements include:
 - development -> All work is done in this branch or a branch based from it
 - feature-X -> Branches for feature work to be done on
 - experimental-X -> Branches for to explore the potential and limits of a new feature idea
-  - experimental-vulkan -> Branch where the vulkan renderer is being explored and written and refactors to the renderer
-                           structure.
+
 
 
 ###
@@ -208,11 +230,15 @@ Requirements include:
 - glm: For math 
 - googletest: For unit testing
 - imgui: For debug menus and the editor UI
-- ImGuiFileDialog: For a file explorer to choose files (temporary, looking for cross-platform native file explorer library)
 - ImPlot: For graphing memory profiling data
 - msgpack: For serialization and deserialization
 - stb_image: For loading image files
 - cpptrace: For generating stacktraces (temporary, waiting for C++23 stacktraces to be implemented)
+- nativefiledialog-extended: For native file dialog windows on macOS and Windows
+- Half: For half float support
+- gli: For loading .ktx and .dds files
+- ImGuizmo: For gizmos in the editor for things like moving entities or rotating them
+- yaml-cpp: For saving things like material files to disk (scene files in the future)
 
 
 ###
@@ -246,19 +272,3 @@ Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
 
 MacOS: AppleClang 16.0.0, Clang 19.1.7      
 Windows: MSVC 19.43
-
-
-
-
-### TODOs: All Render Passes
-
-* Frustum Culling - CPU Side
-* Tiled Light Culling - Compute
-* Cascaded Shadow Maps - Vertex Heavy
-* Geometry Pass - Fragment Heavy
-* SSAO - Compute
-* Lighting Pass - Fragment Heavy
-* Transparent Objects Forward Pass - Fragment Heavy
-* Bloom - Compute
-* SMAA - Fragment Heavy
-
