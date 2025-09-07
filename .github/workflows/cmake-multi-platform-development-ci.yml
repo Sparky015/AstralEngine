@@ -33,7 +33,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      # Ensures that all matrix combinations will be attempted even if one fails
       fail-fast: true
       
       # Defines a matrix of configurations to run the job on
@@ -51,6 +50,7 @@ jobs:
 
     - name: Cache
       uses: actions/cache@v4.2.4
+      id: cache-cmake
       with:
         path: |
           ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
@@ -74,6 +74,7 @@ jobs:
         
     - name: Configure CMake
       # Configures CMake to generate the build system
+      if: steps.cache-cmake.outputs.cache-hit != 'true'
       run: >
         cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
@@ -87,6 +88,6 @@ jobs:
     - name: Test
       # Runs tests only for Debug builds
       if: matrix.build_type == 'Debug'
-      working-directory: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
+      working-directory: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }/Tests/Astral-Runtime}
       run: ctest -C ${{ matrix.build_type }} # Executes tests defined by CTest
 
