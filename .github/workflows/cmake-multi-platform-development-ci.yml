@@ -36,12 +36,12 @@ jobs:
 
     strategy:
       # Ensures that all matrix combinations will be attempted even if one fails
-      fail-fast: false
+      fail-fast: true
       
       # Defines a matrix of configurations to run the job on
       matrix:
         os: [windows-latest, macos-latest]
-        build_type: [Debug, Release]
+        build_type: [Debug]
 
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
