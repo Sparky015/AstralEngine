@@ -156,6 +156,8 @@ make sure to switch the target to your desired target that you want to run.
 
 Requirements include:
 - git
+- Python 3.x 
+- Vulkan SDK
 - CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
 - A supported C++20 compiler
 - 64-bit CPU
