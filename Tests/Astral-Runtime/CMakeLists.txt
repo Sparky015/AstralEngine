@@ -40,4 +40,3 @@ target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/Source)
 include(GoogleTest)
 gtest_discover_tests(AstralEngineTests)
 
-add_test(NAME AstralEngineTests COMMAND RunAstralEngineTests)
