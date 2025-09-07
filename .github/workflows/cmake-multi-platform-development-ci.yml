@@ -48,16 +48,12 @@ jobs:
         submodules: 'recursive'
 
 
-    - name: Cache
-      uses: actions/cache@v4.2.4
-      id: cache-cmake
+    - name: Cache CMake Build
+      uses: actions/cache@v4
+      id: cache-cmake 
       with:
-        path: |
-          ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
-          ThirdPartyLibraries
-      
-        key: ${{ runner.os }}-${{ matrix.build_type }}-build-${{ hashFiles('CMakeLists.txt', 'Astral-Editor/**', 'Astral-Runtime/**', 'ThirdPartyLibraries/**') }}
-        
+        path: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
+        key: ${{ runner.os }}-${{ matrix.build_type }}-build-${{ hashFiles('**/CMakeLists.txt', 'ThirdPartyLibraries/**') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.build_type }}-build-
     
@@ -72,7 +68,7 @@ jobs:
           cache: true
           stripdown: true
         
-    - name: Configure CMake
+    - name: Generate CMake Build System
       # Configures CMake to generate the build system
       if: steps.cache-cmake.outputs.cache-hit != 'true'
       run: >
@@ -89,5 +85,5 @@ jobs:
       # Runs tests only for Debug builds
       if: matrix.build_type == 'Debug'
       working-directory: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}/Tests/Astral-Runtime
-      run: ctest -C ${{ matrix.build_type }} # Executes tests defined by CTest
+      run: ctest -C ${{ matrix.build_type }} 
 
