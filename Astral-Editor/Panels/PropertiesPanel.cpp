@@ -134,8 +134,7 @@ namespace Astral {
         {
 
             PointLightComponent pointLight;
-            ECS_Result result = ecs.GetComponent(entity, pointLight);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
+            ecs.GetComponent(entity, pointLight);
 
             ImGui::Text("Light Color: ");
             ImGui::SameLine();
@@ -157,8 +156,7 @@ namespace Astral {
         if (ImGui::TreeNodeEx("Directional Light##DirectionalLightComponentSceneHierarchy", ImGuiTreeNodeFlags_DefaultOpen))
         {
             DirectionalLightComponent directionalLight;
-            ECS_Result result = ecs.GetComponent(entity, directionalLight);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
+            ecs.GetComponent(entity, directionalLight);
 
             ImGui::Text("Direction: ");
             ImGui::SameLine();

@@ -126,8 +126,7 @@ namespace Astral {
         {
 
             TransformComponent transform;
-            ECS_Result result = ecs.GetComponent(entity, transform);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
+            ecs.GetComponent(entity, transform);
 
             ImGui::Text("Position: ");
             ImGui::SameLine();
@@ -154,8 +153,7 @@ namespace Astral {
         {
 
             SpriteComponent sprite;
-            ECS_Result result = ecs.GetComponent(entity, sprite);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get sprite component")
+            ecs.GetComponent(entity, sprite);
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
@@ -214,8 +212,7 @@ namespace Astral {
         {
 
             MeshComponent meshComponent;
-            ECS_Result result = ecs.GetComponent(entity, meshComponent);
-            ASSERT(result == ECS_Result::ECS_SUCCESS, "SceneHierarchyPanel failed to get transform component")
+            ecs.GetComponent(entity, meshComponent);
 
             AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 

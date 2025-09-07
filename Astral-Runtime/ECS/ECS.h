@@ -72,7 +72,7 @@ namespace Astral {
          * @return ECS_SUCCESS if entity has the component and can return it or ECS_COMPONENT_NOT_PRESENT if the
          *         entity does not have the component. */
         template <typename ComponentType>
-        [[nodiscard]] ECS_Result GetComponent(Entity entity, ComponentType& outComponent);
+        void GetComponent(Entity entity, ComponentType& outComponent);
 
         /**@brief Removes the given component from the entity. Does nothing if the entity does not have the given component.
          * @param entity The entity handle to remove the component from. */

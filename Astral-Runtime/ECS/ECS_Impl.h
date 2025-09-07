@@ -30,11 +30,14 @@ namespace Astral {
 
 
     template<typename ComponentType>
-    ECS_Result ECS::GetComponent(Entity entity, ComponentType& outComponent)
+    void ECS::GetComponent(Entity entity, ComponentType& outComponent)
     {
-        if (!HasComponent<ComponentType>(entity)) { return ECS_Result::ECS_COMPONENT_NOT_PRESENT; }
+        if (!HasComponent<ComponentType>(entity))
+        {
+            WARN("Tried to get component type that the entity does not have attached! Use HasComponent first!")
+            return;
+        }
         outComponent = m_ComponentPoolSet.GetComponentPool<ComponentType>().componentData[entity.GetID()];
-        return ECS_Result::ECS_SUCCESS;
     }
 
 
