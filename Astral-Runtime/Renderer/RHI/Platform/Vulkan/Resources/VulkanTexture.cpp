@@ -627,7 +627,7 @@ namespace Astral {
     	}
 		else
 		{
-			ASTRAL_ERROR("Unknown barrier transition!");
+			AE_ERROR("Unknown barrier transition!");
 		}
 
         commandBufferHandle->BeginRecording();
@@ -819,7 +819,7 @@ namespace Astral {
             if (isCurrentMemoryTypeSupported && hasRequiredMemoryProperties) { return i; }
         }
 
-        ASTRAL_ERROR("Failed to find a suitable memory type for Buffer object!");
+        AE_ERROR("Failed to find a suitable memory type for Buffer object!");
     }
 
 }

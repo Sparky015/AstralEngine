@@ -23,7 +23,7 @@ namespace Astral {
     Ref<Asset> MaterialLoader::LoadAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("MaterialLoader::LoadAsset")
-        if (filePath.extension() != ".astmat") { ASTRAL_ERROR("Tried to load material file with wrong extension: " << filePath); }
+        if (filePath.extension() != ".astmat") { AE_ERROR("Tried to load material file with wrong extension: " << filePath); }
 
         std::ifstream fileStream = std::ifstream(filePath);
         ASSERT(!fileStream.eof(), "Material file is empty!")
@@ -78,12 +78,12 @@ namespace Astral {
         }
         catch (const YAML::Exception& e)
         {
-            ASTRAL_ERROR("Error during material loading! Error: " << e.what())
+            AE_ERROR("Error during material loading! Error: " << e.what())
             return nullptr;
         }
         catch (...)
         {
-            ASTRAL_ERROR("Error during material loading!")
+            AE_ERROR("Error during material loading!")
             return nullptr;
         }
 

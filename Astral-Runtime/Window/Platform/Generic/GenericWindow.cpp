@@ -38,7 +38,7 @@ namespace Astral {
         {
             if (!glfwInit())
             {
-                ASTRAL_ERROR("GLFW failed to initialize!");
+                AE_ERROR("GLFW failed to initialize!");
             }
         }
 
@@ -57,7 +57,7 @@ namespace Astral {
         if (m_Window == nullptr)
         {
             glfwTerminate();
-            ASTRAL_ERROR("GLFW failed to create the window!")
+            AE_ERROR("GLFW failed to create the window!")
         }
 
         SetGLFWCallbacks();

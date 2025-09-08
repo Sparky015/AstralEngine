@@ -18,9 +18,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.CreateIndexBuffer(indices, count * sizeof(uint32));
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 

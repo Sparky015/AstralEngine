@@ -253,7 +253,7 @@ namespace Astral {
             case AttachmentLoadOp::LOAD:   return VK_ATTACHMENT_LOAD_OP_LOAD;
             case AttachmentLoadOp::CLEAR:  return VK_ATTACHMENT_LOAD_OP_CLEAR;
             case AttachmentLoadOp::DONT_CARE: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            default: ASTRAL_ERROR("Invalid Load Op Given!");
+            default: AE_ERROR("Invalid Load Op Given!");
         }
     }
 
@@ -264,7 +264,7 @@ namespace Astral {
         {
             case AttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
             case AttachmentStoreOp::DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            default: ASTRAL_ERROR("Invalid Store Op Given!");
+            default: AE_ERROR("Invalid Store Op Given!");
         }
     }
 

@@ -37,7 +37,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("Vulkan Rendering Context Initialization");
 
-        if (!glfwVulkanSupported()) { ASTRAL_ERROR("GLFW can't find Vulkan!"); }
+        if (!glfwVulkanSupported()) { AE_ERROR("GLFW can't find Vulkan!"); }
 
         CreateInstance();
         CreateDebugMessageCallback();
@@ -269,7 +269,7 @@ namespace Astral {
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: return "Info";
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: return "Warning";
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: return "Error";
-            default: ASTRAL_ERROR("Invalid severity code: " << messageSeverityFlag);
+            default: AE_ERROR("Invalid severity code: " << messageSeverityFlag);
         }
     }
 
@@ -281,7 +281,7 @@ namespace Astral {
             case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: return "General";
             case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: return "Validation";
             case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: return "Performance";
-            default: ASTRAL_ERROR("Invalid flag type: " << messageTypeFlag);
+            default: AE_ERROR("Invalid flag type: " << messageTypeFlag);
         }
     }
 

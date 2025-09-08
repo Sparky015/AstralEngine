@@ -474,7 +474,7 @@ namespace Astral {
                 }
                 else
                 {
-                    ASTRAL_ERROR("Unsupported texture convention for material!")
+                    AE_ERROR("Unsupported texture convention for material!")
                 }
 
 
@@ -1028,7 +1028,7 @@ namespace Astral {
             std::string embeddedFileID = filePath.C_Str();
             int embeddedTextureIndex = std::stoi(embeddedFileID.substr(1));
             // textureRef = m_EmbeddedTextures[embeddedTextureIndex];
-            ASTRAL_ERROR("Embedded Textures are disabled! (For now)");
+            AE_ERROR("Embedded Textures are disabled! (For now)");
         }
         else
         {

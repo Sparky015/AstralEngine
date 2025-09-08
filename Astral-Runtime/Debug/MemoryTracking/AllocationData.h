@@ -39,7 +39,7 @@ namespace Astral {
             case CORE: return "Core";
             case UNKNOWN: return "Unknown Region";
             case MEMORY_REGION_END: return "Enum Memory Region End Marker";
-            default: ASTRAL_ERROR("Memory region value not valid!");
+            default: AE_ERROR("Memory region value not valid!");
         }
     }
 
@@ -75,7 +75,7 @@ namespace Astral {
             case NEW_OPERATOR: return "New Operator";
             case MALLOC: return "Malloc";
             case ALLOCATOR_TYPE_END: return "Enum Memory Region End Marker";
-            default: ASTRAL_ERROR("Memory region value not valid!");
+            default: AE_ERROR("Memory region value not valid!");
         }
     }
 

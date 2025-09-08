@@ -50,7 +50,7 @@ namespace Astral {
             case AssetType::Mesh: return "Mesh";
             case AssetType::EnvironmentMap: return "Environment Map";
             case AssetType::CubeLUT: return "Cube LUT";
-            default: ASTRAL_ERROR("Invalid asset type value given!");
+            default: AE_ERROR("Invalid asset type value given!");
         }
     }
 

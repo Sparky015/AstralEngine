@@ -318,7 +318,7 @@ namespace Astral {
             case ImageFormat::R16G16_S10_5_NV:                                  return VK_FORMAT_R16G16_S10_5_NV;
 
             case ImageFormat::MAX_ENUM: // Fallthrough
-            default: ASTRAL_ERROR("Invalid Image Format Given!");
+            default: AE_ERROR("Invalid Image Format Given!");
         }
     }
 
@@ -367,7 +367,7 @@ namespace Astral {
             case ImageLayout::ATTACHMENT_OPTIMAL_KHR:                          return VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR;
 
             case Astral::ImageLayout::MAX_ENUM: // Fallthrough
-                default: ASTRAL_ERROR("Invalid Image Layout Given!");
+                default: AE_ERROR("Invalid Image Layout Given!");
         }
     }
 
@@ -546,7 +546,7 @@ namespace Astral {
             case VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR:                           return ImageLayout::VIDEO_ENCODE_DPB_KHR;
             case VK_IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT:           return ImageLayout::ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT;
 
-            default: ASTRAL_ERROR("Invalid VkImage Layout Given!");
+            default: AE_ERROR("Invalid VkImage Layout Given!");
         }
     }
 
@@ -807,7 +807,7 @@ namespace Astral {
             case VK_FORMAT_A8_UNORM_KHR:                                return ImageFormat::A8_UNORM_KHR;
 
             case VK_FORMAT_MAX_ENUM: // Fallthrough
-            default: ASTRAL_ERROR("Invalid VkFormat Given!");
+            default: AE_ERROR("Invalid VkFormat Given!");
         }
     }
 

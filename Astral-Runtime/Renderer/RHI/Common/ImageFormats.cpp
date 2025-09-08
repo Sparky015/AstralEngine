@@ -137,9 +137,9 @@ namespace Astral {
             case ImageFormat::E5B9G9R9_UFLOAT_PACK32: return 4;   // Shared exponent HDR
 
             // Undefined
-            case ImageFormat::UNDEFINED: ASTRAL_ERROR("Undefined format cannot be applied to texture!");
-            case ImageFormat::MAX_ENUM: ASTRAL_ERROR("Unsupported format!")
-            default: ASTRAL_ERROR("Unsupported format!")
+            case ImageFormat::UNDEFINED: AE_ERROR("Undefined format cannot be applied to texture!");
+            case ImageFormat::MAX_ENUM: AE_ERROR("Unsupported format!")
+            default: AE_ERROR("Unsupported format!")
         }
     }
 
@@ -273,9 +273,9 @@ namespace Astral {
             case ImageFormat::E5B9G9R9_UFLOAT_PACK32: return 3;   // Shared exponent HDR
 
             // Undefined
-            case ImageFormat::UNDEFINED: ASTRAL_ERROR("Undefined format cannot be applied to texture!");
-            case ImageFormat::MAX_ENUM: ASTRAL_ERROR("Unsupported format!")
-            default: ASTRAL_ERROR("Unsupported format!")
+            case ImageFormat::UNDEFINED: AE_ERROR("Undefined format cannot be applied to texture!");
+            case ImageFormat::MAX_ENUM: AE_ERROR("Unsupported format!")
+            default: AE_ERROR("Unsupported format!")
         }
     }
 
@@ -454,7 +454,7 @@ namespace Astral {
 	        case ImageFormat::ASTC_12x12_SFLOAT_BLOCK: // fallthrough
     			return Vec2{12, 12};
 
-		    default: ASTRAL_ERROR("Unsupported format! Expected a compressed format!");
+		    default: AE_ERROR("Unsupported format! Expected a compressed format!");
     	}
 	}
 

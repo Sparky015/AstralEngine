@@ -158,7 +158,7 @@ namespace Astral {
         ASSERT(assetID != NullAssetID, "Asset ID is null!");
         if (!m_AssetIDToAsset.contains(assetID))
         {
-            ASTRAL_ERROR("Asset registry does not contain an asset with given asset ID!");
+            AE_ERROR("Asset registry does not contain an asset with given asset ID!");
             return nullptr;
         }
         return std::dynamic_pointer_cast<AssetType>(m_AssetIDToAsset.at(assetID));

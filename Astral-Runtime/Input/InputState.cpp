@@ -152,7 +152,7 @@ namespace Astral {
             case KEY_F22:               return "F22";
             case KEY_F23:               return "F23";
             case KEY_F24:               return "F24";
-            default:                    ASTRAL_ERROR("Invalid keycode!");
+            default:                    AE_ERROR("Invalid keycode!");
         }
     }
 

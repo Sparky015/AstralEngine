@@ -9,10 +9,10 @@
 #ifndef TURN_OFF_DEBUG_MACROS
 
 /** Throws an error with a message outputted to the console. */
-#define ASTRAL_ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Astral::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
+#define AE_ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Astral::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
 
 #else
-#define ASTRAL_ERROR(errorMessage)
+#define AE_ERROR(errorMessage)
 #endif
 
 

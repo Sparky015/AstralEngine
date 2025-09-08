@@ -37,7 +37,7 @@ namespace Astral {
         [[unlikely]] if (m_IsSceneActive)
         {
             CloseExportFile();
-            ASTRAL_ERROR("Can't begin a new scene when a scene is already active!")
+            AE_ERROR("Can't begin a new scene when a scene is already active!")
         }
         OpenExportFile(sceneName);
         m_IsSceneActive = true;

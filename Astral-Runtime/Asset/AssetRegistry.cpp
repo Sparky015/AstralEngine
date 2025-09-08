@@ -101,7 +101,7 @@ namespace Astral {
             case AssetType::Mesh: return MeshLoader::LoadAsset(filePath);
             case AssetType::EnvironmentMap: return EnvironmentMapLoader::LoadAsset(filePath);
             case AssetType::CubeLUT: return CubeLUTLoader::LoadAsset(filePath);
-            default: ASTRAL_ERROR("Invalid asset type value given!");
+            default: AE_ERROR("Invalid asset type value given!");
         }
     }
 

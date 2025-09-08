@@ -117,7 +117,7 @@ namespace Astral {
             case ShaderDataType::Int2:   return VK_FORMAT_R32G32_SINT;
             case ShaderDataType::Int3:   return VK_FORMAT_R32G32B32_SINT;
             case ShaderDataType::Int4:   return VK_FORMAT_R32G32B32A32_SINT;
-            default:                     ASTRAL_ERROR("Unknown vertex buffer data type!");
+            default:                     AE_ERROR("Unknown vertex buffer data type!");
         }
     }
 

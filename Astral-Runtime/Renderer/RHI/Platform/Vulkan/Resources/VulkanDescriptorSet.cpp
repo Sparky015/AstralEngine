@@ -448,7 +448,7 @@ namespace Astral {
                 case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER: numImageSamplers++; break;
                 case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE: numStorageImages++; break;
                 case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT: numInputAttachmentSamplers++; break;
-                default: ASTRAL_ERROR("Unsupported descriptor type!")
+                default: AE_ERROR("Unsupported descriptor type!")
             }
         }
 

@@ -18,9 +18,9 @@
 
 
 #else
-#define TRACE(message)
-#define LOG(message)
-#define WARN(message)
+#define AE_TRACE(message)
+#define AE_LOG(message)
+#define AE_WARN(message)
 #endif
 
 

@@ -16,9 +16,9 @@ namespace Astral {
         switch (s_WindowAPI)
         {
             case WindowAPI::GLFW: return new GenericWindow();
-            case WindowAPI::Cocoa: ASTRAL_ERROR("Cocoa Window API not supported yet!");
-            case WindowAPI::Win32: ASTRAL_ERROR("Win32 Window API supported yet!");
-            default: ASTRAL_ERROR("Invalid Window API");
+            case WindowAPI::Cocoa: AE_ERROR("Cocoa Window API not supported yet!");
+            case WindowAPI::Win32: AE_ERROR("Win32 Window API supported yet!");
+            default: AE_ERROR("Invalid Window API");
         }
     }
 

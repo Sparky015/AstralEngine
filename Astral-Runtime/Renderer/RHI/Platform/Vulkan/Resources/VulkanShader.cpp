@@ -45,8 +45,8 @@ namespace Astral {
             case GEOMETRY_SHADER: shaderStage = GLSLANG_STAGE_GEOMETRY; break;
             case TESSELLATION_CONTROL_SHADER: shaderStage = GLSLANG_STAGE_TESSCONTROL; break;
             case TESSELLATION_EVALUATION_SHADER: shaderStage = GLSLANG_STAGE_TESSEVALUATION; break;
-            case NONE: ASTRAL_ERROR("Invalid shader type!"); break;
-            default: ASTRAL_ERROR("Invalid shader type!"); break;
+            case NONE: AE_ERROR("Invalid shader type!"); break;
+            default: AE_ERROR("Invalid shader type!"); break;
         }
 
 
@@ -76,7 +76,7 @@ namespace Astral {
             printf("%s\n", glslang_shader_get_info_debug_log(shader));
             printf("%s\n", input.code);
             glslang_shader_delete(shader);
-            ASTRAL_ERROR("GLSL preprocessing failed " << shaderSource.GetFileName().data());
+            AE_ERROR("GLSL preprocessing failed " << shaderSource.GetFileName().data());
         }
 
         if (!glslang_shader_parse(shader, &input))
@@ -86,7 +86,7 @@ namespace Astral {
             printf("%s\n", glslang_shader_get_info_debug_log(shader));
             printf("%s\n", glslang_shader_get_preprocessed_code(shader));
             glslang_shader_delete(shader);
-            ASTRAL_ERROR("GLSL parsing failed " << shaderSource.GetFileName().data());
+            AE_ERROR("GLSL parsing failed " << shaderSource.GetFileName().data());
         }
 
         glslang_program_t* program = glslang_program_create();
@@ -99,7 +99,7 @@ namespace Astral {
             printf("%s\n", glslang_program_get_info_debug_log(program));
             glslang_program_delete(program);
             glslang_shader_delete(shader);
-            ASTRAL_ERROR("GLSL linking failed " << shaderSource.GetFileName().data());
+            AE_ERROR("GLSL linking failed " << shaderSource.GetFileName().data());
         }
 
         glslang_spv_options_t spv_options = {

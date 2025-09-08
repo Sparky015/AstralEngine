@@ -149,7 +149,7 @@ namespace Astral {
             case 3: cartesianCoords = {  V - 1.0f,  U - 1.0f,  1.0f }; break; // Negative Y
             case 4: cartesianCoords = {  -1.0f, U - 1.0f,  V - 1.0f }; break; // Positive Z
             case 5: cartesianCoords = {  1.0f, 1.0f - U,  V - 1.0f }; break; // Negative Z
-            default: ASTRAL_ERROR("Unsupported face index!");
+            default: AE_ERROR("Unsupported face index!");
         }
         return cartesianCoords;
     }

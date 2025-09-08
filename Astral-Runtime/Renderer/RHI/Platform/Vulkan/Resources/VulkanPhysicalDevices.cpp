@@ -134,7 +134,7 @@ namespace Astral {
             }
         }
 
-        ASTRAL_ERROR("Vulkan: No device found with desired properties!");
+        AE_ERROR("Vulkan: No device found with desired properties!");
     }
 
 

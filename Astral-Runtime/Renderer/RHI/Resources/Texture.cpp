@@ -127,9 +127,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 
@@ -149,9 +149,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 
@@ -171,9 +171,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.Create3DTexture(textureCreateInfo);
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 
@@ -193,9 +193,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.Create1DTexture(textureCreateInfo);
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 
@@ -218,9 +218,9 @@ namespace Astral {
         switch (RendererCommands::GetAPI())
         {
             case API::Vulkan: return device.CreateTexture(textureCreateInfo);
-            case API::DirectX12: ASTRAL_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: ASTRAL_ERROR("Metal is not supported yet!");
-            default: ASTRAL_ERROR("Invalid Renderer API");
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            default: AE_ERROR("Invalid Renderer API");
         }
     }
 
@@ -328,7 +328,7 @@ namespace Astral {
             case gli::FORMAT_RGBA_ASTC_4X4_UNORM_BLOCK16:  return ImageFormat::ASTC_4x4_UNORM_BLOCK;
             case gli::FORMAT_RGBA_ASTC_4X4_SRGB_BLOCK16:   return ImageFormat::ASTC_4x4_SRGB_BLOCK;
 
-        default: ASTRAL_ERROR("No image format match was found!")
+        default: AE_ERROR("No image format match was found!")
         }
     }
 
