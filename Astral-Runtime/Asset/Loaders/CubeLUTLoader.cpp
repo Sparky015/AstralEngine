@@ -78,12 +78,12 @@ namespace Astral::CubeLUTLoader {
 
             if (shaperData.size() != shaperSize)
             {
-                WARN("CubeLUT Loader: Failed to parse all shaper data!");
+                AE_WARN("CubeLUT Loader: Failed to parse all shaper data!");
                 return nullptr;
             }
             if (cubeLUTData.size() != cubeLUTSideLength * cubeLUTSideLength * cubeLUTSideLength)
             {
-                WARN("CubeLUT Loader: Failed to parse all cube lut data!");
+                AE_WARN("CubeLUT Loader: Failed to parse all cube lut data!");
                 return nullptr;
             }
 

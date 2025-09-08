@@ -47,7 +47,7 @@ namespace Astral {
     {
         if (!m_SceneMetricsImporter.HasFileLoaded())
         {
-            WARN("MemoryDebugWindow: No memory profile file is currently loaded!");
+            AE_WARN("MemoryDebugWindow: No memory profile file is currently loaded!");
             return;
         }
 

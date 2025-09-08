@@ -98,7 +98,7 @@ namespace Astral {
     {
         if (newSize <= m_PrimaryDeviceSize)
         {
-            WARN("New size is less than or equal to current buffer size. Skipping reallocation!")
+            AE_WARN("New size is less than or equal to current buffer size. Skipping reallocation!")
             return;
         }
         // Creating new buffer with at least newSize bytes of device memory

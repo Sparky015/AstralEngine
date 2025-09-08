@@ -50,7 +50,7 @@ namespace Astral {
         else if (result == NFD_ERROR)
         {
             outFilePath = "";
-            WARN("NFD Error: " << NFD_GetError())
+            AE_WARN("NFD Error: " << NFD_GetError())
         }
     }
 
@@ -84,7 +84,7 @@ namespace Astral {
         else if (result == NFD_ERROR)
         {
             outFilePath = "";
-            WARN("NFD Error: " << NFD_GetError())
+            AE_WARN("NFD Error: " << NFD_GetError())
         }
     }
 

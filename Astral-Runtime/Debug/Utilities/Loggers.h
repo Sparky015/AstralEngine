@@ -14,7 +14,7 @@
 #define LOG(message) { std::ostringstream ss; ss << message; Astral::Macros::macro_LOG(ss); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define WARN(message) { std::ostringstream ss;  ss << message; Astral::Macros::macro_WARN(ss); }
+#define AE_WARN(message) { std::ostringstream ss;  ss << message; Astral::Macros::macro_WARN(ss); }
 
 
 #else

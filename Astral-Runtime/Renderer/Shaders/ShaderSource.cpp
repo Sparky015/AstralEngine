@@ -47,13 +47,13 @@ namespace Astral {
     {
         if (!m_ShaderCode.empty())
         {
-            WARN("Shader code already exists. Overwriting...");
+            AE_WARN("Shader code already exists. Overwriting...");
         }
 
         std::ifstream file = std::ifstream(filePath);
         if (!file.is_open())
         {
-            WARN("Failed to open file: " << filePath)
+            AE_WARN("Failed to open file: " << filePath)
             return;
         }
 

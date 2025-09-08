@@ -29,7 +29,7 @@ namespace Astral {
             if (!std::filesystem::exists(fullPath))
             {
                 if (fullPath == "") { return nullptr; }
-                WARN("Trying to create asset from file path that does not exist! (\"" << fullPath.string() << "\")")
+                AE_WARN("Trying to create asset from file path that does not exist! (\"" << fullPath.string() << "\")")
                 return nullptr;
             }
             asset = LoadAsset(AssetType::GetStaticAssetType(), fullPath);
@@ -39,7 +39,7 @@ namespace Astral {
             if (!std::filesystem::exists(filePath))
             {
                 if (filePath == "") { return nullptr; }
-                WARN("Trying to create asset from file path that does not exist! (" << filePath.string() << ")")
+                AE_WARN("Trying to create asset from file path that does not exist! (" << filePath.string() << ")")
                 return nullptr;
             }
             asset = LoadAsset(AssetType::GetStaticAssetType(), filePath);
@@ -47,7 +47,7 @@ namespace Astral {
 
         if (!asset)
         {
-            WARN("An asset failed to load! File name: " << m_AssetDirectoryPath.string() + filePath.string())
+            AE_WARN("An asset failed to load! File name: " << m_AssetDirectoryPath.string() + filePath.string())
             return nullptr;
         }
 
@@ -89,7 +89,7 @@ namespace Astral {
             if (!std::filesystem::exists(fullPath))
             {
                 if (fullPath == "") { return; }
-                WARN("Trying to register asset with file path that does not exist! (\"" << fullPath.string() << "\")")
+                AE_WARN("Trying to register asset with file path that does not exist! (\"" << fullPath.string() << "\")")
                 return;
             }
         }
@@ -98,7 +98,7 @@ namespace Astral {
             if (!std::filesystem::exists(filePath))
             {
                 if (filePath == "") { return; }
-                WARN("Trying to register asset with file path that does not exist! (" << filePath.string() << ")")
+                AE_WARN("Trying to register asset with file path that does not exist! (" << filePath.string() << ")")
                 return;
             }
         }

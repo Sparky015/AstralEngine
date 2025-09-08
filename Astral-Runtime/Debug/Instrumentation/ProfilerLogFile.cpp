@@ -20,7 +20,7 @@ namespace Astral {
         GetFileStream().open(m_FilePath);
         if (GetFileStream().fail())
         {
-            WARN("Profiler log file failed to open!");
+            AE_WARN("Profiler log file failed to open!");
         }
         else
         {
@@ -39,7 +39,7 @@ namespace Astral {
         profilerLogFile.GetFileStream().close();
         if (profilerLogFile.GetFileStream().fail())
         {
-            WARN("DebugMacros.cpp: Log file failed to close!");
+            AE_WARN("DebugMacros.cpp: Log file failed to close!");
         }
         else
         {

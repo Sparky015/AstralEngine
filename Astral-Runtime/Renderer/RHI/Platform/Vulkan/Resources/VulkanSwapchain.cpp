@@ -134,7 +134,7 @@ namespace Astral {
                 }
         }
 
-        WARN("Swapchain format and color space defaulted to the first choice! Preferred format or color space is not available!");
+        AE_WARN("Swapchain format and color space defaulted to the first choice! Preferred format or color space is not available!");
         m_SwapchainImageFormat = ConvertVkFormatToImageFormat(availableFormats[0].format);
         return availableFormats[0];
     }

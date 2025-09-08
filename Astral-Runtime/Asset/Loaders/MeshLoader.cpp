@@ -44,7 +44,7 @@ namespace Astral::MeshLoader {
         // If the import failed, report it
         if (nullptr == scene)
         {
-            WARN(importer.GetErrorString());
+            AE_WARN(importer.GetErrorString());
             return nullptr;
         }
 
@@ -52,7 +52,7 @@ namespace Astral::MeshLoader {
         if (!scene->HasMeshes()) { return nullptr; }
 
         aiMesh* mesh = scene->mMeshes[0];
-        if (scene->mNumMeshes > 1) {  WARN("Loading 3D object file with more than 1 mesh! Ignoring " << scene->mNumMeshes << " other meshes!") }
+        if (scene->mNumMeshes > 1) {  AE_WARN("Loading 3D object file with more than 1 mesh! Ignoring " << scene->mNumMeshes << " other meshes!") }
 
         return LoadMesh(mesh);
     }

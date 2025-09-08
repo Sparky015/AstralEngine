@@ -39,7 +39,7 @@ namespace Astral::Macros {
         }
         else
         {
-            WARN("Attempted write to a log file that is already closed!");
+            AE_WARN("Attempted write to a log file that is already closed!");
         }
     #endif
 

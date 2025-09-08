@@ -36,12 +36,12 @@ namespace Astral {
     {
         if (x >= m_Width)
         {
-            WARN("Trying to get pixel data with out of bounds x value: " << x << "(Image width is " << m_Width << ")")
+            AE_WARN("Trying to get pixel data with out of bounds x value: " << x << "(Image width is " << m_Width << ")")
             x = m_Width - 1;
         }
         if (y >= m_Height)
         {
-            WARN("Trying to get pixel data with out of bounds y value: " << y << "(Image height is " << m_Height << ")")
+            AE_WARN("Trying to get pixel data with out of bounds y value: " << y << "(Image height is " << m_Height << ")")
             y = m_Height - 1;
         }
 
@@ -62,12 +62,12 @@ namespace Astral {
     {
         if (x >= m_Width)
         {
-            WARN("Trying to get pixel data with out of bounds x value: " << x << "(Image width is " << m_Width << ")")
+            AE_WARN("Trying to get pixel data with out of bounds x value: " << x << "(Image width is " << m_Width << ")")
             x = m_Width - 1;
         }
         if (y >= m_Height)
         {
-            WARN("Trying to get pixel data with out of bounds y value: " << y << "(Image height is " << m_Height << ")")
+            AE_WARN("Trying to get pixel data with out of bounds y value: " << y << "(Image height is " << m_Height << ")")
             y = m_Height - 1;
         }
 

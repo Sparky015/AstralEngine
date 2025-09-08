@@ -22,7 +22,7 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
     PROFILE_SCOPE("MemorySceneMetricsImporter")
     if (!std::filesystem::exists(filePath))
     {
-        WARN("SceneMetricsImporter: Invalid filepath given!")
+        AE_WARN("SceneMetricsImporter: Invalid filepath given!")
         m_HasFileLoaded = false;
         return false;
     }
@@ -30,7 +30,7 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
     m_File.open(filePath, std::ios::in | std::ios::binary);
     if (!m_File.is_open())
     {
-        WARN("SceneMetricsImporter: Imported memory profile failed to open!")
+        AE_WARN("SceneMetricsImporter: Imported memory profile failed to open!")
         m_HasFileLoaded = false;
         return false;
     }
@@ -73,7 +73,7 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
     }
     catch (std::exception& e)
     {
-        WARN("Unexpected error while importing memory profile: " << e.what());
+        AE_WARN("Unexpected error while importing memory profile: " << e.what());
         m_HasFileLoaded = false;
         return false;
     }
@@ -139,14 +139,14 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
             }
             catch (std::bad_cast&)
             {
-                WARN("SceneMetricsImporter: Object Handle failed cast to MemoryMetrics snapshot!")
+                AE_WARN("SceneMetricsImporter: Object Handle failed cast to MemoryMetrics snapshot!")
             }
         }
 
     }
     catch (std::exception& e)
     {
-        WARN("Unexpected error while reading memory profile: " << e.what());
+        AE_WARN("Unexpected error while reading memory profile: " << e.what());
         m_HasFileLoaded = false;
         return false;
     }

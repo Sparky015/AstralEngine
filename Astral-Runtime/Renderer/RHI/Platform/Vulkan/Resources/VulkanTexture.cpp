@@ -693,7 +693,7 @@ namespace Astral {
 
     	if (!RendererAPI::GetDevice().IsBlitSupportedByFormat(ConvertVkFormatToImageFormat(m_Format)))
     	{
-    		WARN("Texture format does not support blit command needed to generate mip maps!")
+    		AE_WARN("Texture format does not support blit command needed to generate mip maps!")
     	}
     	else if (generateMipMaps)
     	{

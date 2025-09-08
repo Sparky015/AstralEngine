@@ -68,7 +68,7 @@ namespace Astral {
 
             if (texture.target() != gli::TARGET_2D)
             {
-                WARN("Loaded texture is not a 2D image!: " << filePath)
+                AE_WARN("Loaded texture is not a 2D image!: " << filePath)
                 return nullptr;
             }
 
@@ -96,7 +96,7 @@ namespace Astral {
 
         if (!data)
         {
-            WARN("Failed to load texture! File path: " << filePath)
+            AE_WARN("Failed to load texture! File path: " << filePath)
             return nullptr;
         }
 
@@ -208,7 +208,7 @@ namespace Astral {
 
         if (!textureCreateInfo.ImageData)
         {
-            WARN("Failed to load texture!")
+            AE_WARN("Failed to load texture!")
             return nullptr;
         }
 

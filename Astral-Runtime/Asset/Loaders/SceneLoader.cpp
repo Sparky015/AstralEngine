@@ -83,7 +83,7 @@ namespace Astral {
     {
         if (sceneFilePath.extension() != ".aescene")
         {
-            WARN("Skipping the loading of the scene! File extension does not match the Astral Scene extension (.aescene)!")
+            AE_WARN("Skipping the loading of the scene! File extension does not match the Astral Scene extension (.aescene)!")
             return;
         }
 
@@ -355,7 +355,7 @@ namespace Astral {
         // If the import failed, report it
         if (nullptr == scene)
         {
-         WARN(importer.GetErrorString());
+         AE_WARN(importer.GetErrorString());
          return;
         }
 
@@ -450,7 +450,7 @@ namespace Astral {
                  textureCreateInfo.GenerateMipMaps = true;
 
                  textureRef = Texture::CreateTexture(textureCreateInfo);
-                 WARN("Loading an embedded texture! This probably won't work!")
+                 AE_WARN("Loading an embedded texture! This probably won't work!")
                  m_EmbeddedTextures.push_back(textureRef);
              }
          }

@@ -55,7 +55,7 @@ namespace Astral {
         GetFileStream().open(filePathStream.str(), std::ios::out);
         if (GetFileStream().fail())
         {
-            WARN("Console log file failed to open!");
+            AE_WARN("Console log file failed to open!");
         }
         else
         {
@@ -73,7 +73,7 @@ namespace Astral {
         logFile.GetFileStream().close();
         if (logFile.GetFileStream().fail())
         {
-            WARN("ConsoleLogFile.cpp: Log file failed to close!");
+            AE_WARN("ConsoleLogFile.cpp: Log file failed to close!");
         }
         else
         {

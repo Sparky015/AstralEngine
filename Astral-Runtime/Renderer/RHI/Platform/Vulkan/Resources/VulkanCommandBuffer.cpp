@@ -77,7 +77,7 @@ namespace Astral {
     {
         if (!pipeline)
         {
-            WARN("Tried to bind pipeline handle that was null!");
+            AE_WARN("Tried to bind pipeline handle that was null!");
             return;
         }
 
@@ -98,13 +98,13 @@ namespace Astral {
     {
         if (!descriptorSet)
         {
-            WARN("Tried to bind descriptor set handle that was null!");
+            AE_WARN("Tried to bind descriptor set handle that was null!");
             return;
         }
 
         if (!m_BoundPipeline)
         {
-            WARN("Tried to bind descriptor set handle with no bound pipeline!");
+            AE_WARN("Tried to bind descriptor set handle with no bound pipeline!");
             return;
         }
 
@@ -125,13 +125,13 @@ namespace Astral {
     {
         if (!vertexBuffer)
         {
-            WARN("Tried to bind vertex buffer handle that was null!");
+            AE_WARN("Tried to bind vertex buffer handle that was null!");
             return;
         }
 
         if (!m_BoundPipeline)
         {
-            WARN("Tried to bind descriptor set handle with no bound pipeline!");
+            AE_WARN("Tried to bind descriptor set handle with no bound pipeline!");
             return;
         }
 
@@ -149,13 +149,13 @@ namespace Astral {
     {
         if (!indexBuffer)
         {
-            WARN("Tried to bind index buffer handle that was null!");
+            AE_WARN("Tried to bind index buffer handle that was null!");
             return;
         }
 
         if (!m_BoundPipeline)
         {
-            WARN("Tried to bind descriptor set handle with no bound pipeline!");
+            AE_WARN("Tried to bind descriptor set handle with no bound pipeline!");
             return;
         }
 
@@ -172,7 +172,7 @@ namespace Astral {
     {
         if (!m_BoundPipeline)
         {
-            WARN("Tried to set viewport and scissor with no bound pipeline!");
+            AE_WARN("Tried to set viewport and scissor with no bound pipeline!");
             return;
         }
 
@@ -260,7 +260,7 @@ namespace Astral {
     {
         if (!m_BoundPipeline)
         {
-            WARN("Tried to push constants with no bound pipeline!");
+            AE_WARN("Tried to push constants with no bound pipeline!");
             return;
         }
 

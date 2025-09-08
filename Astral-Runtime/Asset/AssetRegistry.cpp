@@ -146,7 +146,7 @@ namespace Astral {
             return;
         }
 
-        WARN("Unable to identify parent directory of relative path! Using executable directory!")
+        AE_WARN("Unable to identify parent directory of relative path! Using executable directory!")
     }
 
 

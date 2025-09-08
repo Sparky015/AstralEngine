@@ -135,7 +135,7 @@ namespace Astral {
         // Function frees the old block and manages the asan region permissions
         if (!AllocatorUtils::ResizeMemoryBlock(m_StartBlockAddress, GetCapacity(), newMemoryBlock, newMemoryBufferSize))
         {
-            WARN("Allocator memory block resize failed!");
+            AE_WARN("Allocator memory block resize failed!");
             return false;
         }
 

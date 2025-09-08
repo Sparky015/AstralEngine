@@ -16,7 +16,7 @@ namespace Astral::AllocatorUtils {
         if (!outNewMemoryBufferPointer) { return false; }
         FreeMaxAlignedBlock(memoryBlockPtr);
 
-        WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newMemoryBufferSize << " bytes)");
+        AE_WARN("Resizing Allocator Memory Block! (" << memoryBlockSize << " bytes -> " << newMemoryBufferSize << " bytes)");
         return true;
     }
 
