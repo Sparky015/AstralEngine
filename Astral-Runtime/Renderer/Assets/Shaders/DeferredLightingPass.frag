@@ -1,6 +1,6 @@
 #version 460
 
-layout(location = 0) in vec3 v_WorldPosition;
+layout(location = 0) in vec3 v_QuadFragPosition;
 layout(location = 1) in vec3 v_Normals;
 layout(location = 2) in vec3 v_Tangents;
 layout(location = 3) in vec3 v_Bitangents;
@@ -42,6 +42,12 @@ layout(set = 2, binding = 2) uniform sampler2D u_RoughnessInput;
 layout(set = 2, binding = 3) uniform sampler2D u_EmissionInput;
 layout(set = 2, binding = 4) uniform sampler2D u_NormalInput;
 layout(set = 2, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout(set = 2, binding = 6) uniform sampler2D u_DirectionalLightShadows;
+
+
+layout(push_constant) uniform PushConstantData {
+    mat4 lightSpaceMatrix;
+} u_PushConstants;
 
 layout(location = 0) out vec4 outColor;
 
@@ -109,6 +115,36 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
+float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
+{
+    vec4 fragPositionLightSpace = u_PushConstants.lightSpaceMatrix * vec4(worldPosition, 1.0f);
+    vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5; // Transform into UV range for sampling shadow map
+
+    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
+    float currentDepth = projCoords.z;
+
+    float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
+//    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            vec2 offset = vec2(float(x), float(y)) * texelSize;
+            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0; // Average of 9 samples
+
+    return shadow;
+}
+
+
 void main()
 {
     vec3 baseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
@@ -163,7 +199,9 @@ void main()
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
         vec3 BRDF = diffuse * lambert + cookTorrance;
-        vec3 outgoingLight = BRDF * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
+        float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
+
+        vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
         finalLight += outgoingLight;
     }
 

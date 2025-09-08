@@ -107,6 +107,7 @@ namespace Astral {
         void DeferredLightingPass();
 
         // Both
+        void CascadedShadowMapsPass();
         void EnvironmentMapPass();
         void ToneMappingPass();
         void FXAAPass();
@@ -124,7 +125,6 @@ namespace Astral {
         uint32 m_CurrentFrameIndex = -1;
         RenderPassHandle m_MainRenderPass;
         RenderPassHandle m_ImGuiRenderPass;
-        RenderPassHandle m_IrradianceCalcPass;
         EventListener<FramebufferResizedEvent> m_WindowResizedListener{[](FramebufferResizedEvent){}};
         EventPublisher<ViewportResizedEvent> m_ViewportResizedPublisher;
         bool m_IsSceneStarted = false;
@@ -133,17 +133,33 @@ namespace Astral {
         UVec2 m_ViewportSize{};
         PipelineStateCache m_PipelineStateCache;
 
+        // Deferred Geometry Pass
         ShaderHandle m_DeferredGeometryPassUnpackedShader;
         ShaderHandle m_DeferredGeometryPassORMShader;
+
+        // Deferred Lighting Pass
         ShaderHandle m_DeferredLightingShader;
+
+        // Forward Lighting Pass
         ShaderHandle m_ForwardUnpackedLightingShader;
         ShaderHandle m_ForwardORMLightingShader;
+
+        // Depth Pre-Pass
         ShaderHandle m_DepthWriteOnlyShader;
+
+        // Environment Map Pass
+        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
+
+        // ACES Color Transforms and Tone Mapping
         DescriptorSetHandle m_InputLUTDescriptorSet;
         DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
-        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
-        float m_SceneExposure{};
 
+        // Cascaded Shadow Maps Pass
+        Light m_FirstDirectionalLightInScene = {};
+        Mat4 m_LightSpaceMatrix{};
+
+
+        float m_SceneExposure{};
         Mat4 m_SceneViewProjection{};
     };
 
