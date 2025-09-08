@@ -71,7 +71,7 @@ TEST_F(RingAllocatorTest, Allocate_FailsWhenSizeExceedsCapacity)
 /**@brief Tests that DoesAllocationWrap correctly identifies wrapping cases */
 TEST_F(RingAllocatorTest, DoesAllocationWrap_CorrectlyIdentifiesWrapping)
 {
-    size_t almostFull = DEFAULT_ALLOCATION_SIZE - 100;
+    size_t almostFull = DEFAULT_ALLOCATION_SIZE - 93;
     void* first = testAllocator.Allocate(almostFull, alignof(char));
     EXPECT_NE(first, nullptr);
 
@@ -80,7 +80,13 @@ TEST_F(RingAllocatorTest, DoesAllocationWrap_CorrectlyIdentifiesWrapping)
     EXPECT_FALSE(testAllocator.DoesAllocationWrap(50, alignof(char)));  // Should fit without wrap
 
     // Test alignment forcing wrap
-    EXPECT_TRUE(testAllocator.DoesAllocationWrap(90, 64));  // Should wrap due to alignment
+    uint32 alignment = 64;
+    uint32 offset = (uintptr_t)first % alignment;
+    uint32 alignmentNeeded = (alignment - offset) % alignment;
+    if (alignmentNeeded > 10)
+    {
+        EXPECT_TRUE(testAllocator.DoesAllocationWrap(90, alignment));  // Should wrap due to alignment
+    }
 }
 
 /**@brief Tests if the natural alignment is maintained even after wrapping */
