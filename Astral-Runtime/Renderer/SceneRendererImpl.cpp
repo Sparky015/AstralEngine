@@ -1112,14 +1112,14 @@ namespace Astral {
 
         float nearPlane = -50.0f;
         float farPlane = 50.0f;
-        float size = 50;
+        float size = 20;
 
         Mat4 lightProjection = glm::ortho(-size, size, -size, size, nearPlane, farPlane);
 
 
-        Mat4 lightView = glm::lookAt(m_FirstDirectionalLightInScene.Position,
+        Mat4 lightView = glm::lookAt(m_FirstDirectionalLightInScene.Position * 5.0f,
                                           glm::vec3( 0.0f, 0.0f,  0.0f),
-                                          glm::vec3( 0.0f, -1.0f,  0.0f));
+                                          glm::vec3( 0.0f, 1.0f,  0.0f));
 
         m_LightSpaceMatrix = lightProjection * lightView;
         m_LightSpaceMatrix[1][1] *= -1; // Flip the Y axis for Vulkan
