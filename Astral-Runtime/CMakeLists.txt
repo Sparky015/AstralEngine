@@ -294,6 +294,14 @@ add_library(AstralEngine
 )
 
 
+# Flags for just the Astral Engine and all libraries and executables that link to it
+if (APPLE)
+    target_compile_options(AstralEngine PRIVATE -Wall -Wextra)#-fsanitize=address
+else ()
+    target_compile_options(AstralEngine PRIVATE -W1)
+endif()
+
+
 # Link directories for Cmake (Point to where the lib files are for GLFW)
 if (APPLE)
     target_link_directories(AstralEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/mac-lib)
