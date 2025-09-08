@@ -44,6 +44,8 @@ jobs:
       with:
         submodules: 'recursive'
 
+    - name: Restore File Modification Times
+      uses: chetan/git-restore-mtime-action@v2
 
     - name: Cache CMake Build
       uses: actions/cache@v4
@@ -68,6 +70,7 @@ jobs:
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
+      if: steps.cache-cmake.outputs.cache-hit != 'true'
       run: >
         cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
