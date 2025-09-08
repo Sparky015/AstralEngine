@@ -292,7 +292,7 @@ namespace Astral {
         const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
         void* pUserData)
     {
-        TRACE("Vulkan Debug Message:");
+        AE_TRACE("Vulkan Debug Message:");
         AE_LOG(pCallbackData->pMessage);
         AE_LOG("   Severity: " << GetDebugMessageSeverity(severity));
         AE_LOG("   Type: " << GetDebugMessageType(type));

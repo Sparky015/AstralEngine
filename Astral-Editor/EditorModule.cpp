@@ -25,7 +25,7 @@ namespace Astral {
         void Init() override
         {
             PROFILE_SCOPE("EditorModuleInit")
-            TRACE("Initializing Editor")
+            AE_TRACE("Initializing Editor")
 
             Astral::ImGuiManager& imguiManager = Astral::Engine::Get().GetImGuiManager();
             imguiManager.EnableViewportDockSpace();
@@ -72,7 +72,7 @@ namespace Astral {
         void Shutdown() override
         {
             PROFILE_SCOPE("EditorModuleShutdown")
-            TRACE("Shutting down Editor")
+            AE_TRACE("Shutting down Editor")
 
             ChessEntities::DestroyEntities();
             m_Mesh = {};

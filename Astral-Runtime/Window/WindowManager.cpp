@@ -17,13 +17,13 @@ namespace Astral{
 
     WindowManager::WindowManager() : m_Window{nullptr}
     {
-        TRACE("Constructing Window System!")
+        AE_TRACE("Constructing Window System!")
     }
 
 
     WindowManager::~WindowManager()
     {
-        TRACE("Destroying Window System!")
+        AE_TRACE("Destroying Window System!")
     }
 
 
@@ -37,7 +37,7 @@ namespace Astral{
     void WindowManager::Init()
     {
         PROFILE_SCOPE("WindowManager::Init")
-        TRACE("Initializing Window Manager!")
+        AE_TRACE("Initializing Window Manager!")
 
         m_UpdateListener.StartListening();
 
@@ -48,7 +48,7 @@ namespace Astral{
 
     void WindowManager::Shutdown()
     {
-        TRACE("Shutting down Window Manager!")
+        AE_TRACE("Shutting down Window Manager!")
         m_UpdateListener.StopListening();
         m_RenderImGuiListener.StopListening();
         m_Window->Shutdown();

@@ -16,7 +16,7 @@ namespace Astral {
         if (numberOfIterations <= 0) { return; }
         GetOriginalStream(); // Initializes cout stream storage variable if not initialized yet
 
-        TRACE("Profiling Function: " << functionName << "!");
+        AE_TRACE("Profiling Function: " << functionName << "!");
 
         // Redirect std::cout to a null stream
         if (suppressCout) { FunctionProfiler::SetCoutStreamToNullStream(); }
@@ -38,8 +38,8 @@ namespace Astral {
         const int64 endTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(endTimeStamp).time_since_epoch().count();
         const int64 duration = endTimePoint - startTimePoint;
 
-        TRACE("Total Function Runtime: " << duration / 1000000.0f << " seconds");
-        TRACE("Average Function Runtime: " << duration / numberOfIterations << " microseconds");
+        AE_TRACE("Total Function Runtime: " << duration / 1000000.0f << " seconds");
+        AE_TRACE("Average Function Runtime: " << duration / numberOfIterations << " microseconds");
     }
 
     std::ofstream FunctionProfiler::m_NullStream = std::ofstream();

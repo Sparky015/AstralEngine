@@ -15,20 +15,20 @@ namespace Astral {
         m_ActiveScene(nullptr),
         m_ActiveSceneExists(true)
     {
-        TRACE("Constructing Scene Manager!")
+        AE_TRACE("Constructing Scene Manager!")
     }
 
 
     SceneManager::~SceneManager()
     {
-        TRACE("Destroying Scene Manager!")
+        AE_TRACE("Destroying Scene Manager!")
     }
 
 
     void SceneManager::Init()
     {
         PROFILE_SCOPE("Scene Manager Initialization");
-        TRACE("Initializing Scene Manager!")
+        AE_TRACE("Initializing Scene Manager!")
         Scene scene{};
         scene.ECS = ECS();
         scene.ECS.Init();
@@ -51,7 +51,7 @@ namespace Astral {
     void SceneManager::Shutdown()
     {
         PROFILE_SCOPE("Scene Manager Shutdown");
-        TRACE("Shutting down Scene Manager!")
+        AE_TRACE("Shutting down Scene Manager!")
         m_UpdateListener.StopListening();
         GetECS().Shutdown();
         m_Scenes.clear();

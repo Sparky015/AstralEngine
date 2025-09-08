@@ -220,7 +220,7 @@ namespace Astral {
 
     void InputState::Init()
     {
-        TRACE("Initializing Input State!")
+        AE_TRACE("Initializing Input State!")
         m_IgnoreNewInputs = false;
         m_KeyPressListener.StartListening();
         m_KeyReleaseListener.StartListening();
@@ -231,7 +231,7 @@ namespace Astral {
 
     void InputState::Shutdown()
     {
-        TRACE("Shutting down Input State!")
+        AE_TRACE("Shutting down Input State!")
         m_KeyPressListener.StopListening();
         m_KeyReleaseListener.StopListening();
         m_KeyRepeatingListener.StopListening();

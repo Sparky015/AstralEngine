@@ -30,7 +30,7 @@ namespace Astral {
     void ImGuiManager::Init()
     {
         PROFILE_SCOPE("ImGui Manager Initialization");
-        TRACE("Initializing Debug Manager!")
+        AE_TRACE("Initializing Debug Manager!")
 
         InitImGui();
 
@@ -52,7 +52,7 @@ namespace Astral {
     void ImGuiManager::Shutdown()
     {
         PROFILE_SCOPE("ImGui Manager Shutdown");
-        TRACE("Shutting down Debug Manager!")
+        AE_TRACE("Shutting down Debug Manager!")
         m_KeyPressedListener.StopListening();
         m_RenderImGuiListener.StopListening();
 
@@ -266,13 +266,13 @@ namespace Astral {
 
     ImGuiManager::ImGuiManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
     {
-        TRACE("Constructing Debug System!")
+        AE_TRACE("Constructing Debug System!")
     }
 
 
     ImGuiManager::~ImGuiManager()
     {
-        TRACE("Destroying Debug System!")
+        AE_TRACE("Destroying Debug System!")
     }
 
 
