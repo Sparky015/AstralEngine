@@ -68,13 +68,12 @@ jobs:
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
-      run: |
-        if [ ! -d "${{ github.workspace }}/cmake-build-${{ matrix.build_type }}" ]; then
-          cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_CXX_STANDARD=20 \
-          -S ${{ github.workspace }}
-        fi
+      if: steps.cache-cmake.outputs.cache-hit != 'true'
+      run: >
+        cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_CXX_STANDARD=20
+        -S ${{ github.workspace }}
 
     - name: Build
       # Builds the project using the generated build system
