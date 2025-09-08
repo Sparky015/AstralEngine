@@ -77,11 +77,11 @@ namespace Astral::Macros {
     }
 
 
-    void macro_WARN(const std::ostringstream& message, const char* file, int line)
+    void macro_WARN(const std::ostringstream& message)
     {
         CheckIfCoutFailed();
 
-        std::cout << SetColor(YELLOW) << "[Warning] "  << "[" << file << ": Line " << line << "] " << message.str() << SetColor(DEFAULT) << "\n";
+        std::cout << SetColor(YELLOW) << "[Warning] " << message.str() << SetColor(DEFAULT) << "\n";
 
     #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();

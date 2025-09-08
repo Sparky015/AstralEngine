@@ -14,7 +14,7 @@
 #define LOG(message) { std::ostringstream ss; ss << message; Astral::Macros::macro_LOG(ss); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
-#define WARN(message) { std::ostringstream ss;  ss << message; Astral::Macros::macro_WARN(ss, __FILE__, __LINE__); }
+#define WARN(message) { std::ostringstream ss;  ss << message; Astral::Macros::macro_WARN(ss); }
 
 
 #else
@@ -33,8 +33,8 @@ namespace Astral::Macros {
     void macro_LOG(const std::ostringstream& message);
 
     /** Logs warnings (that can be a stream) to the console with a yellow color. */
-    void macro_WARN(const std::ostringstream& message, const char* file, int line);
-    void macro_WARN(const std::ostringstream& message, const char* file, int line);
+    void macro_WARN(const std::ostringstream& message);
+    void macro_WARN(const std::ostringstream& message);
 
     /** Checks if std::cout is in fail state and corrects it. */
     void CheckIfCoutFailed();
