@@ -34,7 +34,7 @@ namespace Astral {
 
         void Init(const VkInstance& instance, const VkSurfaceKHR& surface);
 
-        uint32 SelectDevice(VkQueueFlags requiredQueueType, bool supportsPresent);
+        uint32 SelectDevice(VkQueueFlags requiredQueueType, VkBool32 supportsPresent);
 
         VulkanPhysicalDevice& SelectedDevice();
         uint32 SelectedQueueFamily() { return m_QueueFamilyIndex; }

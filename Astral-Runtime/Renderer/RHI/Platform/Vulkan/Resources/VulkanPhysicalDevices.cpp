@@ -114,7 +114,7 @@ namespace Astral {
     }
 
 
-    uint32 VulkanPhysicalDevices::SelectDevice(VkQueueFlags requiredQueueType, bool supportsPresent)
+    uint32 VulkanPhysicalDevices::SelectDevice(VkQueueFlags requiredQueueType, VkBool32 supportsPresent)
     {
         ASSERT(!m_Devices.empty(), "Vulkan physical device(s) data has not been read in yet! Call Init()!");
 
