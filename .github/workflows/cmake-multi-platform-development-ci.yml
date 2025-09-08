@@ -68,7 +68,6 @@ jobs:
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
-      if: steps.cache-cmake.outputs.cache-hit != 'true'
       run: >
         cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
