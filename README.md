@@ -25,7 +25,8 @@ Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement ph
 Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
 of a pre depth pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
 geometry pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
-deferred uses FXAA (looking into TAA in the future).
+deferred uses FXAA (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance
+and prefiltered environment maps one time for each environment map that is set.
 
 * Frame/Render Graph
 
@@ -130,7 +131,6 @@ This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 ### TODO Render Passes
 
-* Cascaded Shadow Maps
 * SSAO
 * Omni-Directional Shadow Maps
 * Transparent Objects Forward Pass
