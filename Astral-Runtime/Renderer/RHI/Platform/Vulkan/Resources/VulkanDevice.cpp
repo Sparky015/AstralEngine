@@ -385,7 +385,7 @@ namespace Astral {
         float priorities[] = { 1.0f, 0.5f };
 
         uint32 queueCount = m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount;
-        LOG("Queue family has " << queueCount << " queue(s)!")
+        AE_LOG("Queue family has " << queueCount << " queue(s)!")
 
         VkDeviceQueueCreateInfo deviceQueueCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
@@ -405,7 +405,7 @@ namespace Astral {
 
         if (m_PhysicalDevice.features.geometryShader == VK_FALSE)
         {
-            LOG("Vulkan: Geometry Shader is not supported!")
+            AE_LOG("Vulkan: Geometry Shader is not supported!")
         }
         else
         {
@@ -414,7 +414,7 @@ namespace Astral {
 
         if (m_PhysicalDevice.features.tessellationShader == VK_FALSE)
         {
-            LOG("Vulkan: Tessellation Shader is not supported!")
+            AE_LOG("Vulkan: Tessellation Shader is not supported!")
         }
         else
         {
@@ -423,7 +423,7 @@ namespace Astral {
 
         if (m_PhysicalDevice.features.samplerAnisotropy == VK_FALSE)
         {
-            LOG("Vulkan: Sampler Anisotropy is not supported!")
+            AE_LOG("Vulkan: Sampler Anisotropy is not supported!")
         }
         else
         {
@@ -432,7 +432,7 @@ namespace Astral {
 
         if (m_PhysicalDevice.features.sampleRateShading == VK_FALSE)
         {
-            LOG("Vulkan: Sampler Anisotropy is not supported!")
+            AE_LOG("Vulkan: Sampler Anisotropy is not supported!")
         }
         else
         {

@@ -518,7 +518,7 @@ namespace Astral {
             RenderPassHandle& renderPass = m_RenderPasses[renderPassIndex];
 
 
-            LOG("Creating Render Pass: " << pass.GetName());
+            AE_LOG("Creating Render Pass: " << pass.GetName());
 
             renderPass->BeginBuildingSubpass();
 

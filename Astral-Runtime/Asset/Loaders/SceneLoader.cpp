@@ -359,8 +359,8 @@ namespace Astral {
          return;
         }
 
-        LOG("Loading Scene: " << scene->mName.C_Str());
-        LOG("Scene has " << scene->mNumLights << " lights!")
+        AE_LOG("Loading Scene: " << scene->mName.C_Str());
+        AE_LOG("Scene has " << scene->mNumLights << " lights!")
 
         for (int i = 0; i < scene->mMetaData->mNumProperties; i++)
         {
@@ -396,7 +396,7 @@ namespace Astral {
             {
                 entryValue = std::string(((aiString*)entry->mData)->C_Str());
             }
-            LOG(i << ": " << key->C_Str() << " -> " << entryValue);
+            AE_LOG(i << ": " << key->C_Str() << " -> " << entryValue);
         }
 
         // Create directory for new files to go into for better organization
@@ -412,7 +412,7 @@ namespace Astral {
                     extension++;
                 }
                 destinationDirString = sceneDir.generic_string() + '/' + sceneFilePath.stem().generic_string() + "_" + std::to_string(extension) + '/';
-                LOG("Duplicate directory name found! Creating new directory at " << destinationDirString);
+                AE_LOG("Duplicate directory name found! Creating new directory at " << destinationDirString);
             }
             std::filesystem::create_directory(destinationDirString);
             destinationDir = destinationDirString;
@@ -497,7 +497,7 @@ namespace Astral {
                              extension++;
                          }
                          filePath = uniqueFilePath + '_' + std::to_string(extension);
-                         LOG("Duplicate material name found! Serializing to " << filePath);
+                         AE_LOG("Duplicate material name found! Serializing to " << filePath);
                      }
 
                      MaterialLoader::SerializeMaterial(materialRef, filePath);
@@ -510,11 +510,11 @@ namespace Astral {
          if (scene->HasMeshes())
          {
              m_Meshes.reserve(scene->mNumMeshes);
-             LOG("Number of meshes: " << scene->mNumMeshes)
+             AE_LOG("Number of meshes: " << scene->mNumMeshes)
              for (int i = 0; i < scene->mNumMeshes; i++)
              {
                  aiMesh* mesh = scene->mMeshes[i];
-                 LOG("Mesh: " << mesh->mName.C_Str());
+                 AE_LOG("Mesh: " << mesh->mName.C_Str());
                  Ref<Mesh> meshRef = MeshLoader::LoadMesh(mesh);
 
                 if (shouldSerializeObjects)
@@ -534,7 +534,7 @@ namespace Astral {
                          extension++;
                         }
                         filePath = uniqueFilePath + '_' + std::to_string(extension);
-                        LOG("Duplicate mesh name found! Serializing to " << filePath);
+                        AE_LOG("Duplicate mesh name found! Serializing to " << filePath);
                     }
 
                     MeshLoader::SerializeMesh(mesh, scene->mMaterials[mesh->mMaterialIndex], filePath);
@@ -563,7 +563,7 @@ namespace Astral {
         aiNode* rootNode = scene->mRootNode;
         std::vector<aiMatrix4x4> transforms;
 
-        LOG("Total root child nodes: " << scene->mRootNode->mNumChildren)
+        AE_LOG("Total root child nodes: " << scene->mRootNode->mNumChildren)
         Helpers::ProcessSceneNode(scene, rootNode, m_Materials, m_Meshes, lightNameToLight);
 
 
@@ -685,10 +685,10 @@ namespace Astral {
                         {
                             insideEntryValue = std::string(((aiString*)insideEntry->mData)->C_Str());
                         }
-                        LOG("Light " << node->mName.C_Str() << " (Inside) : " << insideKey->C_Str() << " -> " << insideEntryValue);
+                        AE_LOG("Light " << node->mName.C_Str() << " (Inside) : " << insideKey->C_Str() << " -> " << insideEntryValue);
                     }
                 }
-                LOG("Light " << node->mName.C_Str() << ": " << key->C_Str() << " -> " << entryValue);
+                AE_LOG("Light " << node->mName.C_Str() << ": " << key->C_Str() << " -> " << entryValue);
             }
 
             aiLight* light = lightNameToLight.at(node->mName.C_Str());
@@ -771,7 +771,7 @@ namespace Astral {
     {
         Ref<Material> materialRef = CreateRef<Material>();
 
-        LOG("Material: " << material->GetName().C_Str());
+        AE_LOG("Material: " << material->GetName().C_Str());
 
         Ref<Texture> baseColor;
         Ref<Texture> metallic;
@@ -801,17 +801,17 @@ namespace Astral {
         }
         else
         {
-            LOG("No base color. Trying diffuse...")
+            AE_LOG("No base color. Trying diffuse...")
             material->GetTexture(aiTextureType_DIFFUSE, 0, &baseColorFilePath);
 
             if (baseColorFilePath.length == 0)
             {
-                LOG("Missing base color!")
+                AE_LOG("Missing base color!")
                 baseColor = m_DefaultMaterialBaseColor;
             }
             else
             {
-                LOG("Diffuse found! Using diffuse instead of base color map!")
+                AE_LOG("Diffuse found! Using diffuse instead of base color map!")
                 baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
                 if (!baseColor) { baseColor = m_DefaultMaterialBaseColor;  }
             }
@@ -827,7 +827,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No metallicness map! Using default!")
+            AE_LOG("No metallicness map! Using default!")
             metallic = m_DefaultMaterialMetallic;
         }
 
@@ -841,7 +841,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No roughness map! Using default!")
+            AE_LOG("No roughness map! Using default!")
             roughness = m_DefaultMaterialRoughness;
         }
 
@@ -855,7 +855,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No emission map! Using default!")
+            AE_LOG("No emission map! Using default!")
             emission = m_DefaultMaterialEmission;
         }
 
@@ -869,7 +869,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No normal map! Using vertex normals instead!")
+            AE_LOG("No normal map! Using vertex normals instead!")
             normals = m_DefaultMaterialNormals;
             materialRef->HasNormalMap = false;
         }
@@ -906,7 +906,7 @@ namespace Astral {
         AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
         Ref<Material> materialRef = CreateRef<Material>();
 
-        LOG("Material: " << material->GetName().C_Str());
+        AE_LOG("Material: " << material->GetName().C_Str());
 
         Ref<Texture> baseColor;
         Ref<Texture> normals;
@@ -934,17 +934,17 @@ namespace Astral {
         }
         else
         {
-            LOG("No base color. Trying diffuse...")
+            AE_LOG("No base color. Trying diffuse...")
             material->GetTexture(aiTextureType_DIFFUSE, 0, &baseColorFilePath);
 
             if (baseColorFilePath.length == 0)
             {
-                LOG("Missing base color!")
+                AE_LOG("Missing base color!")
                 baseColor = m_DefaultMaterialBaseColor;
             }
             else
             {
-                LOG("Diffuse found! Using diffuse instead of base color map!")
+                AE_LOG("Diffuse found! Using diffuse instead of base color map!")
                 baseColor = GetTexture(baseColorFilePath, externalTextures, sceneDir);
                 if (!baseColor) { baseColor = m_DefaultMaterialBaseColor;  }
             }
@@ -961,7 +961,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No normal map! Using vertex normals instead!")
+            AE_LOG("No normal map! Using vertex normals instead!")
             normals = m_DefaultMaterialNormals;
             materialRef->HasNormalMap = false;
         }
@@ -976,7 +976,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No AO-Roughness-Metallic map! Using default!")
+            AE_LOG("No AO-Roughness-Metallic map! Using default!")
             aoRoughnessMetallicPacked = m_DefaultMaterialRoughness;
         }
 
@@ -990,7 +990,7 @@ namespace Astral {
         }
         else
         {
-            LOG("No emission map! Using default!")
+            AE_LOG("No emission map! Using default!")
             emission = m_DefaultMaterialEmission;
         }
 

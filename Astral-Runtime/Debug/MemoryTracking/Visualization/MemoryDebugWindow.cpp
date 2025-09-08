@@ -28,7 +28,7 @@ namespace Astral {
 
     bool MemoryDebugWindow::LoadMemoryProfile(const std::filesystem::path& path)
     {
-        LOG("MemoryDebugWindow: Loading Memory Profile...")
+        AE_LOG("MemoryDebugWindow: Loading Memory Profile...")
         m_SceneMetricsImporter.ImportMemoryProfile(path);
         if (m_SceneMetricsImporter.HasFileLoaded())
         {

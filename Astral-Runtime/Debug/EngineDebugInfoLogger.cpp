@@ -15,7 +15,7 @@ namespace Astral {
     void LogEngineDebugInfo()
     {
         PROFILE_SCOPE("LogEngineDebugInfo");
-        LOG("\n      Engine Info/Tools/Libraries:");
+        AE_LOG("\n      Engine Info/Tools/Libraries:");
 
         /** Outputs the build configuration of the engine. */
         #ifdef DEBUG_BUILD
@@ -36,7 +36,7 @@ namespace Astral {
         #elif __GNUC__
         LOG("Compiler: GNU GCC " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__);
         #elif _MSC_VER
-        LOG("Compiler: MSVC " << _MSC_VER);
+        AE_LOG("Compiler: MSVC " << _MSC_VER);
         #elif __INTEL_COMPILER
             LOG("Compiler: Intel " << __INTEL_COMPILER);
         #else
@@ -51,7 +51,7 @@ namespace Astral {
                                                        << (_LIBCPP_VERSION % 1000) / 10 << '.'
                                                        << _LIBCPP_VERSION % 10) ;
         #elif _MSC_VER
-            LOG("Standard Library: Microsoft STL " << _MSC_VER);
+            AE_LOG("Standard Library: Microsoft STL " << _MSC_VER);
         #else
             LOG("Standard Library: Unknown");
         #endif
@@ -60,13 +60,13 @@ namespace Astral {
         Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
         Astral::RenderingContext& renderingContext = Astral::Engine::Get().GetRendererManager().GetContext();
 
-        LOG("Window: " << window.GetVersion());
-        LOG("Rendering API: " << renderingContext.GetRenderingAPI());
-        LOG("Graphics Vendor: " << renderingContext.GetGPUVendor());
-        LOG("Graphics Processor: " << renderingContext.GetGraphicsProcessorName());
+        AE_LOG("Window: " << window.GetVersion());
+        AE_LOG("Rendering API: " << renderingContext.GetRenderingAPI());
+        AE_LOG("Graphics Vendor: " << renderingContext.GetGPUVendor());
+        AE_LOG("Graphics Processor: " << renderingContext.GetGraphicsProcessorName());
 
 
-        LOG(""); // Creates an extra new line
+        AE_LOG(""); // Creates an extra new line
     }
 
 }

@@ -166,7 +166,7 @@ namespace Astral {
             }
             else if (result == NFD_CANCEL)
             {
-                LOG("Save File Dialog Canceled");
+                AE_LOG("Save File Dialog Canceled");
             }
             else if (result == NFD_ERROR)
             {

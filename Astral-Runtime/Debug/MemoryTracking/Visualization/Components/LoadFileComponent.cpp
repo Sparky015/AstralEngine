@@ -60,7 +60,7 @@ namespace Astral {
             {
                 static MemoryDebugWindow memoryDebugWindow;
 
-                LOG(filePath);
+                AE_LOG(filePath);
                 memoryDebugWindow.CloseMemoryDebugWindow();
                 memoryDebugWindow.LoadMemoryProfile(filePath);
             }

@@ -293,14 +293,14 @@ namespace Astral {
         void* pUserData)
     {
         TRACE("Vulkan Debug Message:");
-        LOG(pCallbackData->pMessage);
-        LOG("   Severity: " << GetDebugMessageSeverity(severity));
-        LOG("   Type: " << GetDebugMessageType(type));
-        LOG("   Objects:");
+        AE_LOG(pCallbackData->pMessage);
+        AE_LOG("   Severity: " << GetDebugMessageSeverity(severity));
+        AE_LOG("   Type: " << GetDebugMessageType(type));
+        AE_LOG("   Objects:");
 
         for (uint32 i = 0; i < pCallbackData->objectCount; i++)
         {
-            LOG("     " << pCallbackData->pObjects[i].objectHandle);
+            AE_LOG("     " << pCallbackData->pObjects[i].objectHandle);
         }
 
         return VK_FALSE;

@@ -45,7 +45,7 @@ namespace Astral {
         else if (result == NFD_CANCEL)
         {
             outFilePath = "";
-            LOG("Open File Dialog Canceled")
+            AE_LOG("Open File Dialog Canceled")
         }
         else if (result == NFD_ERROR)
         {
@@ -79,7 +79,7 @@ namespace Astral {
         else if (result == NFD_CANCEL)
         {
             outFilePath = "";
-            LOG("Open File Dialog Canceled")
+            AE_LOG("Open File Dialog Canceled")
         }
         else if (result == NFD_ERROR)
         {

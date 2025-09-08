@@ -5,7 +5,7 @@
 
 int main()
 {
-    LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
+    AE_LOG("\n---   Entering main()    ---     (static and global object initialization above)\n");
 
 
     {
@@ -16,6 +16,6 @@ int main()
     }
 
 
-    LOG("\n---   Exiting main() ---     (static and global object destruction below)\n");
+    AE_LOG("\n---   Exiting main() ---     (static and global object destruction below)\n");
     return 0;
 }

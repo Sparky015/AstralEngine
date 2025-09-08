@@ -23,7 +23,7 @@ namespace Astral {
         ASSERT(result == VK_SUCCESS, "vkEnumeratePhysicalDevices failed! (Getting number of devices) Error: " << result);
 
         m_Devices.resize(numberOfDevices);
-        LOG("Vulkan Init: Number of Physical Devices: " << numberOfDevices);
+        AE_LOG("Vulkan Init: Number of Physical Devices: " << numberOfDevices);
 
         std::vector<VkPhysicalDevice> deviceHandles;
         deviceHandles.resize(numberOfDevices);
@@ -38,17 +38,17 @@ namespace Astral {
 
             vkGetPhysicalDeviceProperties(physicalDevice, &m_Devices[i].deviceProperties);
 
-            LOG("Device " << i << " name: " << m_Devices[i].deviceProperties.deviceName);
+            AE_LOG("Device " << i << " name: " << m_Devices[i].deviceProperties.deviceName);
 
             uint32 apiVersion = m_Devices[i].deviceProperties.apiVersion;
-            LOG("Supported API Version: " << VK_API_VERSION_MAJOR(apiVersion) << "."
+            AE_LOG("Supported API Version: " << VK_API_VERSION_MAJOR(apiVersion) << "."
                                           << VK_API_VERSION_MINOR(apiVersion) << "."
                                           << VK_API_VERSION_PATCH(apiVersion));
 
             uint32 numberOfQueueFamilies = 0;
             vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &numberOfQueueFamilies, nullptr);
 
-            LOG("Device " << i << " Number of Queue Families: " << numberOfQueueFamilies);
+            AE_LOG("Device " << i << " Number of Queue Families: " << numberOfQueueFamilies);
 
             m_Devices[i].queueFamilyProperties.resize(numberOfQueueFamilies);
             m_Devices[i].supportsPresent.resize(numberOfQueueFamilies);
@@ -59,10 +59,10 @@ namespace Astral {
             {
                 const VkQueueFamilyProperties& queueFamilyProperties = m_Devices[i].queueFamilyProperties[j];
 
-                LOG("   Queue Family " << j << " has " << queueFamilyProperties.queueCount << " queues")
+                AE_LOG("   Queue Family " << j << " has " << queueFamilyProperties.queueCount << " queues")
 
                 VkQueueFlags queueFlags = queueFamilyProperties.queueFlags;
-                LOG("Queue Flags: "
+                AE_LOG("Queue Flags: "
                     << "\nGFX: " << ((queueFlags & VK_QUEUE_GRAPHICS_BIT) ? "Yes" : "No")
                     << "\nCompute: " << ((queueFlags & VK_QUEUE_COMPUTE_BIT) ? "Yes" : "No")
                     << "\nTransfer: " << ((queueFlags & VK_QUEUE_TRANSFER_BIT) ? "Yes" : "No")
@@ -85,7 +85,7 @@ namespace Astral {
             for (uint32 j = 0; j < numberOfSurfaceFormats; j++)
             {
                 const VkSurfaceFormatKHR& surfaceFormat = m_Devices[i].surfaceFormats[j];
-                LOG("   Format " << surfaceFormat.format << " Color Space: " << surfaceFormat.colorSpace)
+                AE_LOG("   Format " << surfaceFormat.format << " Color Space: " << surfaceFormat.colorSpace)
             }
 
             result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &m_Devices[i].surfaceCapabilities);
@@ -102,10 +102,10 @@ namespace Astral {
 
             vkGetPhysicalDeviceMemoryProperties(physicalDevice, &m_Devices[i].memoryProperties);
 
-            LOG("Number of Memory Types: ")
+            AE_LOG("Number of Memory Types: ")
             for (uint32 j = 0; j < m_Devices[i].memoryProperties.memoryTypeCount; j++)
             {
-                LOG(j << ": flags " << m_Devices[i].memoryProperties.memoryTypes[j].propertyFlags
+                AE_LOG(j << ": flags " << m_Devices[i].memoryProperties.memoryTypes[j].propertyFlags
                       << ": heap " << m_Devices[i].memoryProperties.memoryTypes[j].heapIndex)
             }
 
@@ -128,7 +128,7 @@ namespace Astral {
                 {
                     m_SelectedDeviceIndex = deviceIndex;
                     m_QueueFamilyIndex = queueFamilyIndex;
-                    LOG("Vulkan: Using device " << deviceIndex << " and queue family " << queueFamilyIndex)
+                    AE_LOG("Vulkan: Using device " << deviceIndex << " and queue family " << queueFamilyIndex)
                     return deviceIndex;
                 }
             }

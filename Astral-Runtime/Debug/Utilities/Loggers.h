@@ -11,7 +11,7 @@
 #define TRACE(message) { std::ostringstream ss; ss << message; Astral::Macros::macro_TRACE(ss); }
 
 /** A simple log to console that can take a stream and standardizes which side of the string the new line character is on. */
-#define LOG(message) { std::ostringstream ss; ss << message; Astral::Macros::macro_LOG(ss); }
+#define AE_LOG(message) { std::ostringstream ss; ss << message; Astral::Macros::macro_LOG(ss); }
 
 /** Logs warnings (that can be a stream) to the console with a yellow color. */
 #define AE_WARN(message) { std::ostringstream ss;  ss << message; Astral::Macros::macro_WARN(ss); }

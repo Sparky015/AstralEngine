@@ -34,7 +34,7 @@ namespace Astral {
 #ifndef ASTRAL_DISABLE_MEMORY_TRACKING
         std::unique_lock lock(m_Mutex);
         bool successFlag = m_SceneMetricsExporter.BeginScene(sceneName);
-        if (!successFlag) { LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
+        if (!successFlag) { AE_LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
 #endif
     }
 
