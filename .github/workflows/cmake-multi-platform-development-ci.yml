@@ -71,7 +71,6 @@ jobs:
       if: steps.cache-cmake.outputs.cache-hit != 'true'
       run: >
         cmake -B ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}
-        -G Ninja
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_CXX_STANDARD=20
         -S ${{ github.workspace }}
