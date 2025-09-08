@@ -27,7 +27,7 @@ namespace Astral {
         {
             ImGui::Text("Allocation Data:");
             ImGui::Spacing();
-            ImGui::Text("Address: %lx", storage.GetAllocationDataOverTime()[selectedPointIndex].pointer);
+            ImGui::Text("Address: 0x%Ix", storage.GetAllocationDataOverTime()[selectedPointIndex].pointer);
             ImGui::Text("Size: %zu", storage.GetAllocationDataOverTime()[selectedPointIndex].size);
             ImGui::Text("Region: %s", MemoryRegionToString(storage.GetAllocationDataOverTime()[selectedPointIndex].region));
             ImGui::Text("Allocator: %s", AllocatorTypeToString(storage.GetAllocationDataOverTime()[selectedPointIndex].allocatorType));
