@@ -43,6 +43,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        submodules: 'recursive'
 
     - name: Cache Submodules
       uses: actions/cache@v4
@@ -53,8 +54,6 @@ jobs:
           # Add each submodule path on a new line here
         key: ${{ runner.os }}-submodules-${{ hashFiles('.gitmodules', 'ThirdPartyLibraries/**') }}
 
-    - name: Update Submodules
-      run: git submodule update --init --recursive
 
     - name: Restore File Modification Times
       uses: chetan/git-restore-mtime-action@v2
