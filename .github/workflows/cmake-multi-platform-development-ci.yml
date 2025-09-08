@@ -65,8 +65,6 @@ jobs:
           cache: true
           stripdown: true
 
-    - name: Install Ninja
-      uses: turtlesec-no/get-ninja@main
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
