@@ -49,8 +49,7 @@ jobs:
       id: cache-submodules
       with:
         path: |
-          ThirdPartyLibraries/glfw
-          ThirdPartyLibraries/glm
+          ThirdPartyLibraries
           # Add each submodule path on a new line here
         key: ${{ runner.os }}-submodules-${{ hashFiles('.gitmodules', 'ThirdPartyLibraries/**') }}
 
