@@ -119,13 +119,12 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 {
     vec4 fragPositionLightSpace = u_PushConstants.lightSpaceMatrix * vec4(worldPosition, 1.0f);
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5; // Transform into UV range for sampling shadow map
+    projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
     float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
     float currentDepth = projCoords.z;
 
     float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
-//    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
@@ -176,7 +175,7 @@ void main()
         // Vectors
         vec3 lightVector;
         if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
-        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(lightPosition); } // Light position is direction for directional lights
+        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(-lightPosition); } // Light position is direction for directional lights
 
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - worldPosition);
