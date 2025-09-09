@@ -4,6 +4,8 @@
 * @date 7/1/2025
 */
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
 #include "SceneRendererImpl.h"
 
 #include "RHI/RendererAPI.h"
@@ -358,7 +360,7 @@ namespace Astral {
             .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
         };
 
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(1024), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
         shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
@@ -1092,6 +1094,35 @@ namespace Astral {
     }
 
 
+
+    static std::vector<Vec4> GetFrustumCornersWorldSpace(const Mat4& projectionView)
+    {
+        const Mat4 cameraInverse = glm::inverse(projectionView);
+
+        std::vector<Vec4> frustumCorners;
+
+        // Loops to get each corner of the frustum
+        for (unsigned int x = 0; x < 2; ++x)
+        {
+            for (unsigned int y = 0; y < 2; ++y)
+            {
+                for (unsigned int z = 0; z < 2; ++z)
+                {
+                    const Vec4 point =
+                        cameraInverse * Vec4(
+                            2.0f * x - 1.0f,
+                            2.0f * y - 1.0f,
+                            2.0f * z - 1.0f,
+                            1.0f);
+                    frustumCorners.push_back(point / point.w);
+                }
+            }
+        }
+
+        return frustumCorners;
+    }
+
+
     void SceneRendererImpl::CascadedShadowMapsPass()
     {
         if (!m_RendererSettings.IsShadowsOn) { return; }
@@ -1110,19 +1141,67 @@ namespace Astral {
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        float nearPlane = -50.0f;
-        float farPlane = 50.0f;
-        float size = 20;
 
-        Mat4 lightProjection = glm::ortho(-size, size, -size, size, nearPlane, farPlane);
+        std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(m_SceneViewProjection);
+
+        // Find center of frustum
+
+        Vec3 center = Vec3(0.0f);
+        for (auto& cornerPosition : frustumCorners)
+        {
+            center += Vec3(cornerPosition);
+        }
+        center /= frustumCorners.size();
+
+        const Vec3 lightDir = glm::normalize(m_FirstDirectionalLightInScene.Position);
+        Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
+
+        // Check if the light direction is parallel to the default up vector
+        if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
+        {
+            up = Vec3(0.0f, 0.0f, 1.0f);
+        }
+
+        Mat4 lightView = glm::lookAt(center - m_FirstDirectionalLightInScene.Position,
+                           center,
+                           up);
 
 
-        Mat4 lightView = glm::lookAt(m_FirstDirectionalLightInScene.Position * 5.0f,
-                                          glm::vec3( 0.0f, 0.0f,  0.0f),
-                                          glm::vec3( 0.0f, 1.0f,  0.0f));
+        // Get the min and max positions of the frustum in world space
+        float minX = std::numeric_limits<float>::max();
+        float maxX = std::numeric_limits<float>::lowest();
+        float minY = std::numeric_limits<float>::max();
+        float maxY = std::numeric_limits<float>::lowest();
+        float minZ = std::numeric_limits<float>::max();
+        float maxZ = std::numeric_limits<float>::lowest();
+        for (const auto& cornerPosition : frustumCorners)
+        {
+            const auto trf = lightView * cornerPosition;
+            minX = std::min(minX, trf.x);
+            maxX = std::max(maxX, trf.x);
+            minY = std::min(minY, trf.y);
+            maxY = std::max(maxY, trf.y);
+            minZ = std::min(minZ, trf.z);
+            maxZ = std::max(maxZ, trf.z);
+        }
+
+
+        const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+
+        Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
+        AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
+               "\nMin X: " << minX <<
+               "\nMax X: " << maxX <<
+               "\nMin Y: " << minY <<
+               "\nMax Y: " << maxY <<
+               "\nMin Z: " << minZ <<
+               "\nMax Z: " << maxZ <<
+               "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
+               "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
+               "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
+
 
         m_LightSpaceMatrix = lightProjection * lightView;
-        m_LightSpaceMatrix[1][1] *= -1; // Flip the Y axis for Vulkan
 
 
         CascadedShadowMapsPushConstantData cascadedShadowMapsPushConstantData{};
@@ -1143,7 +1222,7 @@ namespace Astral {
 
             PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0);
             commandBuffer->BindPipeline(shadowMapPipeline);
-            commandBuffer->SetViewportAndScissor(Vec2(1024));
+            commandBuffer->SetViewportAndScissor(Vec2(4096));
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
 
