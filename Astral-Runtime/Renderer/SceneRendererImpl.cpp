@@ -83,6 +83,7 @@ namespace Astral {
         rendererSettings.IsVSyncEnabled = true;
         rendererSettings.IsFrustumCullingEnabled = true;
         rendererSettings.IsShadowsOn = true;
+        rendererSettings.NumShadowCascades = 3;
 
 
         SetRendererSettings(rendererSettings);
@@ -256,6 +257,20 @@ namespace Astral {
             if (m_RendererSettings.RendererType == RendererType::DEFERRED)
             {
                 BuildRenderGraphForDeferred();
+            }
+        }
+
+        if (m_RendererSettings.NumShadowCascades != rendererSettings.NumShadowCascades)
+        {
+            m_RendererSettings.NumShadowCascades = rendererSettings.NumShadowCascades;
+
+            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
+            {
+                BuildRenderGraphForDeferred();
+            }
+            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
+            {
+                BuildRenderGraphForForward();
             }
         }
 
