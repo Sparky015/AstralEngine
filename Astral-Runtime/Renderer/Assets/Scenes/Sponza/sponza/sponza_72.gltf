@@ -1,7 +1,7 @@
 {
     "asset": {
         "version": "2.0",
-        "generator": "Open Asset Import Library (assimp v6.0.ad6e8e21)"
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
     },
     "extensionsUsed": [
         "KHR_materials_specular",
@@ -51,14 +51,14 @@
             "count": 98,
             "type": "VEC3",
             "max": [
-                0.000007015218216110952,
-                0.03638127073645592,
+                0.000007015217761363601,
+                0.03636416047811508,
                 1.0
             ],
             "min": [
                 -1.0,
-                -0.0022641855757683516,
-                -0.6882073879241943
+                -0.0022622982505708933,
+                -0.6882073283195496
             ]
         },
         {
