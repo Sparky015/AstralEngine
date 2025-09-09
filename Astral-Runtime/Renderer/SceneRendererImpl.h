@@ -84,6 +84,10 @@ namespace Astral {
 
             Ref<EnvironmentMap> EnvironmentMap;
             DescriptorSetHandle EnvironmentMapDescriptorSet;
+
+            BufferHandle ForwardShadowLightMatrices;
+            DescriptorSetHandle ForwardShadowLightMatricesDescriptorSet;
+
             bool IsIrradianceMapCalculationNeeded;
         };
 

@@ -35,10 +35,16 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
-layout (set = 2, binding = 0) uniform sampler2D u_BaseColor;
-layout (set = 2, binding = 1) uniform sampler2D u_AO_Roughness_Metallic;
-layout (set = 2, binding = 2) uniform sampler2D u_Emission;
-layout (set = 2, binding = 3) uniform sampler2D u_Normals;
+layout(set = 2, binding = 0) uniform sampler2D u_DirectionalLightShadows;
+
+layout (set = 3, binding = 0) uniform LightMatrices {
+    mat4 lightMatrices;
+} u_LightMatrices;
+
+layout (set = 4, binding = 0) uniform sampler2D u_BaseColor;
+layout (set = 4, binding = 1) uniform sampler2D u_AO_Roughness_Metallic;
+layout (set = 4, binding = 2) uniform sampler2D u_Emission;
+layout (set = 4, binding = 3) uniform sampler2D u_Normals;
 
 layout (push_constant) uniform ModelData {
     mat4 transform;
@@ -90,6 +96,33 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
+{
+    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices * vec4(worldPosition, 1.0f);
+    vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
+    projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
+
+    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
+    float currentDepth = projCoords.z;
+
+    float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            vec2 offset = vec2(float(x), float(y)) * texelSize;
+            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0; // Average of 9 samples
+
+    return shadow;
+}
 
 void main()
 {
@@ -150,7 +183,7 @@ void main()
 
         vec3 lightVector;
         if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
-        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(lightPosition); } // Light position is direction for directional lights
+        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(-lightPosition); } // Light position is direction for directional lights
 
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - v_WorldPosition);
@@ -174,7 +207,9 @@ void main()
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
         vec3 BRDF = diffuse * lambert + cookTorrance;
-        vec3 outgoingLight = BRDF * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
+        float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
+
+        vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
         finalLight += outgoingLight;
     }
 

@@ -493,6 +493,19 @@ namespace Astral {
         depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
+        AttachmentDescription shadowMapMSAABufferDescription = {
+            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
+        };
+
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        shadowMapPass.CreateDepthStencilAttachment(shadowMapMSAABufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
 
         AttachmentDescription lightingMSAATextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
@@ -507,8 +520,10 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ ForwardLightingPass(); });
+        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Shadow_Map_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.CreateColorAttachment(lightingMSAATextureDescription, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        lightingPass.AddDependency(&shadowMapPass);
 
         AttachmentDescription lightingResolveTextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
@@ -557,6 +572,7 @@ namespace Astral {
 
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(depthPrePass);
+        m_RenderGraph.AddPass(shadowMapPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddOutputPass(tonemappingPass);
@@ -695,6 +711,12 @@ namespace Astral {
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
             context.IsIrradianceMapCalculationNeeded = true;
+
+            context.ForwardShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
+            context.ForwardShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
+            context.ForwardShadowLightMatricesDescriptorSet->BeginBuildingSet();
+            context.ForwardShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ForwardShadowLightMatrices, ShaderStage::FRAGMENT);
+            context.ForwardShadowLightMatricesDescriptorSet->EndBuildingSet();
         }
 
 
@@ -933,7 +955,9 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ForwardShadowLightMatricesDescriptorSet});
+
+        frameContext.ForwardShadowLightMatrices->CopyDataToBuffer(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -961,10 +985,13 @@ namespace Astral {
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
-            commandBuffer->BindDescriptorSet(material.DescriptorSet, 2);
+            commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
+            commandBuffer->BindDescriptorSet(frameContext.ForwardShadowLightMatricesDescriptorSet, 3);
+            commandBuffer->BindDescriptorSet(material.DescriptorSet, 4);
 
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+
 
             ForwardLightingPassPushData pushConstantData = {
                 .ModelMatrix = frameContext.Transforms[i],
@@ -1204,16 +1231,16 @@ namespace Astral {
         const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 
         Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
-        AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
-               "\nMin X: " << minX <<
-               "\nMax X: " << maxX <<
-               "\nMin Y: " << minY <<
-               "\nMax Y: " << maxY <<
-               "\nMin Z: " << minZ <<
-               "\nMax Z: " << maxZ <<
-               "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
-               "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
-               "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
+        // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
+        //        "\nMin X: " << minX <<
+        //        "\nMax X: " << maxX <<
+        //        "\nMin Y: " << minY <<
+        //        "\nMax Y: " << maxY <<
+        //        "\nMin Z: " << minZ <<
+        //        "\nMax Z: " << maxZ <<
+        //        "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
+        //        "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
+        //        "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
 
 
         m_LightSpaceMatrix = lightProjection * lightView;
@@ -1224,7 +1251,7 @@ namespace Astral {
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            Mesh& mesh = frameContext.Meshes[i];
+            Mesh mesh = frameContext.Meshes[i];
             Material& material = frameContext.Materials[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
