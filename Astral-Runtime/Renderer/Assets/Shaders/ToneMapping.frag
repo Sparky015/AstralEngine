@@ -31,39 +31,39 @@ vec3 toneMapACES(vec3 pixelColor)
     return clamp(pixelColor, 0.0, 1.0);
 }
 
-void main()
-{
-    vec3 scenePixelData = texture(u_SceneRender, v_TextureCoord).rgb;
-    scenePixelData *= exp2(u_PushConstantData.exposure);
-
-    vec3 toneMappedData = toneMapACES(scenePixelData);
-
-    toneMappedData = pow(toneMappedData, vec3(1.0f / 2.2f));
-
-    color = vec4(toneMappedData, 1.0);
-}
-
-
 //void main()
 //{
-//    vec3 renderedColors = texture(u_SceneRender, v_TextureCoord).rgb;
-//    renderedColors *= exp2(u_PushConstantData.exposure);
+//    vec3 scenePixelData = texture(u_SceneRender, v_TextureCoord).rgb;
+//    scenePixelData *= exp2(u_PushConstantData.exposure);
 //
-//    renderedColors = clamp(renderedColors, u_PushConstantData.shaperInputMin, u_PushConstantData.shaperInputMax); // Clamp to the max float value to avoid INF values going through the fit
-//    float shaperRange = u_PushConstantData.shaperInputMax - u_PushConstantData.shaperInputMin;
-//    vec3 shaperCoords = (renderedColors - u_PushConstantData.shaperInputMin) / shaperRange;
+//    vec3 toneMappedData = toneMapACES(scenePixelData);
 //
-//    shaperCoords = clamp(shaperCoords, vec3(0), vec3(1));
-//
-//    vec3 shapedCoords = vec3(
-//        texture(u_ToneMapShaper, shaperCoords.r).r,
-//        texture(u_ToneMapShaper, shaperCoords.g).r,
-//        texture(u_ToneMapShaper, shaperCoords.b).r
-//    );
-//
-//    shapedCoords = clamp(shapedCoords, 0, 1);
-//
-//    vec3 toneMappedData = texture(u_ToneMapLut, shapedCoords).rgb;
+//    toneMappedData = pow(toneMappedData, vec3(1.0f / 2.2f));
 //
 //    color = vec4(toneMappedData, 1.0);
 //}
+
+
+void main()
+{
+    vec3 renderedColors = texture(u_SceneRender, v_TextureCoord).rgb;
+    renderedColors *= exp2(u_PushConstantData.exposure);
+
+    renderedColors = clamp(renderedColors, u_PushConstantData.shaperInputMin, u_PushConstantData.shaperInputMax); // Clamp to the max float value to avoid INF values going through the fit
+    float shaperRange = u_PushConstantData.shaperInputMax - u_PushConstantData.shaperInputMin;
+    vec3 shaperCoords = (renderedColors - u_PushConstantData.shaperInputMin) / shaperRange;
+
+    shaperCoords = clamp(shaperCoords, vec3(0), vec3(1));
+
+    vec3 shapedCoords = vec3(
+        texture(u_ToneMapShaper, shaperCoords.r).r,
+        texture(u_ToneMapShaper, shaperCoords.g).r,
+        texture(u_ToneMapShaper, shaperCoords.b).r
+    );
+
+    shapedCoords = clamp(shapedCoords, 0, 1);
+
+    vec3 toneMappedData = texture(u_ToneMapLut, shapedCoords).rgb;
+
+    color = vec4(toneMappedData, 1.0);
+}
