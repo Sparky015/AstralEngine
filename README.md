@@ -163,7 +163,7 @@ Requirements include:
 - 64-bit CPU
 
 Note: The project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
-      The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script to see if you have the libraries needed present and the correct Vulkan SDK version installed.
+      The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
 
 #### Windows
 
