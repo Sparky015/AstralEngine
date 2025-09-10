@@ -160,7 +160,10 @@ void main()
 
     float metallic = texture(u_MetallicInput, v_TextureCoord).r;
     float roughness = texture(u_RoughnessInput, v_TextureCoord).r;
+
     vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
+    emission = ConvertSRGBPimariesToAP1Primaries(emission);
+
     vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
     normal = normal * 2.0 - 1.0;
     normal = normalize(normal);
@@ -240,6 +243,8 @@ void main()
     kD *= 1.0 - metallic;
 
     vec3 irradiance = texture(u_Irradiance, normal).rgb;
+    irradiance = ConvertSRGBPimariesToAP1Primaries(irradiance);
+
     vec3 diffuse = irradiance * baseColor;
 
     vec3 ambient = u_SceneData.ambientLightConstant * (kD * diffuse + specular);
