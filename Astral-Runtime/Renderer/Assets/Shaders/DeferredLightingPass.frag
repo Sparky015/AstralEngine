@@ -144,9 +144,20 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 }
 
 
+vec3 ConvertSRGBPimariesToAP1Primaries(vec3 srgbPrimaries)
+{
+    const mat3 srgbPrimariesToAP1Primaries = mat3( 0.613132422390542, 0.070124380833917, 0.020587657528185,
+    0.339538015799666, 0.916394011313573, 0.109574571610682,
+    0.047416696048269, 0.013451523958235, 0.869785404035327 );
+    return srgbPrimariesToAP1Primaries * srgbPrimaries;
+}
+
+
 void main()
 {
     vec3 baseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
+    baseColor = ConvertSRGBPimariesToAP1Primaries(baseColor);
+
     float metallic = texture(u_MetallicInput, v_TextureCoord).r;
     float roughness = texture(u_RoughnessInput, v_TextureCoord).r;
     vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
@@ -170,6 +181,8 @@ void main()
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
+        lightColor = ConvertSRGBPimariesToAP1Primaries(lightColor);
+
         uint lightType = u_SceneLights.lights[i].lightType;
 
         // Vectors
@@ -212,6 +225,8 @@ void main()
     vec3 reflectionVector = reflect(-viewVector, normal);
     float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
     vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
+    prefilteredColor = ConvertSRGBPimariesToAP1Primaries(prefilteredColor);
+
     vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
     viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
     clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);

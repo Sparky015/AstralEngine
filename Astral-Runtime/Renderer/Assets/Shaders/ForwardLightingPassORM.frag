@@ -186,6 +186,8 @@ void main()
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
+        lightColor = ConvertSRGBPimariesToAP1Primaries(lightColor);
+
         uint lightType = u_SceneLights.lights[i].lightType;
 
         // Vectors
@@ -231,6 +233,8 @@ void main()
     vec3 reflectionVector = reflect(-viewVector, normal);
     float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
     vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
+    prefilteredColor = ConvertSRGBPimariesToAP1Primaries(prefilteredColor);
+
     vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
     viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
     clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);
