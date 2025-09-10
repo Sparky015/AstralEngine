@@ -64,6 +64,15 @@ and memory efficiency. Currently, the asset loads are single threaded, but in th
 multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a 
 smooth UI/UX.
 
+* Academy Color Encoding System (ACES) Color Workflow
+
+ACES 2.0 has been implemented for high quality color management, resulting in more vibrant and accurate colors. 
+All rendering is done in the ACEScg space with the ACES filmic look being applied. For the input display transform, all 
+color inputs being converted from sRGB to AP1 primaries to place them in the ACEScg space. After rendering is done, 
+I use a OCIO baked lut that contains the Reference Rendering Transform and the Output Display Transform which converts
+the final colors from the ACEScg space to the sRGB space with gamma applied while also applying tone mapping for standard
+dynamic range displays.
+
 ###
 #### Custom Allocators (Experimental Proof of Concept)
 

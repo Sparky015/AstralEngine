@@ -46,6 +46,8 @@ namespace Astral {
         RendererType RendererType;
         bool IsVSyncEnabled;
         bool IsFrustumCullingEnabled;
+        bool IsShadowsOn;
+        int32 NumShadowCascades;
         RendererDebugView DebugView;
     };
 

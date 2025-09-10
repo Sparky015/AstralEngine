@@ -35,11 +35,17 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
-layout (set = 2, binding = 0) uniform sampler2D u_BaseColor;
-layout (set = 2, binding = 1) uniform sampler2D u_Metallic;
-layout (set = 2, binding = 2) uniform sampler2D u_Roughness;
-layout (set = 2, binding = 3) uniform sampler2D u_Emission;
-layout (set = 2, binding = 4) uniform sampler2D u_Normals;
+layout(set = 2, binding = 0) uniform sampler2D u_DirectionalLightShadows;
+
+layout (set = 3, binding = 0) uniform LightMatrices {
+    mat4 lightMatrices;
+} u_LightMatrices;
+
+layout (set = 4, binding = 0) uniform sampler2D u_BaseColor;
+layout (set = 4, binding = 1) uniform sampler2D u_Metallic;
+layout (set = 4, binding = 2) uniform sampler2D u_Roughness;
+layout (set = 4, binding = 3) uniform sampler2D u_Emission;
+layout (set = 4, binding = 4) uniform sampler2D u_Normals;
 
 layout (push_constant) uniform ModelData {
     mat4 transform;
@@ -91,12 +97,53 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
+{
+    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices * vec4(worldPosition, 1.0f);
+    vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
+    projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
+
+    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
+    float currentDepth = projCoords.z;
+
+    float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            vec2 offset = vec2(float(x), float(y)) * texelSize;
+            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0; // Average of 9 samples
+
+    return shadow;
+}
+
+vec3 ConvertSRGBPimariesToAP1Primaries(vec3 srgbPrimaries)
+{
+    const mat3 srgbPrimariesToAP1Primaries = mat3( 0.613132422390542, 0.070124380833917, 0.020587657528185,
+    0.339538015799666, 0.916394011313573, 0.109574571610682,
+    0.047416696048269, 0.013451523958235, 0.869785404035327 );
+    return srgbPrimariesToAP1Primaries * srgbPrimaries;
+}
+
 void main()
 {
     vec3 baseColor = texture(u_BaseColor, v_TextureCoord).rgb;
+    baseColor = ConvertSRGBPimariesToAP1Primaries(baseColor);
+
     vec3 metallic = texture(u_Metallic, v_TextureCoord).rgb;
     float roughness = texture(u_Roughness, v_TextureCoord).r;
+
     vec3 emission = texture(u_Emission, v_TextureCoord).rgb;
+    emission = ConvertSRGBPimariesToAP1Primaries(emission);
+
     vec3 tangentSpaceNormal = texture(u_Normals, v_TextureCoord).rgb;
 
     vec3 normal = v_Normals;
@@ -140,6 +187,8 @@ void main()
     {
         vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
         vec3 lightColor = u_SceneLights.lights[i].lightColor;
+        lightColor = ConvertSRGBPimariesToAP1Primaries(lightColor);
+
         uint lightType = u_SceneLights.lights[i].lightType;
 
         // Vectors
@@ -148,7 +197,7 @@ void main()
 
         vec3 lightVector;
         if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
-        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(lightPosition); } // Light position is direction for directional lights
+        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(-lightPosition); } // Light position is direction for directional lights
 
         vec3 halfwayVector = normalize(viewVector + lightVector);
         float lightDistance = length(lightPosition - v_WorldPosition);
@@ -172,7 +221,9 @@ void main()
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
         vec3 BRDF = diffuse * lambert + cookTorrance;
-        vec3 outgoingLight = BRDF * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
+        float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
+
+        vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
         finalLight += outgoingLight;
     }
 
@@ -183,6 +234,8 @@ void main()
     vec3 reflectionVector = reflect(-viewVector, normal);
     float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
     vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
+    prefilteredColor = ConvertSRGBPimariesToAP1Primaries(prefilteredColor);
+
     vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
     viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
     clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);
@@ -196,6 +249,8 @@ void main()
     kD *= 1.0 - metallic;
 
     vec3 irradiance = texture(u_Irradiance, normal).rgb;
+    irradiance = ConvertSRGBPimariesToAP1Primaries(irradiance);
+
     vec3 diffuse = irradiance * baseColor;
 
     vec3 ambient = u_SceneData.ambientLightConstant * (kD * diffuse + specular);

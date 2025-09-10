@@ -146,6 +146,15 @@ namespace Astral {
             ImGui::EndCombo();
         }
 
+
+        ImGui::Text("Shadows: ");
+        ImGui::SameLine();
+        ImGui::Checkbox("##ShadowsToggle", &rendererSettings.IsShadowsOn);
+
+        ImGui::Text("Shadow Cascades: ");
+        ImGui::SameLine();
+        ImGui::InputInt("##ShadowCascadesInput", &rendererSettings.NumShadowCascades);
+
         SceneRenderer::SetRendererSettings(rendererSettings);
     }
 

@@ -139,8 +139,8 @@ namespace Astral {
 
                 Vec3 rotationInRadians = glm::radians(transformComponent.rotation);
                 Mat4 rotationMatrix = glm::eulerAngleXYZ(rotationInRadians.x, rotationInRadians.y, rotationInRadians.z);
-                Vec4 directionVec4 = Vec4(directionalLightComponent.Direction, 1.0f);
-                light.Position = glm::normalize(directionVec4 * rotationMatrix);
+                Vec4 directionVec4 = Vec4(directionalLightComponent.Direction, 0.0f);
+                light.Position = glm::normalize(rotationMatrix * directionVec4);
 
                 light.LightColor = directionalLightComponent.LightColor * directionalLightComponent.Intensity;
                 light.LightType = LightType::DIRECTIONAL;

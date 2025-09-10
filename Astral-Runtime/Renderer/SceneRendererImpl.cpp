@@ -4,6 +4,8 @@
 * @date 7/1/2025
 */
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
 #include "SceneRendererImpl.h"
 
 #include "RHI/RendererAPI.h"
@@ -39,30 +41,11 @@ namespace Astral {
         BuildImGuiEditorRenderPass();
 
 
-        AttachmentDescription irradianceAttachmentDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = UVec4(0, 0, 0, 1.0f)
-        };
-
-        m_IrradianceCalcPass = RendererAPI::GetDevice().CreateRenderPass();
-        m_IrradianceCalcPass->BeginBuildingRenderPass();
-        m_IrradianceCalcPass->BeginBuildingSubpass();
-        AttachmentIndex irradianceAttachment = m_IrradianceCalcPass->DefineAttachment(irradianceAttachmentDescription);
-        m_IrradianceCalcPass->AddColorAttachment(irradianceAttachment, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        m_IrradianceCalcPass->EndBuildingSubpass();
-        m_IrradianceCalcPass->EndBuildingRenderPass();
-
-
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
 
-        // BuildRenderGraphForDeferred();
-        BuildRenderGraphForForward();
+        BuildRenderGraphForDeferred();
+        // BuildRenderGraphForForward();
 
         m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
@@ -76,29 +59,23 @@ namespace Astral {
         m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
         m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
 
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
-        m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
-        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
-        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
-        m_ToneMappingLUTDescriptorSet->EndBuildingSet();
-
-
-        Ref<CubeLUT> inputLUT = registry.CreateAsset<CubeLUT>("LUTs/rec709_linear_to_acescg.cube");
-        m_InputLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_InputLUTDescriptorSet->BeginBuildingSet();
-        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->LUT3D, ShaderStage::FRAGMENT);
-        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->Shaper1D, ShaderStage::FRAGMENT);
-        m_InputLUTDescriptorSet->EndBuildingSet();
-
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
+        m_RTT_ODT_LUT_DescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+        m_RTT_ODT_LUT_DescriptorSet->BeginBuildingSet();
+        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
+        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
+        m_RTT_ODT_LUT_DescriptorSet->EndBuildingSet();
 
 
 
         // Renderer Settings
         RendererSettings rendererSettings{};
-        rendererSettings.RendererType = RendererType::FORWARD;
+        rendererSettings.RendererType = RendererType::DEFERRED;
         rendererSettings.IsVSyncEnabled = true;
         rendererSettings.IsFrustumCullingEnabled = true;
+        rendererSettings.IsShadowsOn = true;
+        rendererSettings.NumShadowCascades = 3;
+
 
         SetRendererSettings(rendererSettings);
     }
@@ -193,12 +170,25 @@ namespace Astral {
             frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance, ImageLayout::GENERAL);
         }
 
-        frameContext.Meshes.clear();
-        frameContext.Materials.clear();
-        frameContext.Transforms.clear();
+
+        for (Light& light : sceneDescription.Lights)
+        {
+            if (light.LightType == LightType::DIRECTIONAL)
+            {
+                m_FirstDirectionalLightInScene = light;
+            }
+        }
+
+
+
 
         m_SceneExposure = sceneDescription.Exposure;
         m_SceneViewProjection = sceneDescription.Camera.GetProjectionViewMatrix();
+
+
+        frameContext.Meshes.clear();
+        frameContext.Materials.clear();
+        frameContext.Transforms.clear();
     }
 
 
@@ -261,7 +251,22 @@ namespace Astral {
             }
         }
 
+        if (m_RendererSettings.NumShadowCascades != rendererSettings.NumShadowCascades)
+        {
+            m_RendererSettings.NumShadowCascades = rendererSettings.NumShadowCascades;
+
+            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
+            {
+                BuildRenderGraphForDeferred();
+            }
+            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
+            {
+                BuildRenderGraphForForward();
+            }
+        }
+
         m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
+        m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
     }
 
 
@@ -351,6 +356,19 @@ namespace Astral {
         geometryPass.CreateDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
+        AttachmentDescription lightDepthBufferDescription = {
+            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
+        };
+
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
 
         AttachmentDescription lightingTextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
@@ -370,8 +388,10 @@ namespace Astral {
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Light_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
         lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        lightingPass.AddDependency(&shadowMapPass);
 
 
         RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](){ EnvironmentMapPass(); });
@@ -423,6 +443,7 @@ namespace Astral {
 
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(geometryPass);
+        m_RenderGraph.AddPass(shadowMapPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddPass(tonemappingPass);
@@ -463,6 +484,19 @@ namespace Astral {
         depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
+        AttachmentDescription shadowMapMSAABufferDescription = {
+            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
+            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+            .LoadOp = AttachmentLoadOp::CLEAR,
+            .StoreOp = AttachmentStoreOp::STORE,
+            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
+        };
+
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        shadowMapPass.CreateDepthStencilAttachment(shadowMapMSAABufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
 
         AttachmentDescription lightingMSAATextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
@@ -477,8 +511,10 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ ForwardLightingPass(); });
+        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Shadow_Map_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         lightingPass.CreateColorAttachment(lightingMSAATextureDescription, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        lightingPass.AddDependency(&shadowMapPass);
 
         AttachmentDescription lightingResolveTextureDescription = {
             .Format = ImageFormat::R16G16B16A16_SFLOAT,
@@ -527,6 +563,7 @@ namespace Astral {
 
         m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         m_RenderGraph.AddPass(depthPrePass);
+        m_RenderGraph.AddPass(shadowMapPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(environmentMapPass);
         m_RenderGraph.AddOutputPass(tonemappingPass);
@@ -665,6 +702,12 @@ namespace Astral {
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
             context.IsIrradianceMapCalculationNeeded = true;
+
+            context.ForwardShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
+            context.ForwardShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
+            context.ForwardShadowLightMatricesDescriptorSet->BeginBuildingSet();
+            context.ForwardShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ForwardShadowLightMatrices, ShaderStage::FRAGMENT);
+            context.ForwardShadowLightMatricesDescriptorSet->EndBuildingSet();
         }
 
 
@@ -903,7 +946,9 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ForwardShadowLightMatricesDescriptorSet});
+
+        frameContext.ForwardShadowLightMatrices->CopyDataToBuffer(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -931,10 +976,13 @@ namespace Astral {
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
-            commandBuffer->BindDescriptorSet(material.DescriptorSet, 2);
+            commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
+            commandBuffer->BindDescriptorSet(frameContext.ForwardShadowLightMatricesDescriptorSet, 3);
+            commandBuffer->BindDescriptorSet(material.DescriptorSet, 4);
 
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+
 
             ForwardLightingPassPushData pushConstantData = {
                 .ModelMatrix = frameContext.Transforms[i],
@@ -1071,9 +1119,154 @@ namespace Astral {
         commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
+        commandBuffer->PushConstants(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
+
         commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
+    }
+
+
+
+    static std::vector<Vec4> GetFrustumCornersWorldSpace(const Mat4& projectionView)
+    {
+        const Mat4 cameraInverse = glm::inverse(projectionView);
+
+        std::vector<Vec4> frustumCorners;
+
+        // Loops to get each corner of the frustum
+        for (unsigned int x = 0; x < 2; ++x)
+        {
+            for (unsigned int y = 0; y < 2; ++y)
+            {
+                for (unsigned int z = 0; z < 2; ++z)
+                {
+                    const Vec4 point =
+                        cameraInverse * Vec4(
+                            2.0f * x - 1.0f,
+                            2.0f * y - 1.0f,
+                            2.0f * z - 1.0f,
+                            1.0f);
+                    frustumCorners.push_back(point / point.w);
+                }
+            }
+        }
+
+        return frustumCorners;
+    }
+
+
+    void SceneRendererImpl::CascadedShadowMapsPass()
+    {
+        if (!m_RendererSettings.IsShadowsOn) { return; }
+
+        struct CascadedShadowMapsPushConstantData
+        {
+            Mat4 LightSpaceMatrix;
+            Mat4 ModelMatrix;
+        };
+
+        if (m_FirstDirectionalLightInScene.LightType != LightType::DIRECTIONAL) { return; }
+
+        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
+
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+
+        std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(m_SceneViewProjection);
+
+        // Find center of frustum
+
+        Vec3 center = Vec3(0.0f);
+        for (auto& cornerPosition : frustumCorners)
+        {
+            center += Vec3(cornerPosition);
+        }
+        center /= frustumCorners.size();
+
+        const Vec3 lightDir = glm::normalize(m_FirstDirectionalLightInScene.Position);
+        Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
+
+        // Check if the light direction is parallel to the default up vector
+        if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
+        {
+            up = Vec3(0.0f, 0.0f, 1.0f);
+        }
+
+        Mat4 lightView = glm::lookAt(center - m_FirstDirectionalLightInScene.Position,
+                           center,
+                           up);
+
+
+        // Get the min and max positions of the frustum in world space
+        float minX = std::numeric_limits<float>::max();
+        float maxX = std::numeric_limits<float>::lowest();
+        float minY = std::numeric_limits<float>::max();
+        float maxY = std::numeric_limits<float>::lowest();
+        float minZ = std::numeric_limits<float>::max();
+        float maxZ = std::numeric_limits<float>::lowest();
+        for (const auto& cornerPosition : frustumCorners)
+        {
+            const auto trf = lightView * cornerPosition;
+            minX = std::min(minX, trf.x);
+            maxX = std::max(maxX, trf.x);
+            minY = std::min(minY, trf.y);
+            maxY = std::max(maxY, trf.y);
+            minZ = std::min(minZ, trf.z);
+            maxZ = std::max(maxZ, trf.z);
+        }
+
+
+        const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+
+        Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
+        // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
+        //        "\nMin X: " << minX <<
+        //        "\nMax X: " << maxX <<
+        //        "\nMin Y: " << minY <<
+        //        "\nMax Y: " << maxY <<
+        //        "\nMin Z: " << minZ <<
+        //        "\nMax Z: " << maxZ <<
+        //        "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
+        //        "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
+        //        "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
+
+
+        m_LightSpaceMatrix = lightProjection * lightView;
+
+
+        CascadedShadowMapsPushConstantData cascadedShadowMapsPushConstantData{};
+        cascadedShadowMapsPushConstantData.LightSpaceMatrix = m_LightSpaceMatrix;
+
+        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        {
+            Mesh mesh = frameContext.Meshes[i];
+            Material& material = frameContext.Materials[i];
+
+            if (material.ShaderModel != ShaderModel::PBR) { continue; }
+
+            mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/ShadowMap.vert");
+
+            Material shadowMapMaterial{};
+            shadowMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
+            shadowMapMaterial.DescriptorSet = nullptr;
+
+            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0);
+            commandBuffer->BindPipeline(shadowMapPipeline);
+            commandBuffer->SetViewportAndScissor(Vec2(4096));
+
+            commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
+
+            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
+            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+
+            cascadedShadowMapsPushConstantData.ModelMatrix = frameContext.Transforms[i];
+            commandBuffer->PushConstants(&cascadedShadowMapsPushConstantData, sizeof(cascadedShadowMapsPushConstantData));
+
+            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
+        }
     }
 
 
@@ -1123,7 +1316,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
@@ -1133,7 +1326,7 @@ namespace Astral {
 
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
-        toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
+        toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
         commandBuffer->BindPipeline(toneMappingPipeline);
