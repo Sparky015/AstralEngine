@@ -271,6 +271,7 @@ namespace Astral {
             .MSAASampleCount = textureCreateInfo.MSAASampleCount,
             .SamplerFilter = textureCreateInfo.SamplerFilter,
             .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -297,6 +298,7 @@ namespace Astral {
             .MSAASampleCount = textureCreateInfo.MSAASampleCount,
             .SamplerFilter = textureCreateInfo.SamplerFilter,
             .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -323,6 +325,7 @@ namespace Astral {
             .MSAASampleCount = textureCreateInfo.MSAASampleCount,
             .SamplerFilter = textureCreateInfo.SamplerFilter,
             .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -349,6 +352,8 @@ namespace Astral {
             .MSAASampleCount = textureCreateInfo.MSAASampleCount,
             .SamplerFilter = textureCreateInfo.SamplerFilter,
             .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);

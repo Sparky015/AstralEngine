@@ -39,6 +39,7 @@ namespace Astral {
         SampleCount MSAASampleCount = SampleCount::SAMPLE_1_BIT;
         SamplerFilter SamplerFilter = SamplerFilter::LINEAR;
         SamplerAddressMode SamplerAddressMode = SamplerAddressMode::REPEAT;
+        bool EnableAnisotropy = true;
     };
 
     /**

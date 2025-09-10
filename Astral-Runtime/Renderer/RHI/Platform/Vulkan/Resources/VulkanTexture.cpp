@@ -38,7 +38,7 @@ namespace Astral {
         CreateTexture(desc);
     	AllocateTextureMemory();
     	CreateImageView(desc.ImageUsageFlags);
-    	CreateImageSampler(desc.SamplerFilter, desc.SamplerAddressMode);
+    	CreateImageSampler(desc.SamplerFilter, desc.SamplerAddressMode, desc.EnableAnisotropy);
 
     	if (desc.ImageData)
     	{
@@ -75,7 +75,7 @@ namespace Astral {
 		m_TextureType(TextureType::IMAGE_2D),
 		m_IsSwapchainOwned(true)
     {
-    	CreateImageSampler(SamplerFilter::LINEAR, SamplerAddressMode::REPEAT);
+    	CreateImageSampler(SamplerFilter::LINEAR, SamplerAddressMode::REPEAT, false);
 
     	if (m_CurrentLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ||
 					(m_Format == VK_FORMAT_D16_UNORM) ||
@@ -772,7 +772,7 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode)
+    void VulkanTexture::CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotrophy)
     {
     	VkSamplerCreateInfo samplerCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
@@ -785,7 +785,7 @@ namespace Astral {
     		.addressModeV = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
     		.addressModeW = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
     		.mipLodBias = 0.0f,
-    		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported(),
+    		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported() && shouldEnableAnisotrophy,
     		.maxAnisotropy = RendererAPI::GetDevice().GetMaxAnisotropySupported(),
     		.compareEnable = VK_FALSE,
     		.compareOp = VK_COMPARE_OP_ALWAYS,

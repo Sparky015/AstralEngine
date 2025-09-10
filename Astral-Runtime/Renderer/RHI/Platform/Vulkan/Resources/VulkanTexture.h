@@ -46,6 +46,7 @@ namespace Astral {
         SampleCount MSAASampleCount;
         SamplerFilter SamplerFilter;
         SamplerAddressMode SamplerAddressMode;
+        bool EnableAnisotropy;
     };
 
     /**
@@ -220,7 +221,7 @@ namespace Astral {
         /**
          * @brief Creates the VkImageSampler for the texture
          */
-        void CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode);
+        void CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotrophy);
 
         /**
          * @brief Destroys the VkImageSampler for the texture
