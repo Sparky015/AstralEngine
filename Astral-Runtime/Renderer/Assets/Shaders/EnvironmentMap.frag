@@ -13,9 +13,22 @@ layout(push_constant) uniform PushConstant {
 
 layout(location = 0) out vec4 color;
 
+
+
+vec3 ConvertSRGBPimariesToAP1Primaries(vec3 srgbPrimaries)
+{
+    const mat3 srgbPrimariesToAP1Primaries = mat3( 0.613132422390542, 0.070124380833917, 0.020587657528185,
+                                                   0.339538015799666, 0.916394011313573, 0.109574571610682,
+                                                   0.047416696048269, 0.013451523958235, 0.869785404035327 );
+    return srgbPrimariesToAP1Primaries * srgbPrimaries;
+}
+
 void main()
 {
     float totalMips = textureQueryLevels(u_Cubemap) - 1;
     float lodLevel = clamp(u_PushConstant.environmentMapBlur, 0, 1) * totalMips;
-    color = textureLod(u_Cubemap, v_Position, lodLevel);
+
+    vec3 srgbPrimaries = textureLod(u_Cubemap, v_Position, lodLevel).rgb;
+    vec3 ap1Primaries = ConvertSRGBPimariesToAP1Primaries(srgbPrimaries);
+    color = vec4(ap1Primaries, 1.0f);
 }
