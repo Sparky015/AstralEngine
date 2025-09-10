@@ -38,7 +38,7 @@ namespace Astral {
         CreateTexture(desc);
     	AllocateTextureMemory();
     	CreateImageView(desc.ImageUsageFlags);
-    	CreateImageSampler();
+    	CreateImageSampler(desc.SamplerFilter, desc.SamplerAddressMode);
 
     	if (desc.ImageData)
     	{
@@ -75,7 +75,7 @@ namespace Astral {
 		m_TextureType(TextureType::IMAGE_2D),
 		m_IsSwapchainOwned(true)
     {
-    	CreateImageSampler();
+    	CreateImageSampler(SamplerFilter::LINEAR, SamplerAddressMode::REPEAT);
 
     	if (m_CurrentLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ||
 					(m_Format == VK_FORMAT_D16_UNORM) ||
@@ -772,18 +772,18 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateImageSampler()
+    void VulkanTexture::CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode)
     {
     	VkSamplerCreateInfo samplerCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
     		.pNext = nullptr,
     		.flags = 0,
-    		.magFilter = VK_FILTER_LINEAR,
-    		.minFilter = VK_FILTER_LINEAR,
+    		.magFilter = ConvertSamplerFilterToVkFilter(samplerFilter),
+    		.minFilter = ConvertSamplerFilterToVkFilter(samplerFilter),
     		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-    		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    		.addressModeU = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
+    		.addressModeV = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
+    		.addressModeW = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
     		.mipLodBias = 0.0f,
     		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported(),
     		.maxAnisotropy = RendererAPI::GetDevice().GetMaxAnisotropySupported(),

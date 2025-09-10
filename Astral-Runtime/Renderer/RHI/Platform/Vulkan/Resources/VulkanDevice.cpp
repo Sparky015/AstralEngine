@@ -268,7 +268,9 @@ namespace Astral {
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_2D,
-            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -292,7 +294,9 @@ namespace Astral {
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::CUBEMAP,
-            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -316,7 +320,9 @@ namespace Astral {
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_3D,
-            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
@@ -340,7 +346,9 @@ namespace Astral {
             .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
             .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
             .TextureType = TextureType::IMAGE_1D,
-            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);

@@ -44,6 +44,8 @@ namespace Astral {
         bool GenerateMipMaps;
         TextureType TextureType;
         SampleCount MSAASampleCount;
+        SamplerFilter SamplerFilter;
+        SamplerAddressMode SamplerAddressMode;
     };
 
     /**
@@ -218,7 +220,7 @@ namespace Astral {
         /**
          * @brief Creates the VkImageSampler for the texture
          */
-        void CreateImageSampler();
+        void CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode);
 
         /**
          * @brief Destroys the VkImageSampler for the texture
