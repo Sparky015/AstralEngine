@@ -492,6 +492,31 @@ namespace Astral {
     }
 
 
+    VkFilter ConvertSamplerFilterToVkFilter(SamplerFilter samplerFilter)
+    {
+        switch (samplerFilter)
+        {
+            case SamplerFilter::NEAREST:              return VK_FILTER_NEAREST;
+            case SamplerFilter::LINEAR:               return VK_FILTER_LINEAR;
+            default: AE_ERROR("Invalid Sampler Filter Given!");
+        }
+    }
+
+
+    VkSamplerAddressMode ConvertSamplerAddressModeToVkSamplerAddressMode(SamplerAddressMode samplerAddressMode)
+    {
+        switch (samplerAddressMode)
+        {
+            case SamplerAddressMode::REPEAT:                        return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+            case SamplerAddressMode::MIRRORED_REPEAT:               return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+            case SamplerAddressMode::CLAMP_TO_EDGE:                 return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+            case SamplerAddressMode::CLAMP_TO_BORDER:               return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+            case SamplerAddressMode::MIRROR_CLAMP_TO_EDGE:          return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+            default: AE_ERROR("Invalid Sampler Address Mode Given!");
+        }
+    }
+
+
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount)
     {
         VkSampleCountFlagBits vkSampleCount;
