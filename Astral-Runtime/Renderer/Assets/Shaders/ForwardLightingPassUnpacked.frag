@@ -55,6 +55,7 @@ layout (push_constant) uniform ModelData {
 
 layout(location = 0) out vec4 color;
 
+const float PI = 3.14159265359;
 
 // GGX/Trowbridge-Reitz Normal Distribution Function
 float GGXNormalDistribution(float alpha, vec3 N, vec3 H)
@@ -62,7 +63,7 @@ float GGXNormalDistribution(float alpha, vec3 N, vec3 H)
     float numerator = pow(alpha, 2.0f);
 
     float NdotH = max(dot(N, H), 0.0f);
-    float denominator = 3.1415 * pow(pow(NdotH, 2.0f) * (pow(alpha, 2.0f) - 1.0f) + 1.0, 2.0f);
+    float denominator = PI * pow(pow(NdotH, 2.0f) * (pow(alpha, 2.0f) - 1.0f) + 1.0, 2.0f);
     denominator = max(denominator, 0.00001f);
 
     return numerator / denominator;
@@ -213,7 +214,7 @@ void main()
         vec3 specular = Fresnel(baseReflectivity, viewVector, halfwayVector);
         vec3 diffuse = (vec3(1.0) - specular) * (1.0f - metallic.r);
 
-        vec3 lambert = baseColor / 3.1415;
+        vec3 lambert = baseColor / PI;
 
         vec3 cookTorranceNumerator = GGXNormalDistribution(alpha, normal, halfwayVector) * Shadowing(alpha, normal, viewVector, lightVector) * specular;
         float cookTorranceDenominator = 4.0 * max(dot(viewVector, normal), 0.0) * max(dot(lightVector, normal), 0.0);
