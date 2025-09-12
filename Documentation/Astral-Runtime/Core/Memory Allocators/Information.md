@@ -157,7 +157,7 @@ thread safety when using the allocators.
 On debugging builds, I have asserts enabled that provide checks to ensure that any errors are caught. Additionally, ASAN
 checks are made to help catch any bugs. Beyond this, I have memory tracking system integrated with these allocators to 
 provide usage metrics and other information that can be used to debug and improve performance. You can learn more
-about the memory tracking system in the Astral Engine [here](../Memory%20Tracking%20&%20Visualization/Information.md).
+about the memory tracking system in the Astral Engine [here](../../Profiling%20Tools/Memory%20Tracking%20&%20Visualization/Information.md).
 
 #### Fragmentation
 
