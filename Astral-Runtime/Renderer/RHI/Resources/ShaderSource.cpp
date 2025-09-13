@@ -100,9 +100,11 @@ namespace Astral {
 
     void ShaderSource::ParseShaderInclude(const std::filesystem::path& filePath, std::string& outSource)
     {
-        if (!filePath.empty())
+        if (filePath.empty())
         {
             AE_WARN("Shader Parser: Ignoring empty include file path!");
+            outSource = "";
+            return;
         }
 
         std::ifstream file = std::ifstream(filePath);
