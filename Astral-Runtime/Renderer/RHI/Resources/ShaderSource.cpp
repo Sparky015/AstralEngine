@@ -62,7 +62,18 @@ namespace Astral {
         std::string line;
         while (std::getline(file, line))
         {
-            ss << line << "\n";
+            if (line.starts_with("#include "))
+            {
+                constexpr uint32 includeWordOffset = 10;
+                std::filesystem::path includePath = line.substr(includeWordOffset, line.size() - includeWordOffset - 1); // Minus 1 for ending quote or angle bracket
+                std::string includeSource = "";
+                ParseShaderInclude(filePath.parent_path() / includePath, includeSource);
+                ss << "\n" << includeSource << "\n";
+            }
+            else
+            {
+                ss << line << "\n";
+            }
         }
 
         m_ShaderCode = ss.str();
@@ -84,6 +95,43 @@ namespace Astral {
     ShaderType ShaderSource::GetShaderType() const
     {
         return m_ShaderType;
+    }
+
+
+    void ShaderSource::ParseShaderInclude(const std::filesystem::path& filePath, std::string& outSource)
+    {
+        if (!filePath.empty())
+        {
+            AE_WARN("Shader Parser: Ignoring empty include file path!");
+        }
+
+        std::ifstream file = std::ifstream(filePath);
+        if (!file.is_open())
+        {
+            AE_WARN("Failed to open file: " << filePath)
+            return;
+        }
+
+        /** Accumulate all the shader source code into the stringstream. */
+        std::stringstream ss;
+        std::string line;
+        while (std::getline(file, line))
+        {
+            if (line.starts_with("#include "))
+            {
+                constexpr uint32 includeWordOffset = 9;
+                std::filesystem::path includePath = line.substr(includeWordOffset, line.size() - includeWordOffset - 1); // - 1 for ending quote or angle bracket
+                std::string includeSource = "";
+                ParseShaderInclude(filePath.parent_path() / includePath, includeSource);
+                ss << "\n" << includeSource << "\n";
+            }
+            else
+            {
+                ss << line << "\n";
+            }
+        }
+
+        outSource = ss.str();
     }
 
 }
