@@ -52,33 +52,13 @@ layout(push_constant) uniform PushConstantData {
 layout(location = 0) out vec4 outColor;
 
 
-#include "ColorUtilities.glsl"
-
+#include "ColorTransforms.glsl"
+#include "Utilities.glsl"
 
 
 const float PI = 3.14159265359;
 
-// Find world position of frag from depth buffer
-vec3 GetWorldPosition()
-{
-    vec3 worldPosition;
 
-    float depth = texture(u_DepthBufferInput, v_TextureCoord).r;
-
-    vec4 clipSpacePosition;
-    clipSpacePosition.x = (v_TextureCoord.x) * 2.0 - 1.0;
-    clipSpacePosition.y = (v_TextureCoord.y) * 2.0 - 1.0;
-    clipSpacePosition.z = depth;
-    clipSpacePosition.w = 1.0;
-
-    vec4 viewSpacePosition = u_SceneData.inverseCameraProjection * clipSpacePosition;
-    viewSpacePosition /= viewSpacePosition.w;
-
-    vec4 worldPosHomogeneous = u_SceneData.inverseCameraView * viewSpacePosition;
-    worldPosition = worldPosHomogeneous.xyz;// / worldPosHomogeneous.w;
-
-    return worldPosition;
-}
 
 // GGX/Trowbridge-Reitz Normal Distribution Function
 float GGXNormalDistribution(float alpha, vec3 N, vec3 H)
@@ -166,8 +146,8 @@ void main()
     normal = normal * 2.0 - 1.0;
     normal = normalize(normal);
 
-
-    vec3 worldPosition = GetWorldPosition();
+    float depth = texture(u_DepthBufferInput, v_TextureCoord).r;
+    vec3 worldPosition = GetWorldPosition(depth, v_TextureCoord, u_SceneData.inverseCameraProjection, u_SceneData.inverseCameraView);
     vec3 cameraPosition = u_SceneData.cameraPosition;
     vec3 viewVector = normalize(cameraPosition - worldPosition);
 

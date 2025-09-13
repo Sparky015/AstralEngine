@@ -1,7 +1,8 @@
 
-#ifndef COLOR_UTILITIES_GLSL
-#define COLOR_UTILITIES_GLSL
+#ifndef COLOR_TRANSFORMS_GLSL
+#define COLOR_TRANSFORMS_GLSL
 
+// Converts linear sRGB primaries to linear AP1 pimaries
 vec3 ConvertSRGBPimariesToAP1Primaries(vec3 srgbPrimaries)
 {
     const mat3 srgbPrimariesToAP1Primaries = mat3( 0.613132422390542, 0.070124380833917, 0.020587657528185,
