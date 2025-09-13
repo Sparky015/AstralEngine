@@ -121,7 +121,7 @@ namespace Astral {
         {
             if (line.starts_with("#include "))
             {
-                constexpr uint32 includeWordOffset = 9;
+                constexpr uint32 includeWordOffset = 10;
                 std::filesystem::path includePath = line.substr(includeWordOffset, line.size() - includeWordOffset - 1); // - 1 for ending quote or angle bracket
                 std::string includeSource = "";
                 ParseShaderInclude(filePath.parent_path() / includePath, includeSource);
