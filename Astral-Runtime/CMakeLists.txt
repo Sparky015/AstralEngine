@@ -32,8 +32,8 @@ add_library(AstralEngine
         ECS/Components/SpriteComponent.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/Shaders/ShaderSource.h
-        Renderer/Shaders/ShaderSource.cpp
+        Renderer/RHI/Resources/ShaderSource.h
+        Renderer/RHI/Resources/ShaderSource.cpp
         Renderer/RHI/Resources/VertexBuffer.cpp
         Renderer/RHI/Resources/VertexBuffer.h
         Renderer/RHI/Resources/IndexBuffer.cpp

@@ -45,6 +45,10 @@ namespace Astral {
         [[nodiscard]] ShaderType GetShaderType() const;
 
     private:
+
+        /** Parses shader code at a given relative path. */
+        void ParseShaderInclude(const std::filesystem::path& filePath, std::string& outSource);
+
         std::string m_ShaderCode;
         std::string m_FileName;
         ShaderType m_ShaderType;
