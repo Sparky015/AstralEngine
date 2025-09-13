@@ -22,6 +22,7 @@ vec3 GetWorldPosition(float depth, vec2 fragPosition, mat4 inverseCameraProjecti
     return worldPosition;
 }
 
+
 mat3 CalculateTBNMatrix(vec3 normals, vec3 tangents, vec3 bitangents)
 {
     vec3 N = normalize(normals);

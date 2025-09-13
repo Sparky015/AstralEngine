@@ -55,7 +55,6 @@ layout (push_constant) uniform ModelData {
 layout(location = 0) out vec4 color;
 
 
-#include "ColorTransforms.glsl"
 #include "BRDF.glsl"
 #include "Utilities.glsl"
 
@@ -67,7 +66,6 @@ void main()
     vec3 aoRoughnessMetallic = texture(u_AO_Roughness_Metallic, v_TextureCoord).rgb;
 
     Material material;
-
     material.BaseColor = texture(u_BaseColor, v_TextureCoord).rgb;
     material.Roughness = aoRoughnessMetallic.g;
     material.Metallic = aoRoughnessMetallic.b;
@@ -83,11 +81,9 @@ void main()
 
     material.Normal = normal;
 
-
     vec3 worldPosition = v_WorldPosition;
     vec3 viewVector = normalize(u_SceneData.cameraPosition - worldPosition);
 
     vec3 finalColor = BRDF(material, worldPosition, viewVector);
-
     color = vec4(finalColor, 1.0f);
 }
