@@ -33,4 +33,27 @@ mat3 CalculateTBNMatrix(vec3 normals, vec3 tangents, vec3 bitangents)
     return TBN;
 }
 
+
+vec3 CalculateNormalFromMap(vec3 tangentSpaceNormal, vec3 vertexNormal, vec3 vertexTangent, vec3 vertexBitangent, uint hasDirectXNormals)
+{
+    tangentSpaceNormal = tangentSpaceNormal * 2.0 - 1.0;
+
+    if (hasDirectXNormals != 0)
+    {
+        tangentSpaceNormal.g = tangentSpaceNormal.g * -1.0f;
+    }
+
+    tangentSpaceNormal = normalize(tangentSpaceNormal);
+
+    mat3 TBN = CalculateTBNMatrix(vertexNormal, vertexTangent, vertexBitangent);
+    vec3 normal = normalize(TBN * tangentSpaceNormal);
+
+    if (hasDirectXNormals != 0)
+    {
+        normal = normal * -1;
+    }
+
+    return normal;
+}
+
 #endif
