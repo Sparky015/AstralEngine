@@ -16,6 +16,7 @@ layout (set = 0, binding = 0) uniform SceneData {
     vec3 cameraPosition;
     uint numLights;
     float ambientLightConstant;
+    uint numShadowCascades;
 } u_SceneData;
 
 const uint LIGHT_TYPE_POINT = 0;
@@ -35,19 +36,18 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
+layout (set = 2, binding = 0) uniform LightMatrices {
+    mat4 lightMatrices;
+} u_LightMatrices;
 
-layout(set = 2, binding = 0) uniform sampler2D u_AlbedoInput;
-layout(set = 2, binding = 1) uniform sampler2D u_MetallicInput;
-layout(set = 2, binding = 2) uniform sampler2D u_RoughnessInput;
-layout(set = 2, binding = 3) uniform sampler2D u_EmissionInput;
-layout(set = 2, binding = 4) uniform sampler2D u_NormalInput;
-layout(set = 2, binding = 5) uniform sampler2D u_DepthBufferInput;
-layout(set = 2, binding = 6) uniform sampler2D u_DirectionalLightShadows;
+layout(set = 3, binding = 0) uniform sampler2D u_AlbedoInput;
+layout(set = 3, binding = 1) uniform sampler2D u_MetallicInput;
+layout(set = 3, binding = 2) uniform sampler2D u_RoughnessInput;
+layout(set = 3, binding = 3) uniform sampler2D u_EmissionInput;
+layout(set = 3, binding = 4) uniform sampler2D u_NormalInput;
+layout(set = 3, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout(set = 3, binding = 6) uniform sampler2DArray u_DirectionalLightShadows;
 
-
-layout(push_constant) uniform PushConstantData {
-    mat4 lightSpaceMatrix;
-} u_PushConstants;
 
 layout(location = 0) out vec4 outColor;
 
@@ -117,24 +117,24 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 
 float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 {
-    vec4 fragPositionLightSpace = u_PushConstants.lightSpaceMatrix * vec4(worldPosition, 1.0f);
+    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices * vec4(worldPosition, 1.0f);
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
     projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
-    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
+    float closestDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, 0.0f)).r;
     float currentDepth = projCoords.z;
 
     float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
 
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
 
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
             vec2 offset = vec2(float(x), float(y)) * texelSize;
-            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
+            float pcfDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy + offset, 0.0f)).r;
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
