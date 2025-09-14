@@ -61,6 +61,7 @@ namespace Astral {
             alignas(16) Vec3 CameraPosition;
             uint32 NumLights;
             float AmbientLightConstant;
+            uint32 NumShadowCascades;
         };
 
 
@@ -85,8 +86,8 @@ namespace Astral {
             Ref<EnvironmentMap> EnvironmentMap;
             DescriptorSetHandle EnvironmentMapDescriptorSet;
 
-            BufferHandle ForwardShadowLightMatrices;
-            DescriptorSetHandle ForwardShadowLightMatricesDescriptorSet;
+            BufferHandle ShadowLightMatrices;
+            DescriptorSetHandle ShadowLightMatricesDescriptorSet;
 
             bool IsIrradianceMapCalculationNeeded;
         };
@@ -160,11 +161,12 @@ namespace Astral {
 
         // Cascaded Shadow Maps Pass
         Light m_FirstDirectionalLightInScene = {};
-        Mat4 m_LightSpaceMatrix{};
+        std::vector<Mat4> m_LightSpaceMatrices{};
 
 
         float m_SceneExposure{};
         Mat4 m_SceneViewProjection{};
+        Camera m_SceneCamera;
     };
 
 }

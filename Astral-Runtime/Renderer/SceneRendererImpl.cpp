@@ -134,8 +134,11 @@ namespace Astral {
             .ScreenSize = m_ViewportSize,
             .CameraPosition = sceneDescription.Camera.GetPosition(),
             .NumLights = (uint32)sceneDescription.Lights.size(),
-            .AmbientLightConstant = sceneDescription.AmbientLightConstant
+            .AmbientLightConstant = sceneDescription.AmbientLightConstant,
+            .NumShadowCascades = 3,
         };
+
+        m_SceneCamera = sceneDescription.Camera;
 
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));
 
@@ -372,7 +375,9 @@ namespace Astral {
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
+            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
+            .LayerCount = (uint32)3,//m_RendererSettings.NumShadowCascades,
+            .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
         RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
@@ -493,7 +498,7 @@ namespace Astral {
         depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
-        AttachmentDescription shadowMapMSAABufferDescription = {
+        AttachmentDescription shadowMapBufferDescription = {
             .Format = ImageFormat::D32_SFLOAT_S8_UINT,
             .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
             .LoadOp = AttachmentLoadOp::CLEAR,
@@ -501,10 +506,12 @@ namespace Astral {
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
+            .LayerCount = (uint32)3,//m_RendererSettings.NumShadowCascades,
+            .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
         RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
-        shadowMapPass.CreateDepthStencilAttachment(shadowMapMSAABufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        shadowMapPass.CreateDepthStencilAttachment(shadowMapBufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
         AttachmentDescription lightingMSAATextureDescription = {
@@ -712,11 +719,11 @@ namespace Astral {
 
             context.IsIrradianceMapCalculationNeeded = true;
 
-            context.ForwardShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
-            context.ForwardShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
-            context.ForwardShadowLightMatricesDescriptorSet->BeginBuildingSet();
-            context.ForwardShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ForwardShadowLightMatrices, ShaderStage::FRAGMENT);
-            context.ForwardShadowLightMatricesDescriptorSet->EndBuildingSet();
+            context.ShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
+            context.ShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
+            context.ShadowLightMatricesDescriptorSet->BeginBuildingSet();
+            context.ShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ShadowLightMatrices, ShaderStage::ALL);
+            context.ShadowLightMatricesDescriptorSet->EndBuildingSet();
         }
 
 
@@ -955,9 +962,8 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ForwardShadowLightMatricesDescriptorSet});
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ShadowLightMatricesDescriptorSet});
 
-        frameContext.ForwardShadowLightMatrices->CopyDataToBuffer(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -986,7 +992,7 @@ namespace Astral {
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
             commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
-            commandBuffer->BindDescriptorSet(frameContext.ForwardShadowLightMatricesDescriptorSet, 3);
+            commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 3);
             commandBuffer->BindDescriptorSet(material.DescriptorSet, 4);
 
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
@@ -1106,7 +1112,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet});
+        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, frameContext.ShadowLightMatricesDescriptorSet});
 
         Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
         mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
@@ -1123,12 +1129,11 @@ namespace Astral {
 
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
-        commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
+        commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 2);
+        commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 3);
 
         commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
         commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
-
-        commandBuffer->PushConstants(&m_LightSpaceMatrix, sizeof(m_LightSpaceMatrix));
 
         commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
 
@@ -1183,71 +1188,77 @@ namespace Astral {
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
+        m_LightSpaceMatrices.clear();
+        std::vector<float> frustumRanges = {.1, 20.0f, 100.0f, 1000.0f};
 
-        std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(m_SceneViewProjection);
-
-        // Find center of frustum
-
-        Vec3 center = Vec3(0.0f);
-        for (auto& cornerPosition : frustumCorners)
+        for (uint32 i = 0; i < 3; i++) //m_RendererSettings.NumShadowCascades
         {
-            center += Vec3(cornerPosition);
+            Camera subfrustumCamera = Camera(CameraType::PERSPECTIVE, m_SceneCamera.GetAspectRatio(), frustumRanges[i], frustumRanges[i + 1]);
+            subfrustumCamera.SetPosition(m_SceneCamera.GetPosition());
+            subfrustumCamera.SetRotation(m_SceneCamera.GetRotation());
+            std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(subfrustumCamera.GetProjectionViewMatrix());
+
+            // Find center of frustum
+
+            Vec3 center = Vec3(0.0f);
+            for (auto& cornerPosition : frustumCorners)
+            {
+                center += Vec3(cornerPosition);
+            }
+            center /= frustumCorners.size();
+
+            const Vec3 lightDir = glm::normalize(m_FirstDirectionalLightInScene.Position);
+            Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
+
+            // Check if the light direction is parallel to the default up vector
+            if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
+            {
+                up = Vec3(0.0f, 0.0f, 1.0f);
+            }
+
+            Mat4 lightView = glm::lookAt(center - m_FirstDirectionalLightInScene.Position,
+                               center,
+                               up);
+
+
+            // Get the min and max positions of the frustum in world space
+            float minX = std::numeric_limits<float>::max();
+            float maxX = std::numeric_limits<float>::lowest();
+            float minY = std::numeric_limits<float>::max();
+            float maxY = std::numeric_limits<float>::lowest();
+            float minZ = std::numeric_limits<float>::max();
+            float maxZ = std::numeric_limits<float>::lowest();
+            for (const auto& cornerPosition : frustumCorners)
+            {
+                const auto trf = lightView * cornerPosition;
+                minX = std::min(minX, trf.x);
+                maxX = std::max(maxX, trf.x);
+                minY = std::min(minY, trf.y);
+                maxY = std::max(maxY, trf.y);
+                minZ = std::min(minZ, trf.z);
+                maxZ = std::max(maxZ, trf.z);
+            }
+
+
+            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+
+            Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
+            // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
+            //        "\nMin X: " << minX <<
+            //        "\nMax X: " << maxX <<
+            //        "\nMin Y: " << minY <<
+            //        "\nMax Y: " << maxY <<
+            //        "\nMin Z: " << minZ <<
+            //        "\nMax Z: " << maxZ <<
+            //        "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
+            //        "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
+            //        "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
+
+
+            m_LightSpaceMatrices.push_back(lightProjection * lightView);
         }
-        center /= frustumCorners.size();
 
-        const Vec3 lightDir = glm::normalize(m_FirstDirectionalLightInScene.Position);
-        Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
-
-        // Check if the light direction is parallel to the default up vector
-        if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
-        {
-            up = Vec3(0.0f, 0.0f, 1.0f);
-        }
-
-        Mat4 lightView = glm::lookAt(center - m_FirstDirectionalLightInScene.Position,
-                           center,
-                           up);
-
-
-        // Get the min and max positions of the frustum in world space
-        float minX = std::numeric_limits<float>::max();
-        float maxX = std::numeric_limits<float>::lowest();
-        float minY = std::numeric_limits<float>::max();
-        float maxY = std::numeric_limits<float>::lowest();
-        float minZ = std::numeric_limits<float>::max();
-        float maxZ = std::numeric_limits<float>::lowest();
-        for (const auto& cornerPosition : frustumCorners)
-        {
-            const auto trf = lightView * cornerPosition;
-            minX = std::min(minX, trf.x);
-            maxX = std::max(maxX, trf.x);
-            minY = std::min(minY, trf.y);
-            maxY = std::max(maxY, trf.y);
-            minZ = std::min(minZ, trf.z);
-            maxZ = std::max(maxZ, trf.z);
-        }
-
-
-        const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
-
-        Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
-        // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
-        //        "\nMin X: " << minX <<
-        //        "\nMax X: " << maxX <<
-        //        "\nMin Y: " << minY <<
-        //        "\nMax Y: " << maxY <<
-        //        "\nMin Z: " << minZ <<
-        //        "\nMax Z: " << maxZ <<
-        //        "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
-        //        "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
-        //        "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
-
-
-        m_LightSpaceMatrix = lightProjection * lightView;
-
-
-        CascadedShadowMapsPushConstantData cascadedShadowMapsPushConstantData{};
-        cascadedShadowMapsPushConstantData.LightSpaceMatrix = m_LightSpaceMatrix;
+        frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -1260,21 +1271,23 @@ namespace Astral {
 
             Material shadowMapMaterial{};
             shadowMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
-            shadowMapMaterial.DescriptorSet = nullptr;
+            shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
 
             PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0);
             commandBuffer->BindPipeline(shadowMapPipeline);
             commandBuffer->SetViewportAndScissor(Vec2(4096));
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
+            commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 1);
+
 
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
-            cascadedShadowMapsPushConstantData.ModelMatrix = frameContext.Transforms[i];
-            commandBuffer->PushConstants(&cascadedShadowMapsPushConstantData, sizeof(cascadedShadowMapsPushConstantData));
 
-            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
+            commandBuffer->PushConstants(&frameContext.Transforms[i], sizeof(Mat4));
+
+            commandBuffer->DrawElementsInstanced(mesh.IndexBuffer, 3);
         }
     }
 
