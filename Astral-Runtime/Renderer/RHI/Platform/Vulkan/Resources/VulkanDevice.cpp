@@ -347,6 +347,30 @@ namespace Astral {
     }
 
 
+    TextureHandle VulkanDevice::Create2DTextureArray(const TextureCreateInfo& textureCreateInfo)
+    {
+        VulkanTextureDesc textureDesc = {
+            .VulkanDevice = this,
+            .Device = m_Device,
+            .PhysicalDeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageLayout = textureCreateInfo.Layout,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount > 0 ? textureCreateInfo.LayerCount : 1,
+            .NumMipLevels = textureCreateInfo.MipMapCount > 0 ? textureCreateInfo.MipMapCount : 1,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_2D_ARRAY,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount
+        };
+
+        return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
     bool VulkanDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
     {
         VkFormat format = ConvertImageFormatToVkFormat(imageFormat);
@@ -401,47 +425,66 @@ namespace Astral {
             VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME
         };
 
-        VkPhysicalDeviceFeatures deviceFeatures = { 0 };
+        VkPhysicalDeviceVulkan12Features deviceFeatures12 = {
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
+            .pNext = nullptr
+        };
 
-        if (m_PhysicalDevice.features.geometryShader == VK_FALSE)
+        VkPhysicalDeviceFeatures2 deviceFeaturesChain = {
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+            .pNext = &deviceFeatures12
+        };
+
+
+
+        if (m_PhysicalDevice.featuresChain.features.tessellationShader == VK_FALSE)
         {
-            AE_LOG("Vulkan: Geometry Shader is not supported!")
+            AE_WARN("Vulkan: Tessellation Shader is not supported!")
         }
         else
         {
-            deviceFeatures.geometryShader = VK_TRUE;
+            deviceFeaturesChain.features.tessellationShader = VK_TRUE;
         }
 
-        if (m_PhysicalDevice.features.tessellationShader == VK_FALSE)
+        if (m_PhysicalDevice.featuresChain.features.samplerAnisotropy == VK_FALSE)
         {
-            AE_LOG("Vulkan: Tessellation Shader is not supported!")
+            AE_WARN("Vulkan: Sampler Anisotropy is not supported!")
         }
         else
         {
-            deviceFeatures.tessellationShader = VK_TRUE;
+            deviceFeaturesChain.features.samplerAnisotropy = VK_TRUE;
         }
 
-        if (m_PhysicalDevice.features.samplerAnisotropy == VK_FALSE)
+        if (m_PhysicalDevice.featuresChain.features.sampleRateShading == VK_FALSE)
         {
-            AE_LOG("Vulkan: Sampler Anisotropy is not supported!")
+            AE_WARN("Vulkan: Sampler Anisotropy is not supported!")
         }
         else
         {
-            deviceFeatures.samplerAnisotropy = VK_TRUE;
+            deviceFeaturesChain.features.sampleRateShading = VK_TRUE;
         }
 
-        if (m_PhysicalDevice.features.sampleRateShading == VK_FALSE)
+        if (m_PhysicalDevice.features12.shaderOutputLayer == VK_FALSE)
         {
-            AE_LOG("Vulkan: Sampler Anisotropy is not supported!")
+            AE_WARN("Vulkan: Shader Output Layer is not supported!")
         }
         else
         {
-            deviceFeatures.sampleRateShading = VK_TRUE;
+            deviceFeatures12.shaderOutputLayer = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features12.shaderOutputViewportIndex == VK_FALSE)
+        {
+            AE_WARN("Vulkan: Shader Output Viewport Index is not supported!")
+        }
+        else
+        {
+            deviceFeatures12.shaderOutputViewportIndex = VK_TRUE;
         }
 
         VkDeviceCreateInfo deviceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = nullptr,
+            .pNext = &deviceFeaturesChain,
             .flags = 0,
             .queueCreateInfoCount = 1,
             .pQueueCreateInfos = &deviceQueueCreateInfo,
@@ -449,7 +492,7 @@ namespace Astral {
             .ppEnabledLayerNames = nullptr,
             .enabledExtensionCount = (uint32)devExts.size(),
             .ppEnabledExtensionNames = devExts.data(),
-            .pEnabledFeatures = &deviceFeatures
+            .pEnabledFeatures = nullptr
         };
 
         VkResult result = vkCreateDevice(m_PhysicalDevice.physicalDevice, &deviceCreateInfo, nullptr, &m_Device);
