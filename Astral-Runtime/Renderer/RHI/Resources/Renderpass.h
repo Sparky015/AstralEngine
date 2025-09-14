@@ -42,6 +42,9 @@ namespace Astral {
         ImageLayout FinalLayout;
         Vec4 ClearColor; // Only use when load op is set to clear
         SampleCount MSAASamples = SampleCount::SAMPLE_1_BIT;
+        uint32 LayerCount = 1;
+        uint32 MipMapCount = 1;
+        TextureType TextureType = TextureType::IMAGE_2D;
 
         bool operator==(const AttachmentDescription&) const = default;
     };
