@@ -140,6 +140,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -202,6 +203,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -358,6 +360,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
 		    default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -397,6 +400,7 @@ namespace Astral {
     			case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     			case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    			case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     		}
     		imageViewCreateInfo.viewType = viewType;
