@@ -150,6 +150,20 @@ namespace Astral {
         ImGui::Text("Camera Rotation: (%.3f, %.3f, %.3f)", cameraRotation.x, cameraRotation.y, cameraRotation.z);
         ImGui::Text("Camera Rotation Speed: (%.3f, %.3f)", rotationSpeed.x, rotationSpeed.y);
 
+        float zNear = scene.PrimaryCamera.GetNearPlane();
+        ImGui::Text("zNear: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##zNearInput", &zNear);
+        if (scene.PrimaryCamera.GetNearPlane() != zNear) { scene.PrimaryCamera.SetNearPlane(zNear); }
+
+        float zFar = scene.PrimaryCamera.GetFarPlane();
+        ImGui::Text("zFar: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##zFarInput", &zFar);
+        if (scene.PrimaryCamera.GetFarPlane() != zFar) { scene.PrimaryCamera.SetFarPlane(zFar); }
+
         ImGui::Text("Camera Base Speed: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);

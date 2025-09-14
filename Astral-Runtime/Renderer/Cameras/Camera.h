@@ -24,6 +24,7 @@ namespace Astral {
     {
     public:
         Camera();
+        Camera(CameraType cameraType, float aspectRatio, float zNear, float zFar);
         Camera(CameraType cameraType, float aspectRatio, float zoomLevel);
         ~Camera();
 
@@ -59,6 +60,24 @@ namespace Astral {
 
         float GetZoomLevel() const { return m_ZoomLevel; }
 
+        void SetNearPlane(float zNear)
+        {
+            m_ZNear = zNear;
+            RecreateProjectionMatrix();
+            CalculateProjectionViewMatrix();
+        }
+
+        void SetFarPlane(float zFar)
+        {
+            m_ZFar = zFar;
+            RecreateProjectionMatrix();
+            CalculateProjectionViewMatrix();
+        }
+
+        float GetNearPlane() { return m_ZNear; }
+        float GetFarPlane() { return m_ZFar; }
+        float GetAspectRatio() { return m_AspectRatio; }
+
         Vec3 GetForwardVector() const;
         Vec3 GetLeftVector() const;
         Vec3 GetRightVector() const;
@@ -66,7 +85,7 @@ namespace Astral {
         const Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
         Camera(const Camera&);
-        Camera& operator=(const Camera&) = delete;
+        Camera& operator=(const Camera&);
         Camera(Camera&&) noexcept = delete;
         Camera& operator=(Camera&&) noexcept = delete;
 
@@ -84,6 +103,8 @@ namespace Astral {
         Vec3 m_Position;
         Vec3 m_Rotation;
         float m_AspectRatio = 1.0f;
+        float m_ZNear;
+        float m_ZFar;
 
         union
         {
