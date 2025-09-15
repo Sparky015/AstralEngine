@@ -138,7 +138,7 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
     float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
 
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, cascadeNum).rg;
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
 
     for(int x = -1; x <= 1; ++x)
     {
