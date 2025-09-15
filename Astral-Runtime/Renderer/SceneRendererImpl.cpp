@@ -380,7 +380,7 @@ namespace Astral {
             .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(4096, 4096, 3), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
         shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
@@ -504,13 +504,14 @@ namespace Astral {
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
             .LayerCount = (uint32)3,//m_RendererSettings.NumShadowCascades,
             .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec2(4096), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(4096, 4096, 3), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
         shadowMapPass.CreateDepthStencilAttachment(shadowMapBufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 

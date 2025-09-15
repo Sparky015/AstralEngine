@@ -606,11 +606,14 @@ namespace Astral {
 
             // Textures
 
-            Vec2 passResourceDimensions = pass.GetWriteAttachmentDimensions();
+            Vec3 passResourceDimensions = pass.GetWriteAttachmentDimensions();
+
             if (passResourceDimensions.x < 0 && passResourceDimensions.y < 0)
             {
                 passResourceDimensions /= -1;
-                passResourceDimensions *= m_ViewportDimensions;
+                passResourceDimensions.x *= (float)m_ViewportDimensions.x;
+                passResourceDimensions.y *= (float)m_ViewportDimensions.y;
+                passResourceDimensions.z = 1;
             }
 
             for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
@@ -688,7 +691,7 @@ namespace Astral {
             {
                 // Create the framebuffers for the render pass
                 passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
-                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y);
+                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y, passResourceDimensions.z);
 
                 for (const TextureHandle& attachmentTexture : m_RenderPassResources[renderPassIndex][i].AttachmentTextures)
                 {

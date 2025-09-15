@@ -8,7 +8,7 @@
 
 namespace Astral {
 
-    RenderGraphPass::RenderGraphPass(Vec2 resourceDimensions, const std::string_view& name, const std::function<void()>& callback) :
+    RenderGraphPass::RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void()>& callback) :
         m_WriteAttachmentDimensions(resourceDimensions),
         m_Callback(callback),
         m_Name(name)
