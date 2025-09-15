@@ -473,14 +473,6 @@ namespace Astral {
             deviceFeatures12.shaderOutputLayer = VK_TRUE;
         }
 
-        if (m_PhysicalDevice.features12.shaderOutputViewportIndex == VK_FALSE)
-        {
-            AE_WARN("Vulkan: Shader Output Viewport Index is not supported!")
-        }
-        else
-        {
-            deviceFeatures12.shaderOutputViewportIndex = VK_TRUE;
-        }
 
         VkDeviceCreateInfo deviceCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
