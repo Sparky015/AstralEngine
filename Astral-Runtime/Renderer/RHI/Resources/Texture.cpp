@@ -83,6 +83,7 @@ namespace Astral {
             textureCreateInfo.ImageDataLength = texture.size();
             textureCreateInfo.LayerCount = texture.layers();
             textureCreateInfo.MipMapCount = texture.levels();
+            textureCreateInfo.GenerateMipMaps = true; // false
         }
         else
         {
@@ -92,6 +93,7 @@ namespace Astral {
             textureCreateInfo.ImageDataLength = width * height * bpp;
             textureCreateInfo.LayerCount = 1;
             textureCreateInfo.MipMapCount = Texture::CalculateMipMapLevels(width, height);
+            textureCreateInfo.GenerateMipMaps = true;
         }
 
         if (!data)
@@ -106,7 +108,6 @@ namespace Astral {
         textureCreateInfo.Dimensions.x = width;
         textureCreateInfo.Dimensions.y = height;
         textureCreateInfo.ImageData = data;
-        textureCreateInfo.GenerateMipMaps = true;
 
 
         TextureHandle textureHandle = Texture::CreateTexture(textureCreateInfo);
