@@ -1174,13 +1174,6 @@ namespace Astral {
     void SceneRendererImpl::CascadedShadowMapsPass()
     {
         if (!m_RendererSettings.IsShadowsOn) { return; }
-
-        struct CascadedShadowMapsPushConstantData
-        {
-            Mat4 LightSpaceMatrix;
-            Mat4 ModelMatrix;
-        };
-
         if (m_FirstDirectionalLightInScene.LightType != LightType::DIRECTIONAL) { return; }
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -1198,6 +1191,7 @@ namespace Astral {
             subfrustumCamera.SetPosition(m_SceneCamera.GetPosition());
             subfrustumCamera.SetRotation(m_SceneCamera.GetRotation());
             std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(subfrustumCamera.GetProjectionViewMatrix());
+
 
             // Find center of frustum
 
@@ -1217,7 +1211,7 @@ namespace Astral {
                 up = Vec3(0.0f, 0.0f, 1.0f);
             }
 
-            Mat4 lightView = glm::lookAt(center - m_FirstDirectionalLightInScene.Position,
+            Mat4 lightView = glm::lookAt(center - lightDir,
                                center,
                                up);
 
@@ -1231,7 +1225,7 @@ namespace Astral {
             float maxZ = std::numeric_limits<float>::lowest();
             for (const auto& cornerPosition : frustumCorners)
             {
-                const auto trf = lightView * cornerPosition;
+                const Vec4 trf = lightView * cornerPosition;
                 minX = std::min(minX, trf.x);
                 maxX = std::max(maxX, trf.x);
                 minY = std::min(minY, trf.y);
@@ -1243,7 +1237,7 @@ namespace Astral {
 
             const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 
-            Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
+            // Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
             // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
             //        "\nMin X: " << minX <<
             //        "\nMax X: " << maxX <<
