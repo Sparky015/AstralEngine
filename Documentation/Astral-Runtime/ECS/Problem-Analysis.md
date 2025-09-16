@@ -13,7 +13,7 @@ Why am I solving this problem?
 
 Identify and Balance Constraints:
 
-How much time to I have to make this?
+How much time do I have to make this?
 - Two weeks at the max
 
 How much research do I have to do on this?
