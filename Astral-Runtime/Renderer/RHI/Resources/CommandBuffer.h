@@ -35,6 +35,7 @@ namespace Astral {
         virtual void EndRenderPass() = 0;
 
         virtual void DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle) = 0;
+        virtual void DrawElementsInstanced(const IndexBufferHandle& indexBufferHandle, uint32 numberOfInstances) = 0;
         virtual void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) = 0;
         virtual void PushConstants(void* data, uint32 sizeInBytes) = 0;
         virtual void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) = 0;

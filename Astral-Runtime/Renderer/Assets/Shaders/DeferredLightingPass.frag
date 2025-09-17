@@ -16,6 +16,7 @@ layout (set = 0, binding = 0) uniform SceneData {
     vec3 cameraPosition;
     uint numLights;
     float ambientLightConstant;
+    uint numShadowCascades;
 } u_SceneData;
 
 const uint LIGHT_TYPE_POINT = 0;
@@ -35,22 +36,28 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
-
-layout(set = 2, binding = 0) uniform sampler2D u_AlbedoInput;
-layout(set = 2, binding = 1) uniform sampler2D u_MetallicInput;
-layout(set = 2, binding = 2) uniform sampler2D u_RoughnessInput;
-layout(set = 2, binding = 3) uniform sampler2D u_EmissionInput;
-layout(set = 2, binding = 4) uniform sampler2D u_NormalInput;
-layout(set = 2, binding = 5) uniform sampler2D u_DepthBufferInput;
-layout(set = 2, binding = 6) uniform sampler2D u_DirectionalLightShadows;
-
-
-layout(push_constant) uniform PushConstantData {
-    mat4 lightMatrices;
+layout (set = 2, binding = 0) uniform LightMatrices {
+    mat4 lightMatrices[8];
 } u_LightMatrices;
 
-layout(location = 0) out vec4 outColor;
+layout(set = 3, binding = 0) uniform sampler2D u_AlbedoInput;
+layout(set = 3, binding = 1) uniform sampler2D u_MetallicInput;
+layout(set = 3, binding = 2) uniform sampler2D u_RoughnessInput;
+layout(set = 3, binding = 3) uniform sampler2D u_EmissionInput;
+layout(set = 3, binding = 4) uniform sampler2D u_NormalInput;
+layout(set = 3, binding = 5) uniform sampler2D u_DepthBufferInput;
+layout(set = 3, binding = 6) uniform sampler2DArray u_DirectionalLightShadows;
 
+layout (push_constant) uniform PushConstants {
+    float cameraZNear;
+    float cameraZFar;
+    int numShadowCascades;
+    uint showCascadeDebugView;
+    float shadowMapBias;
+} u_PushConstants;
+
+
+layout(location = 0) out vec4 outColor;
 
 #include "BRDF.glsl"
 #include "Utilities.glsl"

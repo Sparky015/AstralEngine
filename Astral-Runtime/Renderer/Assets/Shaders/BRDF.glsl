@@ -63,27 +63,55 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
+float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
+{
+    const float blendFactor = .5;
+    const float logComponent = blendFactor * (zNear * pow((zFar / zNear), cascadeNum / totalCascades));
+    const float linearComponent = (1 - blendFactor) * (zNear + cascadeNum / totalCascades * (zFar - zNear));
+    return logComponent + linearComponent;
+}
+
+int GetCascadeIndex(vec3 worldPosition)
+{
+    float distance = (u_SceneData.cameraView * vec4(worldPosition, 1.0f)).z * -1.0f;
+
+    int cascadeNum = u_PushConstants.numShadowCascades - 1;
+    for (int i = 0; i < u_PushConstants.numShadowCascades; i++)
+    {
+        if (distance < CalcCascadeZFar(u_PushConstants.cameraZNear, u_PushConstants.cameraZFar, i + 1, u_PushConstants.numShadowCascades)) { cascadeNum = i; break; }
+    }
+    return cascadeNum;
+}
+
+vec3 cascadeDebugOverlayColors[8] = { { 1.0, 0.0f, 0.0f }, { 0.0, 1.0f, 0.0f }, { 0.0, 0.0f, 1.0f }, { 0.5, 0.5f, 0.0f },
+                                      { 0.0, 0.5f, 0.5f }, { 0.5, 0.0f, 0.5f }, { 1.0, 0.0f, 0.5f }, { 1.0, 5.0f, 0.0f } };
+
+
 float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 {
-    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices * vec4(worldPosition, 1.0f);
+    int cascadeNum = GetCascadeIndex(worldPosition);
+
+    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices[cascadeNum] * vec4(worldPosition, 1.0f);
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
     projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
-    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
-    float currentDepth = projCoords.z;
 
-    float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
+    float closestLightDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
+    float currentCameraDepth = clamp(projCoords.z, 0, 1);
+
+    float biasScalingFactor = u_PushConstants.shadowMapBias;
+    float bias = max(biasScalingFactor * (1.0 - dot(normal, lightVector)), 0.0005);
 
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
 
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
             vec2 offset = vec2(float(x), float(y)) * texelSize;
-            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            float pcfDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy + offset, cascadeNum)).r;
+            shadow += currentCameraDepth - bias > pcfDepth ? 1.0 : 0.0; // 1 = Shadow, 0 = No Shadow
         }
     }
     shadow /= 9.0; // Average of 9 samples
@@ -146,6 +174,13 @@ vec3 BRDF(Material material, vec3 worldPosition, vec3 viewVector)
         float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
 
         vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
+
+        // Cascaded Shadow Map Debug Overlay
+        if (u_PushConstants.showCascadeDebugView == 1u)
+        {
+            outgoingLight = cascadeDebugOverlayColors[GetCascadeIndex(worldPosition)];
+        }
+
         finalLight += outgoingLight;
     }
 

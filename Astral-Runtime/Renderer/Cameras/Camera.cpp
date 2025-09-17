@@ -16,9 +16,38 @@ namespace Astral {
         m_ViewMatrix(1.0f),
         m_ProjectionViewMatrix(1.0f),
         m_Position(0, 0, 0),
-        m_Rotation(0.0f)
+        m_Rotation(0.0f),
+        m_AspectRatio(9.0 / 16.0),
+        m_ZNear(0.1f),
+        m_ZFar(1000.0f),
+        m_ZoomLevel(1)
     {
-        m_ZoomLevel = 1.0f;
+
+        RecreateProjectionMatrix();
+        CalculateProjectionViewMatrix();
+        m_ViewportResizedListener.StartListening();
+    }
+
+
+    Camera::Camera(CameraType cameraType, float aspectRatio, float zNear, float zFar) :
+        m_CameraType(cameraType),
+        m_ProjectionMatrix(),
+        m_ViewMatrix(1.0f),
+        m_ProjectionViewMatrix(1.0f),
+        m_Position(0, 0, 0),
+        m_Rotation(0.0f),
+        m_AspectRatio(aspectRatio),
+        m_ZNear(zNear),
+        m_ZFar(zFar)
+    {
+        if (m_CameraType == CameraType::PERSPECTIVE)
+        {
+            m_POV = 60.0f;
+        }
+        else if (m_CameraType == CameraType::ORTHOGRAPHIC)
+        {
+            m_ZoomLevel = 1.0f;
+        }
 
         RecreateProjectionMatrix();
         CalculateProjectionViewMatrix();
@@ -32,7 +61,9 @@ namespace Astral {
         m_ViewMatrix(1.0f),
         m_ProjectionViewMatrix(1.0f),
         m_Position(0, 0, 0),
-        m_Rotation(0.0f)
+        m_Rotation(0.0f),
+        m_ZNear(0.1f),
+        m_ZFar(1000.0f)
     {
         m_Position = {0, 0, 0};
         if (m_CameraType == CameraType::PERSPECTIVE)
@@ -104,6 +135,8 @@ namespace Astral {
         m_Rotation(other.m_Rotation),
         m_AspectRatio(other.m_AspectRatio),
         m_POV(other.m_POV),
+        m_ZNear(other.m_ZNear),
+        m_ZFar(other.m_ZFar),
         m_ViewportResizedListener([this](ViewportResizedEvent e)
         {
             ResizeCamera(e);
@@ -115,11 +148,39 @@ namespace Astral {
     }
 
 
+    Camera& Camera::operator=(const Camera& other)
+    {
+        if (this != &other)
+        {
+            m_CameraType = other.m_CameraType;
+            m_ProjectionMatrix = other.m_ProjectionMatrix;
+            m_ViewMatrix = other.m_ViewMatrix;
+            m_ProjectionViewMatrix = other.m_ProjectionViewMatrix;
+            m_Position = other.m_Position;
+            m_Rotation = other.m_Rotation;
+            m_AspectRatio = other.m_AspectRatio;
+            m_POV = other.m_POV;
+            m_ZNear = other.m_ZNear;
+            m_ZFar = other.m_ZFar;
+            m_ViewportResizedListener = EventListener<ViewportResizedEvent>{[this](ViewportResizedEvent e)
+            {
+                ResizeCamera(e);
+            }};
+
+            RecreateProjectionMatrix();
+            CalculateProjectionViewMatrix();
+            m_ViewportResizedListener.StartListening();
+        }
+
+        return *this;
+    }
+
+
     void Camera::RecreateProjectionMatrix()
     {
         if (m_CameraType == CameraType::PERSPECTIVE)
         {
-            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, .10f, 100.0f);
+            m_ProjectionMatrix = glm::perspective(glm::radians(m_POV), m_AspectRatio, m_ZNear, m_ZFar);
         }
         else if (m_CameraType == CameraType::ORTHOGRAPHIC)
         {

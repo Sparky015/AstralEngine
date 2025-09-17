@@ -35,10 +35,10 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
-layout(set = 2, binding = 0) uniform sampler2D u_DirectionalLightShadows;
+layout(set = 2, binding = 0) uniform sampler2DArray u_DirectionalLightShadows;
 
 layout (set = 3, binding = 0) uniform LightMatrices {
-    mat4 lightMatrices;
+    mat4 lightMatrices[8];
 } u_LightMatrices;
 
 layout (set = 4, binding = 0) uniform sampler2D u_BaseColor;
@@ -51,7 +51,12 @@ layout (push_constant) uniform ModelData {
     mat4 transform;
     uint hasNormalMap;
     uint hasDirectXNormals;
-} u_ModelData;
+    float cameraZNear;
+    float cameraZFar;
+    int numShadowCascades;
+    uint showCascadeDebugView;
+    float shadowMapBias;
+} u_PushConstants;
 
 layout(location = 0) out vec4 color;
 
@@ -70,10 +75,10 @@ void main()
 
     vec3 normal = v_Normals;
 
-    if (u_ModelData.hasNormalMap != 0)
+    if (u_PushConstants.hasNormalMap != 0)
     {
         vec3 tangentSpaceNormal = texture(u_Normals, v_TextureCoord).rgb;
-        normal = CalculateNormalFromMap(tangentSpaceNormal, v_Normals, v_Tangents, v_Bitangents, u_ModelData.hasDirectXNormals);
+        normal = CalculateNormalFromMap(tangentSpaceNormal, v_Normals, v_Tangents, v_Bitangents, u_PushConstants.hasDirectXNormals);
     }
 
     material.Normal = normal;

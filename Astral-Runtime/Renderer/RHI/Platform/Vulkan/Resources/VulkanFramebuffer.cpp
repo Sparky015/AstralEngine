@@ -26,11 +26,12 @@ namespace Astral {
     }
 
 
-    void VulkanFramebuffer::BeginBuildingFramebuffer(uint32 framebufferWidth, uint32 framebufferHeight)
+    void VulkanFramebuffer::BeginBuildingFramebuffer(uint32 framebufferWidth, uint32 framebufferHeight, uint32 numLayers)
     {
         InvalidateFramebuffer();
         m_FramebufferWidth = framebufferWidth;
         m_FramebufferHeight = framebufferHeight;
+        m_FramebufferNumLayers = numLayers;
     }
 
 
@@ -99,7 +100,7 @@ namespace Astral {
             .pAttachments = m_ImageViews.data(),
             .width = m_FramebufferWidth,
             .height = m_FramebufferHeight,
-            .layers = 1,
+            .layers = m_FramebufferNumLayers,
         };
 
         VkResult result = vkCreateFramebuffer(m_Device, &framebufferInfo, nullptr, &m_Framebuffer);

@@ -292,6 +292,7 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
         Asset/Loaders/CubeLUTLoader.cpp
         Renderer/RHI/Common/SamplerSettings.h
+        Renderer/RHI/Common/PipelineRasterizerState.h
 )
 
 

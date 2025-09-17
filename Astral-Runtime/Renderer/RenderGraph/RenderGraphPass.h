@@ -13,7 +13,7 @@
 namespace Astral {
 
     // Used to reference the dimensions of the output texture/render target of the render graph
-    static constexpr Vec2 OutputAttachmentDimensions = Vec2(-1);
+    static constexpr Vec3 OutputAttachmentDimensions = Vec3(-1);
 
     enum class AttachmentType
     {
@@ -64,7 +64,7 @@ namespace Astral {
          * @param name The name for the render graph pass (should be unique in render graph)
          * @param callback Callback that will actually execute on the render pass and make the API calls
          */
-        explicit RenderGraphPass(Vec2 resourceDimensions, const std::string_view& name, const std::function<void()>& callback);
+        explicit RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void()>& callback);
 
         /**
          * @brief Links an attachment from another render pass to use as read input in this render pass
@@ -198,7 +198,7 @@ namespace Astral {
         /**
          * @brief Gets the resource dimensions of attachments being written to by the render pass
          */
-        Vec2 GetWriteAttachmentDimensions() const { return m_WriteAttachmentDimensions; }
+        Vec3 GetWriteAttachmentDimensions() const { return m_WriteAttachmentDimensions; }
 
         /**
          * @brief Gets the name of this render pass
@@ -215,7 +215,7 @@ namespace Astral {
         // All attachments created by this render pass
         std::vector<LocalAttachment> m_Attachments;
         std::vector<RenderGraphPass*> m_ExplicitDependencies;
-        Vec2 m_WriteAttachmentDimensions;
+        Vec3 m_WriteAttachmentDimensions;
 
         // All attachments linked to this render pass
         std::vector<ExternalAttachment> m_ReadInputAttachments;

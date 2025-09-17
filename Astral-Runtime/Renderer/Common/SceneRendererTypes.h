@@ -38,7 +38,8 @@ namespace Astral {
         GBUFFER_METALLIC,
         GBUFFER_EMISSION,
         GBUFFER_NORMAL,
-        DEPTH
+        DEPTH,
+        CASCADED_SHADOW_MAP_BOUNDARIES
     };
 
     struct RendererSettings
@@ -47,8 +48,10 @@ namespace Astral {
         bool IsVSyncEnabled;
         bool IsFrustumCullingEnabled;
         bool IsShadowsOn;
-        int32 NumShadowCascades;
+        int32 NumShadowCascades = 1;
         RendererDebugView DebugView;
+        int32 ShadowMapResolution;
+        float ShadowMapBias;
     };
 
 

@@ -606,11 +606,14 @@ namespace Astral {
 
             // Textures
 
-            Vec2 passResourceDimensions = pass.GetWriteAttachmentDimensions();
+            Vec3 passResourceDimensions = pass.GetWriteAttachmentDimensions();
+
             if (passResourceDimensions.x < 0 && passResourceDimensions.y < 0)
             {
                 passResourceDimensions /= -1;
-                passResourceDimensions *= m_ViewportDimensions;
+                passResourceDimensions.x *= (float)m_ViewportDimensions.x;
+                passResourceDimensions.y *= (float)m_ViewportDimensions.y;
+                passResourceDimensions.z = 1;
             }
 
             for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
@@ -626,8 +629,8 @@ namespace Astral {
                         .UsageFlags = localAttachment.AttachmentDescription.ImageUsageFlags,
                         .Dimensions = passResourceDimensions,
                         .ImageData = nullptr,
-                        .LayerCount = 1,
-                        .MipMapCount = 1,
+                        .LayerCount = localAttachment.AttachmentDescription.LayerCount,
+                        .MipMapCount = localAttachment.AttachmentDescription.MipMapCount,
                         .MSAASampleCount = localAttachment.AttachmentDescription.MSAASamples
                     };
 
@@ -637,7 +640,28 @@ namespace Astral {
                     ASSERT(passResources.size() == m_MaxFramesInFlight, "The number of copies of resources is expected to be the number of frames in flight!")
                     for (size_t i = 0; i < m_MaxFramesInFlight; i++)
                     {
-                        TextureHandle attachmentTexture = device.CreateTexture(textureCreateInfo);
+                        TextureHandle attachmentTexture;
+                        if (localAttachment.AttachmentDescription.TextureType == TextureType::IMAGE_2D)
+                        {
+                            attachmentTexture = device.CreateTexture(textureCreateInfo);
+                        }
+                        else if (localAttachment.AttachmentDescription.TextureType == TextureType::IMAGE_2D_ARRAY)
+                        {
+                            attachmentTexture = device.Create2DTextureArray(textureCreateInfo);
+                        }
+                        else if (localAttachment.AttachmentDescription.TextureType == TextureType::IMAGE_3D)
+                        {
+                            attachmentTexture = device.Create3DTexture(textureCreateInfo);
+                        }
+                        else if (localAttachment.AttachmentDescription.TextureType == TextureType::IMAGE_1D)
+                        {
+                            attachmentTexture = device.Create1DTexture(textureCreateInfo);
+                        }
+                        else if (localAttachment.AttachmentDescription.TextureType == TextureType::CUBEMAP)
+                        {
+                            attachmentTexture = device.CreateCubemap(textureCreateInfo);
+                        }
+
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
                         RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
                     }
@@ -667,7 +691,7 @@ namespace Astral {
             {
                 // Create the framebuffers for the render pass
                 passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
-                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y);
+                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y, passResourceDimensions.z);
 
                 for (const TextureHandle& attachmentTexture : m_RenderPassResources[renderPassIndex][i].AttachmentTextures)
                 {

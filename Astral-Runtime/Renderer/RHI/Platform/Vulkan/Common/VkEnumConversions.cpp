@@ -517,6 +517,19 @@ namespace Astral {
     }
 
 
+    VkCullModeFlags ConvertCullModeToVkCullModeFlags(CullMode cullMode)
+    {
+        switch (cullMode)
+        {
+            case CullMode::NONE:                        return VK_CULL_MODE_NONE;
+            case CullMode::FRONT:                       return VK_CULL_MODE_FRONT_BIT;
+            case CullMode::BACK:                        return VK_CULL_MODE_BACK_BIT;
+            case CullMode::FRONT_AND_BACK:              return VK_CULL_MODE_FRONT_AND_BACK;
+            default: AE_ERROR("Invalid Cull Mode Given!");
+        }
+    }
+
+
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount)
     {
         VkSampleCountFlagBits vkSampleCount;

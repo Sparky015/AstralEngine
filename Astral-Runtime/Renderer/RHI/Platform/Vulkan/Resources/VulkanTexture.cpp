@@ -140,6 +140,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -202,6 +203,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -255,6 +257,7 @@ namespace Astral {
     	{
     		case TextureType::IMAGE_1D: imageType = VK_IMAGE_TYPE_1D; break;
     		case TextureType::IMAGE_2D: imageType = VK_IMAGE_TYPE_2D; break;
+    		case TextureType::IMAGE_2D_ARRAY: imageType = VK_IMAGE_TYPE_2D; break;
     		case TextureType::IMAGE_3D: imageType = VK_IMAGE_TYPE_3D; break;
     		case TextureType::CUBEMAP: imageType = VK_IMAGE_TYPE_2D; break;
     		default: imageType = VK_IMAGE_TYPE_2D;
@@ -358,6 +361,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
 		    default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -397,6 +401,7 @@ namespace Astral {
     			case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     			case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    			case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     		}
     		imageViewCreateInfo.viewType = viewType;
@@ -691,7 +696,7 @@ namespace Astral {
 
 
 
-    	if (!RendererAPI::GetDevice().IsBlitSupportedByFormat(ConvertVkFormatToImageFormat(m_Format)))
+    	if (generateMipMaps && !RendererAPI::GetDevice().IsBlitSupportedByFormat(ConvertVkFormatToImageFormat(m_Format)))
     	{
     		AE_WARN("Texture format does not support blit command needed to generate mip maps!")
     	}
@@ -757,7 +762,7 @@ namespace Astral {
     				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
     				1,
     				&mipmapImageBlit,
-    				VK_FILTER_NEAREST);
+    				VK_FILTER_NEAREST); // VK_FILTER_LINEAR
 
     			if (mipWidth > 1)  { mipWidth /= 2; }
     			if (mipHeight > 1) { mipHeight /= 2; }

@@ -23,7 +23,8 @@ namespace Astral {
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
         VkPhysicalDeviceMemoryProperties memoryProperties;
         std::vector<VkPresentModeKHR> presentModes;
-        VkPhysicalDeviceFeatures features;
+        VkPhysicalDeviceFeatures2 featuresChain;
+        VkPhysicalDeviceVulkan12Features features12;
     };
 
     class VulkanPhysicalDevices

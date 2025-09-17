@@ -51,6 +51,7 @@ namespace Astral {
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) override;
+        TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) override;
 
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
         bool IsAnisotropySupported() override;
