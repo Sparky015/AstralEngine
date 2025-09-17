@@ -22,8 +22,8 @@ and the environment, but there is a lot of stuff to do to get there.
 
 Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image
 Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
-of a pre depth pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
-geometry pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
+of a pre depth pass, cascaded shadow map pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
+geometry pass, cascaded shadow map pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
 deferred uses FXAA (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance
 and prefiltered environment maps one time for each environment map that is set.
 
