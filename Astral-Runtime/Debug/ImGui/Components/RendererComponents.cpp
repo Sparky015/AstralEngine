@@ -142,6 +142,10 @@ namespace Astral {
             // {
             //     rendererSettings.DebugView = RendererDebugView::DEPTH;
             // }
+            if (ImGui::Selectable("Cascaded Shadow Map Boundaries"))
+            {
+                rendererSettings.DebugView = RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES;
+            }
 
             ImGui::EndCombo();
         }

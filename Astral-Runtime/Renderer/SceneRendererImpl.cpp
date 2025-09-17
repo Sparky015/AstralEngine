@@ -75,6 +75,7 @@ namespace Astral {
         rendererSettings.IsFrustumCullingEnabled = true;
         rendererSettings.IsShadowsOn = true;
         rendererSettings.NumShadowCascades = 3;
+        rendererSettings.ShadowMapResolution = 4096;
 
 
         SetRendererSettings(rendererSettings);
@@ -268,6 +269,20 @@ namespace Astral {
             }
         }
 
+        if (m_RendererSettings.ShadowMapResolution != rendererSettings.ShadowMapResolution)
+        {
+            m_RendererSettings.ShadowMapResolution = rendererSettings.ShadowMapResolution;
+
+            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
+            {
+                BuildRenderGraphForDeferred();
+            }
+            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
+            {
+                BuildRenderGraphForForward();
+            }
+        }
+
         m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
         m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
     }
@@ -285,9 +300,6 @@ namespace Astral {
         m_CurrentViewportTexture.pop();
         return descriptorSet;
     }
-
-
-    static constexpr uint32 ShadowCascadeResolution = 4096;
 
 
     void SceneRendererImpl::BuildRenderGraphForDeferred()
@@ -374,7 +386,7 @@ namespace Astral {
             .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(ShadowCascadeResolution, ShadowCascadeResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
         shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
@@ -504,7 +516,7 @@ namespace Astral {
             .TextureType = TextureType::IMAGE_2D_ARRAY
         };
 
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(ShadowCascadeResolution, ShadowCascadeResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
+        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
         shadowMapPass.CreateDepthStencilAttachment(shadowMapBufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 
@@ -950,6 +962,7 @@ namespace Astral {
             float CameraZNear;
             float CameraZFar;
             int32 NumShadowCascades;
+            uint32 ShowCascadeDebugView;
         };
         static_assert(sizeof(ForwardLightingPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
 
@@ -1002,7 +1015,8 @@ namespace Astral {
                 .HasDirectXNormals = material.HasDirectXNormals,
                 .CameraZNear = m_SceneCamera.GetNearPlane(),
                 .CameraZFar = m_SceneCamera.GetFarPlane(),
-                .NumShadowCascades = m_RendererSettings.NumShadowCascades
+                .NumShadowCascades = m_RendererSettings.NumShadowCascades,
+                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u
             };
 
             commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
@@ -1112,6 +1126,7 @@ namespace Astral {
             float CameraZNear;
             float CameraZFar;
             int32 NumShadowCascades;
+            uint32 ShowCascadeDebugView;
         };
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -1146,7 +1161,8 @@ namespace Astral {
         {
             .CameraZNear = m_SceneCamera.GetNearPlane(),
             .CameraZFar = m_SceneCamera.GetFarPlane(),
-            .NumShadowCascades = m_RendererSettings.NumShadowCascades
+            .NumShadowCascades = m_RendererSettings.NumShadowCascades,
+            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u
         };
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
@@ -1268,7 +1284,7 @@ namespace Astral {
 
 
             // Snap to texel boundaries for stability
-            float shadowMapSize = ShadowCascadeResolution;
+            float shadowMapSize = m_RendererSettings.ShadowMapResolution;
             float texelSizeX = (maxX - minX) / shadowMapSize;
             float texelSizeY = (maxY - minY) / shadowMapSize;
 
@@ -1307,7 +1323,7 @@ namespace Astral {
 
             PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0, CullMode::FRONT);
             commandBuffer->BindPipeline(shadowMapPipeline);
-            commandBuffer->SetViewportAndScissor(Vec2(ShadowCascadeResolution));
+            commandBuffer->SetViewportAndScissor(Vec2(m_RendererSettings.ShadowMapResolution));
 
             commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
             commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 1);

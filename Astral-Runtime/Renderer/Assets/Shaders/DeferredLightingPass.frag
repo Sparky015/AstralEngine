@@ -52,6 +52,7 @@ layout (push_constant) uniform PushConstants {
     float cameraZNear;
     float cameraZFar;
     int numShadowCascades;
+    uint showCascadeDebugView;
 } u_PushConstants;
 
 

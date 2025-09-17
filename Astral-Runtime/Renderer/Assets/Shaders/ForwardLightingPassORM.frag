@@ -53,6 +53,7 @@ layout (push_constant) uniform ModelData {
     float cameraZNear;
     float cameraZFar;
     int numShadowCascades;
+    uint showCascadeDebugView;
 } u_PushConstants;
 
 layout(location = 0) out vec4 color;

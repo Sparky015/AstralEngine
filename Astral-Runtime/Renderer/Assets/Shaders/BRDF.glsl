@@ -71,17 +71,25 @@ float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCasc
     return logComponent + linearComponent;
 }
 
-//float frustumRanges[3] = {20.0f, 100.0f, 1000.0f};
-
-float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
+int GetCascadeIndex(vec3 worldPosition)
 {
     float distance = (u_SceneData.cameraView * vec4(worldPosition, 1.0f)).z * -1.0f;
 
-    int cascadeNum = 2;
-    for (int i = 0; i < 3; i++)
+    int cascadeNum = u_PushConstants.numShadowCascades - 1;
+    for (int i = 0; i < u_PushConstants.numShadowCascades; i++)
     {
         if (distance < CalcCascadeZFar(u_PushConstants.cameraZNear, u_PushConstants.cameraZFar, i + 1, u_PushConstants.numShadowCascades)) { cascadeNum = i; break; }
     }
+    return cascadeNum;
+}
+
+vec3 cascadeDebugOverlayColors[8] = { { 1.0, 0.0f, 0.0f }, { 0.0, 1.0f, 0.0f }, { 0.0, 0.0f, 1.0f }, { 0.5, 0.5f, 0.0f },
+                                      { 0.0, 0.5f, 0.5f }, { 0.5, 0.0f, 0.5f }, { 1.0, 0.0f, 0.5f }, { 1.0, 5.0f, 0.0f } };
+
+
+float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
+{
+    int cascadeNum = GetCascadeIndex(worldPosition);
 
     vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices[cascadeNum] * vec4(worldPosition, 1.0f);
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
@@ -165,22 +173,14 @@ vec3 BRDF(Material material, vec3 worldPosition, vec3 viewVector)
         vec3 BRDF = diffuse * lambert + cookTorrance;
         float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
 
-        // Cascaded Shadow Map Debug Overlay!!
-//        vec3 outgoingLight = vec3(0.0f);
-//
-//        if (shadow == 0.0f)
-//        {
-//            outgoingLight = vec3(1.0f, 0.0f, 0.0f);
-//        }
-//        if (shadow == 1.0f)
-//        {
-//            outgoingLight = vec3(0.0f, 1.0f, 0.0f);
-//        }
-//        if (shadow == 2.0f)
-//        {
-//            outgoingLight = vec3(0.0f, 0.0f, 1.0f);
-//        }
         vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
+
+        // Cascaded Shadow Map Debug Overlay
+        if (u_PushConstants.showCascadeDebugView == 1u)
+        {
+            outgoingLight = cascadeDebugOverlayColors[GetCascadeIndex(worldPosition)];
+        }
+
         finalLight += outgoingLight;
     }
 
