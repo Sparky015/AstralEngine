@@ -762,7 +762,7 @@ namespace Astral {
     				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
     				1,
     				&mipmapImageBlit,
-    				VK_FILTER_NEAREST); // VK_FILTER_LINEAR
+    				VK_FILTER_LINEAR);
 
     			if (mipWidth > 1)  { mipWidth /= 2; }
     			if (mipHeight > 1) { mipHeight /= 2; }

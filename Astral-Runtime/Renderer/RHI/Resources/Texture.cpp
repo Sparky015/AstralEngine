@@ -83,7 +83,7 @@ namespace Astral {
             textureCreateInfo.ImageDataLength = texture.size();
             textureCreateInfo.LayerCount = texture.layers();
             textureCreateInfo.MipMapCount = texture.levels();
-            textureCreateInfo.GenerateMipMaps = true; // false
+            textureCreateInfo.GenerateMipMaps = false;
         }
         else
         {
