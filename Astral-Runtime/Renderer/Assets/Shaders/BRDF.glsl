@@ -80,10 +80,11 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
     projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
 
-    float closestDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
-    float currentDepth = clamp(projCoords.z, 0, 1);
+    float closestLightDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
+    float currentCameraDepth = clamp(projCoords.z, 0, 1);
 
-    float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
+    float biasScalingFactor = .02;
+    float bias = max(biasScalingFactor * (1.0 - dot(normal, lightVector)), 0.005);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
@@ -94,7 +95,7 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
         {
             vec2 offset = vec2(float(x), float(y)) * texelSize;
             float pcfDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy + offset, cascadeNum)).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            shadow += currentCameraDepth - bias > pcfDepth ? 1.0 : 0.0; // 1 = Shadow, 0 = No Shadow
         }
     }
     shadow /= 9.0; // Average of 9 samples
@@ -156,6 +157,21 @@ vec3 BRDF(Material material, vec3 worldPosition, vec3 viewVector)
         vec3 BRDF = diffuse * lambert + cookTorrance;
         float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
 
+        // Cascaded Shadow Map Debug Overlay!!
+//        vec3 outgoingLight = vec3(0.0f);
+//
+//        if (shadow == 0.0f)
+//        {
+//            outgoingLight = vec3(1.0f, 0.0f, 0.0f);
+//        }
+//        if (shadow == 1.0f)
+//        {
+//            outgoingLight = vec3(0.0f, 1.0f, 0.0f);
+//        }
+//        if (shadow == 2.0f)
+//        {
+//            outgoingLight = vec3(0.0f, 0.0f, 1.0f);
+//        }
         vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
         finalLight += outgoingLight;
     }
