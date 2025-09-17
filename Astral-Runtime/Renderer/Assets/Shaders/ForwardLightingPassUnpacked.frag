@@ -51,7 +51,10 @@ layout (push_constant) uniform ModelData {
     mat4 transform;
     uint hasNormalMap;
     uint hasDirectXNormals;
-} u_ModelData;
+    float cameraZNear;
+    float cameraZFar;
+    int numShadowCascades;
+} u_PushConstants;
 
 layout(location = 0) out vec4 color;
 
@@ -70,10 +73,10 @@ void main()
 
     vec3 normal = v_Normals;
 
-    if (u_ModelData.hasNormalMap != 0)
+    if (u_PushConstants.hasNormalMap != 0)
     {
         vec3 tangentSpaceNormal = texture(u_Normals, v_TextureCoord).rgb;
-        normal = CalculateNormalFromMap(tangentSpaceNormal, v_Normals, v_Tangents, v_Bitangents, u_ModelData.hasDirectXNormals);
+        normal = CalculateNormalFromMap(tangentSpaceNormal, v_Normals, v_Tangents, v_Bitangents, u_PushConstants.hasDirectXNormals);
     }
 
     material.Normal = normal;

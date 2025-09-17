@@ -48,6 +48,12 @@ layout(set = 3, binding = 4) uniform sampler2D u_NormalInput;
 layout(set = 3, binding = 5) uniform sampler2D u_DepthBufferInput;
 layout(set = 3, binding = 6) uniform sampler2DArray u_DirectionalLightShadows;
 
+layout (push_constant) uniform PushConstants {
+    float cameraZNear;
+    float cameraZFar;
+    int numShadowCascades;
+} u_PushConstants;
+
 
 layout(location = 0) out vec4 outColor;
 

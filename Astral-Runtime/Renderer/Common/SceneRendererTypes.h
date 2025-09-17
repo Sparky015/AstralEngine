@@ -47,7 +47,7 @@ namespace Astral {
         bool IsVSyncEnabled;
         bool IsFrustumCullingEnabled;
         bool IsShadowsOn;
-        int32 NumShadowCascades;
+        int32 NumShadowCascades = 1;
         RendererDebugView DebugView;
     };
 

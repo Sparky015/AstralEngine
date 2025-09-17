@@ -63,7 +63,15 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
-float frustumRanges[3] = {20.0f, 100.0f, 1000.0f};
+float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
+{
+    const float blendFactor = .5;
+    const float logComponent = blendFactor * (zNear * pow((zFar / zNear), cascadeNum / totalCascades));
+    const float linearComponent = (1 - blendFactor) * (zNear + cascadeNum / totalCascades * (zFar - zNear));
+    return logComponent + linearComponent;
+}
+
+//float frustumRanges[3] = {20.0f, 100.0f, 1000.0f};
 
 float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 {
@@ -72,7 +80,7 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
     int cascadeNum = 2;
     for (int i = 0; i < 3; i++)
     {
-        if (distance < frustumRanges[i]) { cascadeNum = i; break; }
+        if (distance < CalcCascadeZFar(u_PushConstants.cameraZNear, u_PushConstants.cameraZFar, i + 1, u_PushConstants.numShadowCascades)) { cascadeNum = i; break; }
     }
 
     vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices[cascadeNum] * vec4(worldPosition, 1.0f);
