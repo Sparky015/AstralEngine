@@ -76,6 +76,7 @@ namespace Astral {
         rendererSettings.IsShadowsOn = true;
         rendererSettings.NumShadowCascades = 3;
         rendererSettings.ShadowMapResolution = 4096;
+        rendererSettings.ShadowMapBias = .02;
 
 
         SetRendererSettings(rendererSettings);
@@ -285,6 +286,7 @@ namespace Astral {
 
         m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
         m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
+        m_RendererSettings.ShadowMapBias = rendererSettings.ShadowMapBias;
     }
 
 
@@ -963,6 +965,7 @@ namespace Astral {
             float CameraZFar;
             int32 NumShadowCascades;
             uint32 ShowCascadeDebugView;
+            float ShadowMapBias;
         };
         static_assert(sizeof(ForwardLightingPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
 
@@ -1016,7 +1019,8 @@ namespace Astral {
                 .CameraZNear = m_SceneCamera.GetNearPlane(),
                 .CameraZFar = m_SceneCamera.GetFarPlane(),
                 .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u
+                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u,
+                .ShadowMapBias = m_RendererSettings.ShadowMapBias
             };
 
             commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
@@ -1127,6 +1131,7 @@ namespace Astral {
             float CameraZFar;
             int32 NumShadowCascades;
             uint32 ShowCascadeDebugView;
+            float ShadowMapBias;
         };
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -1162,7 +1167,8 @@ namespace Astral {
             .CameraZNear = m_SceneCamera.GetNearPlane(),
             .CameraZFar = m_SceneCamera.GetFarPlane(),
             .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u
+            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u,
+            .ShadowMapBias = m_RendererSettings.ShadowMapBias
         };
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));

@@ -50,7 +50,8 @@ namespace Astral {
         bool IsShadowsOn;
         int32 NumShadowCascades = 1;
         RendererDebugView DebugView;
-        uint32 ShadowMapResolution;
+        int32 ShadowMapResolution;
+        float ShadowMapBias;
     };
 
 

@@ -99,8 +99,8 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
     float closestLightDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
     float currentCameraDepth = clamp(projCoords.z, 0, 1);
 
-    float biasScalingFactor = .02;
-    float bias = max(biasScalingFactor * (1.0 - dot(normal, lightVector)), 0.005);
+    float biasScalingFactor = u_PushConstants.shadowMapBias;
+    float bias = max(biasScalingFactor * (1.0 - dot(normal, lightVector)), 0.0005);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
