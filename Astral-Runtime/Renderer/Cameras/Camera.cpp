@@ -19,7 +19,7 @@ namespace Astral {
         m_Rotation(0.0f),
         m_AspectRatio(9.0 / 16.0),
         m_ZNear(0.1f),
-        m_ZFar(100.0f),
+        m_ZFar(1000.0f),
         m_ZoomLevel(1)
     {
 
@@ -63,7 +63,7 @@ namespace Astral {
         m_Position(0, 0, 0),
         m_Rotation(0.0f),
         m_ZNear(0.1f),
-        m_ZFar(100.0f)
+        m_ZFar(1000.0f)
     {
         m_Position = {0, 0, 0};
         if (m_CameraType == CameraType::PERSPECTIVE)
