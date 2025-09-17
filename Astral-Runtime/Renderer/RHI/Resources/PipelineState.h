@@ -11,6 +11,7 @@
 #include "VertexBufferLayout.h"
 #include "Renderpass.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/PipelineRasterizerState.h"
 
 namespace Astral {
 
@@ -26,6 +27,7 @@ namespace Astral {
         uint32 SubpassIndex;
         bool IsAlphaBlended;
         SampleCount MSAASamples;
+        CullMode CullMode;
     };
 
     struct ComputePipelineStateCreateInfo

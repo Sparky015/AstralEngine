@@ -920,7 +920,7 @@ namespace Astral {
 
             material.FragmentShader = m_DepthWriteOnlyShader;
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -977,7 +977,7 @@ namespace Astral {
 
             Ref<Shader> vertexShader = mesh.VertexShader;
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1024,7 +1024,7 @@ namespace Astral {
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, ForwardMSAASampleCount);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, CullMode::NONE, ForwardMSAASampleCount);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1073,7 +1073,7 @@ namespace Astral {
                 material.FragmentShader = m_DeferredGeometryPassORMShader;
             }
 
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1115,7 +1115,7 @@ namespace Astral {
 
         Ref<Shader> vertexShader = mesh.VertexShader;
 
-        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0);
+        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(pipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1259,7 +1259,7 @@ namespace Astral {
             shadowMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
             shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
 
-            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0);
+            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0, CullMode::FRONT);
             commandBuffer->BindPipeline(shadowMapPipeline);
             commandBuffer->SetViewportAndScissor(Vec2(4096));
 
@@ -1296,7 +1296,7 @@ namespace Astral {
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1336,7 +1336,7 @@ namespace Astral {
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
         toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
-        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(toneMappingPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1373,7 +1373,7 @@ namespace Astral {
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/FXAAPass.frag");
         toneMapperMaterial.DescriptorSet = executionContext.ReadAttachments;
-        PipelineStateHandle fxaaPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
+        PipelineStateHandle fxaaPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(fxaaPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 

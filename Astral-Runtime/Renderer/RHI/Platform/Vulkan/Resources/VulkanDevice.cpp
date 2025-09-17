@@ -159,7 +159,8 @@ namespace Astral {
             .VertexBufferLayout = pipelineStateCreateInfo.BufferLayout,
             .SubpassIndex = pipelineStateCreateInfo.SubpassIndex,
             .IsAlphaBlended = pipelineStateCreateInfo.IsAlphaBlended,
-            .MSAASamples = pipelineStateCreateInfo.MSAASamples
+            .MSAASamples = pipelineStateCreateInfo.MSAASamples,
+            .CullMode = pipelineStateCreateInfo.CullMode
         };
 
         glfwGetFramebufferSize(m_Window, &pipelineStateObjectDesc.WindowWidth, &pipelineStateObjectDesc.WindowHeight);
