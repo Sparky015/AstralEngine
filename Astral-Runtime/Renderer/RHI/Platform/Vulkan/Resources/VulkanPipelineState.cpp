@@ -316,6 +316,8 @@ namespace Astral {
             m_DescriptorSetLayout.push_back(descriptorSet->GetDescriptorSetLayout());
         }
 
+        m_GraphicsDescription.DescriptorSets.clear(); // Remove refs to textures held in the descriptor sets since its not needed by the pipeline
+
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
         m_PushConstantRange.offset = 0;
         m_PushConstantRange.size = MaxPushConstantRange;

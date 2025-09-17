@@ -212,6 +212,8 @@ namespace Astral {
             TextureHandle texture = m_CurrentlyAttachedFramebuffer->GetAttachment(i);
             texture->UpdateLayout(finalLayout);
         }
+
+        m_CurrentlyAttachedFramebuffer = nullptr;
     }
 
 
