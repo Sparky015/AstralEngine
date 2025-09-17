@@ -498,7 +498,6 @@ namespace Astral {
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-
             .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
             .LayerCount = (uint32)m_RendererSettings.NumShadowCascades,
