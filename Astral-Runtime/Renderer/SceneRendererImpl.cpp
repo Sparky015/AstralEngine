@@ -1226,19 +1226,31 @@ namespace Astral {
             }
 
 
-            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+            // Snap to texel boundaries for stability
+            float shadowMapSize = 4096.0f;
+            float texelSizeX = (maxX - minX) / shadowMapSize;
+            float texelSizeY = (maxY - minY) / shadowMapSize;
 
-            // Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
-            // AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
-            //        "\nMin X: " << minX <<
-            //        "\nMax X: " << maxX <<
-            //        "\nMin Y: " << minY <<
-            //        "\nMax Y: " << maxY <<
-            //        "\nMin Z: " << minZ <<
-            //        "\nMax Z: " << maxZ <<
-            //        "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
-            //        "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
-            //        "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
+            minX = floor(minX / texelSizeX) * texelSizeX;
+            maxX = ceil(maxX / texelSizeX) * texelSizeX;
+            minY = floor(minY / texelSizeY) * texelSizeY;
+            maxY = ceil(maxY / texelSizeY) * texelSizeY;
+
+
+            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ - 100, maxZ);
+
+            Vec3 eye = center - m_FirstDirectionalLightInScene.Position;
+            AE_LOG("\n\n\n\nShadows, Light Frustum: " <<
+                   "\nMin X: " << minX <<
+                   "\nMax X: " << maxX <<
+                   "\nMin Y: " << minY <<
+                   "\nMax Y: " << maxY <<
+                   "\nMin Z: " << minZ <<
+                   "\nMax Z: " << maxZ <<
+                   "\nSize: (" << maxX - minX << ", " << maxY - minY << ", " << maxZ - minZ << ")" <<
+                   "\nCenter: (" << center.x << ", " << center.y << ", " << center.z << ") " <<
+                   "\nEye: (" << eye.x << ", " << eye.y << ", " << eye.z << ") " <<
+                   "\nUp: (" << up.x << ", " << up.y << ", " << up.z << ") ")
 
 
             m_LightSpaceMatrices.push_back(lightProjection * lightView);
