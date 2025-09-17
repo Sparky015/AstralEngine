@@ -287,7 +287,7 @@ namespace Astral {
     }
 
 
-    static constexpr uint32 ShadowCascadeResolution = 2048;
+    static constexpr uint32 ShadowCascadeResolution = 4096;
 
 
     void SceneRendererImpl::BuildRenderGraphForDeferred()
