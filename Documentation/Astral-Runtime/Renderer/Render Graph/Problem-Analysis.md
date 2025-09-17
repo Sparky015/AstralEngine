@@ -62,8 +62,8 @@ that the resources are not prematurely destroyed while being used by the GPU.
 Data:
 
 What is read and written over time? What is the access pattern?
-- After the initial render graph build, nothing is being written and only reads the read input attachments of each render pass
-for transitioning memory layouts.
+- After the initial render graph build (built once and kept for many frames until a change is needed), nothing is being written and only reads the read input attachments of each render pass
+for transitioning memory layouts. 
 
 
 Possible Future Features:

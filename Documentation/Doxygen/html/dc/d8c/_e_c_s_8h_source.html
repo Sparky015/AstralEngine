@@ -91,125 +91,127 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/dce/_mesh_component_8h.html">Components/MeshComponent.h</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/d29/_point_light_component_8h.html">Components/PointLightComponent.h</a>&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/dcb/_e_c_s_error_handling_8h.html">ECSErrorHandling.h</a>&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d5/d9b/namespace_astral.html">Astral</a> {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">constexpr</span> EntityID MAX_ENTITIES = 255;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="../../d3/d91/class_astral_1_1_e_c_s.html">   23</a></span>    <span class="keyword">class </span>ECS</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">using </span>ComponentView = std::vector&lt;ComponentType&gt;;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        ECS();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        ~ECS() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ad4571b0591a7d70ad84e2be493b73522">Init</a>();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a9ac300bf676820e875376c1d71726499">Shutdown</a>();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aca3aeb7865a7715bb1b258639e3a1ee0">CreateEntity</a>(std::string_view debugName);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2">DeleteEntity</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2">DeleteEntity</a>(EntityID entityID);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9">IsEntityAlive</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9">IsEntityAlive</a>(EntityID entityID);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a1b665e182101ecfbeeaf35a37ffedccc">RenameEntity</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> std::string_view&amp; name);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        uint32 <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a80a2bf13327453fc74c7b8358fa1c5f0">GetNumberOfActiveEntities</a>();</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ad3c777e00ecf29c838b10293307be933">AddComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> ComponentType&amp; component);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4cd541a2f6a8687db7ab935fa293c755">UpdateComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> ComponentType&amp; component);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        [[nodiscard]] ECS_Result <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#afb3058fc322819a2c31cce48dce21d82">GetComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, ComponentType&amp; outComponent);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a5bbbd6843a987fe09c893dc5eb1300b3">RemoveComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ac3bc76431fb366acc473919122a9250e">HasComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        ComponentView&lt;ComponentType&gt;&amp; <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ac745c50cc6c456ba87bf599502481a6d">GetView</a>(); <span class="comment">// TODO: Return an iterator of the view instead of actual view</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="foldopen" id="foldopen00091" data-start="{" data-end="};">
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">   91</a></span>        <span class="keyword">class </span>Iterator</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="comment">// Iterator Traits</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="keyword">using </span>value_type = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keyword">using </span>difference_type = std::ptrdiff_t;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keyword">using </span>pointer = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>*;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <span class="keyword">using </span>reference = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>&amp;;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keyword">using </span>iterator_category = std::forward_iterator_tag;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="keyword">explicit</span> Iterator(std::vector&lt;bool&gt;* entities, std::vector&lt;std::string&gt;&amp; debugNames, EntityID startingIndex);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            value_type operator*() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            Iterator&amp; operator++();</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            Iterator operator++(<span class="keywordtype">int</span>);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d99/_directional_light_component_8h.html">Components/DirectionalLightComponent.h</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d5/d9b/namespace_astral.html">Astral</a> {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">constexpr</span> EntityID MAX_ENTITIES = 255;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="../../d3/d91/class_astral_1_1_e_c_s.html">   24</a></span>    <span class="keyword">class </span>ECS</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">using </span>ComponentView = std::vector&lt;ComponentType&gt;;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        ECS();</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        ~ECS() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ad4571b0591a7d70ad84e2be493b73522">Init</a>();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a9ac300bf676820e875376c1d71726499">Shutdown</a>();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aca3aeb7865a7715bb1b258639e3a1ee0">CreateEntity</a>(std::string_view debugName);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2">DeleteEntity</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2">DeleteEntity</a>(EntityID entityID);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9">IsEntityAlive</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9">IsEntityAlive</a>(EntityID entityID);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a1b665e182101ecfbeeaf35a37ffedccc">RenameEntity</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> std::string_view&amp; name);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        uint32 <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a80a2bf13327453fc74c7b8358fa1c5f0">GetNumberOfActiveEntities</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ad3c777e00ecf29c838b10293307be933">AddComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> ComponentType&amp; component);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a4cd541a2f6a8687db7ab935fa293c755">UpdateComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, <span class="keyword">const</span> ComponentType&amp; component);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#abed4160a6383de2d9453bdca3a577f00">GetComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity, ComponentType&amp; outComponent);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#a5bbbd6843a987fe09c893dc5eb1300b3">RemoveComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ac3bc76431fb366acc473919122a9250e">HasComponent</a>(<a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a> entity);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ComponentType&gt;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        ComponentView&lt;ComponentType&gt;&amp; <a class="code hl_function" href="../../d3/d91/class_astral_1_1_e_c_s.html#ac745c50cc6c456ba87bf599502481a6d">GetView</a>(); <span class="comment">// TODO: Return an iterator of the view instead of actual view</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="foldopen" id="foldopen00092" data-start="{" data-end="};">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">   92</a></span>        <span class="keyword">class </span>Iterator</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="comment">// Iterator Traits</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keyword">using </span>value_type = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keyword">using </span>difference_type = std::ptrdiff_t;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <span class="keyword">using </span>pointer = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>*;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keyword">using </span>reference = <a class="code hl_class" href="../../df/da2/class_astral_1_1_entity.html">Entity</a>&amp;;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keyword">using </span>iterator_category = std::forward_iterator_tag;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="keyword">explicit</span> Iterator(std::vector&lt;bool&gt;* entities, std::vector&lt;std::string&gt;&amp; debugNames, EntityID startingIndex);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            value_type operator*() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            Iterator&amp; operator++();</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            Iterator operator++(<span class="keywordtype">int</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordtype">size_t</span> FindNextAliveEntity();</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            std::vector&lt;bool&gt;* m_Entities;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            std::vector&lt;std::string&gt;&amp; m_EntityDebugNames;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            EntityID m_CurrentIndex;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        };</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordtype">size_t</span> FindNextAliveEntity();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            std::vector&lt;bool&gt;* m_Entities;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            std::vector&lt;std::string&gt;&amp; m_EntityDebugNames;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            EntityID m_CurrentIndex;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        };</div>
 </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <a class="code hl_class" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Iterator</a> begin() { <span class="keywordflow">return</span> <a class="code hl_class" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Iterator</a>(&amp;m_Entities, m_EntityDebugNames, 0); }</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        Iterator end() { <span class="keywordflow">return</span> Iterator(&amp;m_Entities, m_EntityDebugNames, m_Entities.size()); }</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        EntityID GetNextInactiveEntity();</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        uint32 m_NumberOfActiveEntities;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        std::vector&lt;bool&gt; m_Entities;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        std::vector&lt;std::string&gt; m_EntityDebugNames;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        std::stack&lt;EntityID, std::vector&lt;EntityID&gt;&gt; m_FreeEntities;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        ComponentPoolSet&lt;TransformComponent, SpriteComponent, MeshComponent, PointLightComponent&gt; m_ComponentPoolSet;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    };</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <a class="code hl_class" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Iterator</a> begin() { <span class="keywordflow">return</span> <a class="code hl_class" href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Iterator</a>(&amp;m_Entities, m_EntityDebugNames, 0); }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        Iterator end() { <span class="keywordflow">return</span> Iterator(&amp;m_Entities, m_EntityDebugNames, m_Entities.size()); }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        EntityID GetNextInactiveEntity();</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        uint32 m_NumberOfActiveEntities;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        std::vector&lt;bool&gt; m_Entities;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        std::vector&lt;std::string&gt; m_EntityDebugNames;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        std::stack&lt;EntityID, std::vector&lt;EntityID&gt;&gt; m_FreeEntities;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        ComponentPoolSet&lt;TransformComponent, SpriteComponent, MeshComponent, PointLightComponent, DirectionalLightComponent&gt; m_ComponentPoolSet;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    };</div>
 </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>}</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d3e/_e_c_s___impl_8h.html">ECS_Impl.h</a>&quot;</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>}</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d3e/_e_c_s___impl_8h.html">ECS_Impl.h</a>&quot;</span></div>
 <div class="ttc" id="a_component_pool_set_8h_html"><div class="ttname"><a href="../../da/d9b/_component_pool_set_8h.html">ComponentPoolSet.h</a></div></div>
+<div class="ttc" id="a_directional_light_component_8h_html"><div class="ttname"><a href="../../d8/d99/_directional_light_component_8h.html">DirectionalLightComponent.h</a></div></div>
 <div class="ttc" id="a_e_c_s___impl_8h_html"><div class="ttname"><a href="../../d5/d3e/_e_c_s___impl_8h.html">ECS_Impl.h</a></div></div>
 <div class="ttc" id="a_e_c_s_error_handling_8h_html"><div class="ttname"><a href="../../d4/dcb/_e_c_s_error_handling_8h.html">ECSErrorHandling.h</a></div></div>
 <div class="ttc" id="a_mesh_component_8h_html"><div class="ttname"><a href="../../d3/dce/_mesh_component_8h.html">MeshComponent.h</a></div></div>
 <div class="ttc" id="a_point_light_component_8h_html"><div class="ttname"><a href="../../d1/d29/_point_light_component_8h.html">PointLightComponent.h</a></div></div>
-<div class="ttc" id="aclass_astral_1_1_e_c_s_1_1_iterator_html"><div class="ttname"><a href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Astral::ECS::Iterator</a></div><div class="ttdef"><b>Definition</b> ECS.h:92</div></div>
+<div class="ttc" id="aclass_astral_1_1_e_c_s_1_1_iterator_html"><div class="ttname"><a href="../../d9/d2c/class_astral_1_1_e_c_s_1_1_iterator.html">Astral::ECS::Iterator</a></div><div class="ttdef"><b>Definition</b> ECS.h:93</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_a1b665e182101ecfbeeaf35a37ffedccc"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a1b665e182101ecfbeeaf35a37ffedccc">Astral::ECS::RenameEntity</a></div><div class="ttdeci">void RenameEntity(Entity entity, const std::string_view &amp;name)</div><div class="ttdoc">Renames the debug name of an entity to the given name.</div><div class="ttdef"><b>Definition</b> ECS.cpp:83</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_a4cd541a2f6a8687db7ab935fa293c755"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a4cd541a2f6a8687db7ab935fa293c755">Astral::ECS::UpdateComponent</a></div><div class="ttdeci">void UpdateComponent(Entity entity, const ComponentType &amp;component)</div><div class="ttdoc">Updates a component to an entity.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:24</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_a4de6e55c975a720fa743f84662c4cdc2"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2">Astral::ECS::DeleteEntity</a></div><div class="ttdeci">void DeleteEntity(Entity entity)</div><div class="ttdoc">Deletes an entity from the ECS.</div><div class="ttdef"><b>Definition</b> ECS.cpp:56</div></div>
-<div class="ttc" id="aclass_astral_1_1_e_c_s_html_a5bbbd6843a987fe09c893dc5eb1300b3"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a5bbbd6843a987fe09c893dc5eb1300b3">Astral::ECS::RemoveComponent</a></div><div class="ttdeci">void RemoveComponent(Entity entity)</div><div class="ttdoc">Removes the given component from the entity. Does nothing if the entity does not have the given compo...</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:42</div></div>
+<div class="ttc" id="aclass_astral_1_1_e_c_s_html_a5bbbd6843a987fe09c893dc5eb1300b3"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a5bbbd6843a987fe09c893dc5eb1300b3">Astral::ECS::RemoveComponent</a></div><div class="ttdeci">void RemoveComponent(Entity entity)</div><div class="ttdoc">Removes the given component from the entity. Does nothing if the entity does not have the given compo...</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:45</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_a80a2bf13327453fc74c7b8358fa1c5f0"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a80a2bf13327453fc74c7b8358fa1c5f0">Astral::ECS::GetNumberOfActiveEntities</a></div><div class="ttdeci">uint32 GetNumberOfActiveEntities()</div><div class="ttdoc">Gets the number of entities that are alive.</div><div class="ttdef"><b>Definition</b> ECS.cpp:89</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_a9ac300bf676820e875376c1d71726499"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#a9ac300bf676820e875376c1d71726499">Astral::ECS::Shutdown</a></div><div class="ttdeci">void Shutdown()</div><div class="ttdoc">Shuts down the ECS.</div><div class="ttdef"><b>Definition</b> ECS.cpp:28</div></div>
-<div class="ttc" id="aclass_astral_1_1_e_c_s_html_ac3bc76431fb366acc473919122a9250e"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ac3bc76431fb366acc473919122a9250e">Astral::ECS::HasComponent</a></div><div class="ttdeci">bool HasComponent(Entity entity)</div><div class="ttdoc">Checks if an entity has the requested component.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:50</div></div>
-<div class="ttc" id="aclass_astral_1_1_e_c_s_html_ac745c50cc6c456ba87bf599502481a6d"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ac745c50cc6c456ba87bf599502481a6d">Astral::ECS::GetView</a></div><div class="ttdeci">ComponentView&lt; ComponentType &gt; &amp; GetView()</div><div class="ttdoc">Gets a view of the components of the requested type that can be iterated over.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:58</div></div>
+<div class="ttc" id="aclass_astral_1_1_e_c_s_html_abed4160a6383de2d9453bdca3a577f00"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#abed4160a6383de2d9453bdca3a577f00">Astral::ECS::GetComponent</a></div><div class="ttdeci">void GetComponent(Entity entity, ComponentType &amp;outComponent)</div><div class="ttdoc">Retrieves the requested component of an entity.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:33</div></div>
+<div class="ttc" id="aclass_astral_1_1_e_c_s_html_ac3bc76431fb366acc473919122a9250e"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ac3bc76431fb366acc473919122a9250e">Astral::ECS::HasComponent</a></div><div class="ttdeci">bool HasComponent(Entity entity)</div><div class="ttdoc">Checks if an entity has the requested component.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:53</div></div>
+<div class="ttc" id="aclass_astral_1_1_e_c_s_html_ac745c50cc6c456ba87bf599502481a6d"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ac745c50cc6c456ba87bf599502481a6d">Astral::ECS::GetView</a></div><div class="ttdeci">ComponentView&lt; ComponentType &gt; &amp; GetView()</div><div class="ttdoc">Gets a view of the components of the requested type that can be iterated over.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:61</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_aca3aeb7865a7715bb1b258639e3a1ee0"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#aca3aeb7865a7715bb1b258639e3a1ee0">Astral::ECS::CreateEntity</a></div><div class="ttdeci">Entity CreateEntity(std::string_view debugName)</div><div class="ttdoc">Creates an entity in the ECS and returns its instance.</div><div class="ttdef"><b>Definition</b> ECS.cpp:34</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_ad3c777e00ecf29c838b10293307be933"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ad3c777e00ecf29c838b10293307be933">Astral::ECS::AddComponent</a></div><div class="ttdeci">void AddComponent(Entity entity, const ComponentType &amp;component)</div><div class="ttdoc">Adds a component to an entity.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:15</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_ad4571b0591a7d70ad84e2be493b73522"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#ad4571b0591a7d70ad84e2be493b73522">Astral::ECS::Init</a></div><div class="ttdeci">void Init()</div><div class="ttdoc">Initializes the ECS and its component pools.</div><div class="ttdef"><b>Definition</b> ECS.cpp:19</div></div>
 <div class="ttc" id="aclass_astral_1_1_e_c_s_html_aed858ad068316934253f3b4335ab45a9"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#aed858ad068316934253f3b4335ab45a9">Astral::ECS::IsEntityAlive</a></div><div class="ttdeci">bool IsEntityAlive(Entity entity)</div><div class="ttdoc">Checks if an entity is alive and in the ECS.</div><div class="ttdef"><b>Definition</b> ECS.cpp:71</div></div>
-<div class="ttc" id="aclass_astral_1_1_e_c_s_html_afb3058fc322819a2c31cce48dce21d82"><div class="ttname"><a href="../../d3/d91/class_astral_1_1_e_c_s.html#afb3058fc322819a2c31cce48dce21d82">Astral::ECS::GetComponent</a></div><div class="ttdeci">ECS_Result GetComponent(Entity entity, ComponentType &amp;outComponent)</div><div class="ttdoc">Retrieves the requested component of an entity.</div><div class="ttdef"><b>Definition</b> ECS_Impl.h:33</div></div>
 <div class="ttc" id="aclass_astral_1_1_entity_html"><div class="ttname"><a href="../../df/da2/class_astral_1_1_entity.html">Astral::Entity</a></div><div class="ttdef"><b>Definition</b> Entity.h:17</div></div>
 <div class="ttc" id="anamespace_astral_html"><div class="ttname"><a href="../../d5/d9b/namespace_astral.html">Astral</a></div><div class="ttdef"><b>Definition</b> Asset.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->

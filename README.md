@@ -14,7 +14,6 @@ Project Lifetime: April 2024 - Present
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
 
-###
 ### Notable Features
 
 ----
@@ -73,7 +72,6 @@ I use a OCIO baked lut that contains the Reference Rendering Transform and the O
 the final colors from the ACEScg space to the sRGB space with gamma applied while also applying tone mapping for standard
 dynamic range displays.
 
-###
 #### Custom Allocators (Experimental Proof of Concept)
 
 This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
@@ -83,30 +81,27 @@ A list of the custom allocators follows:
 Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
 ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
 
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Core/Memory%20Allocators/Information.md).
 
 Future allocators to be written: Slab Allocator
 
 - Note that I am still polishing this feature, but it is functionally done.
 
-###
 #### Memory Profiling Tool Suite (Experimental)
 
 This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
 and scope-based allocation profiling tool.
 
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Profiling%20Tools/Memory%20Tracking%20&%20Visualization/Information.md).
 
 - Note that this is only available in debug builds, and that I am still polishing and optimizing this feature, but it is functionally done.
 
-###
 #### Visual Scope Profiler
 
 This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
 took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
 trace tool to view visually.
 
-###
 #### Entity-Component-System (ECS) 
 
 Created a entity component system to compose scenes with entities that you can attach data components to, and every frame,
@@ -116,7 +111,6 @@ and running, but in the future, I want to implement sparse sets into the ECS for
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
-###
 ### Screenshot of Current Engine State
 
 ---
@@ -125,7 +119,6 @@ View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 ![CurrentEngineState](Documentation/Pictures/CurrentEngineState.png)
 This picture contains the Amazon Lumberyard Bistro sample in the Editor. This is from the feature-cascaded-shadow-maps branch!
 
-###
 ### Roadmap
 
 -----
@@ -150,7 +143,6 @@ This picture contains the Amazon Lumberyard Bistro sample in the Editor. This is
 
 
 
-###
 ### How to Build
 
 -----
@@ -226,7 +218,6 @@ Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to
 
 
 
-###
 ### Branches
 
 -----
@@ -238,7 +229,6 @@ Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to
 
 
 
-###
 ### Dependencies and Third Party Libraries
 
 -----
@@ -260,7 +250,6 @@ Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to
 - yaml-cpp: For saving things like material files to disk (scene files in the future)
 
 
-###
 ### Current C++ Version (C++20)
 
 -----
@@ -272,7 +261,6 @@ I am looking to switch to C++23 when the stacktraces feature is actually impleme
 all the major compilers. Also, std::unreachable would be useful.
 
 
-###
 ### Testing Environment
 
 ---- 
