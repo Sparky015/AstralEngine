@@ -16,7 +16,7 @@ namespace Astral {
 
     static Vec3 initialPosition;
     static Vec2 rotationSpeed = Vec2{0};
-    static float sensitivity = .5;
+    static float sensitivity = .15;
     static float rotationDrag = .85;
     static float baseSpeed = 8;
     static DeltaTime deltaTime;
