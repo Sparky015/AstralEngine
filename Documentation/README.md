@@ -32,8 +32,7 @@
               - `Ideas.txt` - Ideas for Memory Allocation Visualization
               - `Memory Visualization Architecture.jpg` - Picture of Memory Allocation Visualization Architecture
               - `Visualization ImGui Architecture.jpg` - Picture of Visualization ImGui Architecture
-            - `Information.md` - Reasons for Allo
-            - cators and Memory Tracking and Research References
+            - `Information.md` - Reasons for Allocators and Memory Tracking and Research References
           - `Scope Profiler` 
             - `Information.md` - Description of Scope Profiler and Research References
         - `Renderer`
