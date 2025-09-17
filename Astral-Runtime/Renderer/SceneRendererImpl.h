@@ -156,8 +156,7 @@ namespace Astral {
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
 
         // ACES Color Transforms and Tone Mapping
-        DescriptorSetHandle m_InputLUTDescriptorSet;
-        DescriptorSetHandle m_ToneMappingLUTDescriptorSet;
+        DescriptorSetHandle m_RTT_ODT_LUT_DescriptorSet;
 
         // Cascaded Shadow Maps Pass
         Light m_FirstDirectionalLightInScene = {};

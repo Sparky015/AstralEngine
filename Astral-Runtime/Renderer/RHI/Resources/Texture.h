@@ -18,6 +18,8 @@
 #include <string>
 #include <filesystem>
 
+#include "Renderer/RHI/Common/SamplerSettings.h"
+
 namespace Astral {
 
     enum class TextureType : uint32
@@ -44,6 +46,9 @@ namespace Astral {
         uint32 MipMapCount = 1;
         bool GenerateMipMaps = false;
         SampleCount MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+        SamplerFilter SamplerFilter = SamplerFilter::LINEAR;
+        SamplerAddressMode SamplerAddressMode = SamplerAddressMode::REPEAT;
+        bool EnableAnisotropy = true;
     };
 
     /**

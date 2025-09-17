@@ -13,9 +13,16 @@ layout(push_constant) uniform PushConstant {
 
 layout(location = 0) out vec4 color;
 
+
+#include "ColorTransforms.glsl"
+
+
 void main()
 {
     float totalMips = textureQueryLevels(u_Cubemap) - 1;
     float lodLevel = clamp(u_PushConstant.environmentMapBlur, 0, 1) * totalMips;
-    color = textureLod(u_Cubemap, v_Position, lodLevel);
+
+    vec3 srgbPrimaries = textureLod(u_Cubemap, v_Position, lodLevel).rgb;
+    vec3 ap1Primaries = ConvertSRGBPimariesToAP1Primaries(srgbPrimaries);
+    color = vec4(ap1Primaries, 1.0f);
 }

@@ -59,21 +59,12 @@ namespace Astral {
         m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
         m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
 
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
-        m_ToneMappingLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_ToneMappingLUTDescriptorSet->BeginBuildingSet();
-        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
-        m_ToneMappingLUTDescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
-        m_ToneMappingLUTDescriptorSet->EndBuildingSet();
-
-
-        Ref<CubeLUT> inputLUT = registry.CreateAsset<CubeLUT>("LUTs/rec709_linear_to_acescg.cube");
-        m_InputLUTDescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_InputLUTDescriptorSet->BeginBuildingSet();
-        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->LUT3D, ShaderStage::FRAGMENT);
-        m_InputLUTDescriptorSet->AddDescriptorImageSampler(inputLUT->Shaper1D, ShaderStage::FRAGMENT);
-        m_InputLUTDescriptorSet->EndBuildingSet();
-
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
+        m_RTT_ODT_LUT_DescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+        m_RTT_ODT_LUT_DescriptorSet->BeginBuildingSet();
+        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
+        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
+        m_RTT_ODT_LUT_DescriptorSet->EndBuildingSet();
 
 
 
@@ -1333,7 +1324,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/acescg_to_rec709_linear.cube");
+        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
         quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
@@ -1343,7 +1334,7 @@ namespace Astral {
 
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
-        toneMapperMaterial.DescriptorSet = m_ToneMappingLUTDescriptorSet;
+        toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0);
         commandBuffer->BindPipeline(toneMappingPipeline);

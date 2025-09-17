@@ -165,6 +165,9 @@ namespace Astral {
             .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .SamplerFilter = SamplerFilter::LINEAR,
+            .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
+            .EnableAnisotropy = false,
         };
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
@@ -187,6 +190,9 @@ namespace Astral {
             .UsageFlags = IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(length, length), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .SamplerFilter = SamplerFilter::LINEAR,
+            .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
+            .EnableAnisotropy = false,
         };
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();

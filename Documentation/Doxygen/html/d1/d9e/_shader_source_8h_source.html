@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Astral Engine: Astral-Runtime/Renderer/Shaders/ShaderSource.h Source File</title>
+<title>Astral Engine: Astral-Runtime/Renderer/RHI/Resources/ShaderSource.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a href="../../dir_6645669d33a7be5a1806af61c22f26fd.html">Astral-Runtime</a></li><li class="navelem"><a href="../../dir_7c35236098b09e3c67e1e7f38bc24118.html">Renderer</a></li><li class="navelem"><a href="../../dir_5cf70ae2c846580287e74c245ae0e924.html">Shaders</a></li>  </ul>
+<li class="navelem"><a href="../../dir_6645669d33a7be5a1806af61c22f26fd.html">Astral-Runtime</a></li><li class="navelem"><a href="../../dir_7c35236098b09e3c67e1e7f38bc24118.html">Renderer</a></li><li class="navelem"><a href="../../dir_a95766f1e81d3ed9e36584fba1216c6d.html">RHI</a></li><li class="navelem"><a href="../../dir_79593a24626df0880028e68b4e99d26a.html">Resources</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -120,19 +120,22 @@ $(function() {
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        [[nodiscard]] ShaderType <a class="code hl_function" href="../../da/d75/class_astral_1_1_shader_source.html#a8f47343dab6898d92bb2780e34406776">GetShaderType</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        std::string m_ShaderCode;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        std::string m_FileName;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        ShaderType m_ShaderType;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    };</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordtype">void</span> ParseShaderInclude(<span class="keyword">const</span> std::filesystem::path&amp; filePath, std::string&amp; outSource);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        std::string m_ShaderCode;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        std::string m_FileName;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        ShaderType m_ShaderType;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    };</div>
 </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
 <div class="ttc" id="a_fixed_integer_types_8h_html"><div class="ttname"><a href="../../d1/d0e/_fixed_integer_types_8h.html">FixedIntegerTypes.h</a></div></div>
-<div class="ttc" id="aclass_astral_1_1_shader_source_html_a0d9a00c4593c574aa0a964c7c4895e17"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a0d9a00c4593c574aa0a964c7c4895e17">Astral::ShaderSource::GetShaderCode</a></div><div class="ttdeci">const std::string &amp; GetShaderCode() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:72</div></div>
-<div class="ttc" id="aclass_astral_1_1_shader_source_html_a41c09734125fed8aa742f1f79c000487"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a41c09734125fed8aa742f1f79c000487">Astral::ShaderSource::GetFileName</a></div><div class="ttdeci">const std::string &amp; GetFileName() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:78</div></div>
-<div class="ttc" id="aclass_astral_1_1_shader_source_html_a8f47343dab6898d92bb2780e34406776"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a8f47343dab6898d92bb2780e34406776">Astral::ShaderSource::GetShaderType</a></div><div class="ttdeci">ShaderType GetShaderType() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:84</div></div>
+<div class="ttc" id="aclass_astral_1_1_shader_source_html_a0d9a00c4593c574aa0a964c7c4895e17"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a0d9a00c4593c574aa0a964c7c4895e17">Astral::ShaderSource::GetShaderCode</a></div><div class="ttdeci">const std::string &amp; GetShaderCode() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:83</div></div>
+<div class="ttc" id="aclass_astral_1_1_shader_source_html_a41c09734125fed8aa742f1f79c000487"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a41c09734125fed8aa742f1f79c000487">Astral::ShaderSource::GetFileName</a></div><div class="ttdeci">const std::string &amp; GetFileName() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:89</div></div>
+<div class="ttc" id="aclass_astral_1_1_shader_source_html_a8f47343dab6898d92bb2780e34406776"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a8f47343dab6898d92bb2780e34406776">Astral::ShaderSource::GetShaderType</a></div><div class="ttdeci">ShaderType GetShaderType() const</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:95</div></div>
 <div class="ttc" id="aclass_astral_1_1_shader_source_html_a97f90e90821d278da7a624cbe6361ca9"><div class="ttname"><a href="../../da/d75/class_astral_1_1_shader_source.html#a97f90e90821d278da7a624cbe6361ca9">Astral::ShaderSource::ParseShader</a></div><div class="ttdeci">void ParseShader(const std::filesystem::path &amp;filePath)</div><div class="ttdef"><b>Definition</b> ShaderSource.cpp:46</div></div>
 <div class="ttc" id="anamespace_astral_html"><div class="ttname"><a href="../../d5/d9b/namespace_astral.html">Astral</a></div><div class="ttdef"><b>Definition</b> Asset.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->

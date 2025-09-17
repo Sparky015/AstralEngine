@@ -130,6 +130,8 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
     projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
+#include "BRDF.glsl"
+#include "Utilities.glsl"
 
 
     float closestDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
@@ -157,89 +159,20 @@ float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 
 void main()
 {
-    vec3 baseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
-    float metallic = texture(u_MetallicInput, v_TextureCoord).r;
-    float roughness = texture(u_RoughnessInput, v_TextureCoord).r;
-    vec3 emission = texture(u_EmissionInput, v_TextureCoord).rgb;
+    Material material;
+    material.BaseColor = texture(u_AlbedoInput, v_TextureCoord).rgb;
+    material.Roughness = texture(u_RoughnessInput, v_TextureCoord).r;
+    material.Metallic = texture(u_MetallicInput, v_TextureCoord).r;
+    material.Emission = texture(u_EmissionInput, v_TextureCoord).rgb;
+
     vec3 normal = texture(u_NormalInput, v_TextureCoord).rgb;
     normal = normal * 2.0 - 1.0;
-    normal = normalize(normal);
+    material.Normal = normalize(normal);
 
+    float depth = texture(u_DepthBufferInput, v_TextureCoord).r;
+    vec3 worldPosition = GetWorldPosition(depth, v_TextureCoord, u_SceneData.inverseCameraProjection, u_SceneData.inverseCameraView);
+    vec3 viewVector = normalize(u_SceneData.cameraPosition - worldPosition);
 
-    vec3 worldPosition = GetWorldPosition();
-    vec3 cameraPosition = u_SceneData.cameraPosition;
-    vec3 viewVector = normalize(cameraPosition - worldPosition);
-
-    vec3 finalLight = vec3(0.0f);
-
-    if (u_SceneData.numLights == 0)
-    {
-        outColor = vec4(emission, 1.0f);
-    }
-
-    for (int i = 0; i < u_SceneData.numLights; i++)
-    {
-        vec3 lightPosition = u_SceneLights.lights[i].lightPosition;
-        vec3 lightColor = u_SceneLights.lights[i].lightColor;
-        uint lightType = u_SceneLights.lights[i].lightType;
-
-        // Vectors
-        vec3 lightVector;
-        if (lightType == LIGHT_TYPE_POINT) { lightVector = normalize(lightPosition - worldPosition); }
-        else if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightVector = normalize(-lightPosition); } // Light position is direction for directional lights
-
-        vec3 halfwayVector = normalize(viewVector + lightVector);
-        float lightDistance = length(lightPosition - worldPosition);
-        float lightAttenuation = 1.0 / (lightDistance * lightDistance); // quadratic attenuation formula
-
-        if (lightType == LIGHT_TYPE_DIRECTIONAL) { lightAttenuation = 1; } // No attenuation for directional lights
-
-            // PBR Equation in Full
-        vec3 baseReflectivity = vec3(0.04);
-        float alpha = pow(roughness, 2.0f);
-        baseReflectivity = mix(baseReflectivity, baseColor, metallic.r); // Mix based on metallic value
-        vec3 specular = Fresnel(baseReflectivity, viewVector, halfwayVector);
-        vec3 diffuse = (vec3(1.0) - specular) * (1.0f - metallic.r);
-
-        vec3 lambert = baseColor / 3.1415;
-
-        vec3 cookTorranceNumerator = GGXNormalDistribution(alpha, normal, halfwayVector) * Shadowing(alpha, normal, viewVector, lightVector) * specular;
-        float cookTorranceDenominator = 4.0 * max(dot(viewVector, normal), 0.0) * max(dot(lightVector, normal), 0.0);
-        cookTorranceDenominator = max(cookTorranceDenominator, 0.000001);
-        vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
-
-        vec3 BRDF = diffuse * lambert + cookTorrance;
-        float shadow = CalculateShadowAtFrag(worldPosition, normal, lightVector);
-
-        vec3 outgoingLight = BRDF * (1 - shadow) * lightColor * max(dot(lightVector, normal), 0.0) * lightAttenuation;
-        finalLight += outgoingLight;
-    }
-
-
-    vec3 F0 = mix(vec3(0.04), baseColor, metallic);
-    vec3 F = IBLFresnelSchlickRoughness(max(dot(normal, viewVector), 0.0), F0, roughness);
-
-    // Indirect Specular
-    vec3 reflectionVector = reflect(-viewVector, normal);
-    float totalMips = textureQueryLevels(u_PrefilteredEnvironment) - 1;
-    vec3 prefilteredColor = textureLod(u_PrefilteredEnvironment, reflectionVector,  roughness * totalMips).rgb;
-    vec2 viewAngleRoughnessInput = vec2(max(dot(normal, viewVector), 0.0), roughness);
-    viewAngleRoughnessInput.r -= .01; // This avoids head on specular lighting for environment lighting which caused issues. This is a fix for now.
-    clamp(viewAngleRoughnessInput.r, 0.0f, 1.0f);
-
-    vec2 envBRDF  = texture(u_BRDFLut, viewAngleRoughnessInput).rg;
-    vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
-
-    // Indirect Diffuse
-    vec3 kS = F;
-    vec3 kD = 1.0 - kS;
-    kD *= 1.0 - metallic;
-
-    vec3 irradiance = texture(u_Irradiance, normal).rgb;
-    vec3 diffuse = irradiance * baseColor;
-
-    vec3 ambient = u_SceneData.ambientLightConstant * (kD * diffuse + specular);
-    finalLight += ambient + emission;
-
-    outColor = vec4(finalLight, 1.0f);
+    vec3 finalColor = BRDF(material, worldPosition, viewVector);
+    outColor = vec4(finalColor, 1.0f);
 }

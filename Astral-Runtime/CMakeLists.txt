@@ -32,8 +32,8 @@ add_library(AstralEngine
         ECS/Components/SpriteComponent.h
         Renderer/RendererManager.cpp
         Renderer/RendererManager.h
-        Renderer/Shaders/ShaderSource.h
-        Renderer/Shaders/ShaderSource.cpp
+        Renderer/RHI/Resources/ShaderSource.h
+        Renderer/RHI/Resources/ShaderSource.cpp
         Renderer/RHI/Resources/VertexBuffer.cpp
         Renderer/RHI/Resources/VertexBuffer.h
         Renderer/RHI/Resources/IndexBuffer.cpp
@@ -291,6 +291,7 @@ add_library(AstralEngine
         Asset/Loaders/EnvironmentMapLoader.cpp
         Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
         Asset/Loaders/CubeLUTLoader.cpp
+        Renderer/RHI/Common/SamplerSettings.h
 )
 
 

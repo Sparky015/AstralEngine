@@ -24,6 +24,7 @@ layout(location = 2) out vec4 roughnessProp;
 layout(location = 3) out vec4 emissionProp;
 layout(location = 4) out vec4 normalProp;
 
+#include "Utilities.glsl"
 
 void main()
 {
@@ -45,12 +46,7 @@ void main()
         }
         tangentSpaceNormal = normalize(tangentSpaceNormal);
 
-        vec3 N = normalize(v_Normals);
-        vec3 T = normalize(v_Tangents);
-        vec3 B = normalize(v_Bitangents);
-        T = normalize(T - N * dot(N, T));
-        B = cross(N, T);
-        mat3 TBN = mat3(T, B, N);
+        mat3 TBN = CalculateTBNMatrix(v_Normals, v_Tangents, v_Bitangents);
         normal = normalize(TBN * tangentSpaceNormal);
 
         if (u_ModelData.hasDirectXNormals != 0)
