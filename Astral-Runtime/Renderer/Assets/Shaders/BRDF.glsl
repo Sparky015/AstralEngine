@@ -63,26 +63,37 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
+float frustumRanges[3] = {20.0f, 100.0f, 1000.0f};
+
 float CalculateShadowAtFrag(vec3 worldPosition, vec3 normal, vec3 lightVector)
 {
-    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices * vec4(worldPosition, 1.0f);
+    float distance = (u_SceneData.cameraView * vec4(worldPosition, 1.0f)).z * -1.0f;
+
+    int cascadeNum = 2;
+    for (int i = 0; i < 3; i++)
+    {
+        if (distance < frustumRanges[i]) { cascadeNum = i; break; }
+    }
+
+    vec4 fragPositionLightSpace = u_LightMatrices.lightMatrices[cascadeNum] * vec4(worldPosition, 1.0f);
     vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
     projCoords.xy = projCoords.xy * 0.5 + 0.5; // Transform into UV range for sampling shadow map
 
-    float closestDepth = texture(u_DirectionalLightShadows, projCoords.xy).r;
-    float currentDepth = projCoords.z;
+
+    float closestDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy, cascadeNum)).r;
+    float currentDepth = clamp(projCoords.z, 0, 1);
 
     float bias = max(0.05 * (1.0 - dot(normal, lightVector)), 0.005);
 
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0);
+    vec2 texelSize = 1.0 / textureSize(u_DirectionalLightShadows, 0).rg;
 
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
             vec2 offset = vec2(float(x), float(y)) * texelSize;
-            float pcfDepth = texture(u_DirectionalLightShadows, projCoords.xy + offset).r;
+            float pcfDepth = texture(u_DirectionalLightShadows, vec3(projCoords.xy + offset, cascadeNum)).r;
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }

@@ -35,10 +35,10 @@ layout (set = 1, binding = 0) uniform samplerCube u_PrefilteredEnvironment;
 layout (set = 1, binding = 1) uniform samplerCube u_Irradiance;
 layout (set = 1, binding = 2) uniform sampler2D u_BRDFLut;
 
-layout(set = 2, binding = 0) uniform sampler2D u_DirectionalLightShadows;
+layout(set = 2, binding = 0) uniform sampler2DArray u_DirectionalLightShadows;
 
 layout (set = 3, binding = 0) uniform LightMatrices {
-    mat4 lightMatrices;
+    mat4 lightMatrices[8];
 } u_LightMatrices;
 
 layout (set = 4, binding = 0) uniform sampler2D u_BaseColor;
@@ -57,8 +57,6 @@ layout(location = 0) out vec4 color;
 
 #include "BRDF.glsl"
 #include "Utilities.glsl"
-
-
 
 
 void main()
