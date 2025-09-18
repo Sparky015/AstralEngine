@@ -161,10 +161,16 @@ namespace Astral {
         ImGui::SetNextItemWidth(-1);
         ImGui::InputInt("##ShadowCascadesInput", &rendererSettings.NumShadowCascades);
 
+        int shadowMapResolution = rendererSettings.ShadowMapResolution;
         ImGui::Text("Shadow Map Resolution: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);
-        ImGui::InputInt("##ShadowMapResolutionInput", &rendererSettings.ShadowMapResolution, 100, 500, ImGuiInputTextFlags_EnterReturnsTrue);
+        ImGui::InputInt("##ShadowMapResolutionInput", &shadowMapResolution);
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            rendererSettings.ShadowMapResolution = shadowMapResolution;
+        }
 
         ImGui::Text("Shadow Map Bias: ");
         ImGui::SameLine();
