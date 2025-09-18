@@ -37,6 +37,9 @@ namespace Astral {
         m_CurrentFrameIndex = 0;
 
 
+
+
+
         // Building the imgui render pass
         BuildImGuiEditorRenderPass();
 
@@ -44,8 +47,18 @@ namespace Astral {
         // Initializing the resources that are allocated per swapchain image
         InitializeFrameResources();
 
-        BuildRenderGraphForDeferred();
-        // BuildRenderGraphForForward();
+        // Renderer Settings
+        RendererSettings rendererSettings{};
+        rendererSettings.RendererType = RendererType::DEFERRED;
+        rendererSettings.IsVSyncEnabled = true;
+        rendererSettings.IsFrustumCullingEnabled = true;
+        rendererSettings.IsShadowsOn = true;
+        rendererSettings.NumShadowCascades = 3;
+        rendererSettings.ShadowMapResolution = 4096;
+        rendererSettings.ShadowMapBias = .02;
+
+        SetRendererSettings(rendererSettings);
+
 
         m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
@@ -65,21 +78,6 @@ namespace Astral {
         m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
         m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
         m_RTT_ODT_LUT_DescriptorSet->EndBuildingSet();
-
-
-
-        // Renderer Settings
-        RendererSettings rendererSettings{};
-        rendererSettings.RendererType = RendererType::DEFERRED;
-        rendererSettings.IsVSyncEnabled = true;
-        rendererSettings.IsFrustumCullingEnabled = true;
-        rendererSettings.IsShadowsOn = true;
-        rendererSettings.NumShadowCascades = 3;
-        rendererSettings.ShadowMapResolution = 4096;
-        rendererSettings.ShadowMapBias = .02;
-
-
-        SetRendererSettings(rendererSettings);
     }
 
 
@@ -226,18 +224,12 @@ namespace Astral {
 
     void SceneRendererImpl::SetRendererSettings(const RendererSettings& rendererSettings)
     {
+        bool isRenderGraphRebuildNeeded = false;
+
         if (m_RendererSettings.RendererType != rendererSettings.RendererType)
         {
             m_RendererSettings.RendererType = rendererSettings.RendererType;
-
-            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
-            {
-                BuildRenderGraphForDeferred();
-            }
-            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
-            {
-                BuildRenderGraphForForward();
-            }
+            isRenderGraphRebuildNeeded = true;
         }
 
         if (m_RendererSettings.IsVSyncEnabled != rendererSettings.IsVSyncEnabled)
@@ -252,28 +244,28 @@ namespace Astral {
 
             if (m_RendererSettings.RendererType == RendererType::DEFERRED)
             {
-                BuildRenderGraphForDeferred();
+                isRenderGraphRebuildNeeded = true;
             }
         }
 
         if (m_RendererSettings.NumShadowCascades != rendererSettings.NumShadowCascades)
         {
             m_RendererSettings.NumShadowCascades = rendererSettings.NumShadowCascades;
-
-            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
-            {
-                BuildRenderGraphForDeferred();
-            }
-            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
-            {
-                BuildRenderGraphForForward();
-            }
+            isRenderGraphRebuildNeeded = true;
         }
 
         if (m_RendererSettings.ShadowMapResolution != rendererSettings.ShadowMapResolution)
         {
             m_RendererSettings.ShadowMapResolution = rendererSettings.ShadowMapResolution;
+            isRenderGraphRebuildNeeded = true;
+        }
 
+        m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
+        m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
+        m_RendererSettings.ShadowMapBias = rendererSettings.ShadowMapBias;
+
+        if (isRenderGraphRebuildNeeded)
+        {
             if (m_RendererSettings.RendererType == RendererType::DEFERRED)
             {
                 BuildRenderGraphForDeferred();
@@ -283,10 +275,6 @@ namespace Astral {
                 BuildRenderGraphForForward();
             }
         }
-
-        m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
-        m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
-        m_RendererSettings.ShadowMapBias = rendererSettings.ShadowMapBias;
     }
 
 
