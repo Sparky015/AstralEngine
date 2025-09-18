@@ -52,6 +52,7 @@ namespace Astral {
         RendererDebugView DebugView;
         int32 ShadowMapResolution;
         float ShadowMapBias;
+        float ShadowMapZMultiplier = 1;
     };
 
 

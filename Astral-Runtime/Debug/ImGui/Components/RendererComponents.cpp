@@ -177,6 +177,11 @@ namespace Astral {
         ImGui::SetNextItemWidth(-1);
         ImGui::InputFloat("##ShadowMapBiasInput", &rendererSettings.ShadowMapBias, 0, 0, "%.5f");
 
+        ImGui::Text("Shadow Map Z Multiplier: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##ShadowMapZMultiplierInput", &rendererSettings.ShadowMapZMultiplier, 0, 0, "%.2f");
+
         SceneRenderer::SetRendererSettings(rendererSettings);
     }
 

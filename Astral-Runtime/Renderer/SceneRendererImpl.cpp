@@ -56,6 +56,7 @@ namespace Astral {
         rendererSettings.NumShadowCascades = 3;
         rendererSettings.ShadowMapResolution = 4096;
         rendererSettings.ShadowMapBias = .02;
+        rendererSettings.ShadowMapZMultiplier = 1;
 
         SetRendererSettings(rendererSettings);
 
@@ -263,6 +264,7 @@ namespace Astral {
         m_RendererSettings.IsFrustumCullingEnabled = rendererSettings.IsFrustumCullingEnabled;
         m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
         m_RendererSettings.ShadowMapBias = rendererSettings.ShadowMapBias;
+        m_RendererSettings.ShadowMapZMultiplier = rendererSettings.ShadowMapZMultiplier;
 
         if (isRenderGraphRebuildNeeded)
         {
@@ -1287,18 +1289,12 @@ namespace Astral {
             minY = floor(minY / texelSizeY) * texelSizeY;
             maxY = ceil(maxY / texelSizeY) * texelSizeY;
 
-
-            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+            float zMult = m_RendererSettings.ShadowMapZMultiplier;
+            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ * zMult, maxZ * zMult);
 
 
             m_LightSpaceMatrices.push_back(lightProjection * lightView);
         }
-
-        // AE_LOG("Cascade Z Ranges: ")
-        // for (auto zValue : frustumRanges)
-        // {
-        //     AE_LOG(zValue)
-        // }
 
         frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
 
