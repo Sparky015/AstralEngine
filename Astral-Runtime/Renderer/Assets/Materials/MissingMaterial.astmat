@@ -3,5 +3,6 @@ Shader: Shaders/Sample_Image.frag
 Texture Convention: Unpacked
 Normals Convention: OpenGL/Vulkan
 Is Alpha Blended: false
+Use Normal Map: false
 Texture Maps:
   - Base Color: Textures/MissingTexture.png
