@@ -12,6 +12,7 @@
 #include "Asset/Loaders/ShaderLoader.h"
 #include "Core/Engine.h"
 #include "Core/SmartPointers.h"
+#include "glm/gtc/type_ptr.hpp"
 #include "imgui/imgui.h"
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Utilities/AssetFileHelpers.h"
@@ -24,9 +25,6 @@ namespace Astral {
     TextureConvention ExternalSceneBreakdownConfigComponent::m_SettingsMaterialTextureConvention = TextureConvention::ORM_PACKED;
 
     Vec3 ExternalSceneBreakdownConfigComponent::m_SettingsRotationOffset = Vec3(0.0f);
-    std::string_view ExternalSceneBreakdownConfigComponent::m_SettingsCoordinateSystemForwardPreview = "-Z";
-    std::string_view ExternalSceneBreakdownConfigComponent::m_SettingsCoordinateSystemUpPreview = "Y";
-    std::string_view ExternalSceneBreakdownConfigComponent::m_SettingsCoordinateSystemRightPreview = "X";
 
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialBaseColor = nullptr;
     TextureHandle ExternalSceneBreakdownConfigComponent::m_SettingsMaterialNormals = nullptr;
@@ -68,45 +66,13 @@ namespace Astral {
             ImGui::Checkbox("Create New Mesh Source Files", &shouldCreateNewSourceFiles);
 
 
-            ImGui::Text("Coordinate System");
+            ImGui::Text("Transform Adjustments");
             ImGui::Spacing();
 
-            ImGui::Text("Forward Axis:");
+            ImGui::Text("Global Rotation Offset:");
             ImGui::SameLine();
-            if (ImGui::BeginCombo("##ExternalSceneBreakdownConfigComponentCoordinateSystemX", m_SettingsCoordinateSystemForwardPreview.data()))
-            {
-                if (ImGui::Selectable("Z")) { m_SettingsRotationOffset.y = 180.0f; m_SettingsCoordinateSystemForwardPreview = "Z"; }
-                if (ImGui::Selectable("-Z")) { m_SettingsRotationOffset.y = 0.0f; m_SettingsCoordinateSystemForwardPreview = "-Z";}
-                if (ImGui::Selectable("X")) { m_SettingsRotationOffset.y = 90.0f; m_SettingsCoordinateSystemForwardPreview = "X";}
-                if (ImGui::Selectable("-X")) { m_SettingsRotationOffset.y = -90.0f; m_SettingsCoordinateSystemForwardPreview = "-X";}
-                if (ImGui::Selectable("Y")) { m_SettingsRotationOffset.x = -90.0f; m_SettingsCoordinateSystemForwardPreview = "Y";}
-                if (ImGui::Selectable("-Y")) { m_SettingsRotationOffset.x = 90.0f;m_SettingsCoordinateSystemForwardPreview = "-Y"; }
-                ImGui::EndCombo();
-            }
-            ImGui::Text("Up Axis:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##ExternalSceneBreakdownConfigComponentCoordinateSystemY", m_SettingsCoordinateSystemUpPreview.data()))
-            {
-                if (ImGui::Selectable("Z")) { m_SettingsRotationOffset.x = -90.0f; m_SettingsCoordinateSystemUpPreview = "Z"; }
-                if (ImGui::Selectable("-Z")) { m_SettingsRotationOffset.x = 90.0f; m_SettingsCoordinateSystemUpPreview = "-Z";}
-                if (ImGui::Selectable("X")) { m_SettingsRotationOffset.z = 90.0f; m_SettingsCoordinateSystemUpPreview = "X";}
-                if (ImGui::Selectable("-X")) { m_SettingsRotationOffset.z = -90.0f; m_SettingsCoordinateSystemUpPreview = "-X";}
-                if (ImGui::Selectable("Y")) { m_SettingsRotationOffset.x = 0.0f; m_SettingsCoordinateSystemUpPreview = "Y";}
-                if (ImGui::Selectable("-Y")) { m_SettingsRotationOffset.x = 180.0f;m_SettingsCoordinateSystemUpPreview = "-Y"; }
-                ImGui::EndCombo();
-            }
-            ImGui::Text("Right Axis:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##ExternalSceneBreakdownConfigComponentCoordinateSystemZ", m_SettingsCoordinateSystemRightPreview.data()))
-            {
-                if (ImGui::Selectable("Z")) { m_SettingsRotationOffset.y = 90.0f; m_SettingsCoordinateSystemRightPreview = "Z"; }
-                if (ImGui::Selectable("-Z")) { m_SettingsRotationOffset.y = -90.0f; m_SettingsCoordinateSystemRightPreview = "-Z";}
-                if (ImGui::Selectable("X")) { m_SettingsRotationOffset.y = 0.0f; m_SettingsCoordinateSystemRightPreview = "X";}
-                if (ImGui::Selectable("-X")) { m_SettingsRotationOffset.y = 180.0f; m_SettingsCoordinateSystemRightPreview = "-X";}
-                if (ImGui::Selectable("Y")) { m_SettingsRotationOffset.z = 90.0f; m_SettingsCoordinateSystemRightPreview = "Y";}
-                if (ImGui::Selectable("-Y")) { m_SettingsRotationOffset.z = -90.0f;m_SettingsCoordinateSystemRightPreview = "-Y"; }
-                ImGui::EndCombo();
-            }
+            ImGui::InputFloat3("##ExternalSceneBreakdownConfigGlobalRotationOffset", glm::value_ptr(m_SettingsRotationOffset));
+
 
             ImGui::Text("Scale Multiplier: ");
             ImGui::SameLine();
