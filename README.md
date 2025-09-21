@@ -119,7 +119,7 @@ View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
 ![CurrentEngineState](Documentation/Pictures/CurrentEngineState.png)
-This picture contains the Amazon Lumberyard Bistro sample in the Editor. This is from the feature-cascaded-shadow-maps branch!
+This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 ### Roadmap
 
