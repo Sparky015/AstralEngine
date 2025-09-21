@@ -6,7 +6,21 @@ include(cmake/PreventInSourceBuilds.cmake)
 
 # Used to support find_package
 set(package_name "cpptrace")
+
+
+
+
+##########################################################################################
+#######################         ASTRAL ENGINE EDIT         ###############################
+
+# ASTRAL ENGINE NOTE: This turns off stacktraces to keep compatability with xcode
 set(CPPTRACE_UNWIND_WITH_NOTHING ON)
+
+##########################################################################################
+##########################################################################################
+
+
+
 project(
   cpptrace
   VERSION 0.8.2
