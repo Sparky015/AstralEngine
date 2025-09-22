@@ -202,7 +202,6 @@ add_library(AstralEngine
         Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
         Renderer/RHI/Resources/Framebuffer.h
-        Renderer/RHI/Resources/DescriptorSetLayout.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
         Renderer/RHI/Resources/CommandQueue.h
