@@ -25,7 +25,7 @@ set(TEST_FILES
         Debug/MemoryTracking/GlobalAllocationStorageTest.cpp
         Debug/MemoryTracking/SceneMetricsExporterTest.cpp
 
-        Renderer/RHI/Resources/BufferTest.cpp
+        Renderer/RHI/Resources/IndexBufferTest.cpp
 )
 
 
