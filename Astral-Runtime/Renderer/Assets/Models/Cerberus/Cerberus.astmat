@@ -3,6 +3,7 @@ Shader: Shaders/brdf.frag
 Texture Convention: Unpacked
 Normals Convention: Vulkan/OpenGL
 Is Alpha Blended: false
+Use Normal Map: false
 Texture Maps:
   - Base Color: Models/Cerberus/Textures/Cerberus_A.tga
   - Metallic: Models/Cerberus/Textures/Cerberus_M.tga

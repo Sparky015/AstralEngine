@@ -1,0 +1,12 @@
+Shader Model: PBR
+Shader: Shaders/brdf.frag
+Texture Convention: Unpacked
+Normals Convention: OpenGL/Vulkan
+Is Alpha Blended: false
+Use Normal Map: false
+Texture Maps:
+  - Base Color: Models/WaterBendingGauntlet/Textures/WaterBendingGauntlet_BaseColor.png
+  - Metallic: Models/WaterBendingGauntlet/Textures/WaterBendingGauntlet_Metallic.png
+  - Roughness: Models/WaterBendingGauntlet/Textures/WaterBendingGauntlet_Roughness.png
+  - Emission: Models/WaterBendingGauntlet/Textures/WaterBendingGauntlet_Emission.png
+  - Normals: Models/WaterBendingGauntlet/Textures/WaterBendingGauntlet_Normal.png

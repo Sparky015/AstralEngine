@@ -31,6 +31,12 @@ set(TEST_FILES_GPU_REQUIRED
         Renderer/RHI/Resources/FramebufferTest.cpp
         Renderer/RHI/Resources/VertexBufferTest.cpp
         Renderer/RHI/Resources/TextureTest.cpp
+        Asset/AssetRegistryTest.cpp
+        Asset/AssetRegistryMaterialLoaderTest.cpp
+        Asset/AssetRegistryMeshLoaderTest.cpp
+        Asset/AssetRegistryShaderLoaderTest.cpp
+        Asset/AssetRegistryEnvironmentMapLoaderTest.cpp
+        Asset/AssetRegistryCubeLUTLoaderTest.cpp
 )
 
 
@@ -64,4 +70,6 @@ target_include_directories(AstralEngineTestsWithGPU PUBLIC ${CMAKE_SOURCE_DIR}/S
 
 include(GoogleTest)
 gtest_discover_tests(AstralEngineTests)
+
+target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_ASSETS_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/Asset/TestAssets/")
 
