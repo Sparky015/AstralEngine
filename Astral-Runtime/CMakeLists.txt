@@ -205,7 +205,6 @@ add_library(AstralEngine
         Renderer/RHI/Resources/DescriptorSetLayout.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
-        Renderer/RHI/Resources/DescriptorPool.h
         Renderer/RHI/Resources/CommandQueue.h
         Renderer/RHI/Resources/Buffer.h
         Renderer/RHI/Resources/CommandBuffer.h
