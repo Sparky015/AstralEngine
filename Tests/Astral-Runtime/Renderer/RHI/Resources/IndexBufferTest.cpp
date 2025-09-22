@@ -24,61 +24,73 @@ namespace Astral {
 
     TEST_F(IndexBufferTests, Constructor_CorrectlyCreatesBufferWithDataPopulated)
     {
-        std::array<uint32, 3> indices = {0, 1, 2};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
-        ASSERT_EQ(indexBuffer->GetCount(), 3);
+        {
+            std::array<uint32, 3> indices = {0, 1, 2};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
+            ASSERT_EQ(indexBuffer->GetCount(), 3);
+        }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
     TEST_F(IndexBufferTests, Constructor_2_CorrectlyCreatesBufferWithDataPopulated)
     {
-        std::array<uint32, 7> indices = {0, 1, 2, 1, 2, 5, 2};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
-        ASSERT_EQ(indexBuffer->GetCount(), 7);
+        {
+            std::array<uint32, 7> indices = {0, 1, 2, 1, 2, 5, 2};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
+            ASSERT_EQ(indexBuffer->GetCount(), 7);
+        }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
     TEST_F(IndexBufferTests, ConstructorUsingHostVisibleMemory_CorrectlyCreatesBufferWithDataPopulated)
     {
-        std::array<uint32, 4> indices = {0, 1, 2, 1};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
-        ASSERT_EQ(indexBuffer->GetCount(), 4);
+        {
+            std::array<uint32, 4> indices = {0, 1, 2, 1};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+            ASSERT_EQ(indexBuffer->GetCount(), 4);
 
-        void* bufferIndices;
-        indexBuffer->MapPointer(&bufferIndices);
-        ASSERT_EQ(memcmp(indices.data(), bufferIndices, sizeof(indices)), 0);
-        indexBuffer->UnmapPointer();
+            void* bufferIndices;
+            indexBuffer->MapPointer(&bufferIndices);
+            ASSERT_EQ(memcmp(indices.data(), bufferIndices, sizeof(indices)), 0);
+            indexBuffer->UnmapPointer();
+        }
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
     TEST_F(IndexBufferTests, ConstructorUsingHostVisibleMemory_2_CorrectlyCreatesBufferWithDataPopulated)
     {
-        std::array<uint32, 6> indices = {0, 1, 2, 1, 8, 4};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
-        ASSERT_EQ(indexBuffer->GetCount(), 6);
+        {
+            std::array<uint32, 6> indices = {0, 1, 2, 1, 8, 4};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+            ASSERT_EQ(indexBuffer->GetCount(), 6);
 
-        void* bufferIndices;
-        indexBuffer->MapPointer(&bufferIndices);
-        ASSERT_EQ(memcmp(indices.data(), bufferIndices, sizeof(indices)), 0);
-        indexBuffer->UnmapPointer();
+            void* bufferIndices;
+            indexBuffer->MapPointer(&bufferIndices);
+            ASSERT_EQ(memcmp(indices.data(), bufferIndices, sizeof(indices)), 0);
+            indexBuffer->UnmapPointer();
+        }
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
     TEST_F(IndexBufferTests, GetCount_CorrectlyReturnsTheCountOfIndices)
     {
-        std::array<uint32, 6> indices = {0, 1, 2, 1, 2, 3};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
-        ASSERT_EQ(indexBuffer->GetCount(), 6);
+        {
+            std::array<uint32, 6> indices = {0, 1, 2, 1, 2, 3};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
+            ASSERT_EQ(indexBuffer->GetCount(), 6);
+        }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
     TEST_F(IndexBufferTests, GetCount_2_CorrectlyReturnsTheCountOfIndices)
     {
-        std::array<uint32, 10> indices = {0, 1, 2, 1, 2, 3, 5, 4, 1, 0};
-        IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
-        ASSERT_EQ(indexBuffer->GetCount(), 10);
+        {
+            std::array<uint32, 10> indices = {0, 1, 2, 1, 2, 3, 5, 4, 1, 0};
+            IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices));
+            ASSERT_EQ(indexBuffer->GetCount(), 10);
+        }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
