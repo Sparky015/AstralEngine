@@ -26,6 +26,7 @@ set(TEST_FILES
         Debug/MemoryTracking/SceneMetricsExporterTest.cpp
 
         Renderer/RHI/Resources/IndexBufferTest.cpp
+        Renderer/RHI/Resources/DescriptorSetTest.cpp
 )
 
 
