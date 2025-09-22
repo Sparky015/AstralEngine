@@ -87,7 +87,7 @@ namespace Astral::EnvironmentMapLoader {
                 .ImageData = (uint8*)nullptr,
                 .ImageDataLength = totalCubemapSize,
                 .MipMapCount = Texture::CalculateMipMapLevels(faceSideLength, faceSideLength), // Create mips for specular IBL
-                .GenerateMipMaps = true
+                .GenerateMipMaps = false
             };
 
              environmentMap.PrefilteredEnvironment = Texture::CreateCubemap(prefilteredEnvironmentCreateInfo);

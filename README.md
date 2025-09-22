@@ -14,7 +14,8 @@ Project Lifetime: April 2024 - Present
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
 
-###
+Visit my website for more information, pictures, and videos: [https://sparky015.github.io](https://sparky015.github.io)
+
 ### Notable Features
 
 ----
@@ -23,8 +24,8 @@ and the environment, but there is a lot of stuff to do to get there.
 
 Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image
 Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
-of a pre depth pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
-geometry pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
+of a pre depth pass, cascaded shadow map pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
+geometry pass, cascaded shadow map pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while
 deferred uses FXAA (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance
 and prefiltered environment maps one time for each environment map that is set.
 
@@ -64,7 +65,15 @@ and memory efficiency. Currently, the asset loads are single threaded, but in th
 multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a 
 smooth UI/UX.
 
-###
+* Academy Color Encoding System (ACES) Color Workflow
+
+ACES 2.0 has been implemented for high quality color management, resulting in more vibrant and accurate colors. 
+All rendering is done in the ACEScg space with the ACES filmic look being applied. For the input display transform, all 
+color inputs being converted from sRGB to AP1 primaries to place them in the ACEScg space. After rendering is done, 
+I use a OCIO baked lut that contains the Reference Rendering Transform and the Output Display Transform which converts
+the final colors from the ACEScg space to the sRGB space with gamma applied while also applying tone mapping for standard
+dynamic range displays.
+
 #### Custom Allocators (Experimental Proof of Concept)
 
 This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
@@ -74,30 +83,27 @@ A list of the custom allocators follows:
 Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
 ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
 
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Allocators/Information.md).
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Core/Memory%20Allocators/Information.md).
 
 Future allocators to be written: Slab Allocator
 
 - Note that I am still polishing this feature, but it is functionally done.
 
-###
 #### Memory Profiling Tool Suite (Experimental)
 
 This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
 and scope-based allocation profiling tool.
 
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Memory%20Tracking%20&%20Visualization/Information.md).
+You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Profiling%20Tools/Memory%20Tracking%20&%20Visualization/Information.md).
 
 - Note that this is only available in debug builds, and that I am still polishing and optimizing this feature, but it is functionally done.
 
-###
 #### Visual Scope Profiler
 
 This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
 took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
 trace tool to view visually.
 
-###
 #### Entity-Component-System (ECS) 
 
 Created a entity component system to compose scenes with entities that you can attach data components to, and every frame,
@@ -107,16 +113,14 @@ and running, but in the future, I want to implement sparse sets into the ECS for
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
-###
 ### Screenshot of Current Engine State
 
 ---
 
 
-![CurrentEngineState](Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png)
+![CurrentEngineState](Documentation/Pictures/CurrentEngineState.png)
 This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
-###
 ### Roadmap
 
 -----
@@ -141,7 +145,6 @@ This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 
 
-###
 ### How to Build
 
 -----
@@ -161,6 +164,15 @@ Requirements include:
 - CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
 - A supported C++20 compiler
 - 64-bit CPU
+
+Note: The project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
+      The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
+
+**Important Other Note**: There are some quirks being ironed out as I develop the engine. Currently, there are a few bugs to be aware if you run the engine. Firstly, shadows will not work correctly with frustum culling turned on. The main geometry pass and
+shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS)
+
+
+Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to download the project. Do not use the 'Download Zip' option!
 
 #### Windows
 
@@ -211,7 +223,6 @@ Requirements include:
 
 
 
-###
 ### Branches
 
 -----
@@ -223,7 +234,6 @@ Requirements include:
 
 
 
-###
 ### Dependencies and Third Party Libraries
 
 -----
@@ -245,7 +255,6 @@ Requirements include:
 - yaml-cpp: For saving things like material files to disk (scene files in the future)
 
 
-###
 ### Current C++ Version (C++20)
 
 -----
@@ -257,7 +266,6 @@ I am looking to switch to C++23 when the stacktraces feature is actually impleme
 all the major compilers. Also, std::unreachable would be useful.
 
 
-###
 ### Testing Environment
 
 ---- 

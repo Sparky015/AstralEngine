@@ -1,7 +1,7 @@
 var searchData=
 [
   ['imagememorybarrier_0',['ImageMemoryBarrier',['../d1/d9f/struct_astral_1_1_image_memory_barrier.html',1,'Astral']]],
-  ['imagesubresourcerange_1',['ImageSubresourceRange',['../d3/da4/struct_astral_1_1_image_subresource_range.html',1,'Astral']]],
+  ['imagesubresourcerange_1',['ImageSubResourceRange',['../d6/d7f/struct_astral_1_1_image_sub_resource_range.html',1,'Astral']]],
   ['imgui_5fimplglfw_5fdata_2',['ImGui_ImplGlfw_Data',['../d5/d6e/struct_im_gui___impl_glfw___data.html',1,'']]],
   ['imgui_5fimplglfw_5fviewportdata_3',['ImGui_ImplGlfw_ViewportData',['../d2/d04/struct_im_gui___impl_glfw___viewport_data.html',1,'']]],
   ['imgui_5fimplopengl3_5fdata_4',['ImGui_ImplOpenGL3_Data',['../dc/d45/struct_im_gui___impl_open_g_l3___data.html',1,'']]],

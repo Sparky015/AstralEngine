@@ -13,6 +13,7 @@
 #include "nfd.h"
 #include "SceneHierarchyPanel.h"
 #include "Asset/Loaders/MaterialLoader.h"
+#include "Renderer/RHI/RendererAPI.h"
 #include "Utilities/AssetFileHelpers.h"
 
 namespace Astral {
@@ -116,6 +117,16 @@ namespace Astral {
             ImGui::EndCombo();
         }
 
+        ImGui::Text("Use Normal Map:");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::BeginCombo("##MaterialEditorPanelUseNormalMapSelect", m_MaterialCopy.HasNormalMap ? "Yes" : "No"))
+        {
+            if (ImGui::Selectable("No")) { m_MaterialCopy.HasNormalMap = false; }
+            if (ImGui::Selectable("Yes")) { m_MaterialCopy.HasNormalMap = true; }
+            ImGui::EndCombo();
+        }
+
 
 
         if (m_MaterialCopy.TextureConvention == TextureConvention::UNPACKED)
@@ -143,6 +154,14 @@ namespace Astral {
         {
             Ref<Material> materialRef = CreateRef<Material>(m_MaterialCopy);
             meshComponent.Material = materialRef;
+
+            meshComponent.Material->DescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+            meshComponent.Material->DescriptorSet->BeginBuildingSet();
+            for (const TextureHandle& textureMap : meshComponent.Material->Textures)
+            {
+                meshComponent.Material->DescriptorSet->AddDescriptorImageSampler(textureMap, ShaderStage::FRAGMENT);
+            }
+            meshComponent.Material->DescriptorSet->EndBuildingSet();
 
             ecs.UpdateComponent(activeEntity, meshComponent);
         }

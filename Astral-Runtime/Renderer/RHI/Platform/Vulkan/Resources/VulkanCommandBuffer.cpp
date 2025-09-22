@@ -250,6 +250,16 @@ namespace Astral {
     }
 
 
+    void VulkanCommandBuffer::DrawElementsInstanced(const IndexBufferHandle& indexBufferHandle, uint32 numberOfInstances)
+    {
+        vkCmdDrawIndexed(m_CommandBuffer, indexBufferHandle->GetCount(), numberOfInstances, 0, 0, 0);
+
+        RendererDebugStats& inProgressDebugStats = RendererAPI::GetInProgressRendererDebugStats();
+        inProgressDebugStats.NumberOfDrawCalls++;
+        inProgressDebugStats.NumberOfTriangles += (indexBufferHandle->GetCount() / 3);
+    }
+
+
     void VulkanCommandBuffer::Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
     {
         vkCmdDispatch(m_CommandBuffer, groupCountX, groupCountY, groupCountZ);

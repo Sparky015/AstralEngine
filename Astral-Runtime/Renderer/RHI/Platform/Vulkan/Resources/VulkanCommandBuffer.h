@@ -46,6 +46,7 @@ namespace Astral {
         void EndRenderPass() override;
 
         void DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle) override;
+        void DrawElementsInstanced(const IndexBufferHandle& indexBufferHandle, uint32 numberOfInstances) override;
         void Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ) override;
         void PushConstants(void* data, uint32 sizeInBytes) override;
         void SetPipelineBarrier(const PipelineBarrier& pipelineBarrier) override;

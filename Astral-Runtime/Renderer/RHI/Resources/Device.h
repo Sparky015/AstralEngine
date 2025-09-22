@@ -35,8 +35,8 @@ namespace Astral {
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
         virtual PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) = 0;
         virtual PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) = 0;
-        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout) = 0;
-        virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes) = 0;
+        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType =GPUMemoryType::DEVICE_LOCAL) = 0;
+        virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType = GPUMemoryType::DEVICE_LOCAL) = 0;
         virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
         virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
@@ -44,6 +44,7 @@ namespace Astral {
         virtual TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
+        virtual TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) = 0;
 
         virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
         virtual bool IsAnisotropySupported() = 0;

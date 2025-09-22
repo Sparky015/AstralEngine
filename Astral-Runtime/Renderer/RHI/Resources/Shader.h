@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Asset/Asset.h"
-#include "Renderer/Shaders/ShaderSource.h"
+#include "ShaderSource.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 
 namespace Astral {

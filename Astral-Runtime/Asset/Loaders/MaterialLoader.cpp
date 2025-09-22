@@ -47,6 +47,7 @@ namespace Astral {
             material->HasDirectXNormals = normalsConvention == "DirectX";
 
             material->IsAlphaBlended = file["Is Alpha Blended"].as<bool>();
+            material->HasNormalMap = file["Use Normal Map"].as<bool>();
 
 
             DescriptorSetHandle descriptorSetHandle = DescriptorSet::CreateDescriptorSet();
@@ -117,6 +118,9 @@ namespace Astral {
         out << YAML::Key << "Is Alpha Blended";
         out << YAML::Value << material->IsAlphaBlended;
 
+        out << YAML::Key << "Use Normal Map";
+        out << YAML::Value << material->HasNormalMap;
+
 
         out << YAML::Key << "Texture Maps";
         out << YAML::Value << YAML::BeginSeq;
@@ -133,11 +137,6 @@ namespace Astral {
                     AssetID textureAssetID = material->Textures[i]->GetAssetID();
                     std::filesystem::path mapPath = registry.GetFilePathFromAssetID(textureAssetID);
 
-                    if (i == 4) // Normals texture
-                    {
-                        if (!material->HasNormalMap) { mapPath = ""; }
-                    }
-
                     out << YAML::BeginMap;
                     out << YAML::Key << textureNames[i].data();
                     out << YAML::Value << mapPath.generic_string();
@@ -153,11 +152,6 @@ namespace Astral {
                 {
                     AssetID textureAssetID = material->Textures[i]->GetAssetID();
                     std::filesystem::path mapPath = registry.GetFilePathFromAssetID(textureAssetID);
-
-                    if (i == 3) // Normals texture
-                    {
-                        if (!material->HasNormalMap) { mapPath = ""; }
-                    }
 
                     out << YAML::BeginMap;
                     out << YAML::Key << textureNames[i].data();

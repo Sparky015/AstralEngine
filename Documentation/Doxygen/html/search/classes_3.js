@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['deferredrenderer_0',['DeferredRenderer',['../d5/dab/class_astral_1_1_deferred_renderer.html',1,'Astral']]],
-  ['deltatime_1',['DeltaTime',['../df/d63/class_astral_1_1_delta_time.html',1,'Astral']]],
-  ['descriptorpool_2',['DescriptorPool',['../d7/d9c/class_astral_1_1_descriptor_pool.html',1,'Astral']]],
-  ['descriptorset_3',['DescriptorSet',['../dd/d4c/class_astral_1_1_descriptor_set.html',1,'Astral']]],
-  ['descriptorsetlayout_4',['DescriptorSetLayout',['../da/d94/class_astral_1_1_descriptor_set_layout.html',1,'Astral']]],
-  ['device_5',['Device',['../d2/dde/class_astral_1_1_device.html',1,'Astral']]],
-  ['doublebufferedallocator_6',['DoubleBufferedAllocator',['../d2/ddb/class_astral_1_1_double_buffered_allocator.html',1,'Astral']]]
+  ['deltatime_0',['DeltaTime',['../df/d63/class_astral_1_1_delta_time.html',1,'Astral']]],
+  ['descriptorpool_1',['DescriptorPool',['../d7/d9c/class_astral_1_1_descriptor_pool.html',1,'Astral']]],
+  ['descriptorset_2',['DescriptorSet',['../dd/d4c/class_astral_1_1_descriptor_set.html',1,'Astral']]],
+  ['descriptorsetlayout_3',['DescriptorSetLayout',['../dd/dd2/struct_astral_1_1_descriptor_set_layout.html',1,'Astral']]],
+  ['device_4',['Device',['../d2/dde/class_astral_1_1_device.html',1,'Astral']]],
+  ['directedgraph_5',['DirectedGraph',['../da/d9f/class_astral_1_1_directed_graph.html',1,'Astral']]],
+  ['directedgraph_3c_20passindex_20_3e_6',['DirectedGraph&lt; PassIndex &gt;',['../da/d9f/class_astral_1_1_directed_graph.html',1,'Astral']]],
+  ['directionallightcomponent_7',['DirectionalLightComponent',['../d8/ded/struct_astral_1_1_directional_light_component.html',1,'Astral']]],
+  ['doublebufferedallocator_8',['DoubleBufferedAllocator',['../d2/ddb/class_astral_1_1_double_buffered_allocator.html',1,'Astral']]]
 ];

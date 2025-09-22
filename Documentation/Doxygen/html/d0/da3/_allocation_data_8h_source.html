@@ -94,7 +94,7 @@ $(function() {
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        RENDERER,</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        WINDOW,</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        ASSETS,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        ENTITYCOMPONENTSYSTEM,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        ENTITY_COMPONENT_SYSTEM,</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        DEBUG,</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        CORE,</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        UNKNOWN,</div>
@@ -110,12 +110,12 @@ $(function() {
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordflow">case</span> RENDERER: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Renderer&quot;</span>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">case</span> WINDOW: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Window&quot;</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordflow">case</span> ASSETS: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Assets&quot;</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">case</span> ENTITYCOMPONENTSYSTEM: <span class="keywordflow">return</span> <span class="stringliteral">&quot;ECS&quot;</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">case</span> ENTITY_COMPONENT_SYSTEM: <span class="keywordflow">return</span> <span class="stringliteral">&quot;ECS&quot;</span>;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">case</span> DEBUG: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Debug&quot;</span>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordflow">case</span> CORE: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Core&quot;</span>;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keywordflow">case</span> UNKNOWN: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown Region&quot;</span>;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keywordflow">case</span> MEMORY_REGION_END: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Enum Memory Region End Marker&quot;</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordflow">default</span>: ASTRAL_ERROR(<span class="stringliteral">&quot;Memory region value not valid!&quot;</span>);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordflow">default</span>: AE_ERROR(<span class="stringliteral">&quot;Memory region value not valid!&quot;</span>);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
@@ -151,7 +151,7 @@ $(function() {
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordflow">case</span> NEW_OPERATOR: <span class="keywordflow">return</span> <span class="stringliteral">&quot;New Operator&quot;</span>;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">case</span> MALLOC: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Malloc&quot;</span>;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keywordflow">case</span> ALLOCATOR_TYPE_END: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Enum Memory Region End Marker&quot;</span>;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">default</span>: ASTRAL_ERROR(<span class="stringliteral">&quot;Memory region value not valid!&quot;</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">default</span>: AE_ERROR(<span class="stringliteral">&quot;Memory region value not valid!&quot;</span>);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        }</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>

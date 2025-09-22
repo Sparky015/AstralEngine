@@ -26,30 +26,64 @@ namespace Astral {
     }
 
 
+    void VulkanVertexBuffer::MapPointer(void** cpuPtr)
+    {
+        m_VertexBuffer.MapPointer(cpuPtr);
+    }
+
+
+    void VulkanVertexBuffer::UnmapPointer()
+    {
+        m_VertexBuffer.UnmapPointer();
+    }
+
+
+    void VulkanVertexBuffer::CopyDataToBuffer(void* data, uint32 size)
+    {
+        m_VertexBuffer.CopyDataToBuffer(data, size);
+    }
+
+
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
-        VulkanBufferDesc stagingBufferDesc = {
-            .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            .Size = desc.SizeInBytes,
-            .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-        };
-        VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
-        stagingBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
+        if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            VulkanBufferDesc stagingBufferDesc = {
+                .Device = m_Device,
+                .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                .Size = desc.SizeInBytes,
+                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
+                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+            };
+            VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
+            stagingBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
 
 
-        VulkanBufferDesc vertexBufferDesc = {
-            .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-            .Size = desc.SizeInBytes,
-            .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-        };
+            VulkanBufferDesc vertexBufferDesc = {
+                .Device = m_Device,
+                .Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                .Size = desc.SizeInBytes,
+                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
+                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+            };
 
-        m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
+            m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
+            m_VertexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.SizeInBytes);
+        }
+        else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            VulkanBufferDesc vertexBufferDesc = {
+                .Device = m_Device,
+                .Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+                .Size = desc.SizeInBytes,
+                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
+                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+            };
 
-        m_VertexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.SizeInBytes);
+            m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
+            m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
+        }
+
     }
 
 }

@@ -98,9 +98,6 @@ void main()
     vec3 prefilteredColor = vec3(0.0);
     float roughness = u_PushConstantData.roughness;
 
-    float totalMips = textureQueryLevels(u_EnvironmentMap) - 1;
-    float lodLevel = roughness * totalMips + 2.5;
-    lodLevel = clamp(lodLevel, 0, totalMips);
     vec2 inputSize = vec2(textureSize(u_EnvironmentMap, 0));
     float texelSolidAngle = 4.0 * PI / (6.0 * inputSize.x * inputSize.y);
 
@@ -122,7 +119,6 @@ void main()
             float mipLevel = 0.5 * log2(sampleSolidAngle / texelSolidAngle) + 1;
 
             vec3 environmentSample = textureLod(u_EnvironmentMap, L, mipLevel).rgb * NdotL;
-            environmentSample = clamp(environmentSample, 0, 65000.0f); // Clamp to the max half float value to avoid INF values
 
             if (any(isnan(environmentSample)) || any(isinf(environmentSample)))
             {

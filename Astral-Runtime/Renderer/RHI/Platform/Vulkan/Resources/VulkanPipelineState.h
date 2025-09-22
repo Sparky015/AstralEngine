@@ -28,6 +28,7 @@ namespace Astral {
         uint32 SubpassIndex;
         bool IsAlphaBlended;
         SampleCount MSAASamples;
+        CullMode CullMode;
     };
 
     class VulkanPipelineState : public PipelineState

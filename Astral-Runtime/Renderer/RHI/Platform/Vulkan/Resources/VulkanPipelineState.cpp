@@ -209,7 +209,7 @@ namespace Astral {
         VkPipelineRasterizationStateCreateInfo rasterizer = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
             .polygonMode = VK_POLYGON_MODE_FILL,
-            .cullMode = VK_CULL_MODE_NONE,
+            .cullMode = ConvertCullModeToVkCullModeFlags(m_GraphicsDescription.CullMode),
             .frontFace = VK_FRONT_FACE_CLOCKWISE,
             .lineWidth = 1.0f
         };
@@ -315,6 +315,8 @@ namespace Astral {
             descriptorSetLayouts.push_back((VkDescriptorSetLayout)descriptorSet->GetNativeLayout());
             m_DescriptorSetLayout.push_back(descriptorSet->GetDescriptorSetLayout());
         }
+
+        m_GraphicsDescription.DescriptorSets.clear(); // Remove refs to textures held in the descriptor sets since its not needed by the pipeline
 
         m_PushConstantRange.stageFlags = VK_SHADER_STAGE_ALL;
         m_PushConstantRange.offset = 0;

@@ -75,21 +75,46 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a></p>
+<p><a href="https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform-development-ci.yml"><img src="https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform-development-ci.yml/badge.svg" alt="CI Build" style="pointer-events: none;" class="inline"/></a></p>
 <hr  />
 <p> Welcome to the Astral Engine project codebase!</p>
 <p>This project is a Work-In-Progress with no official first release.</p>
 <p>It is continuously being updated and improved as I can get to more things.</p>
-<p>Project Lifetime: Late October 2024 - Present</p>
+<p>Project Lifetime: April 2024 - Present</p>
 <p>In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles and the environment, but there is a lot of stuff to do to get there.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
-autotoc_md2</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Notable Features</h2>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-autotoc_md5</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
-Custom Allocators</h3>
+<ul>
+<li>Physically-Based Vulkan HDR Renderer</li>
+</ul>
+<p>Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists of a pre depth pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a geometry pass, lighting pass, environment map pass, tone mapping pass, and FXAA pass. Forward uses MSAA x4 while deferred uses FXAA (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance and prefiltered environment maps one time for each environment map that is set.</p>
+<ul>
+<li>Frame/Render Graph</li>
+</ul>
+<p>Designed and implemented Frame/Render Graph to manage render pass resources and execution as well as memory barriers for synchronization. The Frame Graph allows the user to define any render passes and attachment specs for each render pass, and the Frame Graph will create all the necessary textures, render passes, frame buffers, and descriptor sets for each render pass, and facilitate the synchronization needed between render passes. It also culls any render passes that don't contribute to the final output image. The user can also recreate the Render Graph as many times as they want during rendering and the render graph will manage the creation of new resources the user requested as well as making sure the resources being used on the GPU do not get deleted.</p>
+<ul>
+<li>Renderer Hardware Interface (RHI)</li>
+</ul>
+<p>Created an abstraction layer to manage renderer API usage in order to support multiple rendering APIs in the future (looking into implemented DX12 in the future) and allow for easy API usage for higher level systems while allowing for switching APIs without any diverging code in the high level systems.</p>
+<ul>
+<li>Editor</li>
+</ul>
+<p>Built an editor that I can compose new game scenes with and allow for saving scenes and switching to different scenes without using a different executable. Users can compose scenes by adding and removing entities, adding components to entities and changing entity component data, changing environment settings like the environment map, exposure and ambient light modifier, changing camera properties, and more!</p>
+<ul>
+<li>Scene System</li>
+</ul>
+<p>Designed and implemented a scene system that will allow users to compose scenes with entities, environment maps, and more and save the scene to a file and load scenes from files. Right now it is loading whole scenes at a time and storing them in the asset cache, but in the future, I will implement a way to unload scenes from the asset cache.</p>
+<ul>
+<li>Asset Manager</li>
+</ul>
+<p>Created an asset manager that can load in assets from files and cache their data to improve loading times and memory efficiency. Currently, the asset loads are single threaded, but in the future, I want to look into multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a smooth UI/UX.</p>
+<ul>
+<li>Academy Color Encoding System (ACES) Color Workflow</li>
+</ul>
+<p>ACES 2.0 has been implemented for high quality color management, resulting in more vibrant and accurate colors. All rendering is done in the ACEScg space with the ACES filmic look being applied. For the input display transform, all color inputs being converted from sRGB to AP1 primaries to place them in the ACEScg space. After rendering is done, I use a OCIO baked lut that contains the Reference Rendering Transform and the Output Display Transform which converts the final colors from the ACEScg space to the sRGB space with gamma applied while also applying tone mapping for standard dynamic range displays.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+Custom Allocators (Experimental Proof of Concept)</h3>
 <p>This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance when the situation allows for it.</p>
 <p>A list of the custom allocators follows: Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator, ring allocator/buffer, and stack-based linear allocator (plus an object pool class).</p>
 <p>You can find more detailed information about this (including the why's) here.</p>
@@ -97,75 +122,47 @@ Custom Allocators</h3>
 <ul>
 <li>Note that I am still polishing this feature, but it is functionally done.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
-autotoc_md7</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
-Memory Profiling Tool Suite</h3>
-<p>This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, and scope-based allocation profiling tool</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+Memory Profiling Tool Suite (Experimental)</h3>
+<p>This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, and scope-based allocation profiling tool.</p>
 <p>You can find more detailed information about this (including the why's) here.</p>
 <ul>
-<li>Note that I am still polishing and optimizing this feature, but it is functionally done.</li>
+<li>Note that this is only available in debug builds, and that I am still polishing and optimizing this feature, but it is functionally done.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
-autotoc_md9</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Visual Scope Profiler</h3>
 <p>This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's trace tool to view visually.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
-autotoc_md11</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
-Work-In-Progress Features</h2>
-<hr  />
-<ul>
-<li>Entity-Component-System (ECS) (70% done)</li>
-</ul>
-<p>I am working to make my current ECS implementation more extendable and performant. I am implementing a new ECS with sparse sets.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Entity-Component-System (ECS)</h3>
+<p>Created a entity component system to compose scenes with entities that you can attach data components to, and every frame, a system will operate on entities with certain component types. Right now, it is a basic implementation to get things up and running, but in the future, I want to implement sparse sets into the ECS for better performance when it is necessary.</p>
 <p>View the planning documentation <a href="Documentation/Astral-Runtime/ECS/">here</a></p>
-<ul>
-<li>Asset Manager (40% done)</li>
-</ul>
-<p>I am working to create an asset manager that can load in assets from files and cache their data to improve loading times and memory efficiency.</p>
-<ul>
-<li>Scene System (Early In-Progress)</li>
-</ul>
-<p>I am working on designing a scene system that will allow me to save scenes to files and load scenes from files. I am integrating the ECS system and the asset manager to define a scene from which I can serialize and deserialize.</p>
-<ul>
-<li>Editor (Early In-Progress)</li>
-</ul>
-<p>I am working to build up an editor that I can compose new game scenes with and allow for saving scenes and switching to different scenes without using a different executable.</p>
-<ul>
-<li>Renderer (Early In-Progress)</li>
-</ul>
-<p>I am working on implementing the ability to import 3D/2D meshes. Currently, the renderer only supports hardcoded data which ends up being quads. I am also working on setting up Vulkan for use later on (I am currently using OpenGL 4.1)</p>
-<ul>
-<li>Shaders and Materials (Early In-Progress)</li>
-</ul>
-<p>I am working on designing an extendable material system for shaders, so I can add a Material component into the ECS and remove the Rendering System (ECS) calls out of the client/user code.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
-autotoc_md14</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Screenshot of Current Engine State</h2>
 <hr  />
-<p><img src="Documentation/Astral-Runtime/Overall%20Engine%20Runtime/Pictures/CurrentEngineState.png" alt="CurrentEngineState" class="inline"/> This picture contains the Chess sample project as well as the engine debug menu. Note that the chess sample project is not completely finished and that there is no checks or castling.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
-autotoc_md17</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<p><img src="Documentation/Pictures/CurrentEngineState.png" alt="CurrentEngineState" class="inline"/> This picture contains the Amazon Lumberyard Bistro sample in the Editor. This is from the feature-cascaded-shadow-maps branch!</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Roadmap</h2>
 <hr  />
 <ol type="1">
-<li>Entity-Component-System (ECS)</li>
-<li>Asset Manager</li>
-<li>Game Scenes with serialization and deserialization</li>
-<li>Editor Integration</li>
+<li>The below TODO Render Passes</li>
 <li>Native Scripting</li>
-<li>Material System</li>
-<li>PBR Renderer</li>
-<li>Vulkan Renderer</li>
-<li>GPU Particle System &lt;&mdash; Current dream goal</li>
+<li>Multithreaded Asset System</li>
+<li>Rendering Thread</li>
+<li>GPU Particle System</li>
+<li>Volumetric Lighting</li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
-autotoc_md20</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+TODO Render Passes</h2>
+<ul>
+<li>SSAO</li>
+<li>Omni-Directional Shadow Maps</li>
+<li>Transparent Objects Forward Pass</li>
+<li>Bloom</li>
+<li>SMAA</li>
+<li>TAA</li>
+<li>Tiled Light Culling</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 How to Build</h2>
 <hr  />
 <p>Supported Compilers: MSVC, AppleClang, and Clang Supported Platforms: Windows and macOS (Linux coming in the future)</p>
@@ -173,11 +170,15 @@ How to Build</h2>
 <p>In addition to the methods below, you can also use an IDE that supports building with CMake like CLion or Visual Studio. Before running the project, make sure to switch the target to your desired target that you want to run.</p>
 <p>Requirements include:</p><ul>
 <li>git</li>
+<li>Python 3.x</li>
+<li>Vulkan SDK</li>
 <li>CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)</li>
 <li>A supported C++20 compiler</li>
 <li>64-bit CPU</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<p>Note: The project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed. The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.</p>
+<p>Use <span class="tt">git clone --recursive <a href="https://github.com/Sparky015/AstralEngine.git">https://github.com/Sparky015/AstralEngine.git</a></span> to download the project. Do not use the 'Download Zip' option!</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Windows</h3>
 <ol type="1">
 <li>Open a terminal at the root of the project</li>
@@ -192,7 +193,7 @@ Windows</h3>
 <div class="line">.\[enter_executable_name].exe</div>
 </div><!-- fragment --> Note that to use the executables containing unit tests, you must build them as a debug build</li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 MacOS</h3>
 <ol type="1">
 <li>Open a terminal at the root of the project</li>
@@ -207,23 +208,16 @@ MacOS</h3>
 <div class="line">./[enter_executable_name]</div>
 </div><!-- fragment --> Note that to use the executables containing unit tests, you must build them as a debug build</li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
-autotoc_md25</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Branches</h2>
 <hr  />
 <ul>
 <li>main --&gt; The branch for releases (no actual releases have happened yet)</li>
 <li>development -&gt; All work is done in this branch or a branch based from it</li>
 <li>feature-X -&gt; Branches for feature work to be done on</li>
-<li>experimental-X -&gt; Branches for to explore the potential and limits of a new feature idea<ul>
-<li>experimental-vulkan -&gt; Branch where the vulkan renderer is being explored and written and refactors to the renderer structure.</li>
+<li>experimental-X -&gt; Branches for to explore the potential and limits of a new feature idea</li>
 </ul>
-</li>
-</ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
-autotoc_md28</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 Dependencies and Third Party Libraries</h2>
 <hr  />
 <ul>
@@ -233,50 +227,37 @@ Dependencies and Third Party Libraries</h2>
 <li>glm: For math</li>
 <li>googletest: For unit testing</li>
 <li>imgui: For debug menus and the editor UI</li>
-<li>ImGuiFileDialog: For a file explorer to choose files (temporary, looking for cross-platform native file explorer library)</li>
 <li>ImPlot: For graphing memory profiling data</li>
 <li>msgpack: For serialization and deserialization</li>
 <li>stb_image: For loading image files</li>
 <li>cpptrace: For generating stacktraces (temporary, waiting for C++23 stacktraces to be implemented)</li>
+<li>nativefiledialog-extended: For native file dialog windows on macOS and Windows</li>
+<li>Half: For half float support</li>
+<li>gli: For loading .ktx and .dds files</li>
+<li>ImGuizmo: For gizmos in the editor for things like moving entities or rotating them</li>
+<li>yaml-cpp: For saving things like material files to disk (scene files in the future)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
-autotoc_md31</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Current C++ Version (C++20)</h2>
 <hr  />
 <p>This project is using C++20 currently and mainly for [[unlikely]], [[likely]], consteval, and constexpr improvements (maybe modules in the future).</p>
 <p>I am looking to switch to C++23 when the stacktraces feature is actually implemented by all the major compilers. Also, std::unreachable would be useful.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
-autotoc_md34</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Testing Environment</h2>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Tested IDEs:</h3>
 <p>macOS: CLion and Xcode <br  />
  Windows: CLion and Visual Studio <br  />
 </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Hardware used for Testing:</h3>
 <p>macOS is tested using a MacBook M1 Pro <br  />
  Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Tested Compiler Versions:</h3>
 <p>MacOS: AppleClang 16.0.0, Clang 19.1.7 <br  />
- Windows: MSVC 19.43</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
-TODOs: All Render Passes</h2>
-<ul>
-<li>Frustum Culling - CPU Side</li>
-<li>Tiled Light Culling - Compute</li>
-<li>Cascaded Shadow Maps - Vertex Heavy</li>
-<li>Geometry Pass - Fragment Heavy</li>
-<li>SSAO - Compute</li>
-<li>Lighting Pass - Fragment Heavy</li>
-<li>Transparent Objects Forward Pass - Fragment Heavy</li>
-<li>Bloom - Compute</li>
-<li>SMAA - Fragment Heavy </li>
-</ul>
+ Windows: MSVC 19.43 </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

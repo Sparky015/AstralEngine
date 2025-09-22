@@ -23,6 +23,10 @@ namespace Astral {
         virtual void* GetVerticeData() = 0;
         virtual uint32 GetSize() = 0;
 
+        virtual void MapPointer(void** cpuPtr) = 0;
+        virtual void UnmapPointer() = 0;
+        virtual void CopyDataToBuffer(void* data, uint32 size) = 0;
+
         virtual void* GetNativeHandle() = 0;
 
         static GraphicsRef<VertexBuffer> CreateVertexBuffer(float* vertices, unsigned int size, VertexBufferLayout& bufferLayout);

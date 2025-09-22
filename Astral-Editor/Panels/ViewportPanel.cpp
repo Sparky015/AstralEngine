@@ -61,6 +61,26 @@ namespace Astral {
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         Entity selectedEntity = SceneHierarchyPanel::GetSelectedEntity();
 
+        const ImVec2 imagePosition = ImGui::GetItemRectMin();
+        ImVec2 buttonPosition = ImVec2(imagePosition.x + 10, imagePosition.y + 10);
+        ImGui::SetCursorScreenPos(buttonPosition);
+
+        static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+        if (ImGui::Button("T"))
+        {
+            operation = ImGuizmo::TRANSLATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("R"))
+        {
+            operation = ImGuizmo::ROTATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("S"))
+        {
+            operation = ImGuizmo::SCALE;
+        }
+
         if (selectedEntity.GetID() != NULL_ENTITY)
         {
             TransformComponent transformComponent;
@@ -71,6 +91,7 @@ namespace Astral {
 
             ImGuizmo::BeginFrame();
             ImGuizmo::SetDrawlist();
+            ImGuizmo::AllowAxisFlip(false);
             ImGuizmo::Enable(true);
 
             Camera& camera = scene.PrimaryCamera;
@@ -78,7 +99,7 @@ namespace Astral {
             ImGuizmo::SetRect(windowPos.x, windowPos.y, m_ContentRegionSize.x, m_ContentRegionSize.y);
             Mat4 yUpProjection = camera.GetProjectionMatrix();
             yUpProjection[1][1] *= -1;
-            ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(yUpProjection), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(transformMatrix));
+            ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(yUpProjection), operation, ImGuizmo::MODE::WORLD, glm::value_ptr(transformMatrix));
 
             if (ImGuizmo::IsUsing())
             {
@@ -91,6 +112,8 @@ namespace Astral {
 
                 ecs.UpdateComponent(selectedEntity, transformComponent);
             }
+
+
         }
     }
 

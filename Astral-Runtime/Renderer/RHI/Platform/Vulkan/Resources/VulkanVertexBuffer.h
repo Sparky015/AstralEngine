@@ -26,6 +26,7 @@ namespace Astral {
         uint32 SizeInBytes;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
         VertexBufferLayout& BufferLayout;
+        GPUMemoryType MemoryType;
     };
 
     class VulkanVertexBuffer : public VertexBuffer
@@ -37,6 +38,10 @@ namespace Astral {
         void* GetVerticeData() override { return m_VerticeData; }
         uint32 GetSize() override { return m_SizeInBytes; }
         VertexBufferLayout& GetBufferLayout() override { return m_BufferLayout; }
+
+        void MapPointer(void** cpuPtr) override;
+        void UnmapPointer() override;
+        void CopyDataToBuffer(void* data, uint32 size) override;
 
         void* GetNativeHandle() override { return m_VertexBuffer.GetNativeHandle(); }
 

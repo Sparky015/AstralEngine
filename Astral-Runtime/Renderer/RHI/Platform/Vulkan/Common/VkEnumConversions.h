@@ -19,6 +19,8 @@
 
 #include "Renderer/RHI/Common/DependencyFlags.h"
 #include "Renderer/RHI/Common/ImageSubResourceRange.h"
+#include "Renderer/RHI/Common/PipelineRasterizerState.h"
+#include "Renderer/RHI/Common/SamplerSettings.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 namespace Astral {
@@ -30,6 +32,9 @@ namespace Astral {
     VkImageUsageFlags ConvertImageUsageFlagsToVkImageUsageFlags(ImageUsageFlags imageUsageFlags);
     VkImageAspectFlags ConvertImageAspectFlagsToVkImageAspectFlags(ImageAspectFlags imageAspectFlags);
     VkDependencyFlags ConvertDependencyFlagsToVkDependencyFlags(DependencyFlags dependencyFlags);
+    VkFilter ConvertSamplerFilterToVkFilter(SamplerFilter samplerFilter);
+    VkSamplerAddressMode ConvertSamplerAddressModeToVkSamplerAddressMode(SamplerAddressMode samplerAddressMode);
+    VkCullModeFlags ConvertCullModeToVkCullModeFlags(CullMode cullMode);
 
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
 

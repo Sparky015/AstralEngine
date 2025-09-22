@@ -142,9 +142,45 @@ namespace Astral {
             // {
             //     rendererSettings.DebugView = RendererDebugView::DEPTH;
             // }
+            if (ImGui::Selectable("Cascaded Shadow Map Boundaries"))
+            {
+                rendererSettings.DebugView = RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES;
+            }
 
             ImGui::EndCombo();
         }
+
+
+        ImGui::Text("Shadows: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::Checkbox("##ShadowsToggle", &rendererSettings.IsShadowsOn);
+
+        ImGui::Text("Shadow Cascades: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputInt("##ShadowCascadesInput", &rendererSettings.NumShadowCascades);
+
+        int shadowMapResolution = rendererSettings.ShadowMapResolution;
+        ImGui::Text("Shadow Map Resolution: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputInt("##ShadowMapResolutionInput", &shadowMapResolution);
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            rendererSettings.ShadowMapResolution = shadowMapResolution;
+        }
+
+        ImGui::Text("Shadow Map Bias: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##ShadowMapBiasInput", &rendererSettings.ShadowMapBias, 0, 0, "%.5f");
+
+        ImGui::Text("Shadow Map Z Multiplier: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##ShadowMapZMultiplierInput", &rendererSettings.ShadowMapZMultiplier, 0, 0, "%.2f");
 
         SceneRenderer::SetRendererSettings(rendererSettings);
     }

@@ -83,6 +83,7 @@ namespace Astral {
             textureCreateInfo.ImageDataLength = texture.size();
             textureCreateInfo.LayerCount = texture.layers();
             textureCreateInfo.MipMapCount = texture.levels();
+            textureCreateInfo.GenerateMipMaps = false;
         }
         else
         {
@@ -92,6 +93,7 @@ namespace Astral {
             textureCreateInfo.ImageDataLength = width * height * bpp;
             textureCreateInfo.LayerCount = 1;
             textureCreateInfo.MipMapCount = Texture::CalculateMipMapLevels(width, height);
+            textureCreateInfo.GenerateMipMaps = true;
         }
 
         if (!data)
@@ -106,7 +108,6 @@ namespace Astral {
         textureCreateInfo.Dimensions.x = width;
         textureCreateInfo.Dimensions.y = height;
         textureCreateInfo.ImageData = data;
-        textureCreateInfo.GenerateMipMaps = true;
 
 
         TextureHandle textureHandle = Texture::CreateTexture(textureCreateInfo);
@@ -164,6 +165,9 @@ namespace Astral {
             .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .SamplerFilter = SamplerFilter::LINEAR,
+            .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
+            .EnableAnisotropy = false,
         };
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
@@ -186,6 +190,9 @@ namespace Astral {
             .UsageFlags = IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(length, length), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .SamplerFilter = SamplerFilter::LINEAR,
+            .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
+            .EnableAnisotropy = false,
         };
 
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();

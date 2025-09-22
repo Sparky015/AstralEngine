@@ -38,7 +38,7 @@ namespace Astral {
         CreateTexture(desc);
     	AllocateTextureMemory();
     	CreateImageView(desc.ImageUsageFlags);
-    	CreateImageSampler();
+    	CreateImageSampler(desc.SamplerFilter, desc.SamplerAddressMode, desc.EnableAnisotropy);
 
     	if (desc.ImageData)
     	{
@@ -75,7 +75,7 @@ namespace Astral {
 		m_TextureType(TextureType::IMAGE_2D),
 		m_IsSwapchainOwned(true)
     {
-    	CreateImageSampler();
+    	CreateImageSampler(SamplerFilter::LINEAR, SamplerAddressMode::REPEAT, false);
 
     	if (m_CurrentLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ||
 					(m_Format == VK_FORMAT_D16_UNORM) ||
@@ -140,6 +140,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -202,6 +203,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -255,6 +257,7 @@ namespace Astral {
     	{
     		case TextureType::IMAGE_1D: imageType = VK_IMAGE_TYPE_1D; break;
     		case TextureType::IMAGE_2D: imageType = VK_IMAGE_TYPE_2D; break;
+    		case TextureType::IMAGE_2D_ARRAY: imageType = VK_IMAGE_TYPE_2D; break;
     		case TextureType::IMAGE_3D: imageType = VK_IMAGE_TYPE_3D; break;
     		case TextureType::CUBEMAP: imageType = VK_IMAGE_TYPE_2D; break;
     		default: imageType = VK_IMAGE_TYPE_2D;
@@ -358,6 +361,7 @@ namespace Astral {
     		case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     		case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     		case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_CUBE; break;
+    		case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY; break;
 		    default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     	}
 
@@ -397,6 +401,7 @@ namespace Astral {
     			case TextureType::IMAGE_2D: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			case TextureType::IMAGE_3D: viewType = VK_IMAGE_VIEW_TYPE_3D; break;
     			case TextureType::CUBEMAP: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
+    			case TextureType::IMAGE_2D_ARRAY: viewType = VK_IMAGE_VIEW_TYPE_2D; break;
     			default: viewType = VK_IMAGE_VIEW_TYPE_2D;
     		}
     		imageViewCreateInfo.viewType = viewType;
@@ -691,7 +696,7 @@ namespace Astral {
 
 
 
-    	if (!RendererAPI::GetDevice().IsBlitSupportedByFormat(ConvertVkFormatToImageFormat(m_Format)))
+    	if (generateMipMaps && !RendererAPI::GetDevice().IsBlitSupportedByFormat(ConvertVkFormatToImageFormat(m_Format)))
     	{
     		AE_WARN("Texture format does not support blit command needed to generate mip maps!")
     	}
@@ -757,7 +762,7 @@ namespace Astral {
     				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
     				1,
     				&mipmapImageBlit,
-    				VK_FILTER_NEAREST);
+    				VK_FILTER_LINEAR);
 
     			if (mipWidth > 1)  { mipWidth /= 2; }
     			if (mipHeight > 1) { mipHeight /= 2; }
@@ -772,20 +777,20 @@ namespace Astral {
     }
 
 
-    void VulkanTexture::CreateImageSampler()
+    void VulkanTexture::CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotrophy)
     {
     	VkSamplerCreateInfo samplerCreateInfo = {
 			.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
     		.pNext = nullptr,
     		.flags = 0,
-    		.magFilter = VK_FILTER_LINEAR,
-    		.minFilter = VK_FILTER_LINEAR,
+    		.magFilter = ConvertSamplerFilterToVkFilter(samplerFilter),
+    		.minFilter = ConvertSamplerFilterToVkFilter(samplerFilter),
     		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-    		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    		.addressModeU = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
+    		.addressModeV = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
+    		.addressModeW = ConvertSamplerAddressModeToVkSamplerAddressMode(samplerAddressMode),
     		.mipLodBias = 0.0f,
-    		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported(),
+    		.anisotropyEnable = RendererAPI::GetDevice().IsAnisotropySupported() && shouldEnableAnisotrophy,
     		.maxAnisotropy = RendererAPI::GetDevice().GetMaxAnisotropySupported(),
     		.compareEnable = VK_FALSE,
     		.compareOp = VK_COMPARE_OP_ALWAYS,

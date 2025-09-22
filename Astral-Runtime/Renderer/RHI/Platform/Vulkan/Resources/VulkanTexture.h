@@ -16,14 +16,6 @@
 
 namespace Astral {
 
-    enum class TextureType : uint32
-    {
-        IMAGE_1D,
-        IMAGE_2D,
-        IMAGE_3D,
-        CUBEMAP
-    };
-
     /**
     * @brief Information to create a vulkan texture from
     */
@@ -44,6 +36,9 @@ namespace Astral {
         bool GenerateMipMaps;
         TextureType TextureType;
         SampleCount MSAASampleCount;
+        SamplerFilter SamplerFilter;
+        SamplerAddressMode SamplerAddressMode;
+        bool EnableAnisotropy;
     };
 
     /**
@@ -218,7 +213,7 @@ namespace Astral {
         /**
          * @brief Creates the VkImageSampler for the texture
          */
-        void CreateImageSampler();
+        void CreateImageSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotrophy);
 
         /**
          * @brief Destroys the VkImageSampler for the texture

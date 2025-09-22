@@ -24,8 +24,6 @@ namespace Astral {
         virtual void CopyDataToBuffer(void* data, uint32 size) = 0;
 
         virtual void* GetNativeHandle() = 0;
-
-        static Buffer* CreateBuffer();
     };
 
     using BufferHandle = GraphicsRef<Buffer>;
