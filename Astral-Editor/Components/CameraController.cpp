@@ -7,7 +7,7 @@
 #include "CameraController.h"
 
 #include "Core/Engine.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Scenes/Scene.h"
 #include "Input/InputState.h"
 

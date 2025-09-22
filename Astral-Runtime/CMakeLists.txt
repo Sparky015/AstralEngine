@@ -26,8 +26,8 @@ add_library(AstralEngine
         Debug/Utilities/ConsoleLogFile.h
         Debug/Instrumentation/ProfilerLogFile.cpp
         Debug/Instrumentation/ProfilerLogFile.h
-        ECS/SceneManager.cpp
-        ECS/SceneManager.h
+        Scenes/SceneManager.cpp
+        Scenes/SceneManager.h
         ECS/Components/TransformComponent.h
         ECS/Components/SpriteComponent.h
         Renderer/RendererManager.cpp

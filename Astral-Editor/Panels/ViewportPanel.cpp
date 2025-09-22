@@ -12,7 +12,7 @@
 #include "ImGuizmo.h"
 #include "SceneHierarchyPanel.h"
 #include "ECS/Entity.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "ECS/Systems/RenderingSystem.h"
 #include "glm/gtc/type_ptr.inl"
 #include "Input/InputState.h"

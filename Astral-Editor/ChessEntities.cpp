@@ -4,10 +4,9 @@
 
 #include "ChessEntities.h"
 
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Asset/AssetManager.h"
 #include "Renderer/RHI/Resources/Texture.h"
-
 #include "Core/Engine.h"
 #include "ECS/Components/SpriteComponent.h"
 #include "ECS/Components/TransformComponent.h"

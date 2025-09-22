@@ -20,7 +20,7 @@
 #include "assimp/Exporter.hpp"
 #include "Core/Engine.h"
 #include "Core/SmartPointers.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "glm/detail/type_quat.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/type_ptr.hpp"

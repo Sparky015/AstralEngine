@@ -8,7 +8,7 @@
 
 #include "imgui.h"
 #include "SceneHierarchyPanel.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "glm/gtc/type_ptr.hpp"
 
 namespace Astral {

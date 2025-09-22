@@ -21,7 +21,7 @@
 
 #include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
 namespace Astral {

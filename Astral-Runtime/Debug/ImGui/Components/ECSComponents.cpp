@@ -6,7 +6,7 @@
 
 #include <imgui.h>
 
-#include "ECS/SceneManager.h"
+#include "../../../Scenes/SceneManager.h"
 #include "Core/Engine.h"
 
 void Astral::EntityCountComponent()

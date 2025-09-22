@@ -6,7 +6,7 @@
 
 #include "Core/SystemManager.h"
 
-#include "ECS.h"
+#include "../ECS/ECS.h"
 #include "Scenes/Scene.h"
 
 namespace Astral {

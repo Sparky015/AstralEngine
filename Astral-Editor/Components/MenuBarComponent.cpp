@@ -13,7 +13,7 @@
 #include "nfd.hpp"
 
 #include "imgui.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Asset/Loaders/SceneLoader.h"
 
 namespace Astral {

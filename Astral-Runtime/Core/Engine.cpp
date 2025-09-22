@@ -10,7 +10,7 @@
 #include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Events/EventListener.h"
 #include "Events/EventPublisher.h"
 #include "EngineLoopEvents.h"

@@ -7,7 +7,7 @@
 #include "SceneHierarchyPanel.h"
 
 #include "Core/Engine.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Utilities/AssetFileHelpers.h"
 
 #include "imgui.h"

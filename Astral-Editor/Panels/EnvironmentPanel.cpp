@@ -7,8 +7,7 @@
 #include "EnvironmentPanel.h"
 
 #include "Core/Engine.h"
-#include "ECS/SceneManager.h"
-#include "Scenes/Scene.h"
+#include "Scenes/SceneManager.h"
 #include "Utilities/AssetFileHelpers.h"
 #include "Asset/AssetManager.h"
 

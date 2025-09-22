@@ -7,7 +7,7 @@
 #include "MaterialEditorPanel.h"
 
 #include "ECS/ECS.h"
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 
 #include "imgui.h"
 #include "nfd.h"

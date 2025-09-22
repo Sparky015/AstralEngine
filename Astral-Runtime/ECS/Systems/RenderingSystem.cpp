@@ -5,7 +5,7 @@
 */
 #include "RenderingSystem.h"
 
-#include "ECS/SceneManager.h"
+#include "Scenes/SceneManager.h"
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
@@ -14,7 +14,6 @@
 #include "Window/Window.h"
 #include "Window/WindowManager.h"
 #include "Renderer/SceneRenderer.h"
-
 
 #include <cmath>
 

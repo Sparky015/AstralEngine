@@ -4,10 +4,10 @@
 
 #include "SceneManager.h"
 
-#include "ECS.h"
+#include "../ECS/ECS.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Loggers.h"
-#include "Systems/RenderingSystem.h"
+#include "../ECS/Systems/RenderingSystem.h"
 
 namespace Astral {
 
