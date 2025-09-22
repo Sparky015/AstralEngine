@@ -37,6 +37,7 @@ set(TEST_FILES_GPU_REQUIRED
         Asset/AssetRegistryShaderLoaderTest.cpp
         Asset/AssetRegistryEnvironmentMapLoaderTest.cpp
         Asset/AssetRegistryCubeLUTLoaderTest.cpp
+        Scenes/SceneLoaderTest.cpp
 )
 
 
@@ -72,4 +73,5 @@ include(GoogleTest)
 gtest_discover_tests(AstralEngineTests)
 
 target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_ASSETS_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/Asset/TestAssets/")
+target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_SCENES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/Scenes/TestScenes/")
 
