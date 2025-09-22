@@ -196,14 +196,15 @@ namespace Astral {
     }
 
 
-    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
         VulkanIndexBufferDesc indexBufferDesc = {
             .VulkanDevice = *this,
             .Device = m_Device,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
             .IndiceData = indiceData,
-            .SizeInBytes = sizeInBytes
+            .SizeInBytes = sizeInBytes,
+            .MemoryType = memoryType
         };
 
         return CreateGraphicsRef<VulkanIndexBuffer>(indexBufferDesc);

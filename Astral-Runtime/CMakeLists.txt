@@ -293,6 +293,7 @@ add_library(AstralEngine
         Asset/Loaders/CubeLUTLoader.cpp
         Renderer/RHI/Common/SamplerSettings.h
         Renderer/RHI/Common/PipelineRasterizerState.h
+        Renderer/RHI/Common/MemoryTypes.h
 )
 
 

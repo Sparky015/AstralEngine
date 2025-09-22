@@ -11,7 +11,7 @@
 
 namespace Astral {
 
-    IndexBufferHandle IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count)
+    IndexBufferHandle IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count, GPUMemoryType memoryType)
     {
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 

@@ -26,6 +26,8 @@ namespace Astral {
     {
         CreateBuffer(m_UsedMemorySize, &m_PrimaryBuffer);
         m_PrimaryDeviceSize = AllocateMemory(m_PrimaryBuffer, &m_PrimaryMemory);
+
+        m_MemoryType = desc.RequestedMemoryPropertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ? GPUMemoryType::DEVICE_LOCAL : GPUMemoryType::HOST_VISIBLE;
     }
 
     VulkanBuffer::~VulkanBuffer()

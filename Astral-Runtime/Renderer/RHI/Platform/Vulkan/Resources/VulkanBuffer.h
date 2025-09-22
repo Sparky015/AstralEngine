@@ -12,6 +12,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include "VulkanDevice.h"
+#include "Renderer/RHI/Common/MemoryTypes.h"
 
 namespace Astral {
 
@@ -74,6 +75,7 @@ namespace Astral {
         VkDeviceMemory m_PrimaryMemory;
         VkDeviceSize m_PrimaryDeviceSize;
         bool m_IsDeviceMemoryMapped;
+        GPUMemoryType m_MemoryType;
     };
 
 }
