@@ -3,8 +3,7 @@
 #Enabling the tests for CMake
 enable_testing()
 
-set(TEST_FILES
-        ExampleTest.cpp
+set(TEST_FILES_NO_GPU_REQUIRED
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
 
@@ -21,21 +20,47 @@ set(TEST_FILES
         Core/Memory/Allocators/AllocatorUtilsTest.cpp
         Core/Memory/Allocators/RingAllocatorTest.cpp
 
-        Renderer/OrthographicCameraTest.cpp
+        Renderer/Cameras/CameraTest.cpp
         Debug/MemoryTracking/GlobalAllocationStorageTest.cpp
         Debug/MemoryTracking/SceneMetricsExporterTest.cpp
 )
 
+set(TEST_FILES_GPU_REQUIRED
+        Renderer/RHI/Resources/IndexBufferTest.cpp
+        Renderer/RHI/Resources/DescriptorSetTest.cpp
+        Renderer/RHI/Resources/FramebufferTest.cpp
+        Renderer/RHI/Resources/VertexBufferTest.cpp
+        Renderer/RHI/Resources/TextureTest.cpp
+)
+
 
 add_executable(AstralEngineTests
-        ${TEST_FILES}
+        ${TEST_FILES_NO_GPU_REQUIRED}
 )
+
+add_executable(AstralEngineTestsWithGPU
+        main.cpp
+        ${TEST_FILES_NO_GPU_REQUIRED}
+        ${TEST_FILES_GPU_REQUIRED}
+)
+
+target_compile_definitions(AstralEngine PUBLIC
+        -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+        -DTURN_OFF_PROFILER_MACRO
+)
+
 
 target_link_libraries(AstralEngineTests GTest::gtest_main)
 target_link_libraries(AstralEngineTests AstralEngine)
-
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/Source)
+
+
+target_link_libraries(AstralEngineTestsWithGPU GTest::gtest)
+target_link_libraries(AstralEngineTestsWithGPU AstralEngine)
+target_include_directories(AstralEngineTestsWithGPU PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
+target_include_directories(AstralEngineTestsWithGPU PUBLIC ${CMAKE_SOURCE_DIR}/Source)
+
 
 include(GoogleTest)
 gtest_discover_tests(AstralEngineTests)

@@ -8,6 +8,7 @@
 
 #include "VulkanBuffer.h"
 #include "VulkanDevice.h"
+#include "Renderer/RHI/Common/MemoryTypes.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 
 namespace Astral {
@@ -19,6 +20,7 @@ namespace Astral {
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
         uint32* IndiceData;
         uint32 SizeInBytes;
+        GPUMemoryType MemoryType;
     };
 
     class VulkanIndexBuffer : public IndexBuffer
@@ -26,6 +28,10 @@ namespace Astral {
     public:
         explicit VulkanIndexBuffer(const VulkanIndexBufferDesc& desc);
         ~VulkanIndexBuffer() override;
+
+        void MapPointer(void** cpuPtr) override;
+        void UnmapPointer() override;
+        void CopyDataToBuffer(void* data, uint32 size) override;
 
         uint32 GetCount() const override { return m_SizeInBytes / sizeof(uint32); }
 

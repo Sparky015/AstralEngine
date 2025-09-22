@@ -40,6 +40,12 @@ namespace Astral {
         void UpdateStorageImageBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout) override;
         void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle newTextureHandle) override;
 
+        BufferHandle GetStorageBuffer(uint32 binding) override;
+        BufferHandle GetUniformBuffer(uint32 binding) override;
+        TextureHandle GetImageSampler(uint32 binding) override;
+        TextureHandle GetStorageImage(uint32 binding) override;
+        TextureHandle GetSubpassInputAttachment(uint32 binding) override;
+
         const DescriptorSetLayout& GetDescriptorSetLayout() override { return m_DescriptorSetLayout; }
 
         void* GetNativeLayout() override { return m_VkDescriptorSetLayout; }

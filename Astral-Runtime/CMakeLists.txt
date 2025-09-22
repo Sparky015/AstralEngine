@@ -202,10 +202,8 @@ add_library(AstralEngine
         Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
         Renderer/RHI/Resources/Framebuffer.h
-        Renderer/RHI/Resources/DescriptorSetLayout.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
-        Renderer/RHI/Resources/DescriptorPool.h
         Renderer/RHI/Resources/CommandQueue.h
         Renderer/RHI/Resources/Buffer.h
         Renderer/RHI/Resources/CommandBuffer.h
@@ -293,6 +291,7 @@ add_library(AstralEngine
         Asset/Loaders/CubeLUTLoader.cpp
         Renderer/RHI/Common/SamplerSettings.h
         Renderer/RHI/Common/PipelineRasterizerState.h
+        Renderer/RHI/Common/MemoryTypes.h
 )
 
 
@@ -492,7 +491,6 @@ elseif (LINUX)
 
 endif ()
 
-target_compile_definitions(AstralEngine PUBLIC -DTURN_ON_LOGGING_CONSOLE_TO_FILE)
 target_compile_definitions(AstralEngine PUBLIC -DROOT_DIR="${CMAKE_SOURCE_DIR}/")
 target_compile_definitions(AstralEngine PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
 target_compile_definitions(AstralEngine PUBLIC -DASTRAL_RUNTIME_DIR="${CMAKE_CURRENT_SOURCE_DIR}/")

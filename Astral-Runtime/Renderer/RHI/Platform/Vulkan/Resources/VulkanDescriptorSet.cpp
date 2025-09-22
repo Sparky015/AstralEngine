@@ -402,6 +402,110 @@ namespace Astral {
     }
 
 
+    BufferHandle VulkanDescriptorSet::GetStorageBuffer(uint32 binding)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, "Expected existing binding to be a storage buffer when calling GetStorageBuffer")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 bufferIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
+        }
+
+        return m_Buffers[bufferIndex];
+    }
+
+
+    BufferHandle VulkanDescriptorSet::GetUniformBuffer(uint32 binding)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, "Expected existing binding to be a uniform buffer when calling GetUniformBuffer")
+
+        // Finds the target binding buffer by counting the number of storage buffers or uniform buffers before the target binding
+        uint32 bufferIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER || descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) { bufferIndex++; }
+        }
+
+        return m_Buffers[bufferIndex];
+    }
+
+
+    TextureHandle VulkanDescriptorSet::GetImageSampler(uint32 binding)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "Expected existing binding to be a combined image sampler when calling GetImageSampler")
+
+        // Finds the target binding image by counting the number of combined image samplers, storage images, and input attachments before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
+        }
+
+        return m_Textures[textureIndex];
+    }
+
+
+    TextureHandle VulkanDescriptorSet::GetStorageImage(uint32 binding)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, "Expected existing binding to be a storage image when calling GetStorageImage")
+
+        // Finds the target binding image by counting the number of combined image samplers, storage images, and input attachments before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
+        }
+
+        return m_Textures[textureIndex];
+    }
+
+
+    TextureHandle VulkanDescriptorSet::GetSubpassInputAttachment(uint32 binding)
+    {
+        ASSERT(binding < m_DescriptorSetLayoutBindings.size(), "Specified binding is out of range of the existing descriptor set")
+        const VkDescriptorSetLayoutBinding& targetDescriptorSetLayout = m_DescriptorSetLayoutBindings[binding];
+        VkDescriptorType descriptorType = targetDescriptorSetLayout.descriptorType;
+        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, "Expected existing binding to be a input attachment when calling GetSubpassInputAttachment")
+
+        // Finds the target binding image by counting the number of combined image samplers, storage images, and input attachments before the target binding
+        uint32 textureIndex = 0;
+        for (size_t i = 0; i < binding; i++)
+        {
+            const VkDescriptorSetLayoutBinding& descriptorSetLayout = m_DescriptorSetLayoutBindings[i];
+            if (descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ||
+                descriptorSetLayout.descriptorType == VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+            { textureIndex++; }
+        }
+
+        return m_Textures[textureIndex];
+    }
+
+
     void VulkanDescriptorSet::Invalidate()
     {
         // if (m_DescriptorSet) { FreeDescriptorSet(); m_DescriptorSet = VK_NULL_HANDLE; } // This needs to have the free set bit in the descriptor pool

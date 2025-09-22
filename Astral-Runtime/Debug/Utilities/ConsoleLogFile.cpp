@@ -15,7 +15,7 @@ namespace Astral {
 
     void ConsoleLogFile::Init()
     {
-#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+#ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
 
         const std::time_t t = std::time(nullptr);
         const std::tm* currentTime = std::localtime(&t);
@@ -68,7 +68,7 @@ namespace Astral {
 
     void ConsoleLogFile::Shutdown()
     {
-#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+#ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         logFile.GetFileStream().close();
         if (logFile.GetFileStream().fail())

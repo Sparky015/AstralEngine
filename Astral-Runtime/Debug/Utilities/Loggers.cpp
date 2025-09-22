@@ -36,7 +36,7 @@ namespace Astral::Macros {
                   << currentTime->tm_sec << "." << elapsedPrecisionTime
                   << "] " << SetColor(LIGHT_CYAN) << message.str() << SetColor(DEFAULT) << "\n";
 
-    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
@@ -61,7 +61,7 @@ namespace Astral::Macros {
         CheckIfCoutFailed();
 
         std::cout << SetColor(LIGHT_GREEN) << message.str() << SetColor(DEFAULT) << "\n"; // Color is bright green
-#ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+#ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
@@ -83,7 +83,7 @@ namespace Astral::Macros {
 
         std::cout << SetColor(YELLOW) << "[Warning] " << message.str() << SetColor(DEFAULT) << "\n";
 
-    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
@@ -99,8 +99,8 @@ namespace Astral::Macros {
     {
         if (std::cout.fail())
         {
-            std::cout << "\n" << SetColor(YELLOW) << "std::cout failed!" << SetColor(DEFAULT);
             std::cout.clear();
+            std::cout << "\n" << SetColor(YELLOW) << "std::cout failed!" << SetColor(DEFAULT);
         }
     }
 
