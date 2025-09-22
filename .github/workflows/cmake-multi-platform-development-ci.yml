@@ -90,7 +90,7 @@ jobs:
 
     - name: Build
       # Builds the project using the generated build system
-      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} --output-on-failure
 
     - name: Test
       # Runs tests only for Debug builds
