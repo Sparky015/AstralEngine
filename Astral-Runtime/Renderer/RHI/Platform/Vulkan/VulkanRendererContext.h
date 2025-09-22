@@ -42,6 +42,8 @@ namespace Astral {
         void ShutdownImGuiForAPIBackend() override;
 
         Device& GetDevice() override { return *m_Device; }
+        uint32 GetNumValidationErrorsAndWarnings() override { return m_NumValidationErrorsAndWarnings; }
+        void ClearNumValidationErrorsAndWarnings() override { m_NumValidationErrorsAndWarnings = 0; }
 
     private:
 
@@ -71,6 +73,8 @@ namespace Astral {
 
         VulkanPhysicalDevices m_PhysicalDevices;
         uint32 m_QueueFamilyIndex;
+
+        static uint32 m_NumValidationErrorsAndWarnings;
 
         GraphicsOwnedPtr<Device> m_Device;
     };

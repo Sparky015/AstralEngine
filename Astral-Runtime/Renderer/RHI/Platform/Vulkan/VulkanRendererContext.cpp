@@ -22,6 +22,8 @@
 
 namespace Astral {
 
+    uint32 VulkanRenderingContext::m_NumValidationErrorsAndWarnings = 0;
+
     VulkanRenderingContext::VulkanRenderingContext(GLFWwindow* window) :
         m_Instance(VK_NULL_HANDLE),
         m_DebugMessenger(VK_NULL_HANDLE),
@@ -301,6 +303,11 @@ namespace Astral {
         for (uint32 i = 0; i < pCallbackData->objectCount; i++)
         {
             AE_LOG("     " << pCallbackData->pObjects[i].objectHandle);
+        }
+
+        if (type & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT || type & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+        {
+            m_NumValidationErrorsAndWarnings++;
         }
 
         return VK_FALSE;
