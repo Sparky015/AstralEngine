@@ -27,6 +27,7 @@ set(TEST_FILES
 
         Renderer/RHI/Resources/IndexBufferTest.cpp
         Renderer/RHI/Resources/DescriptorSetTest.cpp
+        Renderer/RHI/Resources/FramebufferTest.cpp
 )
 
 

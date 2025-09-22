@@ -31,7 +31,7 @@ namespace Astral {
          * @brief Begins the building of a framebuffer
          * @param framebufferWidth Specifies the width of the framebuffer
          * @param framebufferHeight Specifies the height of the framebuffer
-         * @param numLayers
+         * @param numLayers Specifies the number of layers in the framebuffer
          * @post  @ref EndBuildingFramebuffer should be called to create the framebuffer
          */
         virtual void BeginBuildingFramebuffer(uint32 framebufferWidth, uint32 framebufferHeight, uint32 numLayers = 1) = 0;
