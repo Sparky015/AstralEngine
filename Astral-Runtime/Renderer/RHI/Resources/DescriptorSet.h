@@ -56,6 +56,13 @@ namespace Astral {
         virtual void UpdateStorageImageBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
         virtual void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle textureHandle) = 0;
 
+        virtual BufferHandle GetStorageBuffer(uint32 binding) = 0;
+        virtual BufferHandle GetUniformBuffer(uint32 binding) = 0;
+        virtual TextureHandle GetImageSampler(uint32 binding) = 0;
+        virtual TextureHandle GetStorageImage(uint32 binding) = 0;
+        virtual TextureHandle GetSubpassInputAttachment(uint32 binding) = 0;
+
+
         virtual const DescriptorSetLayout& GetDescriptorSetLayout() = 0;
 
         virtual void* GetNativeLayout() = 0;
