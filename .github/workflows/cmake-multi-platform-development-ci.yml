@@ -90,11 +90,11 @@ jobs:
 
     - name: Build
       # Builds the project using the generated build system
-      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} --output-on-failure
+      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }}
 
     - name: Test
       # Runs tests only for Debug builds
       if: matrix.build_type == 'Debug'
       working-directory: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}/Tests/Astral-Runtime
-      run: ctest -C ${{ matrix.build_type }} 
+      run: ctest -C ${{ matrix.build_type }}  --output-on-failure
 
