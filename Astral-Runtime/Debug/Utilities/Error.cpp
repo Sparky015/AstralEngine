@@ -22,7 +22,7 @@ namespace Astral::Macros {
             filePath.erase(pos, rootDir.length());
         }
 
-    #ifdef TURN_ON_LOGGING_CONSOLE_TO_FILE
+    #ifndef TURN_OFF_LOGGING_CONSOLE_TO_FILE
         ConsoleLogFile& logFile = ConsoleLogFile::GetInstance();
         if (logFile.IsOpen())
         {
