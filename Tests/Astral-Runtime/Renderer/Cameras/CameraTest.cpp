@@ -1,5 +1,5 @@
 /**
-* @file OrthographicCamera.cpp
+* @file CameraTest.cpp
 * @author Andrew Fagan
 * @date 1/15/2025
 */
@@ -10,14 +10,14 @@
 
 namespace Astral {
 
-class OrthographicCameraTests : public ::testing::Test
+class CameraTests : public ::testing::Test
 {
 public:
 
 };
 
 /**@brief Tests that the constructor defaults the position and rotation to what they need to be */
-TEST_F(OrthographicCameraTests, Constructor_InitializesCorrectly)
+TEST_F(CameraTests, Constructor_InitializesCorrectly)
 {
     Camera camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
 
@@ -26,7 +26,7 @@ TEST_F(OrthographicCameraTests, Constructor_InitializesCorrectly)
 }
 
 /**@brief Tests that the position is set properly and that the projection view matrix is updated. */
-TEST_F(OrthographicCameraTests, SetPosition_UpdatesPosition) {
+TEST_F(CameraTests, SetPosition_UpdatesPosition) {
     Camera camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
     Mat4 oldProjectionViewMatrix = camera.GetProjectionViewMatrix();
 
@@ -37,7 +37,7 @@ TEST_F(OrthographicCameraTests, SetPosition_UpdatesPosition) {
 }
 
 /**@brief Tests that the rotation is set properly and that the projection view matrix is updated. */
-TEST_F(OrthographicCameraTests, SetRotation_UpdatesRotation) {
+TEST_F(CameraTests, SetRotation_UpdatesRotation) {
     Camera camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
     Mat4 oldProjectionViewMatrix = camera.GetProjectionViewMatrix();
 
