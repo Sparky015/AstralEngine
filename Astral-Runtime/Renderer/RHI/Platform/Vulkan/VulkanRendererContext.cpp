@@ -305,7 +305,7 @@ namespace Astral {
             AE_LOG("     " << pCallbackData->pObjects[i].objectHandle);
         }
 
-        if (type & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT || type & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+        if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT || severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
         {
             m_NumValidationErrorsAndWarnings++;
         }
