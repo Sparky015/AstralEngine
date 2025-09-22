@@ -4,7 +4,6 @@
 enable_testing()
 
 set(TEST_FILES
-        ExampleTest.cpp
         Core/Events/EventSystemTest.cpp
         Input/KeycodeConversionsTest.cpp
 
@@ -28,8 +27,9 @@ set(TEST_FILES
         Renderer/RHI/Resources/IndexBufferTest.cpp
         Renderer/RHI/Resources/DescriptorSetTest.cpp
         Renderer/RHI/Resources/FramebufferTest.cpp
+        Renderer/RHI/Resources/VertexBufferTest.cpp
+        Renderer/RHI/Resources/TextureTest.cpp
 )
-
 
 
 add_executable(AstralEngineTests

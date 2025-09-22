@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 #include "Renderer/RHI/RendererAPI.h"
-#include "Renderer/RHI/Resources/Buffer.h"
+#include "Renderer/RHI/Resources/IndexBuffer.h"
 
 namespace Astral {
 

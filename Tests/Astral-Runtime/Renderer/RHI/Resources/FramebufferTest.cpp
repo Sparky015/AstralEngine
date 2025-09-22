@@ -4,13 +4,6 @@
 * @date 9/21/25
 */
 
-/**
-* @file DescriptorSetTest.cpp
-* @author Andrew Fagan
-* @date 9/21/25
-*/
-
-
 #include "gtest/gtest.h"
 
 #include "Renderer/RHI/RendererAPI.h"
