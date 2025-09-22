@@ -13,7 +13,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 enable_testing()
-option(GLI_TEST_ENABLE "Build unit tests" ON)
+option(GLI_TEST_ENABLE "Build unit tests" OFF)
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-DSOURCE_DIR=".")
