@@ -89,7 +89,7 @@ namespace Astral {
             BufferHandle ShadowLightMatrices;
             DescriptorSetHandle ShadowLightMatricesDescriptorSet;
 
-            bool IsIrradianceMapCalculationNeeded;
+            bool IsEnvironmentMapIBLCalculationNeeded;
         };
 
         void BuildRenderGraphForDeferred();
@@ -117,8 +117,12 @@ namespace Astral {
         void ToneMappingPass();
         void FXAAPass();
 
+        void ComputeEnvironmentIBL();
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
         void ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions);
+
+        // Editor
+        void DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget);
 
         bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform);
 

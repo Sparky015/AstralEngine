@@ -168,7 +168,7 @@ namespace Astral {
                 m_EnvironmentMapStorageImagesSet->AddDescriptorStorageImage(frameContext.EnvironmentMap->PrefilteredEnvironment, ShaderStage::COMPUTE, ImageLayout::GENERAL);
                 m_EnvironmentMapStorageImagesSet->EndBuildingSet();
 
-                frameContext.IsIrradianceMapCalculationNeeded = true;
+                frameContext.IsEnvironmentMapIBLCalculationNeeded = true;
             }
 
             frameContext.EnvironmentMapDescriptorSet->UpdateImageSamplerBinding(1, sceneDescription.EnvironmentMap->Irradiance, ImageLayout::GENERAL);
@@ -715,7 +715,7 @@ namespace Astral {
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
-            context.IsIrradianceMapCalculationNeeded = true;
+            context.IsEnvironmentMapIBLCalculationNeeded = true;
 
             context.ShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
             context.ShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
@@ -746,103 +746,27 @@ namespace Astral {
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
+
         commandBuffer->BeginRecording();
 
-        // Irradiance Map calculation if empty
-        if (frameContext.IsIrradianceMapCalculationNeeded)
+        if (frameContext.IsEnvironmentMapIBLCalculationNeeded)
         {
-            RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
-
-            uint32 totalMipLevels = frameContext.EnvironmentMap->PrefilteredEnvironment->GetNumMipLevels();
-            uint32 mipWidth = frameContext.EnvironmentMap->PrefilteredEnvironment->GetWidth();
-            uint32 mipHeight = frameContext.EnvironmentMap->PrefilteredEnvironment->GetHeight();
-
-            for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
-            {
-                m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, ImageLayout::GENERAL);
-                UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
-                RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
-                if (mipWidth > 1)  { mipWidth /= 2; }
-                if (mipHeight > 1) { mipHeight /= 2; }
-            }
-            frameContext.IsIrradianceMapCalculationNeeded = false;
+            ComputeEnvironmentIBL();
         }
-
 
         // Viewport Rendering
         m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
 
-
-        TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
-        ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
-        {
-            PipelineBarrier pipelineBarrier = {};
-            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
-
-
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
-                .AspectMask = offscreenRenderTarget->GetImageAspect(),
-                .BaseMipLevel = 0,
-                .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
-                .BaseArrayLayer = 0,
-                .LayerCount = offscreenRenderTarget->GetNumLayers()
-            };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
-
-            commandBuffer->SetPipelineBarrier(pipelineBarrier);
-        }
-
-
-        // ImGui Rendering
-        commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
-        RendererAPI::CallImGuiDraws(commandBuffer);
-        commandBuffer->EndRenderPass();
-        commandBuffer->EndLabel();
-
-
-        {
-            PipelineBarrier pipelineBarrier = {};
-            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
-
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = initialLayout;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
-                .AspectMask = offscreenRenderTarget->GetImageAspect(),
-                .BaseMipLevel = 0,
-                .LevelCount = 1,
-                .BaseArrayLayer = 0,
-                .LayerCount = 1
-            };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
-
-            commandBuffer->SetPipelineBarrier(pipelineBarrier);
-        }
-
+        // Editor UI rendering to swapchain image
+        DrawEditorUI(commandBuffer, renderTarget);
 
         commandBuffer->EndRecording();
+
 
         CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
         commandQueue->Submit(commandBuffer, renderTarget);
         commandQueue->Present(renderTarget);
+
 
         uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
         if (m_CurrentViewportTexture.size() == 0)
@@ -1439,6 +1363,33 @@ namespace Astral {
     }
 
 
+    void SceneRendererImpl::ComputeEnvironmentIBL()
+    {
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+
+        // -------------- Compute Irradiance -------------------------------------------------
+
+        RendererAPI::ExecuteOneTimeAndBlock([this](CommandBufferHandle asyncCommandBuffer){ ComputeIrradianceMap(asyncCommandBuffer); });
+
+
+        // -------------- Compute Prefiltered Environment -------------------------------------------------
+
+        uint32 totalMipLevels = frameContext.EnvironmentMap->PrefilteredEnvironment->GetNumMipLevels();
+        uint32 mipWidth = frameContext.EnvironmentMap->PrefilteredEnvironment->GetWidth();
+        uint32 mipHeight = frameContext.EnvironmentMap->PrefilteredEnvironment->GetHeight();
+
+        for (uint32 mipLevel = 0; mipLevel < totalMipLevels; mipLevel++)
+        {
+            m_EnvironmentMapStorageImagesSet->UpdateStorageImageBinding(2, frameContext.EnvironmentMap->PrefilteredEnvironment, mipLevel, ImageLayout::GENERAL);
+            UVec2 mipDimensions = UVec2(mipWidth, mipHeight);
+            RendererAPI::ExecuteOneTimeAndBlock([&](CommandBufferHandle asyncCommandBuffer){ ComputePrefilteredEnvironmentMap(asyncCommandBuffer, mipLevel, mipDimensions); });
+            if (mipWidth > 1)  { mipWidth /= 2; }
+            if (mipHeight > 1) { mipHeight /= 2; }
+        }
+        frameContext.IsEnvironmentMapIBLCalculationNeeded = false;
+    }
+
+
     struct ComputeIrradianceMapPushConstants
     {
         float FaceIndex;
@@ -1527,6 +1478,75 @@ namespace Astral {
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
+    }
+
+
+    void SceneRendererImpl::DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget)
+    {
+        TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
+        ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = offscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
+                .BaseArrayLayer = 0,
+                .LayerCount = offscreenRenderTarget->GetNumLayers()
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            commandBuffer->SetPipelineBarrier(pipelineBarrier);
+        }
+
+
+        // ImGui Rendering
+        commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
+        RendererAPI::CallImGuiDraws(commandBuffer);
+        commandBuffer->EndRenderPass();
+        commandBuffer->EndLabel();
+
+
+        {
+            PipelineBarrier pipelineBarrier = {};
+            pipelineBarrier.SourceStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            imageMemoryBarrier.NewLayout = initialLayout;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = offscreenRenderTarget;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            commandBuffer->SetPipelineBarrier(pipelineBarrier);
+        }
+
     }
 
 
