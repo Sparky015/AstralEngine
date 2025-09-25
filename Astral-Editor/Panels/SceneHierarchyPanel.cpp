@@ -65,22 +65,6 @@ namespace Astral {
             if (ImGui::Selectable(entity.GetDebugName().data(), selectedEntity == entity))
             {
                 selectedEntity = entity;
-
-                if (ecs.HasComponent<TransformComponent>(entity))
-                {
-                    ShowTransformComponent(ecs, entity);
-                }
-
-                if (ecs.HasComponent<SpriteComponent>(entity))
-                {
-                    ShowSpriteComponent(ecs, entity);
-                }
-
-                if (ecs.HasComponent<MeshComponent>(entity))
-                {
-                    ShowMeshComponent(ecs, entity);
-                }
-
             }
 
             ImGui::PopID();
