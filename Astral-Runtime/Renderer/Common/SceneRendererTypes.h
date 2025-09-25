@@ -39,7 +39,9 @@ namespace Astral {
         GBUFFER_EMISSION,
         GBUFFER_NORMAL,
         DEPTH,
-        CASCADED_SHADOW_MAP_BOUNDARIES
+        CASCADED_SHADOW_MAP_BOUNDARIES,
+        TONE_MAPPING_NONE,
+        TONE_MAPPING_REINHARD,
     };
 
     struct RendererSettings
@@ -77,6 +79,9 @@ namespace Astral {
             case RendererDebugView::GBUFFER_EMISSION: return "GBuffer-Emission";
             case RendererDebugView::GBUFFER_NORMAL: return "GBuffer-Normal";
             case RendererDebugView::DEPTH: return "Depth";
+            case RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES: return "Cascaded Shadow Map Boundaries";
+            case RendererDebugView::TONE_MAPPING_NONE: return "Tone Mapping-Off";
+            case RendererDebugView::TONE_MAPPING_REINHARD: return "Tone Mapping-Reinhard";
             default: return "Unsupported Renderer Type";
         }
     }

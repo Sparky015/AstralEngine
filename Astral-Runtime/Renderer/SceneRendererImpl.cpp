@@ -933,8 +933,8 @@ namespace Astral {
                 .CameraZNear = m_SceneCamera.GetNearPlane(),
                 .CameraZFar = m_SceneCamera.GetFarPlane(),
                 .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u,
-                .ShadowMapBias = m_RendererSettings.ShadowMapBias
+                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
+                .ShadowMapBias = m_RendererSettings.ShadowMapBias,
             };
 
             commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
@@ -1081,8 +1081,8 @@ namespace Astral {
             .CameraZNear = m_SceneCamera.GetNearPlane(),
             .CameraZFar = m_SceneCamera.GetFarPlane(),
             .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES ? 1u : 0u,
-            .ShadowMapBias = m_RendererSettings.ShadowMapBias
+            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
+            .ShadowMapBias = m_RendererSettings.ShadowMapBias,
         };
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
@@ -1287,12 +1287,23 @@ namespace Astral {
     }
 
 
+
+    // For demo purposes to show benefits of ACES (ACES is used normally)
+    enum class ToneMappingDebugView : uint32
+    {
+        NO_DEBUG_VIEW,
+        DEBUG_VIEW_REINHARD,
+        DEBUG_VIEW_NO_TONE_MAPPING,
+    };
+
+
     void SceneRendererImpl::ToneMappingPass()
     {
         struct ToneMappingPassPushConstants
         {
             float Exposure;
             Vec2 ShaperInputRange;
+            ToneMappingDebugView ToneMappingDebugView;
         };
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -1323,6 +1334,18 @@ namespace Astral {
         ToneMappingPassPushConstants toneMappingPushConstants;
         toneMappingPushConstants.Exposure = m_SceneExposure;
         toneMappingPushConstants.ShaperInputRange = toneMappingLUT->ShaperInputRange;
+        toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::NO_DEBUG_VIEW;
+
+
+        if (m_RendererSettings.DebugView == RendererDebugView::TONE_MAPPING_REINHARD)
+        {
+            toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::DEBUG_VIEW_REINHARD;
+        }
+        else if (m_RendererSettings.DebugView == RendererDebugView::TONE_MAPPING_NONE)
+        {
+            toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::DEBUG_VIEW_NO_TONE_MAPPING;
+        }
+
         commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
 
         commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);

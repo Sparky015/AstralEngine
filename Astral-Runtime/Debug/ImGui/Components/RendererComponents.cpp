@@ -146,6 +146,14 @@ namespace Astral {
             {
                 rendererSettings.DebugView = RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES;
             }
+            if (ImGui::Selectable("Tone Mapping-Off"))
+            {
+                rendererSettings.DebugView = RendererDebugView::TONE_MAPPING_NONE;
+            }
+            if (ImGui::Selectable("Tone Mapping-Reinhard"))
+            {
+                rendererSettings.DebugView = RendererDebugView::TONE_MAPPING_REINHARD;
+            }
 
             ImGui::EndCombo();
         }
