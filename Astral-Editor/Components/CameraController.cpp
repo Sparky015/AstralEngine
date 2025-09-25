@@ -17,9 +17,12 @@ namespace Astral {
     static Vec3 initialPosition;
     static Vec2 rotationSpeed = Vec2{0};
     static float sensitivity = .15;
-    static float rotationDrag = .85;
-    static float baseSpeed = 8;
+    static float rotationConservationFactor = .85;
+    static float translationConservationFactor = .75;
+    static float baseAcceleration = 2;
     static DeltaTime deltaTime;
+
+
 
 
     void CameraControllerComponent()
@@ -27,14 +30,15 @@ namespace Astral {
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
         Camera& primaryCamera = scene.PrimaryCamera;
 
-        static float magnitude = 0;
+        static float translationAcceleration = 0;
+        static Vec3 translationVelocity = Vec3(0);
 
         deltaTime.UpdateDeltaTime();
-        magnitude = baseSpeed * deltaTime.GetSeconds();
+        translationAcceleration = baseAcceleration * deltaTime.GetSeconds();
 
         if (InputState::IsKeyDown(KEY_LEFT_CLICK))
         {
-            magnitude *= 20;
+            translationAcceleration *= 20;
         }
 
         static Vec2 lastMousePosition{};
@@ -62,7 +66,7 @@ namespace Astral {
         Vec3 newRotation = {currentRotation.x - rotationSpeed.y, currentRotation.y + rotationSpeed.x, currentRotation.z};
         primaryCamera.SetRotation(newRotation);
 
-        rotationSpeed *= rotationDrag;
+        rotationSpeed *= rotationConservationFactor;
 
         initialPosition = primaryCamera.GetPosition(); // For tracking camera velocity
         Vec3 movingDirection = Vec3(0.0f);
@@ -125,9 +129,12 @@ namespace Astral {
 
         if (movingDirection != Vec3(0.0f))
         {
-            Vec3 positionDelta = glm::normalize(movingDirection) * magnitude;
-            primaryCamera.SetPosition(initialPosition + positionDelta);
+            translationVelocity += glm::normalize(movingDirection) * translationAcceleration;
         }
+
+        primaryCamera.SetPosition(initialPosition + translationVelocity);
+
+        translationVelocity *= translationConservationFactor;
 
         CameraPropertiesComponent();
     }
@@ -164,20 +171,25 @@ namespace Astral {
         ImGui::InputFloat("##zFarInput", &zFar);
         if (scene.PrimaryCamera.GetFarPlane() != zFar) { scene.PrimaryCamera.SetFarPlane(zFar); }
 
-        ImGui::Text("Camera Base Speed: ");
+        ImGui::Text("Base Acceleration: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);
-        ImGui::InputFloat("##CameraSpeedInput", &baseSpeed);
+        ImGui::InputFloat("##CameraAccelerationInput", &baseAcceleration);
+
+        ImGui::Text("Translation Conservation Factor: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputFloat("##CameraTranslationConservationFactorInput", &translationConservationFactor);
 
         ImGui::Text("Mouse Sensitivity: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);
         ImGui::InputFloat("##MouseSensitivityInput", &sensitivity);
 
-        ImGui::Text("Camera Drag Factor: ");
+        ImGui::Text("Rotation Conservation Factor: ");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(-1);
-        ImGui::InputFloat("##CameraDragFactorInput", &rotationDrag);
+        ImGui::InputFloat("##CameraRotationConservationFactorInput", &rotationConservationFactor);
 
 
         ImGui::End();
