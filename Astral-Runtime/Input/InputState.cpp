@@ -14,6 +14,7 @@ namespace Astral {
 
     std::array<KeyState, InputState::NUMBER_OF_KEYS> InputState::m_KeyState = {KeyState()};
     MouseCursorState InputState::m_MouseCursorState = MouseCursorState();
+    Vec2 InputState::m_MousePositionBackBuffer = Vec2();
     bool InputState::m_IgnoreNewInputs = false;
 
     bool InputState::IsKeyDown(int keycode)
@@ -175,6 +176,14 @@ namespace Astral {
     }
 
 
+    void InputState::EnableTrackingInputs()
+    {
+        m_MouseCursorState.MouseXPosition = m_MousePositionBackBuffer.x;
+        m_MouseCursorState.MouseYPosition = m_MousePositionBackBuffer.y;
+        m_IgnoreNewInputs = false;
+    }
+
+
     Astral::EventListener<KeyPressedEvent> InputState::m_KeyPressListener = Astral::EventListener<KeyPressedEvent> {[](KeyPressedEvent keyPressedEvent){InputState::OnKeyPress(keyPressedEvent);}};
     Astral::EventListener<KeyReleasedEvent> InputState::m_KeyReleaseListener = Astral::EventListener<KeyReleasedEvent> {[](KeyReleasedEvent keyReleasedEvent){InputState::OnKeyRelease(keyReleasedEvent);}};
     Astral::EventListener<KeyRepeatingEvent> InputState::m_KeyRepeatingListener = Astral::EventListener<KeyRepeatingEvent> {[](KeyRepeatingEvent keyRepeatingEvent){InputState::OnKeyRepeating(keyRepeatingEvent);}};
@@ -212,9 +221,15 @@ namespace Astral {
 
     void InputState::OnMouseMoved(MouseMovedEvent mouseMovedEvent)
     {
-        if (m_IgnoreNewInputs) { return; }
+        if (m_IgnoreNewInputs)
+        {
+            m_MousePositionBackBuffer = Vec2(mouseMovedEvent.xPosition, mouseMovedEvent.yPosition);
+            return;
+        }
+
         m_MouseCursorState.MouseXPosition = mouseMovedEvent.xPosition;
         m_MouseCursorState.MouseYPosition = mouseMovedEvent.yPosition;
+        m_MousePositionBackBuffer = Vec2(mouseMovedEvent.xPosition, mouseMovedEvent.yPosition);
     }
 
 
