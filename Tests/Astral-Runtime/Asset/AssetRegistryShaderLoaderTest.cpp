@@ -39,10 +39,10 @@ INSTANTIATE_TEST_SUITE_P(
     ShaderLoaderTestPaths,
     AssetRegistryShaderLoaderTest,
     ::testing::Values(
-        "Shaders/ComputeIrradianceMap.comp",
-        "Shaders/DeferredLightingPass.frag",
-        "Shaders/EnvironmentMap.frag",
-        "Shaders/ShadowMap.vert"
+        "Shaders/Test_ComputeIrradianceMap.comp",
+        "Shaders/Test_DeferredLightingPass.frag",
+        "Shaders/Test_EnvironmentMap.frag",
+        "Shaders/Test_ShadowMap.vert"
     )
 );
 

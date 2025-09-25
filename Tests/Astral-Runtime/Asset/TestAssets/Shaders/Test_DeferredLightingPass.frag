@@ -59,8 +59,8 @@ layout (push_constant) uniform PushConstants {
 
 layout(location = 0) out vec4 outColor;
 
-#include "BRDF.glsl"
-#include "Utilities.glsl"
+#include "Test_BRDF.glsl"
+#include "Test_Utilities.glsl"
 
 
 void main()

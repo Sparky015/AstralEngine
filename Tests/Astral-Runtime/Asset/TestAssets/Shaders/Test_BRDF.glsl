@@ -3,7 +3,7 @@
 #ifndef BRDF_GLSL
 #define BRDF_GLSL
 
-#include "ColorTransforms.glsl"
+#include "Test_ColorTransforms.glsl"
 
 const float PI = 3.14159265359;
 
