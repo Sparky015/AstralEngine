@@ -7,18 +7,36 @@ layout (set = 2, binding = 0) uniform sampler3D u_ToneMapLut; // LUT is ACES bak
 layout (set = 2, binding = 1) uniform sampler1D u_ToneMapShaper; // Shaper is ACES baked shaper for helping convert ACEScg to sRGB
 
 
+uint ToneMappingDebugView_DEBUG_VIEW_REINHARD = 1;
+uint ToneMappingDebugView_DEBUG_VIEW_NO_TONE_MAPPING = 2;
+
 layout (push_constant) uniform PushConstantData {
     float exposure;
     float shaperInputMin;
     float shaperInputMax;
+    uint toneMappingDebugView;
 } u_PushConstantData;
 
 layout(location = 0) out vec4 color;
+
+#include "ColorTransforms.glsl"
 
 void main()
 {
     vec3 renderedColors = texture(u_SceneRender, v_TextureCoord).rgb;
     renderedColors *= exp2(u_PushConstantData.exposure);
+
+    if (u_PushConstantData.toneMappingDebugView == ToneMappingDebugView_DEBUG_VIEW_NO_TONE_MAPPING)
+    {
+        color = vec4(ConvertAP1PrimariesToSRGBPrimaries(renderedColors), 1.0);
+        return;
+    }
+    else if (u_PushConstantData.toneMappingDebugView == ToneMappingDebugView_DEBUG_VIEW_REINHARD)
+    {
+        renderedColors = renderedColors / (1 + renderedColors);
+        color = vec4(ConvertAP1PrimariesToSRGBPrimaries(renderedColors), 1.0);
+        return;
+    }
 
     renderedColors = clamp(renderedColors, u_PushConstantData.shaperInputMin, u_PushConstantData.shaperInputMax); // Clamp to the max float value to avoid INF values going through the fit
     float shaperRange = u_PushConstantData.shaperInputMax - u_PushConstantData.shaperInputMin;
