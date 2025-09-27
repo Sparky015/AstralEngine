@@ -29,6 +29,9 @@ namespace Astral {
         static void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
 
+        static void SerializeEnvironmentSettings(const Scene& scene, aiMetadata& outMetaData);
+        static void LoadEnvironmentSettings(Scene& scene, const aiMetadata& metaData);
+
         struct Helpers
         {
             static void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);

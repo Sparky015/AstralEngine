@@ -119,10 +119,24 @@ namespace Astral {
 
 
 
+
+
         // Load entity data
         for (int i = 0; i < importedScene->mRootNode->mNumChildren; i++)
         {
             aiNode* node = importedScene->mRootNode->mChildren[i];
+
+            if (strcmp(node->mName.C_Str(), "__SCENE_METADATA__") == 0)
+            {
+                if (node->mMetaData && node->mMetaData->HasKey("AE_SceneEnvironmentSettings"))
+                {
+                    aiMetadata environmentSettingsMetaData{};
+                    node->mMetaData->Get("AE_SceneEnvironmentSettings", environmentSettingsMetaData);
+                    LoadEnvironmentSettings(activeScene, environmentSettingsMetaData);
+                }
+                continue;
+            }
+
             Entity entity = sceneECS.CreateEntity(node->mName.C_Str());
 
             // Transform component is always present
@@ -266,13 +280,23 @@ namespace Astral {
             std::string sceneResourceID = std::to_string(sceneResource.SceneResourceID);
             resourceMetaData.Add(sceneResourceID, aiString(resourceFilePath));
         }
-        exportScene->mMetaData = aiMetadata::Alloc(1);
-        exportScene->mMetaData->Add("AE_ExternalResourceFilePaths", resourceMetaData);
+
+        aiMetadata environmentSettingsMetaData = aiMetadata();
+        SerializeEnvironmentSettings(scene, environmentSettingsMetaData);
+
 
 
         // Serialize ecs in scene node metadata
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         exportScene->mRootNode = new aiNode("Root Node"); // assimp will delete the root node when the aiScene goes out of scope
+
+        // Scene meta data work around as some exporters don't support metadata for the root node or scene metadata field
+        aiNode* sceneMetaDataNode = new aiNode("__SCENE_METADATA__");
+        sceneMetaDataNode->mMetaData = aiMetadata::Alloc(2);
+        sceneMetaDataNode->mMetaData->Add("AE_ExternalResourceFilePaths", resourceMetaData);
+        sceneMetaDataNode->mMetaData->Add("AE_SceneEnvironmentSettings", environmentSettingsMetaData);
+        exportScene->mRootNode->addChildren(1, &sceneMetaDataNode);
+
         for (Entity entity : ecs)
         {
             aiNode* node = new aiNode; // assimp will recursively delete all child nodes when the root node gets deleted
@@ -364,6 +388,49 @@ namespace Astral {
         // in the expected format
         Assimp::Exporter exporter;
         exporter.Export(exportScene.get(), "gltf2", filePath.string().c_str());
+    }
+
+
+    void SceneLoader::SerializeEnvironmentSettings(const Scene& scene, aiMetadata& outMetaData)
+    {
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+        int numFields = 4;
+        outMetaData.Alloc(numFields);
+
+        AssetID environmentMapAssetID = NullAssetID;
+        if (scene.EnvironmentMap)
+        {
+            environmentMapAssetID = scene.EnvironmentMap->GetAssetID();
+        }
+        std::string environmentMapFilePath = registry.GetFilePathFromAssetID(environmentMapAssetID);
+
+        outMetaData.Add("Environment_EnvironmentMapFilePath", aiString(environmentMapFilePath));
+        outMetaData.Add("Environment_AmbientLightConstant", scene.AmbientLightConstant);
+        outMetaData.Add("Environment_Exposure", scene.Exposure);
+        outMetaData.Add("Environment_EnvironmentMapBlur", scene.EnvironmentMapBlur);
+    }
+
+
+    void SceneLoader::LoadEnvironmentSettings(Scene& scene, const aiMetadata& metaData)
+    {
+        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
+
+        aiString environmentMapFilePath;
+        double ambientLightConstant;
+        double exposure;
+        double environmentMapBlur;
+
+        metaData.Get("Environment_EnvironmentMapFilePath", environmentMapFilePath);
+        metaData.Get("Environment_AmbientLightConstant", ambientLightConstant);
+        metaData.Get("Environment_Exposure", exposure);
+        metaData.Get("Environment_EnvironmentMapBlur", environmentMapBlur);
+
+        Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>(environmentMapFilePath.C_Str());
+        if (environmentMap) { scene.EnvironmentMap = environmentMap; }
+
+        scene.AmbientLightConstant = ambientLightConstant;
+        scene.Exposure = exposure;
+        scene.EnvironmentMapBlur = environmentMapBlur;
     }
 
 
