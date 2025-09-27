@@ -431,7 +431,7 @@ namespace Astral {
         {
             environmentMapAssetID = scene.EnvironmentMap->GetAssetID();
         }
-        std::string environmentMapFilePath = registry.GetFilePathFromAssetID(environmentMapAssetID);
+        std::string environmentMapFilePath = registry.GetFilePathFromAssetID(environmentMapAssetID).generic_string();
 
         outMetaData.Add("Environment_EnvironmentMapFilePath", aiString(environmentMapFilePath));
         outMetaData.Add("Environment_AmbientLightConstant", scene.AmbientLightConstant);
