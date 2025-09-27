@@ -24,13 +24,13 @@ namespace Astral {
         float Exposure;
     };
 
-    enum class RendererType : uint8
+    enum class RendererType : uint32
     {
         FORWARD,
         DEFERRED
     };
 
-    enum class RendererDebugView
+    enum class RendererDebugView : uint32
     {
         NONE,
         GBUFFER_ALBEDO,

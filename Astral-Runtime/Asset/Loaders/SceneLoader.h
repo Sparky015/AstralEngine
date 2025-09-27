@@ -13,6 +13,7 @@
 #include "Core/SmartPointers.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/Common/Mesh.h"
+#include "Renderer/Common/SceneRendererTypes.h"
 #include "Scenes/Scene.h"
 
 
@@ -34,6 +35,9 @@ namespace Astral {
 
         static void SerializeCameraSettings(const Camera& camera, aiMetadata& outMetaData);
         static void LoadCameraSettings(Camera& outCamera, const aiMetadata& metaData);
+
+        static void SerializeRendererSettings(const RendererSettings& rendererSettings, aiMetadata& outMetaData);
+        static void LoadRendererSettings(RendererSettings& outRendererSettings, const aiMetadata& metaData);
 
         struct Helpers
         {

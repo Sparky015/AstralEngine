@@ -32,6 +32,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 #include "glm/gtx/euler_angles.hpp"
+#include "Renderer/SceneRenderer.h"
 
 namespace Astral {
 
@@ -142,6 +143,17 @@ namespace Astral {
                     aiMetadata sceneCameraProperties{};
                     node->mMetaData->Get("AE_SceneCameraProperties", sceneCameraProperties);
                     LoadCameraSettings(activeScene.PrimaryCamera, sceneCameraProperties);
+                }
+
+                if (node->mMetaData->HasKey("AE_RendererSettings"))
+                {
+                    aiMetadata rendererSettingsMetaData{};
+                    node->mMetaData->Get("AE_RendererSettings", rendererSettingsMetaData);
+
+                    RendererSettings rendererSettings;
+                    LoadRendererSettings(rendererSettings, rendererSettingsMetaData);
+
+                    SceneRenderer::SetRendererSettings(rendererSettings);
                 }
 
                 continue;
@@ -297,7 +309,8 @@ namespace Astral {
         aiMetadata cameraPropertiesMetaData = aiMetadata();
         SerializeCameraSettings(scene.PrimaryCamera, cameraPropertiesMetaData);
 
-
+        aiMetadata rendererSettingsMetaData = aiMetadata();
+        SerializeRendererSettings(SceneRenderer::GetRendererSettings(), rendererSettingsMetaData);
 
         // Serialize ecs in scene node metadata
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
@@ -306,10 +319,11 @@ namespace Astral {
         // Scene meta data work around as some exporters don't support metadata for the root node or scene metadata field
         aiNode* sceneMetaDataNode = new aiNode("__SCENE_METADATA__");
         int numFields = 3;
-        sceneMetaDataNode->mMetaData = aiMetadata::Alloc(numFields);
+        sceneMetaDataNode->mMetaData = new aiMetadata();
         sceneMetaDataNode->mMetaData->Add("AE_ExternalResourceFilePaths", resourceMetaData);
         sceneMetaDataNode->mMetaData->Add("AE_SceneEnvironmentSettings", environmentSettingsMetaData);
         sceneMetaDataNode->mMetaData->Add("AE_SceneCameraProperties", cameraPropertiesMetaData);
+        sceneMetaDataNode->mMetaData->Add("AE_RendererSettings", rendererSettingsMetaData);
         exportScene->mRootNode->addChildren(1, &sceneMetaDataNode);
 
         for (Entity entity : ecs)
@@ -495,6 +509,50 @@ namespace Astral {
         outCamera.SetRotation(rotation);
         outCamera.SetNearPlane(nearPlane);
         outCamera.SetFarPlane(farPlane);
+    }
+
+
+    void SceneLoader::SerializeRendererSettings(const RendererSettings& rendererSettings, aiMetadata& outMetaData)
+    {
+        int numFields = 9;
+        outMetaData.Alloc(numFields);
+
+        uint64 rendererType = (uint64)rendererSettings.RendererType;
+        uint64 debugView = (uint64)rendererSettings.DebugView;
+
+        outMetaData.Add("RendererSettings_RendererType", rendererType);
+        outMetaData.Add("RendererSettings_IsVSyncEnabled", rendererSettings.IsVSyncEnabled);
+        outMetaData.Add("RendererSettings_IsFrustumCullingEnabled", rendererSettings.IsFrustumCullingEnabled);
+        outMetaData.Add("RendererSettings_IsShadowsOn", rendererSettings.IsShadowsOn);
+        outMetaData.Add("RendererSettings_NumShadowCascades", rendererSettings.NumShadowCascades);
+        outMetaData.Add("RendererSettings_DebugView", debugView);
+        outMetaData.Add("RendererSettings_ShadowMapResolution", rendererSettings.ShadowMapResolution);
+        outMetaData.Add("RendererSettings_ShadowMapBias", rendererSettings.ShadowMapBias);
+        outMetaData.Add("RendererSettings_ShadowMapZMultiplier", rendererSettings.ShadowMapZMultiplier);
+    }
+
+
+    void SceneLoader::LoadRendererSettings(RendererSettings& outRendererSettings, const aiMetadata& metaData)
+    {
+        uint64 rendererType, debugView, numShadowCascades, shadowMapResolution;
+        double shadowMapBias, shadowMapZMultiplier;
+
+        metaData.Get("RendererSettings_RendererType", rendererType);
+        metaData.Get("RendererSettings_IsVSyncEnabled", outRendererSettings.IsVSyncEnabled);
+        metaData.Get("RendererSettings_IsFrustumCullingEnabled", outRendererSettings.IsFrustumCullingEnabled);
+        metaData.Get("RendererSettings_IsShadowsOn", outRendererSettings.IsShadowsOn);
+        metaData.Get("RendererSettings_NumShadowCascades", numShadowCascades);
+        metaData.Get("RendererSettings_DebugView", debugView);
+        metaData.Get("RendererSettings_ShadowMapResolution", shadowMapResolution);
+        metaData.Get("RendererSettings_ShadowMapBias", shadowMapBias);
+        metaData.Get("RendererSettings_ShadowMapZMultiplier", shadowMapZMultiplier);
+
+        outRendererSettings.RendererType = (RendererType)rendererType;
+        outRendererSettings.NumShadowCascades = numShadowCascades;
+        outRendererSettings.DebugView = (RendererDebugView)debugView;
+        outRendererSettings.ShadowMapResolution = shadowMapResolution;
+        outRendererSettings.ShadowMapBias = shadowMapBias;
+        outRendererSettings.ShadowMapZMultiplier = shadowMapZMultiplier;
     }
 
 
