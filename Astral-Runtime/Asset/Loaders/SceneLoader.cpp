@@ -137,34 +137,30 @@ namespace Astral {
 
             if (node->mMetaData->HasKey("Mesh_MeshData"))
             {
-                // SceneResourceID meshDataResourceID;
-                // node->mMetaData->Get("Mesh_MeshData", meshDataResourceID);
-                // SceneResourceID materialResourceID;
-                // node->mMetaData->Get("Mesh_Material", materialResourceID);
-                aiString meshDataResourceID;
-                node->mMetaData->Get("Mesh_MeshData", meshDataResourceID);
-                aiString materialResourceID;
-                node->mMetaData->Get("Mesh_Material", materialResourceID);
+                aiString meshDataResourceFilePath;
+                node->mMetaData->Get("Mesh_MeshData", meshDataResourceFilePath);
+                aiString materialResourceFilePath;
+                node->mMetaData->Get("Mesh_Material", materialResourceFilePath);
                 MeshComponent meshComponent{};
 
-                if (materialResourceID.C_Str() != "")
+                if (materialResourceFilePath.C_Str() != "")
                 {
                     // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
                     // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
                     // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    meshComponent.Material = registry.CreateAsset<Material>(materialResourceID.C_Str());
+                    meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
                 {
                     meshComponent.Material = nullptr;
                 }
 
-                if (meshDataResourceID.C_Str() != "")
+                if (meshDataResourceFilePath.C_Str() != "")
                 {
                     // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
                     // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
                     // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceID.C_Str());
+                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -180,30 +176,30 @@ namespace Astral {
                 // node->mMetaData->Get("Sprite_MeshData", meshDataResourceID);
                 // SceneResourceID materialResourceID;
                 // node->mMetaData->Get("Sprite_Material", materialResourceID);
-                aiString meshDataResourceID;
-                node->mMetaData->Get("Sprite_MeshData", meshDataResourceID);
-                aiString materialResourceID;
-                node->mMetaData->Get("Sprite_Material", materialResourceID);
+                aiString meshDataResourceFilePath;
+                node->mMetaData->Get("Sprite_MeshData", meshDataResourceFilePath);
+                aiString materialResourceFilePath;
+                node->mMetaData->Get("Sprite_Material", materialResourceFilePath);
                 SpriteComponent spriteComponent{};
 
-                if (materialResourceID.C_Str() != "")
+                if (materialResourceFilePath.C_Str() != "")
                 {
                     // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
                     // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
                     // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    spriteComponent.Material = registry.CreateAsset<Material>(materialResourceID.C_Str());
+                    spriteComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
                 {
                     spriteComponent.Material = nullptr;
                 }
 
-                if (meshDataResourceID.C_Str() != "")
+                if (meshDataResourceFilePath.C_Str() != "")
                 {
                     // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
                     // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
                     // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceID.C_Str());
+                    spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -227,6 +223,29 @@ namespace Astral {
                 pointLightComponent.LightColor = Vec3(x, y, z);
 
                 sceneECS.AddComponent(entity, pointLightComponent);
+            }
+
+            if (node->mMetaData->HasKey("DirectionalLightComponent_Intensity"))
+            {
+                double intensity;
+                node->mMetaData->Get("DirectionalLightComponent_Intensity", intensity);
+                double r, g, b;
+                node->mMetaData->Get("DirectionalLightComponent_LightColor_X", r);
+                node->mMetaData->Get("DirectionalLightComponent_LightColor_Y", g);
+                node->mMetaData->Get("DirectionalLightComponent_LightColor_Z", b);
+
+                double x, y, z;
+                node->mMetaData->Get("DirectionalLightComponent_Direction_X", x);
+                node->mMetaData->Get("DirectionalLightComponent_Direction_Y", y);
+                node->mMetaData->Get("DirectionalLightComponent_Direction_Z", z);
+
+
+                DirectionalLightComponent directionalLightComponent{};
+                directionalLightComponent.Intensity = intensity;
+                directionalLightComponent.LightColor = Vec3(r, g, b);
+                directionalLightComponent.Direction = Vec3(x, y, z);
+
+                sceneECS.AddComponent(entity, directionalLightComponent);
             }
         }
 
@@ -320,6 +339,21 @@ namespace Astral {
                 node->mMetaData->Add("PointLightComponent_LightColor_X", pointLightComponent.LightColor.x);
                 node->mMetaData->Add("PointLightComponent_LightColor_Y", pointLightComponent.LightColor.y);
                 node->mMetaData->Add("PointLightComponent_LightColor_Z", pointLightComponent.LightColor.z);
+            }
+
+            if (ecs.HasComponent<DirectionalLightComponent>(entity))
+            {
+                DirectionalLightComponent directionalLightComponent;
+                ecs.GetComponent(entity, directionalLightComponent);
+
+                if (!node->mMetaData) { node->mMetaData = new aiMetadata; }
+                node->mMetaData->Add("DirectionalLightComponent_Intensity", directionalLightComponent.Intensity);
+                node->mMetaData->Add("DirectionalLightComponent_LightColor_X", directionalLightComponent.LightColor.x);
+                node->mMetaData->Add("DirectionalLightComponent_LightColor_Y", directionalLightComponent.LightColor.y);
+                node->mMetaData->Add("DirectionalLightComponent_LightColor_Z", directionalLightComponent.LightColor.z);
+                node->mMetaData->Add("DirectionalLightComponent_Direction_X", directionalLightComponent.Direction.x);
+                node->mMetaData->Add("DirectionalLightComponent_Direction_Y", directionalLightComponent.Direction.y);
+                node->mMetaData->Add("DirectionalLightComponent_Direction_Z", directionalLightComponent.Direction.z);
             }
 
             exportScene->mRootNode->addChildren(1, &node);
