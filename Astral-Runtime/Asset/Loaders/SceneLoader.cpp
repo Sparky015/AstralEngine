@@ -128,12 +128,22 @@ namespace Astral {
 
             if (strcmp(node->mName.C_Str(), "__SCENE_METADATA__") == 0)
             {
-                if (node->mMetaData && node->mMetaData->HasKey("AE_SceneEnvironmentSettings"))
+                if (!node->mMetaData) { continue; }
+
+                if (node->mMetaData->HasKey("AE_SceneEnvironmentSettings"))
                 {
                     aiMetadata environmentSettingsMetaData{};
                     node->mMetaData->Get("AE_SceneEnvironmentSettings", environmentSettingsMetaData);
                     LoadEnvironmentSettings(activeScene, environmentSettingsMetaData);
                 }
+
+                if (node->mMetaData->HasKey("AE_SceneCameraProperties"))
+                {
+                    aiMetadata sceneCameraProperties{};
+                    node->mMetaData->Get("AE_SceneCameraProperties", sceneCameraProperties);
+                    LoadCameraSettings(activeScene.PrimaryCamera, sceneCameraProperties);
+                }
+
                 continue;
             }
 
@@ -284,6 +294,9 @@ namespace Astral {
         aiMetadata environmentSettingsMetaData = aiMetadata();
         SerializeEnvironmentSettings(scene, environmentSettingsMetaData);
 
+        aiMetadata cameraPropertiesMetaData = aiMetadata();
+        SerializeCameraSettings(scene.PrimaryCamera, cameraPropertiesMetaData);
+
 
 
         // Serialize ecs in scene node metadata
@@ -292,9 +305,11 @@ namespace Astral {
 
         // Scene meta data work around as some exporters don't support metadata for the root node or scene metadata field
         aiNode* sceneMetaDataNode = new aiNode("__SCENE_METADATA__");
-        sceneMetaDataNode->mMetaData = aiMetadata::Alloc(2);
+        int numFields = 3;
+        sceneMetaDataNode->mMetaData = aiMetadata::Alloc(numFields);
         sceneMetaDataNode->mMetaData->Add("AE_ExternalResourceFilePaths", resourceMetaData);
         sceneMetaDataNode->mMetaData->Add("AE_SceneEnvironmentSettings", environmentSettingsMetaData);
+        sceneMetaDataNode->mMetaData->Add("AE_SceneCameraProperties", cameraPropertiesMetaData);
         exportScene->mRootNode->addChildren(1, &sceneMetaDataNode);
 
         for (Entity entity : ecs)
@@ -431,6 +446,55 @@ namespace Astral {
         scene.AmbientLightConstant = ambientLightConstant;
         scene.Exposure = exposure;
         scene.EnvironmentMapBlur = environmentMapBlur;
+    }
+
+
+    void SceneLoader::SerializeCameraSettings(const Camera& camera, aiMetadata& outMetaData)
+    {
+        int numFields = 8;
+        outMetaData.Alloc(numFields);
+
+        Vec3 position = camera.GetPosition();
+        Vec3 rotation = camera.GetRotation();
+        float farPlane = camera.GetFarPlane();
+        float nearPlane = camera.GetNearPlane();
+
+        outMetaData.Add("Camera_Position_X", position.x);
+        outMetaData.Add("Camera_Position_Y", position.y);
+        outMetaData.Add("Camera_Position_Z", position.z);
+
+        outMetaData.Add("Camera_Rotation_X", rotation.x);
+        outMetaData.Add("Camera_Rotation_Y", rotation.y);
+        outMetaData.Add("Camera_Rotation_Z", rotation.z);
+
+        outMetaData.Add("Camera_NearPlane", nearPlane);
+        outMetaData.Add("Camera_FarPlane", farPlane);
+    }
+
+
+    void SceneLoader::LoadCameraSettings(Camera& outCamera, const aiMetadata& metaData)
+    {
+        double x, y, z;
+        double nearPlane;
+        double farPlane;
+
+        metaData.Get("Camera_Position_X", x);
+        metaData.Get("Camera_Position_Y", y);
+        metaData.Get("Camera_Position_Z", z);
+        Vec3 position = Vec3(x, y ,z);
+
+        metaData.Get("Camera_Rotation_X", x);
+        metaData.Get("Camera_Rotation_Y", y);
+        metaData.Get("Camera_Rotation_Z", z);
+        Vec3 rotation = Vec3(x, y ,z);
+
+        metaData.Get("Camera_NearPlane", nearPlane);
+        metaData.Get("Camera_FarPlane", farPlane);
+
+        outCamera.SetPosition(position);
+        outCamera.SetRotation(rotation);
+        outCamera.SetNearPlane(nearPlane);
+        outCamera.SetFarPlane(farPlane);
     }
 
 

@@ -74,9 +74,9 @@ namespace Astral {
             CalculateProjectionViewMatrix();
         }
 
-        float GetNearPlane() { return m_ZNear; }
-        float GetFarPlane() { return m_ZFar; }
-        float GetAspectRatio() { return m_AspectRatio; }
+        float GetNearPlane() const { return m_ZNear; }
+        float GetFarPlane() const { return m_ZFar; }
+        float GetAspectRatio() const { return m_AspectRatio; }
 
         Vec3 GetForwardVector() const;
         Vec3 GetLeftVector() const;

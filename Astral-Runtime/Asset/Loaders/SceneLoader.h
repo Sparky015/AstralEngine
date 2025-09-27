@@ -32,6 +32,9 @@ namespace Astral {
         static void SerializeEnvironmentSettings(const Scene& scene, aiMetadata& outMetaData);
         static void LoadEnvironmentSettings(Scene& scene, const aiMetadata& metaData);
 
+        static void SerializeCameraSettings(const Camera& camera, aiMetadata& outMetaData);
+        static void LoadCameraSettings(Camera& outCamera, const aiMetadata& metaData);
+
         struct Helpers
         {
             static void LoadAndBreakObjectIntoMuiltipleObjects(const std::filesystem::path& sceneFilePath, bool shouldSerializeObjects);
@@ -89,9 +92,6 @@ namespace Astral {
         static bool m_DefaultFlipUVs;
         static float m_ScaleMultiplier;
     };
-
-
-
 
 
 }
