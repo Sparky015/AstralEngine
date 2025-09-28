@@ -1,0 +1,12 @@
+Shader Model: PBR
+Shader: Shaders/ForwardLightingPassUnpacked.frag
+Texture Convention: Unpacked
+Normals Convention: Vulkan/OpenGL
+Is Alpha Blended: false
+Use Normal Map: false
+Texture Maps:
+  - Base Color: Textures/MissingTexture.png
+  - Metallic: Textures/SolidBlack.png
+  - Roughness: Textures/SolidWhite.png
+  - Emission: Textures/SolidBlack.png
+  - Normals: Textures/SolidBlack.png

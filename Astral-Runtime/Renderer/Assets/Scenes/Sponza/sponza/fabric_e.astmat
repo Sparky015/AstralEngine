@@ -3,9 +3,10 @@ Shader: Shaders/ForwardLightingPassUnpacked.frag
 Texture Convention: Unpacked
 Normals Convention: Vulkan/OpenGL
 Is Alpha Blended: false
+Use Normal Map: false
 Texture Maps:
   - Base Color: Scenes/Sponza/textures/sponza_fabric_green_diff.png
   - Metallic: Textures/SolidBlack.png
   - Roughness: Textures/SolidWhite.png
   - Emission: Textures/SolidBlack.png
-  - Normals: ""
+  - Normals: Textures/SolidBlack.png
