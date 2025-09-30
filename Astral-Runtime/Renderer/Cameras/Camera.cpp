@@ -14,7 +14,7 @@ namespace Astral {
         m_CameraType(CameraType::ORTHOGRAPHIC),
         m_ProjectionMatrix(),
         m_ViewMatrix(1.0f),
-        m_ProjectionViewMatrix(1.0f),
+        m_ViewProjection(1.0f),
         m_Position(0, 0, 0),
         m_Rotation(0.0f),
         m_AspectRatio(9.0 / 16.0),
@@ -24,7 +24,7 @@ namespace Astral {
     {
 
         RecreateProjectionMatrix();
-        CalculateProjectionViewMatrix();
+        CalculateViewProjectionMatrix();
         m_ViewportResizedListener.StartListening();
     }
 
@@ -33,7 +33,7 @@ namespace Astral {
         m_CameraType(cameraType),
         m_ProjectionMatrix(),
         m_ViewMatrix(1.0f),
-        m_ProjectionViewMatrix(1.0f),
+        m_ViewProjection(1.0f),
         m_Position(0, 0, 0),
         m_Rotation(0.0f),
         m_AspectRatio(aspectRatio),
@@ -50,7 +50,7 @@ namespace Astral {
         }
 
         RecreateProjectionMatrix();
-        CalculateProjectionViewMatrix();
+        CalculateViewProjectionMatrix();
         m_ViewportResizedListener.StartListening();
     }
 
@@ -59,7 +59,7 @@ namespace Astral {
         m_CameraType(cameraType),
         m_ProjectionMatrix(),
         m_ViewMatrix(1.0f),
-        m_ProjectionViewMatrix(1.0f),
+        m_ViewProjection(1.0f),
         m_Position(0, 0, 0),
         m_Rotation(0.0f),
         m_ZNear(0.1f),
@@ -77,7 +77,7 @@ namespace Astral {
 
         m_AspectRatio = aspectRatio;
         RecreateProjectionMatrix();
-        CalculateProjectionViewMatrix();
+        CalculateViewProjectionMatrix();
         m_ViewportResizedListener.StartListening();
     }
 
@@ -90,7 +90,53 @@ namespace Astral {
 
     const Mat4& Camera::GetProjectionViewMatrix() const
     {
-        return m_ProjectionViewMatrix;
+        return m_ViewProjection;
+    }
+
+
+    void Camera::SetPosition(const Vec3& position)
+    {
+        m_Position = position;
+        CalculateViewProjectionMatrix();
+    }
+
+
+    void Camera::SetRotation(const Vec3& rotation)
+    {
+        m_Rotation = rotation;
+        CalculateViewProjectionMatrix();
+    }
+
+
+    void Camera::SetZoom(float zoom)
+    {
+        if (m_CameraType != CameraType::ORTHOGRAPHIC) { return; }
+        m_ZoomLevel = zoom;
+        RecreateProjectionMatrix();
+        CalculateViewProjectionMatrix();
+    }
+
+
+    float Camera::GetZoomLevel() const
+    {
+        if (m_CameraType != CameraType::ORTHOGRAPHIC) { return -1; }
+        return m_ZoomLevel;
+    }
+
+
+    void Camera::SetNearPlane(float zNear)
+    {
+        m_ZNear = zNear;
+        RecreateProjectionMatrix();
+        CalculateViewProjectionMatrix();
+    }
+
+
+    void Camera::SetFarPlane(float zFar)
+    {
+        m_ZFar = zFar;
+        RecreateProjectionMatrix();
+        CalculateViewProjectionMatrix();
     }
 
 
@@ -130,7 +176,7 @@ namespace Astral {
         m_CameraType(other.m_CameraType),
         m_ProjectionMatrix(other.m_ProjectionMatrix),
         m_ViewMatrix(other.m_ViewMatrix),
-        m_ProjectionViewMatrix(other.m_ProjectionViewMatrix),
+        m_ViewProjection(other.m_ViewProjection),
         m_Position(other.m_Position),
         m_Rotation(other.m_Rotation),
         m_AspectRatio(other.m_AspectRatio),
@@ -143,7 +189,7 @@ namespace Astral {
         })
     {
         RecreateProjectionMatrix();
-        CalculateProjectionViewMatrix();
+        CalculateViewProjectionMatrix();
         m_ViewportResizedListener.StartListening();
     }
 
@@ -155,7 +201,7 @@ namespace Astral {
             m_CameraType = other.m_CameraType;
             m_ProjectionMatrix = other.m_ProjectionMatrix;
             m_ViewMatrix = other.m_ViewMatrix;
-            m_ProjectionViewMatrix = other.m_ProjectionViewMatrix;
+            m_ViewProjection = other.m_ViewProjection;
             m_Position = other.m_Position;
             m_Rotation = other.m_Rotation;
             m_AspectRatio = other.m_AspectRatio;
@@ -168,7 +214,7 @@ namespace Astral {
             }};
 
             RecreateProjectionMatrix();
-            CalculateProjectionViewMatrix();
+            CalculateViewProjectionMatrix();
             m_ViewportResizedListener.StartListening();
         }
 
@@ -192,7 +238,7 @@ namespace Astral {
     }
 
 
-    void Camera::CalculateProjectionViewMatrix()
+    void Camera::CalculateViewProjectionMatrix()
     {
         Mat4 orientation;
 
@@ -217,7 +263,15 @@ namespace Astral {
 
         Mat4 transform = glm::translate(Mat4(1.0f), m_Position) * orientation;
         m_ViewMatrix = glm::inverse(transform);
-        m_ProjectionViewMatrix = m_ProjectionMatrix * m_ViewMatrix;
+        m_ViewProjection = m_ProjectionMatrix * m_ViewMatrix;
+    }
+
+
+    void Camera::ResizeCamera(const ViewportResizedEvent& e)
+    {
+        m_AspectRatio = (float)e.Width / (float)e.Height;
+        RecreateProjectionMatrix();
+        CalculateViewProjectionMatrix();
     }
 
 }
