@@ -113,6 +113,18 @@ and running, but in the future, I want to implement sparse sets into the ECS for
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
+
+### Next Feature (In-Progress)
+
+#### Job System and a Multithreaded Asset System
+
+Currently researching and planning for a Job System to build a base for a multithreaded engine
+and implementing a multithreaded asset system as the first use of the Job System.
+
+
+----
+
+
 ### Screenshot of Current Engine State
 
 ---
@@ -127,10 +139,9 @@ This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 1. The below TODO Render Passes
 2. Native Scripting
-3. Multithreaded Asset System
-4. Rendering Thread
-5. GPU Particle System
-6. Volumetric Lighting
+3. Rendering Thread
+4. GPU Particle System
+5. Volumetric Lighting
 
 
 ### TODO Render Passes
