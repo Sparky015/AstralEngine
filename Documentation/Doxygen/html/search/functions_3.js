@@ -5,6 +5,7 @@ var searchData=
   ['decrementpublishercount_2',['DecrementPublisherCount',['../dc/dcd/class_astral_1_1_event_bus.html#a9fff538025d38f3ad682b6417d2a700a',1,'Astral::EventBus']]],
   ['deleteentity_3',['DeleteEntity',['../d3/d91/class_astral_1_1_e_c_s.html#a4de6e55c975a720fa743f84662c4cdc2',1,'Astral::ECS']]],
   ['destroy_4',['destroy',['../d1/de1/class_astral_1_1_generic_region_allocator.html#ad6444f98f43b067c9019975c422c95e9',1,'Astral::GenericRegionAllocator']]],
-  ['doesallocationwrap_5',['DoesAllocationWrap',['../d7/d22/class_astral_1_1_ring_allocator.html#ad43b3a81d048ffbebc383ed75ee16086',1,'Astral::RingAllocator']]],
-  ['doescauseoverflow_6',['DoesCauseOverflow',['../d7/d15/_allocator_utils_8h.html#a717cb1d2807b498f003ec98fb8fedf04',1,'Astral::AllocatorUtils']]]
+  ['disabletracking_5',['DisableTracking',['../d9/d89/class_astral_1_1_memory_tracker.html#a16e9103391a96d897419bd61588a2121',1,'Astral::MemoryTracker']]],
+  ['doesallocationwrap_6',['DoesAllocationWrap',['../d7/d22/class_astral_1_1_ring_allocator.html#ad43b3a81d048ffbebc383ed75ee16086',1,'Astral::RingAllocator']]],
+  ['doescauseoverflow_7',['DoesCauseOverflow',['../d7/d15/_allocator_utils_8h.html#a717cb1d2807b498f003ec98fb8fedf04',1,'Astral::AllocatorUtils']]]
 ];
