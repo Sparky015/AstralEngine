@@ -62,7 +62,7 @@ namespace Astral {
          * @brief Gets the ViewProjection matrix
          * @return The ViewProjection matrix
          */
-        const Mat4& GetProjectionViewMatrix() const;
+        const Mat4& GetViewProjectionMatrix() const;
 
         /**
          * @brief Sets the position of the camera in world space

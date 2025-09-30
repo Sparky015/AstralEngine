@@ -118,7 +118,7 @@ namespace Astral {
         frameContext.SceneRenderTarget = renderTarget;
 
         SceneData sceneData = {
-            .CameraViewProjection = sceneDescription.Camera.GetProjectionViewMatrix(),
+            .CameraViewProjection = sceneDescription.Camera.GetViewProjectionMatrix(),
             .CameraView = sceneDescription.Camera.GetViewMatrix(),
             .CameraProjection = sceneDescription.Camera.GetProjectionMatrix(),
             .CameraInverseViewMat = glm::inverse(sceneDescription.Camera.GetViewMatrix()),
@@ -187,7 +187,7 @@ namespace Astral {
 
 
         m_SceneExposure = sceneDescription.Exposure;
-        m_SceneViewProjection = sceneDescription.Camera.GetProjectionViewMatrix();
+        m_SceneViewProjection = sceneDescription.Camera.GetViewProjectionMatrix();
 
 
         frameContext.Meshes.clear();
@@ -1158,7 +1158,7 @@ namespace Astral {
             Camera subfrustumCamera = Camera(CameraType::PERSPECTIVE, m_SceneCamera.GetAspectRatio(), frustumRanges[i], cascadeZFar);
             subfrustumCamera.SetPosition(m_SceneCamera.GetPosition());
             subfrustumCamera.SetRotation(m_SceneCamera.GetRotation());
-            std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(subfrustumCamera.GetProjectionViewMatrix());
+            std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(subfrustumCamera.GetViewProjectionMatrix());
 
 
             // Find center of frustum

@@ -88,7 +88,7 @@ namespace Astral {
     }
 
 
-    const Mat4& Camera::GetProjectionViewMatrix() const
+    const Mat4& Camera::GetViewProjectionMatrix() const
     {
         return m_ViewProjection;
     }
