@@ -14,18 +14,30 @@
 
 namespace Astral {
 
+    /**
+    * @enum ShaderModel
+    * @brief The shader model to use for a material
+    */
     enum class ShaderModel : uint8
     {
         PBR,
         UNLIT
     };
 
+    /**
+    * @enum TextureConvention
+    * @brief The convention of the texture channel data used in a material
+    */
     enum class TextureConvention : uint8
     {
         UNPACKED,
         ORM_PACKED
     };
 
+    /**
+     * @struct Material
+     * @brief Defines material properties and textures used by the material
+     */
     struct Material : public Asset
     {
         ShaderModel ShaderModel;
@@ -38,10 +50,23 @@ namespace Astral {
         bool HasDirectXNormals;
         bool IsAlphaBlended;
 
-        AssetType GetAssetType() override { return GetStaticAssetType(); };
+        /**
+         * @brief Gets the type of the asset (AssetType::Material)
+         * @return The type of asset (AssetType::Material)
+         */
+        AssetType GetAssetType() override { return GetStaticAssetType(); }
+
+        /**
+         * @brief Gets the type of the asset (AssetType::Material)
+         * @return The type of asset (AssetType::Material)
+         */
         static AssetType GetStaticAssetType() { return AssetType::Material; }
     };
 
+    /**
+     * @brief Gets the string version of a shader model
+     * @return The shader model name as a string
+     */
     inline std::string_view ShaderModelToString(ShaderModel shaderModel)
     {
         switch (shaderModel)
@@ -52,6 +77,10 @@ namespace Astral {
         }
     }
 
+    /**
+     * @brief Gets the shader model enum value from a string version of the enum value
+     * @return The shader model enum value
+     */
     inline ShaderModel StringToShaderModel(std::string_view shaderModel)
     {
         if (shaderModel == "Unlit") return ShaderModel::UNLIT;
@@ -59,6 +88,10 @@ namespace Astral {
         AE_ERROR("Unsupported shader model string given!");
     }
 
+    /**
+     * @brief Gets the string version of a texture convention enum value
+     * @return The texture convention name as a string
+     */
     inline std::string_view TextureConventionToString(TextureConvention textureConvention)
     {
         switch (textureConvention)
@@ -69,6 +102,10 @@ namespace Astral {
         }
     }
 
+    /**
+     * @brief Gets the texture convention enum value from a string version of the enum value
+     * @return The texture convention enum value
+     */
     inline TextureConvention StringToTextureConvention(std::string_view textureConvention)
     {
         if (textureConvention == "Unpacked") return TextureConvention::UNPACKED;
