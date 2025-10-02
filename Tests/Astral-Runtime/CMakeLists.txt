@@ -38,6 +38,8 @@ set(TEST_FILES_GPU_REQUIRED
         Asset/AssetRegistryEnvironmentMapLoaderTest.cpp
         Asset/AssetRegistryCubeLUTLoaderTest.cpp
         Scenes/SceneLoaderTest.cpp
+        Core/Time/ClockTest.cpp
+        Core/Time/DeltaTimeTest.cpp
 )
 
 
