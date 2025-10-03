@@ -57,9 +57,9 @@ namespace Astral {
         m_ApplicationModule->Init();
 
 
-        cpuinfo_initialize();
-        glslang_initialize_process();
-        NFD_Init();
+        AE_PROFILE_FUNCTION(cpuinfo_initialize(), "cpuinfo_initialize");
+        AE_PROFILE_FUNCTION(glslang_initialize_process(), "glslang_initialize_process");
+        AE_PROFILE_FUNCTION(NFD_Init(), "NFD_Init");
     }
 
 
@@ -67,9 +67,9 @@ namespace Astral {
     {
         PROFILE_SCOPE("Engine::~Engine");
 
-        NFD_Quit();
-        glslang_finalize_process();
-        cpuinfo_deinitialize();
+        AE_PROFILE_FUNCTION(NFD_Quit(), "NFD_Quit");
+        AE_PROFILE_FUNCTION(glslang_finalize_process(), "glslang_finalize_process");
+        AE_PROFILE_FUNCTION(cpuinfo_deinitialize(), "cpuinfo_deinitialize");
 
         m_ApplicationModule->Shutdown();
         m_ECSManager->Shutdown();
@@ -90,7 +90,7 @@ namespace Astral {
 
     void Engine::Run()
     {
-        PROFILE_SCOPE("Engine Runtime");
+        PROFILE_SCOPE("Engine::Run");
 
         Astral::DeltaTime m_DeltaTime;
         Astral::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
