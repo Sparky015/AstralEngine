@@ -278,7 +278,7 @@ namespace Astral {
 
     void ImGuiManager::InitImGui() const
     {
-        PROFILE_SCOPE("Initialize ImGui");
+        PROFILE_SCOPE("ImGuiManager::InitImGui");
 
         ImGui::CreateContext();
         ImPlot::CreateContext();
@@ -313,7 +313,7 @@ namespace Astral {
 
     void ImGuiManager::ShutdownImGui() const
     {
-        PROFILE_SCOPE("ImGui Manager Shutdown");
+        PROFILE_SCOPE("ImGuiManager::ShutdownImGui");
 
         ImGui_ImplGlfw_Shutdown();
 
