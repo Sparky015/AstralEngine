@@ -19,6 +19,16 @@ namespace Astral {
     class Bitmap
     {
     public:
+
+        /**
+         * @brief Constructor for Bitmap
+         * @param data A pointer to the data of the texture or nullptr if no data. (Note: Data is copied to internal buffer)
+         * @param imageFormat The format of the data
+         * @param width The width of the texture
+         * @param height The height of the texture
+         * @warning Image formats with component sizes that are not byte-aligned (not 8, 16, or 32 bits per channel)
+         * are not supported. This includes packed formats like R10G11B10 or RGB9E5.
+         */
         explicit Bitmap(void* data, ImageFormat imageFormat, uint32 width, uint32 height);
 
         /**
@@ -48,7 +58,7 @@ namespace Astral {
         uint32 GetPixelWidth() const { return m_Width; }
 
         /**
-         * @brief Gets the height of the map in pixels
+         * @brief Gets the height of the bitmap in pixels
          * @return The height of the bitmap in pixels
          */
         uint32 GetPixelHeight() const { return m_Height; }
