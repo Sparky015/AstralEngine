@@ -103,7 +103,7 @@ $(function(){ initResizable(false); });
 <li>GetColorAttachments()&#160;:&#160;<a class="el" href="d7/dac/class_astral_1_1_render_graph_pass.html#a85c294dcd064f87930b3cd5c56fbae56">Astral::RenderGraphPass</a></li>
 <li>GetComponent()&#160;:&#160;<a class="el" href="d3/d91/class_astral_1_1_e_c_s.html#abed4160a6383de2d9453bdca3a577f00">Astral::ECS</a></li>
 <li>GetComputePipeline()&#160;:&#160;<a class="el" href="d1/da4/class_astral_1_1_pipeline_state_cache.html#a340d6f793c73f8a2ed39b4fb8850955f">Astral::PipelineStateCache</a></li>
-<li>GetData()&#160;:&#160;<a class="el" href="da/d3e/class_astral_1_1_bitmap.html#a6015ee87ff13d3ce288f962ac1d80511">Astral::Bitmap</a></li>
+<li>GetData()&#160;:&#160;<a class="el" href="da/d3e/class_astral_1_1_bitmap.html#a6015ee87ff13d3ce288f962ac1d80511">Astral::Bitmap</a>, <a class="el" href="d7/d97/struct_astral_1_1_edge.html#a43269ebdda64f30343d9907000b91716">Astral::Edge&lt; DataType &gt;</a>, <a class="el" href="d2/d96/class_astral_1_1_vertex.html#a57b3ef4f6c91595d16db56a341b484c7">Astral::Vertex&lt; DataType &gt;</a></li>
 <li>GetDepthAttachment()&#160;:&#160;<a class="el" href="d7/dac/class_astral_1_1_render_graph_pass.html#a9911998c0a06b6bdd4ed5f5522a01e8e">Astral::RenderGraphPass</a></li>
 <li>GetDimensions()&#160;:&#160;<a class="el" href="d0/d07/class_astral_1_1_render_target.html#aa9569e6a07b1bb073feaf00f89b88305">Astral::RenderTarget</a>, <a class="el" href="d9/dc6/class_astral_1_1_texture.html#a9eb2c8e2f2a113437e21178650eed2c5">Astral::Texture</a>, <a class="el" href="d7/dd1/class_astral_1_1_vulkan_render_target.html#ad44dee36d3b1c1be39d3aa22859e1424">Astral::VulkanRenderTarget</a>, <a class="el" href="d6/d72/class_astral_1_1_vulkan_texture.html#a3d2489f5dee1ca149fbfa2a23f98f8e1">Astral::VulkanTexture</a></li>
 <li>GetExecutionContext()&#160;:&#160;<a class="el" href="d1/d89/class_astral_1_1_render_graph.html#aa7bb238dc43540076ace613495bb1c88">Astral::RenderGraph</a></li>
@@ -127,6 +127,7 @@ $(function(){ initResizable(false); });
 <li>GetKeyName()&#160;:&#160;<a class="el" href="d9/dd5/class_astral_1_1_input_state.html#a839b20a7f49682714c40dec4e66f8ebe">Astral::InputState</a></li>
 <li>GetLayout()&#160;:&#160;<a class="el" href="d9/dc6/class_astral_1_1_texture.html#a0cad3aa53a83927af26241521b78ea20">Astral::Texture</a>, <a class="el" href="d6/d72/class_astral_1_1_vulkan_texture.html#a1455bf52f228613f546d03f2886fa6fd">Astral::VulkanTexture</a></li>
 <li>GetLeftVector()&#160;:&#160;<a class="el" href="d4/d4b/class_astral_1_1_camera.html#a3402e0adfd1a2e0646cf54640f922eb1">Astral::Camera</a></li>
+<li>GetLeftVertex()&#160;:&#160;<a class="el" href="d7/d97/struct_astral_1_1_edge.html#a6bf445b6d656f8da4c56f4c338c1a466">Astral::Edge&lt; DataType &gt;</a></li>
 <li>GetLocalAttachment()&#160;:&#160;<a class="el" href="d7/dac/class_astral_1_1_render_graph_pass.html#a05e67e71f63d71448f3390daa494fb3e">Astral::RenderGraphPass</a></li>
 <li>GetMarker()&#160;:&#160;<a class="el" href="d2/ddb/class_astral_1_1_double_buffered_allocator.html#a0b5a52b978f15e5ef37c2d6b279da4d2">Astral::DoubleBufferedAllocator</a>, <a class="el" href="d3/dec/class_astral_1_1_frame_allocator.html#abadcb858f20209fc76a895e6deca1791">Astral::FrameAllocator</a>, <a class="el" href="d5/d78/class_astral_1_1_stack_allocator.html#a2dc4a81f9aa34da6e71638f483d8b8ff">Astral::StackAllocator</a>, <a class="el" href="da/dda/class_astral_1_1_s_t_l_stack_allocator.html#af1073e037d85ca657107a4d2c673de15">Astral::STLStackAllocator&lt; T &gt;</a></li>
 <li>GetMemoryMetrics()&#160;:&#160;<a class="el" href="d9/d89/class_astral_1_1_memory_tracker.html#a27155fd938aac77181874aef74e41e44">Astral::MemoryTracker</a></li>
@@ -165,6 +166,7 @@ $(function(){ initResizable(false); });
 <li>GetRenderTargets()&#160;:&#160;<a class="el" href="d2/d75/class_astral_1_1_swapchain.html#a39c9a51cdb1abf6de5d4f2d0a9506285">Astral::Swapchain</a>, <a class="el" href="d1/d41/class_astral_1_1_vulkan_swapchain.html#af56e6ccd273bcfe1f2141f5a8872b4df">Astral::VulkanSwapchain</a></li>
 <li>GetResolveAttachments()&#160;:&#160;<a class="el" href="d7/dac/class_astral_1_1_render_graph_pass.html#afe989a7220011515a318e7f6eafe6335">Astral::RenderGraphPass</a></li>
 <li>GetRightVector()&#160;:&#160;<a class="el" href="d4/d4b/class_astral_1_1_camera.html#a2294e21c05739eff53e42ebfe500bdbd">Astral::Camera</a></li>
+<li>GetRightVertex()&#160;:&#160;<a class="el" href="d7/d97/struct_astral_1_1_edge.html#a2cb17e3279ad83ebd2257da761310258">Astral::Edge&lt; DataType &gt;</a></li>
 <li>GetRotation()&#160;:&#160;<a class="el" href="d4/d4b/class_astral_1_1_camera.html#a1b92f5bd1bbb336614714672a2d6541a">Astral::Camera</a></li>
 <li>GetSceneMetrics()&#160;:&#160;<a class="el" href="d0/d2c/class_astral_1_1_scene_metrics_importer.html#a3b62bb1748d02d31694b86f5781dfe94">Astral::SceneMetricsImporter</a></li>
 <li>GetSeconds()&#160;:&#160;<a class="el" href="df/d63/class_astral_1_1_delta_time.html#aedad199da9e94c9af37f3691b5f25fc3">Astral::DeltaTime</a></li>
@@ -189,6 +191,7 @@ $(function(){ initResizable(false); });
 <li>GetUsedBlockSize()&#160;:&#160;<a class="el" href="d2/ddb/class_astral_1_1_double_buffered_allocator.html#a336d1e1b3b8ddfa92561a62fb5d99f18">Astral::DoubleBufferedAllocator</a>, <a class="el" href="d3/dec/class_astral_1_1_frame_allocator.html#a13feb77fad3e7ae8e321b97e4ccd2e93">Astral::FrameAllocator</a>, <a class="el" href="da/d10/class_astral_1_1_linear_allocator.html#a2ec67d7a5e376930cd78d42e5a6a367d">Astral::LinearAllocator</a>, <a class="el" href="d5/d78/class_astral_1_1_stack_allocator.html#a1c1aee2ec808f49900425edac2a7166b">Astral::StackAllocator</a>, <a class="el" href="da/dee/class_astral_1_1_stack_based_linear_allocator.html#a8da97a00129dd41ba26a708dddecc38e">Astral::StackBasedLinearAllocator&lt; MemoryBlockSize &gt;</a></li>
 <li>getUsedBlockSize()&#160;:&#160;<a class="el" href="dd/d18/class_astral_1_1_s_t_l_linear_allocator.html#a87d5e14289a4a97e0acf15ac2c27d240">Astral::STLLinearAllocator&lt; T &gt;</a>, <a class="el" href="da/dda/class_astral_1_1_s_t_l_stack_allocator.html#ac6705a45b4973403220019e128bc780c">Astral::STLStackAllocator&lt; T &gt;</a>, <a class="el" href="d9/d84/class_astral_1_1_s_t_l_stack_based_linear_allocator.html#acbe29c94990bcb40da46f7be52ff10a1">Astral::STLStackBasedLinearAllocator&lt; ElementType, MemoryBlockSize &gt;</a></li>
 <li>GetUsedCount()&#160;:&#160;<a class="el" href="d2/df4/class_astral_1_1_object_pool.html#a7e3e98e8e42632517e0355fca95a6522">Astral::ObjectPool&lt; ElementType, NumberOfElements, ElementAllocator &gt;</a></li>
+<li>GetVertexIndex()&#160;:&#160;<a class="el" href="d2/d96/class_astral_1_1_vertex.html#a143f70260cd057d8ce57833160fc502e">Astral::Vertex&lt; DataType &gt;</a></li>
 <li>GetView()&#160;:&#160;<a class="el" href="d3/d91/class_astral_1_1_e_c_s.html#ac745c50cc6c456ba87bf599502481a6d">Astral::ECS</a></li>
 <li>GetViewMatrix()&#160;:&#160;<a class="el" href="d4/d4b/class_astral_1_1_camera.html#a2e2fff2c6da4a347de3d29a952912e3f">Astral::Camera</a></li>
 <li>GetViewportSize()&#160;:&#160;<a class="el" href="dd/dd1/class_astral_1_1_scene_renderer.html#aefdb2479c1ec173488a243d4ccd2aee5">Astral::SceneRenderer</a>, <a class="el" href="d4/d53/class_astral_1_1_scene_renderer_impl.html#a6fd05751f8647118fa2f41c66761ea3f">Astral::SceneRendererImpl</a></li>
@@ -202,7 +205,7 @@ $(function(){ initResizable(false); });
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 30 2025 19:23:57 for Astral Engine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
+Generated on Thu Oct 2 2025 22:33:34 for Astral Engine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
 </small></address>
 </div><!-- doc-content -->
 </body>

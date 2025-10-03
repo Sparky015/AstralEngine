@@ -5,5 +5,6 @@ var searchData=
   ['next_20feature_20in_20progress_2',['Next Feature (In-Progress)',['../index.html#autotoc_md8',1,'']]],
   ['notable_20features_3',['Notable Features',['../index.html#autotoc_md2',1,'']]],
   ['notrackingstlallocator_4',['NoTrackingSTLAllocator',['../db/daf/class_astral_1_1_no_tracking_s_t_l_allocator.html',1,'Astral']]],
-  ['notrackingstlallocator_2eh_5',['NoTrackingSTLAllocator.h',['../d7/da0/_no_tracking_s_t_l_allocator_8h.html',1,'']]]
+  ['notrackingstlallocator_2eh_5',['NoTrackingSTLAllocator.h',['../d7/da0/_no_tracking_s_t_l_allocator_8h.html',1,'']]],
+  ['numofvertices_6',['NumOfVertices',['../da/d9f/class_astral_1_1_directed_graph.html#a7763f798774d8048961a9e994fb0ef90',1,'Astral::DirectedGraph']]]
 ];

@@ -101,7 +101,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d5/d9b/namespace_astral.html">Astral</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>   <span class="keyword">inline</span> Bitmap::Bitmap(<span class="keywordtype">void</span>* data, ImageFormat imageFormat, uint32 width, uint32 height) :</div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../da/d3e/class_astral_1_1_bitmap.html#a946934e44fbadc1f8baf32478b8e89a6">   17</a></span>   <span class="keyword">inline</span> <a class="code hl_function" href="../../da/d3e/class_astral_1_1_bitmap.html#a946934e44fbadc1f8baf32478b8e89a6">Bitmap::Bitmap</a>(<span class="keywordtype">void</span>* data, ImageFormat imageFormat, uint32 width, uint32 height) :</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        m_MapData(),</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        m_Width(width),</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        m_Height(height),</div>
@@ -117,10 +118,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            memcpy(m_MapData.data(), data, m_MapData.size());</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        }</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    }</div>
+</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen00035" data-start="{" data-end="}">
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="../../da/d3e/class_astral_1_1_bitmap.html#a37a14bb7f293ab977eb5408ecf8d0cb5">   35</a></span>    <span class="keyword">inline</span> Vec4 Bitmap::GetPixel(uint32 x, uint32 y)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="../../da/d3e/class_astral_1_1_bitmap.html#a37a14bb7f293ab977eb5408ecf8d0cb5">   35</a></span>    <span class="keyword">inline</span> Vec4 <a class="code hl_function" href="../../da/d3e/class_astral_1_1_bitmap.html#a37a14bb7f293ab977eb5408ecf8d0cb5">Bitmap::GetPixel</a>(uint32 x, uint32 y)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordflow">if</span> (x &gt;= m_Width)</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        {</div>
@@ -148,7 +150,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="../../da/d3e/class_astral_1_1_bitmap.html#a4d3943caf5f0f2bb030b4dce4289ef74">   61</a></span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> Bitmap::SetPixel(uint32 x, uint32 y, <span class="keyword">const</span> Vec4&amp; pixelData)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="../../da/d3e/class_astral_1_1_bitmap.html#a4d3943caf5f0f2bb030b4dce4289ef74">   61</a></span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../da/d3e/class_astral_1_1_bitmap.html#a4d3943caf5f0f2bb030b4dce4289ef74">Bitmap::SetPixel</a>(uint32 x, uint32 y, <span class="keyword">const</span> Vec4&amp; pixelData)</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">if</span> (x &gt;= m_Width)</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        {</div>
@@ -248,15 +250,17 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>}</div>
 <div class="ttc" id="aclass_astral_1_1_bitmap_html"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html">Astral::Bitmap</a></div><div class="ttdoc">Represents the data of a 2D image.</div><div class="ttdef"><b>Definition</b> Bitmap.h:20</div></div>
 <div class="ttc" id="aclass_astral_1_1_bitmap_html_a37a14bb7f293ab977eb5408ecf8d0cb5"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a37a14bb7f293ab977eb5408ecf8d0cb5">Astral::Bitmap::GetPixel</a></div><div class="ttdeci">Vec4 GetPixel(uint32 x, uint32 y) const</div><div class="ttdoc">Gets the component data of a pixel.</div><div class="ttdef"><b>Definition</b> Bitmap_Impl.h:35</div></div>
-<div class="ttc" id="aclass_astral_1_1_bitmap_html_a6db4bd4899019efc561a66ed7638c9a3"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a6db4bd4899019efc561a66ed7638c9a3">Astral::Bitmap::GetPixelWidth</a></div><div class="ttdeci">uint32 GetPixelWidth() const</div><div class="ttdoc">Gets the width of the bitmap in pixels.</div><div class="ttdef"><b>Definition</b> Bitmap.h:48</div></div>
-<div class="ttc" id="aclass_astral_1_1_bitmap_html_a95dc352a78e870355503ac6f04ab45f7"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a95dc352a78e870355503ac6f04ab45f7">Astral::Bitmap::GetPixelHeight</a></div><div class="ttdeci">uint32 GetPixelHeight() const</div><div class="ttdoc">Gets the height of the map in pixels.</div><div class="ttdef"><b>Definition</b> Bitmap.h:54</div></div>
+<div class="ttc" id="aclass_astral_1_1_bitmap_html_a4d3943caf5f0f2bb030b4dce4289ef74"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a4d3943caf5f0f2bb030b4dce4289ef74">Astral::Bitmap::SetPixel</a></div><div class="ttdeci">void SetPixel(uint32 x, uint32 y, const Vec4 &amp;pixelData)</div><div class="ttdoc">Sets the component data of a pixel.</div><div class="ttdef"><b>Definition</b> Bitmap_Impl.h:61</div></div>
+<div class="ttc" id="aclass_astral_1_1_bitmap_html_a6db4bd4899019efc561a66ed7638c9a3"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a6db4bd4899019efc561a66ed7638c9a3">Astral::Bitmap::GetPixelWidth</a></div><div class="ttdeci">uint32 GetPixelWidth() const</div><div class="ttdoc">Gets the width of the bitmap in pixels.</div><div class="ttdef"><b>Definition</b> Bitmap.h:58</div></div>
+<div class="ttc" id="aclass_astral_1_1_bitmap_html_a946934e44fbadc1f8baf32478b8e89a6"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a946934e44fbadc1f8baf32478b8e89a6">Astral::Bitmap::Bitmap</a></div><div class="ttdeci">Bitmap(void *data, ImageFormat imageFormat, uint32 width, uint32 height)</div><div class="ttdoc">Constructor for Bitmap.</div><div class="ttdef"><b>Definition</b> Bitmap_Impl.h:17</div></div>
+<div class="ttc" id="aclass_astral_1_1_bitmap_html_a95dc352a78e870355503ac6f04ab45f7"><div class="ttname"><a href="../../da/d3e/class_astral_1_1_bitmap.html#a95dc352a78e870355503ac6f04ab45f7">Astral::Bitmap::GetPixelHeight</a></div><div class="ttdeci">uint32 GetPixelHeight() const</div><div class="ttdoc">Gets the height of the bitmap in pixels.</div><div class="ttdef"><b>Definition</b> Bitmap.h:64</div></div>
 <div class="ttc" id="anamespace_astral_html"><div class="ttname"><a href="../../d5/d9b/namespace_astral.html">Astral</a></div><div class="ttdef"><b>Definition</b> Asset.h:13</div></div>
 <div class="ttc" id="anamespace_astral_html_a09e005ef220c022416e2c071ba3df51f"><div class="ttname"><a href="../../d5/d9b/namespace_astral.html#a09e005ef220c022416e2c071ba3df51f">Astral::GetNumComponents</a></div><div class="ttdeci">uint32 GetNumComponents(ImageFormat imageFormat)</div><div class="ttdoc">Gets the number of components in the format.</div><div class="ttdef"><b>Definition</b> ImageFormats.cpp:147</div></div>
 <div class="ttc" id="anamespace_astral_html_acf4b489db61c5e74fbe6108967d0ce36"><div class="ttname"><a href="../../d5/d9b/namespace_astral.html#acf4b489db61c5e74fbe6108967d0ce36">Astral::GetBytesPerTexel</a></div><div class="ttdeci">uint32 GetBytesPerTexel(ImageFormat imageFormat)</div><div class="ttdoc">Gets the number of bytes per texel in the format.</div><div class="ttdef"><b>Definition</b> ImageFormats.cpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 30 2025 19:23:56 for Astral Engine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
+Generated on Thu Oct 2 2025 22:33:34 for Astral Engine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
 </small></address>
 </div><!-- doc-content -->
 </body>

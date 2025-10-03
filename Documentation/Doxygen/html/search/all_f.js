@@ -4,5 +4,5 @@ var searchData=
   ['of_20concept_1',['Custom Allocators (Experimental Proof of Concept)',['../index.html#autotoc_md4',1,'']]],
   ['of_20current_20engine_20state_2',['Screenshot of Current Engine State',['../index.html#autotoc_md11',1,'']]],
   ['operator_3d_3',['operator=',['../d2/df4/class_astral_1_1_object_pool.html#aed5e51a251f0a009c162589e5fbcf680',1,'Astral::ObjectPool::operator=()'],['../d4/d4b/class_astral_1_1_camera.html#adf7d2c4efc025859a603486b63bada88',1,'Astral::Camera::operator=()']]],
-  ['operator_3d_3d_4',['operator==',['../d7/dac/class_astral_1_1_render_graph_pass.html#abae232477bf73a13420b8c89fdcf9d11',1,'Astral::RenderGraphPass']]]
+  ['operator_3d_3d_4',['operator==',['../d7/d97/struct_astral_1_1_edge.html#a9667da5e296cd8984d092bb4771b3c38',1,'Astral::Edge::operator==()'],['../d2/d96/class_astral_1_1_vertex.html#aa3741f1026ca8fbbf01347186fd9710d',1,'Astral::Vertex::operator==()'],['../d7/dac/class_astral_1_1_render_graph_pass.html#abae232477bf73a13420b8c89fdcf9d11',1,'Astral::RenderGraphPass::operator==()']]]
 ];
