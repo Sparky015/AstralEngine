@@ -34,7 +34,6 @@ namespace Astral {
         /** Propagates an event to listeners. */
         void PublishEvent(T event)
         {
-            PROFILE_SCOPE("EventPublisher::PublishEvent")
             EventBus<T>& eventBus = EventBus<T>::Get();
             eventBus.RaiseEvent(event);
         }

@@ -21,6 +21,8 @@ namespace Astral {
 
     void SceneHierarchyPanel::Show()
     {
+        PROFILE_SCOPE("SceneHierarchyPanel::Show")
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         if (ecs.GetNumberOfActiveEntities() == 0) { selectedEntity = Entity(NULL_ENTITY); }
 

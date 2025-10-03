@@ -45,6 +45,8 @@ namespace Astral {
 
     void Editor::UpdateEditorUI()
     {
+        PROFILE_SCOPE("Editor::UpdateEditorUI")
+
         SceneHierarchyPanel::Show();
         ViewportPanel::Show();
         MenuBarComponent::Show();

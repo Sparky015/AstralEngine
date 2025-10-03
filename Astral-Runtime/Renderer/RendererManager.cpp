@@ -28,7 +28,7 @@ namespace Astral {
 
     void RendererManager::Init()
     {
-        PROFILE_SCOPE("Renderer Manager Initialization");
+        PROFILE_SCOPE("RendererManager::Init");
         AE_TRACE("Initializing Renderer Manager!");
         m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
@@ -40,7 +40,7 @@ namespace Astral {
 
     void RendererManager::Shutdown()
     {
-        PROFILE_SCOPE("Renderer Manager Shutdown");
+        PROFILE_SCOPE("RendererManager::Shutdown");
         AE_TRACE("Shutting down Renderer Manager!")
 
         SceneRenderer::Shutdown();

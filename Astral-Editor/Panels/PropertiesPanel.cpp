@@ -15,6 +15,8 @@ namespace Astral {
 
     void Astral::PropertiesPanel()
     {
+        PROFILE_SCOPE("PropertiesPanel")
+
         ImGui::Begin("Properties##EditorPropertiesPanel");
 
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();

@@ -31,6 +31,7 @@ namespace Astral {
     Engine::Engine() :
         m_ApplicationModule(Application::CreateApplicationModule()),
         m_IsLoopRunning(true),
+        m_FrameCount(0),
 
         m_WindowManager(CreateScopedPtr<WindowManager>()),
         m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
@@ -39,7 +40,7 @@ namespace Astral {
         m_ECSManager(CreateScopedPtr<SceneManager>())
 
     {
-        PROFILE_SCOPE("Engine Initialization");
+        PROFILE_SCOPE("Engine::Engine");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
         m_Instance = this;
 
@@ -55,6 +56,7 @@ namespace Astral {
         m_ECSManager->Init();
         m_ApplicationModule->Init();
 
+
         cpuinfo_initialize();
         glslang_initialize_process();
         NFD_Init();
@@ -63,7 +65,7 @@ namespace Astral {
 
     Engine::~Engine()
     {
-        PROFILE_SCOPE("Engine Shutdown");
+        PROFILE_SCOPE("Engine::~Engine");
 
         NFD_Quit();
         glslang_finalize_process();
@@ -99,11 +101,13 @@ namespace Astral {
         };
         windowClosedListener.StartListening();
 
+        char frameScopeProfilerNameBuffer[64];
 
                                   /****  Engine Loop  ****/
         while (m_IsLoopRunning)
         {
-            PROFILE_SCOPE("Frame");
+            snprintf(frameScopeProfilerNameBuffer, sizeof(frameScopeProfilerNameBuffer), "Frame %zu", m_FrameCount);
+            PROFILE_SCOPE(frameScopeProfilerNameBuffer);
 
             m_DeltaTime.UpdateDeltaTime();
 
@@ -117,8 +121,9 @@ namespace Astral {
             m_ApplicationModule->Update(m_DeltaTime);
 
 
-
             m_WindowManager->SwapBuffers();
+
+            m_FrameCount++;
         }
 
 
