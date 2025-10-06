@@ -4,25 +4,26 @@
 * @date 7/1/2025
 */
 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include "SceneRendererImpl.h"
 
-#include "RHI/RendererAPI.h"
-
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
-#include "Renderer/RHI/Resources/CommandBuffer.h"
-#include "Renderer/RHI/Resources/RenderTarget.h"
-#include "Renderer/RHI/Resources/Shader.h"
-#include "Renderer/RendererManager.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
+#include "RHI/RendererAPI.h"
+#include "RHI/Resources/CommandBuffer.h"
+#include "RHI/Resources/RenderTarget.h"
+#include "RHI/Resources/Shader.h"
+#include "Renderer/RendererManager.h"
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
+
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/gtc/type_ptr.hpp>
+
+#include <future>
+
 
 namespace Astral {
 
