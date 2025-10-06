@@ -292,6 +292,10 @@ add_library(AstralEngine
         Renderer/RHI/Common/SamplerSettings.h
         Renderer/RHI/Common/PipelineRasterizerState.h
         Renderer/RHI/Common/MemoryTypes.h
+        Job/JobManager.cpp
+        Job/JobManager.h
+        Job/JobQueue.cpp
+        Job/JobQueue.h
 )
 
 

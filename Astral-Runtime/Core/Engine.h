@@ -8,6 +8,7 @@
 
 #include "ApplicationModule.h"
 #include "SmartPointers.h"
+#include "Job/JobManager.h"
 #include "Time/Clock.h"
 
 
@@ -52,6 +53,7 @@ namespace Astral {
         ScopedPtr<RendererManager> m_RendererManager;
         ScopedPtr<AssetManager> m_AssetManager;
         ScopedPtr<SceneManager> m_ECSManager;
+        ScopedPtr<JobManager> m_JobManager;
     };
 
 }
