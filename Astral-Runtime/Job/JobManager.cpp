@@ -6,13 +6,15 @@
 
 #include "JobManager.h"
 
+#include "Core/SmartPointers.h"
 #include "Debug/Utilities/Asserts.h"
 
 namespace Astral {
 
     bool JobManager::m_IsActive = false;
 
-    JobManager::JobManager()
+    JobManager::JobManager() :
+        m_ThreadPool(CreateScopedPtr<ThreadPool>())
     {
     }
 
@@ -20,6 +22,7 @@ namespace Astral {
     JobManager::~JobManager()
     {
     }
+
 
     JobManager& JobManager::Get()
     {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "JobQueue.h"
+#include "ThreadPool.h"
 #include "Core/SystemManager.h"
 
 namespace Astral {
@@ -22,6 +22,8 @@ namespace Astral {
         void Init() override;
         void Shutdown() override;
 
+        ThreadPool& GetThreadPool() { return *m_ThreadPool; }
+
         JobManager(JobManager&&) = delete;
         JobManager& operator=(JobManager&&) = delete;
         JobManager(const JobManager&) = delete;
@@ -30,7 +32,7 @@ namespace Astral {
     private:
 
         static bool m_IsActive;
-        std::unique_ptr<JobQueue> m_JobQueue;
+        std::unique_ptr<ThreadPool> m_ThreadPool;
     };
 
 }
