@@ -294,8 +294,8 @@ add_library(AstralEngine
         Renderer/RHI/Common/MemoryTypes.h
         Job/JobManager.cpp
         Job/JobManager.h
-        Job/JobQueue.cpp
-        Job/JobQueue.h
+        Job/ThreadPool.cpp
+        Job/ThreadPool.h
 )
 
 
