@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['glfwclientapi_0',['GlfwClientApi',['../de/d02/imgui__impl__glfw_8cpp.html#abfd5392e93ee3c4e7f86cc5515e2d413',1,'imgui_impl_glfw.cpp']]]
+  ['shadermodel_0',['ShaderModel',['../d5/d9b/namespace_astral.html#a0b2c17c23ba0996e507c87b395222bad',1,'Astral']]]
 ];

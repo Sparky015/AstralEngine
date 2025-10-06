@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parseshader_0',['ParseShader',['../da/d75/class_astral_1_1_shader_source.html#a97f90e90821d278da7a624cbe6361ca9',1,'Astral::ShaderSource']]],
-  ['profilefunction_1',['ProfileFunction',['../d6/d0d/class_astral_1_1_function_profiler.html#a660b657cafc1ca4c678090fbc9778bb6',1,'Astral::FunctionProfiler']]],
-  ['publishevent_2',['PublishEvent',['../d0/d57/class_astral_1_1_event_publisher.html#a33c9c3ce48dbc8132d17e7574a2d75e1',1,'Astral::EventPublisher']]]
+  ['objectpool_0',['ObjectPool',['../d2/df4/class_astral_1_1_object_pool.html#a54320e83d33dd02d08370c427a36b1bd',1,'Astral::ObjectPool::ObjectPool()'],['../d2/df4/class_astral_1_1_object_pool.html#a4735bf932a96f3b71656ef4cbd8321ae',1,'Astral::ObjectPool::ObjectPool(Args &amp;&amp;... args)']]],
+  ['operator_3d_1',['operator=',['../d2/df4/class_astral_1_1_object_pool.html#aed5e51a251f0a009c162589e5fbcf680',1,'Astral::ObjectPool::operator=()'],['../d4/d4b/class_astral_1_1_camera.html#adf7d2c4efc025859a603486b63bada88',1,'Astral::Camera::operator=()']]],
+  ['operator_3d_3d_2',['operator==',['../d7/d97/struct_astral_1_1_edge.html#a9667da5e296cd8984d092bb4771b3c38',1,'Astral::Edge::operator==()'],['../d2/d96/class_astral_1_1_vertex.html#aa3741f1026ca8fbbf01347186fd9710d',1,'Astral::Vertex::operator==()'],['../d7/dac/class_astral_1_1_render_graph_pass.html#abae232477bf73a13420b8c89fdcf9d11',1,'Astral::RenderGraphPass::operator==()']]]
 ];

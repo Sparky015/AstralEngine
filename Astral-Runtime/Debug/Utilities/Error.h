@@ -6,14 +6,11 @@
 
 #include <sstream>
 
-#ifndef TURN_OFF_DEBUG_MACROS
+// We ignore the TURN_OFF_DEBUG_MACROS macro for the AE_ERROR call as if a branch calls AE_ERROR, it is considered a
+// fatal error and should be called regardless of the build type.
 
 /** Throws an error with a message outputted to the console. */
 #define AE_ERROR(errorMessage) { std::ostringstream ss; ss << errorMessage; Astral::Macros::macro_ERROR(ss, __FILE__, __LINE__, __func__); throw std::runtime_error(ss.str());}
-
-#else
-#define AE_ERROR(errorMessage)
-#endif
 
 
 namespace Astral::Macros {
