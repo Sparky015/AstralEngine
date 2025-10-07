@@ -47,8 +47,9 @@ namespace Astral {
         std::mutex m_QueueLock;
 
         std::vector<std::thread> m_Threads;
+        std::vector<std::condition_variable> m_RunConditions;
+
         std::unordered_map<std::thread::id, uint32> m_ThreadToQueueIndex;
-        std::condition_variable m_RunCondition;
         std::atomic_bool m_StopFlag;
     };
 

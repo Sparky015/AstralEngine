@@ -14,13 +14,14 @@ namespace Astral {
         m_NextTaskID(0),
         m_NextThreadID(0),
         m_Threads(std::thread::hardware_concurrency()),
+        m_RunConditions(std::thread::hardware_concurrency()),
         m_StopFlag(false)
     {
         for (size_t i = 0; i < m_Threads.size(); i++)
         {
+            m_Threads[i] = std::thread(&ThreadPool::WorkerThreadMain, this);
             const std::thread::id& threadID = m_Threads[i].get_id();
             m_ThreadToQueueIndex[threadID] = i;
-            m_Threads[i] = std::thread(&ThreadPool::WorkerThreadMain, this);
         }
     }
 
@@ -28,12 +29,23 @@ namespace Astral {
     ThreadPool::~ThreadPool()
     {
         m_StopFlag = true;
-        m_RunCondition.notify_all();
+
+        for (size_t i = 0; i < m_Threads.size(); i++)
+        {
+            m_RunConditions[i].notify_all();
+
+            if (m_Threads[i].joinable())
+            {
+                m_Threads[i].join();
+            }
+        }
     }
 
 
     std::future<void> ThreadPool::SubmitTask(const std::function<void()>& callback, float priority, int32 affinity)
     {
+        std::unique_lock<std::mutex> lock(m_QueueLock);
+
         Task task = {
             .TaskCallback = callback,
             .Priority = priority,
@@ -55,7 +67,7 @@ namespace Astral {
 
         std::priority_queue<Task>& taskQueue = m_TaskQueues[task.Affinity];
         taskQueue.push(std::move(task));
-        m_RunCondition.notify_one();
+        m_RunConditions[task.Affinity].notify_one();
 
         return taskFuture;
     }
@@ -63,6 +75,8 @@ namespace Astral {
 
     std::future<void> ThreadPool::SubmitTask(std::function<void()>&& callback, float priority, int32 affinity)
     {
+        std::unique_lock<std::mutex> lock(m_QueueLock);
+
         Task task = {
             .TaskCallback = callback,
             .Priority = priority,
@@ -84,7 +98,7 @@ namespace Astral {
 
         std::priority_queue<Task>& taskQueue = m_TaskQueues[task.Affinity];
         taskQueue.push(std::move(task));
-        m_RunCondition.notify_one();
+        m_RunConditions[task.Affinity].notify_one();
 
         return taskFuture;
     }
@@ -105,7 +119,7 @@ namespace Astral {
             uint32 queueIndex = m_ThreadToQueueIndex[std::this_thread::get_id()];
             std::priority_queue<Task>& taskQueue = m_TaskQueues[queueIndex];
 
-            m_RunCondition.wait(lock, [&](){ return m_StopFlag || !taskQueue.empty(); });
+            m_RunConditions[queueIndex].wait(lock, [&](){ return m_StopFlag || !taskQueue.empty(); });
 
             if (m_StopFlag && taskQueue.empty())
             {
