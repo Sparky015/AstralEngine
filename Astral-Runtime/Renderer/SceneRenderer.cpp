@@ -17,6 +17,8 @@ namespace Astral {
 
     void SceneRenderer::Init()
     {
+        PROFILE_SCOPE("SceneRenderer::Init");
+
         m_Renderer = CreateGraphicsOwnedPtr<SceneRendererImpl>();
         m_Renderer->Init();
     }
@@ -24,6 +26,8 @@ namespace Astral {
 
     void SceneRenderer::Shutdown()
     {
+        PROFILE_SCOPE("SceneRenderer::Shutdown");
+
         m_Renderer->Shutdown();
         m_Renderer.reset();
     }

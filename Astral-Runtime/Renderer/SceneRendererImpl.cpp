@@ -830,7 +830,7 @@ namespace Astral {
 
     void SceneRendererImpl::DepthPrePass()
     {
-        PROFILE_SCOPE("DepthPrePass")
+        PROFILE_SCOPE("SceneRendererImpl::DepthPrePass")
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -870,7 +870,7 @@ namespace Astral {
 
     void SceneRendererImpl::ForwardLightingPass()
     {
-        PROFILE_SCOPE("ForwardLightingPass")
+        PROFILE_SCOPE("SceneRendererImpl::ForwardLightingPass")
 
         struct ForwardLightingPassPushData
         {
@@ -950,7 +950,7 @@ namespace Astral {
 
     void SceneRendererImpl::MSAAEnvironmentPass()
     {
-        PROFILE_SCOPE("MSAAEnvironmentPass")
+        PROFILE_SCOPE("SceneRendererImpl::MSAAEnvironmentPass")
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -985,7 +985,7 @@ namespace Astral {
 
     void SceneRendererImpl::GeometryPass()
     {
-        PROFILE_SCOPE("GeometryPass")
+        PROFILE_SCOPE("SceneRendererImpl::GeometryPass")
 
         struct GeometryPassPushData
         {
@@ -1045,7 +1045,7 @@ namespace Astral {
 
     void SceneRendererImpl::DeferredLightingPass()
     {
-        PROFILE_SCOPE("DeferredLightingPass")
+        PROFILE_SCOPE("SceneRendererImpl::DeferredLightingPass")
 
         struct DeferredLightingPushConstants
         {
@@ -1141,7 +1141,7 @@ namespace Astral {
 
     void SceneRendererImpl::CascadedShadowMapsPass()
     {
-        PROFILE_SCOPE("CascadedShadowMapsPass")
+        PROFILE_SCOPE("SceneRendererImpl::CascadedShadowMapsPass")
 
         if (!m_RendererSettings.IsShadowsOn) { return; }
         if (m_FirstDirectionalLightInScene.LightType != LightType::DIRECTIONAL) { return; }
@@ -1266,7 +1266,7 @@ namespace Astral {
 
     void SceneRendererImpl::EnvironmentMapPass()
     {
-        PROFILE_SCOPE("EnvironmentMapPass")
+        PROFILE_SCOPE("SceneRendererImpl::EnvironmentMapPass")
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1311,7 +1311,7 @@ namespace Astral {
 
     void SceneRendererImpl::ToneMappingPass()
     {
-        PROFILE_SCOPE("ToneMappingPass")
+        PROFILE_SCOPE("SceneRendererImpl::ToneMappingPass")
 
         struct ToneMappingPassPushConstants
         {
@@ -1373,7 +1373,7 @@ namespace Astral {
 
     void SceneRendererImpl::FXAAPass()
     {
-        PROFILE_SCOPE("FXAAPass")
+        PROFILE_SCOPE("SceneRendererImpl::FXAAPass")
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -1404,7 +1404,7 @@ namespace Astral {
 
     void SceneRendererImpl::ComputeEnvironmentIBL()
     {
-        PROFILE_SCOPE("ComputeEnvironmentIBL")
+        PROFILE_SCOPE("SceneRendererImpl::ComputeEnvironmentIBL")
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
 
@@ -1440,7 +1440,7 @@ namespace Astral {
 
     void SceneRendererImpl::ComputeIrradianceMap(const CommandBufferHandle& commandBuffer)
     {
-        PROFILE_SCOPE("ComputeIrradianceMap")
+        PROFILE_SCOPE("SceneRendererImpl::ComputeIrradianceMap")
 
         commandBuffer->BeginLabel("IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
@@ -1484,7 +1484,7 @@ namespace Astral {
 
     void SceneRendererImpl::ComputePrefilteredEnvironmentMap(const CommandBufferHandle& commandBuffer, uint32 mipLevel, UVec2 mipDimensions)
     {
-        PROFILE_SCOPE("ComputePrefilteredEnvironmentMap")
+        PROFILE_SCOPE("SceneRendererImpl::ComputePrefilteredEnvironmentMap")
 
         commandBuffer->BeginLabel("PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
@@ -1528,7 +1528,7 @@ namespace Astral {
 
     void SceneRendererImpl::DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget)
     {
-        PROFILE_SCOPE("DrawEditorUI")
+        PROFILE_SCOPE("SceneRendererImpl::DrawEditorUI")
 
         TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
         ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
@@ -1606,7 +1606,7 @@ namespace Astral {
 
     bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
     {
-        PROFILE_SCOPE("ShouldCullMesh")
+        PROFILE_SCOPE("SceneRendererImpl::ShouldCullMesh")
 
         std::array<Vec4, 6> frustum;
         BoundingSphere worldSpaceBoundingSphere;
@@ -1668,6 +1668,8 @@ namespace Astral {
 
     void SceneRendererImpl::ResizeViewport(uint32 width, uint32 height)
     {
+        PROFILE_SCOPE("SceneRendererImpl::ResizeViewport")
+
         m_ViewportSize = UVec2(width, height);
         m_ViewportResizedPublisher.PublishEvent(ViewportResizedEvent(width, height));
 

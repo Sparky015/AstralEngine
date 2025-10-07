@@ -49,6 +49,7 @@ namespace Astral {
         ScopedPtr<Application::ApplicationModule> m_ApplicationModule;
         bool m_IsLoopRunning;
         Astral::Clock m_Clock;
+        size_t m_FrameCount;
 
         ScopedPtr<WindowManager> m_WindowManager;
         ScopedPtr<Astral::ImGuiManager> m_ImGuiManager;
