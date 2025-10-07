@@ -32,6 +32,14 @@ namespace Astral {
 
             void Execute();
 
+            Task() = default;
+            ~Task() = default;
+
+            Task(const Task&) = delete;
+            Task& operator=(const Task&) = delete;
+            Task(Task&&) = default;
+            Task& operator=(Task&&) = default;
+
             bool operator==(const Task& other) const { return TaskID == other.TaskID; }
             std::partial_ordering operator<=>(const Task& other) const { return Priority <=> other.Priority; }
         };
@@ -43,7 +51,7 @@ namespace Astral {
 
         std::atomic_size_t m_NextTaskID;
         std::atomic_size_t m_NextThreadID;
-        std::unordered_map<uint32, std::priority_queue<Task>> m_TaskQueues;
+        std::vector<std::priority_queue<Task>> m_TaskQueues;
         std::mutex m_QueueLock;
 
         std::vector<std::thread> m_Threads;

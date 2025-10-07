@@ -13,6 +13,7 @@ namespace Astral {
     ThreadPool::ThreadPool() :
         m_NextTaskID(0),
         m_NextThreadID(0),
+        m_TaskQueues(std::thread::hardware_concurrency()),
         m_Threads(std::thread::hardware_concurrency()),
         m_RunConditions(std::thread::hardware_concurrency()),
         m_StopFlag(false)
@@ -46,13 +47,13 @@ namespace Astral {
     {
         std::unique_lock<std::mutex> lock(m_QueueLock);
 
-        Task task = {
-            .TaskCallback = callback,
-            .Priority = priority,
-            .Affinity = affinity,
-            .TaskID = m_NextTaskID,
-            .Promise = std::promise<void>(),
-        };
+        Task task{};
+        task.TaskCallback = callback;
+        task.Priority = priority;
+        task.Affinity = affinity;
+        task.TaskID = m_NextTaskID;
+        task.Promise = std::promise<void>();
+
 
         m_NextTaskID++;
 
@@ -77,13 +78,12 @@ namespace Astral {
     {
         std::unique_lock<std::mutex> lock(m_QueueLock);
 
-        Task task = {
-            .TaskCallback = callback,
-            .Priority = priority,
-            .Affinity = affinity,
-            .TaskID = m_NextTaskID,
-            .Promise = std::promise<void>(),
-        };
+        Task task{};
+        task.TaskCallback = std::move(callback);
+        task.Priority = priority;
+        task.Affinity = affinity;
+        task.TaskID = m_NextTaskID;
+        task.Promise = std::promise<void>();
 
         m_NextTaskID++;
 
