@@ -105,11 +105,8 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
-        RenderTargetHandle renderTarget;
-        {
-            PROFILE_SCOPE("SceneRenderer::BeginScene::AcquireNextImage")
-            renderTarget = swapchain.AcquireNextImage();
-        }
+        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+
 
         m_IsSceneStarted = true;
         m_CurrentFrameIndex++;
