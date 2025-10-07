@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <filesystem>
+#include <future>
 
 #include "Asset.h"
 #include "AssetRegistryStats.h"
@@ -31,6 +32,10 @@ namespace Astral {
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
+
+        template <typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        std::future<Ref<AssetType>> CreateAssetAsync(const std::filesystem::path& filePath);
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
