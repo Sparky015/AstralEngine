@@ -116,11 +116,9 @@ View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 ### Next Feature (In-Progress)
 
-#### Job System and a Multithreaded Asset System
+#### Multithreaded Asset System
 
-Currently researching and planning for a Job System to build a base for a multithreaded engine
-and implementing a multithreaded asset system as the first use of the Job System.
-
+Currently researching and planning for a multithreaded asset system as the first application of the ThreadPool class.
 
 ----
 
