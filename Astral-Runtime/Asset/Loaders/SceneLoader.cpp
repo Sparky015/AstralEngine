@@ -184,6 +184,8 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
                     // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
                     // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
+                    std::future<void> future = registry.CreateAssetAsync<Material>(materialResourceFilePath.C_Str());
+                    future.wait();
                     meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
@@ -196,6 +198,8 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
                     // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
                     // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
+                    std::future<void> future = registry.CreateAssetAsync<Mesh>(materialResourceFilePath.C_Str());
+                    future.wait();
                     meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else

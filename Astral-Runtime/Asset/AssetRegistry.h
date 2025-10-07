@@ -13,6 +13,7 @@
 #include "AssetRegistryStats.h"
 #include "Debug/Utilities/Loggers.h"
 #include "Core/SmartPointers.h"
+#include "Job/JobManager.h"
 
 namespace Astral {
 
@@ -31,6 +32,10 @@ namespace Astral {
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAsset(const std::filesystem::path& filePath);
+
+        template <typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        std::future<void> CreateAssetAsync(const std::filesystem::path& filePath);
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
