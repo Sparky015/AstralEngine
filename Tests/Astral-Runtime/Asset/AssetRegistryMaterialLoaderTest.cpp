@@ -31,7 +31,7 @@ public:
 TEST_P(AssetRegistryMaterialLoaderTest, CreateAsset_LoadsMaterialsCorrectlyWithoutError)
 {
     const char* path = GetParam();
-    Ref<Material> material = TestAssetRegistry.GetOrCreateAsset<Material>(path);
+    Ref<Material> material = TestAssetRegistry.CreateAsset<Material>(path);
     ASSERT_NE(material, nullptr);
     ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
 }

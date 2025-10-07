@@ -38,7 +38,7 @@ namespace Astral {
 
             std::string shaderPath = file["Shader"].as<std::string>();
             std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
-            material->FragmentShader = registry.GetOrCreateAsset<Shader>(shaderPath);
+            material->FragmentShader = registry.CreateAsset<Shader>(shaderPath);
 
             std::string textureConvention = file["Texture Convention"].as<std::string>();
             material->TextureConvention = StringToTextureConvention(textureConvention);
@@ -68,7 +68,7 @@ namespace Astral {
                     }
                 }
 
-                TextureHandle textureMap = registry.GetOrCreateAsset<Texture>(textureMapPath);
+                TextureHandle textureMap = registry.CreateAsset<Texture>(textureMapPath);
                 material->Textures.push_back(textureMap);
                 descriptorSetHandle->AddDescriptorImageSampler(textureMap, ShaderStage::FRAGMENT);
             }

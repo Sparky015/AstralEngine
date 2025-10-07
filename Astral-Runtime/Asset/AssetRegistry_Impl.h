@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 
@@ -14,7 +13,7 @@ namespace Astral {
 
     template<typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
-    Ref<AssetType> AssetRegistry::GetOrCreateAsset(const std::filesystem::path& filePath)
+    Ref<AssetType> AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("AssetRegistry::CreateAsset")
 
@@ -69,16 +68,6 @@ namespace Astral {
         asset->SetAssetID(assetID);
 
         return GetAsset<AssetType>(assetID);
-    }
-
-
-    template<typename AssetType> requires std::is_base_of_v<Asset, AssetType>
-    std::future<void> AssetRegistry::CreateAssetAsync(const std::filesystem::path& filePath)
-    {
-        ThreadPool& threadPool = Engine::Get().GetJobManager().GetThreadPool();
-        return threadPool.SubmitTask([this, filePath]() {
-            GetOrCreateAsset<AssetType>(filePath);
-        }, 1.0f);
     }
 
 

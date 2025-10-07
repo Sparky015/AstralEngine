@@ -30,7 +30,7 @@ public:
 TEST_P(AssetRegistryEnvironmentMapLoaderTest, CreateAsset_LoadsEnvironmentMapsCorrectlyWithoutError)
 {
     const char* path = GetParam();
-    Ref<EnvironmentMap> environmentMap = TestAssetRegistry.GetOrCreateAsset<EnvironmentMap>(path);
+    Ref<EnvironmentMap> environmentMap = TestAssetRegistry.CreateAsset<EnvironmentMap>(path);
     ASSERT_NE(environmentMap, nullptr);
     ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
 }

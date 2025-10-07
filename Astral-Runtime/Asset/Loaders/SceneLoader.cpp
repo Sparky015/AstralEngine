@@ -56,9 +56,9 @@ namespace Astral {
     {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        TextureHandle missingBaseColor = registry.GetOrCreateAsset<Texture>("Textures/MissingTexture.png");
-        TextureHandle solidBlack = registry.GetOrCreateAsset<Texture>("Textures/SolidBlack.png");
-        TextureHandle solidWhite = registry.GetOrCreateAsset<Texture>("Textures/SolidWhite.png");
+        TextureHandle missingBaseColor = registry.CreateAsset<Texture>("Textures/MissingTexture.png");
+        TextureHandle solidBlack = registry.CreateAsset<Texture>("Textures/SolidBlack.png");
+        TextureHandle solidWhite = registry.CreateAsset<Texture>("Textures/SolidWhite.png");
 
         SetDefaultMaterialShaderModel(ShaderModel::PBR);
         SetDefaultMaterialTextureConvention(TextureConvention::UNPACKED);
@@ -184,9 +184,9 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
                     // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
                     // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    std::future<void> future = registry.CreateAssetAsync<Material>(materialResourceFilePath.C_Str());
-                    future.wait();
-                    meshComponent.Material = registry.GetOrCreateAsset<Material>(materialResourceFilePath.C_Str());
+                    // std::future<void> future = registry.CreateAssetAsync<Material>(materialResourceFilePath.C_Str());
+                    // future.wait();
+                    meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -198,9 +198,9 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
                     // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
                     // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    std::future<void> future = registry.CreateAssetAsync<Mesh>(materialResourceFilePath.C_Str());
-                    future.wait();
-                    meshComponent.MeshData = registry.GetOrCreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
+                    // std::future<void> future = registry.CreateAssetAsync<Mesh>(materialResourceFilePath.C_Str());
+                    // future.wait();
+                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -227,7 +227,7 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
                     // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
                     // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
-                    spriteComponent.Material = registry.GetOrCreateAsset<Material>(materialResourceFilePath.C_Str());
+                    spriteComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace Astral {
                     // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
                     // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
                     // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
-                    spriteComponent.MeshData = registry.GetOrCreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
+                    spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -458,7 +458,7 @@ namespace Astral {
         metaData.Get("Environment_Exposure", exposure);
         metaData.Get("Environment_EnvironmentMapBlur", environmentMapBlur);
 
-        Ref<EnvironmentMap> environmentMap = registry.GetOrCreateAsset<EnvironmentMap>(environmentMapFilePath.C_Str());
+        Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>(environmentMapFilePath.C_Str());
         if (environmentMap) { scene.EnvironmentMap = environmentMap; }
 
         scene.AmbientLightConstant = ambientLightConstant;
