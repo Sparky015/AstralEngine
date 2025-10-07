@@ -14,7 +14,7 @@ namespace Astral {
 
     template<typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
-    Ref<AssetType> AssetRegistry::CreateAsset(const std::filesystem::path& filePath)
+    Ref<AssetType> AssetRegistry::GetOrCreateAsset(const std::filesystem::path& filePath)
     {
         PROFILE_SCOPE("AssetRegistry::CreateAsset")
 
@@ -77,8 +77,8 @@ namespace Astral {
     {
         ThreadPool& threadPool = Engine::Get().GetJobManager().GetThreadPool();
         return threadPool.SubmitTask([this, filePath]() {
-            CreateAsset<AssetType>(filePath);
-        }, 1.0f, 1);
+            GetOrCreateAsset<AssetType>(filePath);
+        }, 1.0f);
     }
 
 

@@ -172,7 +172,7 @@ namespace Astral {
                 SelectFileFromDialog(selectedFilePath, "Astral Material", "astmat");
                 registry.GetRelativePath(selectedFilePath);
                 std::string relativePath = selectedFilePath.string();
-                Ref<Material> newMaterial = registry.CreateAsset<Material>(relativePath);
+                Ref<Material> newMaterial = registry.GetOrCreateAsset<Material>(relativePath);
 
                 if (newMaterial != nullptr)
                 {
@@ -213,7 +213,7 @@ namespace Astral {
             ImGui::SameLine();
             if (ImGui::InputText("##MeshFilePath", meshInputBuffer, sizeof(meshInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                Ref<Mesh> newMesh = registry.CreateAsset<Mesh>(meshInputBuffer);
+                Ref<Mesh> newMesh = registry.GetOrCreateAsset<Mesh>(meshInputBuffer);
 
                 if (newMesh != nullptr)
                 {
@@ -230,7 +230,7 @@ namespace Astral {
                 SelectFileFromDialog(selectedFilePath, "3D Object", "fbx,gltf,obj");
                 registry.GetRelativePath(selectedFilePath);
                 std::string relativePath = selectedFilePath.string();
-                Ref<Mesh> newMesh = registry.CreateAsset<Mesh>(relativePath);
+                Ref<Mesh> newMesh = registry.GetOrCreateAsset<Mesh>(relativePath);
 
                 if (newMesh != nullptr)
                 {
@@ -255,7 +255,7 @@ namespace Astral {
             ImGui::SameLine();
             if (ImGui::InputText("##MaterialFilePath", materialInputBuffer, sizeof(materialInputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                Ref<Material> newMaterial = registry.CreateAsset<Material>(materialInputBuffer);
+                Ref<Material> newMaterial = registry.GetOrCreateAsset<Material>(materialInputBuffer);
 
                 if (newMaterial != nullptr)
                 {
@@ -272,7 +272,7 @@ namespace Astral {
                 SelectFileFromDialog(selectedFilePath, "Astral Material", "astmat");
                 registry.GetRelativePath(selectedFilePath);
                 std::string relativePath = selectedFilePath.string();
-                Ref<Material> newMaterial = registry.CreateAsset<Material>(relativePath);
+                Ref<Material> newMaterial = registry.GetOrCreateAsset<Material>(relativePath);
 
                 if (newMaterial != nullptr)
                 {

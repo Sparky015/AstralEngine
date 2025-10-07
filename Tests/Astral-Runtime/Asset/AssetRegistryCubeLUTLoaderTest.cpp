@@ -31,7 +31,7 @@ public:
 TEST_P(AssetRegistryCubeLUTLoaderTest, CreateAsset_LoadsCubeLUTCorrectlyWithoutError)
 {
     const char* path = GetParam();
-    Ref<CubeLUT> cubeLUT = TestAssetRegistry.CreateAsset<CubeLUT>(path);
+    Ref<CubeLUT> cubeLUT = TestAssetRegistry.GetOrCreateAsset<CubeLUT>(path);
     ASSERT_NE(cubeLUT, nullptr);
     ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
 }

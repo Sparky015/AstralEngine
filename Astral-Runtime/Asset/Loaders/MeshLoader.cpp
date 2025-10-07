@@ -149,15 +149,15 @@ namespace Astral::MeshLoader {
 
         if (mesh->HasNormals() && mesh->HasTextureCoords(0))
         {
-            vertexShader = registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
+            vertexShader = registry.GetOrCreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
         }
         else if (mesh->HasTextureCoords(0))
         {
-            vertexShader = registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
+            vertexShader = registry.GetOrCreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
         }
         else
         {
-            vertexShader = registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals.vert");
+            vertexShader = registry.GetOrCreateAsset<Shader>("Shaders/Mesh_Position_Normals.vert");
         }
 
         Mesh meshInstance{};

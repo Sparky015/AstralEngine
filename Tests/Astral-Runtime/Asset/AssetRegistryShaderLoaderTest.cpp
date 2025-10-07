@@ -30,7 +30,7 @@ public:
 TEST_P(AssetRegistryShaderLoaderTest, CreateAsset_LoadsShadersCorrectlyWithoutError)
 {
     const char* path = GetParam();
-    Ref<Shader> shader = TestAssetRegistry.CreateAsset<Shader>(path);
+    Ref<Shader> shader = TestAssetRegistry.GetOrCreateAsset<Shader>(path);
     ASSERT_NE(shader, nullptr);
     ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
 }

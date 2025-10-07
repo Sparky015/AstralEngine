@@ -30,7 +30,7 @@ public:
 TEST_P(AssetRegistryMeshLoaderTest, CreateAsset_LoadsMeshesCorrectlyWithoutError)
 {
     const char* path = GetParam();
-    Ref<Mesh> mesh = TestAssetRegistry.CreateAsset<Mesh>(path);
+    Ref<Mesh> mesh = TestAssetRegistry.GetOrCreateAsset<Mesh>(path);
     ASSERT_NE(mesh, nullptr);
     ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
 }

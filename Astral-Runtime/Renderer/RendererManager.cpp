@@ -59,22 +59,22 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         // Materials
-        registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");
+        registry.GetOrCreateAsset<Material>("Materials/MissingMaterial.astmat");
 
         // Meshs
-        registry.CreateAsset<Mesh>("Meshes/Quad.obj");
+        registry.GetOrCreateAsset<Mesh>("Meshes/Quad.obj");
 
         // Shaders
-        registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
-        registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
-        registry.CreateAsset<Shader>("Shaders/SampleImage.frag");
-        registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
+        registry.GetOrCreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
+        registry.GetOrCreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
+        registry.GetOrCreateAsset<Shader>("Shaders/SampleImage.frag");
+        registry.GetOrCreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
 
 
         // Textures
-        registry.CreateAsset<Texture>("Textures/MissingTexture.png");
-        registry.CreateAsset<Texture>("Textures/SolidBlack.png");
-        registry.CreateAsset<Texture>("Textures/SolidWhite.png");
+        registry.GetOrCreateAsset<Texture>("Textures/MissingTexture.png");
+        registry.GetOrCreateAsset<Texture>("Textures/SolidBlack.png");
+        registry.GetOrCreateAsset<Texture>("Textures/SolidWhite.png");
 
         // Demo Models
         // registry.RegisterAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
@@ -82,7 +82,7 @@ namespace Astral {
 
 
         // Cubemap Mesh
-        registry.CreateAsset<Mesh>("Meshes/Cube.obj");
+        registry.GetOrCreateAsset<Mesh>("Meshes/Cube.obj");
 
     }
 

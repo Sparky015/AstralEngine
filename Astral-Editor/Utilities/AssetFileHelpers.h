@@ -43,7 +43,7 @@ namespace Astral {
         ImGui::SetNextItemWidth(availableSpace.x - 40);
         if (ImGui::InputText("##AssetSelectionInputText", inputBuffer, sizeof(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
         {
-            Ref<AssetType> newAsset = registry.CreateAsset<AssetType>(inputBuffer);
+            Ref<AssetType> newAsset = registry.GetOrCreateAsset<AssetType>(inputBuffer);
             if (newAsset) { outAsset = newAsset; }
         }
         ImGui::SameLine();
@@ -54,7 +54,7 @@ namespace Astral {
             SelectFileFromDialog(selectedFilePath, filterName, filterSpec);
             registry.GetRelativePath(selectedFilePath);
 
-            Ref<AssetType> newAsset = registry.CreateAsset<AssetType>(selectedFilePath.string());
+            Ref<AssetType> newAsset = registry.GetOrCreateAsset<AssetType>(selectedFilePath.string());
             if (newAsset) { outAsset = newAsset; }
         }
 

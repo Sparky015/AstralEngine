@@ -28,7 +28,7 @@ namespace Astral {
 
     TEST_F(AssetRegistryTest, CreateAsset_CreatesAssetCorrectlyWithoutError)
     {
-        Ref<Texture> texture = TestAssetRegistry.CreateAsset<Texture>("Textures/PNG/SolidWhite.png");
+        Ref<Texture> texture = TestAssetRegistry.GetOrCreateAsset<Texture>("Textures/PNG/SolidWhite.png");
         ASSERT_NE(texture, nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
