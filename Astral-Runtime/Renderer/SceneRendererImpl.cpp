@@ -21,13 +21,26 @@
 
 #include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
+#include "RHI/RendererAPI.h"
+#include "RHI/Resources/CommandBuffer.h"
+#include "RHI/Resources/RenderTarget.h"
+#include "RHI/Resources/Shader.h"
+#include "Renderer/RendererManager.h"
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
+
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/gtc/type_ptr.hpp>
+
+#include <future>
+
 
 namespace Astral {
 
     void SceneRendererImpl::Init()
     {
+        PROFILE_SCOPE("SceneRenderer::Init")
+
         m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeWindowImages(event.Width, event.Height); }};
         m_WindowResizedListener.StartListening();
 
@@ -102,11 +115,8 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
 
-        RenderTargetHandle renderTarget;
-        {
-            PROFILE_SCOPE("SceneRenderer::BeginScene::AcquireNextImage")
-            renderTarget = swapchain.AcquireNextImage();
-        }
+        RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
+
 
         m_IsSceneStarted = true;
         m_CurrentFrameIndex++;

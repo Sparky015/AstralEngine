@@ -292,6 +292,11 @@ add_library(AstralEngine
         Renderer/RHI/Common/SamplerSettings.h
         Renderer/RHI/Common/PipelineRasterizerState.h
         Renderer/RHI/Common/MemoryTypes.h
+        Job/JobManager.cpp
+        Job/JobManager.h
+        Job/ThreadPool.cpp
+        Job/ThreadPool.h
+        Job/ThreadPool_Impl.h
 )
 
 
@@ -452,7 +457,6 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
             -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
             -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
 #            -DTURN_OFF_DEBUG_MACROS
-#            -DTURN_OFF_PROFILER_MACRO
             -DASTRAL_DISABLE_RENDERING_API_VALIDATION
 #            -DASTRAL_DISABLE_MEMORY_TRACKING
     )

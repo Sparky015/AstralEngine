@@ -55,6 +55,7 @@ namespace Astral {
         static bool m_IsLogFileOpen;
         std::string m_FilePath;
         int m_ProfileCount;
+        std::mutex m_WriteLock;
     };
 
 } // Debug

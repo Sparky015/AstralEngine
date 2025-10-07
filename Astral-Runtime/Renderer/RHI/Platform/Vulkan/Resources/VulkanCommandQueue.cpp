@@ -56,6 +56,8 @@ namespace Astral {
 
     void VulkanCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
     {
+        PROFILE_SCOPE("VulkanCommandQueue::SubmitSync")
+
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkSubmitInfo submitInfo = {

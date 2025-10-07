@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 
@@ -68,6 +69,16 @@ namespace Astral {
         asset->SetAssetID(assetID);
 
         return GetAsset<AssetType>(assetID);
+    }
+
+    template<typename AssetType>
+        requires std::is_base_of_v<Asset, AssetType>
+    std::future<Ref<AssetType>> AssetRegistry::CreateAssetAsync(const std::filesystem::path& filePath)
+    {
+        ThreadPool& threadPool = Engine::Get().GetJobManager().GetThreadPool();
+        return threadPool.SubmitTaskWithResult<Ref<AssetType>>([this, filePath] {
+            return CreateAsset<AssetType>(filePath);
+        }, 1.0f);
     }
 
 

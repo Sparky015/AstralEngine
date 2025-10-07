@@ -37,8 +37,8 @@ namespace Astral {
         m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
         m_RendererManager(CreateScopedPtr<RendererManager>()),
         m_AssetManager(CreateScopedPtr<AssetManager>()),
-        m_ECSManager(CreateScopedPtr<SceneManager>())
-
+        m_ECSManager(CreateScopedPtr<SceneManager>()),
+        m_JobManager(CreateScopedPtr<JobManager>())
     {
         PROFILE_SCOPE("Engine::Engine");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
@@ -54,6 +54,7 @@ namespace Astral {
         m_AssetManager->InitAssetLoaderDefaults();
         InputState::Init();
         m_ECSManager->Init();
+        m_JobManager->Init();
         m_ApplicationModule->Init();
 
 
@@ -72,6 +73,8 @@ namespace Astral {
         AE_PROFILE_FUNCTION(cpuinfo_deinitialize(), "cpuinfo_deinitialize");
 
         m_ApplicationModule->Shutdown();
+        m_JobManager->Shutdown();
+        m_JobManager.reset();
         m_ECSManager->Shutdown();
         m_ECSManager.reset();
         InputState::Shutdown();
