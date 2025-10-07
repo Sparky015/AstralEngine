@@ -296,6 +296,7 @@ add_library(AstralEngine
         Job/JobManager.h
         Job/ThreadPool.cpp
         Job/ThreadPool.h
+        Job/ThreadPool_Impl.h
 )
 
 

@@ -13,16 +13,31 @@ namespace Astral {
     ThreadPool::ThreadPool() :
         m_NextTaskID(0),
         m_NextThreadID(0),
+        m_StopFlag(false),
         m_TaskQueues(std::thread::hardware_concurrency()),
+        m_QueueLocks(std::thread::hardware_concurrency()),
         m_Threads(std::thread::hardware_concurrency()),
-        m_RunConditions(std::thread::hardware_concurrency()),
-        m_StopFlag(false)
+        m_RunConditions(std::thread::hardware_concurrency())
     {
         for (size_t i = 0; i < m_Threads.size(); i++)
         {
-            m_Threads[i] = std::thread(&ThreadPool::WorkerThreadMain, this);
-            const std::thread::id& threadID = m_Threads[i].get_id();
-            m_ThreadToQueueIndex[threadID] = i;
+            m_Threads[i] = std::thread([this, i](){ WorkerThreadMain(i); });
+        }
+    }
+
+
+    ThreadPool::ThreadPool(uint32 numThreads) :
+        m_NextTaskID(0),
+        m_NextThreadID(0),
+        m_StopFlag(false),
+        m_TaskQueues(numThreads),
+        m_QueueLocks(numThreads),
+        m_Threads(numThreads),
+        m_RunConditions(numThreads)
+    {
+        for (size_t i = 0; i < m_Threads.size(); i++)
+        {
+            m_Threads[i] = std::thread([this, i](){ WorkerThreadMain(i); });
         }
     }
 
@@ -45,19 +60,15 @@ namespace Astral {
 
     std::future<void> ThreadPool::SubmitTask(const std::function<void()>& callback, float priority, int32 affinity)
     {
-        std::unique_lock<std::mutex> lock(m_QueueLock);
-
         Task task{};
         task.TaskCallback = callback;
         task.Priority = priority;
         task.Affinity = affinity;
         task.TaskID = m_NextTaskID;
         task.Promise = std::promise<void>();
-
-
         m_NextTaskID++;
 
-        if (task.Affinity == -1)
+        if (task.Affinity < 0 || (size_t)task.Affinity >= m_Threads.size())
         {
             task.Affinity = m_NextThreadID;
             m_NextThreadID++;
@@ -65,6 +76,8 @@ namespace Astral {
         }
 
         std::future<void> taskFuture = task.Promise.get_future();
+
+        std::unique_lock<std::mutex> lock(m_QueueLocks[task.Affinity]);
 
         std::priority_queue<Task>& taskQueue = m_TaskQueues[task.Affinity];
         taskQueue.push(std::move(task));
@@ -76,18 +89,15 @@ namespace Astral {
 
     std::future<void> ThreadPool::SubmitTask(std::function<void()>&& callback, float priority, int32 affinity)
     {
-        std::unique_lock<std::mutex> lock(m_QueueLock);
-
         Task task{};
         task.TaskCallback = std::move(callback);
         task.Priority = priority;
         task.Affinity = affinity;
         task.TaskID = m_NextTaskID;
         task.Promise = std::promise<void>();
-
         m_NextTaskID++;
 
-        if (task.Affinity == -1)
+        if (task.Affinity < 0 || (size_t)task.Affinity >= m_Threads.size())
         {
             task.Affinity = m_NextThreadID;
             m_NextThreadID++;
@@ -95,6 +105,8 @@ namespace Astral {
         }
 
         std::future<void> taskFuture = task.Promise.get_future();
+
+        std::unique_lock<std::mutex> lock(m_QueueLocks[task.Affinity]);
 
         std::priority_queue<Task>& taskQueue = m_TaskQueues[task.Affinity];
         taskQueue.push(std::move(task));
@@ -111,15 +123,15 @@ namespace Astral {
     }
 
 
-    void ThreadPool::WorkerThreadMain()
+    void ThreadPool::WorkerThreadMain(uint32 threadIndex)
     {
         while (!m_StopFlag)
         {
-            std::unique_lock<std::mutex> lock(m_QueueLock);
-            uint32 queueIndex = m_ThreadToQueueIndex[std::this_thread::get_id()];
-            std::priority_queue<Task>& taskQueue = m_TaskQueues[queueIndex];
+            std::unique_lock<std::mutex> lock(m_QueueLocks[threadIndex]);
 
-            m_RunConditions[queueIndex].wait(lock, [&](){ return m_StopFlag || !taskQueue.empty(); });
+            std::priority_queue<Task>& taskQueue = m_TaskQueues[threadIndex];
+
+            m_RunConditions[threadIndex].wait(lock, [&](){ return m_StopFlag || !taskQueue.empty(); });
 
             if (m_StopFlag && taskQueue.empty())
             {
