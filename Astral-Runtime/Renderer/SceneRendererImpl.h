@@ -204,8 +204,11 @@ namespace Astral {
         ShaderHandle m_ForwardUnpackedLightingShader;
         ShaderHandle m_ForwardORMLightingShader;
 
-        // Depth Pre-Pass
+        // Depth Pre-Pass & Cascaded Shadow Maps
         ShaderHandle m_DepthWriteOnlyShader;
+
+        // Cascaded Shadow Maps
+        ShaderHandle m_ShadowMapShader;
 
         // Environment Map Pass
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;

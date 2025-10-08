@@ -83,6 +83,7 @@ namespace Astral {
         m_ForwardUnpackedLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
         m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
         m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
+        m_ShadowMapShader = registry.CreateAsset<Shader>("Shaders/ShadowMap.vert");
 
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
         m_RTT_ODT_LUT_DescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
@@ -1249,10 +1250,10 @@ namespace Astral {
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
-            mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/ShadowMap.vert");
+            mesh.VertexShader = m_ShadowMapShader;
 
             Material shadowMapMaterial{};
-            shadowMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
+            shadowMapMaterial.FragmentShader = m_DepthWriteOnlyShader;
             shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
 
             PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0, CullMode::FRONT);
