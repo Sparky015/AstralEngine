@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 345,
+            "type": "VEC3",
+            "max": [
+                997.873779296875,
+                -852.8097534179688,
+                139.03065490722656
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -878.5285034179688,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 345,
+            "type": "VEC3",
+            "max": [
+                -0.00392144825309515,
+                0.00392144825309515,
+                0.999984622001648
+            ],
+            "min": [
+                -0.00392144825309515,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 345,
+            "type": "VEC3",
+            "max": [
+                0.9997576475143433,
+                0.9999921917915344,
+                0.005561404395848513
+            ],
+            "min": [
+                -0.9998879432678223,
+                -0.9990902543067932,
+                -0.005545479711145163
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 345,
+            "type": "VEC2",
+            "max": [
+                0.90478515625,
+                0.8865966796875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 345,
+            "type": "VEC2",
+            "max": [
+                0.990234375,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 1236,
+            "type": "SCALAR",
+            "max": [
+                344
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 22884,
+            "uri": "Bistro_Research_Exterior_Paris_ElectricBox_5977.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 4140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4140,
+            "byteLength": 4140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 8280,
+            "byteLength": 4140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 12420,
+            "byteLength": 2760,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 15180,
+            "byteLength": 2760,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 17940,
+            "byteLength": 4944,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\ElectricBox_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\ElectricBox_Normal.dds"
+        },
+        {
+            "uri": "Textures\\ElectricBox_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "ElectricBox",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ElectricBox_5977",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ElectricBox_5977",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

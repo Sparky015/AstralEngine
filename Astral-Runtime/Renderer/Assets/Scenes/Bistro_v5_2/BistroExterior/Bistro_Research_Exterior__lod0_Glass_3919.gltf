@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 121,
+            "type": "VEC3",
+            "max": [
+                -483.1878356933594,
+                2.2991867065429688,
+                139.6687469482422
+            ],
+            "min": [
+                -490.6519470214844,
+                -7.979714870452881,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 121,
+            "type": "VEC3",
+            "max": [
+                0.12925885617733002,
+                0.992323100566864,
+                0.9068172574043274
+            ],
+            "min": [
+                -0.9888623356819153,
+                -0.47339725494384766,
+                -0.8595449924468994
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 121,
+            "type": "VEC3",
+            "max": [
+                0.4494609236717224,
+                0.12524352967739105,
+                0.15370599925518036
+            ],
+            "min": [
+                -0.9950679540634155,
+                -0.9994164109230042,
+                -0.44640854001045227
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 121,
+            "type": "VEC2",
+            "max": [
+                0.473388671875,
+                0.88177490234375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 121,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 624,
+            "type": "SCALAR",
+            "max": [
+                120
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 8788,
+            "uri": "Bistro_Research_Exterior__lod0_Glass_3919.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 1452,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1452,
+            "byteLength": 1452,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2904,
+            "byteLength": 1452,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4356,
+            "byteLength": 968,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5324,
+            "byteLength": 968,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 6292,
+            "byteLength": 2496,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Vespa_Headlight_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Headlight_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Headlight_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Vespa_Headlight",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Glass_3919",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Glass_3919",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

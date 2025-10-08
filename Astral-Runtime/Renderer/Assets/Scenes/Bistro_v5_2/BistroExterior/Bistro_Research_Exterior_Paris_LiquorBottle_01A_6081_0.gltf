@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 120,
+            "type": "VEC3",
+            "max": [
+                724.4240112304688,
+                -443.1549987792969,
+                143.90457153320313
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -445.8963928222656,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 120,
+            "type": "VEC3",
+            "max": [
+                0.9971842169761658,
+                0.9894671440124512,
+                0.999984622001648
+            ],
+            "min": [
+                -0.99777752161026,
+                -0.9881353974342346,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 120,
+            "type": "VEC3",
+            "max": [
+                0.9884303212165833,
+                0.9971920251846313,
+                0.011056749150156975
+            ],
+            "min": [
+                -0.9896824359893799,
+                -0.997785210609436,
+                -0.02925039641559124
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 120,
+            "type": "VEC2",
+            "max": [
+                0.9765625,
+                0.73974609375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 120,
+            "type": "VEC2",
+            "max": [
+                0.96142578125,
+                0.7109375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 504,
+            "type": "SCALAR",
+            "max": [
+                119
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 8256,
+            "uri": "Bistro_Research_Exterior_Paris_LiquorBottle_01A_6081_0.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 1440,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1440,
+            "byteLength": 1440,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2880,
+            "byteLength": 1440,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4320,
+            "byteLength": 960,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5280,
+            "byteLength": 960,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 6240,
+            "byteLength": 2016,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Caps_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Caps_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Caps_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Paris_LiquorBottle_01_Caps",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_LiquorBottle_01A_6081",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_LiquorBottle_01A_6081",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

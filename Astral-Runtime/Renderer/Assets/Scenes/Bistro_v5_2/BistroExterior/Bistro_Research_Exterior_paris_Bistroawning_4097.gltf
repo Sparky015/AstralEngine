@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2451,
+            "type": "VEC3",
+            "max": [
+                298.088623046875,
+                -161.341064453125,
+                334.3797912597656
+            ],
+            "min": [
+                -56.11839294433594,
+                -520.067626953125,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2451,
+            "type": "VEC3",
+            "max": [
+                0.9681363105773926,
+                0.9998001456260681,
+                0.999796986579895
+            ],
+            "min": [
+                -0.8795843124389648,
+                -0.9930583238601685,
+                -0.9994314908981323
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2451,
+            "type": "VEC3",
+            "max": [
+                0.9998956918716431,
+                0.9810374975204468,
+                0.9402201175689697
+            ],
+            "min": [
+                -0.9959598183631897,
+                -0.9913161993026733,
+                -0.947104811668396
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2451,
+            "type": "VEC2",
+            "max": [
+                0.9912109375,
+                0.99090576171875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2451,
+            "type": "VEC2",
+            "max": [
+                0.85888671875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 13080,
+            "type": "SCALAR",
+            "max": [
+                2450
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 179772,
+            "uri": "Bistro_Research_Exterior_paris_Bistroawning_4097.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 29412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 29412,
+            "byteLength": 29412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 58824,
+            "byteLength": 29412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 88236,
+            "byteLength": 19608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 107844,
+            "byteLength": 19608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 127452,
+            "byteLength": 52320,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Awnings_Fabric_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Awnings_Fabric_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Awnings_Fabric_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Awnings_Fabric",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_paris_Bistroawning_4097",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_paris_Bistroawning_4097",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

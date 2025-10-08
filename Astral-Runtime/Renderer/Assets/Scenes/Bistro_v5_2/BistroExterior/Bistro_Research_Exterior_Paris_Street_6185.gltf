@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 731,
+            "type": "VEC3",
+            "max": [
+                513.3644409179688,
+                2454.974365234375,
+                23.16196632385254
+            ],
+            "min": [
+                -3283.460205078125,
+                -1660.1715087890625,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 731,
+            "type": "VEC3",
+            "max": [
+                -0.00392144825309515,
+                0.01185671892017126,
+                0.999984622001648
+            ],
+            "min": [
+                -0.011855978518724442,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 731,
+            "type": "VEC3",
+            "max": [
+                0.941993236541748,
+                0.9594475626945496,
+                0.01569604128599167
+            ],
+            "min": [
+                -0.9997249245643616,
+                -0.9985297918319702,
+                -0.003829691559076309
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 731,
+            "type": "VEC2",
+            "max": [
+                15.1640625,
+                12.3203125
+            ],
+            "min": [
+                -21.09375,
+                -28.09375
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 731,
+            "type": "VEC2",
+            "max": [
+                0.9794921875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 3447,
+            "type": "SCALAR",
+            "max": [
+                730
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 51800,
+            "uri": "Bistro_Research_Exterior_Paris_Street_6185.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 8772,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 8772,
+            "byteLength": 8772,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 17544,
+            "byteLength": 8772,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 26316,
+            "byteLength": 5848,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 32164,
+            "byteLength": 5848,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 38012,
+            "byteLength": 13788,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Pavement_Cobblestone_Small_BLENDSHADER_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Cobblestone_Small_BLENDSHADER_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Cobblestone_Small_BLENDSHADER_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Pavement_Cobblestone_Small_BLENDSHADER",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Street_6185",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Street_6185",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 22595,
+            "type": "VEC3",
+            "max": [
+                5076.53369140625,
+                -1727.5244140625,
+                1397.6365966796875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -3325.323486328125,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 22595,
+            "type": "VEC3",
+            "max": [
+                0.9994224309921265,
+                0.99777752161026,
+                0.9999843835830688
+            ],
+            "min": [
+                -0.9982666969299316,
+                -0.9989860653877258,
+                -0.5745563507080078
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 22595,
+            "type": "VEC3",
+            "max": [
+                0.9999286532402039,
+                0.9999018311500549,
+                0.9985066056251526
+            ],
+            "min": [
+                -0.9999555945396423,
+                -0.9999920129776001,
+                -0.9983002543449402
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 22595,
+            "type": "VEC2",
+            "max": [
+                0.99853515625,
+                0.868896484375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -0.01171875
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 22595,
+            "type": "VEC2",
+            "max": [
+                0.99853515625,
+                0.868896484375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -0.01171875
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 48768,
+            "type": "SCALAR",
+            "max": [
+                22594
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1370012,
+            "uri": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051_1.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 271140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 271140,
+            "byteLength": 271140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 542280,
+            "byteLength": 271140,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 813420,
+            "byteLength": 180760,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 994180,
+            "byteLength": 180760,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1174940,
+            "byteLength": 195072,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Green_Leaves_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Green_Leaves_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Green_Leaves_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Linde_Tree_Large_Green_Leaves.DoubleSided",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1518,
+            "type": "VEC3",
+            "max": [
+                117.45034790039063,
+                1316.0611572265625,
+                83.150390625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1518,
+            "type": "VEC3",
+            "max": [
+                0.9993600845336914,
+                0.9993700981140137,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9996158480644226,
+                -0.999609649181366,
+                -0.988318920135498
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1518,
+            "type": "VEC3",
+            "max": [
+                0.9997947216033936,
+                0.9997947216033936,
+                0.4952683448791504
+            ],
+            "min": [
+                -0.9997943639755249,
+                -0.999794602394104,
+                -0.9999924302101135
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1518,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9959030151367188
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1518,
+            "type": "VEC2",
+            "max": [
+                0.98779296875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 5850,
+            "type": "SCALAR",
+            "max": [
+                1517
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 102336,
+            "uri": "Bistro_Research_Exterior_Paris_Bollard_01A2_4137.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 18216,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 18216,
+            "byteLength": 18216,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 36432,
+            "byteLength": 18216,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 54648,
+            "byteLength": 12144,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 66792,
+            "byteLength": 12144,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 78936,
+            "byteLength": 23400,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Bollards_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Bollards_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Bollards_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Bollards",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Bollard_01A2_4137",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Bollard_01A2_4137",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

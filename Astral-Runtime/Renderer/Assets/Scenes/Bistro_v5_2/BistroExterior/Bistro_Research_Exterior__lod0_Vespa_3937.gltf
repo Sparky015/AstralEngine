@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 26521,
+            "type": "VEC3",
+            "max": [
+                -397.38525390625,
+                36.97721862792969,
+                152.17160034179688
+            ],
+            "min": [
+                -526.2227783203125,
+                -104.22303009033203,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 26521,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.9998001456260681,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9999231100082397,
+                -0.9999843835830688,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 26521,
+            "type": "VEC3",
+            "max": [
+                0.9999182820320129,
+                0.9996073842048645,
+                0.9999922513961792
+            ],
+            "min": [
+                -0.9993462562561035,
+                -0.9998422265052795,
+                -0.999992311000824
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 26521,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9926567077636719
+            ],
+            "min": [
+                -0.609375,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 26521,
+            "type": "VEC2",
+            "max": [
+                0.98876953125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 109371,
+            "type": "SCALAR",
+            "max": [
+                26520
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1816576,
+            "uri": "Bistro_Research_Exterior__lod0_Vespa_3937.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 318252,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 318252,
+            "byteLength": 318252,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 636504,
+            "byteLength": 318252,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 954756,
+            "byteLength": 212168,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1166924,
+            "byteLength": 212168,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1379092,
+            "byteLength": 437484,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Vespa_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Vespa",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Vespa_3937",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Vespa_3937",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 697,
+            "type": "VEC3",
+            "max": [
+                736.2763671875,
+                -423.8076171875,
+                124.40940856933594
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -439.8316650390625,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 697,
+            "type": "VEC3",
+            "max": [
+                0.9977423548698425,
+                0.9858548045158386,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9972280263900757,
+                -0.9726294279098511,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 697,
+            "type": "VEC3",
+            "max": [
+                0.9994867444038391,
+                0.9977014064788818,
+                0.9982232451438904
+            ],
+            "min": [
+                -0.9999862313270569,
+                -0.9964352250099182,
+                -0.99997878074646
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 697,
+            "type": "VEC2",
+            "max": [
+                0.98193359375,
+                0.99163818359375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 697,
+            "type": "VEC2",
+            "max": [
+                0.9892578125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 2292,
+            "type": "SCALAR",
+            "max": [
+                696
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 45412,
+            "uri": "Bistro_Research_Exterior_Paris_NapkinHolder_01A_6113.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 8364,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 8364,
+            "byteLength": 8364,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 16728,
+            "byteLength": 8364,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 25092,
+            "byteLength": 5576,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 30668,
+            "byteLength": 5576,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 36244,
+            "byteLength": 9168,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\NapkinHolder_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\NapkinHolder_Normal.dds"
+        },
+        {
+            "uri": "Textures\\NapkinHolder_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "NapkinHolder",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_NapkinHolder_01A_6113",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_NapkinHolder_01A_6113",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

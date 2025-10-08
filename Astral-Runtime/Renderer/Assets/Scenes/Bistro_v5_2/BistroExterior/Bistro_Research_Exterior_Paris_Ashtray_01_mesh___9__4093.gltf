@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 466,
+            "type": "VEC3",
+            "max": [
+                161.11306762695313,
+                990.84130859375,
+                110.87108612060547
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 466,
+            "type": "VEC3",
+            "max": [
+                0.9993600845336914,
+                0.9993700385093689,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9990631937980652,
+                -0.9990483522415161,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 466,
+            "type": "VEC3",
+            "max": [
+                0.9990423917770386,
+                0.9994324445724487,
+                0.7424689531326294
+            ],
+            "min": [
+                -0.9993763566017151,
+                -0.999070942401886,
+                -0.5822069048881531
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 466,
+            "type": "VEC2",
+            "max": [
+                0.9912109375,
+                0.9926567077636719
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 466,
+            "type": "VEC2",
+            "max": [
+                0.9892578125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 1464,
+            "type": "SCALAR",
+            "max": [
+                465
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 30088,
+            "uri": "Bistro_Research_Exterior_Paris_Ashtray_01_mesh___9__4093.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 5592,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5592,
+            "byteLength": 5592,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 11184,
+            "byteLength": 5592,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 16776,
+            "byteLength": 3728,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 20504,
+            "byteLength": 3728,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 24232,
+            "byteLength": 5856,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Ashtray_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Ashtray_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Ashtray_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Ashtray",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Ashtray_01_mesh___9__4093",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Ashtray_01_mesh___9__4093",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

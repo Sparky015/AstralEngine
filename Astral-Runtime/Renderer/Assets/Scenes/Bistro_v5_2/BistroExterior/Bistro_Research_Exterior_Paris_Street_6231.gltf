@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 224,
+            "type": "VEC3",
+            "max": [
+                2020.9295654296875,
+                3078.839111328125,
+                19.42865753173828
+            ],
+            "min": [
+                -118.03459167480469,
+                -1721.2894287109375,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 224,
+            "type": "VEC3",
+            "max": [
+                0.0513121522963047,
+                0.05131203308701515,
+                0.9999843835830688
+            ],
+            "min": [
+                -0.05129605159163475,
+                -0.05130575969815254,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 224,
+            "type": "VEC3",
+            "max": [
+                0.8771302103996277,
+                -0.4797004163265228,
+                0.06715386360883713
+            ],
+            "min": [
+                -0.3594690263271332,
+                -0.9645116329193115,
+                -0.05489898845553398
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 224,
+            "type": "VEC2",
+            "max": [
+                -3.673828125,
+                8.9296875
+            ],
+            "min": [
+                -8.046875,
+                -7.6640625
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 224,
+            "type": "VEC2",
+            "max": [
+                0.98681640625,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 378,
+            "type": "SCALAR",
+            "max": [
+                223
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 13160,
+            "uri": "Bistro_Research_Exterior_Paris_Street_6231.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 2688,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2688,
+            "byteLength": 2688,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5376,
+            "byteLength": 2688,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 8064,
+            "byteLength": 1792,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 9856,
+            "byteLength": 1792,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 11648,
+            "byteLength": 1512,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Pavement_Cobble_Leaves_BLENDSHADER_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Cobble_Leaves_BLENDSHADER_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Cobble_Leaves_BLENDSHADER_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Pavement_Cobble_Leaves_BLENDSHADER",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Street_6231",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Street_6231",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

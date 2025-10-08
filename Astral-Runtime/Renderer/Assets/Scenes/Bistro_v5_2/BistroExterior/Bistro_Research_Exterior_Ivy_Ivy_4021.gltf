@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17964,
+            "type": "VEC3",
+            "max": [
+                1010.0841064453125,
+                -788.7174682617188,
+                1129.5438232421875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -1495.8387451171875,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17964,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.9997386932373047,
+                0.9999219179153442
+            ],
+            "min": [
+                -0.9995543360710144,
+                -0.9999843835830688,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17964,
+            "type": "VEC3",
+            "max": [
+                0.9999331831932068,
+                0.9994373321533203,
+                0.9999904632568359
+            ],
+            "min": [
+                -0.9999922513961792,
+                -0.9996617436408997,
+                -0.9999902844429016
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17964,
+            "type": "VEC2",
+            "max": [
+                1.0,
+                78.0
+            ],
+            "min": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17964,
+            "type": "VEC2",
+            "max": [
+                0.97802734375,
+                0.9921913146972656
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 75090,
+            "type": "SCALAR",
+            "max": [
+                17963
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1234488,
+            "uri": "Bistro_Research_Exterior_Ivy_Ivy_4021.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 215568,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 215568,
+            "byteLength": 215568,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 431136,
+            "byteLength": 215568,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 646704,
+            "byteLength": 143712,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 790416,
+            "byteLength": 143712,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 934128,
+            "byteLength": 300360,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Ivy_branches_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Ivy_branches_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Ivy_branches_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Ivy_branches",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Ivy_Ivy_4021",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Ivy_Ivy_4021",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

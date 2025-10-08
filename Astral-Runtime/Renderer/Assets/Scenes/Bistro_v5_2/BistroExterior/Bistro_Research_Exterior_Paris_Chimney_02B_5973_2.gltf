@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1375,
+            "type": "VEC3",
+            "max": [
+                1240.3421630859375,
+                225.52525329589844,
+                1948.5198974609375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1375,
+            "type": "VEC3",
+            "max": [
+                0.999796986579895,
+                0.9856752157211304,
+                0.9931195378303528
+            ],
+            "min": [
+                -0.9998001456260681,
+                -0.9852215051651001,
+                -0.47585079073905945
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1375,
+            "type": "VEC3",
+            "max": [
+                0.9816114902496338,
+                0.9900739789009094,
+                0.9997747540473938
+            ],
+            "min": [
+                -0.9904170036315918,
+                -0.9912782311439514,
+                -0.8212538957595825
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1375,
+            "type": "VEC2",
+            "max": [
+                1.001953125,
+                2.0048828125
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1375,
+            "type": "VEC2",
+            "max": [
+                0.98193359375,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 3888,
+            "type": "SCALAR",
+            "max": [
+                1374
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 87052,
+            "uri": "Bistro_Research_Exterior_Paris_Chimney_02B_5973_2.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 16500,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 16500,
+            "byteLength": 16500,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 33000,
+            "byteLength": 16500,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 49500,
+            "byteLength": 11000,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 60500,
+            "byteLength": 11000,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 71500,
+            "byteLength": 15552,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Chimneys_Metal_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Chimneys_Metal_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Chimneys_Metal_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Chimneys_Metal",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Chimney_02B_5973",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Chimney_02B_5973",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

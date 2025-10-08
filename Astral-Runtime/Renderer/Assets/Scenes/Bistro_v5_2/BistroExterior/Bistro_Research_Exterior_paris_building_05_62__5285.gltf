@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2124,
+            "type": "VEC3",
+            "max": [
+                2946.533203125,
+                -1174.384033203125,
+                397.152099609375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -1255.5594482421875,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2124,
+            "type": "VEC3",
+            "max": [
+                0.9993600845336914,
+                0.9986953735351563,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9915928840637207,
+                -0.9999843835830688,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2124,
+            "type": "VEC3",
+            "max": [
+                0.9965729713439941,
+                0.9914605617523193,
+                0.999992311000824
+            ],
+            "min": [
+                -0.9997075200080872,
+                -0.9912399053573608,
+                -0.9999924302101135
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2124,
+            "type": "VEC2",
+            "max": [
+                0.99853515625,
+                0.9977798461914063
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2124,
+            "type": "VEC2",
+            "max": [
+                0.98876953125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 6060,
+            "type": "SCALAR",
+            "max": [
+                2123
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 134688,
+            "uri": "Bistro_Research_Exterior_paris_building_05_62__5285.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 25488,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 25488,
+            "byteLength": 25488,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 50976,
+            "byteLength": 25488,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 76464,
+            "byteLength": 16992,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 93456,
+            "byteLength": 16992,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 110448,
+            "byteLength": 24240,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\MASTER_Doors_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\MASTER_Doors_Normal.dds"
+        },
+        {
+            "uri": "Textures\\MASTER_Doors_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "MASTER_Doors",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_paris_building_05_62__5285",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_paris_building_05_62__5285",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

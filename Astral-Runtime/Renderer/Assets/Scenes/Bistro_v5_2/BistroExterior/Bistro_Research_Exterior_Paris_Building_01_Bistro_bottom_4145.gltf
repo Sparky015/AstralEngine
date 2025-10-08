@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 94,
+            "type": "VEC3",
+            "max": [
+                189.39710998535156,
+                -164.83798217773438,
+                268.3894958496094
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -175.51296997070313,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 94,
+            "type": "VEC3",
+            "max": [
+                0.9986746907234192,
+                0.9883189797401428,
+                -0.0038836486637592316
+            ],
+            "min": [
+                -0.9982666969299316,
+                -0.9840513467788696,
+                -0.003956652246415615
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 94,
+            "type": "VEC3",
+            "max": [
+                0.0039422172121703625,
+                0.0038608196191489697,
+                0.9999924898147583
+            ],
+            "min": [
+                -0.003907978534698486,
+                -0.003888550214469433,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 94,
+            "type": "VEC2",
+            "max": [
+                0.646484375,
+                0.728759765625
+            ],
+            "min": [
+                -0.42724609375,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 94,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 228,
+            "type": "SCALAR",
+            "max": [
+                93
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 5800,
+            "uri": "Bistro_Research_Exterior_Paris_Building_01_Bistro_bottom_4145.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 1128,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1128,
+            "byteLength": 1128,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2256,
+            "byteLength": 1128,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 3384,
+            "byteLength": 752,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4136,
+            "byteLength": 752,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4888,
+            "byteLength": 912,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\MASTER_Wood_Painted3_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\MASTER_Wood_Painted3_Normal.dds"
+        },
+        {
+            "uri": "Textures\\MASTER_Wood_Painted3_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "MASTER_Wood_Painted3",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Building_01_Bistro_bottom_4145",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Building_01_Bistro_bottom_4145",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

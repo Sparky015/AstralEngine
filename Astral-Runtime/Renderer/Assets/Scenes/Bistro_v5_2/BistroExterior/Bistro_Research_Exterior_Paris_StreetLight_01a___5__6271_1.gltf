@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 49,
+            "type": "VEC3",
+            "max": [
+                -172.91790771484375,
+                -1001.3853149414063,
+                443.2437744140625
+            ],
+            "min": [
+                -178.31051635742188,
+                -1006.7780151367188,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 49,
+            "type": "VEC3",
+            "max": [
+                0.9478864073753357,
+                0.9486760497093201,
+                0.9193270802497864
+            ],
+            "min": [
+                -0.9463136196136475,
+                -0.9454907178878784,
+                -0.003943584859371185
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 49,
+            "type": "VEC3",
+            "max": [
+                0.9468540549278259,
+                0.9691296219825745,
+                0.909254789352417
+            ],
+            "min": [
+                -0.9488793611526489,
+                -0.9463208913803101,
+                -0.8297412991523743
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 49,
+            "type": "VEC2",
+            "max": [
+                0.95849609375,
+                0.980499267578125
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 49,
+            "type": "VEC2",
+            "max": [
+                0.171142578125,
+                0.7265625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 192,
+            "type": "SCALAR",
+            "max": [
+                48
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 3316,
+            "uri": "Bistro_Research_Exterior_Paris_StreetLight_01a___5__6271_1.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 588,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 588,
+            "byteLength": 588,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1176,
+            "byteLength": 588,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1764,
+            "byteLength": 392,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2156,
+            "byteLength": 392,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2548,
+            "byteLength": 768,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Paris_StringLights_01_White_Color_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Paris_StringLights_01_White_Color_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Paris_StringLights_01_White_Color_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Paris_StringLights_01_White_Color",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_StreetLight_01a___5__6271",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_StreetLight_01a___5__6271",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

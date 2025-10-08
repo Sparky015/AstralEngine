@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 556,
+            "type": "VEC3",
+            "max": [
+                -2265.640380859375,
+                974.9553833007813,
+                545.3281860351563
+            ],
+            "min": [
+                -2316.187255859375,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 556,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.988318920135498,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9430553317070007,
+                -0.8789410591125488,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 556,
+            "type": "VEC3",
+            "max": [
+                0.8600531816482544,
+                0.9920375347137451,
+                0.9999924898147583
+            ],
+            "min": [
+                -0.9746373295783997,
+                -0.9072819948196411,
+                -0.998515248298645
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 556,
+            "type": "VEC2",
+            "max": [
+                2.556640625,
+                0.9903411865234375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -0.00390625
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 556,
+            "type": "VEC2",
+            "max": [
+                0.9873046875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 978,
+            "type": "SCALAR",
+            "max": [
+                555
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 32824,
+            "uri": "Bistro_Research_Exterior_Paris_ShopSign_01A1_6155.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 6672,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 6672,
+            "byteLength": 6672,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 13344,
+            "byteLength": 6672,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 20016,
+            "byteLength": 4448,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 24464,
+            "byteLength": 4448,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 28912,
+            "byteLength": 3912,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Banner_Metal_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Banner_Metal_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Banner_Metal_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Banner_Metal",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ShopSign_01A1_6155",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ShopSign_01A1_6155",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}
