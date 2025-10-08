@@ -52,6 +52,8 @@ namespace Astral {
 
     void RenderingSystem::SubmitMeshComponents()
     {
+        PROFILE_SCOPE("RenderingSystem::SubmitMeshComponents")
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         ECS::ComponentView<MeshComponent>& meshDisplay = ecs.GetView<MeshComponent>();
@@ -77,6 +79,8 @@ namespace Astral {
 
     void RenderingSystem::SubmitSpriteComponents()
     {
+        PROFILE_SCOPE("RenderingSystem::SubmitSpriteComponents")
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
 
         ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
@@ -102,6 +106,8 @@ namespace Astral {
 
     void RenderingSystem::GetLightComponents(std::vector<Light>& outLights)
     {
+        PROFILE_SCOPE("RenderingSystem::GetLightComponents")
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
         const ECS::ComponentView<PointLightComponent>& pointLightDisplay = ecs.GetView<PointLightComponent>();

@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include <fstream>
-
 #include "Core/FixedIntegerTypes.h"
+
+#include <fstream>
+#include <mutex>
 
 namespace Astral {
 
