@@ -39,8 +39,6 @@ namespace Astral {
 
     void SceneRendererImpl::Init()
     {
-        PROFILE_SCOPE("SceneRenderer::Init")
-
         m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeWindowImages(event.Width, event.Height); }};
         m_WindowResizedListener.StartListening();
 
