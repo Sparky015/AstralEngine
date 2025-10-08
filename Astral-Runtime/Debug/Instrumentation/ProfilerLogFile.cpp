@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include <thread>
+#include <unordered_map>
 
 
 namespace Astral {
