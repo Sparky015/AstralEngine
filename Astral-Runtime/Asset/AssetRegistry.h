@@ -35,10 +35,6 @@ namespace Astral {
 
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
-        std::future<Ref<AssetType>> CreateAssetAsync(const std::filesystem::path& filePath);
-
-        template <typename AssetType>
-            requires std::is_base_of_v<Asset, AssetType>
         void RegisterAsset(Ref<AssetType> alreadyLoadedAsset, const std::filesystem::path& filePath);
 
         template <typename AssetType>

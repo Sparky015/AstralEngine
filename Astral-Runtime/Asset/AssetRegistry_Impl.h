@@ -71,16 +71,6 @@ namespace Astral {
         return GetAsset<AssetType>(assetID);
     }
 
-    template<typename AssetType>
-        requires std::is_base_of_v<Asset, AssetType>
-    std::future<Ref<AssetType>> AssetRegistry::CreateAssetAsync(const std::filesystem::path& filePath)
-    {
-        ThreadPool& threadPool = Engine::Get().GetJobManager().GetThreadPool();
-        return threadPool.SubmitTaskWithResult<Ref<AssetType>>([this, filePath] {
-            return CreateAsset<AssetType>(filePath);
-        }, 1.0f);
-    }
-
 
     template <typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
