@@ -113,13 +113,6 @@ and running, but in the future, I want to implement sparse sets into the ECS for
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
-
-### Next Feature (In-Progress)
-
-#### Multithreaded Asset System
-
-Currently researching and planning for a multithreaded asset system as the first application of the ThreadPool class.
-
 ----
 
 
