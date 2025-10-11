@@ -27,6 +27,8 @@ namespace Astral {
 
     void CameraControllerComponent()
     {
+        PROFILE_SCOPE("CameraControllerComponent")
+
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
         Camera& primaryCamera = scene.PrimaryCamera;
 

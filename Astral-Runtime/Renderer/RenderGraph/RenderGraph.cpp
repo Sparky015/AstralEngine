@@ -17,6 +17,8 @@ namespace Astral {
 
     void RenderGraph::BeginBuildingRenderGraph(uint32 maxFramesInFlight, const std::string_view& debugName)
     {
+        PROFILE_SCOPE("RenderGraph::BeginBuildingRenderGraph")
+
         m_DebugName = debugName;
         m_MaxFramesInFlight = maxFramesInFlight;
 
@@ -88,6 +90,8 @@ namespace Astral {
 
     void RenderGraph::EndBuildingRenderGraph()
     {
+        PROFILE_SCOPE("RenderGraph::EndBuildingRenderGraph")
+
         BuildRenderGraph();
         SolveRenderPassExecutionOrder();
         CompileRenderPassBarriers();
@@ -98,6 +102,8 @@ namespace Astral {
 
     void RenderGraph::Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex)
     {
+        PROFILE_SCOPE("RenderGraph::Execute")
+
         UpdateRenderGraphResourcesHold();
         m_ExecutionContext.CommandBuffer = commandBuffer;
 
@@ -173,6 +179,8 @@ namespace Astral {
 
     void RenderGraph::ResizeResources(const std::vector<TextureHandle>& offscreenTargets)
     {
+        PROFILE_SCOPE("RenderGraph::ResizeResources")
+
         m_OffscreenOutputTargets = offscreenTargets;
         ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
         m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
@@ -186,6 +194,8 @@ namespace Astral {
 
     void RenderGraph::ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets)
     {
+        PROFILE_SCOPE("RenderGraph::ResizeResources")
+
         std::vector<TextureHandle> renderTargetTextures;
 
         for (RenderTargetHandle renderTarget : swapchainTargets)
@@ -207,6 +217,8 @@ namespace Astral {
 
     void RenderGraph::BuildRenderGraph()
     {
+        PROFILE_SCOPE("RenderGraph::BuildRenderGraph")
+
         // Converting each external attachment to all render passes to point to the render graph owned render pass instances
         for (size_t renderPassIndex = 0; renderPassIndex < m_Passes.size(); renderPassIndex++)
         {
@@ -290,6 +302,8 @@ namespace Astral {
 
     void RenderGraph::SolveRenderPassExecutionOrder()
     {
+        PROFILE_SCOPE("RenderGraph::SolveRenderPassExecutionOrder")
+
         // NOTE: For this render graph, number of out degrees equals number of dependencies
 
         // First a DFS to find all the nodes with 0 out degrees
@@ -350,6 +364,8 @@ namespace Astral {
 
     void RenderGraph::CompileRenderPassBarriers()
     {
+        PROFILE_SCOPE("RenderGraph::CompileRenderPassBarriers")
+
         // Make the producer pass' final layout the consuming pass' optimal layout
         for (PassIndex consumingPassIndex : m_ExecutionOrder)
         {
@@ -417,6 +433,7 @@ namespace Astral {
 
     void RenderGraph::BuildRenderPassObjects()
     {
+        PROFILE_SCOPE("RenderGraph::BuildRenderPassObjects")
 
         // ----------------------------------------------------------------------------------------------------------------------------------
         // Pass One: Define the attachments for all the render passes ahead of building the render pass objects
@@ -590,6 +607,8 @@ namespace Astral {
 
     void RenderGraph::BuildRenderPassResources()
     {
+        PROFILE_SCOPE("RenderGraph::BuildRenderPassResources")
+
         // ----------------------------------------------------------------------------------------------------------------------------------
         // Build the textures, framebuffers, and descriptor sets for each render pass
 
@@ -759,6 +778,8 @@ namespace Astral {
 
     void RenderGraph::AddRenderGraphResourcesToHold()
     {
+        PROFILE_SCOPE("RenderGraph::AddRenderGraphResourcesToHold")
+
         ASSERT(m_RenderPassResourcesHold.size() < 20, "The render graph resources hold is not being cleared correctly!")
 
         m_RenderPassesHold.push_back(m_RenderPasses);
@@ -769,6 +790,8 @@ namespace Astral {
 
     void RenderGraph::UpdateRenderGraphResourcesHold()
     {
+        PROFILE_SCOPE("RenderGraph::UpdateRenderGraphResourcesHold")
+
         std::vector<uint32> indicesToRemove;
 
         // Queueing indices to remove because if it was removed immediately, resources would be

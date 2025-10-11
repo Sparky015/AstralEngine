@@ -1,0 +1,11 @@
+Shader Model: PBR
+Shader: Shaders/ForwardLightingPassUnpacked.frag
+Texture Convention: AO-Roughness-Metallic Packed
+Normals Convention: DirectX
+Is Alpha Blended: false
+Use Normal Map: true
+Texture Maps:
+  - Base Color: Scenes/Bistro_v5_2/Textures/Shopsign_Pharmacy_Emissive_BaseColor.dds
+  - AO-Roughness-Metallic: Scenes/Bistro_v5_2/Textures/Shopsign_Pharmacy_Emissive_Specular.dds
+  - Emission: Scenes/Bistro_v5_2/Textures/Shopsign_Pharmacy_Emissive_Emissive.dds
+  - Normals: Scenes/Bistro_v5_2/Textures/Shopsign_Pharmacy_Emissive_Normal.dds

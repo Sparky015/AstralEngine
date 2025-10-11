@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5827,
+            "type": "VEC3",
+            "max": [
+                3525.283447265625,
+                -2862.0244140625,
+                168.52252197265625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -3112.832275390625,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5827,
+            "type": "VEC3",
+            "max": [
+                0.9989860653877258,
+                0.9984504580497742,
+                0.9986746907234192
+            ],
+            "min": [
+                -0.9993087649345398,
+                -0.9984258413314819,
+                -0.8327748775482178
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5827,
+            "type": "VEC3",
+            "max": [
+                0.9999922513961792,
+                0.9999889731407166,
+                0.5270069241523743
+            ],
+            "min": [
+                -0.9999924302101135,
+                -0.9999890923500061,
+                -0.6769053339958191
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5827,
+            "type": "VEC2",
+            "max": [
+                1.001953125,
+                1.001434326171875
+            ],
+            "min": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5827,
+            "type": "VEC2",
+            "max": [
+                0.98828125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 5895,
+            "type": "SCALAR",
+            "max": [
+                5826
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 326584,
+            "uri": "Bistro_Research_Exterior_bux_hedge_cylinder_low_4007.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 69924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 69924,
+            "byteLength": 69924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 139848,
+            "byteLength": 69924,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 209772,
+            "byteLength": 46616,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 256388,
+            "byteLength": 46616,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 303004,
+            "byteLength": 23580,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Bux_Hedges46_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Bux_Hedges46_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Bux_Hedges46_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Bux_Hedges46.DoubleSided",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_bux_hedge_cylinder_low_4007",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_bux_hedge_cylinder_low_4007",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

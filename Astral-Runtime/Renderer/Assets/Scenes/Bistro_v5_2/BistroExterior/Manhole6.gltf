@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9,
+            "type": "VEC3",
+            "max": [
+                41.43790817260742,
+                41.890846252441406,
+                22.25788116455078
+            ],
+            "min": [
+                -41.43787384033203,
+                -40.98497772216797,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9,
+            "type": "VEC3",
+            "max": [
+                -0.00392144825309515,
+                0.00392144825309515,
+                0.999984622001648
+            ],
+            "min": [
+                -0.00392144825309515,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9,
+            "type": "VEC3",
+            "max": [
+                0.008734875358641148,
+                0.9999577403068542,
+                -0.0038870759308338165
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                -0.0038886729162186384
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9,
+            "type": "VEC2",
+            "max": [
+                0.8486328125,
+                0.84912109375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9,
+            "type": "VEC2",
+            "max": [
+                0.8486328125,
+                0.84912109375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 24,
+            "type": "SCALAR",
+            "max": [
+                8
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 564,
+            "uri": "Manhole6.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 108,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 108,
+            "byteLength": 108,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 216,
+            "byteLength": 108,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 324,
+            "byteLength": 72,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 396,
+            "byteLength": 72,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 468,
+            "byteLength": 96,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Pavement_Manhole_Cover_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Manhole_Cover_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Pavement_Manhole_Cover_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Pavement_Manhole_Cover",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Manhole6",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Manhole6",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

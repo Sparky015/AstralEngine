@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 843,
+            "type": "VEC3",
+            "max": [
+                6.741506099700928,
+                6.738424301147461,
+                -0.008775348775088787
+            ],
+            "min": [
+                -6.739035129547119,
+                -6.742095947265625,
+                -64.29133605957031
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 843,
+            "type": "VEC3",
+            "max": [
+                0.9998594522476196,
+                0.999984622001648,
+                0.9998594522476196
+            ],
+            "min": [
+                -0.999984622001648,
+                -0.9998594522476196,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 843,
+            "type": "VEC3",
+            "max": [
+                0.9999923706054688,
+                0.9999923706054688,
+                0.999992311000824
+            ],
+            "min": [
+                -0.999992311000824,
+                -0.9999923706054688,
+                -0.9999923706054688
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 843,
+            "type": "VEC2",
+            "max": [
+                1.0537109375,
+                0.9999766945838928
+            ],
+            "min": [
+                -0.05303955078125,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 843,
+            "type": "VEC2",
+            "max": [
+                0.97998046875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 3516,
+            "type": "SCALAR",
+            "max": [
+                842
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 57900,
+            "uri": "Lantern_Wind_23.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 10116,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 10116,
+            "byteLength": 10116,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 20232,
+            "byteLength": 10116,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 30348,
+            "byteLength": 6744,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 37092,
+            "byteLength": 6744,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 43836,
+            "byteLength": 14064,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\LanternEmissive_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\LanternEmissive_Normal.dds"
+        },
+        {
+            "uri": "Textures\\LanternEmissive_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "LanternEmissive",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Lantern_Wind_23",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Lantern_Wind_23",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

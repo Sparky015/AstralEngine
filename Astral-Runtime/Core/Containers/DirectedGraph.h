@@ -19,6 +19,12 @@
 
 namespace Astral {
 
+    /**
+     * @class DirectedGraph
+     * @brief Defines a directed graph data structure
+     * @details Uses on an adjacency list to store edges
+     * @note This is not a complete graph data structure implementation. It contains just enough for building a render graph.
+     */
     template <typename DataType>
     class DirectedGraph
     {
@@ -27,15 +33,17 @@ namespace Astral {
         using Vertex = Vertex<DataType>;
         using Edge = Edge<DataType>;
 
-        Vertex AddVertex(DataType vertexData)
-        {
-            m_VerticeData.push_back(vertexData);
-            VertexIndex vertexIndex = m_Vertices.size();
-            Vertex vertex = Vertex(this, vertexIndex, vertexData);
-            m_Vertices[vertex] = std::vector<Edge>();
-            return vertex;
-        }
+        /**
+         * @brief Defines a directed graph data structure
+         * @param vertexData The data to associate with the vertex
+         * @return A vertex handle (owned by this graph)
+         */
+        Vertex AddVertex(DataType vertexData);
 
+        /**
+         * @brief Gets the number of vertices in the graph
+         * @return The number of vertices in the graph
+         */
         uint32 NumOfVertices() const { return m_Vertices.size(); }
 
     private:
@@ -49,16 +57,13 @@ namespace Astral {
 
 
     template<typename DataType>
-    void Vertex<DataType>::AddEdge(Vertex& vertex, const DataType& edgeData)
+    typename DirectedGraph<DataType>::Vertex DirectedGraph<DataType>::AddVertex(DataType vertexData)
     {
-        Edge edge = Edge<DataType>(m_OwningGraph);
-        edge.SetLeftVertex(*this);
-        edge.SetRightVertex(vertex);
-        edge.SetData(edgeData);
-
-        if (std::ranges::find(m_OwningGraph->m_Vertices[*this], edge) != std::ranges::end(m_OwningGraph->m_Vertices[*this])) { return; }
-
-        m_OwningGraph->m_Vertices[*this].push_back(edge);
+        m_VerticeData.push_back(vertexData);
+        VertexIndex vertexIndex = m_Vertices.size();
+        Vertex vertex = Vertex(this, vertexIndex, vertexData);
+        m_Vertices[vertex] = std::vector<Edge>();
+        return vertex;
     }
 
 }

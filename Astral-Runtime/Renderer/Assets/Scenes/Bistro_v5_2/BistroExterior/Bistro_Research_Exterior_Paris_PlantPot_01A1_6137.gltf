@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 950,
+            "type": "VEC3",
+            "max": [
+                -201.26345825195313,
+                237.57032775878906,
+                69.17630004882813
+            ],
+            "min": [
+                -263.16009521484375,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 950,
+            "type": "VEC3",
+            "max": [
+                0.9997345209121704,
+                0.9998001456260681,
+                0.9999843835830688
+            ],
+            "min": [
+                -0.9993701577186584,
+                -0.9984880089759827,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 950,
+            "type": "VEC3",
+            "max": [
+                0.9995017647743225,
+                0.9980548620223999,
+                0.9998533725738525
+            ],
+            "min": [
+                -0.9995080232620239,
+                -0.9994077086448669,
+                -0.999751627445221
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 950,
+            "type": "VEC2",
+            "max": [
+                0.9931640625,
+                0.9931297302246094
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 950,
+            "type": "VEC2",
+            "max": [
+                0.98681640625,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 3690,
+            "type": "SCALAR",
+            "max": [
+                949
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 64160,
+            "uri": "Bistro_Research_Exterior_Paris_PlantPot_01A1_6137.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 11400,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 11400,
+            "byteLength": 11400,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 22800,
+            "byteLength": 11400,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 34200,
+            "byteLength": 7600,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 41800,
+            "byteLength": 7600,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 49400,
+            "byteLength": 14760,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Plantpots_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Plantpots_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Plantpots_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Plantpots",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_PlantPot_01A1_6137",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_PlantPot_01A1_6137",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

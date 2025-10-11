@@ -1,0 +1,258 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 408,
+            "type": "VEC3",
+            "max": [
+                3.5518527030944824,
+                454.7587585449219,
+                -23.381772994995117
+            ],
+            "min": [
+                -3.7625908851623535,
+                -438.384521484375,
+                -71.52314758300781
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 408,
+            "type": "VEC3",
+            "max": [
+                0.9850260019302368,
+                0.9946756362915039,
+                0.9000762701034546
+            ],
+            "min": [
+                -0.984298586845398,
+                -0.9949609637260437,
+                -0.996253490447998
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 408,
+            "type": "VEC3",
+            "max": [
+                0.876943826675415,
+                0.9782888889312744,
+                0.998431921005249
+            ],
+            "min": [
+                -0.3573416471481323,
+                -0.9439630508422852,
+                -0.9979565143585205
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 408,
+            "type": "VEC2",
+            "max": [
+                0.9912109375,
+                0.31982421875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 408,
+            "type": "VEC2",
+            "max": [
+                0.93994140625,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 2070,
+            "type": "SCALAR",
+            "max": [
+                407
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 29496,
+            "uri": "StringLight_Wind_15_1.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 4896,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4896,
+            "byteLength": 4896,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 9792,
+            "byteLength": 4896,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 14688,
+            "byteLength": 3264,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 17952,
+            "byteLength": 3264,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 21216,
+            "byteLength": 8280,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Paris_StringLights_01_Green_Color_Emissive_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Paris_StringLights_01_Green_Color_Emissive_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Paris_StringLights_01_Green_Color_Emissive_Emissive.dds"
+        },
+        {
+            "uri": "Textures\\Paris_StringLights_01_Green_Color_Emissive_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Paris_StringLights_01_Green_Color_Emissive",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "emissiveTexture": {
+                "index": 2
+            },
+            "emissiveFactor": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 3
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "StringLight_Wind_15",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "StringLight_Wind_15",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        },
+        {
+            "source": 3,
+            "sampler": 3
+        }
+    ],
+    "scene": 0
+}

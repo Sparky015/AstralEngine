@@ -1,5 +1,28 @@
 var searchData=
 [
-  ['trackallocation_0',['TrackAllocation',['../dc/d21/class_astral_1_1_memory_metrics.html#a4f86c78cb8e08c3d6c88bbc6e6ed918b',1,'Astral::MemoryMetrics']]],
-  ['trackdeallocation_1',['TrackDeallocation',['../dc/d21/class_astral_1_1_memory_metrics.html#a639246b6418468679dcd96de3ab13282',1,'Astral::MemoryMetrics']]]
+  ['selectfile_0',['SelectFile',['../d5/d9b/namespace_astral.html#a8f6ec56a67f7e732eae28b0377ff5e8f',1,'Astral']]],
+  ['setdata_1',['SetData',['../d7/d97/struct_astral_1_1_edge.html#a98d244082afbad14610dfe01af717732',1,'Astral::Edge::SetData()'],['../d2/d96/class_astral_1_1_vertex.html#aee7cba0e136ee1366d5696dfdf843c89',1,'Astral::Vertex::SetData()']]],
+  ['setfarplane_2',['SetFarPlane',['../d4/d4b/class_astral_1_1_camera.html#a115b9a33347627adda51ec0ef1c1d43a',1,'Astral::Camera']]],
+  ['setleftvertex_3',['SetLeftVertex',['../d7/d97/struct_astral_1_1_edge.html#a2cd624f59250ab61760d9f12e55e916e',1,'Astral::Edge']]],
+  ['setmemoryregionaccess_4',['SetMemoryRegionAccess',['../d7/d15/_allocator_utils_8h.html#a45761e98cdcce1f63b183273b456e13d',1,'Astral::AllocatorUtils']]],
+  ['setnearplane_5',['SetNearPlane',['../d4/d4b/class_astral_1_1_camera.html#a99048700343179531a7d2d0ad903fee9',1,'Astral::Camera']]],
+  ['setoutputattachment_6',['SetOutputAttachment',['../d1/d89/class_astral_1_1_render_graph.html#ab1c27eeabfc69188b8c614fe5e11d774',1,'Astral::RenderGraph::SetOutputAttachment(const RenderGraphPass &amp;pass, std::string_view attachmentName, const std::vector&lt; TextureHandle &gt; &amp;offscreenTargets)'],['../d1/d89/class_astral_1_1_render_graph.html#a77168ad09a07dc5e6cfa25ca4da7fe26',1,'Astral::RenderGraph::SetOutputAttachment(const RenderGraphPass &amp;pass, std::string_view attachmentName, const std::vector&lt; RenderTargetHandle &gt; &amp;swapchainTargets)']]],
+  ['setpixel_7',['SetPixel',['../da/d3e/class_astral_1_1_bitmap.html#a4d3943caf5f0f2bb030b4dce4289ef74',1,'Astral::Bitmap']]],
+  ['setposition_8',['SetPosition',['../d4/d4b/class_astral_1_1_camera.html#a5c6fe978890f6c265b8681743509950d',1,'Astral::Camera']]],
+  ['setrenderersettings_9',['SetRendererSettings',['../dd/dd1/class_astral_1_1_scene_renderer.html#ae425c812f336adf74e9623e04ef2f107',1,'Astral::SceneRenderer::SetRendererSettings()'],['../d4/d53/class_astral_1_1_scene_renderer_impl.html#aa3ebb64a445ef3534c5a7da4f48e1115',1,'Astral::SceneRendererImpl::SetRendererSettings()']]],
+  ['setrenderertype_10',['SetRendererType',['../dd/dd1/class_astral_1_1_scene_renderer.html#aa222f838c0893dd2314b3c5812cc71e9',1,'Astral::SceneRenderer']]],
+  ['setrightvertex_11',['SetRightVertex',['../d7/d97/struct_astral_1_1_edge.html#a88e95cf4e6721e6800d8e04571db1c45',1,'Astral::Edge']]],
+  ['setrotation_12',['SetRotation',['../d4/d4b/class_astral_1_1_camera.html#aba9b343fc86e95157d5e19998c1cf203',1,'Astral::Camera']]],
+  ['setsyncprimatives_13',['SetSyncPrimatives',['../d7/dd1/class_astral_1_1_vulkan_render_target.html#a1cfaffbb12d6028afff94f54086982af',1,'Astral::VulkanRenderTarget::SetSyncPrimatives()'],['../d0/d07/class_astral_1_1_render_target.html#a7326d1fe5e42ba9c639c0cab3c0fd0de',1,'Astral::RenderTarget::SetSyncPrimatives()']]],
+  ['setzoom_14',['SetZoom',['../d4/d4b/class_astral_1_1_camera.html#a39b1e333ff3dd9d3f994a418ab573374',1,'Astral::Camera']]],
+  ['shadermodeltostring_15',['ShaderModelToString',['../d5/d9b/namespace_astral.html#a4ca9809f8df4423091d29ed7d3adfc22',1,'Astral']]],
+  ['showdatapointinfopanel_16',['ShowDataPointInfoPanel',['../d5/d9b/namespace_astral.html#abb3f3449e4126d5435b267ad235303b8',1,'Astral']]],
+  ['showmemorydebugwindow_17',['ShowMemoryDebugWindow',['../da/de4/class_astral_1_1_memory_debug_window.html#aea47a2a31440c205d140d7470d015a99',1,'Astral::MemoryDebugWindow']]],
+  ['shutdown_18',['Shutdown',['../dc/d21/class_astral_1_1_memory_metrics.html#a5ddff5713c01a63bb4488182c3967237',1,'Astral::MemoryMetrics::Shutdown()'],['../d9/d89/class_astral_1_1_memory_tracker.html#a9f92959cfd4c908ee523f3835dbb595a',1,'Astral::MemoryTracker::Shutdown()'],['../db/d4f/class_astral_1_1_console_log_file.html#ab1da6a2b203a3b1501e630de8ae993b2',1,'Astral::ConsoleLogFile::Shutdown()'],['../d3/d91/class_astral_1_1_e_c_s.html#a9ac300bf676820e875376c1d71726499',1,'Astral::ECS::Shutdown()'],['../d9/d15/class_astral_1_1_renderer_manager.html#a1bc5793583b90730530be80abfc99b4a',1,'Astral::RendererManager::Shutdown()'],['../dd/dd1/class_astral_1_1_scene_renderer.html#a04bf42d14fd3faba0cacd42cbe281ce7',1,'Astral::SceneRenderer::Shutdown()'],['../d4/d53/class_astral_1_1_scene_renderer_impl.html#a138009d4480915160c97361efc5a8b4a',1,'Astral::SceneRendererImpl::Shutdown()']]],
+  ['startlistening_19',['StartListening',['../d7/db3/class_astral_1_1_event_listener.html#a3971e1d07c38cab59f281b2c3b7613e1',1,'Astral::EventListener']]],
+  ['stoplistening_20',['StopListening',['../d7/db3/class_astral_1_1_event_listener.html#af5994eac60ffa0a98062f14359e9e3ca',1,'Astral::EventListener']]],
+  ['stringtoshadermodel_21',['StringToShaderModel',['../d5/d9b/namespace_astral.html#ab8d1f6e9569dad8c8a372f7a1b5b93e4',1,'Astral']]],
+  ['stringtotextureconvention_22',['StringToTextureConvention',['../d5/d9b/namespace_astral.html#a8ae2de693ad675b0c7097c45816e4d92',1,'Astral']]],
+  ['submit_23',['Submit',['../dd/dd1/class_astral_1_1_scene_renderer.html#a8b0ee7f3898e0ce5dc8ace18d865dd1a',1,'Astral::SceneRenderer::Submit()'],['../d4/d53/class_astral_1_1_scene_renderer_impl.html#a569b90ec0ffa61d1532ff20f876e9bcb',1,'Astral::SceneRendererImpl::Submit()']]],
+  ['swapbuffers_24',['SwapBuffers',['../d2/ddb/class_astral_1_1_double_buffered_allocator.html#ae591e0ac8fa02e054648c57900fc798c',1,'Astral::DoubleBufferedAllocator']]]
 ];

@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <filesystem>
+#include <future>
 
 #include "Asset.h"
 #include "AssetRegistryStats.h"

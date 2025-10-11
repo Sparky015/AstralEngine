@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1701,
+            "type": "VEC3",
+            "max": [
+                2.0640015602111816,
+                530.2070922851563,
+                0.000018513466784497723
+            ],
+            "min": [
+                -2.3254990577697754,
+                -530.20703125,
+                -73.90433502197266
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1701,
+            "type": "VEC3",
+            "max": [
+                0.9999843835830688,
+                0.9938291907310486,
+                0.9999843835830688
+            ],
+            "min": [
+                -0.999984622001648,
+                -0.9997345209121704,
+                -0.9999231100082397
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1701,
+            "type": "VEC3",
+            "max": [
+                0.9999923706054688,
+                0.9999802708625793,
+                0.9993757009506226
+            ],
+            "min": [
+                -0.9999891519546509,
+                -0.9999920725822449,
+                -0.998294472694397
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1701,
+            "type": "VEC2",
+            "max": [
+                61.15625,
+                0.9983625411987305
+            ],
+            "min": [
+                -37.6875,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1701,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 5604,
+            "type": "SCALAR",
+            "max": [
+                1700
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 110868,
+            "uri": "StringLight_Wind_21.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 20412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 20412,
+            "byteLength": 20412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 40824,
+            "byteLength": 20412,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 61236,
+            "byteLength": 13608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 74844,
+            "byteLength": 13608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 88452,
+            "byteLength": 22416,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Stringlights_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Stringlights_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Stringlights_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Stringlights",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "StringLight_Wind_21",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "StringLight_Wind_21",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

@@ -11,6 +11,10 @@
 
 namespace Astral {
 
+    /**
+     * @struct ViewportResizedEvent
+     * @brief Defines the size of the new viewport to for when the viewport is resized
+     */
     struct ViewportResizedEvent
     {
         uint32 Width;

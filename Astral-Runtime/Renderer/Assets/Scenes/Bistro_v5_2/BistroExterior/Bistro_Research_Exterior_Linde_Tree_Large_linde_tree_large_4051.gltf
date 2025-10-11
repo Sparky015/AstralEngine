@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9232,
+            "type": "VEC3",
+            "max": [
+                4977.76953125,
+                -1851.0718994140625,
+                1337.8896484375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -3219.85400390625,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9232,
+            "type": "VEC3",
+            "max": [
+                0.9999843835830688,
+                0.9998617172241211,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9986953735351563,
+                -0.999609649181366,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9232,
+            "type": "VEC3",
+            "max": [
+                0.999991774559021,
+                0.9995164275169373,
+                0.9998663663864136
+            ],
+            "min": [
+                -0.9999829530715942,
+                -0.99993896484375,
+                -0.9998663663864136
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9232,
+            "type": "VEC2",
+            "max": [
+                4.24609375,
+                6.80078125
+            ],
+            "min": [
+                -1.3759765625,
+                -0.984375
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 9232,
+            "type": "VEC2",
+            "max": [
+                4.24609375,
+                6.80078125
+            ],
+            "min": [
+                -1.3759765625,
+                -0.984375
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 16011,
+            "type": "SCALAR",
+            "max": [
+                9231
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 544108,
+            "uri": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 110784,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 110784,
+            "byteLength": 110784,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 221568,
+            "byteLength": 110784,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 332352,
+            "byteLength": 73856,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 406208,
+            "byteLength": 73856,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 480064,
+            "byteLength": 64044,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Trunk_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Trunk_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Linde_Tree_Large_Trunk_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Linde_Tree_Large_Trunk",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Linde_Tree_Large_linde_tree_large_4051",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

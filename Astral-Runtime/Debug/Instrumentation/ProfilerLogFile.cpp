@@ -4,9 +4,12 @@
 
 #include "ProfilerLogFile.h"
 
-#include <filesystem>
-
 #include "Debug/Utilities/Loggers.h"
+
+#include <filesystem>
+#include <thread>
+#include <unordered_map>
+
 
 namespace Astral {
 
@@ -50,7 +53,16 @@ namespace Astral {
 
     void ProfilerLogFile::WriteProfile(const ProfileResult& profileResult)
     {
+        std::lock_guard lock(m_WriteLock);
+
         std::ofstream& fileStream = GetFileStream();
+
+        static std::unordered_map<size_t, uint32> threadHashToID{};
+        size_t threadHash = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        if (!threadHashToID.contains(threadHash))
+        {
+            threadHashToID[threadHash] = threadHashToID.size();
+        }
 
         if (m_ProfileCount > 0)
         {
@@ -62,7 +74,7 @@ namespace Astral {
         << "\"name\": \"" << profileResult.Name << "\","
         << "\"ph\": \"X\","
         << "\"pid\": 0,"
-        << "\"tid\": 0,"
+        << "\"tid\": " << threadHashToID[threadHash] << ","
         << 	"\"ts\": " << profileResult.StartTimeStamp << ","
         << "\"args\": {"
             << "\"Allocation Count\": " << profileResult.AllocationCount

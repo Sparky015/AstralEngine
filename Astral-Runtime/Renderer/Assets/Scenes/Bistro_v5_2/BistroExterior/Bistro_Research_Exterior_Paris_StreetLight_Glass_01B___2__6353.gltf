@@ -1,0 +1,258 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 76,
+            "type": "VEC3",
+            "max": [
+                -2000.8548583984375,
+                734.8673706054688,
+                413.7490234375
+            ],
+            "min": [
+                -2032.9774169921875,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 76,
+            "type": "VEC3",
+            "max": [
+                0.9930583238601685,
+                0.9931656718254089,
+                0.09081695973873138
+            ],
+            "min": [
+                -0.9927442073822021,
+                -0.9926302433013916,
+                -0.10671094805002213
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 76,
+            "type": "VEC3",
+            "max": [
+                0.9987173676490784,
+                0.9982935190200806,
+                0.012681905180215836
+            ],
+            "min": [
+                -0.9982667565345764,
+                -0.9986973404884338,
+                -0.011958121322095394
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 76,
+            "type": "VEC2",
+            "max": [
+                0.984375,
+                0.9044189453125
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 76,
+            "type": "VEC2",
+            "max": [
+                0.99072265625,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 216,
+            "type": "SCALAR",
+            "max": [
+                75
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 4816,
+            "uri": "Bistro_Research_Exterior_Paris_StreetLight_Glass_01B___2__6353.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 912,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 912,
+            "byteLength": 912,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1824,
+            "byteLength": 912,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2736,
+            "byteLength": 608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 3344,
+            "byteLength": 608,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 3952,
+            "byteLength": 864,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Emissive_StreetLight_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Emissive.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Emissive_StreetLight",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "emissiveTexture": {
+                "index": 2
+            },
+            "emissiveFactor": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 3
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_StreetLight_Glass_01B___2__6353",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_StreetLight_Glass_01B___2__6353",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        },
+        {
+            "source": 3,
+            "sampler": 3
+        }
+    ],
+    "scene": 0
+}

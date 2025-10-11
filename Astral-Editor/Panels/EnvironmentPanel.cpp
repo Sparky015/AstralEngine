@@ -17,6 +17,8 @@ namespace Astral {
 
     void EnvironmentPanel()
     {
+        PROFILE_SCOPE("EnvironmentPanel")
+
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
 
         ImGui::Begin("Environment##EditorEnvironmentPanel");

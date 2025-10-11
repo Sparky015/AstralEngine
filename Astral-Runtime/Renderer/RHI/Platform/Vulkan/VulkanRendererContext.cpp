@@ -37,7 +37,7 @@ namespace Astral {
 
     void VulkanRenderingContext::Init()
     {
-        PROFILE_SCOPE("Vulkan Rendering Context Initialization");
+        PROFILE_SCOPE("VulkanRenderingContext::Init");
 
         if (!glfwVulkanSupported()) { AE_ERROR("GLFW can't find Vulkan!"); }
 
@@ -54,7 +54,7 @@ namespace Astral {
 
     void VulkanRenderingContext::Shutdown()
     {
-        PROFILE_SCOPE("Vulkan Rendering Context Shutdown");
+        PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
         DestroyDevice();
         DestroyWindowSurface();
@@ -101,7 +101,7 @@ namespace Astral {
 
     void VulkanRenderingContext::CreateInstance()
     {
-        PROFILE_SCOPE("Creating Vulkan Instance")
+        PROFILE_SCOPE("VulkanRenderingContext::CreateInstance")
 
         std::vector<const char*> layers = {
 #ifndef ASTRAL_DISABLE_RENDERING_API_VALIDATION
@@ -155,6 +155,7 @@ namespace Astral {
 
     void VulkanRenderingContext::DestroyInstance()
     {
+        PROFILE_SCOPE("VulkanRenderingContext::DestroyInstance")
         vkDestroyInstance(m_Instance, nullptr);
     }
 

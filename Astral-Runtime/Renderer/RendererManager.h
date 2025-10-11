@@ -10,13 +10,24 @@
 
 namespace Astral {
 
+    /**
+     * @class RendererManager
+     * @brief Manages the lifetime of the rendering context and the scene renderer
+     */
     class RendererManager : public SystemManager
     {
     public:
         RendererManager();
         ~RendererManager() override;
 
+        /**
+         * @brief Initializes the rendering context and the scene renderer
+         */
         void Init() override;
+
+        /**
+         * @brief Shuts down the scene renderer and the rendering context
+         */
         void Shutdown() override;
 
         RendererManager(const RendererManager&) = delete;
@@ -28,6 +39,9 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Loads commonly used renderer assets
+         */
         void LoadRendererAssets();
 
         GraphicsOwnedPtr<RenderingContext> m_RenderContext;

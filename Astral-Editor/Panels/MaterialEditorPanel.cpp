@@ -25,6 +25,8 @@ namespace Astral {
 
     void MaterialEditorPanel::Show()
     {
+        PROFILE_SCOPE("MaterialEditorPanel::Show")
+
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 

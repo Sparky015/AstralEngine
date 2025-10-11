@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 6414,
+            "type": "VEC3",
+            "max": [
+                1979.4620361328125,
+                3999.69970703125,
+                150.76731872558594
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 6414,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.9982666969299316,
+                0.999984622001648
+            ],
+            "min": [
+                -0.999984622001648,
+                -0.9997345209121704,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 6414,
+            "type": "VEC3",
+            "max": [
+                0.9999918937683105,
+                0.9999827742576599,
+                0.9999924898147583
+            ],
+            "min": [
+                -0.9982444643974304,
+                -0.9999807476997375,
+                -0.9999924302101135
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 6414,
+            "type": "VEC2",
+            "max": [
+                0.99853515625,
+                0.9948005676269531
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 6414,
+            "type": "VEC2",
+            "max": [
+                0.99072265625,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 17553,
+            "type": "SCALAR",
+            "max": [
+                6413
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 403740,
+            "uri": "Bistro_Research_Exterior_TrashCanOpen_01A1_6529.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 76968,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 76968,
+            "byteLength": 76968,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 153936,
+            "byteLength": 76968,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 230904,
+            "byteLength": 51312,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 282216,
+            "byteLength": 51312,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 333528,
+            "byteLength": 70212,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Trashcan_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Trashcan_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Trashcan_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Trashcan",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_TrashCanOpen_01A1_6529",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_TrashCanOpen_01A1_6529",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}
