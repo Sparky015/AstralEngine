@@ -54,6 +54,7 @@ layout (push_constant) uniform PushConstants {
     int numShadowCascades;
     uint showCascadeDebugView;
     float shadowMapBias;
+    float shadowMapCascadeLogFactor;
 } u_PushConstants;
 
 

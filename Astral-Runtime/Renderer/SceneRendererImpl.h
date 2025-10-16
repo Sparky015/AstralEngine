@@ -175,7 +175,9 @@ namespace Astral {
         // Editor
         void DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget);
 
-        bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform);
+        float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades); // CSM Helper
+        bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform); // Frustom Culling
+
 
 
         RendererSettings m_RendererSettings{};

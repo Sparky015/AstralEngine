@@ -66,6 +66,7 @@ namespace Astral {
         rendererSettings.ShadowMapResolution = 4096;
         rendererSettings.ShadowMapBias = .02;
         rendererSettings.ShadowMapZMultiplier = 1;
+        rendererSettings.ShadowMapCascadeLogFactor = .8;
 
         SetRendererSettings(rendererSettings);
 
@@ -272,6 +273,7 @@ namespace Astral {
         m_RendererSettings.IsShadowsOn = rendererSettings.IsShadowsOn;
         m_RendererSettings.ShadowMapBias = rendererSettings.ShadowMapBias;
         m_RendererSettings.ShadowMapZMultiplier = rendererSettings.ShadowMapZMultiplier;
+        m_RendererSettings.ShadowMapCascadeLogFactor = rendererSettings.ShadowMapCascadeLogFactor;
 
         if (isRenderGraphRebuildNeeded)
         {
@@ -891,6 +893,7 @@ namespace Astral {
             int32 NumShadowCascades;
             uint32 ShowCascadeDebugView;
             float ShadowMapBias;
+            float ShadowMapCascadeLogFactor;
         };
         static_assert(sizeof(ForwardLightingPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
 
@@ -946,6 +949,7 @@ namespace Astral {
                 .NumShadowCascades = m_RendererSettings.NumShadowCascades,
                 .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
                 .ShadowMapBias = m_RendererSettings.ShadowMapBias,
+                .ShadowMapCascadeLogFactor = m_RendererSettings.ShadowMapCascadeLogFactor,
             };
 
             commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
@@ -1063,6 +1067,7 @@ namespace Astral {
             int32 NumShadowCascades;
             uint32 ShowCascadeDebugView;
             float ShadowMapBias;
+            float ShadowMapCascadeLogFactor;
         };
 
         const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
@@ -1100,6 +1105,7 @@ namespace Astral {
             .NumShadowCascades = m_RendererSettings.NumShadowCascades,
             .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
             .ShadowMapBias = m_RendererSettings.ShadowMapBias,
+            .ShadowMapCascadeLogFactor = m_RendererSettings.ShadowMapCascadeLogFactor
         };
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
@@ -1139,9 +1145,9 @@ namespace Astral {
     }
 
 
-    float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
+    float SceneRendererImpl::CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
     {
-        constexpr float blendFactor = .5;
+        float blendFactor = m_RendererSettings.ShadowMapCascadeLogFactor;
         const float logComponent = blendFactor * (zNear * std::pow((zFar / zNear), cascadeNum / totalCascades));
         const float linearComponent = (1 - blendFactor) * (zNear + cascadeNum / totalCascades * (zFar - zNear));
         return logComponent + linearComponent;
