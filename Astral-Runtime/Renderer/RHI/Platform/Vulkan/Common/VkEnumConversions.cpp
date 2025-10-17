@@ -409,7 +409,7 @@ namespace Astral {
 
     VkPipelineStageFlags ConvertPipelineStageToVkPipelineStageFlags(PipelineStageFlags pipelineStageFlags)
     {
-        VkAccessFlags vkPipelineStageFlags = 0;
+        VkPipelineStageFlags vkPipelineStageFlags = 0;
 
         if (pipelineStageFlags & PIPELINE_STAGE_TOP_OF_PIPE_BIT)                         { vkPipelineStageFlags |= VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT; }
         if (pipelineStageFlags & PIPELINE_STAGE_DRAW_INDIRECT_BIT)                       { vkPipelineStageFlags |= VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT; }
@@ -434,6 +434,34 @@ namespace Astral {
         if (pipelineStageFlags & PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT)    { vkPipelineStageFlags |= VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR; }
 
         return vkPipelineStageFlags;
+    }
+
+
+    VkPipelineStageFlagBits ConvertPipelineStageBitsToVkPipelineStageFlagBits(PipelineStageFlagBits pipelineStageFlags)
+    {
+        if (pipelineStageFlags & PIPELINE_STAGE_TOP_OF_PIPE_BIT)                         { return VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_DRAW_INDIRECT_BIT)                       { return VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_VERTEX_INPUT_BIT)                        { return VK_PIPELINE_STAGE_VERTEX_INPUT_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_VERTEX_SHADER_BIT)                       { return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT)         { return VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT)      { return VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_GEOMETRY_SHADER_BIT)                     { return VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_FRAGMENT_SHADER_BIT)                     { return VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)                { return VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT)                 { return VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)             { return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_COMPUTE_SHADER_BIT)                      { return VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TRANSFER_BIT)                            { return VK_PIPELINE_STAGE_TRANSFER_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)                      { return VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_HOST_BIT)                                { return VK_PIPELINE_STAGE_HOST_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_ALL_GRAPHICS_BIT)                        { return VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_ALL_COMMANDS_BIT)                        { return VK_PIPELINE_STAGE_ALL_COMMANDS_BIT; }
+        if (pipelineStageFlags & PIPELINE_STAGE_NONE)                                    { return VK_PIPELINE_STAGE_NONE; }
+        if (pipelineStageFlags & PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT)        { return VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR; }
+        if (pipelineStageFlags & PIPELINE_STAGE_RAY_TRACING_SHADER_BIT)                  { return VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR; }
+        if (pipelineStageFlags & PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT)    { return VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR; }
+
+        return VK_PIPELINE_STAGE_NONE;
     }
 
 
@@ -526,6 +554,16 @@ namespace Astral {
             case CullMode::BACK:                        return VK_CULL_MODE_BACK_BIT;
             case CullMode::FRONT_AND_BACK:              return VK_CULL_MODE_FRONT_AND_BACK;
             default: AE_ERROR("Invalid Cull Mode Given!");
+        }
+    }
+
+
+    VkQueryType ConvertQueryTypeToVkQueryType(QueryType queryType)
+    {
+        switch (queryType)
+        {
+            case QueryType::TIMESTAMP: return VK_QUERY_TYPE_TIMESTAMP;
+            default: AE_ERROR("Unsupported QueryType given!");
         }
     }
 

@@ -11,11 +11,6 @@
 
 #include <vulkan/vulkan_core.h>
 
-#include "Astral.h"
-#include "Astral.h"
-#include "Astral.h"
-#include "Astral.h"
-
 namespace Astral {
 
     struct VulkanCommandBufferDesc
@@ -54,6 +49,9 @@ namespace Astral {
         void BeginLabel(const ::std::string_view& label, Vec4 color) override;
         void EndLabel() override;
         void InsertMarker(const ::std::string_view& label, Vec4 color) override;
+
+        void ResetQueryPool(const QueryPoolHandle& queryPoolHandle) override;
+        void WriteTimestamp(const QueryPoolHandle& queryPoolHandle, PipelineStageFlagBits pipelineStage, uint32 query) override;
 
         void* GetNativeHandle() override { return m_CommandBuffer; }
 

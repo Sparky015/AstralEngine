@@ -21,6 +21,7 @@
 #include "Renderer/RHI/Common/ImageSubResourceRange.h"
 #include "Renderer/RHI/Common/PipelineRasterizerState.h"
 #include "Renderer/RHI/Common/SamplerSettings.h"
+#include "Renderer/RHI/Resources/QueryPool.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 namespace Astral {
@@ -29,12 +30,14 @@ namespace Astral {
     VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
     VkAccessFlags ConvertAccessFlagsToVkAccessFlags(AccessFlags accessFlags);
     VkPipelineStageFlags ConvertPipelineStageToVkPipelineStageFlags(PipelineStageFlags pipelineStageFlags);
+    VkPipelineStageFlagBits ConvertPipelineStageBitsToVkPipelineStageFlagBits(PipelineStageFlagBits pipelineStageFlags);
     VkImageUsageFlags ConvertImageUsageFlagsToVkImageUsageFlags(ImageUsageFlags imageUsageFlags);
     VkImageAspectFlags ConvertImageAspectFlagsToVkImageAspectFlags(ImageAspectFlags imageAspectFlags);
     VkDependencyFlags ConvertDependencyFlagsToVkDependencyFlags(DependencyFlags dependencyFlags);
     VkFilter ConvertSamplerFilterToVkFilter(SamplerFilter samplerFilter);
     VkSamplerAddressMode ConvertSamplerAddressModeToVkSamplerAddressMode(SamplerAddressMode samplerAddressMode);
     VkCullModeFlags ConvertCullModeToVkCullModeFlags(CullMode cullMode);
+    VkQueryType ConvertQueryTypeToVkQueryType(QueryType queryType);
 
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
 

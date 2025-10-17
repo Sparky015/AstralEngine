@@ -420,6 +420,23 @@ namespace Astral {
     }
 
 
+    void VulkanCommandBuffer::ResetQueryPool(const QueryPoolHandle& queryPoolHandle)
+    {
+        VkQueryPool queryPool = (VkQueryPool)queryPoolHandle->GetNativeHandle();
+
+        vkCmdResetQueryPool(m_CommandBuffer, queryPool, 0, queryPoolHandle->GetNumQueries());
+    }
+
+
+    void VulkanCommandBuffer::WriteTimestamp(const QueryPoolHandle& queryPoolHandle, PipelineStageFlagBits pipelineStage, uint32 query)
+    {
+        VkQueryPool queryPool = (VkQueryPool)queryPoolHandle->GetNativeHandle();
+        VkPipelineStageFlagBits pipelineStageFlagBit = ConvertPipelineStageBitsToVkPipelineStageFlagBits(pipelineStage);
+
+        vkCmdWriteTimestamp(m_CommandBuffer, pipelineStageFlagBit, queryPool, query);
+    }
+
+
     void VulkanCommandBuffer::AllocateCommandBuffer()
     {
         VkCommandBufferAllocateInfo commandBufferAllocate = {

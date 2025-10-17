@@ -53,6 +53,7 @@ namespace Astral {
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) override;
+        QueryPoolHandle CreateQueryPool(QueryType queryType, uint32 queryCount) override;
 
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
         bool IsAnisotropySupported() override;

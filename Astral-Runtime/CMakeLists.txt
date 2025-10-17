@@ -297,6 +297,9 @@ add_library(AstralEngine
         Job/ThreadPool.cpp
         Job/ThreadPool.h
         Job/ThreadPool_Impl.h
+        Renderer/RHI/Resources/QueryPool.h
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanQueryPool.cpp
+        Renderer/RHI/Platform/Vulkan/Resources/VulkanQueryPool.h
 )
 
 

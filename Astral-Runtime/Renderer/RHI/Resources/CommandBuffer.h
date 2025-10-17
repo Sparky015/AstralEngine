@@ -11,6 +11,8 @@
 #include "VertexBuffer.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/PipelineBarriers.h"
+#include "Renderer/RHI/Resources/QueryPool.h"
+
 
 namespace Astral {
 
@@ -43,6 +45,9 @@ namespace Astral {
         virtual void BeginLabel(const std::string_view& label, Vec4 color) = 0;
         virtual void EndLabel() = 0;
         virtual void InsertMarker(const std::string_view& label, Vec4 color) = 0;
+
+        virtual void ResetQueryPool(const QueryPoolHandle& queryPoolHandle) = 0;
+        virtual void WriteTimestamp(const QueryPoolHandle& queryPoolHandle, PipelineStageFlagBits pipelineStage, uint32 query) = 0;
 
         virtual void* GetNativeHandle() = 0;
 

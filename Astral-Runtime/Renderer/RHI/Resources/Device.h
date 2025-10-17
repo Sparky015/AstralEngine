@@ -45,6 +45,7 @@ namespace Astral {
         virtual TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) = 0;
+        virtual QueryPoolHandle CreateQueryPool(QueryType queryType, uint32 queryCount) = 0;
 
         virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
         virtual bool IsAnisotropySupported() = 0;

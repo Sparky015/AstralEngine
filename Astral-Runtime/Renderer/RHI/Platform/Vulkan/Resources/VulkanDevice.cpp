@@ -23,6 +23,7 @@
 #include <utility>
 
 #include "VulkanIndexBuffer.h"
+#include "VulkanQueryPool.h"
 #include "VulkanTexture.h"
 
 namespace Astral {
@@ -384,6 +385,18 @@ namespace Astral {
         };
 
         return CreateGraphicsRef<VulkanTexture>(textureDesc);
+    }
+
+
+    QueryPoolHandle VulkanDevice::CreateQueryPool(QueryType queryType, uint32 queryCount)
+    {
+        VulkanQueryPoolDesc queryPoolDesc = {
+            .Device = m_Device,
+            .QueryType = queryType,
+            .QueryCount = queryCount,
+        };
+
+        return CreateGraphicsRef<VulkanQueryPool>(queryPoolDesc);
     }
 
 
