@@ -7,6 +7,9 @@
 #pragma once
 
 #include "Core/FixedIntegerTypes.h"
+#include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+
+#include <array>
 
 namespace Astral {
 
@@ -22,7 +25,10 @@ namespace Astral {
         virtual ~QueryPool() = default;
 
         virtual uint32 GetNumQueries() = 0;
-        virtual bool GetTimestampQueryResults(std::pair<uint64, uint64>* queryResult) = 0;
+        virtual bool GetTimestampQueryResults(std::array<uint64, 2>& outQueryResult) = 0;
+        virtual void ResetPool() = 0;
+        virtual bool NeedsReset() = 0;
+        virtual void NotifyReset() = 0;
 
         virtual void* GetNativeHandle() = 0;
 

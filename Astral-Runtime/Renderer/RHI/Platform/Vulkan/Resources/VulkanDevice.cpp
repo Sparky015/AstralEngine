@@ -427,6 +427,14 @@ namespace Astral {
     }
 
 
+    float VulkanDevice::GetTimestampPeriod()
+    {
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(m_PhysicalDevice.physicalDevice, &physicalDeviceProperties);
+        return physicalDeviceProperties.limits.timestampPeriod;
+    }
+
+
     void VulkanDevice::WaitIdle()
     {
         vkDeviceWaitIdle(m_Device);

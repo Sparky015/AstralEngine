@@ -39,6 +39,14 @@ namespace Astral {
 
         m_OffscreenOutputTargets.clear();
         m_ViewportDimensions = UVec2(0);
+
+        m_GPUFrameTimeQueryPools.clear();
+        m_GPUFrameTimeQueryPools.resize(maxFramesInFlight);
+
+        for (QueryPoolHandle& queryPoolHandle : m_GPUFrameTimeQueryPools)
+        {
+            queryPoolHandle = RendererAPI::GetDevice().CreateQueryPool(QueryType::TIMESTAMP, 2);
+        }
     }
 
 
@@ -110,6 +118,25 @@ namespace Astral {
 
         commandBuffer->BeginLabel(m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
+
+        QueryPoolHandle frameQueryPool = m_GPUFrameTimeQueryPools[swapchainImageIndex];
+
+        if (!frameQueryPool->NeedsReset())
+        {
+            std::array<uint64, 2> frameTimeResults;
+            bool isFrameTimesAvailable = frameQueryPool->GetTimestampQueryResults(frameTimeResults);
+            if (isFrameTimesAvailable)
+            {
+                uint64 frameTimeInNanoseconds = frameTimeResults[1] - frameTimeResults[0];
+                double frameTimeInMilliseconds = frameTimeInNanoseconds * RendererAPI::GetDevice().GetTimestampPeriod() / 1000000.0f;
+                m_LatestGPUFrameTime = frameTimeInMilliseconds;
+            }
+        }
+
+        commandBuffer->ResetQueryPool(frameQueryPool);
+        commandBuffer->WriteTimestamp(frameQueryPool, PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0);
+
+
         for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
         {
             PassIndex renderPassIndex = m_ExecutionOrder[i];
@@ -171,6 +198,8 @@ namespace Astral {
         }
         commandBuffer->SetPipelineBarrier(pipelineBarrier);
 
+        commandBuffer->WriteTimestamp(frameQueryPool, PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 1);
+
         commandBuffer->EndLabel();
 
         m_ExecutionContext = {};
@@ -212,6 +241,12 @@ namespace Astral {
         m_RenderPassesHold.clear();
         m_RenderPassResourcesHold.clear();
         m_FramesTillClear.clear();
+    }
+
+
+    double RenderGraph::GetLatestGPUFrameTime() const
+    {
+        return m_LatestGPUFrameTime;
     }
 
 

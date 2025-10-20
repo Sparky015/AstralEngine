@@ -50,6 +50,7 @@ namespace Astral {
         virtual bool IsBlitSupportedByFormat(ImageFormat imageFormat) = 0;
         virtual bool IsAnisotropySupported() = 0;
         virtual float GetMaxAnisotropySupported() = 0;
+        virtual float GetTimestampPeriod() = 0;
 
 
         virtual void WaitIdle() = 0;

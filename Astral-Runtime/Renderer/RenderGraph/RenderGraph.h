@@ -126,6 +126,12 @@ namespace Astral {
          */
         void ClearResourceHold();
 
+        /**
+         * @brief Gets the GPU frame time of the most recently completed frame
+         * @return The GPU frame time of the most recently completed frame
+         */
+        double GetLatestGPUFrameTime() const;
+
     private:
 
         /**
@@ -158,8 +164,7 @@ namespace Astral {
         /**
          * @brief Manages the layout transitions of read attachments during execution
          */
-        void TransitionReadAttachmentLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32
-                                             swapchainImageIndex);
+        void TransitionReadAttachmentLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32 swapchainImageIndex);
 
         /**
          * @brief Creates the RHI render pass object for each render pass
@@ -189,6 +194,7 @@ namespace Astral {
 
         /**
          * @brief Contains all the resources for each render pass in the render graph
+         * @note The inside vector contains copies of render pass resources for each swapchain
          */
         using RenderGraphResources = std::vector<std::vector<RenderPassResources>>;
 
@@ -205,6 +211,8 @@ namespace Astral {
         // Contains the order of render passes to execute in such that dependencies are ran first
         std::vector<PassIndex> m_ExecutionOrder;
         RenderGraphPassExecutionContext m_ExecutionContext{};
+        std::vector<QueryPoolHandle> m_GPUFrameTimeQueryPools; // One for each swapchain image
+        double m_LatestGPUFrameTime{};
 
 
         // Contains the RHI objects needed to execute all render passes that are in the execution order
@@ -238,6 +246,3 @@ namespace Astral {
 
 }
 
-
-// TODO: Refactor impl for clarity
-// TODO: Add fallback if render graph compilation fails during a release build

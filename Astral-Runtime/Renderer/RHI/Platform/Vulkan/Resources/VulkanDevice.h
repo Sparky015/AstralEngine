@@ -58,6 +58,7 @@ namespace Astral {
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override;
         bool IsAnisotropySupported() override;
         float GetMaxAnisotropySupported() override;
+        float GetTimestampPeriod() override;
 
         void WaitIdle() override;
 

@@ -425,6 +425,7 @@ namespace Astral {
         VkQueryPool queryPool = (VkQueryPool)queryPoolHandle->GetNativeHandle();
 
         vkCmdResetQueryPool(m_CommandBuffer, queryPool, 0, queryPoolHandle->GetNumQueries());
+        queryPoolHandle->NotifyReset();
     }
 
 

@@ -79,6 +79,12 @@ namespace Astral {
         static UVec2 GetViewportSize() { return m_Renderer->GetViewportSize(); }
 
         /**
+         * @brief Gets render graph of the renderer
+         * @return The render graph of the renderer
+         */
+        static RenderGraph& GetRenderGraph() { return m_Renderer->GetRenderGraph(); }
+
+        /**
          * @brief Gets debug stats for the renderer
          * @return The debug stats for the renderer
          */

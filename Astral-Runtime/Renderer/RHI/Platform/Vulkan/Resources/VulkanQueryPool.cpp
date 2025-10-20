@@ -8,13 +8,16 @@
 
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 #include "Debug/Utilities/Asserts.h"
+#include "Debug/Utilities/Loggers.h"
 
 namespace Astral {
 
     VulkanQueryPool::VulkanQueryPool(const VulkanQueryPoolDesc& createInfo) :
-        m_Device(createInfo.Device)
+        m_Device(createInfo.Device),
+        m_NumQueries(createInfo.QueryCount),
+        m_NeedsReset(true)
     {
-        VkQueryPoolCreateInfo vkQueryPoolCreateInfo;
+        VkQueryPoolCreateInfo vkQueryPoolCreateInfo{};
         vkQueryPoolCreateInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
         vkQueryPoolCreateInfo.queryType = ConvertQueryTypeToVkQueryType(createInfo.QueryType);
         vkQueryPoolCreateInfo.queryCount = createInfo.QueryCount;
@@ -29,12 +32,12 @@ namespace Astral {
     }
 
 
-    bool VulkanQueryPool::GetTimestampQueryResults(std::pair<uint64, uint64>* queryResult)
+    bool VulkanQueryPool::GetTimestampQueryResults(std::array<uint64, 2>& outQueryResult)
     {
         VkResult errorResult = vkGetQueryPoolResults(m_Device, m_QueryPool,
         0, 2,
-        sizeof(*queryResult), queryResult, sizeof(uint64),
-            VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WITH_AVAILABILITY_BIT);
+        sizeof(std::array<uint64, 2>), outQueryResult.data(), sizeof(uint64),
+            VK_QUERY_RESULT_64_BIT);
 
         if (errorResult == VK_NOT_READY)
         {
@@ -43,7 +46,16 @@ namespace Astral {
 
         ASSERT(errorResult == VK_SUCCESS, "Failed to get query pool results");
 
+        m_NeedsReset = true;
+
         return true;
+    }
+
+
+    void VulkanQueryPool::ResetPool()
+    {
+        vkResetQueryPool(m_Device, m_QueryPool, 0, m_NumQueries);
+        m_NeedsReset = false;
     }
 
 }

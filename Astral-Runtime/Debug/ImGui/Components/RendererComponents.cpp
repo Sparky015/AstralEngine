@@ -24,6 +24,7 @@ namespace Astral {
     {
         const ImGuiIO& io = ImGui::GetIO();
         ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
+        ImGui::Text("GPU Frame Time: %.3f ms", SceneRenderer::GetRenderGraph().GetLatestGPUFrameTime());
     }
 
     void DrawCallsPerFrameComponent()
