@@ -42,12 +42,14 @@ namespace Astral {
         m_OffscreenOutputTargets.clear();
         m_ViewportDimensions = UVec2(0);
 
-        m_GPUFrameTimeQueryPools.clear();
-        m_GPUFrameTimeQueryPools.resize(maxFramesInFlight);
-
-        for (QueryPoolHandle& queryPoolHandle : m_GPUFrameTimeQueryPools)
+        if (m_GPUFrameTimeQueryPools.empty())
         {
-            queryPoolHandle = RendererAPI::GetDevice().CreateQueryPool(QueryType::TIMESTAMP, 2);
+            m_GPUFrameTimeQueryPools.resize(maxFramesInFlight);
+
+            for (QueryPoolHandle& queryPoolHandle : m_GPUFrameTimeQueryPools)
+            {
+                queryPoolHandle = RendererAPI::GetDevice().CreateQueryPool(QueryType::TIMESTAMP, 2);
+            }
         }
     }
 
@@ -157,7 +159,6 @@ namespace Astral {
                     uint64 frameTimeInNanoseconds = frameTimeResults[1] - frameTimeResults[0];
                     double frameTimeInMilliseconds = frameTimeInNanoseconds * RendererAPI::GetDevice().GetTimestampPeriod() / 1000000.0f;
                     m_LatestRenderPassGPUFrameTimes[i] = frameTimeInMilliseconds;
-                    AE_LOG(pass.GetName() << ": " << frameTimeInMilliseconds << " ms")
                 }
             }
 
