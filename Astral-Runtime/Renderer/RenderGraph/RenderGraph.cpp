@@ -30,6 +30,8 @@ namespace Astral {
         m_RenderPassNodes.clear();
 
         m_ExecutionOrder.clear();
+        m_LatestRenderPassGPUFrameTimes.clear();
+        m_RenderPassNames.clear();
 
         m_RenderPasses.clear();
         m_RenderPassResources.clear();
@@ -145,6 +147,20 @@ namespace Astral {
             RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
 
 
+            QueryPoolHandle& renderPassQueryPool = renderPassResource.RenderPassGPUTime;
+            if (!renderPassQueryPool->NeedsReset())
+            {
+                std::array<uint64, 2> frameTimeResults;
+                bool isFrameTimesAvailable = renderPassQueryPool->GetTimestampQueryResults(frameTimeResults);
+                if (isFrameTimesAvailable)
+                {
+                    uint64 frameTimeInNanoseconds = frameTimeResults[1] - frameTimeResults[0];
+                    double frameTimeInMilliseconds = frameTimeInNanoseconds * RendererAPI::GetDevice().GetTimestampPeriod() / 1000000.0f;
+                    m_LatestRenderPassGPUFrameTimes[i] = frameTimeInMilliseconds;
+                    AE_LOG(pass.GetName() << ": " << frameTimeInMilliseconds << " ms")
+                }
+            }
+
             m_ExecutionContext.RenderPass = rhiRenderPass;
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
 
@@ -152,11 +168,14 @@ namespace Astral {
 
 
             commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
+            commandBuffer->ResetQueryPool(renderPassQueryPool);
+            commandBuffer->WriteTimestamp(renderPassQueryPool, PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0);
             commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.Framebuffer);
 
             pass.Execute();
 
             commandBuffer->EndRenderPass();
+            commandBuffer->WriteTimestamp(renderPassQueryPool, PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 1);
             commandBuffer->EndLabel();
         }
 
@@ -247,6 +266,18 @@ namespace Astral {
     double RenderGraph::GetLatestGPUFrameTime() const
     {
         return m_LatestGPUFrameTime;
+    }
+
+
+    const std::vector<std::string_view>& RenderGraph::GetRenderPassNames() const
+    {
+        return m_RenderPassNames;
+    }
+
+
+    const std::vector<double>& RenderGraph::GetRenderPassGPUFrameTimes() const
+    {
+        return m_LatestRenderPassGPUFrameTimes;
     }
 
 
@@ -394,6 +425,14 @@ namespace Astral {
         }
 
         ASSERT(m_ExecutionOrder.size() == m_RenderGraph.NumOfVertices(), "Cycle detected in render graph!")
+        m_LatestRenderPassGPUFrameTimes.resize(m_ExecutionOrder.size());
+        m_RenderPassNames.resize(m_ExecutionOrder.size());
+        for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
+        {
+            PassIndex renderPassIndex = m_ExecutionOrder[i];
+            const RenderGraphPass& pass = m_Passes[renderPassIndex];
+            m_RenderPassNames[i] = pass.GetName();
+        }
     }
 
 
@@ -794,7 +833,14 @@ namespace Astral {
                 passResources[i].ReadAttachmentDescriptorSet->EndBuildingSet();
                 RendererAPI::NameObject(passResources[i].ReadAttachmentDescriptorSet, std::string(pass.GetName()) + "_ReadDescriptorSet_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
             }
+
+
+            for (size_t i = 0; i < m_MaxFramesInFlight; i++)
+            {
+                passResources[i].RenderPassGPUTime = RendererAPI::GetDevice().CreateQueryPool(QueryType::TIMESTAMP, 2);
+            }
         }
+
 
         m_ResourceBatchNumber++;
     }

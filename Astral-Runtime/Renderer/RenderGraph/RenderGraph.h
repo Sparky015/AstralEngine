@@ -132,6 +132,18 @@ namespace Astral {
          */
         double GetLatestGPUFrameTime() const;
 
+        /**
+         * @brief Gets a list of each render pass' name in the order that they are executed in
+         * @return A list of each render pass' name in the order that they are executed in
+         */
+        const std::vector<std::string_view>& GetRenderPassNames() const;
+
+        /**
+         * @brief Gets a list of each render pass' GPU frame time in the order that they are executed in
+         * @return A list of each render pass' GPU frame time in the order that they are executed in
+         */
+        const std::vector<double>& GetRenderPassGPUFrameTimes() const;
+
     private:
 
         /**
@@ -142,6 +154,7 @@ namespace Astral {
             DescriptorSetHandle ReadAttachmentDescriptorSet;
             FramebufferHandle Framebuffer;
             std::vector<TextureHandle> AttachmentTextures;
+            QueryPoolHandle RenderPassGPUTime;
         };
 
         /**
@@ -211,8 +224,8 @@ namespace Astral {
         // Contains the order of render passes to execute in such that dependencies are ran first
         std::vector<PassIndex> m_ExecutionOrder;
         RenderGraphPassExecutionContext m_ExecutionContext{};
-        std::vector<QueryPoolHandle> m_GPUFrameTimeQueryPools; // One for each swapchain image
-        double m_LatestGPUFrameTime{};
+        std::vector<double> m_LatestRenderPassGPUFrameTimes;
+        std::vector<std::string_view> m_RenderPassNames;
 
 
         // Contains the RHI objects needed to execute all render passes that are in the execution order
@@ -237,6 +250,8 @@ namespace Astral {
         std::vector<TextureHandle> m_OffscreenOutputTargets;
         bool m_IsOutputRenderTarget{false};
         UVec2 m_ViewportDimensions{0};
+        std::vector<QueryPoolHandle> m_GPUFrameTimeQueryPools; // One for each swapchain image
+        double m_LatestGPUFrameTime{};
 
 
         // Debug name for the render graph

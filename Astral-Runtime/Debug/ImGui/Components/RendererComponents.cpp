@@ -24,7 +24,18 @@ namespace Astral {
     {
         const ImGuiIO& io = ImGui::GetIO();
         ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
-        ImGui::Text("GPU Frame Time: %.3f ms", SceneRenderer::GetRenderGraph().GetLatestGPUFrameTime());
+
+        RenderGraph& renderGraph = SceneRenderer::GetRenderGraph();
+        ImGui::Text("GPU Frame Time: %.3f ms", renderGraph.GetLatestGPUFrameTime());
+
+        const std::vector<std::string_view>& renderPassNames = renderGraph.GetRenderPassNames();
+        const std::vector<double>& renderPassGPUTimes = renderGraph.GetRenderPassGPUFrameTimes();
+
+        for (size_t i = 0; i < renderPassNames.size(); i++)
+        {
+            ImGui::Text("%s: %.3f ms", renderPassNames[i].data(), renderPassGPUTimes[i]);
+        }
+
     }
 
     void DrawCallsPerFrameComponent()
