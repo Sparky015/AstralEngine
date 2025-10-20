@@ -31,9 +31,14 @@ namespace Astral {
         const std::vector<std::string_view>& renderPassNames = renderGraph.GetRenderPassNames();
         const std::vector<double>& renderPassGPUTimes = renderGraph.GetRenderPassGPUFrameTimes();
 
-        for (size_t i = 0; i < renderPassNames.size(); i++)
+
+        if (ImGui::TreeNode("Render Pass GPU Times"))
         {
-            ImGui::Text("%s: %.3f ms", renderPassNames[i].data(), renderPassGPUTimes[i]);
+            for (size_t i = 0; i < renderPassNames.size(); i++)
+            {
+                ImGui::Text("%s: %.3f ms", renderPassNames[i].data(), renderPassGPUTimes[i]);
+            }
+            ImGui::TreePop();
         }
 
     }
