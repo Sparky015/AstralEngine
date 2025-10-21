@@ -23,7 +23,24 @@ Visit my website for more information, pictures, and higher quality videos: [htt
 
 ### Notable Features
 
+#### TLDR
+
+* Physically-Based Vulkan HDR Renderer
+* Frame/Render Graph
+* Renderer Hardware Interface (RHI)
+* Editor
+* Scene System
+* Asset Manager
+* Academy Color Encoding System (ACES) Color Workflow
+* Custom Allocators (Experimental Proof of Concept)
+* Memory Profiling Tool Suite (Experimental)
+* Visual Scope Profiler
+* Entity-Component-System (ECS)
+
+
 ----
+
+#### Feature Details
 
 * Physically-Based Vulkan HDR Renderer 
 
