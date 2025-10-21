@@ -18,6 +18,7 @@ Visit my website for more information, pictures, and higher quality videos: [htt
 
 
 ![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
+
 ![PancakeWithSmore](Documentation/Assets/Videos/PancakesWitHSmore_Short.gif)
 
 
