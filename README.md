@@ -14,7 +14,12 @@ Project Lifetime: April 2024 - Present
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment, but there is a lot of stuff to do to get there.
 
-Visit my website for more information, pictures, and videos: [https://sparky015.github.io](https://sparky015.github.io)
+Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
+
+
+![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
+![PancakeWithSmore](Documentation/Assets/Videos/PancakesWitHSmore_Short.gif)
+
 
 ### Notable Features
 
@@ -87,7 +92,7 @@ You can find more detailed information about this (including the why's) [here](D
 
 Future allocators to be written: Slab Allocator
 
-- Note that I am still polishing this feature, but it is functionally done.
+- Note that I am still polishing this feature, but it is functionally done. It has not been used in the engine yet.
 
 #### Memory Profiling Tool Suite (Experimental)
 
@@ -130,7 +135,7 @@ and implementing a multithreaded asset system as the first use of the Job System
 ---
 
 
-![CurrentEngineState](Documentation/Pictures/CurrentEngineState.png)
+![CurrentEngineState](Documentation/Assets/CurrentEngineState.png)
 This picture contains the Amazon Lumberyard Bistro sample in the Editor.
 
 ### Roadmap
@@ -179,8 +184,8 @@ Requirements include:
 Note: The project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
       The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
 
-**Important Other Note**: There are some quirks being ironed out as I develop the engine. Currently, there are a few bugs to be aware if you run the engine. Firstly, shadows will not work correctly with frustum culling turned on. The main geometry pass and
-shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS)
+> **Important Other Note**: There are some quirks being ironed out as I develop the engine. Currently, there are a few bugs to be aware if you run the engine. Firstly, shadows will not work correctly with frustum culling turned on. The main geometry pass and
+> shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS)
 
 
 Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to download the project. Do not use the 'Download Zip' option!
