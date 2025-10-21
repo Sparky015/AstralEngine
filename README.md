@@ -16,8 +16,9 @@ and the environment, but there is a lot of stuff to do to get there.
 
 Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
 
+![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
 
-![PancakeWithSmore](Documentation/Assets/Videos/PancakesWitHSmore_Short.gif)
+![PancakeWithSmore](Documentation/Assets/Videos/PancakesWithSmore_Short.gif)
 
 
 ### Notable Features
