@@ -28,23 +28,23 @@ TEST_F(CameraTests, Constructor_InitializesCorrectly)
 /**@brief Tests that the position is set properly and that the projection view matrix is updated. */
 TEST_F(CameraTests, SetPosition_UpdatesPosition) {
     Camera camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
-    Mat4 oldProjectionViewMatrix = camera.GetProjectionViewMatrix();
+    Mat4 oldProjectionViewMatrix = camera.GetViewProjectionMatrix();
 
     Vec3 newPosition(1.0f, 2.0f, 3.0f);
     camera.SetPosition(newPosition);
     EXPECT_EQ(camera.GetPosition(), newPosition);
-    EXPECT_NE(oldProjectionViewMatrix, camera.GetProjectionViewMatrix());
+    EXPECT_NE(oldProjectionViewMatrix, camera.GetViewProjectionMatrix());
 }
 
 /**@brief Tests that the rotation is set properly and that the projection view matrix is updated. */
 TEST_F(CameraTests, SetRotation_UpdatesRotation) {
     Camera camera(CameraType::PERSPECTIVE, 1.0, 800.0f);
-    Mat4 oldProjectionViewMatrix = camera.GetProjectionViewMatrix();
+    Mat4 oldProjectionViewMatrix = camera.GetViewProjectionMatrix();
 
     float newRotation = 45.0f;
     camera.SetRotation(Vec3(newRotation));
     EXPECT_EQ(camera.GetRotation(), Vec3(newRotation));
-    EXPECT_NE(oldProjectionViewMatrix, camera.GetProjectionViewMatrix());
+    EXPECT_NE(oldProjectionViewMatrix, camera.GetViewProjectionMatrix());
 }
 
 }

@@ -18,13 +18,10 @@ var searchData=
   ['stackallocator_15',['StackAllocator',['../d5/d78/class_astral_1_1_stack_allocator.html',1,'Astral']]],
   ['stackbasedlinearallocator_16',['StackBasedLinearAllocator',['../da/dee/class_astral_1_1_stack_based_linear_allocator.html',1,'Astral']]],
   ['stllinearallocator_17',['STLLinearAllocator',['../dd/d18/class_astral_1_1_s_t_l_linear_allocator.html',1,'Astral']]],
-  ['stllinearallocator_3c_20u_20_3e_18',['STLLinearAllocator&lt; U &gt;',['../dd/d18/class_astral_1_1_s_t_l_linear_allocator.html',1,'Astral']]],
-  ['stlstackallocator_19',['STLStackAllocator',['../da/dda/class_astral_1_1_s_t_l_stack_allocator.html',1,'Astral']]],
-  ['stlstackallocator_3c_20u_20_3e_20',['STLStackAllocator&lt; U &gt;',['../da/dda/class_astral_1_1_s_t_l_stack_allocator.html',1,'Astral']]],
-  ['stlstackbasedlinearallocator_21',['STLStackBasedLinearAllocator',['../d9/d84/class_astral_1_1_s_t_l_stack_based_linear_allocator.html',1,'Astral']]],
-  ['stlstackbasedlinearallocator_3c_20otherelementtype_2c_20memoryblocksize_20_3e_22',['STLStackBasedLinearAllocator&lt; OtherElementType, MemoryBlockSize &gt;',['../d9/d84/class_astral_1_1_s_t_l_stack_based_linear_allocator.html',1,'Astral']]],
-  ['subpassdependencymasks_23',['SubpassDependencyMasks',['../d1/d1b/struct_astral_1_1_subpass_dependency_masks.html',1,'Astral']]],
-  ['subsystemupdateevent_24',['SubSystemUpdateEvent',['../d9/dde/struct_sub_system_update_event.html',1,'']]],
-  ['swapchain_25',['Swapchain',['../d2/d75/class_astral_1_1_swapchain.html',1,'Astral']]],
-  ['systemmanager_26',['SystemManager',['../d6/d8f/class_system_manager.html',1,'']]]
+  ['stlstackallocator_18',['STLStackAllocator',['../da/dda/class_astral_1_1_s_t_l_stack_allocator.html',1,'Astral']]],
+  ['stlstackbasedlinearallocator_19',['STLStackBasedLinearAllocator',['../d9/d84/class_astral_1_1_s_t_l_stack_based_linear_allocator.html',1,'Astral']]],
+  ['subpassdependencymasks_20',['SubpassDependencyMasks',['../d1/d1b/struct_astral_1_1_subpass_dependency_masks.html',1,'Astral']]],
+  ['subsystemupdateevent_21',['SubSystemUpdateEvent',['../d9/dde/struct_sub_system_update_event.html',1,'']]],
+  ['swapchain_22',['Swapchain',['../d2/d75/class_astral_1_1_swapchain.html',1,'Astral']]],
+  ['systemmanager_23',['SystemManager',['../d6/d8f/class_system_manager.html',1,'']]]
 ];

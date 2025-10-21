@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1628,
+            "type": "VEC3",
+            "max": [
+                2010.82666015625,
+                -1290.6968994140625,
+                425.1869201660156
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -1349.7913818359375,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1628,
+            "type": "VEC3",
+            "max": [
+                0.9923858046531677,
+                0.9869343638420105,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9990631937980652,
+                -0.9981771111488342,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1628,
+            "type": "VEC3",
+            "max": [
+                0.9998058080673218,
+                0.9997588992118835,
+                0.9999924302101135
+            ],
+            "min": [
+                -0.987086296081543,
+                -0.9997551441192627,
+                -0.9999924302101135
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1628,
+            "type": "VEC2",
+            "max": [
+                0.96923828125,
+                0.88287353515625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1628,
+            "type": "VEC2",
+            "max": [
+                0.9833984375,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 6048,
+            "type": "SCALAR",
+            "max": [
+                1627
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 108848,
+            "uri": "Bistro_Research_Exterior_Paris_TrafficSign_01A1_6513.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 19536,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 19536,
+            "byteLength": 19536,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 39072,
+            "byteLength": 19536,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 58608,
+            "byteLength": 13024,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 71632,
+            "byteLength": 13024,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 84656,
+            "byteLength": 24192,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Paris_TrafficSign_A_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Paris_TrafficSign_A_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Paris_TrafficSign_A_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Paris_TrafficSign_A",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_TrafficSign_01A1_6513",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_TrafficSign_01A1_6513",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

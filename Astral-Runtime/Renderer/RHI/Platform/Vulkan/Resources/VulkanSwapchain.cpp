@@ -7,6 +7,7 @@
 #include "VulkanSwapchain.h"
 
 #include "VulkanRenderTarget.h"
+#include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
@@ -47,6 +48,8 @@ namespace Astral {
 
     GraphicsRef<RenderTarget> VulkanSwapchain::AcquireNextImage()
     {
+        PROFILE_SCOPE("VulkanSwapchain::AcquireNextImage")
+
         VkResult result = vkWaitForFences(m_Device, 1, &m_Fences[m_CurrentSemaphorePairIndex], VK_TRUE, UINT64_MAX);
         ASSERT(result == VK_SUCCESS, "Failed to wait on fence!");
 

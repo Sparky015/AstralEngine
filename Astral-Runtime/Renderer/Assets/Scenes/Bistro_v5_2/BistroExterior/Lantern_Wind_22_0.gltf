@@ -1,0 +1,258 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "type": "VEC3",
+            "max": [
+                14.856585502624512,
+                14.856576919555664,
+                -64.29133605957031
+            ],
+            "min": [
+                -14.856585502624512,
+                -14.856576919555664,
+                -89.77381896972656
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "type": "VEC3",
+            "max": [
+                0.9977424740791321,
+                0.99777752161026,
+                0.8861083984375
+            ],
+            "min": [
+                -0.99777752161026,
+                -0.9977423548698425,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "type": "VEC3",
+            "max": [
+                0.7289372086524963,
+                0.7691767811775208,
+                0.9978005886077881
+            ],
+            "min": [
+                -0.767238199710846,
+                -0.7288421988487244,
+                -0.0055457171984016895
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "type": "VEC2",
+            "max": [
+                1.990234375,
+                0.588623046875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "type": "VEC2",
+            "max": [
+                0.958984375,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 2208,
+            "type": "SCALAR",
+            "max": [
+                435
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 31504,
+            "uri": "Lantern_Wind_22_0.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 5232,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5232,
+            "byteLength": 5232,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 10464,
+            "byteLength": 5232,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 15696,
+            "byteLength": 3488,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 19184,
+            "byteLength": 3488,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 22672,
+            "byteLength": 8832,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Emissive_StreetLight_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Emissive.dds"
+        },
+        {
+            "uri": "Textures\\Emissive_StreetLight_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Emissive_StreetLight",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "emissiveTexture": {
+                "index": 2
+            },
+            "emissiveFactor": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 3
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Lantern_Wind_22",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Lantern_Wind_22",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        },
+        {
+            "source": 3,
+            "sampler": 3
+        }
+    ],
+    "scene": 0
+}

@@ -8,6 +8,7 @@
 
 #include "ApplicationModule.h"
 #include "SmartPointers.h"
+#include "Job/JobManager.h"
 #include "Time/Clock.h"
 
 
@@ -36,6 +37,8 @@ namespace Astral {
         Astral::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
         RendererManager& GetRendererManager() { return *m_RendererManager; }
         AssetManager& GetAssetManager() { return *m_AssetManager; }
+        JobManager& GetJobManager() { return *m_JobManager; }
+
 
        /**@brief Gets the amount of time in seconds since the engine was initialized in seconds. */
        [[nodiscard]] float GetTimeSinceInitialization() const { return m_Clock.GetTimeSeconds(); };
@@ -46,12 +49,14 @@ namespace Astral {
         ScopedPtr<Application::ApplicationModule> m_ApplicationModule;
         bool m_IsLoopRunning;
         Astral::Clock m_Clock;
+        size_t m_FrameCount;
 
         ScopedPtr<WindowManager> m_WindowManager;
         ScopedPtr<Astral::ImGuiManager> m_ImGuiManager;
         ScopedPtr<RendererManager> m_RendererManager;
         ScopedPtr<AssetManager> m_AssetManager;
         ScopedPtr<SceneManager> m_ECSManager;
+        ScopedPtr<JobManager> m_JobManager;
     };
 
 }

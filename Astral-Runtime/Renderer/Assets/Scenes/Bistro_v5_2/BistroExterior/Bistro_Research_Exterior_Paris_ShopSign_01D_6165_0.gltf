@@ -1,0 +1,258 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 82,
+            "type": "VEC3",
+            "max": [
+                1295.6007080078125,
+                2577.450927734375,
+                340.70855712890625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 82,
+            "type": "VEC3",
+            "max": [
+                0.46429502964019775,
+                0.8856719732284546,
+                -0.0039015791844576597
+            ],
+            "min": [
+                -0.4736292064189911,
+                -0.8807156682014465,
+                -0.003914231434464455
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 82,
+            "type": "VEC3",
+            "max": [
+                0.8807243704795837,
+                0.46430668234825134,
+                0.0029071103781461716
+            ],
+            "min": [
+                -0.8856804370880127,
+                -0.4736403524875641,
+                -0.0029070305172353983
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 82,
+            "type": "VEC2",
+            "max": [
+                0.99951171875,
+                0.9999999403953552
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                0.0
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 82,
+            "type": "VEC2",
+            "max": [
+                0.77880859375,
+                0.4609375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 240,
+            "type": "SCALAR",
+            "max": [
+                81
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 5224,
+            "uri": "Bistro_Research_Exterior_Paris_ShopSign_01D_6165_0.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 984,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 984,
+            "byteLength": 984,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1968,
+            "byteLength": 984,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2952,
+            "byteLength": 656,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 3608,
+            "byteLength": 656,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4264,
+            "byteLength": 960,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Shopsign_Book_Store_Emissive_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Shopsign_Book_Store_Emissive_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Shopsign_Book_Store_Emissive_Emissive.dds"
+        },
+        {
+            "uri": "Textures\\Shopsign_Book_Store_Emissive_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Shopsign_Book_Store_Emissive",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "emissiveTexture": {
+                "index": 2
+            },
+            "emissiveFactor": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 3
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ShopSign_01D_6165",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_ShopSign_01D_6165",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        },
+        {
+            "source": 3,
+            "sampler": 3
+        }
+    ],
+    "scene": 0
+}

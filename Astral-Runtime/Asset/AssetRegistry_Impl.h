@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Core/Engine.h"
 #include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 

@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17797,
+            "type": "VEC3",
+            "max": [
+                3326.5966796875,
+                -2353.448974609375,
+                333.1263427734375
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -2396.947021484375,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17797,
+            "type": "VEC3",
+            "max": [
+                0.999609649181366,
+                0.9998001456260681,
+                0.9999219179153442
+            ],
+            "min": [
+                -0.999984622001648,
+                -0.999796986579895,
+                -0.9996157288551331
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17797,
+            "type": "VEC3",
+            "max": [
+                0.9997764825820923,
+                0.9997459053993225,
+                0.9997901320457458
+            ],
+            "min": [
+                -0.9999912977218628,
+                -0.9996822476387024,
+                -0.9997847676277161
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17797,
+            "type": "VEC2",
+            "max": [
+                1.0,
+                1.0005550384521484
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                0.0
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 17797,
+            "type": "VEC2",
+            "max": [
+                0.978515625,
+                0.9921913146972656
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 54588,
+            "type": "SCALAR",
+            "max": [
+                17796
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1143796,
+            "uri": "Bistro_Research_Exterior_Paris_Flowers_01a___8__6037.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 213564,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 213564,
+            "byteLength": 213564,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 427128,
+            "byteLength": 213564,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 640692,
+            "byteLength": 142376,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 783068,
+            "byteLength": 142376,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 925444,
+            "byteLength": 218352,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Paris_Flowers_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Paris_Flowers_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Paris_Flowers_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Paris_Flowers",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Flowers_01a___8__6037",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_Flowers_01a___8__6037",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

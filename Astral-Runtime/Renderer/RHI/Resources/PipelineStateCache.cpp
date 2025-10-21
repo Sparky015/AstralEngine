@@ -29,6 +29,7 @@ namespace Astral {
 
     void PipelineStateCache::SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet)
     {
+        PROFILE_SCOPE("PipelineStateCache::SetDescriptorSetStack")
         m_DescriptorSetStack = std::vector<DescriptorSetHandle>();
         m_DescriptorSetStack.push_back(descriptorSet);
     }
@@ -36,6 +37,7 @@ namespace Astral {
 
     void PipelineStateCache::SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets)
     {
+        PROFILE_SCOPE("PipelineStateCache::SetDescriptorSetStack")
         m_DescriptorSetStack = descriptorSets;
     }
 

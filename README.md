@@ -118,15 +118,6 @@ and running, but in the future, I want to implement sparse sets into the ECS for
 View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 
 
-
-### Next Feature (In-Progress)
-
-#### Job System and a Multithreaded Asset System
-
-Currently researching and planning for a Job System to build a base for a multithreaded engine
-and implementing a multithreaded asset system as the first use of the Job System.
-
-
 ----
 
 

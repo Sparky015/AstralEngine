@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 3965,
+            "type": "VEC3",
+            "max": [
+                181.55006408691406,
+                2293.228515625,
+                825.6464233398438
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 3965,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.9999231100082397,
+                0.999984622001648
+            ],
+            "min": [
+                -0.9999231100082397,
+                -0.9999219179153442,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 3965,
+            "type": "VEC3",
+            "max": [
+                0.9999899864196777,
+                0.9999901056289673,
+                0.9999924898147583
+            ],
+            "min": [
+                -0.999989926815033,
+                -0.9999901056289673,
+                -0.9999924898147583
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 3965,
+            "type": "VEC2",
+            "max": [
+                0.998046875,
+                0.996795654296875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 3965,
+            "type": "VEC2",
+            "max": [
+                0.986328125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 16404,
+            "type": "SCALAR",
+            "max": [
+                3964
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 271796,
+            "uri": "Bistro_Research_Exterior_Paris_BistroAwning_02A2_4111.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 47580,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 47580,
+            "byteLength": 47580,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 95160,
+            "byteLength": 47580,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 142740,
+            "byteLength": 31720,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 174460,
+            "byteLength": 31720,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 206180,
+            "byteLength": 65616,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Awnings_Hotel_Fabric_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Awnings_Hotel_Fabric_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Awnings_Hotel_Fabric_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Awnings_Hotel_Fabric",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_BistroAwning_02A2_4111",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_BistroAwning_02A2_4111",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

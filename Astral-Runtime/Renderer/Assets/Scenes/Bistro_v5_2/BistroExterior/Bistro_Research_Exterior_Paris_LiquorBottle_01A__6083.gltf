@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 209,
+            "type": "VEC3",
+            "max": [
+                448.80181884765625,
+                -329.9183349609375,
+                138.12425231933594
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                -338.1382141113281,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 209,
+            "type": "VEC3",
+            "max": [
+                0.988380491733551,
+                0.9963142275810242,
+                0.7225416898727417
+            ],
+            "min": [
+                -0.9874153137207031,
+                -0.996812641620636,
+                -0.999984622001648
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 209,
+            "type": "VEC3",
+            "max": [
+                0.8162660002708435,
+                0.8176473379135132,
+                0.9990673065185547
+            ],
+            "min": [
+                -0.8004387617111206,
+                -0.9461829662322998,
+                -0.5749949216842651
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 209,
+            "type": "VEC2",
+            "max": [
+                1.0546875,
+                1.216796875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 209,
+            "type": "VEC2",
+            "max": [
+                0.9658203125,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 966,
+            "type": "SCALAR",
+            "max": [
+                208
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 14732,
+            "uri": "Bistro_Research_Exterior_Paris_LiquorBottle_01A__6083.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 2508,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2508,
+            "byteLength": 2508,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5016,
+            "byteLength": 2508,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 7524,
+            "byteLength": 1672,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 9196,
+            "byteLength": 1672,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 10868,
+            "byteLength": 3864,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Glass_Wine_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Glass_Wine_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Paris_LiquorBottle_01_Glass_Wine_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Paris_LiquorBottle_01_Glass_Wine",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_LiquorBottle_01A__6083",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior_Paris_LiquorBottle_01A__6083",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

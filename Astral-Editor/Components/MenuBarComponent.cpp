@@ -25,6 +25,8 @@ namespace Astral {
 
     void MenuBarComponent::Show()
     {
+        PROFILE_SCOPE("MenuBarComponent::Show")
+
         m_ShowModal = false;
 
         ImGui::BeginMainMenuBar();

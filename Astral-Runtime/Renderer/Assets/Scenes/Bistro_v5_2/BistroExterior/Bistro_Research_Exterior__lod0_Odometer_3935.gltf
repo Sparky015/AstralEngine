@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 203,
+            "type": "VEC3",
+            "max": [
+                -471.88885498046875,
+                -6.776749610900879,
+                135.1752471923828
+            ],
+            "min": [
+                -478.9562683105469,
+                -15.002816200256348,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 203,
+            "type": "VEC3",
+            "max": [
+                0.9973081946372986,
+                0.9474638104438782,
+                0.9870955944061279
+            ],
+            "min": [
+                -0.9966185092926025,
+                -0.9902247786521912,
+                -0.3252052068710327
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 203,
+            "type": "VEC3",
+            "max": [
+                0.23698623478412628,
+                0.40078556537628174,
+                0.9610646367073059
+            ],
+            "min": [
+                -0.7966428995132446,
+                -0.9691464304924011,
+                -0.9997346997261047
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 203,
+            "type": "VEC2",
+            "max": [
+                0.95068359375,
+                0.707275390625
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 203,
+            "type": "VEC2",
+            "max": [
+                0.9921875,
+                0.9921875
+            ],
+            "min": [
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 1068,
+            "type": "SCALAR",
+            "max": [
+                202
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 14828,
+            "uri": "Bistro_Research_Exterior__lod0_Odometer_3935.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 2436,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2436,
+            "byteLength": 2436,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4872,
+            "byteLength": 2436,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 7308,
+            "byteLength": 1624,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 8932,
+            "byteLength": 1624,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 10556,
+            "byteLength": 4272,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Vespa_Odometer_Glass_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Odometer_Glass_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Vespa_Odometer_Glass_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Vespa_Odometer_Glass",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Odometer_3935",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Odometer_3935",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}

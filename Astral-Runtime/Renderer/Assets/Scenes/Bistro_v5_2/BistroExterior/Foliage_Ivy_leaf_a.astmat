@@ -1,0 +1,11 @@
+Shader Model: PBR
+Shader: Shaders/ForwardLightingPassUnpacked.frag
+Texture Convention: AO-Roughness-Metallic Packed
+Normals Convention: DirectX
+Is Alpha Blended: false
+Use Normal Map: true
+Texture Maps:
+  - Base Color: Scenes/Bistro_v5_2/Textures/Foliage_Ivy_leaf_a_BaseColor.dds
+  - AO-Roughness-Metallic: Scenes/Bistro_v5_2/Textures/Foliage_Ivy_leaf_a_Specular.dds
+  - Emission: Textures/SolidBlack.png
+  - Normals: Scenes/Bistro_v5_2/Textures/Foliage_Ivy_leaf_a_Normal.dds

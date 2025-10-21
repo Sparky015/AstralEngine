@@ -8,7 +8,10 @@
 
 namespace Astral {
 
-    DeltaTime::DeltaTime() : m_DeltaTime(0) {}
+    DeltaTime::DeltaTime() : m_DeltaTime(0)
+    {
+        UpdateDeltaTime();
+    }
 
     void DeltaTime::UpdateDeltaTime()
     {

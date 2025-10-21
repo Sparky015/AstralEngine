@@ -15,6 +15,10 @@
 
 namespace Astral {
 
+    /**
+     * @struct SceneDescription
+     * @brief Defines properties of the scene being rendered
+     */
     struct SceneDescription
     {
         Camera& Camera;
@@ -24,12 +28,20 @@ namespace Astral {
         float Exposure;
     };
 
+    /**
+     * @enum RendererType
+     * @brief The type of rendering path
+     */
     enum class RendererType : uint32
     {
         FORWARD,
         DEFERRED
     };
 
+    /**
+     * @enum RendererType
+     * @brief The type of rendering path
+     */
     enum class RendererDebugView : uint32
     {
         NONE,
@@ -44,6 +56,10 @@ namespace Astral {
         TONE_MAPPING_REINHARD,
     };
 
+    /**
+     * @struct RendererSettings
+     * @brief Defines the settings for the renderer
+     */
     struct RendererSettings
     {
         RendererType RendererType;
@@ -58,6 +74,10 @@ namespace Astral {
     };
 
 
+    /**
+     * @brief Gets the string version of a renderer type enum value
+     * @return The renderer type name as a string
+     */
     inline std::string_view RendererTypeToString(RendererType rendererType)
     {
         switch (rendererType)
@@ -68,6 +88,10 @@ namespace Astral {
         }
     }
 
+    /**
+     * @brief Gets the string version of a renderer debug view enum value
+     * @return The debug view name as a string
+     */
     inline std::string_view RendererDebugViewToString(RendererDebugView debugView)
     {
         switch (debugView)

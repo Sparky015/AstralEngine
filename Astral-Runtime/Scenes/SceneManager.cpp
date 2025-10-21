@@ -27,7 +27,7 @@ namespace Astral {
 
     void SceneManager::Init()
     {
-        PROFILE_SCOPE("Scene Manager Initialization");
+        PROFILE_SCOPE("SceneManager::Init");
         AE_TRACE("Initializing Scene Manager!")
         Scene scene{};
         scene.ECS = ECS();
@@ -43,14 +43,14 @@ namespace Astral {
 
     void SceneManager::Update()
     {
-        PROFILE_SCOPE("Scene ECS Systems");
+        PROFILE_SCOPE("SceneManager::Update");
         RenderingSystem::RenderEntities();
     }
 
 
     void SceneManager::Shutdown()
     {
-        PROFILE_SCOPE("Scene Manager Shutdown");
+        PROFILE_SCOPE("SceneManager::Shutdown");
         AE_TRACE("Shutting down Scene Manager!")
         m_UpdateListener.StopListening();
         GetECS().Shutdown();

@@ -16,6 +16,7 @@ namespace Astral {
 
     void AssetManager::Init()
     {
+        PROFILE_SCOPE("AssetManager::Init");
         m_Registry = CreateScopedPtr<AssetRegistry>();
         m_Registry->Init();
     }

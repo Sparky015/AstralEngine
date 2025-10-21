@@ -13,6 +13,12 @@
 #define PROFILE_SCOPE(title)
 #endif
 
+#ifndef TURN_OFF_PROFILER_MACRO
+#define AE_PROFILE_FUNCTION(functionStatement, title) { Astral::Macros::macro_SCOPE_PROFILER localScopedProfiler = Astral::Macros::macro_SCOPE_PROFILER(title); functionStatement; }
+#else
+#define AE_PROFILE_FUNCTION(functionStatement, title) functionStatement;
+#endif
+
 
 namespace Astral::Macros {
 

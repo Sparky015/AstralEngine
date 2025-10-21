@@ -23,7 +23,6 @@
 #include <queue>
 
 
-
 namespace Astral {
 
 
@@ -32,20 +31,72 @@ namespace Astral {
     public:
         ~SceneRendererImpl() = default;
 
+        /**
+         * @brief Initializes the scene renderer
+         */
         void Init();
+
+        /**
+         * @brief Shuts down the scene renderer
+         */
         void Shutdown();
 
+        /**
+         * @brief Marks the beginning of submitting objects to render
+         * @param sceneDescription The description of the scene to render
+         * @post   @ref EndScene is called to close object submission
+         */
         void BeginScene(const SceneDescription& sceneDescription);
+
+        /**
+         * @brief Marks the end of scene object submission to renderer
+         * @pre   @ref BeginScene is called first to initialize object submission
+         */
         void EndScene();
 
+        /**
+         * @brief Submits an object to the renderer
+         * @param mesh The mesh of the object
+         * @param material The material of the object
+         * @param transform The model transform of the object
+         */
         void Submit(Mesh& mesh, Material& material, Mat4& transform);
 
+        /**
+         * @brief Updates the renderer settings with the given renderer settings
+         * @param rendererSettings The renderer settings to apply to the renderer
+         */
         void SetRendererSettings(const RendererSettings& rendererSettings);
+
+        /**
+         * @brief Gets the current renderer settings
+         * @return The current renderer settings
+         */
         const RendererSettings& GetRendererSettings();
+
+        /**
+         * @brief Gets the viewport texture of the current frame
+         * @return The viewport texture of the current frame
+         */
         DescriptorSetHandle GetViewportTexture();
+
+        /**
+         * @brief Resizes the viewport being rendered to
+         * @param width Width to set viewport to
+         * @param height Height to set viewport to
+         */
         void ResizeViewport(uint32 width, uint32 height);
+
+        /**
+         * @brief Gets the dimensions of the viewport
+         * @return The dimensions of the viewport
+         */
         UVec2 GetViewportSize() { return m_ViewportSize; }
 
+        /**
+         * @brief Gets the renderer path being used
+         * @return The renderer path being used
+         */
         RendererType GetType() const;
 
     private:
@@ -153,8 +204,11 @@ namespace Astral {
         ShaderHandle m_ForwardUnpackedLightingShader;
         ShaderHandle m_ForwardORMLightingShader;
 
-        // Depth Pre-Pass
+        // Depth Pre-Pass & Cascaded Shadow Maps
         ShaderHandle m_DepthWriteOnlyShader;
+
+        // Cascaded Shadow Maps
+        ShaderHandle m_ShadowMapShader;
 
         // Environment Map Pass
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet;

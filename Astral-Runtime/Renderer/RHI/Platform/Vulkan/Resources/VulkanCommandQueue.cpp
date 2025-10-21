@@ -6,6 +6,7 @@
 
 #include "VulkanCommandQueue.h"
 
+#include "Debug/Instrumentation/ScopeProfiler.h"
 #include "Debug/Utilities/Asserts.h"
 
 namespace Astral {
@@ -28,6 +29,8 @@ namespace Astral {
 
     void VulkanCommandQueue::Submit(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
+        PROFILE_SCOPE("VulkanCommandQueue::Submit")
+
         VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTargetHandle->GetRenderCompleteSemaphore();
@@ -53,6 +56,8 @@ namespace Astral {
 
     void VulkanCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
     {
+        PROFILE_SCOPE("VulkanCommandQueue::SubmitSync")
+
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkSubmitInfo submitInfo = {
@@ -74,6 +79,8 @@ namespace Astral {
 
     void VulkanCommandQueue::Present(RenderTargetHandle renderTarget)
     {
+        PROFILE_SCOPE("VulkanCommandQueue::Present")
+
         uint32 imageIndex = renderTarget->GetImageIndex();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTarget->GetRenderCompleteSemaphore();
         VkSwapchainKHR swapchain = (VkSwapchainKHR)m_Swapchain.GetNativeHandle();

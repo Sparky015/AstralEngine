@@ -29,7 +29,7 @@ namespace Astral {
 
     void ImGuiManager::Init()
     {
-        PROFILE_SCOPE("ImGui Manager Initialization");
+        PROFILE_SCOPE("ImGuiManager::Init");
         AE_TRACE("Initializing Debug Manager!")
 
         InitImGui();
@@ -220,7 +220,7 @@ namespace Astral {
     float ImGuiManager::m_Time = 0.0f;
     void ImGuiManager::BeginFrame()
     {
-        PROFILE_SCOPE("ImGui Begin Frame");
+        PROFILE_SCOPE("ImGuiManager::BeginFrame");
         ImGuiIO& io = ImGui::GetIO();
         float time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
@@ -244,7 +244,7 @@ namespace Astral {
 
     void ImGuiManager::EndFrame()
     {
-        PROFILE_SCOPE("ImGui End Frame");
+        PROFILE_SCOPE("ImGuiManager::EndFrame");
         ImGuiIO& io = ImGui::GetIO();
         ImGui::Render();
 
@@ -278,7 +278,7 @@ namespace Astral {
 
     void ImGuiManager::InitImGui() const
     {
-        PROFILE_SCOPE("Initialize ImGui");
+        PROFILE_SCOPE("ImGuiManager::InitImGui");
 
         ImGui::CreateContext();
         ImPlot::CreateContext();
@@ -313,7 +313,7 @@ namespace Astral {
 
     void ImGuiManager::ShutdownImGui() const
     {
-        PROFILE_SCOPE("ImGui Manager Shutdown");
+        PROFILE_SCOPE("ImGuiManager::ShutdownImGui");
 
         ImGui_ImplGlfw_Shutdown();
 

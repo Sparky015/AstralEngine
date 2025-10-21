@@ -1,0 +1,242 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.44188438)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_specular",
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2704,
+            "type": "VEC3",
+            "max": [
+                -1465.30419921875,
+                1210.0213623046875,
+                443.6291198730469
+            ],
+            "min": [
+                -1561.7264404296875,
+                2.2250738585072014e-308,
+                2.2250738585072014e-308
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2704,
+            "type": "VEC3",
+            "max": [
+                0.9999219179153442,
+                0.9999231100082397,
+                0.999796986579895
+            ],
+            "min": [
+                -0.9997387528419495,
+                -0.999609649181366,
+                -0.5293059349060059
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2704,
+            "type": "VEC3",
+            "max": [
+                0.9997575283050537,
+                0.9998049139976501,
+                0.9982637166976929
+            ],
+            "min": [
+                -0.9995476007461548,
+                -0.9998862147331238,
+                -0.9999307990074158
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2704,
+            "type": "VEC2",
+            "max": [
+                3.109375,
+                5.97265625
+            ],
+            "min": [
+                -3.728515625,
+                -0.998046875
+            ]
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2704,
+            "type": "VEC2",
+            "max": [
+                3.109375,
+                5.97265625
+            ],
+            "min": [
+                -3.728515625,
+                -0.998046875
+            ]
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 9759,
+            "type": "SCALAR",
+            "max": [
+                2703
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 179644,
+            "uri": "Bistro_Research_Exterior__lod0_Italian_Cypress3_3927_0.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 32448,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 32448,
+            "byteLength": 32448,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 64896,
+            "byteLength": 32448,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 97344,
+            "byteLength": 21632,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 118976,
+            "byteLength": 21632,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 140608,
+            "byteLength": 39036,
+            "target": 34963
+        }
+    ],
+    "images": [
+        {
+            "uri": "Textures\\Foliage_Trunk_BaseColor.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Trunk_Normal.dds"
+        },
+        {
+            "uri": "Textures\\Foliage_Trunk_Specular.dds"
+        }
+    ],
+    "materials": [
+        {
+            "name": "Foliage_Trunk",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.5527864098548889
+            },
+            "normalTexture": {
+                "index": 1
+            },
+            "extensions": {
+                "KHR_materials_specular": {
+                    "specularFactor": 1.0,
+                    "specularColorFactor": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "specularTexture": {
+                        "index": 2
+                    }
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Italian_Cypress3_3927",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 5,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3,
+                        "TEXCOORD_1": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Bistro_Research_Exterior__lod0_Italian_Cypress3_3927",
+            "mesh": 0
+        }
+    ],
+    "samplers": [
+        {},
+        {},
+        {}
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        },
+        {
+            "source": 1,
+            "sampler": 1
+        },
+        {
+            "source": 2,
+            "sampler": 2
+        }
+    ],
+    "scene": 0
+}
