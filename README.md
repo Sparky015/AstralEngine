@@ -143,8 +143,9 @@ View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 ---
 
 
-![CurrentEngineState](Documentation/Assets/CurrentEngineState.png)
-This picture contains the Amazon Lumberyard Bistro sample in the Editor.
+![AstralEditorScreenshot](Documentation/Assets/Astral_Engine_Editor_Screenshot.png)
+This picture contains the Amazon Lumberyard Bistro sample in the Editor. Note: This is from branch with the GPU performance
+timers being worked on (123-performance-counters-for-render-passes)
 
 ### Roadmap
 
