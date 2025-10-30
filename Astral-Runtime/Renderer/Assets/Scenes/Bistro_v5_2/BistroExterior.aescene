@@ -1631,11 +1631,11 @@
                     "Environment_EnvironmentMapBlur": 0.0
                 },
                 "AE_SceneCameraProperties": {
-                    "Camera_Position_X": -20.868507385253906,
-                    "Camera_Position_Y": 7.37438440322876,
-                    "Camera_Position_Z": -2.667806625366211,
-                    "Camera_Rotation_X": -14.355454444885254,
-                    "Camera_Rotation_Y": -93.04690551757813,
+                    "Camera_Position_X": -20.738624572753906,
+                    "Camera_Position_Y": 6.035476207733154,
+                    "Camera_Position_Z": -2.555384397506714,
+                    "Camera_Rotation_X": -15.605459213256836,
+                    "Camera_Rotation_Y": -93.24224090576172,
                     "Camera_Rotation_Z": 0.0,
                     "Camera_NearPlane": 0.10000000149011612,
                     "Camera_FarPlane": 300.0
@@ -1649,7 +1649,7 @@
                     "RendererSettings_DebugView": 0,
                     "RendererSettings_ShadowMapResolution": 4096,
                     "RendererSettings_ShadowMapBias": 0.00004999999873689376,
-                    "RendererSettings_ShadowMapZMultiplier": 2.5
+                    "RendererSettings_ShadowMapZMultiplier": 4.0
                 }
             }
         },
