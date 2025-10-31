@@ -23,6 +23,10 @@ PushConstantData u_PushConstantData;
 
 struct PS_INPUT 
 {
+    float3 position : LOCATION0;    // Unused
+    float3 normals : LOCATION1;     // Unused
+    float3 tangents : LOCATION2;    // Unused
+    float3 bitangents : LOCATION3;  // Unused
     float2 textureCoord : LOCATION4;
 };
 
