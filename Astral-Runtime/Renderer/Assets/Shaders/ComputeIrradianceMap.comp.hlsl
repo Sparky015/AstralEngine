@@ -3,21 +3,21 @@ TextureCube<float4> u_EnvironmentMap : register(t0, space0);
 SamplerState u_Sampler : register(s0);
 RWTexture2DArray<half4> u_IrradianceMap : register(u1, space0);
 
-#ifdef VULKAN
-[[vk::push_constant]]
-#endif
-cbuffer PushConstantDataBuffer : register(b0)
+struct PushConstantData
 {
-    uint faceIndex;
+    float faceIndex;
 };
 
-const float PI = 3.14159265359;
+[[vk::push_constant]]
+PushConstantData pushConstants;
 
 [numthreads(8, 8, 1)]
 void main(
     uint3 dispatchThreadID : SV_DispatchThreadID
 )
 {
+    const float PI = 3.14159265359;
+
     int3 outputSize;
     u_IrradianceMap.GetDimensions(outputSize.x, outputSize.y, outputSize.z);
 
@@ -28,6 +28,8 @@ void main(
     uv = uv * 2.0 - 1.0; // Move from [0, 1] to [-1, 1]
 
     float3 normal;
+
+    int faceIndex = int(pushConstants.faceIndex);
 
     switch (faceIndex)
     {
@@ -74,5 +76,5 @@ void main(
 
     irradiance = clamp(irradiance, 0, 0x7F7FFFFF); // Clamp to the max float value to avoid INF values
 
-    u_IrradianceMap[int3(pixelCoords, faceIndex)] = float4(irradiance, 1.0);
+    u_IrradianceMap[int3(pixelCoords, pushConstants.faceIndex)] = float4(irradiance, 1.0);
 }
