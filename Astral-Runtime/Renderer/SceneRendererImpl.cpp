@@ -1343,13 +1343,13 @@ namespace Astral {
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
         Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert.hlsl");
         frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
 
         Material toneMapperMaterial{};
-        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
+        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag.hlsl");
         toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
         PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0, CullMode::NONE);
