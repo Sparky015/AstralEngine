@@ -39,19 +39,20 @@ namespace Astral {
         glslang_stage_t shaderStage;
         switch (shaderSource.GetShaderType())
         {
-            case VERTEX_SHADER: shaderStage = GLSLANG_STAGE_VERTEX; break;
-            case FRAGMENT_SHADER: shaderStage = GLSLANG_STAGE_FRAGMENT; break;
-            case COMPUTE_SHADER: shaderStage = GLSLANG_STAGE_COMPUTE; break;
-            case GEOMETRY_SHADER: shaderStage = GLSLANG_STAGE_GEOMETRY; break;
-            case TESSELLATION_CONTROL_SHADER: shaderStage = GLSLANG_STAGE_TESSCONTROL; break;
-            case TESSELLATION_EVALUATION_SHADER: shaderStage = GLSLANG_STAGE_TESSEVALUATION; break;
-            case NONE: AE_ERROR("Invalid shader type!"); break;
+            case ShaderType::VERTEX_SHADER: shaderStage = GLSLANG_STAGE_VERTEX; break;
+            case ShaderType::FRAGMENT_SHADER: shaderStage = GLSLANG_STAGE_FRAGMENT; break;
+            case ShaderType::COMPUTE_SHADER: shaderStage = GLSLANG_STAGE_COMPUTE; break;
+            case ShaderType::GEOMETRY_SHADER: shaderStage = GLSLANG_STAGE_GEOMETRY; break;
+            case ShaderType::TESSELLATION_CONTROL_SHADER: shaderStage = GLSLANG_STAGE_TESSCONTROL; break;
+            case ShaderType::TESSELLATION_EVALUATION_SHADER: shaderStage = GLSLANG_STAGE_TESSEVALUATION; break;
+            case ShaderType::NONE: AE_ERROR("Invalid shader type!"); break;
             default: AE_ERROR("Invalid shader type!"); break;
         }
 
+        ShaderLanguage shaderLanguage = shaderSource.GetShaderLanguage();
 
         const glslang_input_t input = {
-            .language = GLSLANG_SOURCE_GLSL,
+            .language = shaderLanguage == ShaderLanguage::GLSL ? GLSLANG_SOURCE_GLSL : GLSLANG_SOURCE_HLSL,
             .stage = shaderStage,
             .client = GLSLANG_CLIENT_VULKAN,
             .client_version = GLSLANG_TARGET_VULKAN_1_2,
@@ -64,6 +65,7 @@ namespace Astral {
             .forward_compatible = false,
             .messages = GLSLANG_MSG_DEFAULT_BIT,
             .resource = glslang_default_resource(),
+            .callbacks = {},
         };
 
         glslang_shader_t* shader = glslang_shader_create(&input);

@@ -14,36 +14,28 @@ namespace Astral {
 
 
     ShaderSource::ShaderSource() :
-        m_ShaderType(NONE)
+        m_ShaderType(ShaderType::NONE),
+        m_ShaderLanguage(ShaderLanguage::GLSL)
     {}
     
-    ShaderSource::ShaderSource(const std::filesystem::path& filePath) : m_ShaderType(NONE)
+    ShaderSource::ShaderSource(const std::filesystem::path& filePath) : m_ShaderType(ShaderType::NONE)
     {
-        std::filesystem::path extension = filePath.extension();
+        ParseShaderProperties(filePath);
 
-        if (extension == ".vert") { m_ShaderType = VERTEX_SHADER; }
-        else if (extension == ".frag") { m_ShaderType = FRAGMENT_SHADER; }
-        else if (extension == ".comp") { m_ShaderType = COMPUTE_SHADER; }
-        else if (extension == ".geom") { m_ShaderType = GEOMETRY_SHADER; }
-        else if (extension == ".tesc") { m_ShaderType = TESSELLATION_CONTROL_SHADER; }
-        else if (extension == ".tese") { m_ShaderType = TESSELLATION_EVALUATION_SHADER; }
-        else { m_ShaderType = NONE; }
-
-        m_FileName = filePath.filename().string();
 
         if (filePath.is_relative())
         {
             std::filesystem::path absolutePath = std::string(SHADER_DIR) + filePath.string();
-            ParseShader(absolutePath);
+            ParseShaderCode(absolutePath);
         }
         else
         {
-            ParseShader(filePath);
+            ParseShaderCode(filePath);
         }
     }
 
 
-    void ShaderSource::ParseShader(const std::filesystem::path& filePath)
+    void ShaderSource::ParseShaderCode(const std::filesystem::path& filePath)
     {
         if (!m_ShaderCode.empty())
         {
@@ -95,6 +87,55 @@ namespace Astral {
     ShaderType ShaderSource::GetShaderType() const
     {
         return m_ShaderType;
+    }
+
+
+    ShaderLanguage ShaderSource::GetShaderLanguage() const
+    {
+        return m_ShaderLanguage;
+    }
+
+
+    void ShaderSource::ParseShaderProperties(const std::filesystem::path& filePath)
+    {
+        std::filesystem::path extension = filePath.extension();
+
+        if (extension == ".glsl")
+        {
+            // This maps to GLSL headers
+            m_ShaderLanguage = ShaderLanguage::GLSL;
+            m_ShaderType = ShaderType::NONE;
+            m_FileName = filePath.filename().string();
+
+        }
+        else if (extension == ".hlsl")
+        {
+            // This maps to HLSL headers
+            m_ShaderLanguage = ShaderLanguage::HLSL;
+            m_ShaderType = ShaderType::NONE;
+            m_FileName = filePath.filename().string();
+        }
+        else
+        {
+            // This maps to HLSL or GLSL shaders with a stage type
+
+            std::filesystem::path shaderLanguageExtension = filePath.stem().extension();
+
+            if (extension == ".vert") { m_ShaderType = ShaderType::VERTEX_SHADER; }
+            else if (extension == ".frag") { m_ShaderType = ShaderType::FRAGMENT_SHADER; }
+            else if (extension == ".comp") { m_ShaderType = ShaderType::COMPUTE_SHADER; }
+            else if (extension == ".geom") { m_ShaderType = ShaderType::GEOMETRY_SHADER; }
+            else if (extension == ".tesc") { m_ShaderType = ShaderType::TESSELLATION_CONTROL_SHADER; }
+            else if (extension == ".tese") { m_ShaderType = ShaderType::TESSELLATION_EVALUATION_SHADER; }
+            else { m_ShaderType = ShaderType::NONE; }
+
+            if (shaderLanguageExtension == ".glsl") { m_ShaderLanguage = ShaderLanguage::GLSL; }
+            else if (shaderLanguageExtension == ".hlsl") { m_ShaderLanguage = ShaderLanguage::HLSL; }
+            else { m_ShaderLanguage = ShaderLanguage::GLSL; }
+
+            m_FileName = filePath.filename().string();
+        }
+
     }
 
 
