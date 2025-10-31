@@ -374,6 +374,7 @@ if (WIN32)
                 SPIRV-Tools-optd
                 glslangd
                 glslang-default-resource-limitsd
+                dxcompilerd
         )
     else ()
         target_link_libraries(AstralEngine PUBLIC
@@ -383,6 +384,7 @@ if (WIN32)
                 SPIRV-Tools-opt
                 glslang
                 glslang-default-resource-limits
+                dxcompiler
         )
     endif ()
 elseif (APPLE)
@@ -394,6 +396,7 @@ elseif (APPLE)
             SPIRV-Tools
             SPIRV-Tools-diff
             SPIRV-Tools-opt
+            dxcompiler
     )
 endif()
 

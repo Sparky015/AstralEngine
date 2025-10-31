@@ -10,6 +10,7 @@
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 
+#include "dxc/dxcapi.h"
 #include "glslang/Include/glslang_c_interface.h"
 #include "glslang/Public/resource_limits_c.h"
 #include "glslang/Public/ShaderLang.h"
@@ -33,6 +34,19 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanShader::CompileShader");
 
+        if (shaderSource.GetShaderLanguage() == ShaderLanguage::GLSL)
+        {
+            CompileGLSLShader(shaderSource);
+        }
+        else
+        {
+            CompileHLSLShader(shaderSource);
+        }
+    }
+
+
+    void VulkanShader::CompileGLSLShader(const ShaderSource& shaderSource)
+    {
         // Compiling to SPIR-V
         std::vector<uint32> SPIRV_Code;
 
@@ -133,6 +147,102 @@ namespace Astral {
         glslang_shader_delete(shader);
 
         // SPIR-V Compilation Finished
+
+        CreateShaderModule(SPIRV_Code);
+    }
+
+
+    void VulkanShader::CompileHLSLShader(const ShaderSource& shaderSource)
+    {
+        CComPtr<IDxcUtils> pUtils;
+        CComPtr<IDxcCompiler3> pCompiler;
+
+        // Create utils instance
+        HRESULT result = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&pUtils));
+        ASSERT(SUCCEEDED(result), "Failed to create IDxcUtils");
+
+        // Create compiler instance
+        result = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&pCompiler));
+        ASSERT(SUCCEEDED(result), "Failed to create IDxcCompiler3");
+
+        // Create source blob
+        CComPtr<IDxcBlobEncoding> pSource;
+        result = pUtils->CreateBlob(shaderSource.GetShaderCode().data(),
+                                     shaderSource.GetShaderCode().size(),
+                                     CP_UTF8, &pSource);
+        ASSERT(SUCCEEDED(result), "Failed to create source blob");
+
+        // Set up DXC buffer
+        DxcBuffer buffer;
+        buffer.Ptr = pSource->GetBufferPointer();
+        buffer.Size = pSource->GetBufferSize();
+        buffer.Encoding = DXC_CP_UTF8;
+
+
+
+
+        const wchar_t* shaderStageProfile = L"";
+        switch (shaderSource.GetShaderType())
+        {
+            case ShaderType::VERTEX_SHADER: shaderStageProfile = L"vs_6_0"; break;
+            case ShaderType::FRAGMENT_SHADER: shaderStageProfile = L"ps_6_0"; break;
+            case ShaderType::COMPUTE_SHADER: shaderStageProfile = L"cs_6_0"; break;
+            case ShaderType::GEOMETRY_SHADER: shaderStageProfile = L"gs_6_0"; break;
+            case ShaderType::TESSELLATION_CONTROL_SHADER: shaderStageProfile = L"hs_6_0"; break;
+            case ShaderType::TESSELLATION_EVALUATION_SHADER: shaderStageProfile = L"ds_6_0"; break;
+            case ShaderType::NONE: AE_ERROR("Invalid shader type!"); break;
+            default: AE_ERROR("Invalid shader type!"); break;
+        }
+
+
+        // Prepare compiler arguments
+        std::vector<LPCWSTR> args = {
+            L"-E", L"main",                      // Entry point
+            L"-T", shaderStageProfile,        // Target profile (e.g., ps_6_0)
+            L"-spirv",                           // Enable SPIR-V output
+            L"-fspv-target-env=vulkan1.2",       // Target Vulkan 1.2
+            L"/Zi",                              // Debug info
+        };
+
+        // Compile
+        CComPtr<IDxcResult> pResult;
+        result = pCompiler->Compile(&buffer, args.data(), (UINT32)args.size(),
+                                     nullptr, IID_PPV_ARGS(&pResult));
+        ASSERT(SUCCEEDED(result), "Compilation call failed");
+
+        // Check compilation status
+        HRESULT compilationStatus;
+        result = pResult->GetStatus(&compilationStatus);
+        ASSERT(SUCCEEDED(result), "Failed to get compilation status");
+
+        // Handle compilation failure
+        if (FAILED(compilationStatus)) {
+            CComPtr<IDxcBlobEncoding> pErrors;
+            pResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&pErrors), nullptr);
+
+            if (pErrors && pErrors->GetBufferSize() > 0)
+            {
+                std::string errorMsg(
+                    static_cast<const char*>(pErrors->GetBufferPointer()),
+                    pErrors->GetBufferSize()
+                );
+                AE_ERROR(errorMsg.c_str());
+            }
+
+            AE_ERROR("Shader compilation failed");
+        }
+
+        // Extract SPIR-V output
+        CComPtr<IDxcBlob> pSpirv;
+        result = pResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&pSpirv), nullptr);
+        ASSERT(SUCCEEDED(result) && pSpirv != nullptr, "Failed to get SPIR-V output");
+
+        // Copy to output vector
+        std::vector<uint32> SPIRV_Code;
+
+        const uint32* pSpirvData = static_cast<const uint32*>(pSpirv->GetBufferPointer());
+        size_t spirvSize = pSpirv->GetBufferSize() / sizeof(uint32);
+        SPIRV_Code.assign(pSpirvData, pSpirvData + spirvSize);
 
         CreateShaderModule(SPIRV_Code);
     }
