@@ -31,7 +31,7 @@ namespace Astral {
         static int item_current = 1;
         const std::vector<AllocationDataSerializeable>& allocationData = storage.GetAllocationDataOverTime();
 
-        ImGui::Text("Snapshot Count: %zu allocations/frees record", storage.GetSnapshotCount());
+        ImGui::Text("Snapshot Count: %zu allocations/frees recorded", storage.GetSnapshotCount());
 
         ImGui::PushItemWidth(-1);
         ImGui::ListBox("##List of Allocations", &item_current, AllocationDataArrayGetter, (void*)allocationData.data(), allocationData.size(), 30);
