@@ -85,6 +85,7 @@ namespace Astral {
         scene.ECS.Init();
 
         m_Scenes[filePath] = CreateScopedPtr<Scene>(scene);
+        if (m_ActiveScene) { m_Scenes[filePath]->PrimaryCamera = m_ActiveScene->PrimaryCamera; }
         m_ActiveScene = m_Scenes[filePath].get();
         m_ActiveSceneExists = true;
 
