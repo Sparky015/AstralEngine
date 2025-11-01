@@ -14,7 +14,7 @@ namespace Astral {
     {
         static char buffer[200];
         AllocationDataSerializeable* items = (AllocationDataSerializeable*)data;
-        snprintf(buffer, sizeof(buffer), "0x%Ix | Size: %zu bytes", items[idx].pointer, items[idx].size);
+        snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].pointer, items[idx].size);
         return buffer;
     }
 
@@ -31,7 +31,7 @@ namespace Astral {
         static int item_current = 1;
         const std::vector<AllocationDataSerializeable>& allocationData = storage.GetAllocationDataOverTime();
 
-        ImGui::Text("Snapshot Count: %zu", storage.GetSnapshotCount());
+        ImGui::Text("Snapshot Count: %zu allocations/frees record", storage.GetSnapshotCount());
 
         ImGui::PushItemWidth(-1);
         ImGui::ListBox("##List of Allocations", &item_current, AllocationDataArrayGetter, (void*)allocationData.data(), allocationData.size(), 30);
