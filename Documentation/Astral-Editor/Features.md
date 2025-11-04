@@ -8,7 +8,7 @@ runtime and observe the changes right away. The menu covers information across m
 Renderer, Asset Manager, ECS, Memory & Allocation stats, Window Manager, and Input State as well as information 
 about the engine build and the CPU core count and cache sizes of the computer running.
 
-<img src="../../Documentation/Pictures/Astral-Editor/astral-editor-debug-menu.png" alt="DebugMenuPicture" width="50%">
+<img src="../Assets/Astral-Editor/astral-editor-debug-menu.png" alt="DebugMenuPicture" width="50%">
 
 #### Scenes
 
@@ -25,7 +25,7 @@ also allows you to view the material settings for each entity with a material. I
 can make edits on the entity level to test new changes. Furthermore, after any changes you make, you click one button to have it 
 saved to disk.
 
-<img src="../../Documentation/Pictures/Astral-Editor/astral-editor-material-editor.png" alt="MaterialEditorPicture" width="50%">
+<img src="../Assets/Astral-Editor/astral-editor-material-editor.png" alt="MaterialEditorPicture" width="50%">
 
 #### Properties Panel
 
@@ -33,18 +33,18 @@ The Properties panel allows you to add components to an entity as well as view o
 is the key to building scenes. Components define types of data that can be attached to an entity (aka game objects or actors).
 Currently, the supported component types are Transform, Mesh, Material, Point Light, and Directional Light.
 
-<img src="../../Documentation/Pictures/Astral-Editor/astral-editor-properties-panel.png" alt="PropertiesPanelPicture" width="50%">
+<img src="../Assets/Astral-Editor/astral-editor-properties-panel.png" alt="PropertiesPanelPicture" width="50%">
 
 #### Environment Panel
 
 The Environment panel allows you to view or edit environment settings for the scene. You can adjust which environment map is used,
 the ambient light factor, exposure, and the blur of the environment map.
 
-<img src="../../Documentation/Pictures/Astral-Editor/astral-editor-environment.png" alt="EnvironmentPanelPicture" width="50%">
+<img src="../Assets/Astral-Editor/astral-editor-environment.png" alt="EnvironmentPanelPicture" width="50%">
 
 #### Camera Controller Panel
 
 The Camera Controller panel allows you to view or edit settings for the main camera of the scene. You can adjust the speed, sensitivity,
 z near, and z far distances. 
 
-<img src="../../Documentation/Pictures/Astral-Editor/astral-editor-camera-controller-panel.png" alt="CameraControllerPanelPicture" width="50%">
+<img src="../Assets/Astral-Editor/astral-editor-camera-controller-panel.png" alt="CameraControllerPanelPicture" width="50%">
