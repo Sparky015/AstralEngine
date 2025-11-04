@@ -38,11 +38,12 @@ Visit my website for more information, pictures, and higher quality videos: [htt
 * Entity-Component-System (ECS)
 
 
-----
 
-#### Feature Details
+### Feature Details
 
-* Physically-Based Vulkan HDR Renderer 
+---
+
+#### Physically-Based Vulkan HDR Renderer 
 
 Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image
 Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
@@ -51,7 +52,7 @@ geometry pass, cascaded shadow map pass, lighting pass, environment map pass, to
 deferred uses FXAA (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance
 and prefiltered environment maps one time for each environment map that is set.
 
-* Frame/Render Graph
+#### Frame/Render Graph
 
 Designed and implemented Frame/Render Graph to manage render pass resources and execution as well as memory barriers for 
 synchronization. The Frame Graph allows the user to define any render passes and attachment specs for each render pass, and
@@ -61,33 +62,33 @@ to the final output image. The user can also recreate the Render Graph as many t
 and the render graph will manage the creation of new resources the user requested as well as making sure the resources 
 being used on the GPU do not get deleted.
 
-* Renderer Hardware Interface (RHI)
+#### Renderer Hardware Interface (RHI)
 
 Created an abstraction layer to manage renderer API usage in order to support multiple rendering APIs in the future
 (looking into implemented DX12 in the future) and allow for easy API usage for higher level systems while allowing for
 switching APIs without any diverging code in the high level systems.
 
-* Editor 
+#### Editor 
 
 Built an editor that I can compose new game scenes with and allow for saving scenes and switching to different scenes without using a
 different executable. Users can compose scenes by adding and removing entities, adding components to entities and changing
 entity component data, changing environment settings like the environment map, exposure and ambient light modifier, changing 
 camera properties, and more!
 
-* Scene System 
+#### Scene System 
 
 Designed and implemented a scene system that will allow users to compose scenes with entities, environment maps, and more 
 and save the scene to a file and load scenes from files. Right now it is loading whole scenes at a time and storing them
 in the asset cache, but in the future, I will implement a way to unload scenes from the asset cache.
 
-* Asset Manager 
+#### Asset Manager 
 
 Created an asset manager that can load in assets from files and cache their data to improve loading times
 and memory efficiency. Currently, the asset loads are single threaded, but in the future, I want to look into 
 multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a 
 smooth UI/UX.
 
-* Academy Color Encoding System (ACES) Color Workflow
+#### Academy Color Encoding System (ACES) Color Workflow
 
 ACES 2.0 has been implemented for high quality color management, resulting in more vibrant and accurate colors. 
 All rendering is done in the ACEScg space with the ACES filmic look being applied. For the input display transform, all 
@@ -151,11 +152,16 @@ timers being worked on (123-performance-counters-for-render-passes)
 
 -----
 
-1. The below TODO Render Passes
-2. Native Scripting
-3. Rendering Thread
-4. GPU Particle System
-5. Volumetric Lighting
+1. Compute Shader Frame Graph Integration 
+2. The below TODO Render Passes
+3. Native Scripting
+4. GPU-Driven Renderer
+5. GPU Particle System
+6. Volumetric Lighting
+7. Multithreaded Asset Manager
+8. Audio System
+9. Physics System
+10. Render Thread
 
 
 ### TODO Render Passes
@@ -194,7 +200,8 @@ Note: The project will not build without the Vulkan SDK installed on your comput
       The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
 
 > **Important Other Note**: There are some quirks being ironed out as I develop the engine. Currently, there are a few bugs to be aware if you run the engine. Firstly, shadows will not work correctly with frustum culling turned on. The main geometry pass and
-> shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS)
+> shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS).
+> See the Issues section of the GitHub to see an update to date list of any potential bugs.
 
 
 Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to download the project. Do not use the 'Download Zip' option!
