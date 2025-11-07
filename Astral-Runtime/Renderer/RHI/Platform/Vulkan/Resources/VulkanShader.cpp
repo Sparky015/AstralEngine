@@ -10,10 +10,15 @@
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 
+#ifdef ASTRAL_PLATFORM_WINDOWS
+#include <atlbase.h>
+#endif
+
 #include "dxc/dxcapi.h"
 #include "glslang/Include/glslang_c_interface.h"
 #include "glslang/Public/resource_limits_c.h"
 #include "glslang/Public/ShaderLang.h"
+
 
 namespace Astral {
 
