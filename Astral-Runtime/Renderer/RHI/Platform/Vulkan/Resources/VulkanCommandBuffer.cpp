@@ -41,6 +41,8 @@ namespace Astral {
 
     void VulkanCommandBuffer::BeginRecording()
     {
+        PROFILE_SCOPE("VulkanCommandBuffer::BeginRecording")
+
         m_State = State::RECORDING;
 
         VkCommandBufferBeginInfo commandBufferBeginInfo = {
@@ -57,6 +59,8 @@ namespace Astral {
 
     void VulkanCommandBuffer::EndRecording()
     {
+        PROFILE_SCOPE("VulkanCommandBuffer::EndRecording")
+
         m_State = State::RECORDED;
         vkEndCommandBuffer(m_CommandBuffer);
     }

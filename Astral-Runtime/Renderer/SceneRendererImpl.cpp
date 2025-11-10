@@ -1628,8 +1628,6 @@ namespace Astral {
 
     bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
     {
-        PROFILE_SCOPE("SceneRendererImpl::ShouldCullMesh")
-
         std::array<Vec4, 6> frustum;
         BoundingSphere worldSpaceBoundingSphere;
         worldSpaceBoundingSphere.Center = modelTransform * glm::vec4(mesh.BoundingSphere.Center, 1.0f);
