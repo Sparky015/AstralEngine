@@ -60,7 +60,7 @@ namespace Astral {
          * @param material The material of the object
          * @param transform The model transform of the object
          */
-        void Submit(Mesh& mesh, Material& material, Mat4& transform);
+        void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
 
         /**
          * @brief Updates the renderer settings with the given renderer settings
@@ -118,8 +118,8 @@ namespace Astral {
 
         struct FrameContext
         {
-            std::vector<Mesh> Meshes;
-            std::vector<Material> Materials;
+            std::vector<Ref<Mesh>> Meshes;
+            std::vector<Ref<Material>> Materials;
             std::vector<Mat4> Transforms;
 
 
