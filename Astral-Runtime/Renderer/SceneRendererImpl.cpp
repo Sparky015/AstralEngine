@@ -847,21 +847,28 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
+        DescriptorSetHandle materialDescriptorSetSave = nullptr;
+        ShaderHandle materialMaterialShaderSave = nullptr;
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
             Mesh& mesh = frameContext.Meshes[i];
-            Material material = frameContext.Materials[i];
+            Material& material = frameContext.Materials[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
             if (material.DescriptorSet == nullptr) { continue; }
+            materialDescriptorSetSave = material.DescriptorSet;
             material.DescriptorSet = nullptr;
 
+            materialMaterialShaderSave = material.FragmentShader;
             material.FragmentShader = m_DepthWriteOnlyShader;
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
+
+            material.DescriptorSet = materialDescriptorSetSave;
+            material.FragmentShader = materialMaterialShaderSave;
+
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
