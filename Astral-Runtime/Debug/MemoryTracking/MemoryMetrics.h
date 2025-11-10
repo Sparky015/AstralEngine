@@ -73,7 +73,7 @@ namespace Astral {
 
         /**@brief Retrieves memory usage metrics for the current frame
          * @return The memory usage metrics of the current frame */
-        [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_FrameAllocationData; }
+        [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_OldFrameAllocationData; }
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
@@ -162,6 +162,7 @@ namespace Astral {
         ThreadMap m_ActiveAllocationsByThread;
         ThreadMap m_TotalAllocationsByThread;
 
+        FrameAllocationData m_OldFrameAllocationData;
         FrameAllocationData m_FrameAllocationData;
         Astral::EventListener<NewFrameEvent> m_NewFrameEventListener;
 
