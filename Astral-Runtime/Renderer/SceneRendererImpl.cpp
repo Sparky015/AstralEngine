@@ -851,7 +851,7 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         DescriptorSetHandle materialDescriptorSetSave = nullptr;
-        ShaderHandle materialMaterialShaderSave = nullptr;
+        ShaderHandle materialShaderSave = nullptr;
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
@@ -864,13 +864,13 @@ namespace Astral {
             materialDescriptorSetSave = material.DescriptorSet;
             material.DescriptorSet = nullptr;
 
-            materialMaterialShaderSave = material.FragmentShader;
+            materialShaderSave = material.FragmentShader;
             material.FragmentShader = m_DepthWriteOnlyShader;
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
 
             material.DescriptorSet = materialDescriptorSetSave;
-            material.FragmentShader = materialMaterialShaderSave;
+            material.FragmentShader = materialShaderSave;
 
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
