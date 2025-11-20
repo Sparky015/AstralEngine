@@ -5,14 +5,10 @@
 ---------------
 Welcome to the Astral Engine project codebase!
 
-This project is a Work-In-Progress with no official first release.
-
-It is continuously being updated and improved as I can get to more things.
-
 Project Lifetime: April 2024 - Present
 
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
-and the environment, but there is a lot of stuff to do to get there.
+and the environment.
 
 Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
 
@@ -37,6 +33,8 @@ Visit my website for more information, pictures, and higher quality videos: [htt
 * Visual Scope Profiler
 * Entity-Component-System (ECS)
 
+
+#### You can find brief write ups and planning documents for most of the features in the Documentation folder
 
 
 ### Feature Details
