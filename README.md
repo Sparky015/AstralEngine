@@ -205,7 +205,7 @@ Note: The project will not build without the Vulkan SDK installed on your comput
       The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
 
 > **Important Other Note**: There are some quirks being ironed out as I develop the engine. Currently, there are a few bugs to be aware if you run the engine. Firstly, shadows will not work correctly with frustum culling turned on. The main geometry pass and
-> shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling). On macOS, attempting to turn off VSync will cause a crash (Temp. Fix: Do not try to turn off vsync if building from macOS).
+> shadow map pass currently use the same list of geometry to draw, so any culling also affects the shadow map pass (Temp. fix: Turn off frustum culling).
 > See the Issues section of the GitHub to see an update to date list of any potential bugs.
 
 
