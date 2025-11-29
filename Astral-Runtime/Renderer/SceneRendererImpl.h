@@ -22,6 +22,8 @@
 
 #include <queue>
 
+#include "SubmissionList.h"
+
 
 namespace Astral {
 
@@ -118,10 +120,12 @@ namespace Astral {
 
         struct FrameContext
         {
-            std::vector<Ref<Mesh>> Meshes;
-            std::vector<Ref<Material>> Materials;
-            std::vector<Mat4> Transforms;
+            SubmissionList MainList;
+            SubmissionList ShadowMapList;
 
+            std::vector<Ref<Mesh>> ShadowMapListMeshes;
+            std::vector<Ref<Material>> ShadowMapListMaterials;
+            std::vector<Mat4> ShadowMapListTransforms;
 
             TextureHandle OffscreenRenderTarget;
             DescriptorSetHandle OffscreenDescriptorSet;
@@ -177,8 +181,6 @@ namespace Astral {
 
         float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades); // CSM Helper
         bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform); // Frustom Culling
-        void SortSubmissionListsByMaterial();
-
 
 
         RendererSettings m_RendererSettings{};
