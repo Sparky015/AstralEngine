@@ -29,10 +29,13 @@
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/type_ptr.hpp>
+#include "glm/gtx/norm.hpp"
 
 #include <future>
+#include <numeric>
+
 
 
 namespace Astral {
@@ -212,6 +215,8 @@ namespace Astral {
 
     void SceneRendererImpl::EndScene()
     {
+        SortSubmissionListsByMaterial();
+
         {
             PROFILE_SCOPE("SceneRenderer::EndScene")
             m_IsSceneStarted = false;
@@ -1698,6 +1703,55 @@ namespace Astral {
         }
 
         return false;
+    }
+
+
+    void SceneRendererImpl::SortSubmissionListsByMaterial()
+    {
+        PROFILE_SCOPE("SortSubmissionListsByMaterial")
+
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+
+        std::vector<int> sortedIndices(frameContext.Meshes.size());
+        std::iota(sortedIndices.begin(), sortedIndices.end(), 0);
+
+        std::sort(sortedIndices.begin(), sortedIndices.end(), [&frameContext, this](int a, int b)
+        {
+            if (frameContext.Materials[a].get() == frameContext.Materials[b].get())
+            {
+                Vec3 positionA(frameContext.Transforms[a][3][0], frameContext.Transforms[a][3][1], frameContext.Transforms[a][3][2]);
+                Vec3 positionB(frameContext.Transforms[b][3][0], frameContext.Transforms[b][3][1], frameContext.Transforms[b][3][2]);
+                Vec3 cameraPosition = this->m_SceneCamera.GetPosition();
+
+                float distanceSquaredA = glm::distance2(cameraPosition, positionA);
+                float distanceSquaredB = glm::distance2(cameraPosition, positionB);
+
+                return distanceSquaredA < distanceSquaredB;
+            }
+            else
+            {
+                return frameContext.Materials[a].get() < frameContext.Materials[b].get();
+            }
+        });
+
+        std::vector<Ref<Material>> sortedMaterials{};
+        std::vector<Ref<Mesh>> sortedMeshes{};
+        std::vector<Mat4> sortedTransform{};
+        sortedMaterials.reserve(frameContext.Materials.size());
+        sortedMeshes.reserve(frameContext.Meshes.size());
+        sortedTransform.reserve(frameContext.Transforms.size());
+
+        for (int index : sortedIndices)
+        {
+            sortedMaterials.push_back(frameContext.Materials[index]);
+            sortedMeshes.push_back(frameContext.Meshes[index]);
+            sortedTransform.push_back(frameContext.Transforms[index]);
+        }
+
+
+        frameContext.Materials = std::move(sortedMaterials);
+        frameContext.Meshes = std::move(sortedMeshes);
+        frameContext.Transforms = std::move(sortedTransform);
     }
 
 
