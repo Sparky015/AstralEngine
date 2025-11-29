@@ -177,6 +177,7 @@ namespace Astral {
 
         float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades); // CSM Helper
         bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform); // Frustom Culling
+        void SortSubmissionListsByMaterial();
 
 
 
