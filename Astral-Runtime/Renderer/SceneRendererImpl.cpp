@@ -29,9 +29,7 @@
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/type_ptr.hpp>
-#include "glm/gtx/norm.hpp"
 
 #include <future>
 #include <numeric>
@@ -201,21 +199,20 @@ namespace Astral {
         }
 
 
-
-
         m_SceneExposure = sceneDescription.Exposure;
         m_SceneViewProjection = sceneDescription.Camera.GetViewProjectionMatrix();
 
 
-        frameContext.Meshes.clear();
-        frameContext.Materials.clear();
-        frameContext.Transforms.clear();
+        frameContext.MainList.Clear();
+        frameContext.ShadowMapList.Clear();
     }
 
 
     void SceneRendererImpl::EndScene()
     {
-        SortSubmissionListsByMaterial();
+        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        frameContext.MainList.SortByMaterial(m_SceneCamera.GetPosition());
+        frameContext.ShadowMapList.SortFrontToBack(m_SceneCamera.GetPosition());
 
         {
             PROFILE_SCOPE("SceneRenderer::EndScene")
@@ -234,14 +231,14 @@ namespace Astral {
         if (!mesh) { AE_WARN("Empty mesh submitted! Skipping!"); return; }
         if (!material) { AE_WARN("Empty material submitted! Skipping!"); return; }
 
+        frameContext.ShadowMapList.AppendSubmission(mesh, material, transform);
+
         if (m_RendererSettings.IsFrustumCullingEnabled)
         {
             if (ShouldCullMesh(*mesh, transform)) { return; }
         }
 
-        frameContext.Meshes.push_back(mesh);
-        frameContext.Materials.push_back(material);
-        frameContext.Transforms.push_back(transform);
+        frameContext.MainList.AppendSubmission(mesh, material, transform);
     }
 
 
@@ -650,9 +647,8 @@ namespace Astral {
         {
             m_FrameContexts.emplace_back(FrameContext());
             FrameContext& context = m_FrameContexts[i];
-            context.Meshes = std::vector<Ref<Mesh>>();
-            context.Materials = std::vector<Ref<Material>>();
-            context.Transforms = std::vector<Mat4>();
+            context.MainList.Clear();
+            context.ShadowMapList.Clear();
 
 
             TextureCreateInfo textureCreateInfo = {
@@ -864,10 +860,10 @@ namespace Astral {
         DescriptorSetHandle materialDescriptorSetSave = nullptr;
         ShaderHandle materialShaderSave = nullptr;
 
-        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
         {
-            Mesh& mesh = *frameContext.Meshes[i];
-            Material& material = *frameContext.Materials[i];
+            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
+            Material& material = *frameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -891,7 +887,7 @@ namespace Astral {
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
 
-            commandBuffer->PushConstants(&frameContext.Transforms[i], sizeof(frameContext.Transforms[i]));
+            commandBuffer->PushConstants(&frameContext.MainList.GetTransforms()[i], sizeof(frameContext.MainList.GetTransforms()[i]));
 
             commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
@@ -927,10 +923,10 @@ namespace Astral {
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ShadowLightMatricesDescriptorSet});
 
 
-        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
         {
-            Mesh& mesh = *frameContext.Meshes[i];
-            Material& material = *frameContext.Materials[i];
+            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
+            Material& material = *frameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -962,7 +958,7 @@ namespace Astral {
 
 
             ForwardLightingPassPushData pushConstantData = {
-                .ModelMatrix = frameContext.Transforms[i],
+                .ModelMatrix = frameContext.MainList.GetTransforms()[i],
                 .HasNormalMap = material.HasNormalMap,
                 .HasDirectXNormals = material.HasDirectXNormals,
                 .CameraZNear = m_SceneCamera.GetNearPlane(),
@@ -996,7 +992,7 @@ namespace Astral {
 
         Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
+        frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
@@ -1035,10 +1031,10 @@ namespace Astral {
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
         {
-            Mesh& mesh = *frameContext.Meshes[i];
-            Material& material = *frameContext.Materials[i];
+            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
+            Material& material = *frameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -1058,7 +1054,7 @@ namespace Astral {
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
             GeometryPassPushData pushConstantData = {
-                .ModelMatrix = frameContext.Transforms[i],
+                .ModelMatrix = frameContext.MainList.GetTransforms()[i],
                 .HasNormalMap = material.HasNormalMap,
                 .HasDirectXNormals = material.HasDirectXNormals
             };
@@ -1100,7 +1096,7 @@ namespace Astral {
 
         Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
         mesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
+        frameContext.MainList.GetMeshes().push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_DeferredLightingShader;
         material.DescriptorSet = executionContext.ReadAttachments;
@@ -1270,10 +1266,10 @@ namespace Astral {
 
         ShaderHandle meshVertexShaderSave = nullptr;
 
-        for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
+        for (uint32 i = 0; i < frameContext.ShadowMapList.Size(); i++)
         {
-            Ref<Mesh>& mesh = frameContext.Meshes[i];
-            Ref<Material>& material = frameContext.Materials[i];
+            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
+            Ref<Material>& material = frameContext.ShadowMapList.GetMaterials()[i];
 
             if (material->ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -1299,7 +1295,7 @@ namespace Astral {
             commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
 
 
-            commandBuffer->PushConstants(&frameContext.Transforms[i], sizeof(Mat4));
+            commandBuffer->PushConstants(&frameContext.ShadowMapList.GetTransforms()[i], sizeof(Mat4));
 
             commandBuffer->DrawElementsInstanced(mesh->IndexBuffer, m_RendererSettings.NumShadowCascades);
         }
@@ -1320,7 +1316,7 @@ namespace Astral {
 
         Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
+        frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
@@ -1371,7 +1367,7 @@ namespace Astral {
 
         Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
         quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
+        frameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
 
@@ -1425,7 +1421,7 @@ namespace Astral {
 
         Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
         quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
+        frameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/FXAAPass.frag");
@@ -1703,55 +1699,6 @@ namespace Astral {
         }
 
         return false;
-    }
-
-
-    void SceneRendererImpl::SortSubmissionListsByMaterial()
-    {
-        PROFILE_SCOPE("SortSubmissionListsByMaterial")
-
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-
-        std::vector<int> sortedIndices(frameContext.Meshes.size());
-        std::iota(sortedIndices.begin(), sortedIndices.end(), 0);
-
-        std::sort(sortedIndices.begin(), sortedIndices.end(), [&frameContext, this](int a, int b)
-        {
-            if (frameContext.Materials[a].get() == frameContext.Materials[b].get())
-            {
-                Vec3 positionA(frameContext.Transforms[a][3][0], frameContext.Transforms[a][3][1], frameContext.Transforms[a][3][2]);
-                Vec3 positionB(frameContext.Transforms[b][3][0], frameContext.Transforms[b][3][1], frameContext.Transforms[b][3][2]);
-                Vec3 cameraPosition = this->m_SceneCamera.GetPosition();
-
-                float distanceSquaredA = glm::distance2(cameraPosition, positionA);
-                float distanceSquaredB = glm::distance2(cameraPosition, positionB);
-
-                return distanceSquaredA < distanceSquaredB;
-            }
-            else
-            {
-                return frameContext.Materials[a].get() < frameContext.Materials[b].get();
-            }
-        });
-
-        std::vector<Ref<Material>> sortedMaterials{};
-        std::vector<Ref<Mesh>> sortedMeshes{};
-        std::vector<Mat4> sortedTransform{};
-        sortedMaterials.reserve(frameContext.Materials.size());
-        sortedMeshes.reserve(frameContext.Meshes.size());
-        sortedTransform.reserve(frameContext.Transforms.size());
-
-        for (int index : sortedIndices)
-        {
-            sortedMaterials.push_back(frameContext.Materials[index]);
-            sortedMeshes.push_back(frameContext.Meshes[index]);
-            sortedTransform.push_back(frameContext.Transforms[index]);
-        }
-
-
-        frameContext.Materials = std::move(sortedMaterials);
-        frameContext.Meshes = std::move(sortedMeshes);
-        frameContext.Transforms = std::move(sortedTransform);
     }
 
 
