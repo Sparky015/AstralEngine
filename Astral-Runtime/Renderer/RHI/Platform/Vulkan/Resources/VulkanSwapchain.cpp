@@ -59,8 +59,9 @@ namespace Astral {
 
         uint32 imageIndex;
         result = vkAcquireNextImageKHR(m_Device, m_Swapchain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], VK_NULL_HANDLE, &imageIndex);
-        ASSERT(result == VK_SUCCESS, "Failed to acquire swapchain image!");
+        ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR, "Failed to acquire swapchain image!");
 
+        if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR) { return nullptr; }
 
         m_RenderTargets[imageIndex]->SetSyncPrimatives(m_RenderCompleteSemaphores[m_CurrentSemaphorePairIndex], m_ImageAvailableSemaphores[m_CurrentSemaphorePairIndex], m_Fences[m_CurrentSemaphorePairIndex]);
 

@@ -40,7 +40,7 @@ namespace Astral {
 
         /**
          * @brief  Acquires the next render target from the swapchain and returns it
-         * @return The acquired render target
+         * @return The acquired render target or nullptr if the acquire was not successful
          */
         RenderTargetHandle AcquireNextImage() override;
 

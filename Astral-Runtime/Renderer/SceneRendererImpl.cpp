@@ -117,6 +117,12 @@ namespace Astral {
 
         RenderTargetHandle renderTarget = swapchain.AcquireNextImage();
 
+        // If the swapchain could not acquire successfully, then rebuild swapchain and try again
+        if (renderTarget == nullptr)
+        {
+            SetVSync(m_RendererSettings.IsVSyncEnabled); // This rebuilds the swapchain with the same settings and handles synchronizing resources
+            return BeginScene(sceneDescription);
+        }
 
         m_IsSceneStarted = true;
         m_CurrentFrameIndex++;
