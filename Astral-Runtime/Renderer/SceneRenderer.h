@@ -45,7 +45,7 @@ namespace Astral {
          * @param material The material of the object
          * @param transform The model transform of the object
          */
-        static void Submit(Mesh& mesh, Material& material, Mat4& transform);
+        static void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
 
         /**
          * @brief Updates the renderer settings with the given renderer settings

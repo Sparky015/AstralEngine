@@ -45,19 +45,25 @@ namespace Astral {
     PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, SampleCount msaaSampleCount)
     {
         // Build pipeline configuration struct
+        m_GraphicsPipelineStateConfigurationCache.RenderPass = renderPass;
+        m_GraphicsPipelineStateConfigurationCache.VertexShader = mesh.VertexShader;
+        m_GraphicsPipelineStateConfigurationCache.FragmentShader = material.FragmentShader;
+        m_GraphicsPipelineStateConfigurationCache.VertexBufferLayout.CopyAttributes(mesh.VertexBuffer->GetBufferLayout());
+        m_GraphicsPipelineStateConfigurationCache.IsAlphaBlended = material.IsAlphaBlended;
+        m_GraphicsPipelineStateConfigurationCache.MSAASampleCount = msaaSampleCount;
 
-        GraphicsPipelineStateConfiguration pipelineStateConfiguration = {
-            .RenderPass = renderPass,
-            .VertexShader = mesh.VertexShader,
-            .FragmentShader = material.FragmentShader,
-            .ShaderDataLayout = material.DescriptorSet ? material.DescriptorSet->GetDescriptorSetLayout() : DescriptorSetLayout(),
-            .VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout(),
-            .IsAlphaBlended = material.IsAlphaBlended,
-            .MSAASampleCount = msaaSampleCount,
-        };
+        if (material.DescriptorSet)
+        {
+            const std::vector<Descriptor>& descriptors = material.DescriptorSet->GetDescriptorSetLayout().Descriptors;
+            m_GraphicsPipelineStateConfigurationCache.ShaderDataLayout.Descriptors.assign(descriptors.begin(), descriptors.end());
+        }
+        else
+        {
+            m_GraphicsPipelineStateConfigurationCache.ShaderDataLayout.Descriptors.clear();
+        }
 
         // If the pipeline was created already, return it
-        if (m_GraphicsPipelineCache.contains(pipelineStateConfiguration)) { return m_GraphicsPipelineCache[pipelineStateConfiguration]; }
+        if (m_GraphicsPipelineCache.contains(m_GraphicsPipelineStateConfigurationCache)) { return m_GraphicsPipelineCache[m_GraphicsPipelineStateConfigurationCache]; }
 
 
         Device& device = RendererAPI::GetDevice();
@@ -76,12 +82,12 @@ namespace Astral {
             .BufferLayout = mesh.VertexBuffer->GetBufferLayout(),
             .SubpassIndex = subpassIndex,
             .IsAlphaBlended = material.IsAlphaBlended,
-            .MSAASamples = pipelineStateConfiguration.MSAASampleCount,
+            .MSAASamples = m_GraphicsPipelineStateConfigurationCache.MSAASampleCount,
             .CullMode = cullMode
         };
 
         PipelineStateHandle pipelineStateObject = device.CreateGraphicsPipelineState(pipelineStateObjectCreateInfo);
-        m_GraphicsPipelineCache[pipelineStateConfiguration] = pipelineStateObject;
+        m_GraphicsPipelineCache[m_GraphicsPipelineStateConfigurationCache] = pipelineStateObject;
 
         return pipelineStateObject;
     }

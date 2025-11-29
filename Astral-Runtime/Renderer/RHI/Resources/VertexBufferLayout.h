@@ -54,6 +54,12 @@ namespace Astral {
         uint32 GetStride() const { return m_Stride; }
 
         const std::vector<VertexBufferAttribute>& GetAttributes() const { return m_Attributes; }
+
+        void CopyAttributes(const VertexBufferLayout& otherBufferLayout)
+        {
+            m_Attributes.assign(otherBufferLayout.m_Attributes.cbegin(), otherBufferLayout.m_Attributes.cend());
+        }
+
         std::vector<VertexBufferAttribute>::iterator begin() { return m_Attributes.begin(); }
         std::vector<VertexBufferAttribute>::iterator end() { return m_Attributes.end(); }
 

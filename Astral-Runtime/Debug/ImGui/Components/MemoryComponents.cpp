@@ -82,7 +82,7 @@ namespace Astral {
     void AllocationsInCurrentFrame()
     {
         const Astral::FrameAllocationData frameAllocationData = Astral::MemoryTracker::Get().GetMemoryMetrics().GetFrameAllocationData();
-        ImGui::Text("Allocations in current frame: %u", frameAllocationData.NumberOfAllocations);
+        ImGui::Text("Allocations made in current frame: %u", frameAllocationData.NumberOfAllocations);
     }
 
 

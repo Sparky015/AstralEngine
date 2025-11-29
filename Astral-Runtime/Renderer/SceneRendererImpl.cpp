@@ -215,14 +215,17 @@ namespace Astral {
     }
 
 
-    void SceneRendererImpl::Submit(Mesh& mesh, Material& material, Mat4& transform)
+    void SceneRendererImpl::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
 
+        if (!mesh) { AE_WARN("Empty mesh submitted! Skipping!"); return; }
+        if (!material) { AE_WARN("Empty material submitted! Skipping!"); return; }
+
         if (m_RendererSettings.IsFrustumCullingEnabled)
         {
-            if (ShouldCullMesh(mesh, transform)) { return; }
+            if (ShouldCullMesh(*mesh, transform)) { return; }
         }
 
         frameContext.Meshes.push_back(mesh);
@@ -636,8 +639,8 @@ namespace Astral {
         {
             m_FrameContexts.emplace_back(FrameContext());
             FrameContext& context = m_FrameContexts[i];
-            context.Meshes = std::vector<Mesh>();
-            context.Materials = std::vector<Material>();
+            context.Meshes = std::vector<Ref<Mesh>>();
+            context.Materials = std::vector<Ref<Material>>();
             context.Transforms = std::vector<Mat4>();
 
 
@@ -847,21 +850,28 @@ namespace Astral {
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
+        DescriptorSetHandle materialDescriptorSetSave = nullptr;
+        ShaderHandle materialShaderSave = nullptr;
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            Mesh& mesh = frameContext.Meshes[i];
-            Material material = frameContext.Materials[i];
+            Mesh& mesh = *frameContext.Meshes[i];
+            Material& material = *frameContext.Materials[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
             if (material.DescriptorSet == nullptr) { continue; }
+            materialDescriptorSetSave = material.DescriptorSet;
             material.DescriptorSet = nullptr;
 
+            materialShaderSave = material.FragmentShader;
             material.FragmentShader = m_DepthWriteOnlyShader;
 
             PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
+
+            material.DescriptorSet = materialDescriptorSetSave;
+            material.FragmentShader = materialShaderSave;
+
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -908,8 +918,8 @@ namespace Astral {
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            Mesh& mesh = frameContext.Meshes[i];
-            Material& material = frameContext.Materials[i];
+            Mesh& mesh = *frameContext.Meshes[i];
+            Material& material = *frameContext.Materials[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -973,26 +983,26 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
-        Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
-        cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
+        Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
         frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, CullMode::NONE, ForwardMSAASampleCount);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE, ForwardMSAASampleCount);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
 
-        commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(cubemapMesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(cubemapMesh->IndexBuffer);
 
         commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(cubemapMesh->IndexBuffer);
     }
 
 
@@ -1016,8 +1026,8 @@ namespace Astral {
 
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            Mesh& mesh = frameContext.Meshes[i];
-            Material& material = frameContext.Materials[i];
+            Mesh& mesh = *frameContext.Meshes[i];
+            Material& material = *frameContext.Materials[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -1077,16 +1087,16 @@ namespace Astral {
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, frameContext.ShadowLightMatricesDescriptorSet});
 
-        Mesh mesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj"); 
-        mesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        mesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
         material.FragmentShader = m_DeferredLightingShader;
         material.DescriptorSet = executionContext.ReadAttachments;
 
-        Ref<Shader> vertexShader = mesh.VertexShader;
+        Ref<Shader> vertexShader = mesh->VertexShader;
 
-        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE);
+        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, *mesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(pipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1095,8 +1105,8 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 2);
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 3);
 
-        commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
 
         DeferredLightingPushConstants deferredLightingPushConstants
         {
@@ -1110,7 +1120,7 @@ namespace Astral {
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
 
-        commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(mesh->IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
     }
@@ -1247,20 +1257,26 @@ namespace Astral {
 
         frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
 
+        ShaderHandle meshVertexShaderSave = nullptr;
+
         for (uint32 i = 0; i < frameContext.Meshes.size(); i++)
         {
-            Mesh mesh = frameContext.Meshes[i];
-            Material& material = frameContext.Materials[i];
+            Ref<Mesh>& mesh = frameContext.Meshes[i];
+            Ref<Material>& material = frameContext.Materials[i];
 
-            if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
-            mesh.VertexShader = m_ShadowMapShader;
+            if (material->ShaderModel != ShaderModel::PBR) { continue; }
 
             Material shadowMapMaterial{};
             shadowMapMaterial.FragmentShader = m_DepthWriteOnlyShader;
             shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
 
-            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, mesh, 0, CullMode::FRONT);
+            meshVertexShaderSave = mesh->VertexShader;
+            mesh->VertexShader = m_ShadowMapShader;
+
+            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, *mesh, 0, CullMode::FRONT);
+
+            mesh->VertexShader = meshVertexShaderSave;
+
             commandBuffer->BindPipeline(shadowMapPipeline);
             commandBuffer->SetViewportAndScissor(Vec2(m_RendererSettings.ShadowMapResolution));
 
@@ -1268,13 +1284,13 @@ namespace Astral {
             commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 1);
 
 
-            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
+            commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
+            commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
 
 
             commandBuffer->PushConstants(&frameContext.Transforms[i], sizeof(Mat4));
 
-            commandBuffer->DrawElementsInstanced(mesh.IndexBuffer, m_RendererSettings.NumShadowCascades);
+            commandBuffer->DrawElementsInstanced(mesh->IndexBuffer, m_RendererSettings.NumShadowCascades);
         }
     }
 
@@ -1291,26 +1307,26 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
-        Mesh& cubemapMesh = *registry.GetAsset<Mesh>("Meshes/Cube.obj");
-        cubemapMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
+        Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
         frameContext.Meshes.push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
 
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, cubemapMesh, 0, CullMode::NONE);
+        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
 
-        commandBuffer->BindVertexBuffer(cubemapMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(cubemapMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(cubemapMesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(cubemapMesh->IndexBuffer);
 
         commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        commandBuffer->DrawElementsIndexed(cubemapMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(cubemapMesh->IndexBuffer);
     }
 
 
@@ -1342,8 +1358,8 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
-        Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
@@ -1352,7 +1368,7 @@ namespace Astral {
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
         toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
-        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0, CullMode::NONE);
+        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, *quadMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(toneMappingPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
@@ -1377,10 +1393,10 @@ namespace Astral {
 
         commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
 
-        commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
 
-        commandBuffer->DrawElementsIndexed(quadMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
     }
@@ -1396,24 +1412,24 @@ namespace Astral {
 
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        Mesh& quadMesh = *registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.Meshes.push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/FXAAPass.frag");
         toneMapperMaterial.DescriptorSet = executionContext.ReadAttachments;
-        PipelineStateHandle fxaaPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, quadMesh, 0, CullMode::NONE);
+        PipelineStateHandle fxaaPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, *quadMesh, 0, CullMode::NONE);
         commandBuffer->BindPipeline(fxaaPipeline);
         commandBuffer->SetViewportAndScissor(m_ViewportSize);
 
         commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
 
-        commandBuffer->BindVertexBuffer(quadMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(quadMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
 
-        commandBuffer->DrawElementsIndexed(quadMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
     }
 
 
@@ -1621,8 +1637,6 @@ namespace Astral {
 
     bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
     {
-        PROFILE_SCOPE("SceneRendererImpl::ShouldCullMesh")
-
         std::array<Vec4, 6> frustum;
         BoundingSphere worldSpaceBoundingSphere;
         worldSpaceBoundingSphere.Center = modelTransform * glm::vec4(mesh.BoundingSphere.Center, 1.0f);

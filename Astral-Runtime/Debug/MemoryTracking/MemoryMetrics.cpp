@@ -13,6 +13,7 @@ namespace Astral {
         m_TotalAllocations(0),
         m_NewFrameEventListener{[this](NewFrameEvent)
         {
+            m_OldFrameAllocationData = m_FrameAllocationData;
             m_FrameAllocationData = FrameAllocationData();
         }}
     {
