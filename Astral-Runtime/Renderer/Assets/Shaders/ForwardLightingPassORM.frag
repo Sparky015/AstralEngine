@@ -55,6 +55,7 @@ layout (push_constant) uniform ModelData {
     int numShadowCascades;
     uint showCascadeDebugView;
     float shadowMapBias;
+    float shadowMapCascadeLogFactor;
 } u_PushConstants;
 
 layout(location = 0) out vec4 color;

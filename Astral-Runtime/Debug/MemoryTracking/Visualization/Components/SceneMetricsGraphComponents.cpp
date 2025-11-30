@@ -32,20 +32,71 @@ namespace Astral {
 
     void SetGraphAxisLimits(const SceneMetricsStorage& metricsStorage, const SceneMetricsStorage::DataPointStorage& dataStorage)
     {
-        constexpr float GRAPH_MAX_LIMIT_MULTIPLIER = 1.1f;
-
         const auto maxElementIt = std::ranges::max_element(metricsStorage.GetAllocationTimes());
         double maxTime = maxElementIt == metricsStorage.GetAllocationTimes().end() ? 0 : *maxElementIt;
 
         ASSERT(dataStorage.size() == metricsStorage.GetSnapshotCount(), "Dataset size does not match the expected snapshot count!");
 
-        GraphExtrema extrema = GetGraphExtrema(dataStorage);
-
-        ImPlot::SetupAxesLimits(0, maxTime, extrema.min, extrema.max * GRAPH_MAX_LIMIT_MULTIPLIER, ImPlotCond_Once); // Only set on first frame
         ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, maxTime);
-        ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, extrema.min, extrema.max * GRAPH_MAX_LIMIT_MULTIPLIER);
-        ImPlot::SetupAxisZoomConstraints(ImAxis_X1, 0, maxTime);
-        ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, extrema.min, extrema.max * GRAPH_MAX_LIMIT_MULTIPLIER);
+    }
+
+
+    int TimeAxisUnitFormatter(double microseconds, char* buff, int size, void* user_data)
+    {
+        if (microseconds == 0.0f) { return snprintf(buff, size, "0"); }
+
+        if (std::abs(microseconds) < 1000.0)
+        {
+            return snprintf(buff, size, "%.*g us", 6, microseconds);
+        }
+        else if (std::abs(microseconds) < 1000000.0)
+        {
+            return snprintf(buff, size, "%.*g ms", 6, microseconds / 1000.0f);
+        }
+        else
+        {
+            return snprintf(buff, size, "%.*g s", 6, microseconds / 1000000.0f);
+        }
+    }
+
+    int MemoryUsageAxisUnitFormatter(double bytesUsed, char* buff, int size, void* user_data)
+    {
+        if (std::abs(bytesUsed) < 1000.0)
+        {
+            return snprintf(buff, size, "%.0f bytes", bytesUsed);
+        }
+        else if (std::abs(bytesUsed) < 1000000.0)
+        {
+            return snprintf(buff, size, "%.2f KBs", bytesUsed / 1000.0f);
+        }
+        else if (std::abs(bytesUsed) < 1000000000.0)
+        {
+            return snprintf(buff, size, "%.2f MBs", bytesUsed / 1000000.0f);
+        }
+        else
+        {
+            return snprintf(buff, size, "%.2f GBs", bytesUsed / 1000000000.0f);
+        }
+    }
+
+    int MemoryAllocationAxisUnitFormatter(double allocations, char* buff, int size, void* user_data)
+    {
+        if (std::abs(allocations) < 1000.0)
+        {
+            return snprintf(buff, size, "%.0f", allocations);
+        }
+        else if (std::abs(allocations) < 1000000.0)
+        {
+            return snprintf(buff, size, "%.3fK", allocations / 1000.0f);
+        }
+        else if (std::abs(allocations) < 1000000000.0)
+        {
+            return snprintf(buff, size, "%.3fM", allocations / 1000000.0f);
+        }
+        else
+        {
+            return snprintf(buff, size, "%.3fB", allocations / 1000000000.0f);
+        }
     }
 
 
@@ -59,7 +110,9 @@ namespace Astral {
     {
         if (ImPlot::BeginPlot("Global Memory Usage"))
         {
-            ImPlot::SetupAxes("Time (microseconds)", "Memory Usage (bytes)");
+            ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+            ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+            ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
             SetGraphAxisLimits(storage, storage.GetGlobalMemoryUsageOverTime());
             DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -74,7 +127,10 @@ namespace Astral {
     {
         if (ImPlot::BeginPlot("Global Peak Memory Usage"))
         {
-            ImPlot::SetupAxes("Allocation Number", "Peak Memory Usage");
+            ImPlot::SetupAxes("Time", "Peak Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+            ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+            ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
             SetGraphAxisLimits(storage, storage.GetGlobalPeakMemoryUsageOverTime());
             DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -89,7 +145,10 @@ namespace Astral {
     {
         if (ImPlot::BeginPlot("Global Active Allocation Count"))
         {
-            ImPlot::SetupAxes("Allocation Number", "Active Allocations");
+            ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+            ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+            ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
             SetGraphAxisLimits(storage, storage.GetGlobalActiveAllocationsOverTime());
             DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -104,12 +163,15 @@ namespace Astral {
     {
         if (ImPlot::BeginPlot("Global Total Allocations Made"))
         {
-            ImPlot::SetupAxes("Allocation Number", "Allocations Made");
+            ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+            ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+            ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
             SetGraphAxisLimits(storage, storage.GetGlobalTotalAllocationsOverTime());
             DrawSelectedDataPointLine(storage, selectedPointIndex);
 
-            ImPlot::PlotLine("Number of Allocations Made", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)storage.GetGlobalTotalAllocationsOverTime().data(), storage.GetSnapshotCount());
+            ImPlot::PlotLine("Time", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)storage.GetGlobalTotalAllocationsOverTime().data(), storage.GetSnapshotCount());
             ImPlot::EndPlot();
         }
     }
@@ -121,7 +183,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
-                ImPlot::SetupAxes("Time", "Memory Usage (bytes)");
+                ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -139,7 +204,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
-                ImPlot::SetupAxes("Time", "Memory Usage (bytes)");
+                ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -157,7 +225,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
-                ImPlot::SetupAxes("Time", "Allocation Count");
+                ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -175,7 +246,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
-                ImPlot::SetupAxes("Time", "Allocation Count");
+                ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -193,7 +267,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
-                ImPlot::SetupAxes("Time", "Memory Usage (bytes)");
+                ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -211,7 +288,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
-                ImPlot::SetupAxes("Time", "Memory Usage (bytes)");
+                ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -229,7 +309,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
-                ImPlot::SetupAxes("Time", "Allocation Count");
+                ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -247,7 +330,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
-                ImPlot::SetupAxes("Time", "Allocation Count");
+                ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -265,7 +351,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
-                ImPlot::SetupAxes("Time", "Memory Usage (bytes)");
+                ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -283,7 +372,10 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
-                ImPlot::SetupAxes("Time", "Peak Memory Usage (byte)");
+                ImPlot::SetupAxes("Time", "Peak Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryUsageAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
@@ -301,12 +393,15 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
-                ImPlot::SetupAxes("Time", "Peak Memory Usage (byte)");
+                ImPlot::SetupAxes("Time", "Active Allocation Count", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
 
-                ImPlot::PlotLine("ThreadPeakMemoryUsage", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)allocationData.data(), storage.GetSnapshotCount());
+                ImPlot::PlotLine("ThreadActiveAllocations", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)allocationData.data(), storage.GetSnapshotCount());
                 ImPlot::EndPlot();
             }
         }
@@ -319,12 +414,15 @@ namespace Astral {
         {
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
-                ImPlot::SetupAxes("Time", "Peak Memory Usage (byte)");
+                ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
+
+                ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, MemoryAllocationAxisUnitFormatter, nullptr);
 
                 SetGraphAxisLimits(storage, allocationData);
                 DrawSelectedDataPointLine(storage, selectedPointIndex);
 
-                ImPlot::PlotLine("ThreadPeakMemoryUsage", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)allocationData.data(), storage.GetSnapshotCount());
+                ImPlot::PlotLine("ThreadTotalAllocations", (ImU64*)storage.GetAllocationTimes().data(), (ImU64*)allocationData.data(), storage.GetSnapshotCount());
                 ImPlot::EndPlot();
             }
         }

@@ -65,6 +65,7 @@ namespace Astral {
 
     private:
 
+        GraphicsPipelineStateConfiguration m_GraphicsPipelineStateConfigurationCache{}; // Cached memory for checking if pipeline already exists
         std::vector<DescriptorSetHandle> m_DescriptorSetStack{};
         std::unordered_map<GraphicsPipelineStateConfiguration, PipelineStateHandle> m_GraphicsPipelineCache;
         std::unordered_map<ComputePipelineStateConfiguration, PipelineStateHandle> m_ComputePipelineCache;

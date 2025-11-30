@@ -297,6 +297,8 @@ add_library(AstralEngine
         Job/ThreadPool.cpp
         Job/ThreadPool.h
         Job/ThreadPool_Impl.h
+        Renderer/DrawList.cpp
+        Renderer/DrawList.h
 )
 
 
@@ -458,7 +460,7 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
             -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
 #            -DTURN_OFF_DEBUG_MACROS
             -DASTRAL_DISABLE_RENDERING_API_VALIDATION
-#            -DASTRAL_DISABLE_MEMORY_TRACKING
+            -DASTRAL_DISABLE_MEMORY_TRACKING
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default

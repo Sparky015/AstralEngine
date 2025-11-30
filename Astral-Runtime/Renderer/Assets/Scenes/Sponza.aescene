@@ -410,8 +410,42 @@
                 392,
                 393,
                 394,
-                395
+                395,
+                396
             ]
+        },
+        {
+            "name": "__SCENE_METADATA__",
+            "extras": {
+                "AE_ExternalResourceFilePaths": {},
+                "AE_SceneEnvironmentSettings": {
+                    "Environment_EnvironmentMapFilePath": "",
+                    "Environment_AmbientLightConstant": 1.4499995708465576,
+                    "Environment_Exposure": 0.0,
+                    "Environment_EnvironmentMapBlur": 0.0
+                },
+                "AE_SceneCameraProperties": {
+                    "Camera_Position_X": 8.310380935668945,
+                    "Camera_Position_Y": 2.844654083251953,
+                    "Camera_Position_Z": -0.5091152191162109,
+                    "Camera_Rotation_X": -9.312530517578125,
+                    "Camera_Rotation_Y": 91.30074310302734,
+                    "Camera_Rotation_Z": 0.0,
+                    "Camera_NearPlane": 0.10000000149011612,
+                    "Camera_FarPlane": 150.0
+                },
+                "AE_RendererSettings": {
+                    "RendererSettings_RendererType": 0,
+                    "RendererSettings_IsVSyncEnabled": true,
+                    "RendererSettings_IsFrustumCullingEnabled": true,
+                    "RendererSettings_IsShadowsOn": true,
+                    "RendererSettings_NumShadowCascades": 5,
+                    "RendererSettings_DebugView": 0,
+                    "RendererSettings_ShadowMapResolution": 4096,
+                    "RendererSettings_ShadowMapBias": 0.00004999999873689376,
+                    "RendererSettings_ShadowMapZMultiplier": 2.0
+                }
+            }
         },
         {
             "name": "sponza.obj",
@@ -10266,9 +10300,9 @@
                 1.0,
                 0.0,
                 0.0,
-                32.00124740600586,
+                0.0,
                 1.0,
-                -0.0,
+                0.0,
                 0.0,
                 0.0,
                 1.0,
@@ -10278,7 +10312,16 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "extras": {
+                "DirectionalLightComponent_Intensity": 8.0,
+                "DirectionalLightComponent_LightColor_X": 1.0,
+                "DirectionalLightComponent_LightColor_Y": 1.0,
+                "DirectionalLightComponent_LightColor_Z": 1.0,
+                "DirectionalLightComponent_Direction_X": 0.0,
+                "DirectionalLightComponent_Direction_Y": -1.0,
+                "DirectionalLightComponent_Direction_Z": 0.0
+            }
         }
     ],
     "scenes": [

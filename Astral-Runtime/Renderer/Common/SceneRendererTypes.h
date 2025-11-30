@@ -71,6 +71,7 @@ namespace Astral {
         int32 ShadowMapResolution;
         float ShadowMapBias;
         float ShadowMapZMultiplier = 1;
+        float ShadowMapCascadeLogFactor = .8;
     };
 
 

@@ -1631,11 +1631,11 @@
                     "Environment_EnvironmentMapBlur": 0.0
                 },
                 "AE_SceneCameraProperties": {
-                    "Camera_Position_X": -20.868507385253906,
-                    "Camera_Position_Y": 7.37438440322876,
-                    "Camera_Position_Z": -2.667806625366211,
-                    "Camera_Rotation_X": -14.355454444885254,
-                    "Camera_Rotation_Y": -93.04690551757813,
+                    "Camera_Position_X": -21.716232299804688,
+                    "Camera_Position_Y": 6.369217395782471,
+                    "Camera_Position_Z": -1.3098620176315308,
+                    "Camera_Rotation_X": -11.402305603027344,
+                    "Camera_Rotation_Y": -93.00796508789063,
                     "Camera_Rotation_Z": 0.0,
                     "Camera_NearPlane": 0.10000000149011612,
                     "Camera_FarPlane": 300.0
@@ -1643,13 +1643,13 @@
                 "AE_RendererSettings": {
                     "RendererSettings_RendererType": 0,
                     "RendererSettings_IsVSyncEnabled": true,
-                    "RendererSettings_IsFrustumCullingEnabled": false,
+                    "RendererSettings_IsFrustumCullingEnabled": true,
                     "RendererSettings_IsShadowsOn": true,
-                    "RendererSettings_NumShadowCascades": 6,
+                    "RendererSettings_NumShadowCascades": 4,
                     "RendererSettings_DebugView": 0,
-                    "RendererSettings_ShadowMapResolution": 4096,
+                    "RendererSettings_ShadowMapResolution": 2048,
                     "RendererSettings_ShadowMapBias": 0.00004999999873689376,
-                    "RendererSettings_ShadowMapZMultiplier": 2.5
+                    "RendererSettings_ShadowMapZMultiplier": 3.0
                 }
             }
         },

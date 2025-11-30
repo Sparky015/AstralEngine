@@ -72,7 +72,7 @@ namespace Astral {
 
             Mat4 modelTransform = CreateTransform(transformComponent);
 
-            SceneRenderer::Submit(*meshComponent.MeshData, *meshComponent.Material, modelTransform);
+            SceneRenderer::Submit(meshComponent.MeshData, meshComponent.Material, modelTransform);
         }
     }
 
@@ -100,7 +100,7 @@ namespace Astral {
 
             Mat4 modelTransform = CreateTransform(transformComponent);
 
-            SceneRenderer::Submit(*spriteComponent.MeshData, *spriteComponent.Material, modelTransform);
+            SceneRenderer::Submit(spriteComponent.MeshData, spriteComponent.Material, modelTransform);
         }
     }
 

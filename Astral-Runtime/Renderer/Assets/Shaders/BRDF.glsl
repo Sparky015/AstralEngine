@@ -65,7 +65,7 @@ vec3 IBLFresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 
 float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
 {
-    const float blendFactor = .5;
+    float blendFactor = u_PushConstants.shadowMapCascadeLogFactor;
     const float logComponent = blendFactor * (zNear * pow((zFar / zNear), cascadeNum / totalCascades));
     const float linearComponent = (1 - blendFactor) * (zNear + cascadeNum / totalCascades * (zFar - zNear));
     return logComponent + linearComponent;

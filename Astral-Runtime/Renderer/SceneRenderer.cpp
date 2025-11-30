@@ -45,7 +45,7 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::Submit(Mesh& mesh, Material& material, Mat4& transform)
+    void SceneRenderer::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         m_Renderer->Submit(mesh, material, transform);
     }

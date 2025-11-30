@@ -10,6 +10,7 @@
 #include "Common/Material.h"
 #include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
+#include "DrawList.h"
 #include "Renderer/Cameras/Camera.h"
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
@@ -21,7 +22,6 @@
 #include "Renderer/Common/SceneRendererTypes.h"
 
 #include <queue>
-
 
 namespace Astral {
 
@@ -60,7 +60,7 @@ namespace Astral {
          * @param material The material of the object
          * @param transform The model transform of the object
          */
-        void Submit(Mesh& mesh, Material& material, Mat4& transform);
+        void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
 
         /**
          * @brief Updates the renderer settings with the given renderer settings
@@ -118,10 +118,12 @@ namespace Astral {
 
         struct FrameContext
         {
-            std::vector<Mesh> Meshes;
-            std::vector<Material> Materials;
-            std::vector<Mat4> Transforms;
+            DrawList MainList;
+            DrawList ShadowMapList;
 
+            std::vector<Ref<Mesh>> ShadowMapListMeshes;
+            std::vector<Ref<Material>> ShadowMapListMaterials;
+            std::vector<Mat4> ShadowMapListTransforms;
 
             TextureHandle OffscreenRenderTarget;
             DescriptorSetHandle OffscreenDescriptorSet;
@@ -175,7 +177,8 @@ namespace Astral {
         // Editor
         void DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget);
 
-        bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform);
+        float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades); // CSM Helper
+        bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform); // Frustom Culling
 
 
         RendererSettings m_RendererSettings{};
