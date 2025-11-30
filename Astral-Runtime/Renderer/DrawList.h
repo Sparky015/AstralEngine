@@ -1,5 +1,5 @@
 /**
-* @file SubmissionList.h
+* @file DrawList.h
 * @author Andrew Fagan
 * @date 11/29/25
 */
@@ -13,11 +13,11 @@
 
 namespace Astral {
 
-    class SubmissionList
+    class DrawList
     {
     public:
 
-        void AppendSubmission(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
+        void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
         void Reserve(int numSubmissions);
         void Resize(int numSubmissions);
         void Clear();

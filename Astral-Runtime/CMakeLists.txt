@@ -297,8 +297,8 @@ add_library(AstralEngine
         Job/ThreadPool.cpp
         Job/ThreadPool.h
         Job/ThreadPool_Impl.h
-        Renderer/SubmissionList.cpp
-        Renderer/SubmissionList.h
+        Renderer/DrawList.cpp
+        Renderer/DrawList.h
 )
 
 

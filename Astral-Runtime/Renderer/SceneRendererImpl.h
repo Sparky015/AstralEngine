@@ -10,6 +10,7 @@
 #include "Common/Material.h"
 #include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
+#include "DrawList.h"
 #include "Renderer/Cameras/Camera.h"
 #include "RHI/RendererCommands.h"
 #include "RHI/Resources/Framebuffer.h"
@@ -21,9 +22,6 @@
 #include "Renderer/Common/SceneRendererTypes.h"
 
 #include <queue>
-
-#include "SubmissionList.h"
-
 
 namespace Astral {
 
@@ -120,8 +118,8 @@ namespace Astral {
 
         struct FrameContext
         {
-            SubmissionList MainList;
-            SubmissionList ShadowMapList;
+            DrawList MainList;
+            DrawList ShadowMapList;
 
             std::vector<Ref<Mesh>> ShadowMapListMeshes;
             std::vector<Ref<Material>> ShadowMapListMaterials;
