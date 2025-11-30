@@ -231,14 +231,14 @@ namespace Astral {
         if (!mesh) { AE_WARN("Empty mesh submitted! Skipping!"); return; }
         if (!material) { AE_WARN("Empty material submitted! Skipping!"); return; }
 
-        frameContext.ShadowMapList.AppendSubmission(mesh, material, transform);
+        frameContext.ShadowMapList.Submit(mesh, material, transform);
 
         if (m_RendererSettings.IsFrustumCullingEnabled)
         {
             if (ShouldCullMesh(*mesh, transform)) { return; }
         }
 
-        frameContext.MainList.AppendSubmission(mesh, material, transform);
+        frameContext.MainList.Submit(mesh, material, transform);
     }
 
 

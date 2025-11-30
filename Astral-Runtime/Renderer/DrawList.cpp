@@ -1,10 +1,10 @@
 /**
-* @file SubmissionList.cpp
+* @file DrawList.cpp
 * @author Andrew Fagan
 * @date 11/29/25
 */
 
-#include "SubmissionList.h"
+#include "DrawList.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <numeric>
@@ -16,7 +16,7 @@
 
 namespace Astral {
 
-    void SubmissionList::AppendSubmission(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
+    void DrawList::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         m_Meshes.push_back(mesh);
         m_Materials.push_back(material);
@@ -24,7 +24,7 @@ namespace Astral {
     }
 
 
-    void SubmissionList::Reserve(int numSubmissions)
+    void DrawList::Reserve(int numSubmissions)
     {
         m_Meshes.reserve(numSubmissions);
         m_Materials.reserve(numSubmissions);
@@ -32,7 +32,7 @@ namespace Astral {
     }
 
 
-    void SubmissionList::Resize(int numSubmissions)
+    void DrawList::Resize(int numSubmissions)
     {
         m_Meshes.resize(numSubmissions);
         m_Materials.resize(numSubmissions);
@@ -40,7 +40,7 @@ namespace Astral {
     }
 
 
-    void SubmissionList::Clear()
+    void DrawList::Clear()
     {
         m_Meshes.clear();
         m_Materials.clear();
@@ -48,13 +48,13 @@ namespace Astral {
     }
 
 
-    size_t SubmissionList::Size()
+    size_t DrawList::Size()
     {
         return m_Transforms.size();
     }
 
 
-    void SubmissionList::SortByMaterial(Vec3 cameraPosition)
+    void DrawList::SortByMaterial(Vec3 cameraPosition)
     {
         PROFILE_SCOPE("SortSubmissionListsByMaterial")
 
@@ -99,7 +99,7 @@ namespace Astral {
     }
 
 
-    void SubmissionList::SortFrontToBack(Vec3 cameraPosition)
+    void DrawList::SortFrontToBack(Vec3 cameraPosition)
     {
         PROFILE_SCOPE("SortSubmissionListsFrontToBack")
 
@@ -137,19 +137,19 @@ namespace Astral {
     }
 
 
-    std::vector<Ref<Mesh>>& SubmissionList::GetMeshes()
+    std::vector<Ref<Mesh>>& DrawList::GetMeshes()
     {
         return m_Meshes;
     }
 
 
-    std::vector<Ref<Material>>& SubmissionList::GetMaterials()
+    std::vector<Ref<Material>>& DrawList::GetMaterials()
     {
         return m_Materials;
     }
 
 
-    std::vector<Mat4>& SubmissionList::GetTransforms()
+    std::vector<Mat4>& DrawList::GetTransforms()
     {
         return m_Transforms;
     }
