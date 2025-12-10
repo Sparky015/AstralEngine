@@ -79,5 +79,5 @@ target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_SCENES
 
 
 include(GoogleTest)
-gtest_discover_tests(AstralEngineTests)
+gtest_discover_tests(AstralEngineTestsWithGPU)
 
