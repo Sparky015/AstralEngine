@@ -101,7 +101,7 @@ jobs:
 
           # Set VK_LAYER_PATH for Windows (not set by the action automatically)
           # The validation layer JSON files are in the Bin directory
-          echo "VK_LAYER_PATH=${VULKAN_SDK}/Bin" >> $GITHUB_ENV
+          echo "VK_LAYER_PATH=${VULKAN_SDK}\Bin" >> $GITHUB_ENV
 
           # Debug:  Show available layer files
           echo "--- Searching for validation layers ---"
