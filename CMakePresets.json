@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "UnitTestCompliant",
+      "displayName": "Unit Test Compliant",
+      "description": "Version of Astral Engine to link to unit test builds",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-unittestcompliant/profile",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "UnitTestCompliant",
+        "CMAKE_CXX_FLAGS_UNITTESTCOMPLIANT": "-O0 -g"
+      }
+    }
+  ]
+}

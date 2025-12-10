@@ -468,6 +468,13 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
             -DASTRAL_DEBUG_BUILD
 
     )
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "UnitTestCompliant")    # UnitTestCompliant
+target_compile_definitions(AstralEngine PUBLIC
+        -DASTRAL_UNIT_TEST_BUILD
+        -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+        -DTURN_OFF_PROFILER_MACRO
+        -DASTRAL_DISABLE_RENDERING_API_VALIDATION # Turning off validation layer because the layer isn't present in the GitHub CI machine.
+)
 
 endif()
 

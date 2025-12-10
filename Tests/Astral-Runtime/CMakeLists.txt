@@ -60,20 +60,13 @@ target_link_libraries(AstralEngineTests GTest::gtest_main)
 target_link_libraries(AstralEngineTests AstralEngine)
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AstralEngineTests PUBLIC ${CMAKE_SOURCE_DIR}/Source)
-target_compile_definitions(AstralEngineTests PUBLIC
-        -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
-        -DTURN_OFF_PROFILER_MACRO
-)
+
 
 target_link_libraries(AstralEngineTestsWithGPU GTest::gtest)
 target_link_libraries(AstralEngineTestsWithGPU AstralEngine)
 target_include_directories(AstralEngineTestsWithGPU PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AstralEngineTestsWithGPU PUBLIC ${CMAKE_SOURCE_DIR}/Source)
-target_compile_definitions(AstralEngineTestsWithGPU PUBLIC
-        -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
-        -DTURN_OFF_PROFILER_MACRO
-        -DASTRAL_DISABLE_RENDERING_API_VALIDATION # Turning off validation layer because the layer isn't present in the GitHub CI machine.
-)
+
 target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_ASSETS_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/Asset/TestAssets/")
 target_compile_definitions(AstralEngineTestsWithGPU PRIVATE -DASTRAL_TEST_SCENES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/Scenes/TestScenes/")
 
