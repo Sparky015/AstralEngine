@@ -107,11 +107,12 @@ jobs:
           echo "--- Searching for validation layers ---"
           find "$VULKAN_SDK" -name "*layer*. json" 2>/dev/null | head -20
         fi
-        echo "VK_LAYER_PATH: $VK_LAYER_PATH"
+        
 
     - name: Verify Vulkan with SwiftShader
       shell: bash
       run: |
+        echo "VK_LAYER_PATH: $VK_LAYER_PATH"
         echo "VK_ICD_FILENAMES: $VK_ICD_FILENAMES"
         # Run vulkaninfo to verify SwiftShader is detected
         vulkaninfoSDK --summary || vulkaninfo --summary || echo "vulkaninfo not available"
