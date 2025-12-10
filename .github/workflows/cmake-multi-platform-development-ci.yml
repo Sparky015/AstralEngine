@@ -80,6 +80,7 @@ jobs:
           install_swiftshader: true
 
     - name: Configure Vulkan ICD for SwiftShader
+      shell: bash
       run: |
         # Force the Vulkan loader to use the SwiftShader ICD
 
