@@ -77,82 +77,60 @@ jobs:
         install_runtime: true
         cache: true
         stripdown: true
-        install_swiftshader: true
+#        install_swiftshader: true
 
 
-    - name: Register and Configure SwiftShader ICD
-      shell: bash
-      run: |
-        echo "VULKAN_SDK:  $VULKAN_SDK"
-        echo "RUNNER_OS: $RUNNER_OS"
+#    - name: Register and Configure SwiftShader ICD
+#      shell: bash
+#      run: |
+#        echo "VULKAN_SDK:  $VULKAN_SDK"
+#        echo "RUNNER_OS: $RUNNER_OS"
+#
+#        # --- For Windows Runners ---
+#        if [ "$RUNNER_OS" == "Windows" ]; then
+#          # SwiftShader ICD
+#          SWIFTSHADER_ICD="C:/Swiftshader/vk_swiftshader_icd.json"
+#
+#          if [ -f "$SWIFTSHADER_ICD" ]; then
+#            echo "Found SwiftShader ICD file"
+#            echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
+#          fi
+#
+#          # Register SwiftShader in Windows registry
+#          reg add "HKLM\SOFTWARE\Khronos\Vulkan\Drivers" //v "C:\Swiftshader\vk_swiftshader_icd.json" //t REG_DWORD //d 0 //f
+#
+#          # Set VK_LAYER_PATH for Windows (not set by the action automatically)
+#          # The validation layer JSON files are in the Bin directory
+#          echo "VK_LAYER_PATH=${VULKAN_SDK}\Bin" >> $GITHUB_ENV
+#
+#          # Debug:  Show available layer files
+#          echo "--- Searching for validation layers ---"
+#          find "$VULKAN_SDK" -name "*layer*. json" 2>/dev/null | head -20
+#        fi
+#
+#    - name: Register Validation Layers (Windows)
+#      if: runner.os == 'Windows'
+#      shell: pwsh
+#      run: |
+#        # Register the Khronos validation layer in Windows registry
+#        $layerJson = "$env:VULKAN_SDK\Bin\VkLayer_khronos_validation.json"
+#
+#        if (Test-Path $layerJson) {
+#          Write-Host "Registering validation layer: $layerJson"
+#          reg add "HKLM\SOFTWARE\Khronos\Vulkan\ExplicitLayers" /v $layerJson /t REG_DWORD /d 0 /f
+#        } else {
+#          Write-Host "ERROR:  Validation layer not found at $layerJson"
+#        }
+#
+#
+#    - name: Verify Vulkan Set Up
+#      shell: bash
+#      run: |
+#        echo "VK_LAYER_PATH: $VK_LAYER_PATH"
+#        echo "VK_ICD_FILENAMES: $VK_ICD_FILENAMES"
+#        # Run vulkaninfo to verify SwiftShader is detected
+#        vulkaninfoSDK --summary || vulkaninfo --summary || echo "vulkaninfo not available"
 
-        # --- For Windows Runners ---
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          # SwiftShader ICD
-          SWIFTSHADER_ICD="C:/Swiftshader/vk_swiftshader_icd.json"
-
-          if [ -f "$SWIFTSHADER_ICD" ]; then
-            echo "Found SwiftShader ICD file"
-            echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
-          fi
-
-          # Register SwiftShader in Windows registry
-          reg add "HKLM\SOFTWARE\Khronos\Vulkan\Drivers" //v "C:\Swiftshader\vk_swiftshader_icd.json" //t REG_DWORD //d 0 //f
-
-          # Set VK_LAYER_PATH for Windows (not set by the action automatically)
-          # The validation layer JSON files are in the Bin directory
-          echo "VK_LAYER_PATH=${VULKAN_SDK}\Bin" >> $GITHUB_ENV
-
-          # Debug:  Show available layer files
-          echo "--- Searching for validation layers ---"
-          find "$VULKAN_SDK" -name "*layer*. json" 2>/dev/null | head -20
-        fi
-
-    - name: Register Validation Layers (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        # Register the Khronos validation layer in Windows registry
-        $layerJson = "$env:VULKAN_SDK\Bin\VkLayer_khronos_validation.json"
-        
-        if (Test-Path $layerJson) {
-          Write-Host "Registering validation layer: $layerJson"
-          reg add "HKLM\SOFTWARE\Khronos\Vulkan\ExplicitLayers" /v $layerJson /t REG_DWORD /d 0 /f
-        } else {
-          Write-Host "ERROR:  Validation layer not found at $layerJson"
-        }
-        
-
-    - name: Verify Vulkan Set Up
-      shell: bash
-      run: |
-        echo "VK_LAYER_PATH: $VK_LAYER_PATH"
-        echo "VK_ICD_FILENAMES: $VK_ICD_FILENAMES"
-        # Run vulkaninfo to verify SwiftShader is detected
-        vulkaninfoSDK --summary || vulkaninfo --summary || echo "vulkaninfo not available"
-        
-    - name: Debug - Find Validation Layers
-      shell: bash
-      run: |
-        echo "VULKAN_SDK: $VULKAN_SDK"
-
-        echo "--- Searching for ANY . json files in SDK ---"
-        find "$VULKAN_SDK" -name "*.json" 2>/dev/null
-
-        echo "--- Searching for anything with 'layer' in the name ---"
-        find "$VULKAN_SDK" -iname "*layer*" 2>/dev/null
-
-        echo "--- Searching for anything with 'validation' in the name ---"
-        find "$VULKAN_SDK" -iname "*validation*" 2>/dev/null
-
-        echo "--- Searching for anything with 'khronos' in the name ---"
-        find "$VULKAN_SDK" -iname "*khronos*" 2>/dev/null
-
-        echo "--- Full directory structure (top 3 levels) ---"
-        find "$VULKAN_SDK" -maxdepth 3 -type d 2>/dev/null
-
-        echo "--- Contents of Bin directory ---"
-        ls -la "$VULKAN_SDK/Bin/" 2>/dev/null || ls -la "${VULKAN_SDK}\\Bin\\" 2>/dev/null || echo "Bin not found"
 
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
