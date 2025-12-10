@@ -36,7 +36,7 @@ jobs:
       
       matrix:
         os: [windows-latest, macos-latest]
-        build_type: [UnitTestCompliant]
+        build_type: [Debug]
 
     steps:
     - name: Checkout repository
@@ -117,7 +117,29 @@ jobs:
         # Run vulkaninfo to verify SwiftShader is detected
         vulkaninfoSDK --summary || vulkaninfo --summary || echo "vulkaninfo not available"
         
-        
+    - name: Debug - Find Validation Layers
+      shell: bash
+      run: |
+        echo "VULKAN_SDK: $VULKAN_SDK"
+
+        echo "--- Searching for ANY . json files in SDK ---"
+        find "$VULKAN_SDK" -name "*.json" 2>/dev/null
+
+        echo "--- Searching for anything with 'layer' in the name ---"
+        find "$VULKAN_SDK" -iname "*layer*" 2>/dev/null
+
+        echo "--- Searching for anything with 'validation' in the name ---"
+        find "$VULKAN_SDK" -iname "*validation*" 2>/dev/null
+
+        echo "--- Searching for anything with 'khronos' in the name ---"
+        find "$VULKAN_SDK" -iname "*khronos*" 2>/dev/null
+
+        echo "--- Full directory structure (top 3 levels) ---"
+        find "$VULKAN_SDK" -maxdepth 3 -type d 2>/dev/null
+
+        echo "--- Contents of Bin directory ---"
+        ls -la "$VULKAN_SDK/Bin/" 2>/dev/null || ls -la "${VULKAN_SDK}\\Bin\\" 2>/dev/null || echo "Bin not found"
+
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
       if: steps.cache-cmake.outputs.cache-hit != 'true'
