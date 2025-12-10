@@ -76,7 +76,6 @@ jobs:
         optional_components: com.lunarg.vulkan.debug, com.lunarg.vulkan.vma
         install_runtime: true
         cache: true
-        stripdown: true
         install_swiftshader: true
 
 
@@ -122,22 +121,6 @@ jobs:
             find /usr -name "*swiftshader*" 2>/dev/null || true
           fi
         fi
-
-    - name: Register Validation Layers (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run:  |
-        # Find and register the validation layer JSON
-        $layerJson = Get-ChildItem -Path "$env:VULKAN_SDK" -Recurse -Filter "*VkLayer_khronos_validation*.  json" | Select-Object -First 1
-        
-        if ($layerJson) {
-          Write-Host "Found validation layer: $($layerJson.FullName)"
-          reg add "HKLM\SOFTWARE\Khronos\Vulkan\ExplicitLayers" /v $layerJson.FullName /t REG_DWORD /d 0 /f
-          echo "VK_LAYER_PATH=$($layerJson.DirectoryName)" >> $env:GITHUB_ENV
-        } else {
-          Write-Host "Validation layer not found - listing SDK contents:"
-          Get-ChildItem -Path "$env:VULKAN_SDK" -Recurse -Filter "*.json" | Select-Object FullName
-        }
 
     - name: Verify Vulkan with SwiftShader
       shell: bash
