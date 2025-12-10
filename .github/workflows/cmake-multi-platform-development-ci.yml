@@ -107,9 +107,23 @@ jobs:
           echo "--- Searching for validation layers ---"
           find "$VULKAN_SDK" -name "*layer*. json" 2>/dev/null | head -20
         fi
+
+    - name: Register Validation Layers (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        # Register the Khronos validation layer in Windows registry
+        $layerJson = "$env:VULKAN_SDK\Bin\VkLayer_khronos_validation.json"
+        
+        if (Test-Path $layerJson) {
+          Write-Host "Registering validation layer: $layerJson"
+          reg add "HKLM\SOFTWARE\Khronos\Vulkan\ExplicitLayers" /v $layerJson /t REG_DWORD /d 0 /f
+        } else {
+          Write-Host "ERROR:  Validation layer not found at $layerJson"
+        }
         
 
-    - name: Verify Vulkan with SwiftShader
+    - name: Verify Vulkan Set Up
       shell: bash
       run: |
         echo "VK_LAYER_PATH: $VK_LAYER_PATH"
