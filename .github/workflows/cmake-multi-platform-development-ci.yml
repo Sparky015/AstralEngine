@@ -79,6 +79,29 @@ jobs:
           stripdown: true
           install_swiftshader: true
 
+    - name: Configure Vulkan ICD for SwiftShader
+      run: |
+        # Force the Vulkan loader to use the SwiftShader ICD
+
+        # --- For Linux Runners (ubuntu-latest) ---
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          export VK_ICD_FILENAMES="/usr/local/share/vulkan/icd.d/vk_swiftshader.json"
+        fi
+
+        # --- For Windows Runners (windows-latest) ---
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          # The install-vulkan-sdk-action should set VULKAN_SDK,
+          # but you may need to explicitly point to the swiftshader ICD file.
+          $icd_path = Join-Path $env:VULKAN_SDK "Third-Party\lib\swiftshader\vk_swiftshader.json"
+          Write-Host "SwiftShader ICD Path: $icd_path"
+          $env:VK_ICD_FILENAMES = $icd_path
+        fi
+
+          # --- For macOS Runners (macos-latest) ---
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            # Adjust this path based on where the action installs it on macOS
+            export VK_ICD_FILENAMES="$VULKAN_SDK/macOS/Third-Party/lib/swiftshader/libvk_swiftshader.json"
+          fi
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
