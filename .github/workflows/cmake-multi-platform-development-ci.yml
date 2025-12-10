@@ -72,34 +72,65 @@ jobs:
     - name: Install Vulkan SDK
       uses: jakoch/install-vulkan-sdk-action@v1
       with:
-          vulkan_version: 1.3.296.0
-          optional_components: com.lunarg.vulkan.debug, com.lunarg.vulkan.vma
-          install_runtime: true
-          cache: true
-          stripdown: true
-          install_swiftshader: true
+        vulkan_version: 1.3.296.0
+        optional_components: com. lunarg.vulkan. debug, com.lunarg.vulkan. vma
+        install_runtime: true
+        cache: true
+        stripdown: true
+        install_swiftshader: true
 
-    - name: Configure Vulkan ICD for SwiftShader
+
+    - name: Register and Configure SwiftShader ICD
       shell: bash
       run: |
-        # Force the Vulkan loader to use the SwiftShader ICD
+        echo "VULKAN_SDK:  $VULKAN_SDK"
+        echo "RUNNER_OS:  $RUNNER_OS"
 
-        # --- For Linux Runners (ubuntu-latest) ---
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          echo "VK_ICD_FILENAMES=/usr/local/share/vulkan/icd. d/vk_swiftshader.json" >> $GITHUB_ENV
-        fi
-
-        # --- For Windows Runners (windows-latest) ---
+        # --- For Windows Runners ---
         if [ "$RUNNER_OS" == "Windows" ]; then
-          icd_path="${VULKAN_SDK}/Third-Party/lib/swiftshader/vk_swiftshader.json"
-          echo "SwiftShader ICD Path: $icd_path"
-          echo "VK_ICD_FILENAMES=$icd_path" >> $GITHUB_ENV
+          # SwiftShader is installed to C:\Swiftshader by default (not in VULKAN_SDK)
+          SWIFTSHADER_ICD="C:/Swiftshader/vk_swiftshader_icd.json"
+
+          echo "SwiftShader ICD Path: $SWIFTSHADER_ICD"
+
+          # Verify the file exists
+          if [ -f "$SWIFTSHADER_ICD" ]; then
+            echo "Found SwiftShader ICD file"
+            cat "$SWIFTSHADER_ICD"
+          else
+            echo "ERROR: SwiftShader ICD not found!"
+            ls -la "C:/Swiftshader/" || echo "Swiftshader directory not found"
+            exit 1
+          fi
+
+          # Register SwiftShader as a Vulkan driver in Windows registry
+          reg add "HKLM\\SOFTWARE\\Khronos\\Vulkan\\Drivers" /v "C:\\Swiftshader\\vk_swiftshader_icd.json" /t REG_DWORD /d 0 /f
+
+          # Also set VK_ICD_FILENAMES to force using SwiftShader
+          echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
         fi
 
-        # --- For macOS Runners (macos-latest) ---
+        # --- For macOS Runners ---
         if [ "$RUNNER_OS" == "macOS" ]; then
-          echo "VK_ICD_FILENAMES=$VULKAN_SDK/macOS/Third-Party/lib/swiftshader/libvk_swiftshader.json" >> $GITHUB_ENV
+          # macOS SwiftShader location (adjust based on action output)
+          SWIFTSHADER_ICD="/usr/local/share/vulkan/icd. d/vk_swiftshader_icd.json"
+
+          if [ -f "$SWIFTSHADER_ICD" ]; then
+            echo "Found SwiftShader ICD at: $SWIFTSHADER_ICD"
+            echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
+          else
+            echo "Searching for SwiftShader on macOS..."
+            find /usr -name "*swiftshader*" 2>/dev/null || true
+          fi
         fi
+
+    - name: Verify Vulkan with SwiftShader
+      shell: bash
+      run: |
+        echo "VK_ICD_FILENAMES: $VK_ICD_FILENAMES"
+        # Run vulkaninfo to verify SwiftShader is detected
+        vulkaninfoSDK --summary || vulkaninfo --summary || echo "vulkaninfo not available"
+        
         
     - name: Generate CMake Build System
       # Configures CMake to generate the build system
