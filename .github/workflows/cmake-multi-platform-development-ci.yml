@@ -76,6 +76,7 @@ jobs:
         optional_components: com.lunarg.vulkan.debug, com.lunarg.vulkan.vma
         install_runtime: true
         cache: true
+        stripdown: true
         install_swiftshader: true
 
 
@@ -83,43 +84,40 @@ jobs:
       shell: bash
       run: |
         echo "VULKAN_SDK:  $VULKAN_SDK"
-        echo "RUNNER_OS:  $RUNNER_OS"
+        echo "RUNNER_OS: $RUNNER_OS"
 
         # --- For Windows Runners ---
         if [ "$RUNNER_OS" == "Windows" ]; then
-          # SwiftShader is installed to C:\Swiftshader by default
+          # SwiftShader ICD
           SWIFTSHADER_ICD="C:/Swiftshader/vk_swiftshader_icd.json"
 
-          echo "SwiftShader ICD Path: $SWIFTSHADER_ICD"
-
-          # Verify the file exists
           if [ -f "$SWIFTSHADER_ICD" ]; then
             echo "Found SwiftShader ICD file"
-            cat "$SWIFTSHADER_ICD"
-          else
-            echo "ERROR: SwiftShader ICD not found!"
-            exit 1
+            echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
           fi
 
-          # Register SwiftShader as a Vulkan driver in Windows registry
-          # Use Windows-style path with single backslashes in quotes
+          # Register SwiftShader in Windows registry
           reg add "HKLM\SOFTWARE\Khronos\Vulkan\Drivers" //v "C:\Swiftshader\vk_swiftshader_icd.json" //t REG_DWORD //d 0 //f
 
-          # Set VK_ICD_FILENAMES to force using SwiftShader
-          echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
+          # Set VK_LAYER_PATH for Windows (not set by the action automatically)
+          # The validation layer JSON files are in the Bin directory
+          echo "VK_LAYER_PATH=${VULKAN_SDK}/Bin" >> $GITHUB_ENV
+
+          # Debug:  Show available layer files
+          echo "--- Searching for validation layers ---"
+          find "$VULKAN_SDK" -name "*layer*. json" 2>/dev/null | head -20
         fi
 
         # --- For macOS Runners ---
         if [ "$RUNNER_OS" == "macOS" ]; then
-          SWIFTSHADER_ICD="/usr/local/share/vulkan/icd. d/vk_swiftshader_icd.json"
+          SWIFTSHADER_ICD="/usr/local/share/vulkan/icd.d/vk_swiftshader_icd.json"
 
           if [ -f "$SWIFTSHADER_ICD" ]; then
-            echo "Found SwiftShader ICD at: $SWIFTSHADER_ICD"
             echo "VK_ICD_FILENAMES=$SWIFTSHADER_ICD" >> $GITHUB_ENV
-          else
-            echo "Searching for SwiftShader on macOS..."
-            find /usr -name "*swiftshader*" 2>/dev/null || true
           fi
+
+          # Set layer path for macOS
+          echo "VK_LAYER_PATH=${VULKAN_SDK}/share/vulkan/explicit_layer. d" >> $GITHUB_ENV
         fi
 
     - name: Verify Vulkan with SwiftShader
