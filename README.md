@@ -162,22 +162,22 @@ timers being worked on (123-performance-counters-for-render-passes)
 8. Terrain System 
 9. Vegetation and Grass and Mesh Skinning 
 10. Multithreaded Asset System 
-8/ Tile-Based Asset Streaming  
-11. LOD System
-12. Multithreaded Asset Manager
-13. Audio System
-14. Physics System
-15. Render Thread
+11. Tile-Based Asset Streaming  
+12. LOD System
+13. Multithreaded Asset Manager
+14. Audio System
+15. Physics System
+16. Render Thread
 
 
 ### TODO Render Passes
 
-* SSAO
-* Omni-Directional Shadow Maps
 * Transparent Objects Forward Pass
-* Bloom
-* SMAA
+* SSAO
 * TAA
+* Bloom
+* Omni-Directional Shadow Maps
+
 
 
 
