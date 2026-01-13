@@ -164,10 +164,9 @@ timers being worked on (123-performance-counters-for-render-passes)
 10. Multithreaded Asset System 
 11. Tile-Based Asset Streaming  
 12. LOD System
-13. Multithreaded Asset Manager
-14. Audio System
-15. Physics System
-16. Render Thread
+13. Audio System
+14. Physics System
+15. Render Thread
 
 
 ### TODO Render Passes
