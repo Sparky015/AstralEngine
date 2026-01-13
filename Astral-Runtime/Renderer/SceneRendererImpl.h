@@ -168,7 +168,7 @@ namespace Astral {
         void CascadedShadowMapsPass();
         void EnvironmentMapPass();
         void ToneMappingPass();
-        void FXAAPass();
+
 
         void ComputeEnvironmentIBL();
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);

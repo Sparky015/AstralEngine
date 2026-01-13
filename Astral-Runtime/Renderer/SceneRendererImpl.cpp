@@ -446,21 +446,6 @@ namespace Astral {
         tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         tonemappingPass.AddDependency(&environmentMapPass);
 
-        AttachmentDescription fxaaOutputTextureDescription = {
-            .Format = ImageFormat::B8G8R8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass fxaaPass = RenderGraphPass(OutputAttachmentDimensions, "FXAA Pass", [&](){ FXAAPass(); });
-        fxaaPass.LinkReadInputAttachment(&tonemappingPass, "Tonemapping_Output_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        fxaaPass.CreateColorAttachment(fxaaOutputTextureDescription, "FXAA_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-
-
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
         outputTextures.reserve(numFramesInFlight);
@@ -478,19 +463,18 @@ namespace Astral {
         m_RenderGraph.AddPass(shadowMapPass);
         m_RenderGraph.AddPass(lightingPass);
         m_RenderGraph.AddPass(environmentMapPass);
-        m_RenderGraph.AddPass(tonemappingPass);
-        m_RenderGraph.AddOutputPass(fxaaPass);
+        m_RenderGraph.AddOutputPass(tonemappingPass);
 
         switch (m_RendererSettings.DebugView)
         {
-            case RendererDebugView::NONE: m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures); break;
+            case RendererDebugView::NONE: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
             case RendererDebugView::GBUFFER_ALBEDO: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures); break;
             case RendererDebugView::GBUFFER_ROUGHNESS: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputTextures); break;
             case RendererDebugView::GBUFFER_METALLIC: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputTextures); break;
             case RendererDebugView::GBUFFER_EMISSION: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputTextures); break;
             case RendererDebugView::GBUFFER_NORMAL: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures); break;
             case RendererDebugView::DEPTH: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputTextures); break;
-            default: m_RenderGraph.SetOutputAttachment(fxaaPass, "FXAA_Output_Buffer", outputTextures); break;
+            default: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
         }
 
         m_RenderGraph.EndBuildingRenderGraph();
@@ -1406,37 +1390,6 @@ namespace Astral {
         commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
 
         m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
-    }
-
-
-    void SceneRendererImpl::FXAAPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::FXAAPass")
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
-
-        Material toneMapperMaterial{};
-        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/FXAAPass.frag");
-        toneMapperMaterial.DescriptorSet = executionContext.ReadAttachments;
-        PipelineStateHandle fxaaPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, *quadMesh, 0, CullMode::NONE);
-        commandBuffer->BindPipeline(fxaaPipeline);
-        commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-        commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
-
-        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
-
-        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
     }
 
 
