@@ -211,6 +211,8 @@ namespace Astral {
                 return false;
             }
         }
+
+        return true;
     }
 
 

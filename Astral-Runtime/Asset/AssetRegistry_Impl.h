@@ -25,11 +25,16 @@ namespace Astral {
 
         lock.unlock(); // Unlock for asset loading
 
-        Ref<Asset> asset = LoadAssetWithChecks<AssetType>(filePath);
+        Ref<AssetType> asset = LoadAssetWithChecks<AssetType>(filePath);
 
         RegisterAsset(asset, filePath); // RegisterAsset function has its own locks for thread safety
 
-        return GetAsset<AssetType>(asset->GetAssetID()); // Using GetAsset helper to safely cast asset to its actual type
+        if (!asset)
+        {
+            AE_WARN("Asset failed to load in CreateAsset!")
+        }
+
+        return asset;
     }
 
 
@@ -63,9 +68,13 @@ namespace Astral {
         requires std::is_base_of_v<Asset, AssetType>
     void AssetRegistry::RegisterAsset(Ref<AssetType> alreadyLoadedAsset, const std::filesystem::path& filePath)
     {
-        if (alreadyLoadedAsset == nullptr || filePath == "") { return; }
-
         PROFILE_SCOPE("AssetRegistry::RegisterAsset")
+
+        if (alreadyLoadedAsset == nullptr || filePath == "")
+        {
+            AE_WARN("Asset Registry: Can not register empty asset and/or with an empty file path!")
+            return;
+        }
 
         std::unique_lock lock(m_RegistryMutex); // Lock for the read/writes during registering
 
@@ -75,9 +84,6 @@ namespace Astral {
         // Check if the asset file path exists on disk, else skip registering it
         if (!DoesAssetFilePathExist(filePath)) { return; }
 
-        std::filesystem::path relativePath = filePath;
-        GetRelativePath(relativePath); // We store relative file paths to the asset directories in the registry
-
         // If the file has never been loaded, assign a new AssetID
         AssetID assetID = AssignNextAvailableAssetID();
 
@@ -86,8 +92,8 @@ namespace Astral {
         m_RegistryStats.LoadedAssetsByType[AssetType::GetStaticAssetType()] += 1;
 
         // Now add the asset to storage
-        m_FilePathToAssetID[relativePath] = assetID;
-        m_AssetIDToFilePath[assetID] = relativePath;
+        m_FilePathToAssetID[filePath] = assetID;
+        m_AssetIDToFilePath[assetID] = filePath;
         m_AssetIDToAsset[assetID] = alreadyLoadedAsset;
 
         alreadyLoadedAsset->SetAssetID(assetID);
@@ -143,7 +149,11 @@ namespace Astral {
         requires std::is_base_of_v<Asset, AssetType>
     Ref<AssetType> AssetRegistry::GetAsset(std::string_view filePath)
     {
-        if (!m_FilePathToAssetID.contains(filePath)) { return nullptr; }
+        if (!m_FilePathToAssetID.contains(filePath))
+        {
+            AE_WARN("Failed to get asset of file path: " << filePath)
+            return nullptr;
+        }
         AssetID assetID = m_FilePathToAssetID[filePath];
         return GetAsset<AssetType>(assetID);
     }
@@ -151,7 +161,7 @@ namespace Astral {
 
     template<typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
-    Ref<Asset> AssetRegistry::LoadAssetWithChecks(const std::filesystem::path& filePath)
+    Ref<AssetType> AssetRegistry::LoadAssetWithChecks(const std::filesystem::path& filePath)
     {
         std::filesystem::path fullPath = filePath;
         GetAbsolutePath(fullPath);
@@ -165,7 +175,15 @@ namespace Astral {
             return nullptr;
         }
 
-        return asset;
+        Ref<AssetType> assetDerivedType = std::static_pointer_cast<AssetType>(asset);
+
+        if (!assetDerivedType)
+        {
+            AE_WARN("Failed to pointer cast to derived ref asset type!")
+            return assetDerivedType;
+        }
+
+        return assetDerivedType;
     }
 
 }
