@@ -83,20 +83,6 @@ namespace Astral {
         void RegisterRuntimeAsset(Ref<AssetType> alreadyLoadedAsset, const std::string& uniqueIdentifier);
 
         /**
-         * @brief Loads a scene at the given file path and registers all assets
-         * @param filePath The file path of the scene
-         * @note This function is not thread-safe.
-         */
-        void LoadScene(const std::filesystem::path& filePath);
-
-        /**
-         * @brief Serializes a scene to disk
-         * @param filePath The file path to write the scene file to
-         * @note This function is not thread-safe.
-         */
-        void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
-
-        /**
          * @brief Retrieves an asset from the Asset Registry
          * @param assetID The ID of the asset to retrieve
          * @return The asset being requested or nullptr if it does not exist in the registry
@@ -142,6 +128,20 @@ namespace Astral {
          *         This function is not thread-safe.
          */
         Ref<Asset> LoadAsset(AssetType assetType, const std::filesystem::path& filePath);
+
+        /**
+         * @brief Loads a scene at the given file path and registers all assets
+         * @param filePath The file path of the scene
+         * @note This function is not thread-safe.
+         */
+        void LoadScene(const std::filesystem::path& filePath);
+
+        /**
+         * @brief Serializes a scene to disk
+         * @param filePath The file path to write the scene file to
+         * @note This function is not thread-safe.
+         */
+        void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
         /**
          * @brief Sets the user asset directory for the asset registry
@@ -225,6 +225,22 @@ namespace Astral {
          */
         bool IsInDirectory(const std::filesystem::path& directory, const std::filesystem::path& assetFile);
 
+        /**
+         * @brief Checks if a filepath maps to an asset directory and exists
+         * @param filePath The file path to check
+         * @note This function is thread-safe.
+         */
+        bool DoesAssetFilePathExist(const std::filesystem::path& filePath);
+
+        /**
+         * @brief Loads an asset from disk but does not register it (With validation checks)
+         * @param filePath The file path of the asset to load
+         * @return The requested asset or nullptr if the loading failed
+         *         This function is not thread-safe.
+         */
+        template<typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        Ref<Asset> LoadAssetWithChecks(const std::filesystem::path& filePath);
 
         AssetID m_NextAvailableAssetID{0};
 

@@ -34,31 +34,6 @@ namespace Astral {
     }
 
 
-    void AssetRegistry::LoadScene(const std::filesystem::path& filePath)
-    {
-        PROFILE_SCOPE("AssetRegistry::LoadScene")
-
-        if (filePath.is_relative())
-        {
-            std::filesystem::path fullPath = filePath;
-            GetAbsolutePath(fullPath);
-            ASSERT(std::filesystem::exists(fullPath), "Given scene file path does not exist! (" << fullPath << ")")
-            SceneLoader::LoadSceneAssets(fullPath);
-        }
-        else
-        {
-            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath << ")")
-            SceneLoader::LoadSceneAssets(filePath);
-        }
-    }
-
-
-    void AssetRegistry::SerializeScene(Scene& scene, const std::filesystem::path& filePath)
-    {
-        SceneLoader::SerializeScene(scene, filePath);
-    }
-
-
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
         std::unique_lock lock(m_RegistryMutex); // Lock for the asset ID exists read check
@@ -109,6 +84,31 @@ namespace Astral {
             case AssetType::CubeLUT: return CubeLUTLoader::LoadAsset(filePath);
             default: AE_ERROR("Invalid asset type value given!");
         }
+    }
+
+
+    void AssetRegistry::LoadScene(const std::filesystem::path& filePath)
+    {
+        PROFILE_SCOPE("AssetRegistry::LoadScene")
+
+        if (filePath.is_relative())
+        {
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            ASSERT(std::filesystem::exists(fullPath), "Given scene file path does not exist! (" << fullPath << ")")
+            SceneLoader::LoadSceneAssets(fullPath);
+        }
+        else
+        {
+            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath << ")")
+            SceneLoader::LoadSceneAssets(filePath);
+        }
+    }
+
+
+    void AssetRegistry::SerializeScene(Scene& scene, const std::filesystem::path& filePath)
+    {
+        SceneLoader::SerializeScene(scene, filePath);
     }
 
 
@@ -186,6 +186,31 @@ namespace Astral {
         }
 
         return canonicalDirectory != canonicalAssetPath && dirIt == canonicalDirectory.end();
+    }
+
+
+    bool AssetRegistry::DoesAssetFilePathExist(const std::filesystem::path& filePath)
+    {
+        if (filePath.is_relative())
+        {
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            if (!std::filesystem::exists(fullPath))
+            {
+                if (fullPath == "") { return false; }
+                AE_WARN("Trying to register asset with file path that does not exist! (\"" << fullPath.string() << "\")")
+                return false;
+            }
+        }
+        else
+        {
+            if (!std::filesystem::exists(filePath))
+            {
+                if (filePath == "") { return false; }
+                AE_WARN("Trying to register asset with file path that does not exist! (" << filePath.string() << ")")
+                return false;
+            }
+        }
     }
 
 
