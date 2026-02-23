@@ -181,9 +181,6 @@ namespace Astral {
 
                 if (materialResourceFilePath.C_Str() != "")
                 {
-                    // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
-                    // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
-                    // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
                     meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
@@ -193,9 +190,6 @@ namespace Astral {
 
                 if (meshDataResourceFilePath.C_Str() != "")
                 {
-                    // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
-                    // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
-                    // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
                     meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
@@ -208,10 +202,6 @@ namespace Astral {
 
             if (node->mMetaData->HasKey("Sprite_MeshData"))
             {
-                // SceneResourceID meshDataResourceID;
-                // node->mMetaData->Get("Sprite_MeshData", meshDataResourceID);
-                // SceneResourceID materialResourceID;
-                // node->mMetaData->Get("Sprite_Material", materialResourceID);
                 aiString meshDataResourceFilePath;
                 node->mMetaData->Get("Sprite_MeshData", meshDataResourceFilePath);
                 aiString materialResourceFilePath;
@@ -220,9 +210,6 @@ namespace Astral {
 
                 if (materialResourceFilePath.C_Str() != "")
                 {
-                    // ASSERT(externalResourceIDMapping.contains(materialResourceID), "Expected scene to contain scene resource ID!")
-                    // std::string materialFilePath = externalResourceIDMapping[materialResourceID];
-                    // activeScene.ExternalResourceFiles[materialFilePath].ReferenceCount++;
                     spriteComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
@@ -232,9 +219,6 @@ namespace Astral {
 
                 if (meshDataResourceFilePath.C_Str() != "")
                 {
-                    // ASSERT(externalResourceIDMapping.contains(meshDataResourceID), "Expected scene to contain scene resource ID!")
-                    // std::string meshDataFilePath = externalResourceIDMapping[meshDataResourceID];
-                    // activeScene.ExternalResourceFiles[meshDataFilePath].ReferenceCount++;
                     spriteComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
