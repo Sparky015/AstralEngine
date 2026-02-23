@@ -86,6 +86,8 @@ namespace Astral {
         VkDevice m_Device;
         VkCommandPool m_CommandPool;
         GraphicsOwnedPtr<Swapchain> m_Swapchain;
+
+        std::recursive_mutex m_DeviceMutex;
     };
 
 }

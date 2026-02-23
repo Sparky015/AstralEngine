@@ -41,6 +41,8 @@ namespace Astral {
 
     VulkanDevice::~VulkanDevice()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         DestroySwapchain();
         DestroyMemoryPool();
         DestroyDevice();
@@ -49,6 +51,8 @@ namespace Astral {
 
     void VulkanDevice::Init()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         CreateDevice();
         CreateCommandPool();
         m_Swapchain = VulkanDevice::CreateSwapchain(3);
@@ -77,6 +81,8 @@ namespace Astral {
 
     GraphicsRef<CommandBuffer> VulkanDevice::AllocateCommandBuffer()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanCommandBufferDesc vulkanCommandBufferDesc = {
             .Device = m_Device,
             .CommandPool = m_CommandPool
@@ -88,6 +94,8 @@ namespace Astral {
 
     GraphicsRef<CommandQueue> VulkanDevice::GetPrimaryCommandQueue()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanCommandQueueDesc commandQueueDesc = {
             .Device = m_Device,
             .Swapchain = *m_Swapchain,
@@ -101,6 +109,8 @@ namespace Astral {
 
     CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         uint32 asyncQueueIndex = 1;
         while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
 
@@ -116,6 +126,8 @@ namespace Astral {
 
     RenderPassHandle VulkanDevice::CreateRenderPass()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanRenderpassDesc vulkanRenderpassDesc = {
             .Device = m_Device,
         };
@@ -126,6 +138,8 @@ namespace Astral {
 
     FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
 
         VulkanFramebufferDesc vulkanFramebufferDesc = {
@@ -139,6 +153,8 @@ namespace Astral {
 
     ShaderHandle VulkanDevice::CreateShader(const ShaderSource& shaderSource)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanShaderDesc shaderDesc = {
             .Device = m_Device,
             .ShaderSource = shaderSource,
@@ -150,6 +166,8 @@ namespace Astral {
 
     PipelineStateHandle VulkanDevice::CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanGraphicsPipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
             .RenderPass = pipelineStateCreateInfo.RenderPass,
@@ -171,6 +189,8 @@ namespace Astral {
 
     PipelineStateHandle VulkanDevice::CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanComputePipelineStateDesc pipelineStateObjectDesc = {
             .Device = m_Device,
             .ComputeShader = computePipelineStateCreateInfo.ComputeShader,
@@ -183,6 +203,8 @@ namespace Astral {
 
     VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanVertexBufferDesc vertexBufferDesc = {
             .VulkanDevice = *this,
             .Device = m_Device,
@@ -199,6 +221,8 @@ namespace Astral {
 
     IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanIndexBufferDesc indexBufferDesc = {
             .VulkanDevice = *this,
             .Device = m_Device,
@@ -214,6 +238,8 @@ namespace Astral {
 
     BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
@@ -230,6 +256,8 @@ namespace Astral {
 
     BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -246,6 +274,8 @@ namespace Astral {
 
     DescriptorSetHandle VulkanDevice::CreateDescriptorSet()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanDescriptorSetDesc descriptorSetDesc = {
             .Device = m_Device
         };
@@ -256,6 +286,8 @@ namespace Astral {
 
     TextureHandle VulkanDevice::CreateTexture(const TextureCreateInfo& textureCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanTextureDesc textureDesc = {
             .VulkanDevice = this,
             .Device = m_Device,
@@ -283,6 +315,8 @@ namespace Astral {
 
     TextureHandle VulkanDevice::CreateCubemap(const TextureCreateInfo& textureCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanTextureDesc textureDesc = {
             .VulkanDevice = this,
             .Device = m_Device,
@@ -310,6 +344,8 @@ namespace Astral {
 
     TextureHandle VulkanDevice::Create3DTexture(const TextureCreateInfo& textureCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanTextureDesc textureDesc = {
             .VulkanDevice = this,
             .Device = m_Device,
@@ -337,6 +373,8 @@ namespace Astral {
 
     TextureHandle VulkanDevice::Create1DTexture(const TextureCreateInfo& textureCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanTextureDesc textureDesc = {
             .VulkanDevice = this,
             .Device = m_Device,
@@ -365,6 +403,8 @@ namespace Astral {
 
     TextureHandle VulkanDevice::Create2DTextureArray(const TextureCreateInfo& textureCreateInfo)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VulkanTextureDesc textureDesc = {
             .VulkanDevice = this,
             .Device = m_Device,
@@ -389,6 +429,8 @@ namespace Astral {
 
     bool VulkanDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VkFormat format = ConvertImageFormatToVkFormat(imageFormat);
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(m_PhysicalDevice.physicalDevice, format, &formatProperties);
@@ -400,6 +442,8 @@ namespace Astral {
 
     bool VulkanDevice::IsAnisotropySupported()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VkPhysicalDeviceFeatures physicalDeviceFeatures;
         vkGetPhysicalDeviceFeatures(m_PhysicalDevice.physicalDevice, &physicalDeviceFeatures);
         return physicalDeviceFeatures.samplerAnisotropy;
@@ -408,6 +452,8 @@ namespace Astral {
 
     float VulkanDevice::GetMaxAnisotropySupported()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VkPhysicalDeviceProperties physicalDeviceProperties;
         vkGetPhysicalDeviceProperties(m_PhysicalDevice.physicalDevice, &physicalDeviceProperties);
         return physicalDeviceProperties.limits.maxSamplerAnisotropy;
@@ -416,12 +462,16 @@ namespace Astral {
 
     void VulkanDevice::WaitIdle()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         vkDeviceWaitIdle(m_Device);
     }
 
 
     void VulkanDevice::CreateDevice()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         float priorities[] = { 1.0f, 0.5f };
 
         uint32 queueCount = m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount;
@@ -510,12 +560,16 @@ namespace Astral {
 
     void VulkanDevice::DestroyDevice()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         vkDestroyDevice(m_Device, nullptr);
     }
 
 
     void VulkanDevice::CreateCommandPool()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         VkCommandPoolCreateInfo commandPoolCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             .pNext = nullptr,
@@ -530,6 +584,8 @@ namespace Astral {
 
     void VulkanDevice::DestroyMemoryPool()
     {
+        std::unique_lock lock(m_DeviceMutex);
+
         vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
     }
 
