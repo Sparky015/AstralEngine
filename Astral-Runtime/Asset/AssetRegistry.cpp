@@ -61,8 +61,12 @@ namespace Astral {
 
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
+        std::unique_lock lock(m_RegistryMutex); // Lock for the asset ID exists read check
+
         if (!m_AssetIDToFilePath.contains(assetID)) { return; }
         const std::filesystem::path& assetFilePath = m_AssetIDToFilePath.at(assetID);
+
+        lock.unlock(); // Unlock for the UnloadAsset function as it has its own lock
 
         UnloadAsset(assetFilePath);
 
@@ -73,6 +77,8 @@ namespace Astral {
 
     void AssetRegistry::UnloadAsset(const std::filesystem::path& assetFilePath)
     {
+        std::unique_lock lock(m_RegistryMutex); // Lock for the registry read/writes
+
         // Check if the asset is loaded first. Exit early if not loaded.
         AssetID assetID = GetAssetIDFromFilePath(assetFilePath);
         if (assetID == NullAssetID) { return; }

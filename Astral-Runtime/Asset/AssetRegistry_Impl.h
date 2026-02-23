@@ -18,8 +18,12 @@ namespace Astral {
     {
         PROFILE_SCOPE("AssetRegistry::CreateAsset")
 
+        std::unique_lock lock(m_RegistryMutex); // Lock for the read checking if the asset is cached already
+
         // Check if the asset is already loaded first, if it is, return the current AssetID
         if (m_FilePathToAssetID.contains(filePath)) { return GetAsset<AssetType>(m_FilePathToAssetID.at(filePath)); }
+
+        lock.unlock(); // Unlock for asset loading
 
         // Load the asset from disk
         Ref<Asset> asset;
@@ -52,7 +56,7 @@ namespace Astral {
             return nullptr;
         }
 
-
+        lock.lock(); // Relock for read/writes in registering the asset to the registry
 
         // If the file has never been loaded, assign a new AssetID
         AssetID assetID = AssignNextAvailableAssetID();
@@ -72,6 +76,55 @@ namespace Astral {
     }
 
 
+    template<typename AssetType> requires std::is_base_of_v<Asset, AssetType>
+    Ref<AssetType> AssetRegistry::CreateAssetAsync(const std::filesystem::path& filePath)
+    {
+        std::unique_lock lock(m_RegistryMutex); // Lock for the thread pool access and asset ID generation access
+
+        // Submit the asset load as an async task to the thread pool
+        std::future<Ref<Asset>> futureAsset = m_ThreadPool.SubmitTaskWithResult<Ref<Asset>>([filePath, this]() {
+
+            // Load the asset from disk
+            Ref<Asset> asset = nullptr;
+            if (filePath.is_relative())
+            {
+                std::filesystem::path fullPath = filePath;
+                GetAbsolutePath(fullPath);
+                if (!std::filesystem::exists(fullPath))
+                {
+                    if (fullPath == "") { return asset; }
+                    AE_WARN("Trying to create asset from file path that does not exist! (\"" << fullPath.string() << "\")")
+                    return asset;
+                }
+                asset = LoadAsset(AssetType::GetStaticAssetType(), fullPath);
+            }
+            else
+            {
+                if (!std::filesystem::exists(filePath))
+                {
+                    if (filePath == "") { return asset; }
+                    AE_WARN("Trying to create asset from file path that does not exist! (" << filePath.string() << ")")
+                    return asset;
+                }
+                asset = LoadAsset(AssetType::GetStaticAssetType(), filePath);
+            }
+
+            return asset;
+        }, 1.0f);
+
+        // Generate the placeholder asset
+        AssetID placeholderID = AssignNextAvailableAssetID();
+        Ref<AssetType> placeholderAsset = CreateRef<AssetType>();
+        if (!placeholderAsset) { return nullptr; } // Early out if allocation fails
+        placeholderAsset->SetAssetID(placeholderID);
+
+        // AsyncLoadRegistry stores a placeholder asset ID that is tied to this asset future
+        m_AsyncLoadRegistry.RegisterAsyncLoad(placeholderID, filePath, std::move(futureAsset));
+
+        return placeholderAsset;
+    }
+
+
     template <typename AssetType>
         requires std::is_base_of_v<Asset, AssetType>
     void AssetRegistry::RegisterAsset(Ref<AssetType> alreadyLoadedAsset, const std::filesystem::path& filePath)
@@ -79,6 +132,8 @@ namespace Astral {
         if (alreadyLoadedAsset == nullptr || filePath == "") { return; }
 
         PROFILE_SCOPE("AssetRegistry::RegisterAsset")
+
+        std::unique_lock lock(m_RegistryMutex); // Lock for the read/writes during registering
 
         // Check if the asset is already loaded first, if it is, cancel registration
         if (m_FilePathToAssetID.contains(filePath)) { return; }
@@ -131,6 +186,8 @@ namespace Astral {
         PROFILE_SCOPE("AssetRegistry::RegisterRuntimeAsset")
 
         std::string filePath = "Temp://" + uniqueIdentifier;
+
+        std::unique_lock lock(m_RegistryMutex); // Lock for the read/writes during registering
 
         // Check if the asset is already loaded first, if it is, cancel registration
         if (m_FilePathToAssetID.contains(filePath)) { return; }
