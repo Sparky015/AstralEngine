@@ -68,12 +68,14 @@ namespace Astral {
         void RegisterRuntimeAsset(Ref<AssetType> alreadyLoadedAsset, const std::string& uniqueIdentifier);
 
         /**
-         * @brief
+         * @brief Loads a scene at the given file path and registers all assets
+         * @param filePath The file path of the scene
          */
         void LoadScene(const std::filesystem::path& filePath);
 
         /**
-         * @brief
+         * @brief Serializes a scene to disk
+         * @param filePath The file path to write the scene file to
          */
         void SerializeScene(Scene& scene, const std::filesystem::path& filePath);
 
@@ -120,59 +122,73 @@ namespace Astral {
         Ref<Asset> LoadAsset(AssetType assetType, const std::filesystem::path& filePath);
 
         /**
-         * @brief
+         * @brief Sets the user asset directory for the asset registry
+         * @param filePath The file path of the user asset directory
          */
         void SetAssetDirectoryPath(const std::filesystem::path& filePath) { m_AssetDirectoryPath = filePath; }
 
         /**
-         * @brief
+         * @brief Sets the engine asset directory for the asset registry
+         * @param filePath The file path of the engine asset directory
          */
         void SetEngineAssetDirectoryPath(const std::filesystem::path& filePath) { m_EngineAssetsDirectoryPath = filePath; }
 
         /**
-         * @brief
+         * @brief Gets the asset ID of a registered asset from the associated file path
+         * @param filePath The file path the asset is associated with
+         * @return The asset ID of the asset associated with the given file path or the null asset ID if the file path
+         *         is not associated with an asset in the registry
          */
         AssetID GetAssetIDFromFilePath(const std::filesystem::path& filePath);
 
         /**
-         * @brief
+         * @brief Gets the associated file path to a registered asset
+         * @param assetID The ID of the asset to get the file path for
+         * @return The file path of the requested asset or an empty path if the asset is not in the asset registry
          */
         std::filesystem::path GetFilePathFromAssetID(AssetID assetID);
 
         /**
-         * @brief
+         * @brief Gets the tracked load and unload statistics for the asset registry
+         * @return All tracked asset registry statistics
          */
         [[nodiscard]] const AssetRegistryStats& GetAssetRegistryStats() const { return m_RegistryStats; }
 
         /**
-         * @brief
+         * @brief Gets the set asset directory
          */
         const std::filesystem::path& GetAssetDirectoryPath() { return m_AssetDirectoryPath; }
 
         /**
-         * @brief
+         * @brief Takes an absolute filepath and finds the relative filepath to the set asset directory and engine asset directory if any
+         * @param outfilePath The absolute file path to transform into relative file path
          */
         void GetRelativePath(std::filesystem::path& outfilePath); // Used to break down absolute path into relative path that is used to get assets
 
         /**
-         * @brief
+         * @brief Initializes the fallback defaults of asset loading functions
          */
         void InitAssetLoaderDefaults();
 
     private:
 
         /**
-         * @brief
+         * @brief Generates the next asset ID to use when registering an asset
+         * @return A generated asset ID to use when registering an asset
          */
         AssetID AssignNextAvailableAssetID();
 
         /**
-         * @brief
+         * @brief Gets the full absolute file path from a given relative file path that is in either the set user asset or engine asset directories
+         * @param outPath A relative file path inside the set user asset directory or engine asset directory
          */
         void GetAbsolutePath(std::filesystem::path& outPath);
 
         /**
-         * @brief
+         * @brief Recursively checks if a given file path is inside the given directory
+         * @param directory The directory to check if the given file path is in
+         * @param assetFile The file path to check if it is in the given directory
+         * @return True if the given directory contains the given file path, false otherwise
          */
         bool IsInDirectory(const std::filesystem::path& directory, const std::filesystem::path& assetFile);
 
