@@ -299,6 +299,8 @@ add_library(AstralEngine
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
+        Asset/AsyncLoadRegistry.cpp
+        Asset/AsyncLoadRegistry.h
 )
 
 
