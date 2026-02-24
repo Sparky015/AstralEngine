@@ -99,12 +99,6 @@ namespace Astral {
          */
         RendererType GetType() const;
 
-        /**
-         * @brief Gets the renderer's mutex
-         * @return The renderer's mutex
-         */
-        std::recursive_mutex& GetRendererMutex();
-
     private:
 
         struct SceneData
@@ -233,8 +227,6 @@ namespace Astral {
         float m_SceneExposure{};
         Mat4 m_SceneViewProjection{};
         Camera m_SceneCamera;
-
-        std::recursive_mutex m_RendererMutex;
     };
 
 }

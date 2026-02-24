@@ -749,7 +749,7 @@ namespace Astral {
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
-        std::unique_lock lock(m_RendererMutex); // Hold the lock while using the command buffers as only one command pool is used globally
+        std::unique_lock lock(device.GetDeviceMutex()); // Hold the lock while using the command buffers as only one command pool is used globally
 
         commandBuffer->BeginRecording();
 
@@ -1713,12 +1713,6 @@ namespace Astral {
     RendererType SceneRendererImpl::GetType() const
     {
         return m_RendererSettings.RendererType;
-    }
-
-
-    std::recursive_mutex& SceneRendererImpl::GetRendererMutex()
-    {
-        return m_RendererMutex;
     }
 
 } // Renderer

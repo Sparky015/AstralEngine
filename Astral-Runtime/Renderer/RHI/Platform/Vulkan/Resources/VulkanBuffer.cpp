@@ -87,8 +87,6 @@ namespace Astral {
             .size = size
         };
 
-        std::unique_lock lock(SceneRenderer::GetRendererMutex()); // Hold the lock while using the command buffers as only one command pool is used globally
-
         commandBufferHandle->BeginRecording();
         vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_PrimaryBuffer, 1, &bufferCopy);
         commandBufferHandle->EndRecording();

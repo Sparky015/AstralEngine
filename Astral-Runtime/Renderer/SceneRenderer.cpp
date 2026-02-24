@@ -99,10 +99,4 @@ namespace Astral {
         SceneRenderer::SetRendererSettings(rendererSettings);
     }
 
-
-    std::recursive_mutex& SceneRenderer::GetRendererMutex()
-    {
-        return m_Renderer->GetRendererMutex();
-    }
-
 } // Astral

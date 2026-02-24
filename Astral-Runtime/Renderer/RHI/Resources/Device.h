@@ -54,6 +54,7 @@ namespace Astral {
         virtual void WaitIdle() = 0;
 
         virtual void* GetNativeHandle() = 0;
+        virtual std::recursive_mutex& GetDeviceMutex() = 0;
 
     protected:
 

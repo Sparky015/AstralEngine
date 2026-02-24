@@ -61,6 +61,7 @@ namespace Astral {
         void WaitIdle() override;
 
         void* GetNativeHandle() override { return m_Device; }
+        std::recursive_mutex& GetDeviceMutex() override { return m_DeviceMutex; }
 
         VulkanDevice(const VulkanDevice&) = delete;
         VulkanDevice& operator=(const VulkanDevice&) = delete;

@@ -20,8 +20,6 @@ namespace Astral {
     {
         CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
 
-        std::unique_lock lock(SceneRenderer::GetRendererMutex()); // Hold the lock while using the command buffers as only one command pool is used globally
-
         commandBufferHandle->BeginRecording();
         callback(commandBufferHandle);
         commandBufferHandle->EndRecording();
