@@ -749,6 +749,7 @@ namespace Astral {
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
+        std::unique_lock lock(m_RendererMutex); // Hold the lock while using the command buffers as only one command pool is used globally
 
         commandBuffer->BeginRecording();
 
@@ -974,7 +975,7 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
-        Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
         frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
@@ -1078,7 +1079,7 @@ namespace Astral {
 
         m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, frameContext.ShadowLightMatricesDescriptorSet});
 
-        Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        Ref<Mesh> mesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
         mesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.MainList.GetMeshes().push_back(mesh); // Hold onto reference so it is not destroyed early
         Material material{};
@@ -1298,7 +1299,7 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
-        Ref<Mesh> cubemapMesh = registry.GetAsset<Mesh>("Meshes/Cube.obj");
+        Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
         frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
@@ -1349,7 +1350,7 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
-        Ref<Mesh> quadMesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+        Ref<Mesh> quadMesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
         quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
         frameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
 
@@ -1712,6 +1713,12 @@ namespace Astral {
     RendererType SceneRendererImpl::GetType() const
     {
         return m_RendererSettings.RendererType;
+    }
+
+
+    std::recursive_mutex& SceneRendererImpl::GetRendererMutex()
+    {
+        return m_RendererMutex;
     }
 
 } // Renderer

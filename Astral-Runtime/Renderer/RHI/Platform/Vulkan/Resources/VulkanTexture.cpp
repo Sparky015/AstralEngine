@@ -652,6 +652,7 @@ namespace Astral {
         CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
+        std::unique_lock lock(SceneRenderer::GetRendererMutex()); // Hold the lock while using the command buffers as only one command pool is used globally
 
     	commandBufferHandle->BeginRecording();
 
