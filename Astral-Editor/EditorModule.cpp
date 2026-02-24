@@ -60,7 +60,7 @@ namespace Astral {
             // m_Mesh.IndexBuffer = m_IndexBuffer;
 
             Astral::AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-            Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
+            Ref<Mesh> mesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
             ChessEntities::InitEntities();
         }
 
