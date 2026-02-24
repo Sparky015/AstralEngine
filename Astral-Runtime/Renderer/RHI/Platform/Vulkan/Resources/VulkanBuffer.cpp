@@ -6,10 +6,10 @@
 
 #include "VulkanBuffer.h"
 
-#include "assimp/code/AssetLib/Blender/BlenderCustomData.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Loggers.h"
+#include "Renderer/SceneRenderer.h"
 
 namespace Astral {
 
@@ -86,6 +86,8 @@ namespace Astral {
             .dstOffset = 0,
             .size = size
         };
+
+        std::unique_lock lock(SceneRenderer::GetRendererMutex()); // Hold the lock while using the command buffers as only one command pool is used globally
 
         commandBufferHandle->BeginRecording();
         vkCmdCopyBuffer(commandBuffer, stagingBuffer, m_PrimaryBuffer, 1, &bufferCopy);

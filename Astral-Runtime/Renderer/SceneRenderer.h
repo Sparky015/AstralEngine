@@ -102,6 +102,12 @@ namespace Astral {
          */
         static void SetRendererType(RendererType rendererType);
 
+        /**
+         * @brief Gets the renderer's mutex
+         * @return The renderer's mutex
+         */
+        static std::recursive_mutex& GetRendererMutex();
+
     private:
 
         static GraphicsOwnedPtr<SceneRendererImpl> m_Renderer;
