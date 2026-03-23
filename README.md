@@ -10,7 +10,9 @@ Project Lifetime: April 2024 - Present
 In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
 and the environment.
 
-Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
+* Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
+
+* For an up to date project roadmap and task planning, go to the GitHub Project linked to this repo under the Projects tab or at this [link](https://github.com/users/Sparky015/projects/9/views/1).
 
 ![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
 
@@ -145,38 +147,6 @@ View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
 ![AstralEditorScreenshot](Documentation/Assets/Astral_Engine_Editor_Screenshot.png)
 This picture contains the Amazon Lumberyard Bistro sample in the Editor. Note: This is from branch with the GPU performance
 timers being worked on (123-performance-counters-for-render-passes)
-
-### Roadmap
-
------
-
-1. Compute Shader Frame Graph Integration 
-2. The below TODO Render Passes
-3. Native Scripting
-4. GPU-Driven Renderer
-5. GPU Particle System
-6. Volumetric Lighting
-7. Forward+ Rendering Path
-8. Terrain System 
-9. Vegetation and Grass and Mesh Skinning 
-10. Multithreaded Asset System 
-8/ Tile-Based Asset Streaming  
-11. LOD System
-12. Multithreaded Asset Manager
-13. Audio System
-14. Physics System
-15. Render Thread
-
-
-### TODO Render Passes
-
-* SSAO
-* Omni-Directional Shadow Maps
-* Transparent Objects Forward Pass
-* Bloom
-* SMAA
-* TAA
-
 
 
 ### How to Build
