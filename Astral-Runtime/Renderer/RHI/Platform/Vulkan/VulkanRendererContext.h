@@ -32,10 +32,6 @@ namespace Astral {
         void Init() override;
         void Shutdown() override;
 
-        std::string_view GetGraphicsProcessorName() override;
-        std::string_view GetGPUVendor() override;
-        std::string_view GetRenderingAPI() override;
-
         void* GetInstanceHandle() override { return m_Instance; }
 
         void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override;

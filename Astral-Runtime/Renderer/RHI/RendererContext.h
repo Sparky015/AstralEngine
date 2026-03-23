@@ -29,10 +29,6 @@ namespace Astral {
 
         UVec2 GetFramebufferSize();
 
-        virtual std::string_view GetRenderingAPI() = 0;
-        virtual std::string_view GetGPUVendor() = 0;
-        virtual std::string_view GetGraphicsProcessorName() = 0;
-
         virtual void* GetInstanceHandle() = 0;
 
         virtual void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) = 0;

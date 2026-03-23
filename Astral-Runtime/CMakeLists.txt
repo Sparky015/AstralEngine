@@ -299,6 +299,10 @@ add_library(AstralEngine
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
+        Renderer/RHI/Platform/Metal/MetalRendererContext.cpp
+        Renderer/RHI/Platform/Metal/MetalRendererContext.h
+        Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
 )
 
 

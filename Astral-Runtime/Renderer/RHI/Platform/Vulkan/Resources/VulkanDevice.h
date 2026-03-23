@@ -58,6 +58,10 @@ namespace Astral {
         bool IsAnisotropySupported() override;
         float GetMaxAnisotropySupported() override;
 
+        std::string_view GetRenderingAPI() override;
+        std::string_view GetGPUVendor() override;
+        std::string_view GetGraphicsProcessorName() override;
+
         void WaitIdle() override;
 
         void* GetNativeHandle() override { return m_Device; }

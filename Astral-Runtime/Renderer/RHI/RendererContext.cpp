@@ -6,6 +6,7 @@
 
 #include "Core/Engine.h"
 #include "Debug/Utilities/Error.h"
+#include "Platform/Metal/MetalRendererContext.h"
 #include "Platform/Vulkan/VulkanRendererContext.h"
 #include "Renderer/RHI/RendererCommands.h"
 #include "Window/WindowManager.h"
@@ -28,7 +29,7 @@ namespace Astral {
         {
             case API::Vulkan: return new VulkanRenderingContext((GLFWwindow*)nativeWindow);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return new MetalRenderingContext();
             case API::None: AE_ERROR("No Rendering API was set!");
             default: AE_ERROR("Invalid Rendering API");
         }
