@@ -29,7 +29,7 @@ namespace Astral {
         {
             case API::Vulkan: return new VulkanRenderingContext((GLFWwindow*)nativeWindow);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: return new MetalRenderingContext();
+            case API::Metal: return new MetalRenderingContext((GLFWwindow*)nativeWindow);
             case API::None: AE_ERROR("No Rendering API was set!");
             default: AE_ERROR("Invalid Rendering API");
         }

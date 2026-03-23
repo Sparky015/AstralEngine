@@ -6,29 +6,32 @@
 
 #include "MetalDevice.h"
 
+#include "Debug/Utilities/Asserts.h"
+#include "MetalSwapchain.h"
+
 namespace Astral {
 
-    MetalDevice::MetalDevice(const MetalDeviceDesc& desc)
-    {
-
-    }
+    MetalDevice::MetalDevice(const MetalDeviceDesc& desc) {}
 
 
     MetalDevice::~MetalDevice()
     {
-
+        DestroySwapchain();
+        DestroyDevice();
     }
 
 
     void MetalDevice::Init()
     {
-
+        CreateDevice();
+        m_Swapchain = CreateSwapchain(3);
     }
 
 
     Swapchain& MetalDevice::GetSwapchain()
     {
-
+        ASSERT(m_Swapchain, "Metal Swapchain has not been created! Cannot retrieve null instance!");
+        return *m_Swapchain;
     }
 
 
@@ -184,13 +187,38 @@ namespace Astral {
 
     void* MetalDevice::GetNativeHandle()
     {
-        return nullptr;
+        return m_Device;
+    }
+
+
+    void MetalDevice::CreateDevice()
+    {
+        m_Device = MTL::CreateSystemDefaultDevice();
+    }
+
+
+    void MetalDevice::DestroyDevice()
+    {
+        if (m_Device)
+        {
+            m_Device->release();
+        }
     }
 
 
     GraphicsOwnedPtr<Swapchain> MetalDevice::CreateSwapchain(uint32 numberOfImages)
     {
-        return nullptr;
+        MetalSwapchainDesc metalSwapchainDesc = {
+
+        };
+
+        return CreateGraphicsOwnedPtr<MetalSwapchain>(metalSwapchainDesc);
+    }
+
+
+    void MetalDevice::DestroySwapchain()
+    {
+        m_Swapchain.reset();
     }
 
 }

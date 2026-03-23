@@ -8,11 +8,14 @@
 
 #include "Renderer/RHI/Resources/Device.h"
 
+#include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
 namespace Astral {
 
     struct MetalDeviceDesc
     {
-
+        CA::MetalLayer* CAMetalLayer;
     };
 
     class MetalDevice : public Device
@@ -53,11 +56,33 @@ namespace Astral {
 
         void WaitIdle() override; // TODO
 
-        void* GetNativeHandle() override; // TODO
+        void* GetNativeHandle() override;
 
-    protected:
+    private:
 
+        /**
+         * @brief Allocates the default system device
+         */
+        void CreateDevice();
+
+        /**
+         * @brief Releases the device
+         */
+        void DestroyDevice();
+
+        /**
+         * @brief Allocates a swapchain instance
+         */
         GraphicsOwnedPtr<Swapchain> CreateSwapchain(uint32 numberOfImages) override; // TODO
+
+        /**
+         * @brief Destroys the swapchain instance
+         */
+        void DestroySwapchain();
+
+
+        MTL::Device* m_Device;
+        GraphicsOwnedPtr<Swapchain> m_Swapchain;
     };
 
 }
