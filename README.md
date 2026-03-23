@@ -12,7 +12,7 @@ and the environment.
 
 * Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
 
-* For an up to date project roadmap and task planning, go to the GitHub Project linked to this repo under the Projects tab or at this [link](https://github.com/users/Sparky015/projects/9/views/1).
+* For an up to date project roadmap and task planning, go to the GitHub Project linked to this repo under the Projects tab or click this [link](https://github.com/users/Sparky015/projects/9/views/1).
 
 ![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
 
