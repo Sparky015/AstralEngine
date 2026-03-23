@@ -37,16 +37,36 @@ namespace Astral {
         bool IsReady(AssetID placeholderAssetID);
 
         /**
+         * @brief Retreives the result of an async load
+         * @param placeholderAssetID The asset ID of the placeholder associated with the async load
+         * @return The result of the async load or nullptr if the async load is not finished
+         */
+        Ref<Asset> GetAsyncLoadResult(AssetID placeholderAssetID);
+
+        /**
          * @brief Checks if the file path of an asset is currently registered in the async load registry
          * @param filePath The file path of asset loading
          * @return True if the file path is registered and false otherwise
          */
         bool IsRegistered(const std::filesystem::path& filePath);
 
+        /**
+         * @brief Checks if the file path of an asset is currently registered in the async load registry
+         * @param placeholderAssetID The asset ID of the placeholder
+         * @return True if the file path is registered and false otherwise
+         */
+        bool IsRegistered(AssetID placeholderAssetID);
+
+
+        const std::filesystem::path& GetFilePathAssociatedWithPlaceHolder(AssetID placeholderID);
+
 
     private:
 
+        void UnregisterAsyncLoad(AssetID placeholderAssetID);
+
         std::unordered_map<AssetID, std::future<Ref<Asset>>> m_AssetIDToAssetFuture;
+        std::unordered_map<AssetID, std::filesystem::path> m_AssetIDToFilePaths;
         std::unordered_set<std::filesystem::path> m_RegisteredFilePaths;
     };
 

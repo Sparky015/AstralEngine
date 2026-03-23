@@ -34,6 +34,20 @@ namespace Astral {
     }
 
 
+    bool AssetRegistry::IsAsyncLoadPlaceholder(Ref<Asset> asset)
+    {
+        if (!asset) { return false; }
+        return m_AsyncLoadRegistry.IsRegistered(asset->GetAssetID());
+    }
+
+
+    bool AssetRegistry::IsAsyncLoadRetrievalReady(Ref<Asset> asset)
+    {
+        if (!asset) { return false; }
+        return m_AsyncLoadRegistry.IsReady(asset->GetAssetID());
+    }
+
+
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
         std::unique_lock lock(m_RegistryMutex); // Lock for the asset ID exists read check

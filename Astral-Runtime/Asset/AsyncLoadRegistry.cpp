@@ -18,6 +18,7 @@ namespace Astral {
             return;
         }
         m_AssetIDToAssetFuture[placeholderAssetID] = std::move(assetFuture);
+        m_AssetIDToFilePaths[placeholderAssetID] = filePath;
         m_RegisteredFilePaths.insert(filePath);
     }
 
@@ -35,9 +36,42 @@ namespace Astral {
     }
 
 
+    Ref<Asset> AsyncLoadRegistry::GetAsyncLoadResult(AssetID placeholderAssetID)
+    {
+        if (!IsReady(placeholderAssetID)) { return nullptr; }
+        Ref<Asset> result = m_AssetIDToAssetFuture[placeholderAssetID].get();
+        UnregisterAsyncLoad(placeholderAssetID);
+        return result;
+    }
+
+
     bool AsyncLoadRegistry::IsRegistered(const std::filesystem::path& filePath)
     {
         return m_RegisteredFilePaths.contains(filePath);
     }
+
+
+    bool AsyncLoadRegistry::IsRegistered(AssetID placeholderAssetID)
+    {
+        return m_AssetIDToAssetFuture.contains(placeholderAssetID);
+    }
+
+
+    const std::filesystem::path& AsyncLoadRegistry::GetFilePathAssociatedWithPlaceHolder(AssetID placeholderID)
+    {
+        return m_AssetIDToFilePaths[placeholderID];
+    }
+
+
+    void AsyncLoadRegistry::UnregisterAsyncLoad(AssetID placeholderAssetID)
+    {
+        if (!IsRegistered(placeholderAssetID)) { return; }
+
+        std::filesystem::path filePath = m_AssetIDToFilePaths[placeholderAssetID];
+        m_RegisteredFilePaths.erase(filePath);
+        m_AssetIDToAssetFuture.erase(placeholderAssetID);
+        m_AssetIDToFilePaths.erase(placeholderAssetID);
+    }
+
 }
 

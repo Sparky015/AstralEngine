@@ -59,6 +59,13 @@ namespace Astral {
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAssetAsync(const std::filesystem::path& filePath);
 
+        bool IsAsyncLoadPlaceholder(Ref<Asset> asset);
+        bool IsAsyncLoadRetrievalReady(Ref<Asset> asset);
+
+        template <typename AssetType>
+            requires std::is_base_of_v<Asset, AssetType>
+        Ref<AssetType> FetchAndRegisterAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder);
+
         /**
          * @brief Takes an already loaded asset and registers it into the Asset Registry with the given file path.
          * @param alreadyLoadedAsset The asset being registered

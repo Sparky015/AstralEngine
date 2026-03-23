@@ -43,6 +43,13 @@ namespace Astral {
     {
         std::unique_lock lock(m_RegistryMutex); // Lock for the thread pool access and asset ID generation access
 
+        // Check if the asset is already loaded first, if it is, return the current AssetID
+        if (m_FilePathToAssetID.contains(filePath)) { return GetAsset<AssetType>(m_FilePathToAssetID.at(filePath)); }
+
+        // Check if the asset is already registered for an async load
+        // TODO: Make repeatedly requested assets get pointed to the same one asset load (MISSING ASSETS PROBLEM IS CAUSED HERE)
+        //if (m_AsyncLoadRegistry.IsRegistered(filePath)) { return nullptr; }
+
         // Submit the asset load as an async task to the thread pool
         std::future<Ref<Asset>> futureAsset = m_ThreadPool.SubmitTaskWithResult<Ref<Asset>>([filePath, this]() {
 
@@ -61,6 +68,42 @@ namespace Astral {
         m_AsyncLoadRegistry.RegisterAsyncLoad(placeholderID, filePath, std::move(futureAsset));
 
         return placeholderAsset;
+    }
+
+
+    template<typename AssetType> requires std::is_base_of_v<Asset, AssetType>
+    Ref<AssetType> AssetRegistry::FetchAndRegisterAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder)
+    {
+        if (!asyncLoadPlaceholder)
+        {
+            AE_WARN("Given async load placer holder is null! Skipping result fetch!")
+            return nullptr;
+        }
+        if (!m_AsyncLoadRegistry.IsReady(asyncLoadPlaceholder->GetAssetID()))
+        {
+            AE_WARN("Tried to fetch result of async load that is not finished! Skipping!")
+            return nullptr;
+        }
+
+        std::filesystem::path associatedFilePath = m_AsyncLoadRegistry.GetFilePathAssociatedWithPlaceHolder(asyncLoadPlaceholder->GetAssetID());
+        Ref<Asset> asset = m_AsyncLoadRegistry.GetAsyncLoadResult(asyncLoadPlaceholder->GetAssetID());
+
+        if (!asset)
+        {
+            AE_WARN("Async asset load failed! (Asset is nullptr)")
+            return nullptr;
+        }
+
+        Ref<AssetType> assetDerivedType = std::static_pointer_cast<AssetType>(asset);
+
+        if (!assetDerivedType)
+        {
+            AE_WARN("Failed to pointer cast to derived ref asset type!")
+            return assetDerivedType;
+        }
+
+        RegisterAsset(assetDerivedType, associatedFilePath);
+        return assetDerivedType;
     }
 
 

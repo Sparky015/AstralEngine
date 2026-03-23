@@ -181,7 +181,10 @@ namespace Astral {
 
                 if (materialResourceFilePath.C_Str() != "")
                 {
-                    meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
+                    Ref<Material> placeholderMaterial = registry.CreateAssetAsync<Material>(materialResourceFilePath.C_Str()); //
+                    AE_LOG(placeholderMaterial->GetAssetID());
+                    meshComponent.Material = placeholderMaterial;
+                    //meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
                 }
                 else
                 {
@@ -190,7 +193,10 @@ namespace Astral {
 
                 if (meshDataResourceFilePath.C_Str() != "")
                 {
-                    meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
+                    Ref<Mesh> placeholderMesh = registry.CreateAssetAsync<Mesh>(meshDataResourceFilePath.C_Str()); //
+                    AE_LOG(placeholderMesh->GetAssetID());
+                    meshComponent.MeshData = placeholderMesh;
+                    //meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
                 }
                 else
                 {
