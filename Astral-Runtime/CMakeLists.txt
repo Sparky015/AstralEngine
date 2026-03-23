@@ -399,7 +399,13 @@ elseif (APPLE)
     )
 endif()
 
+#                         ######   METAL SET UP   ######
 
+if (APPLE)
+    if (TARGET Metal4) # If Metal4 target exists, then Metal is available
+        target_link_libraries(AstralEngine PUBLIC Metal4)
+    endif ()
+endif()
 
 
 # Include Directories
