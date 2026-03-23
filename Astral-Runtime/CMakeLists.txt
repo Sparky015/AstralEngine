@@ -299,8 +299,13 @@ add_library(AstralEngine
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
+        Renderer/RHI/Platform/Metal/MetalRendererContext.mm
+        Renderer/RHI/Platform/Metal/MetalRendererContext.h
+        Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
+        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
 )
-
 
 # Flags for just the Astral Engine and all libraries and executables that link to it
 if (APPLE)
@@ -404,6 +409,7 @@ endif()
 if (APPLE)
     if (TARGET Metal4) # If Metal4 target exists, then Metal is available
         target_link_libraries(AstralEngine PUBLIC Metal4)
+        target_compile_definitions(AstralEngine PUBLIC -DASTRAL_METAL_AVAILABLE)
     endif ()
 endif()
 

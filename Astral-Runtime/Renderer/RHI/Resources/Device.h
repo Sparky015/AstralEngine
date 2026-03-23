@@ -50,6 +50,9 @@ namespace Astral {
         virtual bool IsAnisotropySupported() = 0;
         virtual float GetMaxAnisotropySupported() = 0;
 
+        virtual std::string_view GetRenderingAPI() = 0;
+        virtual std::string_view GetGPUVendor() = 0;
+        virtual std::string_view GetGraphicsProcessorName() = 0;
 
         virtual void WaitIdle() = 0;
 

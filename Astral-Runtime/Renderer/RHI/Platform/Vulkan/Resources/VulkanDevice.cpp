@@ -414,6 +414,41 @@ namespace Astral {
     }
 
 
+    std::string_view VulkanDevice::GetRenderingAPI()
+    {
+        static uint32 vulkanAPIVersion = m_PhysicalDevice.deviceProperties.apiVersion;
+        static char buffer[39] = "Vulkan ";
+        snprintf(buffer + 7, sizeof(buffer) - 7, "%d.%d.%d", VK_API_VERSION_MAJOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_MINOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_PATCH(vulkanAPIVersion));
+        return buffer;
+    }
+
+
+    std::string_view VulkanDevice::GetGPUVendor()
+    {
+        switch (m_PhysicalDevice.deviceProperties.vendorID)
+        {
+            case 0x1002: return "AMD";
+            case 0x10DE: return "NVIDIA";
+            case 0x106B: return "Apple";
+            case 0x8086: return "Intel";
+            case 0x13B5: return "ARM";
+            case 0x5143: return "Imagination Technologies";
+            case 0x1AD0: return "Google";
+            case 0x1AE0: return "Samsung";
+            case 0x1217: return "Qualcomm";
+            default: return "Unknown";
+        }
+    }
+
+
+    std::string_view VulkanDevice::GetGraphicsProcessorName()
+    {
+        return m_PhysicalDevice.deviceProperties.deviceName;
+    }
+
+
     void VulkanDevice::WaitIdle()
     {
         vkDeviceWaitIdle(m_Device);
