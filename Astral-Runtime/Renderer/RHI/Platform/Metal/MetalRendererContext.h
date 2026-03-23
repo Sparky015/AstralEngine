@@ -25,10 +25,6 @@ namespace Astral {
         uint32 GetNumValidationErrorsAndWarnings() override;
         void ClearNumValidationErrorsAndWarnings() override;
 
-        std::string_view GetRenderingAPI() override;
-        std::string_view GetGPUVendor() override;
-        std::string_view GetGraphicsProcessorName() override;
-
         void* GetInstanceHandle() override { return nullptr; }
 
         void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override; // TODO
