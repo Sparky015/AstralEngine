@@ -1,4 +1,5 @@
-add_library(AstralEngine
+
+set(ENGINE_SOURCE
         pch.h
         pch.cpp
         Core/Events/EventBus.h
@@ -191,9 +192,6 @@ add_library(AstralEngine
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
         Core/SmartPointers.h
-
-
-
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
@@ -299,13 +297,37 @@ add_library(AstralEngine
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
-        Renderer/RHI/Platform/Metal/MetalRendererContext.mm
-        Renderer/RHI/Platform/Metal/MetalRendererContext.h
-        Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
-        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
+
 )
+
+set(METAL_RHI_FILES
+    Renderer/RHI/Platform/Metal/MetalRendererContext.mm
+    Renderer/RHI/Platform/Metal/MetalRendererContext.h
+    Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
+    Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
+)
+
+set(D3D12_RHI_FILES
+
+)
+
+
+if (APPLE)
+    if (TARGET Metal4) # If Metal4 target exists, then Metal is available
+        list(APPEND ENGINE_SOURCE ${METAL_RHI_FILES})
+    endif ()
+endif()
+
+if (WIN32)
+    if (TARGET D3D12)
+        list(APPEND ENGINE_SOURCE ${D3D12_RHI_FILES})
+    endif()
+endif()
+
+
+add_library(AstralEngine ${ENGINE_SOURCE})
 
 # Flags for just the Astral Engine and all libraries and executables that link to it
 if (APPLE)
@@ -321,6 +343,8 @@ if (APPLE)
 elseif (WIN32)
     target_link_directories(AstralEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
+
+
 
 
 
@@ -411,6 +435,13 @@ if (APPLE)
         target_link_libraries(AstralEngine PUBLIC Metal4)
         target_compile_definitions(AstralEngine PUBLIC -DASTRAL_METAL_AVAILABLE)
     endif ()
+endif()
+
+if (WIN32)
+    if (TARGET D3D12)
+        target_link_libraries(AstralEngine PUBLIC D3D12)
+        target_compile_definitions(AstralEngine PUBLIC -DASTRAL_D3D12_AVAILABLE)
+    endif()
 endif()
 
 
