@@ -297,6 +297,12 @@ set(ENGINE_SOURCE
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
+        Renderer/RHI/Platform/D3D12/D3D12RendererContext.cpp
+        Renderer/RHI/Platform/D3D12/D3D12RendererContext.h
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.cpp
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.h
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.cpp
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.h
 
 )
 
