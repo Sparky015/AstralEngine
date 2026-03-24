@@ -11,7 +11,10 @@
 
 namespace Astral {
 
-    MetalDevice::MetalDevice(const MetalDeviceDesc& desc) {}
+    MetalDevice::MetalDevice(const MetalDeviceDesc& desc) :
+        m_Device(nullptr),
+        m_CAMetalLayer(desc.CAMetalLayer)
+    {}
 
 
     MetalDevice::~MetalDevice()
