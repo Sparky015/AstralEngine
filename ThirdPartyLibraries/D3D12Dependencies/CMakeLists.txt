@@ -29,11 +29,13 @@ if (WIN32)
 
     # Only build the D3D12 target if the framework dependencies are found
     if (D3D12_LIB AND DXGI_LIB AND D3D12_INCLUDE_DIR)
-        add_library(D3D12Dependencies INTERFACE)
+        add_library(D3D12Dependencies INTERFACE D3D12Helpers.h)
+        target_include_directories(D3D12Dependencies INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
         target_link_libraries(D3D12Dependencies INTERFACE ${D3D12_LIB})
         target_link_libraries(D3D12Dependencies INTERFACE ${DXGI_LIB})
         target_include_directories(D3D12Dependencies INTERFACE ${D3D12_INCLUDE_DIR})
+
 
         message(STATUS "All D3D12 dependencies were found!")
         message(STATUS "D3D12 is supported!")
