@@ -395,37 +395,11 @@ endif ()
 
 #                         ######   VULKAN SET UP   ######
 
-if (WIN32)
-    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        target_link_libraries(AstralEngine PUBLIC
-                vulkan-1
-                SPIRV-Toolsd
-                SPIRV-Tools-diffd
-                SPIRV-Tools-optd
-                glslangd
-                glslang-default-resource-limitsd
-        )
-    else ()
-        target_link_libraries(AstralEngine PUBLIC
-                vulkan-1
-                SPIRV-Tools
-                SPIRV-Tools-diff
-                SPIRV-Tools-opt
-                glslang
-                glslang-default-resource-limits
-        )
+if (WIN32 OR APPLE OR LINUX)
+    if (TARGET VulkanDependencies) # If VulkanDependencies target exists, then Vulkan is available
+        target_link_libraries(AstralEngine PUBLIC VulkanDependencies)
+        target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
     endif ()
-elseif (APPLE)
-    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
-    target_link_libraries(AstralEngine PUBLIC
-            vulkan.1
-            glslang
-            glslang-default-resource-limits
-            SPIRV-Tools
-            SPIRV-Tools-diff
-            SPIRV-Tools-opt
-    )
 endif()
 
 #                         ######   METAL SET UP   ######
@@ -437,9 +411,11 @@ if (APPLE)
     endif ()
 endif()
 
+#                         ######   D3D12 SET UP   ######
+
 if (WIN32)
-    if (TARGET D3D12)
-        target_link_libraries(AstralEngine PUBLIC D3D12)
+    if (TARGET D3D12Dependencies) # If D3D12Dependencies target exists, then D3D12 is available
+        target_link_libraries(AstralEngine PUBLIC D3D12Dependencies)
         target_compile_definitions(AstralEngine PUBLIC -DASTRAL_D3D12_AVAILABLE)
     endif()
 endif()
@@ -522,21 +498,15 @@ target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM
 
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (LINUX)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 endif ()
 
