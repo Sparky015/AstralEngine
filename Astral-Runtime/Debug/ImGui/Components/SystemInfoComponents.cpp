@@ -67,7 +67,7 @@ namespace Astral {
     void SystemGPUNameComponent()
     {
         Astral::RenderingContext& rendererContext = Astral::Engine::Get().GetRendererManager().GetContext();
-        ImGui::Text("GPU Name: %s", rendererContext.GetGraphicsProcessorName().data());
+        ImGui::Text("GPU Name: %s", rendererContext.GetDevice().GetGraphicsProcessorName().data());
     }
 
     void SystemCPUVendorComponent()
@@ -78,7 +78,7 @@ namespace Astral {
     void SystemGPUVendorComponent()
     {
         Astral::RenderingContext& rendererContext = Astral::Engine::Get().GetRendererManager().GetContext();
-        ImGui::Text("GPU Vendor: %s", rendererContext.GetGPUVendor().data());
+        ImGui::Text("GPU Vendor: %s", rendererContext.GetDevice().GetGPUVendor().data());
     }
 
     void CPUCacheSizeComponent()

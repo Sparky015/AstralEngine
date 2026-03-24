@@ -59,11 +59,12 @@ namespace Astral {
         /** Outputs the libraries used depending on the platform. */
         Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
         Astral::RenderingContext& renderingContext = Astral::Engine::Get().GetRendererManager().GetContext();
+        Astral::Device& device = renderingContext.GetDevice();
 
         AE_LOG("Window: " << window.GetVersion());
-        AE_LOG("Rendering API: " << renderingContext.GetRenderingAPI());
-        AE_LOG("Graphics Vendor: " << renderingContext.GetGPUVendor());
-        AE_LOG("Graphics Processor: " << renderingContext.GetGraphicsProcessorName());
+        AE_LOG("Rendering API: " << device.GetRenderingAPI());
+        AE_LOG("Graphics Vendor: " << device.GetGPUVendor());
+        AE_LOG("Graphics Processor: " << device.GetGraphicsProcessorName());
 
 
         AE_LOG(""); // Creates an extra new line

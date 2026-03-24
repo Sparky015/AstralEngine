@@ -20,10 +20,10 @@
 
 namespace Astral {
 
-    /*
-    * This sets up the rendering context for when Vulkan is used. It defines functions that are overridden from
-    * RendererContext and also needs a window from the window solution to set the context to.
-    */
+    /**
+     * @brief Holds components needed for the lifetime of the Vulkan renderer such as the instance, physical devices, window surface,
+     *        debug callback hook, and logical device.
+     */
     class VulkanRenderingContext : public RenderingContext
     {
     public:
@@ -31,10 +31,6 @@ namespace Astral {
 
         void Init() override;
         void Shutdown() override;
-
-        std::string_view GetGraphicsProcessorName() override;
-        std::string_view GetGPUVendor() override;
-        std::string_view GetRenderingAPI() override;
 
         void* GetInstanceHandle() override { return m_Instance; }
 
