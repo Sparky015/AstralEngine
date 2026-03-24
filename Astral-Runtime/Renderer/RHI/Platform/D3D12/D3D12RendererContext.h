@@ -8,12 +8,13 @@
 
 #include "Renderer/RHI/RendererContext.h"
 
+#include "D3D12Helpers.h"
 #include <GLFW/glfw3.h>
 
 namespace Astral {
 
     /**
-     * @brief Holds components needed for the lifetime of the D3D12 renderer such as the device and window layer
+     * @brief Holds components needed for the lifetime of the D3D12 renderer such as the device
      */
     class D3D12RenderingContext : public RenderingContext
     {
@@ -46,19 +47,32 @@ namespace Astral {
 
     private:
 
+        void EnableDebugLayer();
+
         /**
-         * @brief Creates the ID3D12Device
+         * @brief Creates the DXGIFactory
+         */
+        void CreateDXGIFactory();
+
+        /**
+         * @brief Destroys the DXGIFactory
+         */
+        void DestroyDXGIFactory();
+
+        /**
+         * @brief
          */
         void CreateDevice(); // TODO
 
         /**
-         * @brief Destroys the ID3D12Device
+         * @brief
          */
         void DestroyDevice(); // TODO
 
 
 
         GLFWwindow* m_Window;
+        ComPtr<IDXGIFactory4> m_Factory;
         GraphicsOwnedPtr<Device> m_Device;
     };
 
