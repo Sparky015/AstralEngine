@@ -82,6 +82,7 @@ namespace Astral {
 
 
         MTL::Device* m_Device;
+        CA::MetalLayer* m_CAMetalLayer;
         GraphicsOwnedPtr<Swapchain> m_Swapchain;
     };
 

@@ -8,33 +8,61 @@
 
 #include "Renderer/RHI/Resources/Swapchain.h"
 
+#include "QuartzCore/CAMetalLayer.hpp"
+
 namespace Astral {
 
     struct MetalSwapchainDesc
     {
-        // TODO
+        CA::MetalLayer* CAMetalLayer;
     };
 
+    /**
+     * @brief Manages the Metal swapchain functionality (on top of the CAMetalLayer)
+     */
     class MetalSwapchain : public Swapchain
     {
     public:
-        MetalSwapchain(const MetalSwapchainDesc& metalSwapchainDesc); // TODO
+        MetalSwapchain(const MetalSwapchainDesc& metalSwapchainDesc);
         ~MetalSwapchain() override = default;
 
+        /**
+         * @brief Acquires the next image from the CAMetalLayer
+         * @return The render target (CA::MetalDrawable)
+         */
         GraphicsRef<RenderTarget> AcquireNextImage() override; // TODO
 
-        uint32 GetNumberOfImages() override; // TODO
+        /**
+         * @brief Gets the number of images supported by the swapchain
+         * @return The number of images currently supported by the swapchain
+         */
+        uint32 GetNumberOfImages() override;
 
         std::vector<RenderTargetHandle>& GetRenderTargets() override; // TODO
 
-        void RecreateSwapchain(uint32 width, uint32 height) override; // TODO
+        /**
+         * @brief Sets the dimensions of the render targets
+         * @param width The new width of the render targets
+         * @param height The new height of the render targets
+         */
+        void RecreateSwapchain(uint32 width, uint32 height) override;
 
-        void RecreateSwapchain(bool isVSyncEnabled) override; // TODO
+        /**
+         * @brief Sets the vsync state
+         * @param isVSyncEnabled The new state to set the vsync to
+         */
+        void RecreateSwapchain(bool isVSyncEnabled) override;
 
-        void* GetNativeHandle() override; // TODO
+        /**
+         * @brief Gets the native handle of the swapchain
+         * @return Returns the CA::MetalLayer*
+         */
+        void* GetNativeHandle() override;
 
     private:
 
+        std::vector<RenderTargetHandle> m_RenderTargets; // Always empty
+        CA::MetalLayer* m_CAMetalLayer;
     };
 
 }
