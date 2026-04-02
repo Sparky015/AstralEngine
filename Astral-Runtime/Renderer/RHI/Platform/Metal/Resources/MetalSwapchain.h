@@ -61,6 +61,7 @@ namespace Astral {
 
     private:
 
+        std::vector<RenderTargetHandle> m_RenderTargets; // Always empty
         CA::MetalLayer* m_CAMetalLayer;
     };
 

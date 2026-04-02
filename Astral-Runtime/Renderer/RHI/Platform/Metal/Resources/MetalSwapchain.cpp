@@ -34,6 +34,8 @@ namespace Astral {
     std::vector<RenderTargetHandle>& MetalSwapchain::GetRenderTargets()
     {
         // Not possible for metal
+        AE_ERROR("This method is not supported for Metal!")
+        return m_RenderTargets; // Returns empty vector to not crash
     }
 
 
