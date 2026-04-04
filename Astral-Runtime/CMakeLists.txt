@@ -305,6 +305,8 @@ add_library(AstralEngine
         Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
         Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
         Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
+        Renderer/RHI/Platform/Metal/Resources/MetalBuffer.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalBuffer.h
 )
 
 # Flags for just the Astral Engine and all libraries and executables that link to it
