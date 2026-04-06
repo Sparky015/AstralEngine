@@ -158,6 +158,45 @@ namespace Astral {
     }
 
 
+    void MetalBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    {
+        if (m_MemoryType == memoryType) { return; }
+
+        if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            MetalBufferDesc deviceLocalBufferDesc = {
+                .Device = m_Device,
+                .Size = m_BufferLength,
+                .MemoryType = GPUMemoryType::DEVICE_LOCAL
+            };
+
+            MetalBuffer deviceLocalbuffer = MetalBuffer(deviceLocalBufferDesc);
+            deviceLocalbuffer.UploadToDeviceLocalBuffer(m_Buffer->contents(), m_BufferLength);
+
+            // Replace this buffer with new buffer
+            *this = std::move(deviceLocalbuffer);
+        }
+        else if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            MetalBufferDesc hostVisibleBufferDesc = {
+                .Device = m_Device,
+                .Size = m_BufferLength,
+                .MemoryType = GPUMemoryType::HOST_VISIBLE
+            };
+
+            MetalBuffer hostVisibleBuffer = MetalBuffer(hostVisibleBufferDesc);
+            hostVisibleBuffer.CopyFromStagingBuffer(*this, m_BufferLength); // Copies from the private buffer back to a shared buffer
+
+            // Replace this buffer with new buffer
+            *this = std::move(hostVisibleBuffer);
+        }
+        else
+        {
+            AE_ERROR("[MetalBuffer::ChangeMemoryType] Memory type not implemented!")
+        }
+    }
+
+
     void* MetalBuffer::GetNativeHandle()
     {
         return m_Buffer;
@@ -203,16 +242,21 @@ namespace Astral {
 
     MetalBuffer& MetalBuffer::operator=(MetalBuffer&& other) noexcept
     {
-        m_Device = other.m_Device;
-        m_Buffer = other.m_Buffer;
-        m_BufferLength = other.m_BufferLength;
-        m_UsedMemorySize = other.m_UsedMemorySize;
-        m_MemoryType = other.m_MemoryType;
+        if (this != &other)
+        {
+            DestroyBuffer(m_Buffer); // Clean up old buffer if one exists
 
-        other.m_Device = nullptr;
-        other.m_Buffer = nullptr;
-        other.m_BufferLength = 0;
-        other.m_UsedMemorySize = 0;
+            m_Device = other.m_Device;
+            m_Buffer = other.m_Buffer;
+            m_BufferLength = other.m_BufferLength;
+            m_UsedMemorySize = other.m_UsedMemorySize;
+            m_MemoryType = other.m_MemoryType;
+
+            other.m_Device = nullptr;
+            other.m_Buffer = nullptr;
+            other.m_BufferLength = 0;
+            other.m_UsedMemorySize = 0;
+        }
 
         return *this;
     }

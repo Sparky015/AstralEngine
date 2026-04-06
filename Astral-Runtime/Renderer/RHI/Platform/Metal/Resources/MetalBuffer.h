@@ -7,7 +7,6 @@
 #pragma once
 
 #include "Metal/MTLBuffer.hpp"
-#include "Renderer/RHI/Common/MemoryTypes.h"
 #include "Renderer/RHI/Resources/Buffer.h"
 #include "Renderer/RHI/Resources/Device.h"
 
@@ -82,6 +81,13 @@ namespace Astral {
          * @warning This forces a blocking wait while the GPU transfers the data.
          */
         void UploadToDeviceLocalBuffer(void* data, uint32 size) override;
+
+        /**
+         * @brief Changes the memory type used by this buffer to the requested type
+         * @param memoryType The memory type to change the buffer to
+         * @warning This forces a blocking wait while the GPU transfers the data between CPU to GPU or GPU to CPU memory
+         */
+        void ChangeMemoryType(GPUMemoryType memoryType);
 
         /**
          * @brief Gets the native handle of the buffer
