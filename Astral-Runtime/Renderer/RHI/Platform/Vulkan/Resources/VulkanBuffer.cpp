@@ -119,6 +119,53 @@ namespace Astral {
     }
 
 
+    void VulkanBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    {
+        if (m_MemoryType == memoryType) { return; }
+
+        if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            VulkanBufferDesc deviceLocalBufferDesc = {
+                .Device = m_Device,
+                .Usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                .Size = (uint32)m_BufferDeviceSize,
+                .DeviceMemoryProperties = m_DeviceMemoryProperties,
+                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+            };
+
+            VulkanBuffer deviceLocalbuffer = VulkanBuffer(deviceLocalBufferDesc);
+
+            void* bufferMemory;
+            this->MapPointer(&bufferMemory);
+            deviceLocalbuffer.UploadToDeviceLocalBuffer(bufferMemory, m_BufferDeviceSize);
+            this->UnmapPointer();
+
+            // Replace this buffer with new buffer
+            *this = std::move(deviceLocalbuffer);
+        }
+        else if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            VulkanBufferDesc hostVisibleBufferDesc = {
+                .Device = m_Device,
+                .Usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                .Size = (uint32)m_BufferDeviceSize,
+                .DeviceMemoryProperties = m_DeviceMemoryProperties,
+                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+            };
+
+            VulkanBuffer hostVisibleBuffer = VulkanBuffer(hostVisibleBufferDesc);
+            hostVisibleBuffer.CopyFromStagingBuffer(*this, m_BufferDeviceSize); // Copies from the device local buffer back to a host visible buffer
+
+            // Replace this buffer with new buffer
+            *this = std::move(hostVisibleBuffer);
+        }
+        else
+        {
+            AE_ERROR("[MetalBuffer::ChangeMemoryType] Memory type not implemented!")
+        }
+    }
+
+
     void* VulkanBuffer::GetNativeHandle()
     {
         return m_Buffer;

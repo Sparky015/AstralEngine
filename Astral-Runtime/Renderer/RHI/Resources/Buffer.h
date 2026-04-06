@@ -8,6 +8,7 @@
 
 #include "Core/FixedIntegerTypes.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/MemoryTypes.h"
 
 namespace Astral {
 
@@ -68,6 +69,13 @@ namespace Astral {
         * @warning This forces a blocking wait while the GPU transfers the data.
         */
         virtual void UploadToDeviceLocalBuffer(void* data, uint32 size) = 0;
+
+        /**
+         * @brief Changes the memory type used by this buffer to the requested type
+         * @param memoryType The memory type to change the buffer to
+         * @warning This forces a blocking wait while the GPU transfers the data between CPU to GPU or GPU to CPU memory
+         */
+        virtual void ChangeMemoryType(GPUMemoryType memoryType) = 0;
 
         /**
          * @brief Gets the native handle of the buffer
