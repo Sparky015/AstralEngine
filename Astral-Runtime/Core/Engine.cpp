@@ -106,8 +106,6 @@ namespace Astral {
 
         char frameScopeProfilerNameBuffer[64];
 
-        m_IsLoopRunning = false;
-
                                   /****  Engine Loop  ****/
         while (m_IsLoopRunning)
         {
