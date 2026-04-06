@@ -80,25 +80,35 @@ namespace Astral {
         void CopyDataToBuffer(void* data, uint32 size) override;
 
         /**
+        * @brief Uploads the given data to this buffer
+        * @param data The address of the data to copy to the buffer
+        * @param size The size of the data to upload to this buffer
+        * @note This is only supported by device local buffers. This does not support copying to a host visible buffer.
+        * @warning This forces a blocking wait while the GPU transfers the data.
+        */
+        void UploadToDeviceLocalBuffer(void* data, uint32 size) override;
+
+        /**
          * @brief Gets the native handle of the buffer
          * @return The native handle of the buffer (VkBuffer)
         */
         void* GetNativeHandle() override;
-
-        /**
-         * @brief Copies data from a staging buffer to this buffer using a copy buffer command
-         * @param device The graphics device
-         * @param stagingBuffer The origin buffer to copy from
-         * @param size The size of the data that should be copied to this buffer
-         * @note This forces a blocking wait while the GPU transfers the data
-         */
-        void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& stagingBuffer, VkDeviceSize size);
 
 
         VulkanBuffer(const VulkanBuffer&) = delete;
         VulkanBuffer& operator=(const VulkanBuffer& desc) = delete;
         VulkanBuffer(VulkanBuffer&& other) noexcept;
         VulkanBuffer& operator=(VulkanBuffer&& other) noexcept;
+
+    protected:
+
+        /**
+        * @brief Copies data from a staging buffer to this buffer using a copy buffer command
+        * @param stagingBuffer The origin buffer to copy from
+        * @param size The size of the data that should be copied to this buffer
+        * @warning This forces a blocking wait while the GPU transfers the data.
+        */
+        void CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 size) override;
 
     private:
 

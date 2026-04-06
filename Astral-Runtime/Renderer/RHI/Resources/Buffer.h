@@ -61,10 +61,29 @@ namespace Astral {
         virtual void CopyDataToBuffer(void* data, uint32 size) = 0;
 
         /**
+        * @brief Uploads the given data to this buffer
+        * @param data The address of the data to copy to the buffer
+        * @param size The size of the data to upload to this buffer
+        * @note This is only supported by device local buffers. This does not support copying to a host visible buffer.
+        * @warning This forces a blocking wait while the GPU transfers the data.
+        */
+        virtual void UploadToDeviceLocalBuffer(void* data, uint32 size) = 0;
+
+        /**
          * @brief Gets the native handle of the buffer
          * @return The native handle of the buffer
          */
         virtual void* GetNativeHandle() = 0;
+
+    protected:
+
+        /**
+         * @brief Copies data from a staging buffer to this buffer using a blit command
+         * @param stagingBuffer The origin buffer to copy from
+         * @param size The size of the data that should be copied to this buffer
+         * @warning This forces a blocking wait while the GPU transfers the data
+         */
+        virtual void CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 size) = 0;
 
     };
 

@@ -70,9 +70,18 @@ namespace Astral {
          * @brief Copies data to this buffer
          * @param data The address of the data to copy to the buffer
          * @param size The size of the data to copy to this buffer
-         * @note This is only supported by host visible buffers. This does not support uploading to a private buffer
+         * @note This is only supported by host visible buffers. This does not support uploading to a private buffer.
          */
         void CopyDataToBuffer(void* data, uint32 size) override;
+
+        /**
+         * @brief Uploads the given data to this buffer
+         * @param data The address of the data to copy to the buffer
+         * @param size The size of the data to upload to this buffer
+         * @note This is only supported by private buffers. This does not support copying to a shared buffer.
+         * @warning This forces a blocking wait while the GPU transfers the data.
+         */
+        void UploadToDeviceLocalBuffer(void* data, uint32 size) override;
 
         /**
          * @brief Gets the native handle of the buffer
@@ -80,20 +89,21 @@ namespace Astral {
         */
         void* GetNativeHandle() override;
 
-        /**
-         * @brief Copies data from a staging buffer to this buffer using a blit command
-         * @param device The graphics device
-         * @param stagingBuffer The origin buffer to copy from
-         * @param size The size of the data that should be copied to this buffer
-         * @note This forces a blocking wait while the GPU transfers the data
-         */
-        void CopyFromStagingBuffer(Device& device, Buffer& stagingBuffer, uint32 size);
-
 
         MetalBuffer(const MetalBuffer&) = delete;
         MetalBuffer& operator=(const MetalBuffer&) = delete;
         MetalBuffer(MetalBuffer&& other) noexcept;
         MetalBuffer& operator=(MetalBuffer&& other) noexcept;
+
+    protected:
+
+        /**
+         * @brief Copies data from a staging buffer to this buffer using a blit command
+         * @param stagingBuffer The origin buffer to copy from
+         * @param size The size of the data that should be copied to this buffer
+         * @warning This forces a blocking wait while the GPU transfers the data
+         */
+        void CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 size) override;
 
     private:
 

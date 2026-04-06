@@ -8,9 +8,10 @@
 
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Loggers.h"
+#include "Renderer/RHI/RendererAPI.h"
+
 #include "Metal/MTLBlitCommandEncoder.hpp"
 #include "Metal/MTLCommandBuffer.hpp"
-
 #include "Metal/MTLDevice.hpp"
 
 namespace Astral {
@@ -119,7 +120,7 @@ namespace Astral {
 
         if (m_Buffer->storageMode() == MTL::StorageModePrivate)
         {
-            AE_WARN("[MetalBuffer::CopyDataToBuffer] Buffer does not support read/write from CPU!")
+            AE_WARN("[MetalBuffer::CopyDataToBuffer] Private buffer type does not support read/write from CPU!")
             return;
         }
 
@@ -132,18 +133,43 @@ namespace Astral {
     }
 
 
+    void MetalBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    {
+        if (!data || size == 0) { return; }
+
+        ASSERT(size <= m_BufferLength, "Data does not fit in buffer!")
+
+        if (m_Buffer->storageMode() != MTL::StorageModePrivate)
+        {
+            AE_WARN("[MetalBuffer::UploadToPrivateBuffer] A private buffer is required to upload data!")
+            return;
+        }
+
+        MetalBufferDesc stagingBufferDesc = {
+            .Device = m_Device,
+            .Size = size,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE
+        };
+
+        MetalBuffer stagingBuffer = MetalBuffer(stagingBufferDesc);
+        stagingBuffer.CopyDataToBuffer(data, size);
+
+        this->CopyFromStagingBuffer(stagingBuffer, size);
+    }
+
+
     void* MetalBuffer::GetNativeHandle()
     {
         return m_Buffer;
     }
 
 
-    void MetalBuffer::CopyFromStagingBuffer(Device& device, Buffer& stagingBuffer, uint32 size)
+    void MetalBuffer::CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 size)
     {
         ASSERT(size <= m_BufferLength, "Data does not fit in buffer!")
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
 
-        CommandBufferHandle commandBufferHandle = device.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
         MTL::CommandBuffer* commandBuffer = (MTL::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
 
@@ -155,7 +181,7 @@ namespace Astral {
         blitEncoder->endEncoding();
         commandBufferHandle->EndRecording();
 
-        CommandQueueHandle commandQueueHandle = device.GetPrimaryCommandQueue();
+        CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
         commandQueueHandle->SubmitSync(commandBufferHandle);
         commandQueueHandle->WaitIdle();
     }

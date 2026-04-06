@@ -45,17 +45,6 @@ namespace Astral {
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
         {
-            VulkanBufferDesc stagingBufferDesc = {
-                .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                .Size = desc.SizeInBytes,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-            };
-
-            VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
-            stagingBuffer.CopyDataToBuffer(m_IndiceData, desc.SizeInBytes);
-
             VulkanBufferDesc indexBufferDesc = {
                 .Device = m_Device,
                 .Usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
@@ -65,7 +54,7 @@ namespace Astral {
             };
 
             m_IndexBuffer = VulkanBuffer{indexBufferDesc};
-            m_IndexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.SizeInBytes);
+            m_IndexBuffer.UploadToDeviceLocalBuffer(desc.IndiceData, desc.SizeInBytes);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {

@@ -6,10 +6,10 @@
 
 #include "VulkanBuffer.h"
 
-#include "assimp/code/AssetLib/Blender/BlenderCustomData.h"
 #include "Debug/Utilities/Asserts.h"
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Loggers.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral {
 
@@ -92,17 +92,44 @@ namespace Astral {
     }
 
 
+    void VulkanBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    {
+        if (!data || size == 0) { return; }
+
+        ASSERT(size <= m_BufferDeviceSize, "Data does not fit in buffer!")
+
+        if (m_MemoryType != GPUMemoryType::DEVICE_LOCAL)
+        {
+            AE_WARN("[VulkanBuffer::UploadToPrivateBuffer] A device local buffer is required to upload data!")
+            return;
+        }
+
+        VulkanBufferDesc stagingBufferDesc = {
+            .Device = m_Device,
+            .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            .Size = size,
+            .DeviceMemoryProperties = m_DeviceMemoryProperties,
+            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+        };
+
+        VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
+        stagingBuffer.CopyDataToBuffer(data, size);
+
+        this->CopyFromStagingBuffer(stagingBuffer, size);
+    }
+
+
     void* VulkanBuffer::GetNativeHandle()
     {
         return m_Buffer;
     }
 
 
-    void VulkanBuffer::CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& stagingBuffer, VkDeviceSize size)
+    void VulkanBuffer::CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 size)
     {
         ASSERT(size <= m_BufferDeviceSize, "Data does not fit in buffer!")
 
-        CommandBufferHandle commandBufferHandle = device.AllocateCommandBuffer();
+        CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkBuffer vkStagingBuffer = (VkBuffer)stagingBuffer.GetNativeHandle();
 
@@ -116,7 +143,7 @@ namespace Astral {
         vkCmdCopyBuffer(commandBuffer, vkStagingBuffer, m_Buffer, 1, &bufferCopy);
         commandBufferHandle->EndRecording();
 
-        CommandQueueHandle commandQueueHandle = device.GetPrimaryCommandQueue();
+        CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
         commandQueueHandle->SubmitSync(commandBufferHandle);
         commandQueueHandle->WaitIdle();
     }
