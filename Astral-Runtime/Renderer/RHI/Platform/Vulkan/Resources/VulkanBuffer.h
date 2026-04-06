@@ -4,18 +4,20 @@
 * @date 5/17/2025
 */
 
-
 #pragma once
 
 #include "Renderer/RHI/Resources/Buffer.h"
 
-#include <vulkan/vulkan_core.h>
-
-#include "VulkanDevice.h"
 #include "Renderer/RHI/Common/MemoryTypes.h"
+#include "VulkanDevice.h"
+
+#include <vulkan/vulkan_core.h>
 
 namespace Astral {
 
+    /**
+     * @brief A description of how to build a Vulkan buffer
+     */
     struct VulkanBufferDesc
     {
         VkDevice Device;
@@ -25,6 +27,10 @@ namespace Astral {
         VkMemoryPropertyFlags RequestedMemoryPropertyFlags;
     };
 
+
+    /**
+     * @brief A wrapper around a Vulkan buffer supporting extra convenience functions
+     */
     class VulkanBuffer : public Buffer
     {
     public:
@@ -32,36 +38,99 @@ namespace Astral {
         explicit VulkanBuffer(const VulkanBufferDesc& desc);
         ~VulkanBuffer() override;
 
-        [[nodiscard]] VkDeviceMemory GetDeviceMemory() const { return m_PrimaryMemory; }
-        [[nodiscard]] VkDeviceSize GetDeviceSize() const { return m_PrimaryDeviceSize; }
-        void MapPointer(void** cpuPtr) override;
-        void UnmapPointer() override;
-        void CopyDataToBuffer(void* data, uint32 size) override;
+        /**
+         * @brief Gets the amount of memory allocated to the buffer
+         * @return The amount of memory used in the buffer
+         */
+        uint32 GetAllocatedSize() override;
 
-        void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& sourceBuffer, VkDeviceSize size);
+        /**
+         * @brief Gets the amount of memory written to in the buffer
+         * @return The amount of memory used in the buffer
+         */
+        uint32 GetUsedSize() override;
 
-        uint32 GetAllocatedSize() override { return m_PrimaryDeviceSize; }
-        uint32 GetUsedSize() override { return m_UsedMemorySize; }
+        /**
+         * @brief Reallocates the length of a buffer by creating a new buffer and copying data over
+         * @param newSize The length to make the new buffer
+         * @note This is only supported by host visible buffers. This does not support uploading to a device local buffer
+         */
         void ReallocateMemory(uint32 newSize) override;
 
-        void* GetNativeHandle() override { return m_PrimaryBuffer; }
+        /**
+         * @brief Maps a pointer to the address of this buffer
+         * @param cpuPtr The address of where the buffer address should be stored
+         */
+        void MapPointer(void** cpuPtr) override;
+
+        /**
+         * @brief Unmaps a pointer from this buffer
+         */
+        void UnmapPointer() override;
+
+        /**
+         * @brief Copies data to this buffer
+         * @param data The address of the data to copy to the buffer
+         * @param size The size of the data to copy to this buffer
+         * @note This is only supported by host visible buffers. This does not support uploading to a device local buffer. Reallocation is
+         * skipped if the new buffer size is less than or equal to the current buffer size.
+         */
+        void CopyDataToBuffer(void* data, uint32 size) override;
+
+        /**
+         * @brief Gets the native handle of the buffer
+         * @return The native handle of the buffer (VkBuffer)
+        */
+        void* GetNativeHandle() override;
+
+        /**
+         * @brief Copies data from a staging buffer to this buffer using a copy buffer command
+         * @param device The graphics device
+         * @param stagingBuffer The origin buffer to copy from
+         * @param size The size of the data that should be copied to this buffer
+         * @note This forces a blocking wait while the GPU transfers the data
+         */
+        void CopyFromStagingBuffer(VulkanDevice& device, VulkanBuffer& stagingBuffer, VkDeviceSize size);
 
 
         VulkanBuffer(const VulkanBuffer&) = delete;
-        VulkanBuffer& operator=(const VulkanBufferDesc& desc) = delete;
-        VulkanBuffer(VulkanBuffer&& other) = delete;
+        VulkanBuffer& operator=(const VulkanBuffer& desc) = delete;
+        VulkanBuffer(VulkanBuffer&& other) noexcept;
         VulkanBuffer& operator=(VulkanBuffer&& other) noexcept;
 
     private:
 
+        /**
+         * @brief Creates a buffer allocated with at least the given length
+         * @param outBuffer The address to write the new buffer to
+         * @param length The length of the buffer
+         */
+        void CreateBuffer(VkBuffer* outBuffer, uint32 length);
 
-        void CreateBuffer(uint32 size, VkBuffer* buffer);
-        uint32 AllocateMemory(VkBuffer buffer, VkDeviceMemory* deviceMemory);
+        /**
+         * @brief Allocates the backing memory for the buffer and binds the memory to the buffer
+         * @param outDeviceMemory The address to write the device memory handle to
+         * @param buffer The buffer to allocate memory for
+         */
+        uint32 AllocateMemory(VkDeviceMemory* outDeviceMemory, VkBuffer buffer);
 
+        /**
+         * @brief Destroys the buffer
+         * @param buffer The buffer to destroy
+         */
         void DestroyBuffer(VkBuffer buffer);
+
+        /**
+         * @brief Frees the backing memory of the buffer
+         * @param deviceMemory The device memory to free
+         */
         void FreeMemory(VkDeviceMemory deviceMemory);
 
-
+        /**
+         * @brief Finds a memory type with the flags requested by the buffer
+         * @param memoryTypeBitsMask The flags requested by the buffer
+         * @return The index of the memory type that has the requested flags by the buffer
+         */
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 
         VkDevice m_Device;
@@ -70,10 +139,9 @@ namespace Astral {
         VkPhysicalDeviceMemoryProperties m_DeviceMemoryProperties;
         VkMemoryPropertyFlags m_RequestedPropertyFlags;
 
-
-        VkBuffer m_PrimaryBuffer;
-        VkDeviceMemory m_PrimaryMemory;
-        VkDeviceSize m_PrimaryDeviceSize;
+        VkBuffer m_Buffer;
+        VkDeviceMemory m_BufferMemory;
+        VkDeviceSize m_BufferDeviceSize;
         bool m_IsDeviceMemoryMapped;
         GPUMemoryType m_MemoryType;
     };
