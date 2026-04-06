@@ -88,7 +88,7 @@ namespace Astral {
         memcpy(memory, data, size);
         UnmapPointer();
 
-        m_UsedMemorySize = size;
+        if (size > m_UsedMemorySize) { m_UsedMemorySize = size; }
     }
 
 
@@ -150,7 +150,7 @@ namespace Astral {
         VkResult result = vkMapMemory(m_Device, newDeviceMemory, 0, deviceBufferSize, 0, &newBufferPtr);
         ASSERT(result == VK_SUCCESS, "Failed to map new memory in buffer")
 
-        memcpy(newBufferPtr, currentBufferPtr, m_UsedMemorySize);
+        memcpy(newBufferPtr, currentBufferPtr, m_BufferDeviceSize);
 
         UnmapPointer();
         vkUnmapMemory(m_Device, newDeviceMemory);

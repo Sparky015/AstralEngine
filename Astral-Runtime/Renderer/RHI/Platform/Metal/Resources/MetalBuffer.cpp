@@ -69,7 +69,7 @@ namespace Astral {
         void* currentBufferMemory;
         MapPointer(&currentBufferMemory);
 
-        memcpy(newBuffer->contents(), currentBufferMemory, m_UsedMemorySize);
+        memcpy(newBuffer->contents(), currentBufferMemory, m_BufferLength);
 
         UnmapPointer();
 
@@ -128,7 +128,7 @@ namespace Astral {
         memcpy(memory, data, size);
         UnmapPointer();
 
-        m_UsedMemorySize = size;
+       if (size > m_UsedMemorySize) { m_UsedMemorySize = size; }
     }
 
 

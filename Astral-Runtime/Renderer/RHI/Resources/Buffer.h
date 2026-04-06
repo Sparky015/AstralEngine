@@ -28,6 +28,7 @@ namespace Astral {
         /**
          * @brief Gets the amount of memory written to in the buffer
          * @return The amount of memory used in the buffer
+         * @warning This is possible to be inaccurate if writing to a MapPointer was done
          */
         virtual uint32 GetUsedSize() = 0;
 
@@ -42,6 +43,7 @@ namespace Astral {
         /**
          * @brief Maps a pointer to the address of this buffer
          * @param cpuPtr The address of where the buffer address should be stored
+         * @warning Use @ref CopyDataToBuffer to do write operations for accurate memory usage tracking of the buffer
          */
         virtual void MapPointer(void** cpuPtr) = 0;
 
