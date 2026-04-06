@@ -8,6 +8,8 @@
 
 #include "Core/FixedIntegerTypes.h"
 #include "Debug/Utilities/Error.h"
+
+#define MSGPACK_DISABLE_LEGACY_NIL
 #include "msgpack.hpp"
 #include <thread>
 
