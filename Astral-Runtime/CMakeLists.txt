@@ -157,13 +157,13 @@ set(ENGINE_SOURCE
         Debug/MemoryTracking/Serialization/SceneMetricsStorage.cpp
         Debug/MemoryTracking/Serialization/SceneMetricsStorage.h
         Debug/MemoryTracking/Serialization/MemoryMetricsSnapshot.h
-
         Debug/MemoryTracking/GlobalAllocationStorage.cpp
         Debug/MemoryTracking/GlobalAllocationStorage.h
         Debug/MemoryTracking/MemoryMetrics.cpp
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
         Debug/MemoryTracking/NewDeleteOverrides.h
+
         ECS/ECS.cpp
         ECS/ECS.h
         Core/FixedIntegerTypes.h
@@ -192,10 +192,6 @@ set(ENGINE_SOURCE
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
         Core/SmartPointers.h
-        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
-        Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
         Renderer/RHI/Resources/Sampler.h
         Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
@@ -206,40 +202,7 @@ set(ENGINE_SOURCE
         Renderer/RHI/Resources/Buffer.h
         Renderer/RHI/Resources/CommandBuffer.h
         Renderer/RHI/Resources/Swapchain.h
-        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
-        Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
         Renderer/RHI/Common/GraphicsSmartPointers.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.h
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.h
         Renderer/Common/Mesh.h
         Renderer/Common/Material.h
         Renderer/RHI/Resources/Shader.cpp
@@ -247,8 +210,6 @@ set(ENGINE_SOURCE
         Asset/Loaders/ShaderLoader.cpp
         Renderer/RHI/Common/ImageLayouts.h
         Renderer/RHI/Common/ImageFormats.h
-        Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
-        Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
         Renderer/RHI/Common/AccessFlags.h
         Renderer/Common/RendererEvents.h
         Asset/Loaders/MeshLoader.cpp
@@ -285,7 +246,6 @@ set(ENGINE_SOURCE
         Core/Containers/DirectedGraphEdge.h
         Asset/Loaders/EnvironmentMapLoader.h
         Asset/Loaders/EnvironmentMapLoader.cpp
-        Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
         Asset/Loaders/CubeLUTLoader.cpp
         Renderer/RHI/Common/SamplerSettings.h
         Renderer/RHI/Common/PipelineRasterizerState.h
@@ -297,26 +257,50 @@ set(ENGINE_SOURCE
         Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
-        Renderer/RHI/Platform/Metal/MetalRendererContext.mm
-        Renderer/RHI/Platform/Metal/MetalRendererContext.h
-        Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
-        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
-        Renderer/RHI/Platform/Metal/Resources/MetalBuffer.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalBuffer.h
-        Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.h
         Renderer/RHI/Common/BufferUsageFlags.h
-        Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
-        Renderer/RHI/Platform/D3D12/D3D12RendererContext.cpp
-        Renderer/RHI/Platform/D3D12/D3D12RendererContext.h
-        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.cpp
-        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.h
-        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.cpp
-        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.h
+)
 
+set(VULKAN_RHI_FILES
+    Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
+    Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.h
+    Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.h
+    Renderer/RHI/Platform/Vulkan/VulkanRendererCommands.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDevice.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandBuffer.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanSwapchain.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanCommandQueue.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanBuffer.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanVertexBuffer.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanDescriptorSet.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanIndexBuffer.h
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanTexture.h
+    Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
+    Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
+    Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
 )
 
 set(METAL_RHI_FILES
@@ -326,12 +310,28 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
     Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
+    Renderer/RHI/Platform/Metal/Resources/MetalBuffer.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
 )
 
 set(D3D12_RHI_FILES
-
+    Renderer/RHI/Platform/D3D12/D3D12RendererContext.cpp
+    Renderer/RHI/Platform/D3D12/D3D12RendererContext.h
+    Renderer/RHI/Platform/D3D12/Resources/D3D12Device.cpp
+    Renderer/RHI/Platform/D3D12/Resources/D3D12Device.h
+    Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.cpp
+    Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.h
 )
 
+if (WIN32 OR APPLE OR LINUX)
+    if (TARGET VulkanDependencies) # If VulkanDependencies target exists, then Vulkan is available
+        list(APPEND ENGINE_SOURCE ${VULKAN_RHI_FILES})
+    endif ()
+endif()
 
 if (APPLE)
     if (TARGET Metal4) # If Metal4 target exists, then Metal is available
@@ -340,7 +340,7 @@ if (APPLE)
 endif()
 
 if (WIN32)
-    if (TARGET D3D12)
+    if (TARGET D3D12Dependencies) # If D3D12 target exists, then D3D12 is available
         list(APPEND ENGINE_SOURCE ${D3D12_RHI_FILES})
     endif()
 endif()
@@ -460,9 +460,6 @@ target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLi
 
 target_include_directories(AstralEngine PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/")
 
-message(STATUS "Vulkan SDK Path: $ENV{VULKAN_SDK}")
-
-target_include_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/include")
 
 
 # Precompiled Header
