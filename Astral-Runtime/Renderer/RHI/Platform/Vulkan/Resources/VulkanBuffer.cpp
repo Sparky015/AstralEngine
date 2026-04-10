@@ -161,7 +161,7 @@ namespace Astral {
         }
         else
         {
-            AE_ERROR("[MetalBuffer::ChangeMemoryType] Memory type not implemented!")
+            AE_ERROR("[VulkanBuffer::ChangeMemoryType] Memory type not implemented!")
         }
     }
 
