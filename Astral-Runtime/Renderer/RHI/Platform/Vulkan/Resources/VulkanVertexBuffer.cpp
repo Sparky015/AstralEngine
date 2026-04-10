@@ -54,6 +54,18 @@ namespace Astral {
     }
 
 
+    void VulkanVertexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    {
+        m_VertexBuffer.UploadToDeviceLocalBuffer(data, size);
+    }
+
+
+    void VulkanVertexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    {
+        m_VertexBuffer.ChangeMemoryType(memoryType);
+    }
+
+
     void* VulkanVertexBuffer::GetNativeHandle()
     {
         return m_VertexBuffer.GetNativeHandle();
