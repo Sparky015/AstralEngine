@@ -1,4 +1,5 @@
-add_library(AstralEngine
+
+set(ENGINE_SOURCE
         pch.h
         pch.cpp
         Core/Events/EventBus.h
@@ -191,9 +192,6 @@ add_library(AstralEngine
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
         Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
         Core/SmartPointers.h
-
-
-
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
         Renderer/RHI/Platform/Vulkan/Resources/VulkanPhysicalDevices.cpp
@@ -312,7 +310,43 @@ add_library(AstralEngine
         Renderer/RHI/Common/BufferUsageFlags.h
         Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
         Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
+        Renderer/RHI/Platform/D3D12/D3D12RendererContext.cpp
+        Renderer/RHI/Platform/D3D12/D3D12RendererContext.h
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.cpp
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Device.h
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.cpp
+        Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.h
+
 )
+
+set(METAL_RHI_FILES
+    Renderer/RHI/Platform/Metal/MetalRendererContext.mm
+    Renderer/RHI/Platform/Metal/MetalRendererContext.h
+    Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
+    Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.h
+)
+
+set(D3D12_RHI_FILES
+
+)
+
+
+if (APPLE)
+    if (TARGET Metal4) # If Metal4 target exists, then Metal is available
+        list(APPEND ENGINE_SOURCE ${METAL_RHI_FILES})
+    endif ()
+endif()
+
+if (WIN32)
+    if (TARGET D3D12)
+        list(APPEND ENGINE_SOURCE ${D3D12_RHI_FILES})
+    endif()
+endif()
+
+
+add_library(AstralEngine ${ENGINE_SOURCE})
 
 # Flags for just the Astral Engine and all libraries and executables that link to it
 if (APPLE)
@@ -328,6 +362,8 @@ if (APPLE)
 elseif (WIN32)
     target_link_directories(AstralEngine PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/GLFW/windows-lib)
 endif ()
+
+
 
 
 
@@ -378,37 +414,11 @@ endif ()
 
 #                         ######   VULKAN SET UP   ######
 
-if (WIN32)
-    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/Lib")
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        target_link_libraries(AstralEngine PUBLIC
-                vulkan-1
-                SPIRV-Toolsd
-                SPIRV-Tools-diffd
-                SPIRV-Tools-optd
-                glslangd
-                glslang-default-resource-limitsd
-        )
-    else ()
-        target_link_libraries(AstralEngine PUBLIC
-                vulkan-1
-                SPIRV-Tools
-                SPIRV-Tools-diff
-                SPIRV-Tools-opt
-                glslang
-                glslang-default-resource-limits
-        )
+if (WIN32 OR APPLE OR LINUX)
+    if (TARGET VulkanDependencies) # If VulkanDependencies target exists, then Vulkan is available
+        target_link_libraries(AstralEngine PUBLIC VulkanDependencies)
+        target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
     endif ()
-elseif (APPLE)
-    target_link_directories(AstralEngine PUBLIC "$ENV{VULKAN_SDK}/lib")
-    target_link_libraries(AstralEngine PUBLIC
-            vulkan.1
-            glslang
-            glslang-default-resource-limits
-            SPIRV-Tools
-            SPIRV-Tools-diff
-            SPIRV-Tools-opt
-    )
 endif()
 
 #                         ######   METAL SET UP   ######
@@ -418,6 +428,15 @@ if (APPLE)
         target_link_libraries(AstralEngine PUBLIC Metal4)
         target_compile_definitions(AstralEngine PUBLIC -DASTRAL_METAL_AVAILABLE)
     endif ()
+endif()
+
+#                         ######   D3D12 SET UP   ######
+
+if (WIN32)
+    if (TARGET D3D12Dependencies) # If D3D12Dependencies target exists, then D3D12 is available
+        target_link_libraries(AstralEngine PUBLIC D3D12Dependencies)
+        target_compile_definitions(AstralEngine PUBLIC -DASTRAL_D3D12_AVAILABLE)
+    endif()
 endif()
 
 
@@ -498,21 +517,15 @@ target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM
 
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 elseif (LINUX)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_LINUX)
-
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_VULKAN_AVAILABLE)
 
 endif ()
 
