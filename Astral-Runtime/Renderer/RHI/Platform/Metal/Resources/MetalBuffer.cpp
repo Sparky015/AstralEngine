@@ -36,14 +36,14 @@ namespace Astral {
     }
 
 
-    uint32 MetalBuffer::GetAllocatedSize()
+    uint32 MetalBuffer::GetAllocatedSize() const
     {
         if (!m_Buffer) { AE_WARN("Buffer has not been created! Can't get allocated size!"); return 0; }
         return m_Buffer->allocatedSize();
     }
 
 
-    uint32 MetalBuffer::GetUsedSize()
+    uint32 MetalBuffer::GetUsedSize() const
     {
         return m_UsedMemorySize;
     }
@@ -93,12 +93,14 @@ namespace Astral {
         if (!m_Buffer)
         {
             AE_WARN("[MetalBuffer::MapPointer] Buffer has not been created! Can't map pointer to buffer!")
+            *cpuPtr = nullptr;
             return;
         }
 
         if (m_Buffer->storageMode() == MTL::StorageModePrivate)
         {
             AE_WARN("[MetalBuffer::MapPointer] Buffer does not support read/write from CPU on private memory!")
+            *cpuPtr = nullptr;
             return;
         }
 

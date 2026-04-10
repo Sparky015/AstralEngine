@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include "Metal/MTLBuffer.hpp"
 #include "Renderer/RHI/Resources/Buffer.h"
 #include "Renderer/RHI/Resources/Device.h"
+
+#include "Metal/MTLBuffer.hpp"
 
 namespace Astral {
 
@@ -28,6 +29,7 @@ namespace Astral {
     class MetalBuffer : public Buffer
     {
     public:
+        MetalBuffer() = default;
         MetalBuffer(const MetalBufferDesc& metalBufferDesc);
         ~MetalBuffer() override;
 
@@ -35,14 +37,14 @@ namespace Astral {
          * @brief Gets the amount of memory allocated to the buffer
          * @return The amount of memory used in the buffer
          */
-        uint32 GetAllocatedSize() override;
+        uint32 GetAllocatedSize() const override;
 
         /**
          * @brief Gets the amount of memory written to in the buffer
          * @return The amount of memory used in the buffer
          * @warning This is possible to be inaccurate if writing to a MapPointer was done
          */
-        uint32 GetUsedSize() override;
+        uint32 GetUsedSize() const override;
 
         /**
          * @brief Reallocates the length of a buffer by creating a new buffer and copying data over
