@@ -13,6 +13,7 @@ namespace Astral {
         m_VertexBuffer(),
         m_DataSize(desc.DataSize)
     {
+        CreateVertexBuffer(desc);
     }
 
 
