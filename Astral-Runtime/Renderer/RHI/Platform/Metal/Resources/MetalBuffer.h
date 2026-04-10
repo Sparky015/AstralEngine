@@ -42,7 +42,7 @@ namespace Astral {
         /**
          * @brief Gets the amount of memory written to in the buffer
          * @return The amount of memory used in the buffer
-         * @warning This is possible to be inaccurate if writing to a MapPointer was done
+         * @warning This is possible to be inaccurate if any writes to a mapped pointer was done
          */
         uint32 GetUsedSize() const override;
 
