@@ -19,7 +19,7 @@ namespace Astral {
     struct VulkanIndexBufferDesc
     {
         VkDevice Device;
-        uint32* IndiceData;
+        uint32* IndexData;
         uint32 DataSize;
         GPUMemoryType MemoryType;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;

@@ -19,7 +19,7 @@ namespace Astral {
     struct MetalVertexBufferDesc
     {
         MTL::Device* Device;
-        void* VerticeData;
+        void* VertexData;
         uint32 DataSize;
         VertexBufferLayout& BufferLayout;
         GPUMemoryType MemoryType;

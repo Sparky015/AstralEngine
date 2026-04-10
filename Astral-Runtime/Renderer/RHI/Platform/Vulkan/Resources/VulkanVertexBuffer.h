@@ -19,7 +19,7 @@ namespace Astral {
     struct VulkanVertexBufferDesc
     {
         VkDevice Device;
-        void* VerticeData;
+        void* VertexData;
         uint32 DataSize;
         VertexBufferLayout& BufferLayout;
         GPUMemoryType MemoryType;

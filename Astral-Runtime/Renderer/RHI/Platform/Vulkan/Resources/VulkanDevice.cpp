@@ -185,7 +185,7 @@ namespace Astral {
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
             .Device = m_Device,
-            .VerticeData = verticeData,
+            .VertexData = verticeData,
             .DataSize = sizeInBytes,
             .BufferLayout = bufferLayout,
             .MemoryType = memoryType,
@@ -200,7 +200,7 @@ namespace Astral {
     {
         VulkanIndexBufferDesc indexBufferDesc = {
             .Device = m_Device,
-            .IndiceData = indiceData,
+            .IndexData = indiceData,
             .DataSize = sizeInBytes,
             .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties

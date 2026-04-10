@@ -81,7 +81,7 @@ namespace Astral {
             };
 
             m_VertexBuffer = MetalBuffer{vertexBufferDesc};
-            m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VerticeData, desc.DataSize);
+            m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VertexData, desc.DataSize);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
@@ -92,7 +92,7 @@ namespace Astral {
             };
 
             m_VertexBuffer = MetalBuffer{vertexBufferDesc};
-            m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.DataSize);
+            m_VertexBuffer.CopyDataToBuffer(desc.VertexData, desc.DataSize);
         }
         else
         {
