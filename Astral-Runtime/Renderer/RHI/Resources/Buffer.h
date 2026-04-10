@@ -24,14 +24,14 @@ namespace Astral {
          * @brief Gets the amount of memory allocated to the buffer
          * @return The amount of memory used in the buffer
          */
-        virtual uint32 GetAllocatedSize() = 0;
+        virtual uint32 GetAllocatedSize() const = 0;
 
         /**
          * @brief Gets the amount of memory written to in the buffer
          * @return The amount of memory used in the buffer
          * @warning This is possible to be inaccurate if writing to a MapPointer was done
          */
-        virtual uint32 GetUsedSize() = 0;
+        virtual uint32 GetUsedSize() const = 0;
 
         /**
          * @brief Reallocates the length of a buffer by creating a new buffer and copying data over

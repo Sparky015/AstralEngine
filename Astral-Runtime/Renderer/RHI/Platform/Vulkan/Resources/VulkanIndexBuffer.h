@@ -15,12 +15,11 @@ namespace Astral {
 
     struct VulkanIndexBufferDesc
     {
-        VulkanDevice& VulkanDevice;
         VkDevice Device;
-        VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
         uint32* IndiceData;
         uint32 SizeInBytes;
         GPUMemoryType MemoryType;
+        VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
     };
 
     class VulkanIndexBuffer : public IndexBuffer
@@ -41,10 +40,8 @@ namespace Astral {
 
         void CreateIndexBuffer(const VulkanIndexBufferDesc& desc);
 
-        VkDevice m_Device;
         VulkanBuffer m_IndexBuffer;
         uint32 m_SizeInBytes;
-        void* m_IndiceData;
     };
 
 

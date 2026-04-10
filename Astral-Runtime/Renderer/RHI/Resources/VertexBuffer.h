@@ -18,10 +18,9 @@ namespace Astral {
     public:
 
         virtual ~VertexBuffer() = default;
-        virtual VertexBufferLayout& GetBufferLayout() = 0;
+        virtual const VertexBufferLayout& GetBufferLayout() const = 0;
 
-        virtual void* GetVerticeData() = 0;
-        virtual uint32 GetSize() = 0;
+        virtual uint32 GetSize() const = 0;
 
         virtual void MapPointer(void** cpuPtr) = 0;
         virtual void UnmapPointer() = 0;

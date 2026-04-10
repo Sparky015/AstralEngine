@@ -9,10 +9,8 @@
 namespace Astral {
 
     VulkanIndexBuffer::VulkanIndexBuffer(const VulkanIndexBufferDesc& desc) :
-        m_Device(desc.Device),
         m_IndexBuffer(),
-        m_SizeInBytes(desc.SizeInBytes),
-        m_IndiceData(desc.IndiceData)
+        m_SizeInBytes(desc.SizeInBytes)
     {
         CreateIndexBuffer(desc);
     }
@@ -46,7 +44,7 @@ namespace Astral {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
         {
             VulkanBufferDesc indexBufferDesc = {
-                .Device = m_Device,
+                .Device = desc.Device,
                 .Size = desc.SizeInBytes,
                 .Usage = BUFFER_USAGE_INDEX_BUFFER,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
@@ -59,7 +57,7 @@ namespace Astral {
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
             VulkanBufferDesc stagingBufferDesc = {
-                .Device = m_Device,
+                .Device = desc.Device,
                 .Size = desc.SizeInBytes,
                 .Usage = BUFFER_USAGE_INDEX_BUFFER,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
@@ -67,7 +65,7 @@ namespace Astral {
             };
 
             m_IndexBuffer = VulkanBuffer(stagingBufferDesc);
-            m_IndexBuffer.CopyDataToBuffer(m_IndiceData, desc.SizeInBytes);
+            m_IndexBuffer.CopyDataToBuffer(desc.IndiceData, desc.SizeInBytes);
         }
     }
 

@@ -39,9 +39,15 @@ namespace Astral {
     }
 
 
-    uint32 VulkanBuffer::GetAllocatedSize()
+    uint32 VulkanBuffer::GetAllocatedSize() const
     {
         return m_BufferDeviceSize;
+    }
+
+
+    uint32 VulkanBuffer::GetUsedSize() const
+    {
+        return m_UsedMemorySize;
     }
 
 
@@ -196,12 +202,6 @@ namespace Astral {
         CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
         commandQueueHandle->SubmitSync(commandBufferHandle);
         commandQueueHandle->WaitIdle();
-    }
-
-
-    uint32 VulkanBuffer::GetUsedSize()
-    {
-        return m_UsedMemorySize;
     }
 
 
