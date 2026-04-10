@@ -181,11 +181,11 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
             .Device = m_Device,
-            .VertexData = verticeData,
+            .VertexData = vertexData,
             .DataSize = sizeInBytes,
             .BufferLayout = bufferLayout,
             .MemoryType = memoryType,
@@ -196,11 +196,11 @@ namespace Astral {
     }
 
 
-    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
         VulkanIndexBufferDesc indexBufferDesc = {
             .Device = m_Device,
-            .IndexData = indiceData,
+            .IndexData = indexData,
             .DataSize = sizeInBytes,
             .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
