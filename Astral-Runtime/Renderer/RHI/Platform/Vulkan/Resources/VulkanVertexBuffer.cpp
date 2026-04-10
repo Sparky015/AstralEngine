@@ -88,6 +88,10 @@ namespace Astral {
             m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
             m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
         }
+        else
+        {
+            AE_ERROR("[VulkanVertexBuffer::CreateVertexBuffer] Memory type not implemented!")
+        }
 
     }
 
