@@ -210,7 +210,7 @@ namespace Astral {
     }
 
 
-    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
@@ -226,7 +226,7 @@ namespace Astral {
     }
 
 
-    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,

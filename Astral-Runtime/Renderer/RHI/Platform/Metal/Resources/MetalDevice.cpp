@@ -116,12 +116,12 @@ namespace Astral {
     }
 
 
-    BufferHandle MetalDevice::CreateStorageBuffer(void* data, uint32 size)
+    BufferHandle MetalDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         MetalBufferDesc metalStorageBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .MemoryType = memoryType,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalStorageBufferDesc);
@@ -130,12 +130,12 @@ namespace Astral {
     }
 
 
-    BufferHandle MetalDevice::CreateUniformBuffer(void* data, uint32 size)
+    BufferHandle MetalDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         MetalBufferDesc metalUniformBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .MemoryType = memoryType,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalUniformBufferDesc);

@@ -663,11 +663,11 @@ namespace Astral {
             context.SceneRenderTarget = nullptr;
 
 
-            context.SceneDataBuffer = device.CreateUniformBuffer(nullptr, sizeof(SceneData));
+            context.SceneDataBuffer = device.CreateUniformBuffer(nullptr, sizeof(SceneData), GPUMemoryType::HOST_VISIBLE);
             std::string sceneDataBufferName = std::string("Scene_Data_Buffer_") + std::to_string(i);
             RendererAPI::NameObject(context.SceneDataBuffer, sceneDataBufferName);
 
-            context.SceneLightsBuffer = device.CreateStorageBuffer(nullptr, 1024);
+            context.SceneLightsBuffer = device.CreateStorageBuffer(nullptr, 1024, GPUMemoryType::HOST_VISIBLE);
             std::string sceneLightsBufferName = std::string("Scene_Lights_Buffer_") + std::to_string(i);
             RendererAPI::NameObject(context.SceneLightsBuffer, sceneLightsBufferName);
 
@@ -720,7 +720,7 @@ namespace Astral {
 
             context.IsEnvironmentMapIBLCalculationNeeded = true;
 
-            context.ShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8);
+            context.ShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8, GPUMemoryType::HOST_VISIBLE);
             context.ShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
             context.ShadowLightMatricesDescriptorSet->BeginBuildingSet();
             context.ShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ShadowLightMatrices, ShaderStage::ALL);
