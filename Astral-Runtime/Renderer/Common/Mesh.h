@@ -9,6 +9,7 @@
 
 #include "Asset/Asset.h"
 #include "Core/SmartPointers.h"
+#include "Core/Math/Math.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
