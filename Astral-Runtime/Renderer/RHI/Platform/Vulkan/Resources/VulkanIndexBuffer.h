@@ -82,6 +82,11 @@ namespace Astral {
          */
         void* GetNativeHandle() override;
 
+        VulkanIndexBuffer(const VulkanIndexBuffer&) = delete;
+        VulkanIndexBuffer& operator=(const VulkanIndexBuffer& desc) = delete;
+        VulkanIndexBuffer(VulkanIndexBuffer&& other) noexcept;
+        VulkanIndexBuffer& operator=(VulkanIndexBuffer&& other) noexcept;
+
     private:
 
         /**

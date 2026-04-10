@@ -82,6 +82,11 @@ namespace Astral {
          */
         void* GetNativeHandle() override;
 
+        MetalIndexBuffer(const MetalIndexBuffer&) = delete;
+        MetalIndexBuffer& operator=(const MetalIndexBuffer& desc) = delete;
+        MetalIndexBuffer(MetalIndexBuffer&& other) noexcept;
+        MetalIndexBuffer& operator=(MetalIndexBuffer&& other) noexcept;
+
     private:
 
         /**

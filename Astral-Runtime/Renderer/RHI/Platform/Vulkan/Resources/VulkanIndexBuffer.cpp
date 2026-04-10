@@ -63,6 +63,28 @@ namespace Astral {
     }
 
 
+    VulkanIndexBuffer::VulkanIndexBuffer(VulkanIndexBuffer&& other) noexcept :
+        m_IndexBuffer(std::move(other.m_IndexBuffer)),
+        m_DataSize(other.m_DataSize)
+    {
+        other.m_DataSize = 0;
+    }
+
+
+    VulkanIndexBuffer& VulkanIndexBuffer::operator=(VulkanIndexBuffer&& other) noexcept
+    {
+        if (this != &other)
+        {
+            m_IndexBuffer = std::move(other.m_IndexBuffer);
+            m_DataSize = other.m_DataSize;
+
+            other.m_DataSize = 0;
+        }
+
+        return *this;
+    }
+
+
     void VulkanIndexBuffer::CreateIndexBuffer(const VulkanIndexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)

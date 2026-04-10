@@ -70,6 +70,30 @@ namespace Astral {
     }
 
 
+    MetalVertexBuffer::MetalVertexBuffer(MetalVertexBuffer&& other) noexcept :
+        m_BufferLayout(std::move(other.m_BufferLayout)),
+        m_VertexBuffer(std::move(other.m_VertexBuffer)),
+        m_DataSize(other.m_DataSize)
+    {
+        other.m_DataSize = 0;
+    }
+
+
+    MetalVertexBuffer& MetalVertexBuffer::operator=(MetalVertexBuffer&& other) noexcept
+    {
+        if (this == &other)
+        {
+            m_BufferLayout = std::move(other.m_BufferLayout);
+            m_VertexBuffer = std::move(other.m_VertexBuffer);
+            m_DataSize = other.m_DataSize;
+
+            other.m_DataSize = 0;
+        }
+
+        return *this;
+    }
+
+
     void MetalVertexBuffer::CreateVertexBuffer(const MetalVertexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)

@@ -61,6 +61,28 @@ namespace Astral {
     }
 
 
+    MetalIndexBuffer::MetalIndexBuffer(MetalIndexBuffer&& other) noexcept :
+        m_IndexBuffer(std::move(other.m_IndexBuffer)),
+        m_DataSize(other.m_DataSize)
+    {
+        other.m_DataSize = 0;
+    }
+
+
+    MetalIndexBuffer& MetalIndexBuffer::operator=(MetalIndexBuffer&& other) noexcept
+    {
+        if (this != &other)
+        {
+            m_IndexBuffer = std::move(other.m_IndexBuffer);
+            m_DataSize = other.m_DataSize;
+
+            other.m_DataSize = 0;
+        }
+
+        return *this;
+    }
+
+
     void MetalIndexBuffer::CreateIndexBuffer(const MetalIndexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)

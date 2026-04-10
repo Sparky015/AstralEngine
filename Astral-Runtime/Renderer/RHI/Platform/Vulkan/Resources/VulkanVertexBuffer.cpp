@@ -72,6 +72,28 @@ namespace Astral {
     }
 
 
+    VulkanVertexBuffer::VulkanVertexBuffer(VulkanVertexBuffer&& other) noexcept :
+        m_BufferLayout(std::move(other.m_BufferLayout)),
+        m_VertexBuffer(std::move(other.m_VertexBuffer)),
+        m_DataSize(other.m_DataSize)
+    {
+        other.m_DataSize = 0;
+    }
+
+    VulkanVertexBuffer& VulkanVertexBuffer::operator=(VulkanVertexBuffer&& other) noexcept
+    {
+        if (this == &other)
+        {
+            m_BufferLayout = std::move(other.m_BufferLayout);
+            m_VertexBuffer = std::move(other.m_VertexBuffer);
+            m_DataSize = other.m_DataSize;
+
+            other.m_DataSize = 0;
+        }
+
+        return *this;
+    }
+
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
