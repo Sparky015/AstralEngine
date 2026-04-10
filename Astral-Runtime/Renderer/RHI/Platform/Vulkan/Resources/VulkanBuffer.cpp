@@ -10,24 +10,26 @@
 #include "Debug/Utilities/Error.h"
 #include "Debug/Utilities/Loggers.h"
 #include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
 namespace Astral {
 
     VulkanBuffer::VulkanBuffer(const VulkanBufferDesc& desc) :
         m_Device(desc.Device),
-        m_Usage(desc.Usage),
+        m_UsageFlags(desc.Usage),
         m_UsedMemorySize(desc.Size),
         m_DeviceMemoryProperties(desc.DeviceMemoryProperties),
-        m_RequestedPropertyFlags(desc.RequestedMemoryPropertyFlags),
+        m_RequestedPropertyFlags(0),
         m_Buffer(),
         m_BufferMemory(),
         m_BufferDeviceSize(),
-        m_IsDeviceMemoryMapped(false)
+        m_IsDeviceMemoryMapped(false),
+        m_MemoryType(desc.MemoryType)
     {
+        m_RequestedPropertyFlags = ConvertMemoryPropertyFlagsToVkMemoryPropertyFlags(m_MemoryType);
+
         CreateBuffer(&m_Buffer, m_UsedMemorySize);
         m_BufferDeviceSize = AllocateMemory(&m_BufferMemory, m_Buffer);
-
-        m_MemoryType = desc.RequestedMemoryPropertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ? GPUMemoryType::DEVICE_LOCAL : GPUMemoryType::HOST_VISIBLE;
     }
 
     VulkanBuffer::~VulkanBuffer()
@@ -106,10 +108,11 @@ namespace Astral {
 
         VulkanBufferDesc stagingBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_STREAMABLE,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_DeviceMemoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+
         };
 
         VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
@@ -127,10 +130,10 @@ namespace Astral {
         {
             VulkanBufferDesc deviceLocalBufferDesc = {
                 .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 .Size = (uint32)m_BufferDeviceSize,
+                .Usage = m_UsageFlags,
+                .MemoryType = GPUMemoryType::DEVICE_LOCAL,
                 .DeviceMemoryProperties = m_DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
             };
 
             VulkanBuffer deviceLocalbuffer = VulkanBuffer(deviceLocalBufferDesc);
@@ -147,10 +150,10 @@ namespace Astral {
         {
             VulkanBufferDesc hostVisibleBufferDesc = {
                 .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 .Size = (uint32)m_BufferDeviceSize,
+                .Usage = m_UsageFlags,
+                .MemoryType = GPUMemoryType::HOST_VISIBLE,
                 .DeviceMemoryProperties = m_DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
             };
 
             VulkanBuffer hostVisibleBuffer = VulkanBuffer(hostVisibleBufferDesc);
@@ -241,7 +244,7 @@ namespace Astral {
 
     VulkanBuffer::VulkanBuffer(VulkanBuffer&& other) noexcept :
         m_Device(other.m_Device),
-        m_Usage(other.m_Usage),
+        m_UsageFlags(other.m_UsageFlags),
         m_UsedMemorySize(other.m_UsedMemorySize),
         m_DeviceMemoryProperties(other.m_DeviceMemoryProperties),
         m_RequestedPropertyFlags(other.m_RequestedPropertyFlags),
@@ -252,7 +255,7 @@ namespace Astral {
         m_MemoryType(other.m_MemoryType)
     {
         other.m_Device = VK_NULL_HANDLE;
-        other.m_Usage = 0;
+        other.m_UsageFlags = 0;
         other.m_UsedMemorySize = 0;
         other.m_DeviceMemoryProperties = VkPhysicalDeviceMemoryProperties();
         other.m_RequestedPropertyFlags = 0;
@@ -266,7 +269,7 @@ namespace Astral {
 
     VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
     {
-        m_Usage = other.m_Usage;
+        m_UsageFlags = other.m_UsageFlags;
         m_UsedMemorySize = other.m_UsedMemorySize;
         m_DeviceMemoryProperties = other.m_DeviceMemoryProperties;
         m_RequestedPropertyFlags = other.m_RequestedPropertyFlags;
@@ -279,7 +282,7 @@ namespace Astral {
         m_IsDeviceMemoryMapped = other.m_IsDeviceMemoryMapped;
 
         other.m_Device = VK_NULL_HANDLE;
-        other.m_Usage = 0;
+        other.m_UsageFlags = 0;
         other.m_UsedMemorySize = 0;
         other.m_DeviceMemoryProperties = VkPhysicalDeviceMemoryProperties();
         other.m_RequestedPropertyFlags = 0;
@@ -295,10 +298,13 @@ namespace Astral {
 
     void VulkanBuffer::CreateBuffer(VkBuffer* outBuffer, uint32 length)
     {
+        VkBufferUsageFlags vkBufferUsageFlags = GetVkBufferUsageFlags();
+
         VkBufferCreateInfo bufferInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+            .pNext = nullptr,
             .size = length,
-            .usage = m_Usage,
+            .usage = vkBufferUsageFlags,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE
         };
 
@@ -360,6 +366,19 @@ namespace Astral {
         }
 
         AE_ERROR("Failed to find a suitable memory type for Buffer object!");
+    }
+
+
+    VkBufferUsageFlags VulkanBuffer::GetVkBufferUsageFlags() const
+    {
+        VkBufferUsageFlags vkBufferUsageFlags = ConvertBufferUsageFlagsToVkBufferUsageFlags(m_UsageFlags);
+
+        if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL && (m_UsageFlags & BUFFER_USAGE_GPU_ONLY) == 0)
+        {
+            vkBufferUsageFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT; // Device local memory needs to be transferred to when uploading data
+        }
+
+        return vkBufferUsageFlags;
     }
 
 }

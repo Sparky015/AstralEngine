@@ -8,10 +8,11 @@
 
 #include "Renderer/RHI/Resources/Buffer.h"
 
+#include "Renderer/RHI/Common/BufferUsageFlags.h"
 #include "Renderer/RHI/Common/MemoryTypes.h"
-#include "VulkanDevice.h"
 
 #include <vulkan/vulkan_core.h>
+
 
 namespace Astral {
 
@@ -21,10 +22,10 @@ namespace Astral {
     struct VulkanBufferDesc
     {
         VkDevice Device;
-        VkBufferUsageFlags Usage;
         uint32 Size;
+        BufferUsageFlags Usage;
+        GPUMemoryType MemoryType;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
-        VkMemoryPropertyFlags RequestedMemoryPropertyFlags;
     };
 
 
@@ -152,8 +153,14 @@ namespace Astral {
          */
         uint32 GetMemoryTypeIndex(uint32 memoryTypeBitsMask);
 
+        /**
+         * @brief Gets the Vulkan version of the buffer usage flags
+         * @return The Vulkan version of the buffer usage flags
+         */
+        VkBufferUsageFlags GetVkBufferUsageFlags() const;
+
         VkDevice m_Device;
-        VkBufferUsageFlags m_Usage;
+        BufferUsageFlags m_UsageFlags;
         uint32 m_UsedMemorySize;
         VkPhysicalDeviceMemoryProperties m_DeviceMemoryProperties;
         VkMemoryPropertyFlags m_RequestedPropertyFlags;

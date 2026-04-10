@@ -216,10 +216,10 @@ namespace Astral {
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_STORAGE_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
@@ -232,10 +232,10 @@ namespace Astral {
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_UNIFORM_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
