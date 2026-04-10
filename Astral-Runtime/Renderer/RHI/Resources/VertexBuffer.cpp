@@ -17,7 +17,7 @@ namespace Astral {
 
         switch (RendererCommands::GetAPI())
         {
-            case API::Vulkan: return device.CreateVertexBuffer(vertices, size, bufferLayout);
+            case API::Vulkan: return device.CreateVertexBuffer(vertices, size, bufferLayout, GPUMemoryType::DEVICE_LOCAL);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
             case API::Metal: AE_ERROR("Metal is not supported yet!");
             default: AE_ERROR("Invalid Renderer API");
