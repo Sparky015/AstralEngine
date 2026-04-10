@@ -22,7 +22,7 @@ namespace Astral {
     {
         VkDevice Device;
         void* VerticeData;
-        uint32 SizeInBytes;
+        uint32 DataSize;
         VertexBufferLayout& BufferLayout;
         GPUMemoryType MemoryType;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;

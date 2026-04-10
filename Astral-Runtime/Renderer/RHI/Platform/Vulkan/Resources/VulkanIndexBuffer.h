@@ -17,7 +17,7 @@ namespace Astral {
     {
         VkDevice Device;
         uint32* IndiceData;
-        uint32 SizeInBytes;
+        uint32 DataSize;
         GPUMemoryType MemoryType;
         VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
     };
@@ -32,7 +32,7 @@ namespace Astral {
         void UnmapPointer() override;
         void CopyDataToBuffer(void* data, uint32 size) override;
 
-        uint32 GetCount() const override { return m_SizeInBytes / sizeof(uint32); }
+        uint32 GetCount() const override { return m_DataSize / sizeof(uint32); }
 
         void* GetNativeHandle() override { return m_IndexBuffer.GetNativeHandle(); }
 
@@ -41,7 +41,7 @@ namespace Astral {
         void CreateIndexBuffer(const VulkanIndexBufferDesc& desc);
 
         VulkanBuffer m_IndexBuffer;
-        uint32 m_SizeInBytes;
+        uint32 m_DataSize;
     };
 
 

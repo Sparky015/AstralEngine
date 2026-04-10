@@ -13,7 +13,7 @@ namespace Astral {
     VulkanVertexBuffer::VulkanVertexBuffer(const VulkanVertexBufferDesc& desc) :
         m_BufferLayout(desc.BufferLayout),
         m_VertexBuffer(),
-        m_DataSize(desc.SizeInBytes)
+        m_DataSize(desc.DataSize)
     {
         CreateVertexBuffer(desc);
     }
@@ -66,27 +66,27 @@ namespace Astral {
         {
             VulkanBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
-                .Size = desc.SizeInBytes,
+                .Size = desc.DataSize,
                 .Usage = BUFFER_USAGE_VERTEX_BUFFER,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
             m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
-            m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VerticeData, desc.SizeInBytes);
+            m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VerticeData, desc.DataSize);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
             VulkanBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
-                .Size = desc.SizeInBytes,
+                .Size = desc.DataSize,
                 .Usage = BUFFER_USAGE_VERTEX_BUFFER,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
             m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
-            m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
+            m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.DataSize);
         }
         else
         {
