@@ -21,6 +21,12 @@ namespace Astral {
     }
 
 
+    uint32 VulkanIndexBuffer::GetCount() const
+    {
+        return m_DataSize / sizeof(uint32);
+    }
+
+
     void VulkanIndexBuffer::MapPointer(void** cpuPtr)
     {
         m_IndexBuffer.MapPointer(cpuPtr);
@@ -36,6 +42,24 @@ namespace Astral {
     void VulkanIndexBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
         m_IndexBuffer.CopyDataToBuffer(data, size);
+    }
+
+
+    void VulkanIndexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    {
+        m_IndexBuffer.UploadToDeviceLocalBuffer(data, size);
+    }
+
+
+    void VulkanIndexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    {
+        m_IndexBuffer.ChangeMemoryType(memoryType);
+    }
+
+
+    void* VulkanIndexBuffer::GetNativeHandle()
+    {
+        return m_IndexBuffer.GetNativeHandle();
     }
 
 
