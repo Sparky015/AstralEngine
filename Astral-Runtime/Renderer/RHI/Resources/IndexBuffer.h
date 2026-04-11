@@ -10,6 +10,9 @@
 
 namespace Astral {
 
+    /**
+     * @brief Supports buffer operations to store index data for GPU access
+     */
     class IndexBuffer
     {
     public:
@@ -63,7 +66,14 @@ namespace Astral {
          */
         virtual void* GetNativeHandle() = 0;
 
-        static GraphicsRef<IndexBuffer> CreateIndexBuffer(uint32* data, uint32 count, GPUMemoryType memoryType = GPUMemoryType::DEVICE_LOCAL);
+        /**
+        * @brief Creates an index buffer with the given data and memory type
+        * @param indexData The address of the index data
+        * @param count The number of indices stored in the pointed to memory block
+        * @param memoryType The GPU memory type of the vertex buffer
+        * @warning Creating a device local buffer forces a blocking wait while the GPU transfers the data.
+        */
+        static GraphicsRef<IndexBuffer> CreateIndexBuffer(uint32* indexData, uint32 count, GPUMemoryType memoryType);
     };
 
     using IndexBufferHandle = GraphicsRef<IndexBuffer>;

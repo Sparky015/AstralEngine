@@ -72,7 +72,15 @@ namespace Astral {
          */
         virtual void* GetNativeHandle() = 0;
 
-        static GraphicsRef<VertexBuffer> CreateVertexBuffer(float* vertices, unsigned int size, VertexBufferLayout& bufferLayout);
+        /**
+        * @brief Creates a vertex buffer with the given data and memory type
+        * @param vertexData The address of the vertex data
+        * @param size The size of the vertex data
+        * @param bufferLayout The layout of the per-vertex data
+        * @param memoryType The GPU memory type of the vertex buffer
+        * @warning Creating a device local buffer forces a blocking wait while the GPU transfers the data.
+        */
+        static GraphicsRef<VertexBuffer> CreateVertexBuffer(float* vertexData, uint32 size, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType);
     };
 
     using VertexBufferHandle = GraphicsRef<VertexBuffer>;
