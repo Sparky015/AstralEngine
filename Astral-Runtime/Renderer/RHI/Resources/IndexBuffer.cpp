@@ -19,7 +19,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateIndexBuffer(indexData, count * sizeof(uint32), memoryType);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateIndexBuffer(indexData, count * sizeof(uint32), memoryType);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
