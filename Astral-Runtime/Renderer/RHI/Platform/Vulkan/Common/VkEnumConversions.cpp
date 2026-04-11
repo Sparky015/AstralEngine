@@ -6,6 +6,8 @@
 
 #include "VkEnumConversions.h"
 
+#include "Debug/Utilities/Error.h"
+
 namespace Astral {
     VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat)
     {
@@ -527,6 +529,32 @@ namespace Astral {
             case CullMode::FRONT_AND_BACK:              return VK_CULL_MODE_FRONT_AND_BACK;
             default: AE_ERROR("Invalid Cull Mode Given!");
         }
+    }
+
+
+    VkMemoryPropertyFlags ConvertMemoryPropertyFlagsToVkMemoryPropertyFlags(GPUMemoryType memoryType)
+    {
+        VkMemoryPropertyFlags vkMemoryPropertyFlags = 0;
+
+        if (memoryType == GPUMemoryType::DEVICE_LOCAL)   { vkMemoryPropertyFlags |= VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT; }
+        if (memoryType == GPUMemoryType::HOST_VISIBLE)   { vkMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT; }
+
+        return vkMemoryPropertyFlags;
+    }
+
+
+    VkBufferUsageFlags ConvertBufferUsageFlagsToVkBufferUsageFlags(BufferUsageFlags bufferUsageFlags)
+    {
+        VkBufferUsageFlags vkBufferUsageFlags = 0;
+
+        if (bufferUsageFlags & BUFFER_USAGE_VERTEX_BUFFER)   { vkBufferUsageFlags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; }
+        if (bufferUsageFlags & BUFFER_USAGE_INDEX_BUFFER)    { vkBufferUsageFlags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT; }
+        if (bufferUsageFlags & BUFFER_USAGE_STORAGE_BUFFER)  { vkBufferUsageFlags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT; }
+        if (bufferUsageFlags & BUFFER_USAGE_UNIFORM_BUFFER)  { vkBufferUsageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT; }
+        if (bufferUsageFlags & BUFFER_USAGE_STREAMABLE)      { vkBufferUsageFlags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT; }
+        if (bufferUsageFlags & BUFFER_USAGE_GPU_ONLY)        {} // Adds nothing
+
+        return vkBufferUsageFlags;
     }
 
 

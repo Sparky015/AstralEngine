@@ -1,69 +1,67 @@
 /**
-* @file VulkanIndexBuffer.cpp
+* @file MetalIndexBuffer.cpp
 * @author Andrew Fagan
-* @date 5/21/2025
+* @date 4/10/26
 */
 
-#include "VulkanIndexBuffer.h"
+#include "MetalIndexBuffer.h"
 
 namespace Astral {
 
-    VulkanIndexBuffer::VulkanIndexBuffer(const VulkanIndexBufferDesc& desc) :
-        m_IndexBuffer(),
-        m_DataSize(desc.DataSize)
+    MetalIndexBuffer::MetalIndexBuffer(const MetalIndexBufferDesc& desc)
     {
         CreateIndexBuffer(desc);
     }
 
-    VulkanIndexBuffer::~VulkanIndexBuffer()
-    {
 
+    MetalIndexBuffer::~MetalIndexBuffer()
+    {
     }
 
 
-    uint32 VulkanIndexBuffer::GetCount() const
+    uint32 MetalIndexBuffer::GetCount() const
     {
         return m_DataSize / sizeof(uint32);
     }
 
 
-    void VulkanIndexBuffer::MapPointer(void** cpuPtr)
+    void MetalIndexBuffer::MapPointer(void** cpuPtr)
     {
         m_IndexBuffer.MapPointer(cpuPtr);
     }
 
 
-    void VulkanIndexBuffer::UnmapPointer()
+    void MetalIndexBuffer::UnmapPointer()
     {
         m_IndexBuffer.UnmapPointer();
     }
 
 
-    void VulkanIndexBuffer::CopyDataToBuffer(void* data, uint32 size)
+    void MetalIndexBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
         m_IndexBuffer.CopyDataToBuffer(data, size);
     }
 
 
-    void VulkanIndexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    void MetalIndexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
     {
         m_IndexBuffer.UploadToDeviceLocalBuffer(data, size);
     }
 
 
-    void VulkanIndexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    void MetalIndexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
     {
         m_IndexBuffer.ChangeMemoryType(memoryType);
     }
 
 
-    void* VulkanIndexBuffer::GetNativeHandle()
+    void* MetalIndexBuffer::GetNativeHandle()
     {
         return m_IndexBuffer.GetNativeHandle();
     }
 
 
-    VulkanIndexBuffer::VulkanIndexBuffer(VulkanIndexBuffer&& other) noexcept :
+    MetalIndexBuffer::MetalIndexBuffer(MetalIndexBuffer&& other) noexcept :
         m_IndexBuffer(std::move(other.m_IndexBuffer)),
         m_DataSize(other.m_DataSize)
     {
@@ -71,7 +69,7 @@ namespace Astral {
     }
 
 
-    VulkanIndexBuffer& VulkanIndexBuffer::operator=(VulkanIndexBuffer&& other) noexcept
+    MetalIndexBuffer& MetalIndexBuffer::operator=(MetalIndexBuffer&& other) noexcept
     {
         if (this != &other)
         {
@@ -85,34 +83,31 @@ namespace Astral {
     }
 
 
-    void VulkanIndexBuffer::CreateIndexBuffer(const VulkanIndexBufferDesc& desc)
+    void MetalIndexBuffer::CreateIndexBuffer(const MetalIndexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
         {
-            VulkanBufferDesc indexBufferDesc = {
+            MetalBufferDesc indexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_INDEX_BUFFER,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
-            m_IndexBuffer = VulkanBuffer{indexBufferDesc};
+            m_IndexBuffer = MetalBuffer{indexBufferDesc};
             m_IndexBuffer.UploadToDeviceLocalBuffer(desc.IndexData, desc.DataSize);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
-            VulkanBufferDesc stagingBufferDesc = {
+            MetalBufferDesc indexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_INDEX_BUFFER,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
-            m_IndexBuffer = VulkanBuffer(stagingBufferDesc);
+            m_IndexBuffer = MetalBuffer(indexBufferDesc);
             m_IndexBuffer.CopyDataToBuffer(desc.IndexData, desc.DataSize);
         }
     }
 
 }
+

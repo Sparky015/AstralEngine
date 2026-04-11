@@ -1,39 +1,38 @@
 /**
-* @file VulkanVertexBuffer.h
+* @file MetalVertexBuffer.h
 * @author Andrew Fagan
-* @date 5/18/2025
+* @date 4/6/26
 */
 
 #pragma once
 
+#include "MetalBuffer.h"
 #include "Renderer/RHI/Resources/VertexBuffer.h"
-#include "VulkanBuffer.h"
 
-#include <vulkan/vulkan_core.h>
+#include "Metal/MTLDevice.hpp"
 
 namespace Astral {
 
     /**
-     * @brief A description of how to build a Vulkan vertex buffer
+     * @brief A description of how to build a Metal vertex buffer
      */
-    struct VulkanVertexBufferDesc
+    struct MetalVertexBufferDesc
     {
-        VkDevice Device;
+        MTL::Device* Device;
         void* VertexData;
         uint32 DataSize;
         VertexBufferLayout& BufferLayout;
         GPUMemoryType MemoryType;
-        VkPhysicalDeviceMemoryProperties DeviceMemoryProperties;
     };
 
     /**
-     * @brief A wrapper around a Vulkan buffer supporting vertex buffer layouts and extra convenience functions
+     * @brief A wrapper around a Metal buffer supporting vertex buffer layouts and extra convenience functions
      */
-    class VulkanVertexBuffer : public VertexBuffer
+    class MetalVertexBuffer : public VertexBuffer
     {
     public:
-        explicit VulkanVertexBuffer(const VulkanVertexBufferDesc& desc);
-        ~VulkanVertexBuffer() override;
+        explicit MetalVertexBuffer(const MetalVertexBufferDesc& desc);
+        ~MetalVertexBuffer() override;
 
         /**
          * @brief Gets the size of the vertex data initially written to this buffer
@@ -56,6 +55,7 @@ namespace Astral {
 
         /**
          * @brief Unmaps a pointer from this buffer
+         * @note This does nothing on the Metal implementation
          */
         void UnmapPointer() override;
 
@@ -63,17 +63,17 @@ namespace Astral {
          * @brief Copies data to this buffer
          * @param data The address of the data to copy to the buffer
          * @param size The size of the data to copy to this buffer
-         * @note This is only supported by host visible buffers. This does not support uploading to a device local buffer.
+         * @note This is only supported by host visible buffers. This does not support uploading to a private buffer.
          */
         void CopyDataToBuffer(void* data, uint32 size) override;
 
         /**
-         * @brief Uploads the given data to this buffer
-         * @param data The address of the data to copy to the buffer
-         * @param size The size of the data to upload to this buffer
-         * @note This is only supported by device local buffers. This does not support copying to a host visible buffer.
-         * @warning This forces a blocking wait while the GPU transfers the data.
-         */
+        * @brief Uploads the given data to this buffer
+        * @param data The address of the data to copy to the buffer
+        * @param size The size of the data to upload to this buffer
+        * @note This is only supported by private buffers. This does not support copying to a shared buffer.
+        * @warning This forces a blocking wait while the GPU transfers the data.
+        */
         void UploadToDeviceLocalBuffer(void* data, uint32 size) override;
 
         /**
@@ -85,14 +85,14 @@ namespace Astral {
 
         /**
          * @brief Gets the native handle of the buffer
-         * @return The native handle of the buffer (VkBuffer)
+         * @return The native handle of the buffer (MTL::Buffer*)
          */
         void* GetNativeHandle() override;
 
-        VulkanVertexBuffer(const VulkanVertexBuffer&) = delete;
-        VulkanVertexBuffer& operator=(const VulkanVertexBuffer& desc) = delete;
-        VulkanVertexBuffer(VulkanVertexBuffer&& other) noexcept;
-        VulkanVertexBuffer& operator=(VulkanVertexBuffer&& other) noexcept;
+        MetalVertexBuffer(const MetalVertexBuffer&) = delete;
+        MetalVertexBuffer& operator=(const MetalVertexBuffer& desc) = delete;
+        MetalVertexBuffer(MetalVertexBuffer&& other) noexcept;
+        MetalVertexBuffer& operator=(MetalVertexBuffer&& other) noexcept;
 
     private:
 
@@ -100,10 +100,10 @@ namespace Astral {
          * @brief Creates a vertex buffer from a vertex buffer description
          * @param desc The description of the vertex buffer to build
          */
-        void CreateVertexBuffer(const VulkanVertexBufferDesc& desc);
+        void CreateVertexBuffer(const MetalVertexBufferDesc& desc);
 
         VertexBufferLayout m_BufferLayout;
-        VulkanBuffer m_VertexBuffer;
+        MetalBuffer m_VertexBuffer;
         uint32 m_DataSize;
     };
 

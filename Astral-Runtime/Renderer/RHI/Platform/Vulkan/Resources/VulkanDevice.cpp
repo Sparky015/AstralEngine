@@ -181,45 +181,43 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
-            .VulkanDevice = *this,
             .Device = m_Device,
-            .VerticeData = verticeData,
-            .SizeInBytes = sizeInBytes,
-            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .VertexData = vertexData,
+            .DataSize = sizeInBytes,
             .BufferLayout = bufferLayout,
             .MemoryType = memoryType,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 
         return CreateGraphicsRef<VulkanVertexBuffer>(vertexBufferDesc);
     }
 
 
-    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
         VulkanIndexBufferDesc indexBufferDesc = {
-            .VulkanDevice = *this,
             .Device = m_Device,
-            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .IndiceData = indiceData,
-            .SizeInBytes = sizeInBytes,
-            .MemoryType = memoryType
+            .IndexData = indexData,
+            .DataSize = sizeInBytes,
+            .MemoryType = memoryType,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 
         return CreateGraphicsRef<VulkanIndexBuffer>(indexBufferDesc);
     }
 
 
-    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_STORAGE_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
@@ -228,14 +226,14 @@ namespace Astral {
     }
 
 
-    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_UNIFORM_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);

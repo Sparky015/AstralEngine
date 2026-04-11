@@ -448,10 +448,10 @@ namespace Astral {
 
         VulkanBufferDesc bufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             .Size = bufferLength,
+            .Usage = BUFFER_USAGE_STREAMABLE,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDeviceMemoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
 
         VulkanBuffer stagingBuffer = VulkanBuffer{bufferDesc};

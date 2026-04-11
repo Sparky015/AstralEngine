@@ -7,7 +7,10 @@
 #include "MetalDevice.h"
 
 #include "Debug/Utilities/Asserts.h"
+#include "MetalBuffer.h"
+#include "MetalIndexBuffer.h"
 #include "MetalSwapchain.h"
+#include "MetalVertexBuffer.h"
 
 namespace Astral {
 
@@ -86,27 +89,58 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle MetalDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
+    VertexBufferHandle MetalDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
-        return nullptr;
+        MetalVertexBufferDesc metalVertexBufferDesc = {
+            .Device = m_Device,
+            .VertexData = vertexData,
+            .DataSize = sizeInBytes,
+            .BufferLayout = bufferLayout,
+            .MemoryType = memoryType
+        };
+
+        return CreateGraphicsRef<MetalVertexBuffer>(metalVertexBufferDesc);
     }
 
 
-    IndexBufferHandle MetalDevice::CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType)
+    IndexBufferHandle MetalDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
-        return nullptr;
+        MetalIndexBufferDesc metalIndexBufferDesc = {
+            .Device = m_Device,
+            .IndexData = indexData,
+            .DataSize = sizeInBytes,
+            .MemoryType = memoryType
+        };
+
+        return CreateGraphicsRef<MetalIndexBuffer>(metalIndexBufferDesc);
     }
 
 
-    BufferHandle MetalDevice::CreateStorageBuffer(void* data, uint32 size)
+    BufferHandle MetalDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
-        return nullptr;
+        MetalBufferDesc metalStorageBufferDesc = {
+            .Device = m_Device,
+            .Size = size,
+            .MemoryType = memoryType,
+        };
+
+        BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalStorageBufferDesc);
+        bufferHandle->CopyDataToBuffer(data, size);
+        return bufferHandle;
     }
 
 
-    BufferHandle MetalDevice::CreateUniformBuffer(void* data, uint32 size)
+    BufferHandle MetalDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
-        return nullptr;
+        MetalBufferDesc metalUniformBufferDesc = {
+            .Device = m_Device,
+            .Size = size,
+            .MemoryType = memoryType,
+        };
+
+        BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalUniformBufferDesc);
+        bufferHandle->CopyDataToBuffer(data, size);
+        return bufferHandle;
     }
 
 

@@ -42,11 +42,10 @@ namespace Astral {
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
         PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo) override;
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override;
-        VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType =
-                                                      GPUMemoryType::DEVICE_LOCAL) override;
-        IndexBufferHandle CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType = GPUMemoryType::DEVICE_LOCAL) override;
-        BufferHandle CreateStorageBuffer(void* data, uint32 size) override;
-        BufferHandle CreateUniformBuffer(void* data, uint32 size) override;
+        VertexBufferHandle CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override;
+        IndexBufferHandle CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType) override;
+        BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
+        BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
         DescriptorSetHandle CreateDescriptorSet() override;
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override;
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;

@@ -1,28 +1,27 @@
 /**
-* @file MetalDevice.h
+* @file D3D12Device.h
 * @author Andrew Fagan
-* @date 3/23/26
+* @date 3/24/2026
 */
 
 #pragma once
 
 #include "Renderer/RHI/Resources/Device.h"
 
-#include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
+
 
 namespace Astral {
 
-    struct MetalDeviceDesc
+    struct D3D12DeviceDesc
     {
-        CA::MetalLayer* CAMetalLayer;
+
     };
 
-    class MetalDevice : public Device
+    class D3D12Device : public Device
     {
     public:
-        explicit MetalDevice(const MetalDeviceDesc& desc); // TODO
-        ~MetalDevice() override; // TODO
+        explicit D3D12Device(const D3D12DeviceDesc& desc); // TODO
+        ~D3D12Device() override; // TODO
 
         void Init() override; // TODO
 
@@ -33,12 +32,12 @@ namespace Astral {
         RenderPassHandle CreateRenderPass() override; // TODO
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override; // TODO
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override; // TODO
-        PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) override; // TODO
+        PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphicsPipelineStateCreateInfo) override; // TODO
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override; // TODO
-        VertexBufferHandle CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override;
-        IndexBufferHandle CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType) override;
-        BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
-        BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
+        VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override; // TODO
+        IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType) override; // TODO
+        BufferHandle CreateStorageBuffer(void* data, uint32 size) override; // TODO
+        BufferHandle CreateUniformBuffer(void* data, uint32 size) override; // TODO
         DescriptorSetHandle CreateDescriptorSet() override; // TODO
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override; // TODO
@@ -61,14 +60,14 @@ namespace Astral {
     private:
 
         /**
-         * @brief Allocates the default system device
+         * @brief
          */
-        void CreateDevice();
+        void CreateDevice(); // TODO
 
         /**
-         * @brief Releases the device
+         * @brief
          */
-        void DestroyDevice();
+        void DestroyDevice();  // TODO
 
         /**
          * @brief Allocates a swapchain instance
@@ -81,8 +80,6 @@ namespace Astral {
         void DestroySwapchain();
 
 
-        MTL::Device* m_Device;
-        CA::MetalLayer* m_CAMetalLayer;
         GraphicsOwnedPtr<Swapchain> m_Swapchain;
     };
 

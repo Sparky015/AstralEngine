@@ -1,16 +1,14 @@
 /**
-* @file VulkanVertexBuffer.cpp
+* @file MetalVertexBuffer.cpp
 * @author Andrew Fagan
-* @date 5/18/2025
+* @date 4/6/26
 */
 
-#include "VulkanVertexBuffer.h"
-
-#include "Debug/Utilities/Asserts.h"
+#include "MetalVertexBuffer.h"
 
 namespace Astral {
 
-    VulkanVertexBuffer::VulkanVertexBuffer(const VulkanVertexBufferDesc& desc) :
+    MetalVertexBuffer::MetalVertexBuffer(const MetalVertexBufferDesc& desc) :
         m_BufferLayout(desc.BufferLayout),
         m_VertexBuffer(),
         m_DataSize(desc.DataSize)
@@ -19,60 +17,60 @@ namespace Astral {
     }
 
 
-    VulkanVertexBuffer::~VulkanVertexBuffer()
+    MetalVertexBuffer::~MetalVertexBuffer()
     {
     }
 
 
-    uint32 VulkanVertexBuffer::GetSize() const
+    uint32 MetalVertexBuffer::GetSize() const
     {
         return m_DataSize;
     }
 
 
-    const VertexBufferLayout& VulkanVertexBuffer::GetBufferLayout() const
+    const VertexBufferLayout& MetalVertexBuffer::GetBufferLayout() const
     {
         return m_BufferLayout;
     }
 
 
-    void VulkanVertexBuffer::MapPointer(void** cpuPtr)
+    void MetalVertexBuffer::MapPointer(void** cpuPtr)
     {
         m_VertexBuffer.MapPointer(cpuPtr);
     }
 
 
-    void VulkanVertexBuffer::UnmapPointer()
+    void MetalVertexBuffer::UnmapPointer()
     {
         m_VertexBuffer.UnmapPointer();
     }
 
 
-    void VulkanVertexBuffer::CopyDataToBuffer(void* data, uint32 size)
+    void MetalVertexBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
         m_VertexBuffer.CopyDataToBuffer(data, size);
     }
 
 
-    void VulkanVertexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    void MetalVertexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
     {
         m_VertexBuffer.UploadToDeviceLocalBuffer(data, size);
     }
 
 
-    void VulkanVertexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    void MetalVertexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
     {
         m_VertexBuffer.ChangeMemoryType(memoryType);
     }
 
 
-    void* VulkanVertexBuffer::GetNativeHandle()
+    void* MetalVertexBuffer::GetNativeHandle()
     {
         return m_VertexBuffer.GetNativeHandle();
     }
 
 
-    VulkanVertexBuffer::VulkanVertexBuffer(VulkanVertexBuffer&& other) noexcept :
+    MetalVertexBuffer::MetalVertexBuffer(MetalVertexBuffer&& other) noexcept :
         m_BufferLayout(std::move(other.m_BufferLayout)),
         m_VertexBuffer(std::move(other.m_VertexBuffer)),
         m_DataSize(other.m_DataSize)
@@ -80,7 +78,8 @@ namespace Astral {
         other.m_DataSize = 0;
     }
 
-    VulkanVertexBuffer& VulkanVertexBuffer::operator=(VulkanVertexBuffer&& other) noexcept
+
+    MetalVertexBuffer& MetalVertexBuffer::operator=(MetalVertexBuffer&& other) noexcept
     {
         if (this == &other)
         {
@@ -94,39 +93,37 @@ namespace Astral {
         return *this;
     }
 
-    void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
+
+    void MetalVertexBuffer::CreateVertexBuffer(const MetalVertexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
         {
-            VulkanBufferDesc vertexBufferDesc = {
+            MetalBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
-            m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
+            m_VertexBuffer = MetalBuffer{vertexBufferDesc};
             m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VertexData, desc.DataSize);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
-            VulkanBufferDesc vertexBufferDesc = {
+            MetalBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
 
-            m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
+            m_VertexBuffer = MetalBuffer{vertexBufferDesc};
             m_VertexBuffer.CopyDataToBuffer(desc.VertexData, desc.DataSize);
         }
         else
         {
             AE_ERROR("[VulkanVertexBuffer::CreateVertexBuffer] Memory type not implemented!")
         }
-
     }
 
 }
+
+

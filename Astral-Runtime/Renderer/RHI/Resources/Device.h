@@ -35,10 +35,10 @@ namespace Astral {
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
         virtual PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) = 0;
         virtual PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) = 0;
-        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType =GPUMemoryType::DEVICE_LOCAL) = 0;
-        virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType = GPUMemoryType::DEVICE_LOCAL) = 0;
-        virtual BufferHandle CreateStorageBuffer(void* data, uint32 size) = 0;
-        virtual BufferHandle CreateUniformBuffer(void* data, uint32 size) = 0;
+        virtual VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) = 0;
+        virtual IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType) = 0;
+        virtual BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) = 0;
+        virtual BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) = 0;
         virtual DescriptorSetHandle CreateDescriptorSet() = 0;
         virtual TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) = 0;
         virtual TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) = 0;
