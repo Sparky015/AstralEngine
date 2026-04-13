@@ -6,17 +6,11 @@
 
 #include "ProfilerApp.h"
 
-#include "Panels/AllocationStacktracePanel.h"
-#include "Panels/AllocationsListPanel.h"
-#include "Panels/DataPointInfoPanel.h"
-#include "Panels/GraphSelectorPanel.h"
-#include "Panels/MemoryGraphPanel.h"
-#include "Views/GraphViews.h"
-
 #include "Core/Engine.h"
 #include "Core/Utilities/Loggers.h"
 #include "Window/WindowManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
+#include "Views/GraphViews.h"
 
 #include "ImPlot/implot.h"
 #include "imgui.h"
