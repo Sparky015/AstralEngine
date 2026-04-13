@@ -55,6 +55,10 @@ add_library(AstralCore
 
     FixedIntegerTypes.h
     Containers/DirectedGraphHashes.h
+
+    Threading/ThreadPool.cpp
+    Threading/ThreadPool.h
+    Threading/ThreadPool_Impl.h
 )
 
 

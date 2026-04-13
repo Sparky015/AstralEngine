@@ -173,9 +173,6 @@ add_library(AstralEngine
         Renderer/RHI/Common/MemoryTypes.h
         Job/JobManager.cpp
         Job/JobManager.h
-        Job/ThreadPool.cpp
-        Job/ThreadPool.h
-        Job/ThreadPool_Impl.h
         Renderer/DrawList.cpp
         Renderer/DrawList.h
 

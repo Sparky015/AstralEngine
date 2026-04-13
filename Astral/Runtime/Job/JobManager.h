@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "ThreadPool.h"
+#include "Core/Threading/ThreadPool.h"
 #include "Core/SystemManager.h"
 
 namespace Astral {
