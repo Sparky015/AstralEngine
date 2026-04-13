@@ -4,13 +4,12 @@
 
 #include "RendererComponents.h"
 
-#include <imgui.h>
-
 #include "Core/Engine.h"
 #include "Renderer/SceneRenderer.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"
 
+#include <imgui.h>
 
 namespace Astral {
 

@@ -63,26 +63,10 @@ add_library(AstralEngine
         Debug/Instrumentation/ScopeProfiler.cpp
         Debug/Instrumentation/ScopeProfiler.h
 
-        Debug/ImGui/Components/WindowComponents.cpp
-        Debug/ImGui/Components/WindowComponents.h
-        Debug/ImGui/Components/RendererComponents.cpp
-        Debug/ImGui/Components/RendererComponents.h
-        Debug/ImGui/Components/BuildConfigComponents.cpp
-        Debug/ImGui/Components/BuildConfigComponents.h
-        Debug/ImGui/Components/ECSComponents.cpp
-        Debug/ImGui/Components/ECSComponents.h
-        Debug/ImGui/Components/InputStateComponents.cpp
-        Debug/ImGui/Components/InputStateComponents.h
-        Debug/ImGui/Components/SystemInfoComponents.cpp
-        Debug/ImGui/Components/SystemInfoComponents.h
         Debug/MemoryTracking/MemoryMetrics.cpp
         Debug/MemoryTracking/MemoryMetrics.h
         Debug/MemoryTracking/NewDeleteOverrides.cpp
-        Debug/ImGui/Components/MemoryComponents.cpp
-        Debug/ImGui/Components/MemoryComponents.h
         Debug/MemoryTracking/NoTrackingSTLAllocator.h
-        Debug/ImGui/Components/EngineComponents.cpp
-        Debug/ImGui/Components/EngineComponents.h
 
         Renderer/Cameras/Camera.cpp
         Renderer/Cameras/Camera.h
@@ -124,8 +108,6 @@ add_library(AstralEngine
         Asset/AssetManager.cpp
         Asset/Loaders/TextureLoader.h
         Asset/Loaders/TextureLoader.cpp
-        Debug/ImGui/Components/AssetStatsComponents.h
-        Debug/ImGui/Components/AssetStatsComponents.cpp
         Debug/MemoryTracking/GenericRegionAllocator.cpp
         Debug/MemoryTracking/GenericRegionAllocator.h
         Debug/MemoryTracking/MallocFreeOverrides.h

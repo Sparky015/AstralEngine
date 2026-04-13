@@ -4,10 +4,11 @@
 
 #include "ECSComponents.h"
 
+#include "Scenes/SceneManager.h"
+#include "Core/Engine.h"
+
 #include <imgui.h>
 
-#include "../../../Scenes/SceneManager.h"
-#include "Core/Engine.h"
 
 void Astral::EntityCountComponent()
 {

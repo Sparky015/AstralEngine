@@ -4,22 +4,11 @@
 
 #include "ImGuiManager.h"
 
-#include "Components/AssetStatsComponents.h"
-#include "Components/BuildConfigComponents.h"
-#include "Components/ECSComponents.h"
-#include "Components/RendererComponents.h"
-#include "Components/SystemInfoComponents.h"
-#include "Components/WindowComponents.h"
-#include "Debug/ImGui/Components/InputStateComponents.h"
-#include "Components/MemoryComponents.h"
-#include "Core/Engine.h"
-#include "Debug/ImGui/Components/EngineComponents.h"
 #include "ImGuiDependencies/imgui_impl_vulkan.h"
-#include "Input/Keycodes.h"
+#include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "Renderer/SceneRenderer.h"
 #include "Window/WindowManager.h"
 
-#include "ImGuiDependencies/imgui_impl_glfw.h"
 #include "ImPlot/implot.h"
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
@@ -43,8 +32,6 @@ namespace Astral {
             LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
         }
 
-        m_RenderImGuiListener.StartListening();
-        m_KeyPressedListener.StartListening();
     }
 
 
@@ -52,166 +39,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("ImGui Manager Shutdown");
         AE_TRACE("Shutting down Debug Manager!")
-        m_KeyPressedListener.StopListening();
-        m_RenderImGuiListener.StopListening();
 
         ShutdownImGui();
-    }
-
-
-    void ImGuiManager::RenderImGui()
-    {
-        PROFILE_SCOPE("ImGuiManager::RenderImGui");
-
-        static bool showDemoWindow = false;
-        if (showDemoWindow)
-        {
-            ImGui::ShowDemoWindow(&showDemoWindow);
-        }
-
-        if (m_ShowDebugMenu)
-        {
-            ImGui::Begin("Debug Menu", &m_ShowDebugMenu);
-
-            if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                FPSComponent();
-                FrameTimeComponent();
-                DrawCallsPerFrameComponent();
-                RendererViewportSizeComponent();
-
-                ImGui::Spacing();
-
-                VsyncToggleComponent();
-                FrustumCullingToggleComponent();
-                RendererTypeSelector();
-                RendererDebugViewComponent();
-
-                ImGui::Spacing();
-
-                RendererAPIComponent();
-                RendererAPIValidationStatus();
-
-
-                ImGui::Spacing();
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Assets"))
-            {
-                ShowNumberOfAssetsLoaded();
-                ShowTotalNumberOfAssetsLoaded();
-                ShowTotalNumberOfAssetsUnloaded();
-                ShowNumberOfAssetsLoadedByType();
-                ImGui::Spacing();
-                ImGui::TreePop();
-            }
-
-
-            if (ImGui::TreeNode("ECS"))
-            {
-                EntityCountComponent();
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Memory"))
-            {
-                ImGui::Spacing();
-
-                PeakMemoryUsage();
-                GlobalMemoryUsage();
-                GlobalActiveAllocations();
-                GlobalTotalAllocationsMade();
-                AllocationsInCurrentFrame();
-
-                ImGui::Spacing();
-                ImGui::Spacing();
-
-                if (ImGui::TreeNode("Metrics by Allocator"))
-                {
-                    MemoryUsageByAllocator();
-                    PeakMemoryUsageByAllocator();
-                    TotalAllocationsMadeByAllocator();
-                    ActiveAllocationsByAllocator();
-                    ImGui::TreePop();
-                }
-
-                if (ImGui::TreeNode("Metrics by Region"))
-                {
-                    MemoryUsageByRegion();
-                    PeakMemoryUsageByRegion();
-                    TotalAllocationsMadeByRegion();
-                    ActiveAllocationsByRegion();
-                    ImGui::TreePop();
-                }
-
-                if (ImGui::TreeNode("Metrics by Thread"))
-                {
-                    MemoryUsageByThread();
-                    PeakMemoryUsageByThread();
-                    TotalAllocationsMadeByThread();
-                    ActiveAllocationsByThread();
-                    ImGui::TreePop();
-                }
-
-                ImGui::Spacing();
-                ImGui::Spacing();
-
-                ManageMemoryProfilingScene();
-
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Window"))
-            {
-                WindowDimensionsComponent();
-                WindowFramebufferScaleComponent();
-                WindowAPIInfoComponent();
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Input State"))
-            {
-                IsTrackingInputsComponent();
-                ImGui::Spacing();
-                CompleteInputStateComponent();
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Build Configuration"))
-            {
-                BuildProfileComponent();
-                CompilerInfoComponents();
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("System Info"))
-            {
-                SystemGPUNameComponent();
-                SystemCPUNameComponent();
-
-                ImGui::Spacing();
-                CPUCoreInfoComponent();
-
-                ImGui::Spacing();
-                if (ImGui::TreeNode("CPU Cache Info"))
-                {
-                    CPUCacheSizeComponent();
-                    CPUCacheLineComponent();
-                    ImGui::TreePop();
-                }
-
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Other"))
-            {
-                EngineTimeComponent();
-                ImGui::TreePop();
-            }
-
-            ImGui::End();
-        }
     }
 
 
@@ -262,7 +91,7 @@ namespace Astral {
     }
 
 
-    ImGuiManager::ImGuiManager() : m_KeyPressedListener([this](KeyPressedEvent e){ this->OnKeyPress(e);})
+    ImGuiManager::ImGuiManager()
     {
         AE_TRACE("Constructing Debug System!")
     }
@@ -317,12 +146,6 @@ namespace Astral {
 
         ImPlot::DestroyContext();
         ImGui::DestroyContext();
-    }
-
-
-    void ImGuiManager::OnKeyPress(KeyPressedEvent keyPressedEvent)
-    {
-
     }
 
 }
