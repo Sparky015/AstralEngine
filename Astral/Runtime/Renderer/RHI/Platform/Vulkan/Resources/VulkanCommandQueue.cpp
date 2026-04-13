@@ -6,7 +6,7 @@
 
 #include "VulkanCommandQueue.h"
 
-#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Asserts.h"
 
 namespace Astral {

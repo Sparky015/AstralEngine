@@ -7,10 +7,9 @@
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Loggers.h"
+#include "Instrumentation/ScopeProfiler.h"
 
 #include <array>
-
-#include "Debug/Instrumentation/ScopeProfiler.h"
 
 namespace Astral {
 

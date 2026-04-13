@@ -8,7 +8,6 @@ add_library(AstralEngine
         Core/SystemManager.cpp
         Window/WindowManager.cpp
         Window/WindowManager.h
-        Debug/MemoryTracking/NewDeleteOverrides.h
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
@@ -19,8 +18,6 @@ add_library(AstralEngine
         Debug/ImGui/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
-        Debug/Instrumentation/ProfilerLogFile.cpp
-        Debug/Instrumentation/ProfilerLogFile.h
         Scenes/SceneManager.cpp
         Scenes/SceneManager.h
         ECS/Components/TransformComponent.h
@@ -60,35 +57,9 @@ add_library(AstralEngine
         Input/KeycodeConversions.cpp
         ECS/Systems/RenderingSystem.cpp
         ECS/Systems/RenderingSystem.h
-        Debug/Instrumentation/ScopeProfiler.cpp
-        Debug/Instrumentation/ScopeProfiler.h
-
-        Debug/MemoryTracking/MemoryMetrics.cpp
-        Debug/MemoryTracking/MemoryMetrics.h
-        Debug/MemoryTracking/NewDeleteOverrides.cpp
-        Debug/MemoryTracking/NoTrackingSTLAllocator.h
-
         Renderer/Cameras/Camera.cpp
         Renderer/Cameras/Camera.h
 
-        Debug/MemoryTracking/MemoryTracker.cpp
-        Debug/MemoryTracking/MemoryTracker.h
-
-
-        Debug/MemoryTracking/Serialization/SceneMetricsExporter.cpp
-        Debug/MemoryTracking/Serialization/SceneMetricsExporter.h
-        Debug/MemoryTracking/Serialization/SceneMetricsImporter.cpp
-        Debug/MemoryTracking/Serialization/SceneMetricsImporter.h
-        Debug/MemoryTracking/Serialization/SceneMetricsStorage.cpp
-        Debug/MemoryTracking/Serialization/SceneMetricsStorage.h
-        Debug/MemoryTracking/Serialization/MemoryMetricsSnapshot.h
-
-        Debug/MemoryTracking/GlobalAllocationStorage.cpp
-        Debug/MemoryTracking/GlobalAllocationStorage.h
-        Debug/MemoryTracking/MemoryMetrics.cpp
-        Debug/MemoryTracking/MemoryMetrics.h
-        Debug/MemoryTracking/NewDeleteOverrides.cpp
-        Debug/MemoryTracking/NewDeleteOverrides.h
         ECS/ECS.cpp
         ECS/ECS.h
         Core/FixedIntegerTypes.h
@@ -108,12 +79,7 @@ add_library(AstralEngine
         Asset/AssetManager.cpp
         Asset/Loaders/TextureLoader.h
         Asset/Loaders/TextureLoader.cpp
-        Debug/MemoryTracking/GenericRegionAllocator.cpp
-        Debug/MemoryTracking/GenericRegionAllocator.h
-        Debug/MemoryTracking/MallocFreeOverrides.h
-        Debug/MemoryTracking/MallocFreeOverrides.cpp
-        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h
-        Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.cpp
+
         Core/SmartPointers.h
 
 
@@ -238,6 +204,7 @@ endif ()
 
 # Linking Libraries
 target_link_libraries(AstralEngine PUBLIC AstralCore)
+target_link_libraries(AstralEngine PUBLIC AstralProfiler)
 
 target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)

@@ -7,8 +7,8 @@
 
 #include "AllocationData.h"
 #include "Core/Events/EventListener.h"
-#include "Debug/MemoryTracking/GlobalAllocationStorage.h"
-#include "Core/EngineLoopEvents.h"
+#include "GlobalAllocationStorage.h"
+// #include "Core/EngineLoopEvents.h"
 #include "msgpack.hpp"
 
 namespace Astral {
@@ -164,7 +164,7 @@ namespace Astral {
 
         FrameAllocationData m_OldFrameAllocationData;
         FrameAllocationData m_FrameAllocationData;
-        Astral::EventListener<NewFrameEvent> m_NewFrameEventListener;
+        // Astral::EventListener<NewFrameEvent> m_NewFrameEventListener;
 
     public:
         MSGPACK_DEFINE(m_PeakMemoryUsage, m_TotalMemoryUsage, m_TotalActiveAllocations, m_TotalAllocations,

@@ -11,7 +11,6 @@
 #include "Window/WindowManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
 
-#include "ChessEntities.h"
 #include "Asset/AssetManager.h"
 #include "Asset/AssetRegistry.h"
 
@@ -36,32 +35,8 @@ namespace Astral {
             window.SetWindowDimensions(1600, 900);
             m_Editor.Init();
 
-        //     m_Mesh = {};
-        //
-        //     float vertices[20] = {
-        //         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        //         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        //         -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-        //         0.5f,  0.5f, 0.0f, 1.0f, 1.0f
-        // };
-        //
-        //     uint32 indices[6] = { 0, 1, 2, 1, 3, 2};
-        //
-        //     VertexBufferLayout bufferLayout = {
-        //         {Float3, "a_Position"},
-        //         {Float2, "a_TexCords"}
-        //     };
-        //
-        //
-        //     m_VertexBuffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices), bufferLayout);
-        //     m_IndexBuffer = IndexBuffer::CreateIndexBuffer(indices, 6);
-            //
-            // m_Mesh.VertexBuffer = m_VertexBuffer;
-            // m_Mesh.IndexBuffer = m_IndexBuffer;
 
             Astral::AssetRegistry registry = Engine::Get().GetAssetManager().GetRegistry();
-            Ref<Mesh> mesh = registry.GetAsset<Mesh>("Meshes/Quad.obj");
-            ChessEntities::InitEntities();
         }
 
         void Update(const Astral::DeltaTime& deltaTime) override
@@ -74,18 +49,11 @@ namespace Astral {
             PROFILE_SCOPE("EditorModuleShutdown")
             AE_TRACE("Shutting down Editor")
 
-            ChessEntities::DestroyEntities();
-            m_Mesh = {};
-            m_VertexBuffer.reset();
-            m_IndexBuffer.reset();
             m_Editor.Shutdown();
         }
 
     private:
 
-        Mesh m_Mesh;
-        VertexBufferHandle m_VertexBuffer;
-        IndexBufferHandle m_IndexBuffer;
         Editor m_Editor;
     };
 

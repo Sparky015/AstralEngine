@@ -8,7 +8,7 @@
 
 #include "Core/Containers/Bitmap.h"
 #include "Core/SmartPointers.h"
-#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Resources/Texture.h"
 

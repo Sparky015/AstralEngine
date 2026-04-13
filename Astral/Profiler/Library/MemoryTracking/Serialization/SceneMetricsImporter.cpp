@@ -7,10 +7,10 @@
 #include "SceneMetricsImporter.h"
 
 #include "Core/Utilities/Loggers.h"
+#include "Instrumentation/ScopeProfiler.h"
+
 #include <iostream>
 #include "msgpack.hpp"
-
-#include "Debug/Instrumentation/ScopeProfiler.h"
 
 Astral::SceneMetricsImporter::SceneMetricsImporter() : m_HasFileLoaded(false)
 {

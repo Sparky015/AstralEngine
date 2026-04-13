@@ -4,7 +4,7 @@
 * @date 2/8/25
 */
 
-#include "Debug/MemoryTracking/MemoryTracker.h"
+#include "MemoryTracker.h"
 
 #include "Core/Utilities/Loggers.h"
 

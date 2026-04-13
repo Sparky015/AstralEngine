@@ -6,8 +6,6 @@ add_executable(AstralEditor EditorModule.cpp
         Panels/SceneHierarchyPanel.h
         Editor.cpp
         Editor.h
-        ChessEntities.h
-        ChessEntities.cpp
         Components/MenuBarComponent.cpp
         Components/MenuBarComponent.h
         Panels/PropertiesPanel.cpp

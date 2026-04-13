@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <memory>
-
-#include "Debug/MemoryTracking/GenericRegionAllocator.h"
+#include "MemoryTracking/GenericRegionAllocator.h"
 #include "Asset/Ref.h"
+
+#include <memory>
 
 namespace Astral {
 

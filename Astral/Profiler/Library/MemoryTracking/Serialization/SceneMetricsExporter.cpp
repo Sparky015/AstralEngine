@@ -7,15 +7,13 @@
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Loggers.h"
 #include "SceneMetricsExporter.h"
+#include "MemoryTracking/MemoryTracker.h"
+
 #include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <cpptrace/formatting.hpp>
-
-#include "cpptrace/include/cpptrace/cpptrace.hpp"
-
-#include "Debug/MemoryTracking/MemoryTracker.h"
-
+#include "cpptrace/cpptrace.hpp"
 
 namespace Astral {
 

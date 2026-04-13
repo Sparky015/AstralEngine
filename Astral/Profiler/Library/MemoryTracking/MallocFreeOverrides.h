@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/FixedIntegerTypes.h"
-#include "Debug/MemoryTracking/AllocationData.h"
+#include "AllocationData.h"
 
 namespace Astral {
 

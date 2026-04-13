@@ -7,7 +7,7 @@
 #include "Asset/AssetManager.h"
 #include "Common/CubeLUT.h"
 #include "Core/Engine.h"
-#include "Debug/Instrumentation/ScopeProfiler.h"
+#include "Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Loggers.h"
 #include "RHI/RendererAPI.h"
 #include "Scenes/Scene.h"

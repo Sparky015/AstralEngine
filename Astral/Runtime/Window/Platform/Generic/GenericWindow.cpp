@@ -6,7 +6,6 @@
 
 #include "Window/WindowEvents.h"
 #include "Core/Events/EventPublisher.h"
-#include "Debug/MemoryTracking/RegionTrackingAllocators/WindowTrackingAllocators.h"
 #include "Core/Utilities/Asserts.h"
 #include "Input/KeycodeConversions.h"
 #include "Renderer/SceneRenderer.h"
@@ -26,13 +25,13 @@ namespace Astral {
     {
         /** Initializing GLFW */
 
-        GLFWallocator allocator;
-        allocator.allocate = WindowTrackingMalloc;
-        allocator.reallocate = WindowTrackingRealloc;
-        allocator.deallocate = WindowTrackingFree;
-        allocator.user = nullptr;
-
-        glfwInitAllocator(&allocator);
+        // GLFWallocator allocator;
+        // allocator.allocate = WindowTrackingMalloc;
+        // allocator.reallocate = WindowTrackingRealloc;
+        // allocator.deallocate = WindowTrackingFree;
+        // allocator.user = nullptr;
+        // TODO: Add back the window allocators
+        // glfwInitAllocator(&allocator);
 
         if (!m_IsGLFWInitialized)
         {

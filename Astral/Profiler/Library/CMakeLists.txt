@@ -1,6 +1,31 @@
 add_library(AstralProfiler
     Instrumentation/ProfilerLogFile.cpp
     Instrumentation/ProfilerLogFile.h
+    Instrumentation/ScopeProfiler.cpp
+    Instrumentation/ScopeProfiler.h
+
+    MemoryTracking/AllocationData.h
+    MemoryTracking/GenericRegionAllocator.cpp
+    MemoryTracking/GenericRegionAllocator.h
+    MemoryTracking/GlobalAllocationStorage.cpp
+    MemoryTracking/GlobalAllocationStorage.h
+    MemoryTracking/MallocFreeOverrides.cpp
+    MemoryTracking/MallocFreeOverrides.h
+    MemoryTracking/MemoryMetrics.cpp
+    MemoryTracking/MemoryMetrics.h
+    MemoryTracking/MemoryTracker.cpp
+    MemoryTracking/MemoryTracker.h
+    MemoryTracking/NewDeleteOverrides.cpp
+    MemoryTracking/NewDeleteOverrides.h
+    MemoryTracking/NoTrackingSTLAllocator.h
+
+    MemoryTracking/Serialization/MemoryMetricsSnapshot.h
+    MemoryTracking/Serialization/SceneMetricsExporter.cpp
+    MemoryTracking/Serialization/SceneMetricsExporter.h
+    MemoryTracking/Serialization/SceneMetricsImporter.cpp
+    MemoryTracking/Serialization/SceneMetricsImporter.h
+    MemoryTracking/Serialization/SceneMetricsStorage.cpp
+    MemoryTracking/Serialization/SceneMetricsStorage.h
 )
 
 
@@ -25,6 +50,8 @@ add_dependencies(AstralProfiler
 
 
 # Include Directories
+
+target_include_directories(AstralProfiler PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_include_directories(AstralProfiler PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/msgpack/include")
 target_include_directories(AstralProfiler PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/cpptrace/include")

@@ -6,12 +6,11 @@
 
 #pragma once
 
-#include "Debug/MemoryTracking/AllocationData.h"
-#include "Debug/MemoryTracking/NoTrackingSTLAllocator.h"
+#include "MemoryTracking/AllocationData.h"
+#include "MemoryTracking/NoTrackingSTLAllocator.h"
+#include "MemoryTracking/MemoryMetrics.h"
+
 #include <vector>
-
-#include "Debug/MemoryTracking/MemoryMetrics.h"
-
 
 namespace Astral {
 

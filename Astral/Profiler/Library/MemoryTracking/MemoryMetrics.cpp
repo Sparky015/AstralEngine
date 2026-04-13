@@ -10,12 +10,12 @@ namespace Astral {
         m_PeakMemoryUsage(0),
         m_TotalMemoryUsage(0),
         m_TotalActiveAllocations(0),
-        m_TotalAllocations(0),
-        m_NewFrameEventListener{[this](NewFrameEvent)
-        {
-            m_OldFrameAllocationData = m_FrameAllocationData;
-            m_FrameAllocationData = FrameAllocationData();
-        }}
+        m_TotalAllocations(0)
+        // m_NewFrameEventListener{[this](NewFrameEvent)
+        // {
+        //     m_OldFrameAllocationData = m_FrameAllocationData;
+        //     m_FrameAllocationData = FrameAllocationData();
+        // }}
     {
         // Initialize unordered_maps keys with all enum values
     }
@@ -23,13 +23,13 @@ namespace Astral {
 
     void MemoryMetrics::Init()
     {
-        m_NewFrameEventListener.StartListening();
+        // m_NewFrameEventListener.StartListening();
     }
 
 
     void MemoryMetrics::Shutdown()
     {
-        m_NewFrameEventListener.StopListening();
+        // m_NewFrameEventListener.StopListening();
     }
 
 
