@@ -5,9 +5,11 @@
 #include "MemoryComponents.h"
 
 #include "Profiler/MemoryTracking/MemoryTracker.h"
+#include "Core/PlatformAbstraction/CreateProcess.h"
 
 #include <imgui.h>
 #include <string_view>
+
 
 namespace Astral {
 
@@ -316,6 +318,16 @@ namespace Astral {
         else
         {
             tracker.EndScene();
+        }
+    }
+
+
+    void OpenProfilerComponent()
+    {
+        if (ImGui::Button("Open Profiler"))
+        {
+            char* argv[] = {(char*)"AstralProfiler", nullptr};
+            CreateProcess("./AstralProfiler", argv, nullptr);
         }
     }
 

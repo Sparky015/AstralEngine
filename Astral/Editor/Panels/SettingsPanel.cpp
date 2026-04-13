@@ -112,6 +112,7 @@ namespace Astral {
             ImGui::Spacing();
 
             ManageMemoryProfilingScene();
+            OpenProfilerComponent();
 
             ImGui::TreePop();
         }

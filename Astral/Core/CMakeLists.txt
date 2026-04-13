@@ -59,6 +59,13 @@ add_library(AstralCore
     Threading/ThreadPool.cpp
     Threading/ThreadPool.h
     Threading/ThreadPool_Impl.h
+
+        PlatformAbstraction/CreateProcess.cpp
+        PlatformAbstraction/CreateProcess.h
+        PlatformAbstraction/Platform/Unix/UnixCreateProcess.cpp
+        PlatformAbstraction/Platform/Unix/UnixCreateProcess.h
+        PlatformAbstraction/Platform/Windows/WindowsCreateProcess.cpp
+        PlatformAbstraction/Platform/Windows/WindowsCreateProcess.h
 )
 
 

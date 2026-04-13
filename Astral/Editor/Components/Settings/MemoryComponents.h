@@ -29,5 +29,6 @@ namespace Astral {
     void ActiveAllocationsByThread();
 
     void ManageMemoryProfilingScene();
+    void OpenProfilerComponent();
 
 }
