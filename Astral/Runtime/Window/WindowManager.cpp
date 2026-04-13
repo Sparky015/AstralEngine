@@ -4,7 +4,7 @@
 
 #include "WindowManager.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Loggers.h"
 
 namespace Astral{

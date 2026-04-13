@@ -201,7 +201,7 @@ endif ()
 
 # Linking Libraries
 target_link_libraries(AstralEngine PUBLIC AstralCore)
-target_link_libraries(AstralEngine PUBLIC AstralProfiler)
+target_link_libraries(AstralEngine PUBLIC AstralProfilerAPI)
 
 target_link_libraries(AstralEngine PRIVATE ImGui)
 target_link_libraries(AstralEngine PRIVATE GLAD)

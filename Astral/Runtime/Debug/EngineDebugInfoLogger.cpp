@@ -5,7 +5,7 @@
 #include "EngineDebugInfoLogger.h"
 
 #include "Core/Engine.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Loggers.h"
 #include "Renderer/RendererManager.h"
 #include "Window/WindowManager.h"

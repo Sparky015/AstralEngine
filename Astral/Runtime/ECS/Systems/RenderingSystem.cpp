@@ -8,7 +8,7 @@
 #include "Scenes/SceneManager.h"
 #include "Asset/AssetManager.h"
 #include "Core/Engine.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "ECS/Components/SpriteComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "Window/Window.h"

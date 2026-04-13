@@ -1,2 +1,2 @@
-add_subdirectory(Library)
+add_subdirectory(Library/Profiler)
 add_subdirectory(App)

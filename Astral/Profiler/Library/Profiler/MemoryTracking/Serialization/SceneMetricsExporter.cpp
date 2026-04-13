@@ -7,7 +7,7 @@
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Loggers.h"
 #include "SceneMetricsExporter.h"
-#include "MemoryTracking/MemoryTracker.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
 
 #include <chrono>
 #include <filesystem>

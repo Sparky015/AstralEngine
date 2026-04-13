@@ -2,7 +2,7 @@
 // Created by Andrew Fagan on 11/30/24.
 //
 
-#include "MemoryTracking/MallocFreeOverrides.h"
+#include "Profiler/MemoryTracking/MallocFreeOverrides.h"
 
 #define STBI_MALLOC(size) Astral::TrackingMalloc(size, Astral::ASSETS)
 #define STBI_REALLOC(ptr, size) Astral::TrackingRealloc(ptr, size, Astral::ASSETS)

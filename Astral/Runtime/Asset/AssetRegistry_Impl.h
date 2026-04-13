@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Core/Engine.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Asserts.h"
 
 namespace Astral {

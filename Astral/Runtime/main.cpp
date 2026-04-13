@@ -1,7 +1,7 @@
 #include "Core/Engine.h"
 #include "Debug/EngineDebugInfoLogger.h"
 #include "Core/Utilities/Loggers.h"
-#include "MemoryTracking/MemoryTracker.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
 
 int main()
 {

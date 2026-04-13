@@ -6,7 +6,7 @@
 
 #include "SettingsPanel.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Editor/Components/Settings/AssetStatsComponents.h"
 #include "Editor/Components/Settings/BuildConfigComponents.h"
 #include "Editor/Components/Settings/ECSComponents.h"

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "MemoryTracking/MemoryMetrics.h"
+#include "Profiler/MemoryTracking/MemoryMetrics.h"
 
 namespace Astral {
 

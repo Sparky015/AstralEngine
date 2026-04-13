@@ -8,7 +8,7 @@
 
 #include "Core/Time/DeltaTime.h"
 #include "Core/SmartPointers.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 
 namespace Application {
 

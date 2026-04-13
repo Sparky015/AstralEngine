@@ -5,7 +5,7 @@
 #include "ScopeProfiler.h"
 
 #include "ProfilerLogFile.h"
-#include "MemoryTracking/MemoryTracker.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
 
 namespace Astral::Macros {
 

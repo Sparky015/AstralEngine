@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "MemoryTracking/MemoryMetrics.h"
+#include "Profiler/MemoryTracking/MemoryMetrics.h"
 #include "MemoryMetricsSnapshot.h"
 
 #include "Core/Time/Clock.h"

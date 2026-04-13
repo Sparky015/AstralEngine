@@ -6,7 +6,7 @@
 
 #include "EventBus.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 
 namespace Astral {
 

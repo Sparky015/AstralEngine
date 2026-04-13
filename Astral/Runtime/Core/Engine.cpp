@@ -6,8 +6,8 @@
 #include "Engine.h"
 
 #include "ApplicationModule.h"
-#include "MemoryTracking/MemoryTracker.h"
-#include "MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Scenes/SceneManager.h"

@@ -7,7 +7,7 @@
 #include "EnvironmentMapLoader.h"
 
 #include "Core/Containers/Bitmap.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Renderer/Common/EnvironmentMap.h"
 
 #include "stb_image.h"

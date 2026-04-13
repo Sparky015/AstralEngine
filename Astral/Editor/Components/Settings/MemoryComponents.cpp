@@ -4,7 +4,7 @@
 
 #include "MemoryComponents.h"
 
-#include "MemoryTracking/MemoryTracker.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
 
 #include <imgui.h>
 #include <string_view>

@@ -7,7 +7,7 @@
 #include "VulkanRendererContext.h"
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"

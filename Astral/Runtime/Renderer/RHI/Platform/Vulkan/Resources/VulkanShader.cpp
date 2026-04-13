@@ -6,7 +6,7 @@
 
 #include "VulkanShader.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Error.h"
 

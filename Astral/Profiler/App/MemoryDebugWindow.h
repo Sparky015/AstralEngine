@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Debug/MemoryTracking/Serialization/SceneMetricsStorage.h"
-#include "Debug/MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsStorage.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
 
 #include <filesystem>
 

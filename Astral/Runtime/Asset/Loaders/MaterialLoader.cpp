@@ -13,7 +13,7 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/Common/Material.h"
 #include "Renderer/RendererManager.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 #include "yaml-cpp/yaml.h"

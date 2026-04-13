@@ -7,7 +7,7 @@
 #include "VulkanSwapchain.h"
 
 #include "VulkanRenderTarget.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"

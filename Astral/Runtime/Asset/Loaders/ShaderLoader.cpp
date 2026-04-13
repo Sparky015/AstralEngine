@@ -6,7 +6,7 @@
 
 #include "ShaderLoader.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Resources/Shader.h"
 

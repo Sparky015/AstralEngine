@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "MemoryTracking/AllocationData.h"
-#include "MemoryTracking/NoTrackingSTLAllocator.h"
-#include "MemoryTracking/MemoryMetrics.h"
+#include "Profiler/MemoryTracking/AllocationData.h"
+#include "Profiler/MemoryTracking/NoTrackingSTLAllocator.h"
+#include "Profiler/MemoryTracking/MemoryMetrics.h"
 
 #include <vector>
 

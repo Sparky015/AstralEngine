@@ -6,7 +6,7 @@
 
 #include "MeshLoader.h"
 
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Loggers.h"
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/RHI/Resources/IndexBuffer.h"

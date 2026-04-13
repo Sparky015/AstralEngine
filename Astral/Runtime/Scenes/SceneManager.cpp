@@ -5,7 +5,7 @@
 #include "SceneManager.h"
 
 #include "../ECS/ECS.h"
-#include "Instrumentation/ScopeProfiler.h"
+#include "Profiler/Instrumentation/ScopeProfiler.h"
 #include "Core/Utilities/Loggers.h"
 #include "../ECS/Systems/RenderingSystem.h"
 
