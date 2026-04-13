@@ -35,13 +35,15 @@ namespace Astral {
 
     void ProfilerApp::Init()
     {
-        Engine::Get().GetImGuiManager().EnableViewportDockSpace();
-        // imguiManager.LoadImGuiConfigFile(std::string(ASTRAL_EDITOR_SOURCE_DIR) + "imgui-editor-config.ini");
-        m_RenderImGuiListener.StartListening();
+        ImGuiManager& imguiManager = Engine::Get().GetImGuiManager();
+        imguiManager.EnableViewportDockSpace();
+        imguiManager.LoadImGuiConfigFile(std::string(ASTRAL_PROFILER_APP_SOURCE_DIR) + "/imgui-profiler-config.ini");
 
         Astral::Window& window = Astral::Engine::Get().GetWindowManager().GetWindow();
         window.SetWindowName("Astral Profiler");
         window.SetWindowDimensions(1600, 900);
+
+        m_RenderImGuiListener.StartListening();
     }
 
 

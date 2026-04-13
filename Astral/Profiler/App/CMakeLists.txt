@@ -87,3 +87,4 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
 endif()
 
 target_compile_definitions(AstralProfilerApp PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")
+target_compile_definitions(AstralProfilerApp PUBLIC -DASTRAL_PROFILER_APP_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
