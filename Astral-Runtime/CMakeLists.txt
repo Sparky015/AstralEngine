@@ -258,6 +258,10 @@ set(ENGINE_SOURCE
         Renderer/DrawList.cpp
         Renderer/DrawList.h
         Renderer/RHI/Common/BufferUsageFlags.h
+        Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
+        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
+        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
 )
 
 set(VULKAN_RHI_FILES

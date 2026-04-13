@@ -12,13 +12,11 @@
 #include "Renderer/RHI/Common/ImageSubResourceRange.h"
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
 #include "Renderer/RHI/Common/SampleCount.h"
-
-#include "imgui/imgui.h"
-
-#include <string>
-#include <filesystem>
-
 #include "Renderer/RHI/Common/SamplerSettings.h"
+
+#include <filesystem>
+#include "imgui/imgui.h"
+#include <string>
 
 namespace Astral {
 
