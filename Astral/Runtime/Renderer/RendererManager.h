@@ -39,11 +39,6 @@ namespace Astral {
 
     private:
 
-        /**
-         * @brief Loads commonly used renderer assets
-         */
-        void LoadRendererAssets();
-
         GraphicsOwnedPtr<RenderingContext> m_RenderContext;
     };
 

@@ -33,7 +33,6 @@ namespace Astral {
         m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
 
-        LoadRendererAssets();
         SceneRenderer::Init();
     }
 
@@ -51,39 +50,6 @@ namespace Astral {
     RenderingContext& RendererManager::GetContext()
     {
         return *m_RenderContext;
-    }
-
-
-    void RendererManager::LoadRendererAssets()
-    {
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        // Materials
-        registry.CreateAsset<Material>("Materials/MissingMaterial.astmat");
-
-        // Meshs
-        registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-
-        // Shaders
-        registry.CreateAsset<Shader>("Shaders/Mesh_Position_UV.vert");
-        registry.CreateAsset<Shader>("Shaders/Mesh_Position_Normals_UV.vert");
-        registry.CreateAsset<Shader>("Shaders/SampleImage.frag");
-        registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
-
-
-        // Textures
-        registry.CreateAsset<Texture>("Textures/MissingTexture.png");
-        registry.CreateAsset<Texture>("Textures/SolidBlack.png");
-        registry.CreateAsset<Texture>("Textures/SolidWhite.png");
-
-        // Demo Models
-        // registry.RegisterAsset<Mesh>("Models/WaterBendingGauntlet.fbx");
-        // registry.RegisterAsset<Material>("Models/WaterBendingGauntlet.astmat");
-
-
-        // Cubemap Mesh
-        registry.CreateAsset<Mesh>("Meshes/Cube.obj");
-
     }
 
 }
