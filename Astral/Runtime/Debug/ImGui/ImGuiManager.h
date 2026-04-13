@@ -5,7 +5,6 @@
 #pragma once
 
 #include "Core/SystemManager.h"
-#include "Window/WindowEvents.h"
 
 #include <string>
 
@@ -19,7 +18,6 @@ namespace Astral{
 
         void Init() override;
         void Shutdown() override;
-        void RenderImGui() override;
 
         void BeginFrame();
         void EndFrame();
@@ -35,19 +33,15 @@ namespace Astral{
 
     private:
 
-
         void InitImGui() const;
         void ShutdownImGui() const;
 
-        void OnKeyPress(KeyPressedEvent keyPressedEvent);
 
         static float m_Time;
         bool m_ShowDebugMenu{true};
         bool m_ShowViewportDockSpace{false};
 
         std::vector<std::string> m_LoadedConfigs;
-
-        Astral::EventListener<KeyPressedEvent> m_KeyPressedListener;
     };
 
 }

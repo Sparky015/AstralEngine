@@ -16,6 +16,7 @@
 #include "Panels/EnvironmentPanel.h"
 #include "Panels/MaterialEditorPanel.h"
 #include "Panels/PropertiesPanel.h"
+#include "Panels/SettingsPanel.h"
 
 namespace Astral {
 
@@ -54,6 +55,7 @@ namespace Astral {
         EnvironmentPanel();
         MaterialEditorPanel::Show();
         CameraControllerComponent();
+        SettingsPanel::Show();
     }
 
 }

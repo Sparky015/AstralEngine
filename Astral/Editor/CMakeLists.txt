@@ -16,7 +16,9 @@ add_executable(AstralEditor EditorModule.cpp
         Utilities/AssetFileHelpers.cpp
         Components/ExternalSceneBreakdownConfigComponent.cpp
         Panels/MaterialEditorPanel.cpp
-        Components/CameraController.cpp)
+        Components/CameraController.cpp
+        Panels/SettingsPanel.cpp
+        Panels/SettingsPanel.h)
 
 target_link_libraries(AstralEditor AstralEngine)
 target_link_libraries(AstralEditor ImGui)
