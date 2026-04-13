@@ -26,12 +26,6 @@ namespace Astral {
         {
             ImGui::LoadIniSettingsFromDisk(configFilePath.c_str());
         }
-
-        if (m_LoadedConfigs.size() == 0)
-        {
-            LoadImGuiConfigFile(std::string(ASTRAL_RUNTIME_DIR) + "Debug/ImGui/imgui-config.ini");
-        }
-
     }
 
 
