@@ -11,15 +11,15 @@
 
 namespace Astral {
 
-    IndexBufferHandle IndexBuffer::CreateIndexBuffer(uint32* indices, uint32 count, GPUMemoryType memoryType)
+    IndexBufferHandle IndexBuffer::CreateIndexBuffer(uint32* indexData, uint32 count, GPUMemoryType memoryType)
     {
         Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
 
         switch (RendererCommands::GetAPI())
         {
-            case API::Vulkan: return device.CreateIndexBuffer(indices, count * sizeof(uint32));
+            case API::Vulkan: return device.CreateIndexBuffer(indexData, count * sizeof(uint32), memoryType);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateIndexBuffer(indexData, count * sizeof(uint32), memoryType);
             default: AE_ERROR("Invalid Renderer API");
         }
     }

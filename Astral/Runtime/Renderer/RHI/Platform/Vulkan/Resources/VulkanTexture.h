@@ -11,6 +11,7 @@
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 #include "VulkanBuffer.h"
+#include "VulkanDevice.h"
 
 #include <vulkan/vulkan_core.h>
 

@@ -63,42 +63,6 @@ namespace Astral {
     }
 
 
-    std::string_view VulkanRenderingContext::GetGraphicsProcessorName()
-    {
-        return m_PhysicalDevices.SelectedDevice().deviceProperties.deviceName;
-    }
-
-
-    std::string_view VulkanRenderingContext::GetGPUVendor()
-    {
-        switch (m_PhysicalDevices.SelectedDevice().deviceProperties.vendorID)
-        {
-            case 0x1002: return "AMD";
-            case 0x10DE: return "NVIDIA";
-            case 0x106B: return "Apple";
-            case 0x8086: return "Intel";
-            case 0x13B5: return "ARM";
-            case 0x5143: return "Imagination Technologies";
-            case 0x1AD0: return "Google";
-            case 0x1AE0: return "Samsung";
-            case 0x1217: return "Qualcomm";
-            default: return "Unknown";
-        }
-
-    }
-
-
-    std::string_view VulkanRenderingContext::GetRenderingAPI()
-    {
-        static uint32 vulkanAPIVersion = m_PhysicalDevices.SelectedDevice().deviceProperties.apiVersion;
-        static char buffer[39] = "Vulkan ";
-        snprintf(buffer + 7, sizeof(buffer) - 7, "%d.%d.%d", VK_API_VERSION_MAJOR(vulkanAPIVersion),
-                                                                       VK_API_VERSION_MINOR(vulkanAPIVersion),
-                                                                       VK_API_VERSION_PATCH(vulkanAPIVersion));
-        return buffer;
-    }
-
-
     void VulkanRenderingContext::CreateInstance()
     {
         PROFILE_SCOPE("VulkanRenderingContext::CreateInstance")

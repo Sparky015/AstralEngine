@@ -34,7 +34,7 @@ namespace Astral {
     void RendererAPIComponent()
     {
         Astral::RenderingContext& rendererContext = Astral::Engine::Get().GetRendererManager().GetContext();
-        ImGui::Text("Renderer API: %s", rendererContext.GetRenderingAPI().data());
+        ImGui::Text("Renderer API: %s", rendererContext.GetDevice().GetRenderingAPI().data());
     }
 
 

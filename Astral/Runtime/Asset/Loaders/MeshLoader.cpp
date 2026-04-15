@@ -141,8 +141,8 @@ namespace Astral::MeshLoader {
         float boundingSphereRadius = glm::distance(boundingSphere.Center, aabbCorner);
         boundingSphere.Radius = boundingSphereRadius;
 
-        IndexBufferHandle indexBuffer = IndexBuffer::CreateIndexBuffer(indiceData.data(), indiceData.size());
-        VertexBufferHandle vertexBuffer = VertexBuffer::CreateVertexBuffer(vertexData.data(), vertexData.size() * sizeof(float), bufferLayout);
+        IndexBufferHandle indexBuffer = IndexBuffer::CreateIndexBuffer(indiceData.data(), indiceData.size(), GPUMemoryType::DEVICE_LOCAL);
+        VertexBufferHandle vertexBuffer = VertexBuffer::CreateVertexBuffer(vertexData.data(), vertexData.size() * sizeof(float), bufferLayout, GPUMemoryType::DEVICE_LOCAL);
 
         AssetRegistry& registry = Astral::Engine::Get().GetAssetManager().GetRegistry();
         Ref<Shader> vertexShader;

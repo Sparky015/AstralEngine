@@ -181,45 +181,43 @@ namespace Astral {
     }
 
 
-    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
+    VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
         VulkanVertexBufferDesc vertexBufferDesc = {
-            .VulkanDevice = *this,
             .Device = m_Device,
-            .VerticeData = verticeData,
-            .SizeInBytes = sizeInBytes,
-            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
+            .VertexData = vertexData,
+            .DataSize = sizeInBytes,
             .BufferLayout = bufferLayout,
             .MemoryType = memoryType,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 
         return CreateGraphicsRef<VulkanVertexBuffer>(vertexBufferDesc);
     }
 
 
-    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indiceData, uint32 sizeInBytes, GPUMemoryType memoryType)
+    IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
         VulkanIndexBufferDesc indexBufferDesc = {
-            .VulkanDevice = *this,
             .Device = m_Device,
-            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .IndiceData = indiceData,
-            .SizeInBytes = sizeInBytes,
-            .MemoryType = memoryType
+            .IndexData = indexData,
+            .DataSize = sizeInBytes,
+            .MemoryType = memoryType,
+            .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties
         };
 
         return CreateGraphicsRef<VulkanIndexBuffer>(indexBufferDesc);
     }
 
 
-    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_STORAGE_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
@@ -228,14 +226,14 @@ namespace Astral {
     }
 
 
-    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size)
+    BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
-            .Usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             .Size = size,
+            .Usage = BUFFER_USAGE_UNIFORM_BUFFER,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
-            .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
@@ -411,6 +409,41 @@ namespace Astral {
         VkPhysicalDeviceProperties physicalDeviceProperties;
         vkGetPhysicalDeviceProperties(m_PhysicalDevice.physicalDevice, &physicalDeviceProperties);
         return physicalDeviceProperties.limits.maxSamplerAnisotropy;
+    }
+
+
+    std::string_view VulkanDevice::GetRenderingAPI()
+    {
+        static uint32 vulkanAPIVersion = m_PhysicalDevice.deviceProperties.apiVersion;
+        static char buffer[39] = "Vulkan ";
+        snprintf(buffer + 7, sizeof(buffer) - 7, "%d.%d.%d", VK_API_VERSION_MAJOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_MINOR(vulkanAPIVersion),
+                                                                       VK_API_VERSION_PATCH(vulkanAPIVersion));
+        return buffer;
+    }
+
+
+    std::string_view VulkanDevice::GetGPUVendor()
+    {
+        switch (m_PhysicalDevice.deviceProperties.vendorID)
+        {
+            case 0x1002: return "AMD";
+            case 0x10DE: return "NVIDIA";
+            case 0x106B: return "Apple";
+            case 0x8086: return "Intel";
+            case 0x13B5: return "ARM";
+            case 0x5143: return "Imagination Technologies";
+            case 0x1AD0: return "Google";
+            case 0x1AE0: return "Samsung";
+            case 0x1217: return "Qualcomm";
+            default: return "Unknown";
+        }
+    }
+
+
+    std::string_view VulkanDevice::GetGraphicsProcessorName()
+    {
+        return m_PhysicalDevice.deviceProperties.deviceName;
     }
 
 

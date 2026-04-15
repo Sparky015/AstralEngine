@@ -9,7 +9,8 @@
 #include "Core/FixedIntegerTypes.h"
 #include "Core/Utilities/Error.h"
 
-#include <msgpack.hpp>
+#define MSGPACK_DISABLE_LEGACY_NIL
+#include "msgpack.hpp"
 #include <thread>
 
 namespace Astral {

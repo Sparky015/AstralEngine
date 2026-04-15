@@ -11,11 +11,9 @@
 namespace Astral {
 
     VulkanVertexBuffer::VulkanVertexBuffer(const VulkanVertexBufferDesc& desc) :
-        m_Device(desc.Device),
         m_BufferLayout(desc.BufferLayout),
         m_VertexBuffer(),
-        m_SizeInBytes(desc.SizeInBytes),
-        m_VerticeData(desc.VerticeData)
+        m_DataSize(desc.DataSize)
     {
         CreateVertexBuffer(desc);
     }
@@ -23,6 +21,18 @@ namespace Astral {
 
     VulkanVertexBuffer::~VulkanVertexBuffer()
     {
+    }
+
+
+    uint32 VulkanVertexBuffer::GetSize() const
+    {
+        return m_DataSize;
+    }
+
+
+    const VertexBufferLayout& VulkanVertexBuffer::GetBufferLayout() const
+    {
+        return m_BufferLayout;
     }
 
 
@@ -44,44 +54,77 @@ namespace Astral {
     }
 
 
+    void VulkanVertexBuffer::UploadToDeviceLocalBuffer(void* data, uint32 size)
+    {
+        m_VertexBuffer.UploadToDeviceLocalBuffer(data, size);
+    }
+
+
+    void VulkanVertexBuffer::ChangeMemoryType(GPUMemoryType memoryType)
+    {
+        m_VertexBuffer.ChangeMemoryType(memoryType);
+    }
+
+
+    void* VulkanVertexBuffer::GetNativeHandle()
+    {
+        return m_VertexBuffer.GetNativeHandle();
+    }
+
+
+    VulkanVertexBuffer::VulkanVertexBuffer(VulkanVertexBuffer&& other) noexcept :
+        m_BufferLayout(std::move(other.m_BufferLayout)),
+        m_VertexBuffer(std::move(other.m_VertexBuffer)),
+        m_DataSize(other.m_DataSize)
+    {
+        other.m_DataSize = 0;
+    }
+
+    VulkanVertexBuffer& VulkanVertexBuffer::operator=(VulkanVertexBuffer&& other) noexcept
+    {
+        if (this == &other)
+        {
+            m_BufferLayout = std::move(other.m_BufferLayout);
+            m_VertexBuffer = std::move(other.m_VertexBuffer);
+            m_DataSize = other.m_DataSize;
+
+            other.m_DataSize = 0;
+        }
+
+        return *this;
+    }
+
     void VulkanVertexBuffer::CreateVertexBuffer(const VulkanVertexBufferDesc& desc)
     {
         if (desc.MemoryType == GPUMemoryType::DEVICE_LOCAL)
         {
-            VulkanBufferDesc stagingBufferDesc = {
-                .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                .Size = desc.SizeInBytes,
-                .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-            };
-            VulkanBuffer stagingBuffer = VulkanBuffer(stagingBufferDesc);
-            stagingBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
-
-
             VulkanBufferDesc vertexBufferDesc = {
-                .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                .Size = desc.SizeInBytes,
+                .Device = desc.Device,
+                .Size = desc.DataSize,
+                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
+                .MemoryType = GPUMemoryType::DEVICE_LOCAL,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
             };
 
             m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
-            m_VertexBuffer.CopyFromStagingBuffer(desc.VulkanDevice, stagingBuffer, desc.SizeInBytes);
+            m_VertexBuffer.UploadToDeviceLocalBuffer(desc.VertexData, desc.DataSize);
         }
         else if (desc.MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
             VulkanBufferDesc vertexBufferDesc = {
-                .Device = m_Device,
-                .Usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                .Size = desc.SizeInBytes,
+                .Device = desc.Device,
+                .Size = desc.DataSize,
+                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
+                .MemoryType = GPUMemoryType::HOST_VISIBLE,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
-                .RequestedMemoryPropertyFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
             };
 
             m_VertexBuffer = VulkanBuffer{vertexBufferDesc};
-            m_VertexBuffer.CopyDataToBuffer(desc.VerticeData, desc.SizeInBytes);
+            m_VertexBuffer.CopyDataToBuffer(desc.VertexData, desc.DataSize);
+        }
+        else
+        {
+            AE_ERROR("[VulkanVertexBuffer::CreateVertexBuffer] Memory type not implemented!")
         }
 
     }

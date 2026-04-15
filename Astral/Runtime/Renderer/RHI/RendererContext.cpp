@@ -10,6 +10,15 @@
 #include "Renderer/RHI/RendererCommands.h"
 #include "Window/WindowManager.h"
 
+#ifdef ASTRAL_METAL_AVAILABLE
+#include "Platform/Metal/MetalRendererContext.h"
+#endif
+
+#ifdef ASTRAL_VULKAN_AVAILABLE
+#include "Platform/Vulkan/VulkanRendererContext.h"
+#endif
+
+
 namespace Astral {
 
     UVec2 RenderingContext::GetFramebufferSize()
@@ -26,9 +35,13 @@ namespace Astral {
 
         switch (RendererCommands::GetAPI())
         {
+#ifdef ASTRAL_VULKAN_AVAILABLE
             case API::Vulkan: return new VulkanRenderingContext((GLFWwindow*)nativeWindow);
+#endif
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+#ifdef ASTRAL_METAL_AVAILABLE
+            case API::Metal: return new MetalRenderingContext((GLFWwindow*)nativeWindow);
+#endif
             case API::None: AE_ERROR("No Rendering API was set!");
             default: AE_ERROR("Invalid Rendering API");
         }
