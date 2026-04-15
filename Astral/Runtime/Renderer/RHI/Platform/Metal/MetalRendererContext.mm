@@ -6,7 +6,7 @@
 
 #include "MetalRendererContext.h"
 
-#include "Debug/Utilities/Asserts.h"
+#include "Core/Utilities/Asserts.h"
 #include "Resources/MetalDevice.h"
 
 #define GLFW_EXPOSE_NATIVE_COCOA

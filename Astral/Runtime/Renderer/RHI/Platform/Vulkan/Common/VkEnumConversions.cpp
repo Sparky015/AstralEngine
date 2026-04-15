@@ -6,7 +6,7 @@
 
 #include "VkEnumConversions.h"
 
-#include "Debug/Utilities/Error.h"
+#include "Core/Utilities/Error.h"
 
 namespace Astral {
     VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat)

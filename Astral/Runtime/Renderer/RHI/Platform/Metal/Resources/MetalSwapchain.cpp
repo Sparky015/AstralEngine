@@ -6,7 +6,7 @@
 
 #include "MetalSwapchain.h"
 
-#include "Debug/Utilities/Asserts.h"
+#include "Core/Utilities/Asserts.h"
 
 namespace Astral {
 

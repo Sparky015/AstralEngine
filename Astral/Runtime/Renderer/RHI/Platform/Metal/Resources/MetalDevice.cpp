@@ -6,7 +6,7 @@
 
 #include "MetalDevice.h"
 
-#include "Debug/Utilities/Asserts.h"
+#include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
 #include "MetalIndexBuffer.h"
 #include "MetalSwapchain.h"

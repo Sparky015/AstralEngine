@@ -6,8 +6,8 @@
 
 #include "MetalBuffer.h"
 
-#include "Debug/Utilities/Asserts.h"
-#include "Debug/Utilities/Loggers.h"
+#include "Core/Utilities/Asserts.h"
+#include "Core/Utilities/Loggers.h"
 #include "Renderer/RHI/RendererAPI.h"
 
 #include "Metal/MTLBlitCommandEncoder.hpp"
