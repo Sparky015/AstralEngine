@@ -8,6 +8,8 @@
 
 namespace Astral {
 
-
+    void WindowsCreateProcess(const char* filePath, char* const* argv, char* const* envp)
+    {
+    }
 
 }

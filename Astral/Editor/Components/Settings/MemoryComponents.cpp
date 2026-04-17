@@ -327,7 +327,7 @@ namespace Astral {
         if (ImGui::Button("Open Profiler"))
         {
             char* argv[] = {(char*)"AstralProfiler", nullptr};
-            CreateProcess("./AstralProfiler", argv, nullptr);
+            CreateChildProcess("./AstralProfiler", argv, nullptr);
         }
     }
 

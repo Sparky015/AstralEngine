@@ -1,4 +1,4 @@
-add_library(AstralCore
+set(CORE_SOURCE
     Containers/Bitmap.h
     Containers/Bitmap_Impl.h
     Containers/DirectedGraph.cpp
@@ -60,14 +60,31 @@ add_library(AstralCore
     Threading/ThreadPool.h
     Threading/ThreadPool_Impl.h
 
-        PlatformAbstraction/CreateProcess.cpp
-        PlatformAbstraction/CreateProcess.h
-        PlatformAbstraction/Platform/Unix/UnixCreateProcess.cpp
-        PlatformAbstraction/Platform/Unix/UnixCreateProcess.h
-        PlatformAbstraction/Platform/Windows/WindowsCreateProcess.cpp
-        PlatformAbstraction/Platform/Windows/WindowsCreateProcess.h
+    PlatformAbstraction/CreateProcess.cpp
+    PlatformAbstraction/CreateProcess.h
 )
 
+set(UNIX_PLATFORM_FILES
+    PlatformAbstraction/Platform/Unix/UnixCreateProcess.cpp
+    PlatformAbstraction/Platform/Unix/UnixCreateProcess.h
+)
+
+if (APPLE)
+    list(APPEND CORE_SOURCE ${WINDOWS_PLATFORM_FILES})
+endif()
+
+
+set(WINDOWS_PLATFORM_FILES
+    PlatformAbstraction/Platform/Windows/WindowsCreateProcess.cpp
+    PlatformAbstraction/Platform/Windows/WindowsCreateProcess.h
+)
+
+if (WIN32)
+    list(APPEND CORE_SOURCE ${WINDOWS_PLATFORM_FILES})
+endif()
+
+
+add_library(AstralCore ${CORE_SOURCE})
 
 # Flags for just the Astral Engine and all libraries and executables that link to it
 if (APPLE)

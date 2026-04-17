@@ -9,6 +9,7 @@
 #include "FixedIntegerTypes.h"
 
 #include <iostream>
+#include <chrono>
 
 namespace Astral::Macros {
 

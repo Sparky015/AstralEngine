@@ -36,8 +36,8 @@ namespace Astral {
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override; // TODO
         VertexBufferHandle CreateVertexBuffer(void* verticeData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override; // TODO
         IndexBufferHandle CreateIndexBuffer(uint32* indices, uint32 sizeInBytes, GPUMemoryType memoryType) override; // TODO
-        BufferHandle CreateStorageBuffer(void* data, uint32 size) override; // TODO
-        BufferHandle CreateUniformBuffer(void* data, uint32 size) override; // TODO
+        BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
+        BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
         DescriptorSetHandle CreateDescriptorSet() override; // TODO
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override; // TODO

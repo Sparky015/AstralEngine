@@ -8,6 +8,6 @@
 
 namespace Astral {
 
-    void CreateProcess(const char* filePath, char* const* argv, char* const* envp);
+    void CreateChildProcess(const char* filePath, char* const* argv, char* const* envp);
 
 }

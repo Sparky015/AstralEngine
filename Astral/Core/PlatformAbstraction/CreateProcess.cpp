@@ -15,7 +15,7 @@
 #endif
 
 
-void Astral::CreateProcess(const char* filePath, char* const* argv, char* const* envp)
+void Astral::CreateChildProcess(const char* filePath, char* const* argv, char* const* envp)
 {
 #ifdef ASTRAL_PLATFORM_MACOS
     UnixCreateProcess(filePath, argv, envp);

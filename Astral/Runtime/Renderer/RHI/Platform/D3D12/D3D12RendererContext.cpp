@@ -6,7 +6,7 @@
 
 #include "D3D12RendererContext.h"
 
-#include "Debug/Utilities/Asserts.h"
+#include "Core/Utilities/Asserts.h"
 #include "Resources/D3D12Device.h"
 
 
