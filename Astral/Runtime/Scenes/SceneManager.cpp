@@ -36,8 +36,6 @@ namespace Astral {
         m_Scenes["Engine:\\BaseScene.fbx"] = CreateScopedPtr<Scene>(scene);
         m_ActiveScene = m_Scenes["Engine:\\BaseScene.fbx"].get();;
         m_ActiveSceneExists = true;
-
-        m_UpdateListener.StartListening();
     }
 
 
@@ -52,7 +50,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneManager::Shutdown");
         AE_TRACE("Shutting down Scene Manager!")
-        m_UpdateListener.StopListening();
         GetECS().Shutdown();
         m_Scenes.clear();
     }

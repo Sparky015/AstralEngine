@@ -37,7 +37,7 @@ namespace Astral {
         m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
         m_RendererManager(CreateScopedPtr<RendererManager>()),
         m_AssetManager(CreateScopedPtr<AssetManager>()),
-        m_ECSManager(CreateScopedPtr<SceneManager>()),
+        m_SceneManager(CreateScopedPtr<SceneManager>()),
         m_JobManager(CreateScopedPtr<JobManager>())
     {
         PROFILE_SCOPE("Engine::Engine");
@@ -53,7 +53,7 @@ namespace Astral {
         m_RendererManager->Init();
         m_AssetManager->InitAssetLoaderDefaults();
         InputState::Init();
-        m_ECSManager->Init();
+        m_SceneManager->Init();
         m_JobManager->Init();
         m_ApplicationModule->Init();
 
@@ -75,8 +75,8 @@ namespace Astral {
         m_ApplicationModule->Shutdown();
         m_JobManager->Shutdown();
         m_JobManager.reset();
-        m_ECSManager->Shutdown();
-        m_ECSManager.reset();
+        m_SceneManager->Shutdown();
+        m_SceneManager.reset();
         InputState::Shutdown();
         m_AssetManager->Shutdown();
         m_AssetManager.reset();
@@ -96,7 +96,6 @@ namespace Astral {
         PROFILE_SCOPE("Engine::Run");
 
         Astral::DeltaTime m_DeltaTime;
-        Astral::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
         Astral::EventPublisher<NewFrameEvent> newFramePublisher;
         Astral::EventPublisher<RenderImGuiEvent> renderImGuiPublisher;
         Astral::EventListener<WindowClosedEvent> windowClosedListener{
@@ -116,11 +115,18 @@ namespace Astral {
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
+            // Render ImGui UI
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();
 
-            subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+            // Update systems
+            m_WindowManager->Update();
+            m_ImGuiManager->Update();
+            m_AssetManager->Update();
+            m_RendererManager->Update();
+            m_SceneManager->Update();
+            m_JobManager->Update();
             m_ApplicationModule->Update(m_DeltaTime);
 
 

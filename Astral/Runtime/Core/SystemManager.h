@@ -21,6 +21,5 @@ public:
 
 protected:
 
-    Astral::EventListener<SubSystemUpdateEvent> m_UpdateListener;
     Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

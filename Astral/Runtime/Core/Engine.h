@@ -33,7 +33,7 @@ namespace Astral {
        static inline Engine& Get() { return *m_Instance; }
 
         WindowManager& GetWindowManager() { return *m_WindowManager; }
-        SceneManager& GetSceneManager() { return *m_ECSManager; }
+        SceneManager& GetSceneManager() { return *m_SceneManager; }
         Astral::ImGuiManager& GetImGuiManager() { return *m_ImGuiManager; }
         RendererManager& GetRendererManager() { return *m_RendererManager; }
         AssetManager& GetAssetManager() { return *m_AssetManager; }
@@ -55,7 +55,7 @@ namespace Astral {
         ScopedPtr<Astral::ImGuiManager> m_ImGuiManager;
         ScopedPtr<RendererManager> m_RendererManager;
         ScopedPtr<AssetManager> m_AssetManager;
-        ScopedPtr<SceneManager> m_ECSManager;
+        ScopedPtr<SceneManager> m_SceneManager;
         ScopedPtr<JobManager> m_JobManager;
     };
 
