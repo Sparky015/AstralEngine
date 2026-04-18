@@ -31,13 +31,7 @@ namespace Astral {
          * @param sceneDescription The description of the scene to render
          * @post   @ref EndScene is called to close object submission
          */
-        static void BeginScene(const SceneDescription& sceneDescription);
-
-        /**
-         * @brief Marks the end of scene object submission to renderer
-         * @pre   @ref BeginScene is called first to initialize object submission
-         */
-        static void EndScene();
+        static void BeginSceneSubmission(const SceneDescription& sceneDescription);
 
         /**
          * @brief Submits an object to the renderer
@@ -46,6 +40,18 @@ namespace Astral {
          * @param transform The model transform of the object
          */
         static void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
+
+        /**
+         * @brief Marks the end of scene object submission to renderer
+         * @pre   @ref BeginScene is called first to initialize object submission
+         */
+        static void EndSceneSubmission();
+
+        /**
+         * @brief Renders submitted objects
+         * @pre   @ref EndSceneSubmission is called first to end object submission
+         */
+        static void RenderScene();
 
         /**
          * @brief Updates the renderer settings with the given renderer settings

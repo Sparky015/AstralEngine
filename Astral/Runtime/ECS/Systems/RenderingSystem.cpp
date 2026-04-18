@@ -23,9 +23,9 @@
 
 namespace Astral {
 
-    void RenderingSystem::RenderEntities()
+    void RenderingSystem::SubmitEntitiesToRenderer()
     {
-        PROFILE_SCOPE("RenderingSystem::RenderEntities");
+        PROFILE_SCOPE("RenderingSystem::SubmitEntitiesToRenderer");
 
         Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
 
@@ -41,12 +41,12 @@ namespace Astral {
         };
 
 
-        SceneRenderer::BeginScene(sceneDescription);
+        SceneRenderer::BeginSceneSubmission(sceneDescription);
 
         SubmitMeshComponents();
         SubmitSpriteComponents();
 
-        SceneRenderer::EndScene();
+        SceneRenderer::EndSceneSubmission();
     }
 
 

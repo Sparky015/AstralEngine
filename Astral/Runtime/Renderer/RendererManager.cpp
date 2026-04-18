@@ -37,6 +37,12 @@ namespace Astral {
     }
 
 
+    void RendererManager::Update()
+    {
+        SceneRenderer::RenderScene();
+    }
+
+
     void RendererManager::Shutdown()
     {
         PROFILE_SCOPE("RendererManager::Shutdown");

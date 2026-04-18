@@ -17,7 +17,7 @@ namespace Astral {
     {
     public:
 
-        static void RenderEntities();
+        static void SubmitEntitiesToRenderer();
 
     private:
 

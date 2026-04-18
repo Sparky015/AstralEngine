@@ -42,7 +42,7 @@ namespace Astral {
     void SceneManager::Update()
     {
         PROFILE_SCOPE("SceneManager::Update");
-        RenderingSystem::RenderEntities();
+        RenderingSystem::SubmitEntitiesToRenderer();
     }
 
 

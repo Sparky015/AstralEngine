@@ -46,13 +46,7 @@ namespace Astral {
          * @param sceneDescription The description of the scene to render
          * @post   @ref EndScene is called to close object submission
          */
-        void BeginScene(const SceneDescription& sceneDescription);
-
-        /**
-         * @brief Marks the end of scene object submission to renderer
-         * @pre   @ref BeginScene is called first to initialize object submission
-         */
-        void EndScene();
+        void BeginSceneSubmission(const SceneDescription& sceneDescription);
 
         /**
          * @brief Submits an object to the renderer
@@ -61,6 +55,18 @@ namespace Astral {
          * @param transform The model transform of the object
          */
         void Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform);
+
+        /**
+         * @brief Marks the end of scene object submission to renderer
+         * @pre   @ref BeginScene is called first to initialize object submission
+         */
+        void EndSceneSubmission();
+
+        /**
+         * @brief Renders submitted objects
+         * @pre   @ref EndSceneSubmission is called first to end object submission
+         */
+        void RenderScene();
 
         /**
          * @brief Updates the renderer settings with the given renderer settings
@@ -149,8 +155,6 @@ namespace Astral {
         void BuildRenderGraphForForward();
         void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
-
-        void RenderScene();
 
         void ResizeWindowImages(uint32 width, uint32 height);
         void SetVSync(bool isVSyncEnabled);

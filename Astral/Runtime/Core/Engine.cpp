@@ -126,12 +126,11 @@ namespace Astral {
             m_WindowManager->Update();
             m_ImGuiManager->Update();
             m_AssetManager->Update();
-            m_RendererManager->Update();
             m_SceneManager->Update();
             m_JobManager->Update();
             m_ApplicationModule->Update(m_DeltaTime);
 
-
+            m_RendererManager->Update();
             m_WindowManager->SwapBuffers();
 
             m_FrameCount++;

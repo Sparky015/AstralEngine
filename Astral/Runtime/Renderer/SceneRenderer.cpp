@@ -33,21 +33,27 @@ namespace Astral {
     }
 
 
-    void SceneRenderer::BeginScene(const SceneDescription& sceneDescription)
+    void SceneRenderer::BeginSceneSubmission(const SceneDescription& sceneDescription)
     {
-        m_Renderer->BeginScene(sceneDescription);
-    }
-
-
-    void SceneRenderer::EndScene()
-    {
-        m_Renderer->EndScene();
+        m_Renderer->BeginSceneSubmission(sceneDescription);
     }
 
 
     void SceneRenderer::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         m_Renderer->Submit(mesh, material, transform);
+    }
+
+
+    void SceneRenderer::EndSceneSubmission()
+    {
+        m_Renderer->EndSceneSubmission();
+    }
+
+
+    void SceneRenderer::RenderScene()
+    {
+        m_Renderer->RenderScene();
     }
 
 
