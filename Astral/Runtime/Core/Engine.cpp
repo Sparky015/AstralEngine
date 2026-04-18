@@ -115,10 +115,12 @@ namespace Astral {
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
+
             // Render ImGui UI
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();
+
 
             // Update systems
             m_WindowManager->Update();

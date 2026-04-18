@@ -13,9 +13,22 @@ void SystemManager::Update()
 
 }
 
+
 void SystemManager::RenderImGui()
 {
 
+}
+
+
+void SystemManager::EnableImGuiRenderingCallback()
+{
+    m_RenderImGuiListener.StartListening();
+}
+
+
+void SystemManager::DisableImGuiRenderingCallback()
+{
+    m_RenderImGuiListener.StopListening();
 }
 
 

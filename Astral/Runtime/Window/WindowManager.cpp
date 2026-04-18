@@ -47,7 +47,6 @@ namespace Astral{
     void WindowManager::Shutdown()
     {
         AE_TRACE("Shutting down Window Manager!")
-        m_RenderImGuiListener.StopListening();
         m_Window->Shutdown();
     }
 

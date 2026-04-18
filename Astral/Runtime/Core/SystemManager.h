@@ -21,5 +21,10 @@ public:
 
 protected:
 
+    void EnableImGuiRenderingCallback();
+    void DisableImGuiRenderingCallback();
+
+private:
+
     Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };
