@@ -10,6 +10,13 @@
 
 namespace Astral {
 
+    MemoryTracker& MemoryTracker::Get()
+    {
+        static MemoryTracker instance = MemoryTracker();
+        return instance;
+    }
+
+
     void MemoryTracker::Init()
     {
 #ifndef ASTRAL_DISABLE_MEMORY_TRACKING
@@ -115,6 +122,13 @@ namespace Astral {
     bool MemoryTracker::IsTrackingEnabled()
     {
         return m_IsTrackingEnabled;
+    }
+
+
+    const MemoryMetrics& MemoryTracker::GetMemoryMetrics() const
+    {
+        std::shared_lock lock(m_Mutex);
+        return m_MemoryMetrics;
     }
 
 
