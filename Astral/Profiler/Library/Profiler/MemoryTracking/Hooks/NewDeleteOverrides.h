@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "MemoryMetrics.h"
+#include "../MemoryMetrics.h"
 
 /**@brief Redefines the new operator to track memory usages and allocations
  * @throws bad_alloc if std::malloc returns nullptr */

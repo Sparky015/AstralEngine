@@ -27,7 +27,7 @@ namespace Astral {
         /**
          * @brief Gets the singleton instance of the MemoryTracker
          */
-        inline static MemoryTracker& Get();
+        static MemoryTracker& Get();
 
         /**
          * @brief Initializes the MemoryTracker.
