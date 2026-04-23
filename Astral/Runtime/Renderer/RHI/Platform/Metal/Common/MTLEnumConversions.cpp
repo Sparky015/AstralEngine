@@ -355,5 +355,30 @@ namespace Astral {
 
     }
 
+
+    MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode)
+    {
+        switch (samplerAddressMode)
+        {
+            case SamplerAddressMode::REPEAT:                return MTL::SamplerAddressModeRepeat;
+            case SamplerAddressMode::MIRRORED_REPEAT:       return MTL::SamplerAddressModeMirrorRepeat;
+            case SamplerAddressMode::CLAMP_TO_EDGE:         return MTL::SamplerAddressModeClampToEdge;
+            case SamplerAddressMode::CLAMP_TO_BORDER:       return MTL::SamplerAddressModeClampToBorderColor;
+            case SamplerAddressMode::MIRROR_CLAMP_TO_EDGE:  return MTL::SamplerAddressModeMirrorClampToEdge;
+            default: AE_ERROR("Unsupported SamplerAddressMode given!")
+        }
+    }
+
+
+    MTL::SamplerMinMagFilter ConvertSamplerFilterToMTLMinMagFilter(SamplerFilter samplerFilter)
+    {
+        switch (samplerFilter)
+        {
+            case SamplerFilter::NEAREST: return MTL::SamplerMinMagFilterNearest;
+            case SamplerFilter::LINEAR: return MTL::SamplerMinMagFilterLinear;
+            default: AE_ERROR("Unsupported SamplerFilter given!")
+        }
+    }
+
 }
 

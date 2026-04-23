@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include "Metal/MTLDevice.hpp"
 #include "Renderer/RHI/Resources/Texture.h"
+
+#include "Metal/MTLDevice.hpp"
+#include "Metal/MTLSampler.hpp"
 
 namespace Astral {
 
@@ -153,8 +155,35 @@ namespace Astral {
          */
         void DestroyTexture();
 
+        /**
+         * @brief Creates the MTL::SamplerState object
+         * @param desc The texture desc including sampler flags for the texture
+         */
+        void CreateSampler(const MetalTextureDesc& desc);
+
+        /**
+         * @brief Releases the MTL::SamplerState object
+         */
+        void DestroySampler();
+
+        // TODO: Handle data upload to host visible and device local textures
 
         MTL::Texture* m_Texture;
+        MTL::SamplerState* m_Sampler;
+
+        uint32 m_Width;
+        uint32 m_Height;
+        ImageFormat m_ImageFormat;
+        ImageLayout m_ImageLayout;
+        ImageUsageFlags m_ImageUsageFlags;
+        uint32 m_NumLayers;
+        uint32 m_NumMipLevels;
+        TextureType m_TextureType;
+
+        SampleCount m_MSAASampleCount;
+        SamplerFilter m_SamplerFilter;
+        SamplerAddressMode m_SamplerAddressMode;
+        bool m_IsAnisotropyEnabled;
     };
 
 }

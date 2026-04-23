@@ -188,31 +188,33 @@ namespace Astral {
 
     bool MetalDevice::IsAnisotropySupported()
     {
-        return false;
+        return true; // Universal available based on gpu family feature set for Metal 4;
     }
 
 
     float MetalDevice::GetMaxAnisotropySupported()
     {
-        return 0;
+        return 16; // Universal limit based on gpu family feature set for Metal 4;
     }
 
 
     std::string_view MetalDevice::GetRenderingAPI()
     {
-
+        return "Metal 4";
     }
 
 
     std::string_view MetalDevice::GetGPUVendor()
     {
-
+        return "Apple";
     }
 
 
     std::string_view MetalDevice::GetGraphicsProcessorName()
     {
-
+        static char buffer[64];
+        snprintf(buffer, sizeof(buffer), "%s", m_Device->name()->cString(NS::ASCIIStringEncoding));
+        return buffer;
     }
 
 
@@ -231,6 +233,11 @@ namespace Astral {
     void MetalDevice::CreateDevice()
     {
         m_Device = MTL::CreateSystemDefaultDevice();
+
+        if (!m_Device->supportsFamily(MTL::GPUFamilyMetal4))
+        {
+            AE_ERROR("This device does not support Metal 4!")
+        }
     }
 
 
@@ -246,7 +253,7 @@ namespace Astral {
     GraphicsOwnedPtr<Swapchain> MetalDevice::CreateSwapchain(uint32 numberOfImages)
     {
         MetalSwapchainDesc metalSwapchainDesc = {
-
+            .CAMetalLayer = m_CAMetalLayer
         };
 
         return CreateGraphicsOwnedPtr<MetalSwapchain>(metalSwapchainDesc);
