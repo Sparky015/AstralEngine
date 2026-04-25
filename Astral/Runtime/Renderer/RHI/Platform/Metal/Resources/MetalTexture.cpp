@@ -121,7 +121,15 @@ namespace Astral {
         MTL::TextureDescriptor* textureDescriptor = MTL::TextureDescriptor::alloc();
         ASSERT(textureDescriptor, "MTL::TextureDescriptor failed to be allocated by Metal!")
 
-        // textureDescriptor->setResourceOptions(); TODO: Handle different memory types
+        MTL::ResourceOptions resourceOptions = MTL::ResourceOptions();
+        switch (m_MemoryType)
+        {
+            case GPUMemoryType::DEVICE_LOCAL: resourceOptions |= MTL::ResourceStorageModePrivate; break;
+            case GPUMemoryType::HOST_VISIBLE: resourceOptions |= MTL::ResourceStorageModeShared; break;
+            default: AE_ERROR("[MetalBuffer::CreateBuffer] Given memory type is not implemented!")
+        }
+        
+        textureDescriptor->setResourceOptions(resourceOptions);
 
         textureDescriptor->setPixelFormat(ConvertImageFormatToMTLPixelFormat(desc.ImageFormat));
         textureDescriptor->setUsage(ConvertImageUsageToMTLTextureUsage(desc.ImageUsageFlags));

@@ -21,6 +21,7 @@ namespace Astral {
         MTL::Device* Device;
         unsigned char* ImageData;
         uint32 ImageDataLength;
+        GPUMemoryType MemoryType;
         ImageFormat ImageFormat;
         ImageUsageFlags ImageUsageFlags;
         uint32 ImageWidth;
@@ -179,6 +180,7 @@ namespace Astral {
         uint32 m_NumLayers;
         uint32 m_NumMipLevels;
         TextureType m_TextureType;
+        GPUMemoryType m_MemoryType;
 
         SampleCount m_MSAASampleCount;
         SamplerFilter m_SamplerFilter;
