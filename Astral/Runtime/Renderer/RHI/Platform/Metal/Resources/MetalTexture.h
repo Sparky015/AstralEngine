@@ -143,6 +143,11 @@ namespace Astral {
          */
         void* GetNativeImageView(uint32 layer, uint32 mipLevel) override;
 
+        MetalTexture(const MetalTexture&) = delete;
+        MetalTexture& operator=(const MetalTexture&) = delete;
+        MetalTexture(MetalTexture&& other) noexcept;
+        MetalTexture& operator=(MetalTexture&& other) noexcept;
+
     private:
 
         /**
@@ -169,6 +174,7 @@ namespace Astral {
 
         // TODO: Handle data upload to host visible and device local textures
 
+        MTL::Device* m_Device;
         MTL::Texture* m_Texture;
         MTL::SamplerState* m_Sampler;
 

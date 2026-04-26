@@ -12,7 +12,8 @@
 
 namespace Astral {
 
-    MetalTexture::MetalTexture(const MetalTextureDesc& desc)
+    MetalTexture::MetalTexture(const MetalTextureDesc& desc) :
+        m_Device(desc.Device)
     {
         ASSERT(desc.Device, "The device passed to MetalTexture::MetalTexture cannot be nullptr!");
 
@@ -113,6 +114,98 @@ namespace Astral {
     void* MetalTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
     {
 
+    }
+
+
+    MetalTexture::MetalTexture(MetalTexture&& other) noexcept :
+        m_Device(other.m_Device),
+        m_Texture(other.m_Texture),
+        m_Sampler(other.m_Sampler),
+
+        m_Width(other.m_Width),
+        m_Height(other.m_Height),
+        m_ImageFormat(other.m_ImageFormat),
+        m_ImageLayout(other.m_ImageLayout),
+        m_ImageUsageFlags(other.m_ImageUsageFlags),
+        m_NumLayers(other.m_NumLayers),
+        m_NumMipLevels(other.m_NumMipLevels),
+        m_TextureType(other.m_TextureType),
+        m_MemoryType(other.m_MemoryType),
+
+        m_MSAASampleCount(other.m_MSAASampleCount),
+        m_SamplerFilter(other.m_SamplerFilter),
+        m_SamplerAddressMode(other.m_SamplerAddressMode),
+        m_IsAnisotropyEnabled(other.m_IsAnisotropyEnabled)
+    {
+        other.m_Device = nullptr;
+        other.m_Texture = nullptr;
+        other.m_Sampler = nullptr;
+
+        other.m_Width = 0;
+        other.m_Height = 0;
+        other.m_ImageFormat = ImageFormat::UNDEFINED;
+        other.m_ImageLayout = ImageLayout::UNDEFINED;
+        other.m_ImageUsageFlags = 0;
+        other.m_NumLayers = 0;
+        other.m_NumMipLevels = 0;
+        other.m_TextureType = TextureType::IMAGE_1D;
+        other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+        other.m_MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+        other.m_SamplerFilter = SamplerFilter::LINEAR;
+        other.m_SamplerAddressMode = SamplerAddressMode::REPEAT;
+        other.m_IsAnisotropyEnabled = false;
+    }
+
+
+    MetalTexture& MetalTexture::operator=(MetalTexture&& other) noexcept
+    {
+        if (this != &other)
+        {
+            DestroyTexture(); // Clean up old texture and sampler if one exists
+            DestroySampler();
+
+            m_Device = other.m_Device;
+            m_Texture = other.m_Texture;
+            m_Sampler = other.m_Sampler;
+
+            m_Width = other.m_Width;
+            m_Height = other.m_Height;
+            m_ImageFormat = other.m_ImageFormat;
+            m_ImageLayout = other.m_ImageLayout;
+            m_ImageUsageFlags = other.m_ImageUsageFlags;
+            m_NumLayers = other.m_NumLayers;
+            m_NumMipLevels = other.m_NumMipLevels;
+            m_TextureType = other.m_TextureType;
+            m_MemoryType = other.m_MemoryType;
+
+            m_MSAASampleCount = other.m_MSAASampleCount;
+            m_SamplerFilter = other.m_SamplerFilter;
+            m_SamplerAddressMode = other.m_SamplerAddressMode;
+            m_IsAnisotropyEnabled = other.m_IsAnisotropyEnabled;
+
+
+            other.m_Device = nullptr;
+            other.m_Texture = nullptr;
+            other.m_Sampler = nullptr;
+
+            other.m_Width = 0;
+            other.m_Height = 0;
+            other.m_ImageFormat = ImageFormat::UNDEFINED;
+            other.m_ImageLayout = ImageLayout::UNDEFINED;
+            other.m_ImageUsageFlags = 0;
+            other.m_NumLayers = 0;
+            other.m_NumMipLevels = 0;
+            other.m_TextureType = TextureType::IMAGE_1D;
+            other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+            other.m_MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+            other.m_SamplerFilter = SamplerFilter::LINEAR;
+            other.m_SamplerAddressMode = SamplerAddressMode::REPEAT;
+            other.m_IsAnisotropyEnabled = false;
+        }
+
+        return *this;
     }
 
 
