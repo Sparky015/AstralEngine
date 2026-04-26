@@ -90,67 +90,6 @@ namespace Astral {
         virtual ImageLayout GetLayout() = 0;
 
         /**
-         * @brief Updates the layout of the texture to the specified layout
-         * @param imageLayout The image layout to update the texture to
-         */
-        virtual void UpdateLayout(ImageLayout imageLayout) = 0;
-
-        /**
-         * @brief Copies data to this texture
-         * @param data The address of the data to copy to the texture
-         * @param size The size of the data to copy to this texture
-         * @note This is only supported by host visible textures. This does not support uploading to a device local texture.
-         */
-        virtual void CopyDataToTexture(void* data, uint32 size) = 0;
-
-        /**
-         * @brief Uploads the given data to this texture
-         * @param data The address of the data to copy to the texture
-         * @param size The size of the data to upload to this texture
-         * @note This is only supported by device local textures. This does not support copying to a host visible texture.
-         * @warning This forces a blocking wait while the GPU transfers the data.
-         */
-        virtual void UploadToDeviceLocalTextureBlocking(void* data, uint32 size) = 0;
-
-        /**
-         * @brief Uploads the given data to this device local texture asynchronously
-         * @param commandBuffer The command buffer to record blit commands into
-         * @param data The address of the data to copy to the texture
-         * @param size The size of the data to upload to this texture
-         * @note This is only supported by device local textures. This does not support copying to a host visible texture.
-         */
-        virtual void UploadToDeviceLocalTextureAsync(const CommandBufferHandle& commandBuffer, void* data, uint32 size) = 0;
-
-        /**
-         * @brief Changes the memory type used by this texture to the requested type
-         * @param memoryType The memory type to change the texture to
-         * @warning This forces a blocking wait while the GPU transfers the data between CPU to GPU or GPU to CPU memory
-         */
-        virtual void ChangeMemoryTypeBlocking(GPUMemoryType memoryType) = 0;
-
-        /**
-         * @brief Changes the memory type used by this texture to the requested type
-         * @param commandBuffer The command buffer to record blit commands into
-         * @param memoryType The memory type to change the texture to
-         */
-        virtual void ChangeMemoryTypeAsync(const CommandBufferHandle& commandBuffer, GPUMemoryType memoryType) = 0;
-
-        /**
-         * @brief Resizes the texture to new dimensions
-         * @param width The new width of the texture
-         * @param height The new height of the texture
-         * @warning This forces a blocking wait while the GPU transfers the data between CPU to GPU or GPU to CPU memory
-         */
-        virtual void ResizeTextureBlocking(uint32 width, uint32 height) = 0;
-
-        /**
-         * @brief Resizes the texture to new dimensions asynchronously
-         * @param width The new width of the texture
-         * @param height The new height of the texture
-         */
-        virtual void ResizeTextureAsync(const CommandBufferHandle& commandBuffer, uint32 width, uint32 height) = 0;
-
-        /**
          * @brief  Gets the image format of the texture
          * @return The image format of the texture
          */
