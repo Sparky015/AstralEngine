@@ -238,6 +238,130 @@ namespace Astral {
     }
 
 
+    VulkanTexture::VulkanTexture(VulkanTexture&& other) noexcept :
+        m_Device(other.m_Device),
+        m_Image(other.m_Image),
+        m_Sampler(other.m_Sampler),
+
+        m_ImageView(other.m_ImageView),
+        m_LayerImageViews(std::move(other.m_LayerImageViews)),
+        m_LayerMipImageViews(std::move(other.m_LayerMipImageViews)),
+
+        m_ImageWidth(other.m_ImageWidth),
+        m_ImageHeight(other.m_ImageHeight),
+        m_ImageDepth(other.m_ImageDepth),
+
+        m_Format(other.m_Format),
+        m_CurrentLayout(other.m_CurrentLayout),
+        m_ImageUsageFlags(other.m_ImageUsageFlags),
+        m_ImageAspect(other.m_ImageAspect),
+        m_IsSwapchainOwned(other.m_IsSwapchainOwned),
+
+        m_NumLayers(other.m_NumLayers),
+        m_NumMipLevels(other.m_NumMipLevels),
+        m_TextureType(other.m_TextureType),
+        m_MemoryType(other.m_MemoryType),
+
+        m_ImageMemory(other.m_ImageMemory),
+        m_AllocationSize(other.m_AllocationSize)
+    {
+        other.m_Device = nullptr;
+        other.m_Image = nullptr;
+        other.m_Sampler = nullptr;
+
+        other.m_ImageView = nullptr;
+
+        other.m_ImageWidth = 0;
+        other.m_ImageHeight = 0;
+        other.m_ImageDepth = 0;
+
+        other.m_Format = VK_FORMAT_UNDEFINED;
+        other.m_CurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        other.m_ImageUsageFlags = 0;
+        other.m_ImageAspect = 0;
+        other.m_IsSwapchainOwned = false;
+
+        other.m_NumLayers = 0;
+        other.m_NumMipLevels = 0;
+        other.m_TextureType = TextureType::IMAGE_1D;
+        other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+        other.m_ImageMemory = nullptr;
+        other.m_AllocationSize = 0;
+    }
+
+
+    VulkanTexture& VulkanTexture::operator=(VulkanTexture&& other) noexcept
+    {
+        if (this != &other)
+        {
+            // Clean up old texture, allocation, sampler and image views if they exists
+            DestroyImageSampler();
+
+            if (!m_IsSwapchainOwned)
+            {
+                DestroyImageView();
+                DestroyTexture();
+                FreeTextureMemory();
+            }
+
+
+            m_Device = other.m_Device;
+            m_Image = other.m_Image;
+            m_Sampler = other.m_Sampler;
+
+            m_ImageView = other.m_ImageView;
+            m_LayerImageViews = std::move(other.m_LayerImageViews);
+            m_LayerMipImageViews = std::move(other.m_LayerMipImageViews);
+
+            m_ImageWidth = other.m_ImageWidth;
+            m_ImageHeight = other.m_ImageHeight;
+            m_ImageDepth = other.m_ImageDepth;
+
+            m_Format = other.m_Format;
+            m_CurrentLayout = other.m_CurrentLayout;
+            m_ImageUsageFlags = other.m_ImageUsageFlags;
+            m_ImageAspect = other.m_ImageAspect;
+            m_IsSwapchainOwned = other.m_IsSwapchainOwned;
+
+            m_NumLayers = other.m_NumLayers;
+            m_NumMipLevels = other.m_NumMipLevels;
+            m_TextureType = other.m_TextureType;
+            m_MemoryType = other.m_MemoryType;
+
+            m_ImageMemory = other.m_ImageMemory;
+            m_AllocationSize = other.m_AllocationSize;
+
+
+            other.m_Device = nullptr;
+            other.m_Image = nullptr;
+            other.m_Sampler = nullptr;
+
+            other.m_ImageView = nullptr;
+
+            other.m_ImageWidth = 0;
+            other.m_ImageHeight = 0;
+            other.m_ImageDepth = 0;
+
+            other.m_Format = VK_FORMAT_UNDEFINED;
+            other.m_CurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            other.m_ImageUsageFlags = 0;
+            other.m_ImageAspect = 0;
+            other.m_IsSwapchainOwned = false;
+
+            other.m_NumLayers = 0;
+            other.m_NumMipLevels = 0;
+            other.m_TextureType = TextureType::IMAGE_1D;
+            other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+            other.m_ImageMemory = nullptr;
+            other.m_AllocationSize = 0;
+        }
+
+        return *this;
+    }
+
+
     void VulkanTexture::CreateTexture(const VulkanTextureDesc& desc)
     {
     	m_ImageUsageFlags |= desc.ImageUsageFlags;

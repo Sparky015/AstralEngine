@@ -156,6 +156,11 @@ namespace Astral {
          */
         void* GetNativeImageView() override { return m_ImageView; }
 
+        VulkanTexture(const VulkanTexture&) = delete;
+        VulkanTexture& operator=(const VulkanTexture&) = delete;
+        VulkanTexture(VulkanTexture&& other) noexcept;
+        VulkanTexture& operator=(VulkanTexture&& other) noexcept;
+
     private:
 
         /**
@@ -228,29 +233,33 @@ namespace Astral {
 
 
         VulkanDevice* m_DeviceManager;
-        VkDevice m_Device;
-        VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
-        uint32 m_ImageWidth;
-        uint32 m_ImageHeight;
-        uint32 m_ImageDepth;
-        VkFormat m_Format;
-        VkImageLayout m_CurrentLayout;
 
+        VkDevice m_Device;
         VkImage m_Image;
-        VkDeviceMemory m_ImageMemory;
-        uint32 m_AllocationSize;
+        VkSampler m_Sampler;
+
         VkImageView m_ImageView;
-        ImageUsageFlags m_ImageUsageFlags;
         std::vector<VkImageView> m_LayerImageViews; // All layer image views are at mip 0
         std::map<std::pair<uint32, uint32>, VkImageView> m_LayerMipImageViews;
 
-        VkSampler m_Sampler;
+        uint32 m_ImageWidth;
+        uint32 m_ImageHeight;
+        uint32 m_ImageDepth;
+
+        VkFormat m_Format;
+        VkImageLayout m_CurrentLayout;
+        ImageUsageFlags m_ImageUsageFlags;
         ImageAspectFlags m_ImageAspect;
+        bool m_IsSwapchainOwned;
+
         uint32 m_NumLayers;
         uint32 m_NumMipLevels;
         TextureType m_TextureType;
+        GPUMemoryType m_MemoryType;
 
-        bool m_IsSwapchainOwned;
+        VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
+        VkDeviceMemory m_ImageMemory;
+        uint32 m_AllocationSize;
     };
 
 }
