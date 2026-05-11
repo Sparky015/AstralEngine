@@ -172,6 +172,24 @@ namespace Astral {
          */
         void DestroySampler();
 
+        /**
+         * @brief Uploads texture data on initial construction
+         */
+        void UploadTextureData(void* data, uint32 length);
+
+        /**
+         * @brief Copies texture data from a staging buffer to private memory
+         * @param stagingBuffer The staging buffer to copy from
+         * @param length The length of data to copy
+         * @note This is only for private memory
+         */
+        void CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 length);
+
+        /**
+         * @brief Generates mip maps using image blits
+         */
+        void GenerateMipMaps();
+
         // TODO: Handle data upload to host visible and device local textures
 
         MTL::Device* m_Device;
