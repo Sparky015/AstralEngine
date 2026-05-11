@@ -101,19 +101,19 @@ namespace Astral {
 
     void* MetalTexture::GetNativeLayerImageView(uint32 layer)
     {
-
+        return m_Texture;
     }
 
 
     void* MetalTexture::GetNativeMipMapImageView(uint32 mipLevel)
     {
-
+        return m_Texture;
     }
 
 
     void* MetalTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
     {
-
+        return m_Texture;
     }
 
 
