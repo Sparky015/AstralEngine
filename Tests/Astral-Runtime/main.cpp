@@ -6,7 +6,7 @@
 
 #include "Core/Engine.h"
 #include "Debug/MemoryTracking/MemoryTracker.h"
-#include "Debug/Utilities/Loggers.h"
+#include "Core/Utilities/Loggers.h"
 #include "gtest/gtest.h"
 
 

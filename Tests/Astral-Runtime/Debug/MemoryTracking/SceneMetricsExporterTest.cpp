@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Debug/MemoryTracking/Serialization/SceneMetricsExporter.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsExporter.h"
 
 class SceneMetricsAccumulatorTest : public ::testing::Test
 {
