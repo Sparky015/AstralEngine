@@ -10,6 +10,7 @@
 
 #include "Metal/MTLDevice.hpp"
 #include "Metal/MTLSampler.hpp"
+#include "Metal/MTLBlitCommandEncoder.hpp"
 
 namespace Astral {
 
@@ -173,24 +174,35 @@ namespace Astral {
         void DestroySampler();
 
         /**
+         * @brief Initializes texture data and generates mipmaps (if enabled)
+         */
+        void InitializeTextureData(const MetalTextureDesc& desc);
+
+        /**
          * @brief Uploads texture data on initial construction
          */
-        void UploadTextureData(void* data, uint32 length);
+        void UploadToPrivateTextureMemory(MTL::BlitCommandEncoder* blitEncoder, void* data, uint32 length);
+
+        /**
+         * @brief Copies data to shared texture memory on initial construction
+         */
+        void CopyToSharedTextureMemory(void* data, uint32 length);
 
         /**
          * @brief Copies texture data from a staging buffer to private memory
+         * @param blitEncoder
          * @param stagingBuffer The staging buffer to copy from
          * @param length The length of data to copy
          * @note This is only for private memory
          */
-        void CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 length);
+        void CopyFromStagingBuffer(MTL::BlitCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length);
 
         /**
-         * @brief Generates mip maps using image blits
+         * @brief Generates mip maps for texture
+         * @param blitEncoder The blit encoder to use when generating mip maps
          */
-        void GenerateMipMaps();
+        void GenerateMipMaps(MTL::BlitCommandEncoder* blitEncoder);
 
-        // TODO: Handle data upload to host visible and device local textures
 
         MTL::Device* m_Device;
         MTL::Texture* m_Texture;

@@ -23,12 +23,7 @@ namespace Astral {
         ASSERT(desc.Device, "The device passed to MetalTexture::MetalTexture cannot be nullptr!");
 
         CreateTexture(desc);
-        UploadTextureData(desc.ImageData, desc.ImageDataLength);
-
-        if (desc.GenerateMipMaps)
-        {
-            GenerateMipMaps();
-        }
+        InitializeTextureData(desc);
     }
 
 
@@ -291,58 +286,81 @@ namespace Astral {
     }
 
 
-    void MetalTexture::UploadTextureData(void* data, uint32 length)
+    void MetalTexture::InitializeTextureData(const MetalTextureDesc& desc)
     {
         if (m_MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
-            void* textureMemory = m_Texture->buffer()->contents();
-            memcpy(textureMemory, data, length);
+            CopyToSharedTextureMemory(desc.ImageData, desc.ImageDataLength);
         }
-        else if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL)
-        {
-            MetalBufferDesc bufferDesc = {
-                .Device = m_Device,
-                .Size = length,
-                .MemoryType = GPUMemoryType::HOST_VISIBLE,
-            };
 
-            MetalBuffer stagingBuffer = MetalBuffer{bufferDesc};
-            stagingBuffer.CopyDataToBuffer(data, length);
-
-            CopyFromStagingBuffer(stagingBuffer, length);
-        }
-        else
+        // Allocates a shared command buffer if a staging buffer copy or/and mip map generation is needed
+        if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL || desc.GenerateMipMaps)
         {
-            AE_ERROR("Unsupported memory type!")
+            CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
+            MTL::CommandBuffer* commandBuffer = (MTL::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+
+            commandBufferHandle->BeginRecording();
+            MTL::BlitCommandEncoder* blitEncoder = commandBuffer->blitCommandEncoder();
+
+            if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                UploadToPrivateTextureMemory(blitEncoder, desc.ImageData, desc.ImageDataLength);
+            }
+
+            if (desc.GenerateMipMaps)
+            {
+                GenerateMipMaps(blitEncoder);
+            }
+
+            blitEncoder->endEncoding();
+            commandBufferHandle->EndRecording();
+
+            CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
+            commandQueueHandle->SubmitSync(commandBufferHandle);
+            commandQueueHandle->WaitIdle();
         }
     }
 
 
-    void MetalTexture::CopyFromStagingBuffer(Buffer& stagingBuffer, uint32 length)
+    void MetalTexture::UploadToPrivateTextureMemory(MTL::BlitCommandEncoder* blitEncoder, void* data, uint32 length)
+    {
+        MetalBufferDesc bufferDesc = {
+            .Device = m_Device,
+            .Size = length,
+            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+        };
+
+        MetalBuffer stagingBuffer = MetalBuffer{bufferDesc};
+        stagingBuffer.CopyDataToBuffer(data, length);
+
+        CopyFromStagingBuffer(blitEncoder, stagingBuffer, length);
+    }
+
+
+    void MetalTexture::CopyToSharedTextureMemory(void* data, uint32 length)
+    {
+        void* textureMemory = m_Texture->buffer()->contents();
+        memcpy(textureMemory, data, length);
+    }
+
+
+    void MetalTexture::CopyFromStagingBuffer(MTL::BlitCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length)
     {
         ASSERT(length <= stagingBuffer.GetAllocatedSize(), "Data does not fit in buffer!")
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
-
-        CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
-        MTL::CommandBuffer* commandBuffer = (MTL::CommandBuffer*)commandBufferHandle->GetNativeHandle();
-
-        commandBufferHandle->BeginRecording();
-        MTL::BlitCommandEncoder* blitEncoder = commandBuffer->blitCommandEncoder();
-
         blitEncoder->copyFromBuffer(metalStagingBuffer, 0, m_Texture->buffer(), 0, length);
-
-        blitEncoder->endEncoding();
-        commandBufferHandle->EndRecording();
-
-        CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
-        commandQueueHandle->SubmitSync(commandBufferHandle);
-        commandQueueHandle->WaitIdle();
     }
 
 
-    void MetalTexture::GenerateMipMaps()
+    void MetalTexture::GenerateMipMaps(MTL::BlitCommandEncoder* blitEncoder)
     {
+        if (!RendererAPI::GetDevice().IsBlitSupportedByFormat(m_ImageFormat))
+        {
+            AE_WARN("Texture format does not support blit command needed to generate mip maps!")
+            return;
+        }
 
+        blitEncoder->generateMipmaps(m_Texture);
     }
 
 }
