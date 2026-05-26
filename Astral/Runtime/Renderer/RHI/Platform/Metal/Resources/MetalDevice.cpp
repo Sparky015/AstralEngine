@@ -9,6 +9,7 @@
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
 #include "MetalIndexBuffer.h"
+#include "MetalShader.h"
 #include "MetalSwapchain.h"
 #include "MetalVertexBuffer.h"
 
@@ -73,7 +74,12 @@ namespace Astral {
 
     ShaderHandle MetalDevice::CreateShader(const ShaderSource& shaderSource)
     {
-        return nullptr;
+        MetalShaderDesc shaderDesc = {
+            .Device = m_Device,
+            .ShaderSource = shaderSource,
+        };
+
+        return CreateGraphicsRef<MetalShader>(shaderDesc);
     }
 
 

@@ -18,6 +18,9 @@ namespace Astral {
         const ShaderSource& ShaderSource;
     };
 
+    /**
+     * @brief Defines a Metal RHI shader module object
+     */
     class MetalShader : public Shader
     {
     public:
@@ -29,7 +32,34 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Converts HLSL/GLSL source code into MSL
+         */
+        void ConvertShaderToMSL(const ShaderSource& shaderSource);
 
+        /**
+         * @brief Compiles Metal Shading Language (MSL) source code into Metal IR
+         */
+        void CompileShaderLibrary(const std::string& MSLSourceCode);
+
+        /**
+         * @brief Releases the shader library from memory
+         */
+        void ReleaseShaderLibrary();
+
+        /**
+         * @brief Creates the entry point function object
+         */
+        void CreateFunctionEntry();
+
+        /**
+         * @brief Destroys the entry point function object
+         */
+        void DestroyFunctionEntry();
+
+
+        MTL::Library* m_Library;
+        MTL::Function* m_Function;
     };
 
 }
