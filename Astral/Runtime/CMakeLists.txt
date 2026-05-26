@@ -148,6 +148,22 @@ set(ENGINE_SOURCE
         Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
         Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
         Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
+        Renderer/RHI/Platform/Metal/Resources/MetalShader.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalShader.h
+        Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.h
+        Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.h
+        Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.h
+        Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.h
+        Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.h
+        Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
+        Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
+        Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
 )
 
 set(VULKAN_RHI_FILES
