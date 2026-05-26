@@ -85,10 +85,10 @@ namespace Astral {
             return;
         }
 
-        if (m_BoundPipeline && pipeline->GetHandleHandle() == m_BoundPipeline->GetHandleHandle()) { return; } // Prevent redundant pipeline bind call
+        if (m_BoundPipeline && pipeline->GetNativeHandle() == m_BoundPipeline->GetNativeHandle()) { return; } // Prevent redundant pipeline bind call
         if (m_BoundPipeline && pipeline->GetDescriptorSetLayout() != m_BoundPipeline->GetDescriptorSetLayout()) { m_BoundDescriptorSets.clear(); }
 
-        VkPipeline vkPipeline = (VkPipeline)pipeline->GetHandleHandle();
+        VkPipeline vkPipeline = (VkPipeline)pipeline->GetNativeHandle();
         VkPipelineBindPoint bindPoint = pipeline->GetPipelineType() == PipelineType::GRAPHICS ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
         vkCmdBindPipeline(m_CommandBuffer, bindPoint, vkPipeline);
         m_BoundPipeline = pipeline;

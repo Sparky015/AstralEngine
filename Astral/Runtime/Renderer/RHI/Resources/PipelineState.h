@@ -50,7 +50,7 @@ namespace Astral {
         virtual PipelineType GetPipelineType() = 0;
         virtual const std::vector<DescriptorSetLayout>& GetDescriptorSetLayout() const = 0;
         virtual void* GetPipelineLayout() = 0;
-        virtual void* GetHandleHandle() = 0;
+        virtual void* GetNativeHandle() = 0;
     };
 
     using PipelineStateHandle = GraphicsRef<PipelineState>;

@@ -30,7 +30,7 @@ namespace Astral {
         PipelineType GetPipelineType() override { return PipelineType::COMPUTE; }
         const std::vector<DescriptorSetLayout>& GetDescriptorSetLayout() const override { return m_DescriptorSetLayout; }
         void* GetPipelineLayout() override {return m_PipelineLayout; }
-        void* GetHandleHandle() override { return m_Pipeline; }
+        void* GetNativeHandle() override { return m_Pipeline; }
 
     private:
 
