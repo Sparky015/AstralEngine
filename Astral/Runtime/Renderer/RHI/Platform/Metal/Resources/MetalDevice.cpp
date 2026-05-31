@@ -10,6 +10,7 @@
 #include "MetalBuffer.h"
 #include "MetalDescriptorSet.h"
 #include "MetalIndexBuffer.h"
+#include "MetalRenderPass.h"
 #include "MetalShader.h"
 #include "MetalSwapchain.h"
 #include "MetalVertexBuffer.h"
@@ -63,7 +64,11 @@ namespace Astral {
 
     RenderPassHandle MetalDevice::CreateRenderPass()
     {
-        return nullptr;
+        MetalRenderPassDesc renderPassDesc = {
+            .Device = m_Device,
+        };
+
+        return CreateGraphicsRef<MetalRenderPass>(renderPassDesc);
     }
 
 

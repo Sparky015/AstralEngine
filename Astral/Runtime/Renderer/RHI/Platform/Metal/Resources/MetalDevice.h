@@ -30,7 +30,13 @@ namespace Astral {
         CommandBufferHandle AllocateCommandBuffer() override; // TODO
         CommandQueueHandle GetPrimaryCommandQueue() override; // TODO
         CommandQueueHandle GetAsyncCommandQueue() override; // TODO
-        RenderPassHandle CreateRenderPass() override; // TODO
+
+        /**
+         * @brief Creates an empty render pass object
+         * @return The created empty render pass object
+         */
+        RenderPassHandle CreateRenderPass() override;
+
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override; // TODO
 
         /**
@@ -47,8 +53,8 @@ namespace Astral {
         BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
 
         /**
-         * @brief Creates a descriptor set object
-         * @return The created descriptor set object
+         * @brief Creates an empty descriptor set object
+         * @return The created empty descriptor set object
          */
         DescriptorSetHandle CreateDescriptorSet() override;
 
