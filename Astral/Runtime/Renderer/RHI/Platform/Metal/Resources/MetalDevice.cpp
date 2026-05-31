@@ -8,6 +8,7 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
+#include "MetalDescriptorSet.h"
 #include "MetalIndexBuffer.h"
 #include "MetalShader.h"
 #include "MetalSwapchain.h"
@@ -152,7 +153,12 @@ namespace Astral {
 
     DescriptorSetHandle MetalDevice::CreateDescriptorSet()
     {
-        return nullptr;
+        MetalDescriptorSetDesc metalDescriptorSetDesc
+        {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalDescriptorSet>(metalDescriptorSetDesc);
     }
 
 

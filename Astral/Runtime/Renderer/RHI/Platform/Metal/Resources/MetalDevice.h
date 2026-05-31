@@ -32,14 +32,26 @@ namespace Astral {
         CommandQueueHandle GetAsyncCommandQueue() override; // TODO
         RenderPassHandle CreateRenderPass() override; // TODO
         FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override; // TODO
-        ShaderHandle CreateShader(const ShaderSource& shaderSource) override; // TODO
+
+        /**
+         * @brief Creates a shader object from the shader source
+         * @param shaderSource The source code of the shader
+         * @return The shader object
+         */
+        ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
         PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) override; // TODO
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override; // TODO
         VertexBufferHandle CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override;
         IndexBufferHandle CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType) override;
         BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
         BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
-        DescriptorSetHandle CreateDescriptorSet() override; // TODO
+
+        /**
+         * @brief Creates a descriptor set object
+         * @return The created descriptor set object
+         */
+        DescriptorSetHandle CreateDescriptorSet() override;
+
         TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
         TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override; // TODO
         TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
