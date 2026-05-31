@@ -587,6 +587,29 @@ namespace Astral {
     }
 
 
+    VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp)
+    {
+        switch (loadOp)
+        {
+            case AttachmentLoadOp::LOAD:   return VK_ATTACHMENT_LOAD_OP_LOAD;
+            case AttachmentLoadOp::CLEAR:  return VK_ATTACHMENT_LOAD_OP_CLEAR;
+            case AttachmentLoadOp::DONT_CARE: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            default: AE_ERROR("Invalid Load Op Given!");
+        }
+    }
+
+
+    VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp)
+    {
+        switch (storeOp)
+        {
+            case AttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+            case AttachmentStoreOp::DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            default: AE_ERROR("Invalid Store Op Given!");
+        }
+    }
+
+
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout)
     {
         switch (imageLayout)

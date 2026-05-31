@@ -170,9 +170,6 @@ namespace Astral {
          */
         void DestroyRenderPass();
 
-        VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
-        VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
-
         /**
          * @brief Updates texture image layout metadata to the current subpass' optimal layouts
          */

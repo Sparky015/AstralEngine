@@ -41,6 +41,8 @@ namespace Astral {
     VkBufferUsageFlags ConvertBufferUsageFlagsToVkBufferUsageFlags(BufferUsageFlags bufferUsageFlags);
     VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage);
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
+    VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
+    VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
 
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);
     ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);
