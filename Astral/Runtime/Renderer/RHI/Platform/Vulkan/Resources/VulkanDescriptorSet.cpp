@@ -519,22 +519,6 @@ namespace Astral {
     }
 
 
-    VkShaderStageFlags VulkanDescriptorSet::GetVkShaderStageFromShaderStage(ShaderStage shaderStage)
-    {
-        VkShaderStageFlags stageFlags;
-
-        switch (shaderStage)
-        {
-            case ShaderStage::VERTEX: stageFlags = VK_SHADER_STAGE_VERTEX_BIT; break;
-            case ShaderStage::FRAGMENT: stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT; break;
-            case ShaderStage::COMPUTE: stageFlags = VK_SHADER_STAGE_COMPUTE_BIT; break;
-            default: stageFlags = VK_SHADER_STAGE_ALL;
-        }
-
-        return stageFlags;
-    }
-
-
     void VulkanDescriptorSet::CreateDescriptorPool()
     {
         uint32 numStorageBuffers = 0;

@@ -37,7 +37,7 @@ namespace Astral {
     VkCullModeFlags ConvertCullModeToVkCullModeFlags(CullMode cullMode);
     VkMemoryPropertyFlags ConvertMemoryPropertyFlagsToVkMemoryPropertyFlags(GPUMemoryType memoryType);
     VkBufferUsageFlags ConvertBufferUsageFlagsToVkBufferUsageFlags(BufferUsageFlags bufferUsageFlags);
-
+    VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage);
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
 
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);

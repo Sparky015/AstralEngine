@@ -550,6 +550,22 @@ namespace Astral {
     }
 
 
+    VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage)
+    {
+        VkShaderStageFlags stageFlags;
+
+        switch (shaderStage)
+        {
+            case ShaderStage::VERTEX: stageFlags = VK_SHADER_STAGE_VERTEX_BIT; break;
+            case ShaderStage::FRAGMENT: stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+            case ShaderStage::COMPUTE: stageFlags = VK_SHADER_STAGE_COMPUTE_BIT; break;
+            default: stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
+        return stageFlags;
+    }
+
+
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount)
     {
         VkSampleCountFlagBits vkSampleCount;

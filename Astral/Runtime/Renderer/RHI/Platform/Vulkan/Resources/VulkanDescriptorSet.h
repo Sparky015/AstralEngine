@@ -189,8 +189,6 @@ namespace Astral {
 
     private:
 
-        VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage);
-
         /**
          * @brief Creates a descriptor pool of size one fitted to this descriptor set
          */
