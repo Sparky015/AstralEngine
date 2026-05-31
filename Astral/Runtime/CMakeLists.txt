@@ -164,6 +164,7 @@ set(ENGINE_SOURCE
         Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
         Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
         Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
+        Renderer/RHI/Common/ShaderStage.h
 )
 
 set(VULKAN_RHI_FILES

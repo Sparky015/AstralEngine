@@ -9,6 +9,7 @@
 #include "Core/Utilities/Error.h"
 
 namespace Astral {
+
     VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat)
     {
         switch (imageFormat)

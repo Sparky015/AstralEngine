@@ -19,9 +19,11 @@
 #include "Renderer/RHI/Common/MemoryTypes.h"
 #include "Renderer/RHI/Common/PipelineRasterizerState.h"
 #include "Renderer/RHI/Common/SamplerSettings.h"
+#include "Renderer/RHI/Common/ShaderStage.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 #include <vulkan/vulkan_core.h>
+
 
 namespace Astral {
 

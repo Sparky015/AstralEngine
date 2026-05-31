@@ -7,22 +7,11 @@
 #pragma once
 
 #include "Buffer.h"
-#include "Sampler.h"
 #include "Texture.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
+#include "Renderer/RHI/Common/ShaderStage.h"
 
 namespace Astral {
-
-    /**
-     * @brief Defines shader stages
-     */
-    enum class ShaderStage : uint8
-    {
-        VERTEX,
-        FRAGMENT,
-        COMPUTE,
-        ALL
-    };
 
     /**
      * @brief Defines descriptors to use in descriptor sets
