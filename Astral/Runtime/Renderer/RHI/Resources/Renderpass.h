@@ -17,6 +17,9 @@
 
 namespace Astral {
 
+    /**
+     * @brief Defines a load operation for a render pass attachment
+     */
     enum class AttachmentLoadOp : uint8
     {
         LOAD,
@@ -25,6 +28,9 @@ namespace Astral {
         NONE
     };
 
+    /**
+     * @brief Defines a store operation for a render pass attachment
+     */
     enum class AttachmentStoreOp : uint8
     {
         STORE,
@@ -32,6 +38,9 @@ namespace Astral {
         NONE
     };
 
+    /**
+     * @brief Defines an attachment and how to use the attachment in a render pass
+     */
     struct AttachmentDescription
     {
         ImageFormat Format;
@@ -49,6 +58,9 @@ namespace Astral {
         bool operator==(const AttachmentDescription&) const = default;
     };
 
+    /**
+     * @brief Defines information needed to declare a dependency between two subpasses
+     */
     struct SubpassDependencyMasks
     {
         PipelineStageFlags SourceStageMask;
@@ -72,28 +84,129 @@ namespace Astral {
     public:
         virtual ~RenderPass() = default;
 
+        /**
+         * @brief Indicates the start of defining a render pass
+         */
         virtual void BeginBuildingRenderPass() = 0;
+
+        /**
+         * @brief Defines an attachment for this render pass
+         * @param attachmentDescription A description of an attachment
+         * @return The attachment index that can be used to reference this attachment in the render pass
+         */
         virtual AttachmentIndex DefineAttachment(const AttachmentDescription& attachmentDescription) = 0;
+
+        /**
+         * @brief Indicates the start of defining a render pass subpass
+         */
         virtual void BeginBuildingSubpass() = 0;
+
+        /**
+         * @brief Adds an input attachment to the current subpass
+         * @param attachmentIndex The attachment index of the attachment to add as an input attachment
+         * @param optimalImageLayout The image layout to use for the attachment during the render pass
+         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
+         *           is being built as well as which subpass to add this attachment too
+         */
         virtual void AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+
+        /**
+         * @brief Adds a color attachment to the current subpass
+         * @param attachmentIndex The attachment index of the attachment to add as a color attachment
+         * @param optimalImageLayout The image layout to use for the attachment during the render pass
+         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
+         *           is being built as well as which subpass to add this attachment too
+         */
         virtual void AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+
+        /**
+         * @brief Adds a resolve attachment to the current subpass
+         * @param attachmentIndex The attachment index of the attachment to add as a resolve attachment
+         * @param optimalImageLayout The image layout to use for the attachment during the render pass
+         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
+         *           is being built as well as which subpass to add this attachment too
+         */
         virtual void AddResolveAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+
+        /**
+         * @brief Adds a depth-stencil attachment to the current subpass
+         * @param attachmentIndex The attachment index of the attachment to add as a depth-stencil attachment
+         * @param optimalImageLayout The image layout to use for the attachment during the render pass
+         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
+         *           is being built as well as which subpass to add this attachment too
+         */
         virtual void AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
+
+        /**
+         * @brief Instructs the render pass to preserve an attachment if the attachment does not get read or written to for this subpass
+         * @param attachmentIndex The attachment index of the attachment to preserve
+         */
         virtual void PreserveAttachment(AttachmentIndex attachmentIndex) = 0;
+
+        /**
+         * @brief Indicates the end of building the current subpass
+         * @pre @ref BeginBuildingSubpass is called first to indicate the start of building the current subpass
+         */
         virtual SubpassIndex EndBuildingSubpass() = 0;
+
+        /**
+         * @brief Defines a subpass dependency between two subpasses
+         * @param sourceSubpass The source subpass
+         * @param destinationSubpass The destination subpass that depends on the source subpass
+         * @param subpassDependencyMasks Pipeline and access masks of the subpass dependency
+         */
         virtual void DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks) = 0;
+
+        /**
+         * @brief Indicates the end of building the render pass
+         * @pre @ref BeginBuildingRenderPass is called first to indicate the start of building the render pass
+         */
         virtual void EndBuildingRenderPass() = 0;
 
+        /**
+        * @brief Cleans up and resets an existing render pass if applicable
+        */
         virtual void Invalidate() = 0;
 
+        /**
+         * @brief Resets framebuffer texture layout metadata
+         * @param frameBufferHandle The framebuffer being used with the render pass
+         */
         virtual void BeginRenderPass(FramebufferHandle frameBufferHandle) = 0;
+
+        /**
+        * @brief Updates attachment texture layout metadata
+        */
         virtual void NextSubpass() = 0;
+
+        /**
+        * @brief Updates attachment texture layout metadata to final layouts
+        */
         virtual void EndRenderPass() = 0;
 
+        /**
+        * @brief Gets the number of subpasses in the render pass
+        * @return The number of subpasses in the render pass
+        */
         virtual uint32 GetNumberOfSubpasses() = 0;
+
+        /**
+        * @brief Gets the number of color attachments in a subpass
+        * @param subpassIndex The subpass to get the number of color attachments from
+        * @return The number of color attachments in a subpass
+        */
         virtual uint32 GetNumColorAttachments(SubpassIndex subpassIndex) = 0;
+
+        /**
+         * @brief Gets the clear colors of every attachment (that has a clear load op)
+         * @return The clear colors of every attachment (that has a clear load op)
+         */
         virtual const std::vector<Vec4>& GetClearColors() const = 0;
 
+        /**
+         * @brief Gets the native render pass object of the current RHI backend
+         * @return The native render pass object of the current RHI backend
+         */
         virtual void* GetNativeHandle() = 0;
     };
 
