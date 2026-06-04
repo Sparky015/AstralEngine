@@ -100,11 +100,12 @@ namespace Astral {
     }
 
 
-    void RenderGraph::Execute(CommandBufferHandle commandBuffer, uint32 swapchainImageIndex)
+    void RenderGraph::Execute(SharedFrameContext& sharedFrameContext, uint32 swapchainImageIndex)
     {
         PROFILE_SCOPE("RenderGraph::Execute")
 
         UpdateRenderGraphResourcesHold();
+        CommandBufferHandle& commandBuffer = sharedFrameContext.SceneCommandBuffer;
         m_ExecutionContext.CommandBuffer = commandBuffer;
 
 
@@ -120,6 +121,7 @@ namespace Astral {
 
             m_ExecutionContext.RenderPass = rhiRenderPass;
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
+            m_ExecutionContext.ViewportSize = m_ViewportDimensions;
 
             TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
 
@@ -127,7 +129,7 @@ namespace Astral {
             commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
             commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.Framebuffer);
 
-            pass.Execute();
+            pass.Execute(m_ExecutionContext, sharedFrameContext);
 
             commandBuffer->EndRenderPass();
             commandBuffer->EndLabel();

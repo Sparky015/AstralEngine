@@ -10,16 +10,19 @@
 #include "Common/Material.h"
 #include "Common/Mesh.h"
 #include "Core/Events/EventPublisher.h"
-#include "DrawList.h"
 #include "Renderer/Cameras/Camera.h"
-#include "RHI/RendererCommands.h"
-#include "RHI/Resources/Framebuffer.h"
-#include "RHI/Resources/Renderpass.h"
 #include "RHI/Resources/PipelineStateCache.h"
 #include "Window/WindowEvents.h"
 #include "Renderer/RenderGraph/RenderGraph.h"
 #include "ECS/Components/PointLightComponent.h"
 #include "Renderer/Common/SceneRendererTypes.h"
+#include "RenderPasses/CascadedShadowMapRenderPass.h"
+#include "RenderPasses/DeferredGeometryRenderPass.h"
+#include "RenderPasses/DeferredLightingRenderPass.h"
+#include "RenderPasses/DepthRenderPass.h"
+#include "RenderPasses/EnvironmentMapPass.h"
+#include "RenderPasses/ForwardLightingRenderPass.h"
+#include "RenderPasses/ToneMappingPass.h"
 
 #include <queue>
 
@@ -115,36 +118,6 @@ namespace Astral {
             uint32 NumShadowCascades;
         };
 
-
-        struct FrameContext
-        {
-            DrawList MainList;
-            DrawList ShadowMapList;
-
-            std::vector<Ref<Mesh>> ShadowMapListMeshes;
-            std::vector<Ref<Material>> ShadowMapListMaterials;
-            std::vector<Mat4> ShadowMapListTransforms;
-
-            TextureHandle OffscreenRenderTarget;
-            DescriptorSetHandle OffscreenDescriptorSet;
-
-            CommandBufferHandle SceneCommandBuffer;
-            RenderTargetHandle SceneRenderTarget;
-            BufferHandle SceneDataBuffer;
-            BufferHandle SceneLightsBuffer;
-            DescriptorSetHandle SceneDataDescriptorSet;
-
-            FramebufferHandle WindowFramebuffer;
-
-            Ref<EnvironmentMap> EnvironmentMap;
-            DescriptorSetHandle EnvironmentMapDescriptorSet;
-
-            BufferHandle ShadowLightMatrices;
-            DescriptorSetHandle ShadowLightMatricesDescriptorSet;
-
-            bool IsEnvironmentMapIBLCalculationNeeded;
-        };
-
         void BuildRenderGraphForDeferred();
         void BuildRenderGraphForForward();
         void BuildImGuiEditorRenderPass();
@@ -156,19 +129,6 @@ namespace Astral {
         void SetVSync(bool isVSyncEnabled);
 
         // Forward
-        void DepthPrePass();
-        void ForwardLightingPass();
-        void MSAAEnvironmentPass();
-
-        // Deferred
-        void GeometryPass();
-        void DeferredLightingPass();
-
-        // Both
-        void CascadedShadowMapsPass();
-        void EnvironmentMapPass();
-        void ToneMappingPass();
-
 
         void ComputeEnvironmentIBL();
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
@@ -177,16 +137,14 @@ namespace Astral {
         // Editor
         void DrawEditorUI(CommandBufferHandle commandBuffer, RenderTargetHandle renderTarget);
 
-        float CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades); // CSM Helper
         bool ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform); // Frustom Culling
 
 
         RendererSettings m_RendererSettings{};
         RenderGraph m_RenderGraph;
 
-        std::vector<FrameContext> m_FrameContexts;
+        std::vector<SharedFrameContext> m_FrameContexts;
         uint32 m_CurrentFrameIndex = -1;
-        RenderPassHandle m_MainRenderPass;
         RenderPassHandle m_ImGuiRenderPass;
         EventListener<FramebufferResizedEvent> m_WindowResizedListener{[](FramebufferResizedEvent){}};
         EventPublisher<ViewportResizedEvent> m_ViewportResizedPublisher;
@@ -194,35 +152,28 @@ namespace Astral {
         std::queue<DescriptorSetHandle> m_CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
 
         UVec2 m_ViewportSize{};
-        PipelineStateCache m_PipelineStateCache;
 
         // Deferred Geometry Pass
-        ShaderHandle m_DeferredGeometryPassUnpackedShader;
-        ShaderHandle m_DeferredGeometryPassORMShader;
+        DeferredGeometryRenderPass m_DeferredGeometryRenderPass;
 
         // Deferred Lighting Pass
-        ShaderHandle m_DeferredLightingShader;
+        DeferredLightingRenderPass m_DeferredLightingRenderPass;
 
         // Forward Lighting Pass
-        ShaderHandle m_ForwardUnpackedLightingShader;
-        ShaderHandle m_ForwardORMLightingShader;
+        ForwardLightingRenderPass m_ForwardLightingRenderPass;
 
-        // Depth Pre-Pass & Cascaded Shadow Maps
-        ShaderHandle m_DepthWriteOnlyShader;
+        // Depth Pre-Pass
+        DepthRenderPass m_DepthRenderPass;
 
         // Cascaded Shadow Maps
-        ShaderHandle m_ShadowMapShader;
+        CascadedShadowMapRenderPass m_CascadedShadowMapRenderPass;
 
         // Environment Map Pass
-        DescriptorSetHandle m_EnvironmentMapStorageImagesSet;
+        EnvironmentMapRenderPass m_EnvironmentMapRenderPass;
+        DescriptorSetHandle m_EnvironmentMapStorageImagesSet; // Write access to environment map for other passes to populate environment map data
 
         // ACES Color Transforms and Tone Mapping
-        DescriptorSetHandle m_RTT_ODT_LUT_DescriptorSet;
-
-        // Cascaded Shadow Maps Pass
-        Light m_FirstDirectionalLightInScene = {};
-        std::vector<Mat4> m_LightSpaceMatrices{};
-
+        ToneMappingRenderPass m_ToneMappingRenderPass;
 
         float m_SceneExposure{};
         Mat4 m_SceneViewProjection{};

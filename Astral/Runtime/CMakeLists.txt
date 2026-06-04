@@ -144,6 +144,21 @@ set(ENGINE_SOURCE
         Core/Hashing/Hashes.cpp
         Core/Hashing/Hashes.h
         Renderer/RHI/Common/BufferUsageFlags.h
+        Renderer/RenderPasses/RenderPassExecutionContext.h
+        Renderer/RenderPasses/CascadedShadowMapRenderPass.cpp
+        Renderer/RenderPasses/CascadedShadowMapRenderPass.h
+        Renderer/RenderPasses/EnvironmentMapPass.cpp
+        Renderer/RenderPasses/EnvironmentMapPass.h
+        Renderer/RenderPasses/DepthRenderPass.cpp
+        Renderer/RenderPasses/DepthRenderPass.h
+        Renderer/RenderPasses/ToneMappingPass.cpp
+        Renderer/RenderPasses/ToneMappingPass.h
+        Renderer/RenderPasses/DeferredGeometryRenderPass.cpp
+        Renderer/RenderPasses/DeferredGeometryRenderPass.h
+        Renderer/RenderPasses/DeferredLightingRenderPass.cpp
+        Renderer/RenderPasses/DeferredLightingRenderPass.h
+        Renderer/RenderPasses/ForwardLightingRenderPass.cpp
+        Renderer/RenderPasses/ForwardLightingRenderPass.h
 )
 
 set(VULKAN_RHI_FILES
