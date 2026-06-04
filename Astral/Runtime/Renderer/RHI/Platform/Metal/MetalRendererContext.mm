@@ -27,11 +27,13 @@ namespace Astral {
         AllocateCAMetalLayer();
         CreateDevice();
         AttachCALayerToWindow();
+        m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
     }
 
 
     void MetalRenderingContext::Shutdown()
     {
+        m_PipelineStateCache.release();
         DestroyDevice();
         ReleaseCAMetalLayer();
     }
@@ -41,6 +43,12 @@ namespace Astral {
     {
         ASSERT(m_Device, "Metal Device has not been created! Cannot retrieve null device!");
         return *m_Device;
+    }
+
+
+    PipelineStateCache& MetalRenderingContext::GetPipelineStateCache()
+    {
+        return *m_PipelineStateCache;
     }
 
 
