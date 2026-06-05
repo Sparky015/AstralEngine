@@ -35,7 +35,7 @@ namespace Astral {
         m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeWindowImages(event.Width, event.Height); }};
         m_WindowResizedListener.StartListening();
 
-        m_ViewportSize = RendererAPI::GetContext().GetFramebufferSize();
+        m_ViewportSize = RendererAPI::GetContext().GetWindowFramebufferDimensions();
         m_CurrentFrameIndex = 0;
 
 
@@ -397,7 +397,7 @@ namespace Astral {
             RendererAPI::NameObject(context.SceneDataDescriptorSet, sceneDataDescriptorSetName);
 
             context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
+            UVec2 frameBufferDimensions = renderingContext.GetWindowFramebufferDimensions();
             context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
             context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
             context.WindowFramebuffer->EndBuildingFramebuffer();

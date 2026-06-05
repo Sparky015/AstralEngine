@@ -57,7 +57,7 @@ namespace Astral {
         /**
          * @brief Gets the framebuffer size of the main application window
          */
-        UVec2 GetFramebufferSize();
+        UVec2 GetWindowFramebufferDimensions();
 
         /**
          * @brief Gets the native instance handle of the graphics API context
