@@ -66,7 +66,7 @@ namespace Astral {
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
         pipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
-        m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
+        m_CurrentViewportTexture = m_FrameContexts[1].OffscreenDescriptorSet;
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
 
@@ -278,8 +278,8 @@ namespace Astral {
 
     DescriptorSetHandle SceneRendererImpl::GetViewportTexture()
     {
-        DescriptorSetHandle& descriptorSet = m_CurrentViewportTexture.front();
-        m_CurrentViewportTexture.pop();
+        DescriptorSetHandle descriptorSet = m_CurrentViewportTexture;
+        m_CurrentViewportTexture = nullptr;
         return descriptorSet;
     }
 
@@ -489,9 +489,9 @@ namespace Astral {
 
 
         uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
-        if (m_CurrentViewportTexture.size() == 0)
+        if (m_CurrentViewportTexture == nullptr)
         {
-            m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
+            m_CurrentViewportTexture = m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet;
         }
     }
 
@@ -854,8 +854,7 @@ namespace Astral {
         }
 
         uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
-        m_CurrentViewportTexture.pop();
-        m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
+        m_CurrentViewportTexture = m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet;
 
         // Resizing Render Graph
 

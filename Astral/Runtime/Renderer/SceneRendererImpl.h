@@ -141,7 +141,7 @@ namespace Astral {
         EventListener<FramebufferResizedEvent> m_WindowResizedListener{[](FramebufferResizedEvent){}};
         EventPublisher<ViewportResizedEvent> m_ViewportResizedPublisher;
         bool m_IsSceneStarted = false;
-        std::queue<DescriptorSetHandle> m_CurrentViewportTexture; // TODO: Remove queue and just make single instance that is nullable
+        DescriptorSetHandle m_CurrentViewportTexture;
 
         UVec2 m_ViewportSize{};
 
