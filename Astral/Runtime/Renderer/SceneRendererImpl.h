@@ -4,7 +4,6 @@
 * @date 7/1/2025
 */
 
-
 #pragma once
 
 #include "Common/Material.h"
@@ -16,13 +15,8 @@
 #include "Renderer/RenderGraph/RenderGraph.h"
 #include "ECS/Components/PointLightComponent.h"
 #include "Renderer/Common/SceneRendererTypes.h"
-#include "RenderPasses/CascadedShadowMapRenderPass.h"
-#include "RenderPasses/DeferredGeometryRenderPass.h"
-#include "RenderPasses/DeferredLightingRenderPass.h"
-#include "RenderPasses/DepthRenderPass.h"
-#include "RenderPasses/EnvironmentMapPass.h"
-#include "RenderPasses/ForwardLightingRenderPass.h"
-#include "RenderPasses/ToneMappingPass.h"
+#include "RenderingPaths/DeferredRenderingPath.h"
+#include "RenderingPaths/ForwardRenderingPath.h"
 
 #include <queue>
 
@@ -94,7 +88,7 @@ namespace Astral {
          * @brief Gets the dimensions of the viewport
          * @return The dimensions of the viewport
          */
-        UVec2 GetViewportSize() { return m_ViewportSize; }
+        UVec2 GetViewportSize();
 
         /**
          * @brief Gets the renderer path being used
@@ -118,8 +112,7 @@ namespace Astral {
             uint32 NumShadowCascades;
         };
 
-        void BuildRenderGraphForDeferred();
-        void BuildRenderGraphForForward();
+        void BuildRenderGraph();
         void BuildImGuiEditorRenderPass();
         void InitializeFrameResources();
 
@@ -128,7 +121,6 @@ namespace Astral {
         void ResizeWindowImages(uint32 width, uint32 height);
         void SetVSync(bool isVSyncEnabled);
 
-        // Forward
 
         void ComputeEnvironmentIBL();
         void ComputeIrradianceMap(const CommandBufferHandle& commandBuffer);
@@ -153,31 +145,11 @@ namespace Astral {
 
         UVec2 m_ViewportSize{};
 
-        // Deferred Geometry Pass
-        DeferredGeometryRenderPass m_DeferredGeometryRenderPass;
-
-        // Deferred Lighting Pass
-        DeferredLightingRenderPass m_DeferredLightingRenderPass;
-
-        // Forward Lighting Pass
-        ForwardLightingRenderPass m_ForwardLightingRenderPass;
-
-        // Depth Pre-Pass
-        DepthRenderPass m_DepthRenderPass;
-
-        // Cascaded Shadow Maps
-        CascadedShadowMapRenderPass m_CascadedShadowMapRenderPass;
+        DeferredRenderingPath m_DeferredRendererPath{};
+        ForwardRenderingPath m_ForwardRendererPath{};
 
         // Environment Map Pass
-        EnvironmentMapRenderPass m_EnvironmentMapRenderPass;
         DescriptorSetHandle m_EnvironmentMapStorageImagesSet; // Write access to environment map for other passes to populate environment map data
-
-        // ACES Color Transforms and Tone Mapping
-        ToneMappingRenderPass m_ToneMappingRenderPass;
-
-        float m_SceneExposure{};
-        Mat4 m_SceneViewProjection{};
-        Camera m_SceneCamera;
     };
 
 }

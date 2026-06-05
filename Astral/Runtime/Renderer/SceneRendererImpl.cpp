@@ -16,23 +16,15 @@
 #include "Renderer/RHI/Resources/RenderTarget.h"
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RendererManager.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "RHI/RendererAPI.h"
-#include "RHI/Resources/CommandBuffer.h"
-#include "RHI/Resources/RenderTarget.h"
-#include "RHI/Resources/Shader.h"
-#include "Renderer/RendererManager.h"
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
-#include <glm/gtc/type_ptr.hpp>
 
 #include <future>
 #include <numeric>
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -82,31 +74,22 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         uint32 numSwapchainImages = swapchain.GetNumberOfImages();
 
-        m_DepthRenderPass.Init(numSwapchainImages);
-        m_CascadedShadowMapRenderPass.Init(numSwapchainImages);
-        m_EnvironmentMapRenderPass.Init(numSwapchainImages);
-        m_ToneMappingRenderPass.Init(numSwapchainImages);
-        m_DeferredGeometryRenderPass.Init(numSwapchainImages);
-        m_DeferredLightingRenderPass.Init(numSwapchainImages);
-        m_ForwardLightingRenderPass.Init(numSwapchainImages);
+        m_ForwardRendererPath.InitRenderPasses(numSwapchainImages);
+        m_DeferredRendererPath.InitRenderPasses(numSwapchainImages);
     }
 
 
     void SceneRendererImpl::Shutdown()
     {
         PROFILE_SCOPE("SceneRenderer::Shutdown")
+
+        m_DeferredRendererPath.ShutdownRenderPasses();
+        m_ForwardRendererPath.ShutdownRenderPasses();
+
         m_WindowResizedListener.StopListening();
 
         Device& device = RendererAPI::GetDevice();
         device.WaitIdle();
-
-        m_ForwardLightingRenderPass.Shutdown();
-        m_DeferredLightingRenderPass.Shutdown();
-        m_DeferredGeometryRenderPass.Shutdown();
-        m_ToneMappingRenderPass.Shutdown();
-        m_EnvironmentMapRenderPass.Shutdown();
-        m_CascadedShadowMapRenderPass.Shutdown();
-        m_DepthRenderPass.Shutdown();
 
         Engine::Get().GetRendererManager().GetContext().ShutdownImGuiForAPIBackend();
         m_FrameContexts.clear();
@@ -150,8 +133,6 @@ namespace Astral {
             .AmbientLightConstant = sceneDescription.AmbientLightConstant,
             .NumShadowCascades = 3,
         };
-
-        m_SceneCamera = sceneDescription.Camera;
 
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));
 
@@ -197,8 +178,6 @@ namespace Astral {
 
 
         frameContext.SceneDescription = sceneDescription;
-        m_SceneExposure = sceneDescription.Exposure;
-        m_SceneViewProjection = sceneDescription.Camera.GetViewProjectionMatrix();
 
 
         frameContext.MainList.Clear();
@@ -209,8 +188,8 @@ namespace Astral {
     void SceneRendererImpl::EndScene()
     {
         SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        frameContext.MainList.SortByMaterial(m_SceneCamera.GetPosition());
-        frameContext.ShadowMapList.SortFrontToBack(m_SceneCamera.GetPosition());
+        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
+        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
 
         {
             PROFILE_SCOPE("SceneRenderer::EndScene")
@@ -286,14 +265,7 @@ namespace Astral {
 
         if (isRenderGraphRebuildNeeded)
         {
-            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
-            {
-                BuildRenderGraphForDeferred();
-            }
-            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
-            {
-                BuildRenderGraphForForward();
-            }
+            BuildRenderGraph();
         }
     }
 
@@ -312,149 +284,8 @@ namespace Astral {
     }
 
 
-    void SceneRendererImpl::BuildRenderGraphForDeferred()
+    void SceneRendererImpl::BuildRenderGraph()
     {
-
-        AttachmentDescription albedoBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription metallicBufferDescription = {
-            .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription roughnessBufferDescription = {
-            .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription emissionBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription normalBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription depthBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
-        };
-
-        RenderGraphPass geometryPass = RenderGraphPass(
-            OutputAttachmentDimensions,
-            "GBuffer Pass",
-            [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
-                m_DeferredGeometryRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
-            }
-        );
-        geometryPass.CreateColorAttachment(albedoBufferDescription, "GBuffer_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(metallicBufferDescription, "GBuffer_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(roughnessBufferDescription, "GBuffer_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(emissionBufferDescription, "GBuffer_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(normalBufferDescription, "GBuffer_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightDepthBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .LayerCount = (uint32)m_RendererSettings.NumShadowCascades,
-            .TextureType = TextureType::IMAGE_2D_ARRAY
-        };
-
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_CascadedShadowMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightingTextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-
-        RenderGraphPass lightingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
-            "Lighting Pass",
-            [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
-            m_DeferredLightingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
-        });
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Light_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-
-        lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        lightingPass.AddDependency(&shadowMapPass);
-
-
-        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_EnvironmentMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        m_EnvironmentMapRenderPass.SetMSAASampleCount(SampleCount::SAMPLE_1_BIT);
-
-        AttachmentDescription toneMappingOutputTextureDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_ToneMappingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        tonemappingPass.LinkReadInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&environmentMapPass);
-
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
         outputTextures.reserve(numFramesInFlight);
@@ -464,148 +295,15 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        uint32 maxFramesInFlight = m_FrameContexts.size();
 
-
-        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
-        m_RenderGraph.AddPass(geometryPass);
-        m_RenderGraph.AddPass(shadowMapPass);
-        m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(environmentMapPass);
-        m_RenderGraph.AddOutputPass(tonemappingPass);
-
-        switch (m_RendererSettings.DebugView)
+        if (m_RendererSettings.RendererType == RendererType::DEFERRED)
         {
-            case RendererDebugView::NONE: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
-            case RendererDebugView::GBUFFER_ALBEDO: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures); break;
-            case RendererDebugView::GBUFFER_ROUGHNESS: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputTextures); break;
-            case RendererDebugView::GBUFFER_METALLIC: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputTextures); break;
-            case RendererDebugView::GBUFFER_EMISSION: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputTextures); break;
-            case RendererDebugView::GBUFFER_NORMAL: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures); break;
-            case RendererDebugView::DEPTH: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputTextures); break;
-            default: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
+            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
         }
-
-        m_RenderGraph.EndBuildingRenderGraph();
-    }
-
-    static constexpr SampleCount ForwardMSAASampleCount = SampleCount::SAMPLE_4_BIT;
-
-    void SceneRendererImpl::BuildRenderGraphForForward()
-    {
-
-        AttachmentDescription depthMSAABufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .MSAASamples = ForwardMSAASampleCount
-        };
-
-        RenderGraphPass depthPrePass = RenderGraphPass(OutputAttachmentDimensions, "Depth Pre-Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_DepthRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription shadowMapBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .LayerCount = (uint32)m_RendererSettings.NumShadowCascades,
-            .TextureType = TextureType::IMAGE_2D_ARRAY
-        };
-
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_CascadedShadowMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        shadowMapPass.CreateDepthStencilAttachment(shadowMapBufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightingMSAATextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
-            .MSAASamples = ForwardMSAASampleCount,
-        };
-
-
-        RenderGraphPass lightingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
-            "Lighting Pass",
-            [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
-            m_ForwardLightingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
-        });
-        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Shadow_Map_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.CreateColorAttachment(lightingMSAATextureDescription, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        lightingPass.AddDependency(&shadowMapPass);
-
-        AttachmentDescription lightingResolveTextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::DONT_CARE,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
-        };
-
-        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_EnvironmentMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
-        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.CreateResolveAttachment(lightingResolveTextureDescription, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        m_EnvironmentMapRenderPass.SetMSAASampleCount(SampleCount::SAMPLE_4_BIT);
-
-
-        AttachmentDescription toneMappingOutputTextureDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass tonemappingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
-            "Tonemapping Pass",
-            [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
-                m_ToneMappingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
-            });
-        tonemappingPass.LinkReadInputAttachment(&environmentMapPass, "Forward_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&environmentMapPass);
-
-
-        std::vector<TextureHandle> outputTextures;
-        constexpr int numFramesInFlight = 3;
-        outputTextures.reserve(numFramesInFlight);
-        for (int i = 0; i < numFramesInFlight; i++)
+        else if (m_RendererSettings.RendererType == RendererType::FORWARD)
         {
-            TextureHandle offscreenOutput = m_FrameContexts[i].OffscreenRenderTarget;
-            outputTextures.push_back(offscreenOutput);
+            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
         }
-
-        uint32 maxFramesInFlight = m_FrameContexts.size();
-
-
-        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
-        m_RenderGraph.AddPass(depthPrePass);
-        m_RenderGraph.AddPass(shadowMapPass);
-        m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(environmentMapPass);
-        m_RenderGraph.AddOutputPass(tonemappingPass);
-        m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
-        m_RenderGraph.EndBuildingRenderGraph();
     }
 
 
@@ -1058,9 +756,13 @@ namespace Astral {
 
     bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
     {
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        Mat4 m_SceneViewProjection = frameContext.SceneDescription.Camera.GetViewProjectionMatrix();
+
         std::array<Vec4, 6> frustum;
         BoundingSphere worldSpaceBoundingSphere;
         worldSpaceBoundingSphere.Center = modelTransform * glm::vec4(mesh.BoundingSphere.Center, 1.0f);
+
 
         Vec3 scale;
         scale.x = glm::length(Vec3(modelTransform[0]));
@@ -1167,6 +869,12 @@ namespace Astral {
         }
 
         m_RenderGraph.ResizeResources(outputTextures);
+    }
+
+
+    UVec2 SceneRendererImpl::GetViewportSize()
+    {
+        return m_ViewportSize;
     }
 
 

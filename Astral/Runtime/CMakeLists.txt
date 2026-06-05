@@ -159,6 +159,11 @@ set(ENGINE_SOURCE
         Renderer/RenderPasses/DeferredLightingRenderPass.h
         Renderer/RenderPasses/ForwardLightingRenderPass.cpp
         Renderer/RenderPasses/ForwardLightingRenderPass.h
+        Renderer/RenderingPaths/RenderingPath.h
+        Renderer/RenderingPaths/DeferredRenderingPath.cpp
+        Renderer/RenderingPaths/DeferredRenderingPath.h
+        Renderer/RenderingPaths/ForwardRenderingPath.cpp
+        Renderer/RenderingPaths/ForwardRenderingPath.h
 )
 
 set(VULKAN_RHI_FILES
