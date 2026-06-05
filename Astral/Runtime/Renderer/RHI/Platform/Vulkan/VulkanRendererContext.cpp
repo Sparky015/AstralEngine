@@ -58,7 +58,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
-        m_PipelineStateCache.release();
+        m_PipelineStateCache.reset();
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();

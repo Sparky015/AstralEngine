@@ -33,7 +33,7 @@ namespace Astral {
 
     void MetalRenderingContext::Shutdown()
     {
-        m_PipelineStateCache.release();
+        m_PipelineStateCache.reset();
         DestroyDevice();
         ReleaseCAMetalLayer();
     }
