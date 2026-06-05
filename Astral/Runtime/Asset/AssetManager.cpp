@@ -24,6 +24,7 @@ namespace Astral {
 
     void AssetManager::Shutdown()
     {
+        AE_TRACE("Shutting down Asset Manager!")
         m_Registry->Shutdown();
         m_Registry.reset();
     }
