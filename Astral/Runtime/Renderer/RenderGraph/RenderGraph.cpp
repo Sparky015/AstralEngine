@@ -38,7 +38,7 @@ namespace Astral {
         m_OutputAttachmentName = "";
 
         m_OffscreenOutputTargets.clear();
-        m_ViewportDimensions = UVec2(0);
+        m_OutputAttachmentDimensions = UVec2(0);
     }
 
 
@@ -66,7 +66,7 @@ namespace Astral {
         m_OutputAttachmentPass = GetRenderPassIndex(pass);
         ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
-        m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
+        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
 
 
@@ -84,7 +84,7 @@ namespace Astral {
         m_OutputAttachmentPass = GetRenderPassIndex(pass);
         ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
 
-        m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
+        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
     }
 
 
@@ -121,7 +121,7 @@ namespace Astral {
 
             m_ExecutionContext.RenderPass = rhiRenderPass;
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
-            m_ExecutionContext.ViewportSize = m_ViewportDimensions;
+            m_ExecutionContext.ViewportSize = m_OutputAttachmentDimensions;
 
             TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
 
@@ -185,7 +185,7 @@ namespace Astral {
 
         m_OffscreenOutputTargets = offscreenTargets;
         ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
-        m_ViewportDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
+        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
 
         AddRenderGraphResourcesToHold();
 
@@ -629,11 +629,27 @@ namespace Astral {
 
             Vec3 passResourceDimensions = pass.GetWriteAttachmentDimensions();
 
-            if (passResourceDimensions.x < 0 && passResourceDimensions.y < 0)
+            if (passResourceDimensions == RenderGraph_OutputAttachmentDimensions)
             {
                 passResourceDimensions /= -1;
-                passResourceDimensions.x *= (float)m_ViewportDimensions.x;
-                passResourceDimensions.y *= (float)m_ViewportDimensions.y;
+                passResourceDimensions.x *= (float)m_OutputAttachmentDimensions.x;
+                passResourceDimensions.y *= (float)m_OutputAttachmentDimensions.y;
+                passResourceDimensions.z = 1;
+            }
+            else if (passResourceDimensions == RenderGraph_ViewportDimensions)
+            {
+                passResourceDimensions /= -1;
+                UVec2 viewportDimensions = SceneRenderer::GetViewportSize();
+                passResourceDimensions.x = (float)viewportDimensions.x;
+                passResourceDimensions.y = (float)viewportDimensions.y;
+                passResourceDimensions.z = 1;
+            }
+            else if (passResourceDimensions == RenderGraph_WindowFramebufferDimensions)
+            {
+                passResourceDimensions /= -1;
+                UVec2 windowFramebufferDimensions = RendererAPI::GetContext().GetWindowFramebufferDimensions();
+                passResourceDimensions.x = (float)windowFramebufferDimensions.x;
+                passResourceDimensions.y = (float)windowFramebufferDimensions.y;
                 passResourceDimensions.z = 1;
             }
 

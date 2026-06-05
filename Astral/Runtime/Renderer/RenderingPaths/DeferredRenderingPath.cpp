@@ -95,7 +95,7 @@ namespace Astral {
         };
 
         RenderGraphPass geometryPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "GBuffer Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
                 m_DeferredGeometryRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
@@ -141,7 +141,7 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Lighting Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
             m_DeferredLightingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
@@ -159,7 +159,7 @@ namespace Astral {
 
 
         RenderGraphPass environmentMapPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Environment Map Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
                 m_EnvironmentMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
@@ -179,7 +179,7 @@ namespace Astral {
         };
 
         RenderGraphPass tonemappingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Tonemapping Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
                 m_ToneMappingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);

@@ -48,7 +48,7 @@ namespace Astral {
         };
 
         RenderGraphPass depthPrePass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Depth Pre-Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
                 m_DepthRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
@@ -92,7 +92,7 @@ namespace Astral {
 
 
         RenderGraphPass lightingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Lighting Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
             m_ForwardLightingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
@@ -113,7 +113,13 @@ namespace Astral {
             .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
         };
 
-        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext){ m_EnvironmentMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext); });
+        RenderGraphPass environmentMapPass = RenderGraphPass(
+            RenderGraph_ViewportDimensions,
+            "Environment Map Pass",
+            [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
+                m_EnvironmentMapRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);
+            });
+
         environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         environmentMapPass.CreateResolveAttachment(lightingResolveTextureDescription, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         environmentMapPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -131,7 +137,7 @@ namespace Astral {
         };
 
         RenderGraphPass tonemappingPass = RenderGraphPass(
-            OutputAttachmentDimensions,
+            RenderGraph_ViewportDimensions,
             "Tonemapping Pass",
             [&](RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) {
                 m_ToneMappingRenderPass.Execute(renderPassGraphExecutionContext, sharedFrameContext);

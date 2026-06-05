@@ -14,7 +14,13 @@
 namespace Astral {
 
     // Used to reference the dimensions of the output texture/render target of the render graph
-    static constexpr Vec3 OutputAttachmentDimensions = Vec3(-1);
+    static constexpr Vec3 RenderGraph_OutputAttachmentDimensions = Vec3(-1);
+
+    // Used to reference the dimensions of the window framebuffer
+    static constexpr Vec3 RenderGraph_WindowFramebufferDimensions = Vec3(-2);
+
+    // Used to reference the dimensions of the rendering viewport
+    static constexpr Vec3 RenderGraph_ViewportDimensions = Vec3(-3);
 
     enum class AttachmentType
     {
@@ -72,7 +78,7 @@ namespace Astral {
 
         /**
          * @brief Constructor for RenderGraphPass
-         * @param resourceDimensions The resource dimensions for the textures being used as write attachments in the render pass
+         * @param resourceDimensions The resource dimensions for the textures being used as write attachments in the render pass. X and Y are dimensions in the textures, and Z is the number of layers in the textures
          * @param name The name for the render graph pass (should be unique in render graph)
          * @param callback Callback that will actually execute on the render pass and make the API calls
          */
