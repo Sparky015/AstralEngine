@@ -62,6 +62,7 @@ set(CORE_SOURCE
 
     PlatformAbstraction/CreateProcess.cpp
     PlatformAbstraction/CreateProcess.h
+        Containers/StringLiteral.h
 )
 
 set(UNIX_PLATFORM_FILES

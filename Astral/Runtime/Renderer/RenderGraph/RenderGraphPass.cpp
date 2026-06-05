@@ -8,10 +8,10 @@
 
 namespace Astral {
 
-    RenderGraphPass::RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void()>& callback) :
+    RenderGraphPass::RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void(RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext)>& callback) :
         m_WriteAttachmentDimensions(resourceDimensions),
-        m_Callback(callback),
-        m_Name(name)
+        m_Name(name),
+        m_Callback(callback)
     {}
 
     bool RenderGraphPass::ExternalAttachment::operator==(const ExternalAttachment& other) const noexcept

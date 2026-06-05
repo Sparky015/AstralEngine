@@ -21,7 +21,7 @@ namespace Astral {
         void Reserve(int numSubmissions);
         void Resize(int numSubmissions);
         void Clear();
-        size_t Size();
+        size_t Size() const;
 
         void SortByMaterial(Vec3 cameraPosition);
         void SortFrontToBack(Vec3 cameraPosition);
