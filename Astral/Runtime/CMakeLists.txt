@@ -144,10 +144,7 @@ set(ENGINE_SOURCE
         Core/Hashing/Hashes.cpp
         Core/Hashing/Hashes.h
         Renderer/RHI/Common/BufferUsageFlags.h
-        Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
-        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
-        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
+
         Renderer/RenderPasses/RenderPassExecutionContext.h
         Renderer/RenderPasses/CascadedShadowMapRenderPass.cpp
         Renderer/RenderPasses/CascadedShadowMapRenderPass.h
@@ -216,6 +213,8 @@ set(VULKAN_RHI_FILES
 set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/MetalRendererContext.mm
     Renderer/RHI/Platform/Metal/MetalRendererContext.h
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
     Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
@@ -226,6 +225,9 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.h
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
+
 )
 
 set(D3D12_RHI_FILES
