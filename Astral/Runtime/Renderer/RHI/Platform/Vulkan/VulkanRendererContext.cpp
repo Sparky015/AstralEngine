@@ -30,7 +30,8 @@ namespace Astral {
         m_Window(window),
         m_WindowSurface(VK_NULL_HANDLE),
         m_QueueFamilyIndex(-1), // Wraps around to max uint32 to start with an invalid index
-        m_Device(VK_NULL_HANDLE)
+        m_Device(VK_NULL_HANDLE),
+        m_PipelineStateCache()
     {
     }
 
@@ -49,6 +50,7 @@ namespace Astral {
         m_QueueFamilyIndex = m_PhysicalDevices.SelectedQueueFamily();
 
         CreateDevice();
+        m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
     }
 
 
@@ -56,6 +58,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
+        m_PipelineStateCache.reset();
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
@@ -225,6 +228,12 @@ namespace Astral {
     {
         ImGui_ImplVulkan_DestroyFontsTexture();
         ImGui_ImplVulkan_Shutdown();
+    }
+
+
+    PipelineStateCache& VulkanRenderingContext::GetPipelineStateCache()
+    {
+        return *m_PipelineStateCache;
     }
 
 

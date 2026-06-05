@@ -144,27 +144,28 @@ set(ENGINE_SOURCE
         Core/Hashing/Hashes.cpp
         Core/Hashing/Hashes.h
         Renderer/RHI/Common/BufferUsageFlags.h
-        Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
-        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
-        Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
-        Renderer/RHI/Platform/Metal/Resources/MetalShader.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalShader.h
-        Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.h
-        Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.h
-        Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.h
-        Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.h
-        Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.h
-        Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
-        Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
-        Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
         Renderer/RHI/Common/ShaderStage.h
+
+        Renderer/RenderPasses/RenderPassExecutionContext.h
+        Renderer/RenderPasses/CascadedShadowMapRenderPass.cpp
+        Renderer/RenderPasses/CascadedShadowMapRenderPass.h
+        Renderer/RenderPasses/EnvironmentMapPass.cpp
+        Renderer/RenderPasses/EnvironmentMapPass.h
+        Renderer/RenderPasses/DepthRenderPass.cpp
+        Renderer/RenderPasses/DepthRenderPass.h
+        Renderer/RenderPasses/ToneMappingPass.cpp
+        Renderer/RenderPasses/ToneMappingPass.h
+        Renderer/RenderPasses/DeferredGeometryRenderPass.cpp
+        Renderer/RenderPasses/DeferredGeometryRenderPass.h
+        Renderer/RenderPasses/DeferredLightingRenderPass.cpp
+        Renderer/RenderPasses/DeferredLightingRenderPass.h
+        Renderer/RenderPasses/ForwardLightingRenderPass.cpp
+        Renderer/RenderPasses/ForwardLightingRenderPass.h
+        Renderer/RenderingPaths/RenderingPath.h
+        Renderer/RenderingPaths/DeferredRenderingPath.cpp
+        Renderer/RenderingPaths/DeferredRenderingPath.h
+        Renderer/RenderingPaths/ForwardRenderingPath.cpp
+        Renderer/RenderingPaths/ForwardRenderingPath.h
 )
 
 set(VULKAN_RHI_FILES
@@ -213,6 +214,8 @@ set(VULKAN_RHI_FILES
 set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/MetalRendererContext.mm
     Renderer/RHI/Platform/Metal/MetalRendererContext.h
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
     Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
@@ -223,6 +226,25 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.h
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
+    Renderer/RHI/Platform/Metal/Resources/MetalShader.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalShader.h
+    Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.h
+    Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.h
+    Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.h
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.h
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
+
 )
 
 set(D3D12_RHI_FILES

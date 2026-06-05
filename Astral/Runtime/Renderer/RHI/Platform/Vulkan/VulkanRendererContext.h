@@ -28,18 +28,56 @@ namespace Astral {
     {
     public:
         explicit VulkanRenderingContext(GLFWwindow* window);
+        ~VulkanRenderingContext() override = default;
 
+        /**
+         * @brief Initializes the Vulkan rendering context
+         */
         void Init() override;
+
+        /**
+         * @brief Shuts down the Vulkan rendering context
+         */
         void Shutdown() override;
 
+        /**
+         * @brief Gets the graphics device
+         * @return The graphics device
+         */
+        Device& GetDevice() override { return *m_Device; }
+
+        /**
+         * @brief Gets the pipeline state cache
+         * @return The pipeline state cache
+         */
+        PipelineStateCache& GetPipelineStateCache() override;
+
+        /**
+         * @brief Gets the number of validation errors and warnings triggered
+         * @return The number of validation errors and warnings triggered
+         */
+        uint32 GetNumValidationErrorsAndWarnings() override { return m_NumValidationErrorsAndWarnings; }
+
+        /**
+         * @brief Clears the counter of the number of validation errors and warnings triggered
+         */
+        void ClearNumValidationErrorsAndWarnings() override { m_NumValidationErrorsAndWarnings = 0; }
+
+        /**
+         * @brief Gets the native instance handle of the graphics API context
+         * @return The native instance handle of the graphics API context
+         */
         void* GetInstanceHandle() override { return m_Instance; }
 
+        /**
+         * @brief Initializes ImGui rendering backend
+         */
         void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override;
-        void ShutdownImGuiForAPIBackend() override;
 
-        Device& GetDevice() override { return *m_Device; }
-        uint32 GetNumValidationErrorsAndWarnings() override { return m_NumValidationErrorsAndWarnings; }
-        void ClearNumValidationErrorsAndWarnings() override { m_NumValidationErrorsAndWarnings = 0; }
+        /**
+         * @brief Shuts down the ImGui rendering backend
+         */
+        void ShutdownImGuiForAPIBackend() override;
 
     private:
 
@@ -73,6 +111,7 @@ namespace Astral {
         static uint32 m_NumValidationErrorsAndWarnings;
 
         GraphicsOwnedPtr<Device> m_Device;
+        GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
     };
 
 }

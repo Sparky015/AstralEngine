@@ -33,7 +33,17 @@ namespace Astral {
          */
         void Shutdown() override;
 
+        /**
+         * @brief Gets the graphics device
+         * @return The graphics device
+         */
         Device& GetDevice() override;
+
+        /**
+         * @brief Gets the pipeline state cache
+         * @return The pipeline state cache
+         */
+        PipelineStateCache& GetPipelineStateCache() override;
 
         /**
          * @brief This does nothing for Metal specifically.
@@ -53,7 +63,14 @@ namespace Astral {
          */
         void* GetInstanceHandle() override { return nullptr; }
 
+        /**
+         * @brief Initializes ImGui rendering backend
+         */
         void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override; // TODO
+
+        /**
+         * @brief Shuts down the ImGui rendering backend
+         */
         void ShutdownImGuiForAPIBackend() override; // TODO
 
     private:
@@ -87,6 +104,7 @@ namespace Astral {
         GLFWwindow* m_Window;
         CA::MetalLayer* m_CAMetalLayer;
         GraphicsOwnedPtr<Device> m_Device;
+        GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
     };
 
 }

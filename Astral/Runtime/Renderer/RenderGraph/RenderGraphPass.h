@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Renderer/Common/SceneRendererTypes.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 #include <functional>
@@ -13,13 +14,30 @@
 namespace Astral {
 
     // Used to reference the dimensions of the output texture/render target of the render graph
-    static constexpr Vec3 OutputAttachmentDimensions = Vec3(-1);
+    static constexpr Vec3 RenderGraph_OutputAttachmentDimensions = Vec3(-1);
+
+    // Used to reference the dimensions of the window framebuffer
+    static constexpr Vec3 RenderGraph_WindowFramebufferDimensions = Vec3(-2);
+
+    // Used to reference the dimensions of the rendering viewport
+    static constexpr Vec3 RenderGraph_ViewportDimensions = Vec3(-3);
 
     enum class AttachmentType
     {
         COLOR,
         DEPTH_STENCIL,
         RESOLVE
+    };
+
+    /**
+     * @brief Contains information needed by render passes when they are being executed
+     */
+    struct RenderGraphPassExecutionContext
+    {
+        CommandBufferHandle CommandBuffer;
+        RenderPassHandle RenderPass;
+        DescriptorSetHandle ReadAttachments;
+        UVec2 ViewportSize;
     };
 
     /**
@@ -60,11 +78,11 @@ namespace Astral {
 
         /**
          * @brief Constructor for RenderGraphPass
-         * @param resourceDimensions The resource dimensions for the textures being used as write attachments in the render pass
+         * @param resourceDimensions The resource dimensions for the textures being used as write attachments in the render pass. X and Y are dimensions in the textures, and Z is the number of layers in the textures
          * @param name The name for the render graph pass (should be unique in render graph)
          * @param callback Callback that will actually execute on the render pass and make the API calls
          */
-        explicit RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void()>& callback);
+        explicit RenderGraphPass(Vec3 resourceDimensions, const std::string_view& name, const std::function<void(RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext)>& callback);
 
         /**
          * @brief Links an attachment from another render pass to use as read input in this render pass
@@ -193,7 +211,7 @@ namespace Astral {
         /**
          * @brief Executes the render pass' rendering code
          */
-        void Execute() const { m_Callback(); }
+        void Execute(RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext) const { m_Callback(renderPassGraphExecutionContext, sharedFrameContext); }
 
         /**
          * @brief Gets the resource dimensions of attachments being written to by the render pass
@@ -230,7 +248,7 @@ namespace Astral {
         std::string_view m_Name;
 
         // The callback that will execute the rendering code for the render pass
-        std::function<void()> m_Callback;
+        std::function<void(RenderGraphPassExecutionContext& renderPassGraphExecutionContext, SharedFrameContext& sharedFrameContext)> m_Callback;
     };
 
 }
