@@ -25,6 +25,7 @@ namespace Astral {
         std::vector<VkPresentModeKHR> presentModes;
         VkPhysicalDeviceFeatures2 featuresChain;
         VkPhysicalDeviceVulkan12Features features12;
+        VkPhysicalDeviceVulkan13Features features13;
     };
 
     class VulkanPhysicalDevices
