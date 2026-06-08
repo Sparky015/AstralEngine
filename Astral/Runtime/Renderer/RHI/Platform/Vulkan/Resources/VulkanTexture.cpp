@@ -514,6 +514,7 @@ namespace Astral {
     	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_ImageView);
     	ASSERT(result == VK_SUCCESS, "Failed to create image view!");
 
+        m_LayerMipImageViews[{-1, -1}] = m_ImageView;
 
 
     	// Create image views for image layers
