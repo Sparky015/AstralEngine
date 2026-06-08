@@ -122,6 +122,36 @@ namespace Astral {
     }
 
 
+    AttachmentDescription MetalRenderPass::GetAttachmentDescription(AttachmentIndex attachmentIndex) const
+    {
+
+    }
+
+
+    uint32 MetalRenderPass::GetNumAttachments() const
+    {
+
+    }
+
+
+    const std::vector<AttachmentReference>& MetalRenderPass::GetColorAttachmentReferences() const
+    {
+
+    }
+
+
+    const std::vector<AttachmentReference>& MetalRenderPass::GetResolveAttachmentReferences() const
+    {
+
+    }
+
+
+    AttachmentReference MetalRenderPass::GetDepthStencilAttachmentReference() const
+    {
+
+    }
+
+
     const std::vector<Vec4>& MetalRenderPass::GetClearColors() const
     {
 

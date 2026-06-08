@@ -83,36 +83,54 @@ namespace Astral {
     void VulkanRenderPass::AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
     {
         VkImageLayout imageLayout = ConvertImageLayoutToVkImageLayout(optimalImageLayout);
-        VkAttachmentReference attachmentReference = {
+        VkAttachmentReference vkAttachmentReference = {
             .attachment = attachmentIndex,
             .layout = imageLayout,
         };
 
-        m_SubpassAttachments.back().ColorAttachments.push_back(attachmentReference);
+        m_SubpassAttachments.back().ColorAttachments.push_back(vkAttachmentReference);
+
+        AttachmentReference attachmentReference = {
+            .AttachmentIndex = attachmentIndex,
+            .OptimalImageLayout = optimalImageLayout
+        };
+        m_ColorAttachments.push_back(attachmentReference);
     }
 
 
     void VulkanRenderPass::AddResolveAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
     {
         VkImageLayout imageLayout = ConvertImageLayoutToVkImageLayout(optimalImageLayout);
-        VkAttachmentReference attachmentReference = {
+        VkAttachmentReference vkAttachmentReference = {
             .attachment = attachmentIndex,
             .layout = imageLayout,
         };
 
-        m_SubpassAttachments.back().ResolveAttachments.push_back(attachmentReference);
+        m_SubpassAttachments.back().ResolveAttachments.push_back(vkAttachmentReference);
+
+        AttachmentReference attachmentReference = {
+            .AttachmentIndex = attachmentIndex,
+            .OptimalImageLayout = optimalImageLayout
+        };
+        m_ResolveAttachments.push_back(attachmentReference);
     }
 
 
     void VulkanRenderPass::AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
     {
         VkImageLayout imageLayout = ConvertImageLayoutToVkImageLayout(optimalImageLayout);
-        VkAttachmentReference attachmentReference = {
+        VkAttachmentReference vkAttachmentReference = {
             .attachment = attachmentIndex,
             .layout = imageLayout,
         };
 
-        m_SubpassAttachments.back().DepthStencilAttachment.push_back(attachmentReference);
+        m_SubpassAttachments.back().DepthStencilAttachment.push_back(vkAttachmentReference);
+
+        AttachmentReference attachmentReference = {
+            .AttachmentIndex = attachmentIndex,
+            .OptimalImageLayout = optimalImageLayout
+        };
+        m_DepthStencilAttachment = attachmentReference;
     }
 
 
@@ -220,6 +238,37 @@ namespace Astral {
     uint32 VulkanRenderPass::GetNumColorAttachments(SubpassIndex subpassIndex)
     {
         return m_SubpassAttachments.at(subpassIndex).ColorAttachments.size();
+    }
+
+
+    AttachmentDescription VulkanRenderPass::GetAttachmentDescription(AttachmentIndex attachmentIndex) const
+    {
+        ASSERT(attachmentIndex >= 0 && attachmentIndex < m_AttachmentDescriptions.size(), "The given attachment index does not fit the bounds of the attachment descriptions vector!")
+        return m_AttachmentDescriptions[attachmentIndex];
+    }
+
+
+    uint32 VulkanRenderPass::GetNumAttachments() const
+    {
+        return m_AttachmentDescriptions.size();
+    }
+
+
+    const std::vector<AttachmentReference>& VulkanRenderPass::GetColorAttachmentReferences() const
+    {
+        return m_ColorAttachments;
+    }
+
+
+    const std::vector<AttachmentReference>& VulkanRenderPass::GetResolveAttachmentReferences() const
+    {
+        return m_ResolveAttachments;
+    }
+
+
+    AttachmentReference VulkanRenderPass::GetDepthStencilAttachmentReference() const
+    {
+        return m_DepthStencilAttachment;
     }
 
 

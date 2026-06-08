@@ -17,6 +17,12 @@
 
 namespace Astral {
 
+    using AttachmentIndex = uint32;
+    static constexpr AttachmentIndex NullAttachmentIndex = -1;
+    using SubpassIndex = uint8;
+    static constexpr SubpassIndex NullSubpassIndex = -1;
+    static constexpr SubpassIndex SubpassExternal = -1;
+
     /**
      * @brief Defines a load operation for a render pass attachment
      */
@@ -59,6 +65,27 @@ namespace Astral {
     };
 
     /**
+     * @brief Holds a reference index to an attachment as well as the layout to use for the attachment in a render pass
+     */
+    struct AttachmentReference
+    {
+        AttachmentIndex AttachmentIndex;
+        ImageLayout OptimalImageLayout;
+    };
+
+    static constexpr uint32 FullSubresourceRange = -1;
+
+    /**
+     * @brief Holds a resource to back an attachment with fields to specify the subresource range of the resource to use
+     */
+    struct AttachmentResource
+    {
+        TextureHandle Resource;
+        uint32 MipLevel; /// Specify a specific mip map level or use FullSubresourceRange var to use all mip map levels in texture
+        uint32 ArrayLayer; /// Specify a specific layer number or use FullSubresourceRange var to use all layers in texture
+    };
+
+    /**
      * @brief Defines information needed to declare a dependency between two subpasses
      */
     struct SubpassDependencyMasks
@@ -68,12 +95,6 @@ namespace Astral {
         AccessFlags SourceAccessMask;
         AccessFlags DestinationAccessMask;
     };
-
-    using AttachmentIndex = uint32;
-    static constexpr AttachmentIndex NullAttachmentIndex = -1;
-    using SubpassIndex = uint8;
-    static constexpr SubpassIndex NullSubpassIndex = -1;
-    static constexpr SubpassIndex SubpassExternal = -1;
 
     /**
      * @brief Defines the RHI RenderPass object
@@ -189,6 +210,37 @@ namespace Astral {
         * @return The number of subpasses in the render pass
         */
         virtual uint32 GetNumberOfSubpasses() = 0;
+
+        /**
+         * @brief Gets the attachment description of an attachment
+         * @param attachmentIndex The attachment index of the attachment
+         * @return The attachment description of an attachment
+         */
+        virtual AttachmentDescription GetAttachmentDescription(AttachmentIndex attachmentIndex) const = 0;
+
+        /**
+         * @brief Gets the number of attachments in the render pass
+         * @return The number of attachments in the render pass
+         */
+        virtual uint32 GetNumAttachments() const = 0;
+
+        /**
+         * @brief Gets the color attachment references of the render pass
+         * @return The color attachment references of the render pass
+         */
+        virtual const std::vector<AttachmentReference>& GetColorAttachmentReferences() const = 0;
+
+        /**
+         * @brief Gets the resolve attachment references of the render pass
+         * @return The resolve attachment references of the render pass
+         */
+        virtual const std::vector<AttachmentReference>& GetResolveAttachmentReferences() const = 0;
+
+        /**
+         * @brief Gets the depth-stencil attachment reference of the render pass
+         * @return The depth-stencil attachment reference of the render pass
+         */
+        virtual AttachmentReference GetDepthStencilAttachmentReference() const = 0;
 
         /**
         * @brief Gets the number of color attachments in a subpass

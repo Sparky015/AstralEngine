@@ -712,7 +712,12 @@ namespace Astral {
 
         // ImGui Rendering
         commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
+        AttachmentResource attachmentResource = {
+            .Resource = m_FrameContexts[renderTarget->GetImageIndex()].SceneRenderTarget->GetAsTexture(),
+            .MipLevel = FullSubresourceRange,
+            .ArrayLayer = FullSubresourceRange
+        };
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
         RendererAPI::CallImGuiDraws(commandBuffer);
         commandBuffer->EndRenderPass();
         commandBuffer->EndLabel();

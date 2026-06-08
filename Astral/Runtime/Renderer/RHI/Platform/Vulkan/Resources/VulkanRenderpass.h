@@ -147,6 +147,37 @@ namespace Astral {
         uint32 GetNumColorAttachments(SubpassIndex subpassIndex) override;
 
         /**
+         * @brief Gets the attachment description of an attachment
+         * @param attachmentIndex The attachment index of the attachment
+         * @return The attachment description of an attachment
+         */
+        AttachmentDescription GetAttachmentDescription(AttachmentIndex attachmentIndex) const override;
+
+        /**
+         * @brief Gets the number of attachments in the render pass
+         * @return The number of attachments in the render pass
+         */
+        uint32 GetNumAttachments() const override;
+
+        /**
+         * @brief Gets the color attachment descriptions of the render pass
+         * @return The color attachment descriptions of the render pass
+         */
+        const std::vector<AttachmentReference>& GetColorAttachmentReferences() const;
+
+        /**
+         * @brief Gets the color attachment descriptions of the render pass
+         * @return The color attachment descriptions of the render pass
+         */
+        const std::vector<AttachmentReference>& GetResolveAttachmentReferences() const override;
+
+        /**
+         * @brief Gets the color attachment descriptions of the render pass
+         * @return The color attachment descriptions of the render pass
+         */
+        AttachmentReference GetDepthStencilAttachmentReference() const override;
+
+        /**
          * @brief Gets the clear colors of every attachment (that has a clear load op)
          * @return The clear colors of every attachment (that has a clear load op)
          */
@@ -185,6 +216,11 @@ namespace Astral {
         };
 
         VkDevice m_Device;
+
+        std::vector<AttachmentDescription> m_AttachmentDescriptions;
+        std::vector<AttachmentReference> m_ColorAttachments;
+        std::vector<AttachmentReference> m_ResolveAttachments;
+        AttachmentReference m_DepthStencilAttachment;
 
         std::vector<VkAttachmentDescription> m_RenderPassAttachments;
         std::vector<SubpassAttachments> m_SubpassAttachments;
