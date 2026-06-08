@@ -42,12 +42,12 @@ namespace Astral {
         SetDepthStencilState();
         SetColorBlendState();
         SetDynamicState();
+        SetRenderingCreateInfo();
 
-
-        VkRenderPass renderPass = (VkRenderPass)m_GraphicsDescription.RenderPass->GetNativeHandle();
 
         VkGraphicsPipelineCreateInfo pipelineCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+            .pNext = &m_PipelineCreateInfos.RenderingCreateInfo,
             .stageCount = sizeof(m_PipelineCreateInfos.ShaderStates) / sizeof(VkPipelineShaderStageCreateInfo),
             .pStages = m_PipelineCreateInfos.ShaderStates,
             .pVertexInputState = &m_PipelineCreateInfos.VertexInputState,
@@ -59,7 +59,7 @@ namespace Astral {
             .pColorBlendState = &m_PipelineCreateInfos.ColorBlendState,
             .pDynamicState = &m_PipelineCreateInfos.DynamicState,
             .layout = m_PipelineLayout,
-            .renderPass = renderPass,
+            .renderPass = VK_NULL_HANDLE,
             .subpass = m_GraphicsDescription.SubpassIndex,
             .basePipelineHandle = VK_NULL_HANDLE,
             .basePipelineIndex = -1
@@ -302,6 +302,58 @@ namespace Astral {
         };
 
         m_PipelineCreateInfos.DynamicState = dynamicStateCreateInfo;
+    }
+
+
+    void VulkanPipelineState::SetRenderingCreateInfo()
+    {
+        const RenderPassHandle& renderPassHandle = m_GraphicsDescription.RenderPass;
+
+        VkPipelineRenderingCreateInfo renderingCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
+            .pNext = nullptr,
+            .viewMask = 0,
+            .colorAttachmentCount = 0,
+            .pColorAttachmentFormats = nullptr,
+            .depthAttachmentFormat = VK_FORMAT_UNDEFINED,
+            .stencilAttachmentFormat = VK_FORMAT_UNDEFINED,
+        };
+
+        // ==== Populating the color attachments format fields ========================================================
+
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+
+        for (int i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            VkFormat vkAttachmentFormat = ConvertImageFormatToVkFormat(colorAttachmentDescription.Format);
+            m_PipelineCreateInfos.RenderingCreateInfoColorAttachmentFormats.push_back(vkAttachmentFormat);
+        }
+
+        renderingCreateInfo.colorAttachmentCount = m_PipelineCreateInfos.RenderingCreateInfoColorAttachmentFormats.size();
+        renderingCreateInfo.pColorAttachmentFormats = m_PipelineCreateInfos.RenderingCreateInfoColorAttachmentFormats.data();
+
+
+        // ==== Populating the depth/stencil attachment format fields ========================================================
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            // Depth stencil attachment exists
+
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+            VkFormat vkDepthStencilAttachmentFormat = ConvertImageFormatToVkFormat(depthStencilAttachmentDescription.Format);
+            renderingCreateInfo.depthAttachmentFormat = vkDepthStencilAttachmentFormat;
+
+            if (IsStencilFormat(depthStencilAttachmentDescription.Format))
+            {
+                renderingCreateInfo.stencilAttachmentFormat = vkDepthStencilAttachmentFormat;
+            }
+        }
+
+        m_PipelineCreateInfos.RenderingCreateInfo = renderingCreateInfo;
     }
 
 

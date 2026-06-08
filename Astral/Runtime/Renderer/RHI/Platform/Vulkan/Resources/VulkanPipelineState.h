@@ -114,6 +114,10 @@ namespace Astral {
          */
         void SetDynamicState();
 
+        /**
+         * @brief Populates the pipeline rendering create info
+         */
+        void SetRenderingCreateInfo();
 
         /**
          * @brief Creates the pipeline layout based on the descriptor set layouts
@@ -134,7 +138,6 @@ namespace Astral {
          * @brief Destroys the pipeline state object
          */
         void DestroyPipelineState();
-
 
         VkDevice m_Device;
         VulkanGraphicsPipelineStateDesc m_GraphicsDescription;
@@ -157,6 +160,8 @@ namespace Astral {
             VkPipelineLayoutCreateInfo PipelineLayout;
             VkDynamicState DynamicStateSpecs[2];
             VkPipelineDynamicStateCreateInfo DynamicState;
+            std::vector<VkFormat> RenderingCreateInfoColorAttachmentFormats{};
+            VkPipelineRenderingCreateInfo RenderingCreateInfo;
         };
 
         PipelineCreateInfos m_PipelineCreateInfos;
