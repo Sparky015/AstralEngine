@@ -209,7 +209,7 @@ namespace Astral {
         VkRenderingInfo renderingInfo = {
             .sType = VK_STRUCTURE_TYPE_RENDERING_INFO,
             .pNext = nullptr,
-            .flags = VK_RENDERING_CONTENTS_INLINE_BIT_KHR,
+            .flags = 0,
             .renderArea = {
                 .offset = {0,0},
                 .extent = {extent.x, extent.y}
@@ -316,15 +316,13 @@ namespace Astral {
 
     void VulkanCommandBuffer::NextSubpass()
     {
-        vkCmdNextSubpass(m_CommandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-        m_ActiveRenderPass->NextSubpass();
+        // vkCmdNextSubpass(m_CommandBuffer, VK_SUBPASS_CONTENTS_INLINE);
     }
 
 
     void VulkanCommandBuffer::EndRenderPass()
     {
-        vkCmdEndRenderPass(m_CommandBuffer);
-        m_ActiveRenderPass->EndRenderPass();
+        vkCmdEndRendering(m_CommandBuffer);
     }
 
 
