@@ -92,24 +92,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::BeginRenderPass(FramebufferHandle frameBufferHandle)
-    {
-
-    }
-
-
-    void MetalRenderPass::NextSubpass()
-    {
-
-    }
-
-
-    void MetalRenderPass::EndRenderPass()
-    {
-
-    }
-
-
     uint32 MetalRenderPass::GetNumberOfSubpasses()
     {
 

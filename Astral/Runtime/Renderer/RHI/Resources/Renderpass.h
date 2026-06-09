@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Framebuffer.h"
 #include "Renderer/RHI/Common/AccessFlags.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/PipelineStageFlags.h"
 #include "Renderer/RHI/Common/SampleCount.h"
+#include "Renderer/RHI/Resources/Texture.h"
 
 
 namespace Astral {
@@ -188,22 +188,6 @@ namespace Astral {
         * @brief Cleans up and resets an existing render pass if applicable
         */
         virtual void Invalidate() = 0;
-
-        /**
-         * @brief Resets framebuffer texture layout metadata
-         * @param frameBufferHandle The framebuffer being used with the render pass
-         */
-        virtual void BeginRenderPass(FramebufferHandle frameBufferHandle) = 0;
-
-        /**
-        * @brief Updates attachment texture layout metadata
-        */
-        virtual void NextSubpass() = 0;
-
-        /**
-        * @brief Updates attachment texture layout metadata to final layouts
-        */
-        virtual void EndRenderPass() = 0;
 
         /**
         * @brief Gets the number of subpasses in the render pass

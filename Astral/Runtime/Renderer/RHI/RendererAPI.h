@@ -24,7 +24,6 @@ namespace Astral {
         static void NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name);
         static void NameObject(TextureHandle textureHandle, std::string_view name);
         static void NameObject(ShaderHandle shaderHandle, std::string_view name);
-        static void NameObject(FramebufferHandle framebufferHandle, std::string_view name);
         static void NameObject(CommandBufferHandle commandBufferHandle, std::string_view name);
         static void NameObject(RenderPassHandle renderPassHandle, std::string_view name);
 

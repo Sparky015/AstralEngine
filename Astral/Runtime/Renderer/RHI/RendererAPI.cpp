@@ -56,12 +56,6 @@ namespace Astral {
     }
 
 
-    void RendererAPI::NameObject(FramebufferHandle framebufferHandle, std::string_view name)
-    {
-        s_RendererCommands->NameObject(framebufferHandle, name);
-    }
-
-
     void RendererAPI::NameObject(CommandBufferHandle commandBufferHandle, std::string_view name)
     {
         s_RendererCommands->NameObject(commandBufferHandle, name);

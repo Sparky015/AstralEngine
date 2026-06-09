@@ -113,22 +113,6 @@ namespace Astral {
         void Invalidate() override;
 
         /**
-         * @brief Resets framebuffer texture layout metadata
-         * @param frameBufferHandle The framebuffer being used with the render pass
-         */
-        void BeginRenderPass(FramebufferHandle frameBufferHandle) override;
-
-        /**
-        * @brief Updates attachment texture layout metadata
-        */
-        void NextSubpass() override;
-
-        /**
-        * @brief Updates attachment texture layout metadata to final layouts
-        */
-        void EndRenderPass() override;
-
-        /**
         * @brief Gets the number of subpasses in the render pass
         * @return The number of subpasses in the render pass
         */
@@ -220,10 +204,7 @@ namespace Astral {
 
         // VkRenderPass m_RenderPass;
 
-        FramebufferHandle m_CurrentlyAttachedFramebuffer; // Updated each time a render pass is started
         uint32 m_CurrentSubpassIndex{0}; // Updated each time a new subpass is started and reset when a render pass is started
-
-
     };
 
 }

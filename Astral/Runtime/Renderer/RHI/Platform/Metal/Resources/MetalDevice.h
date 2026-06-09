@@ -37,8 +37,6 @@ namespace Astral {
          */
         RenderPassHandle CreateRenderPass() override;
 
-        FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override; // TODO
-
         /**
          * @brief Creates a shader object from the shader source
          * @param shaderSource The source code of the shader

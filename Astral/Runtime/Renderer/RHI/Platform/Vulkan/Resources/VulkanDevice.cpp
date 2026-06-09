@@ -13,7 +13,6 @@
 #include "VulkanCommandQueue.h"
 #include "VulkanRenderpass.h"
 #include "VulkanDescriptorSet.h"
-#include "VulkanFramebuffer.h"
 #include "VulkanPipelineState.h"
 #include "VulkanComputePipelineState.h"
 #include "VulkanShader.h"
@@ -121,19 +120,6 @@ namespace Astral {
         };
 
         return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
-    }
-
-
-    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-
-        VulkanFramebufferDesc vulkanFramebufferDesc = {
-            .Device = m_Device,
-            .RenderPass = renderPass
-        };
-
-        return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
     }
 
 
