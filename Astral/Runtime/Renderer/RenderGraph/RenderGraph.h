@@ -124,7 +124,7 @@ namespace Astral {
         struct RenderPassResources
         {
             DescriptorSetHandle ReadAttachmentDescriptorSet;
-            FramebufferHandle Framebuffer;
+            std::vector<AttachmentResource> AttachmentResources;
             std::vector<TextureHandle> AttachmentTextures;
         };
 
@@ -148,8 +148,12 @@ namespace Astral {
         /**
          * @brief Manages the layout transitions of read attachments during execution
          */
-        void TransitionReadAttachmentLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32
-                                             swapchainImageIndex);
+        void TransitionReadAttachmentLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32 swapchainImageIndex);
+
+        /**
+         * @brief Manages the synchronization and layout transitions of attachments before execution of a render graph pass
+         */
+        void TransitionAttachmentsToOptimalLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32 swapchainImageIndex);
 
         /**
          * @brief Creates the RHI render pass object for each render pass
