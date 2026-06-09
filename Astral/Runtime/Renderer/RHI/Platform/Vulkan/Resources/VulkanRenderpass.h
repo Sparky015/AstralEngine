@@ -163,7 +163,7 @@ namespace Astral {
          * @brief Gets the color attachment descriptions of the render pass
          * @return The color attachment descriptions of the render pass
          */
-        const std::vector<AttachmentReference>& GetColorAttachmentReferences() const;
+        const std::vector<AttachmentReference>& GetColorAttachmentReferences() const override;
 
         /**
          * @brief Gets the color attachment descriptions of the render pass

@@ -33,6 +33,8 @@ namespace Astral {
 
     AttachmentIndex VulkanRenderPass::DefineAttachment(const AttachmentDescription& attachmentDescription)
     {
+        m_AttachmentDescriptions.push_back(attachmentDescription);
+
         VkFormat format = ConvertImageFormatToVkFormat(attachmentDescription.Format);
         VkImageLayout initialLayout = ConvertImageLayoutToVkImageLayout(attachmentDescription.InitialLayout);
         VkImageLayout finalLayout = ConvertImageLayoutToVkImageLayout(attachmentDescription.FinalLayout);
@@ -188,7 +190,7 @@ namespace Astral {
 
     void VulkanRenderPass::EndBuildingRenderPass()
     {
-        CreateRenderPass();
+        // CreateRenderPass();
     }
 
 
