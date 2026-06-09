@@ -69,8 +69,8 @@ namespace Astral {
      */
     struct AttachmentReference
     {
-        AttachmentIndex AttachmentIndex;
-        ImageLayout OptimalImageLayout;
+        AttachmentIndex AttachmentIndex = NullAttachmentIndex;
+        ImageLayout OptimalImageLayout = ImageLayout::UNDEFINED;
     };
 
     static constexpr uint32 FullSubresourceRange = -1;
