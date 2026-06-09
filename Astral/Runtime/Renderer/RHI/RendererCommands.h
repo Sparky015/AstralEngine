@@ -43,7 +43,6 @@ namespace Astral {
         virtual void NameObject(TextureHandle textureHandle, std::string_view name) = 0;
         virtual void NameObject(ShaderHandle shaderHandle, std::string_view name) = 0;
         virtual void NameObject(CommandBufferHandle commandBufferHandle, std::string_view name) = 0;
-        virtual void NameObject(RenderPassHandle renderPassHandle, std::string_view name) = 0;
 
         virtual void CallImGuiDraws(CommandBufferHandle commandBufferHandle) = 0;
 

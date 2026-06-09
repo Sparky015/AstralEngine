@@ -328,9 +328,7 @@ namespace Astral {
 
         imguiRenderPass->BeginBuildingRenderPass();
         AttachmentIndex renderTargetIndex = imguiRenderPass->DefineAttachment(renderTargetDescription);
-        imguiRenderPass->BeginBuildingSubpass();
         imguiRenderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        imguiRenderPass->EndBuildingSubpass();
         imguiRenderPass->EndBuildingRenderPass();
     }
 

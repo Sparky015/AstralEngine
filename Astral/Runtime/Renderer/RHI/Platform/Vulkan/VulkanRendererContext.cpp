@@ -267,7 +267,7 @@ namespace Astral {
             .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
-            .Subpass = renderPassHandle->GetNumberOfSubpasses() - 1,
+            .Subpass = 0,
             .DescriptorPoolSize = 9,
             .UseDynamicRendering = true,
             .PipelineRenderingCreateInfo = pipelineRenderingCreateInfo,

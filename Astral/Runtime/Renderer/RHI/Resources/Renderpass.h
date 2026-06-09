@@ -19,9 +19,6 @@ namespace Astral {
 
     using AttachmentIndex = uint32;
     static constexpr AttachmentIndex NullAttachmentIndex = -1;
-    using SubpassIndex = uint8;
-    static constexpr SubpassIndex NullSubpassIndex = -1;
-    static constexpr SubpassIndex SubpassExternal = -1;
 
     /**
      * @brief Defines a load operation for a render pass attachment
@@ -85,16 +82,6 @@ namespace Astral {
         uint32 ArrayLayer; /// Specify a specific layer number or use FullSubresourceRange var to use all layers in texture
     };
 
-    /**
-     * @brief Defines information needed to declare a dependency between two subpasses
-     */
-    struct SubpassDependencyMasks
-    {
-        PipelineStageFlags SourceStageMask;
-        PipelineStageFlags DestinationStageMask;
-        AccessFlags SourceAccessMask;
-        AccessFlags DestinationAccessMask;
-    };
 
     /**
      * @brief Defines the RHI RenderPass object
@@ -116,20 +103,6 @@ namespace Astral {
          * @return The attachment index that can be used to reference this attachment in the render pass
          */
         virtual AttachmentIndex DefineAttachment(const AttachmentDescription& attachmentDescription) = 0;
-
-        /**
-         * @brief Indicates the start of defining a render pass subpass
-         */
-        virtual void BeginBuildingSubpass() = 0;
-
-        /**
-         * @brief Adds an input attachment to the current subpass
-         * @param attachmentIndex The attachment index of the attachment to add as an input attachment
-         * @param optimalImageLayout The image layout to use for the attachment during the render pass
-         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
-         *           is being built as well as which subpass to add this attachment too
-         */
-        virtual void AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
 
         /**
          * @brief Adds a color attachment to the current subpass
@@ -159,26 +132,6 @@ namespace Astral {
         virtual void AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) = 0;
 
         /**
-         * @brief Instructs the render pass to preserve an attachment if the attachment does not get read or written to for this subpass
-         * @param attachmentIndex The attachment index of the attachment to preserve
-         */
-        virtual void PreserveAttachment(AttachmentIndex attachmentIndex) = 0;
-
-        /**
-         * @brief Indicates the end of building the current subpass
-         * @pre @ref BeginBuildingSubpass is called first to indicate the start of building the current subpass
-         */
-        virtual SubpassIndex EndBuildingSubpass() = 0;
-
-        /**
-         * @brief Defines a subpass dependency between two subpasses
-         * @param sourceSubpass The source subpass
-         * @param destinationSubpass The destination subpass that depends on the source subpass
-         * @param subpassDependencyMasks Pipeline and access masks of the subpass dependency
-         */
-        virtual void DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks) = 0;
-
-        /**
          * @brief Indicates the end of building the render pass
          * @pre @ref BeginBuildingRenderPass is called first to indicate the start of building the render pass
          */
@@ -188,12 +141,6 @@ namespace Astral {
         * @brief Cleans up and resets an existing render pass if applicable
         */
         virtual void Invalidate() = 0;
-
-        /**
-        * @brief Gets the number of subpasses in the render pass
-        * @return The number of subpasses in the render pass
-        */
-        virtual uint32 GetNumberOfSubpasses() = 0;
 
         /**
          * @brief Gets the attachment description of an attachment
@@ -226,24 +173,6 @@ namespace Astral {
          */
         virtual AttachmentReference GetDepthStencilAttachmentReference() const = 0;
 
-        /**
-        * @brief Gets the number of color attachments in a subpass
-        * @param subpassIndex The subpass to get the number of color attachments from
-        * @return The number of color attachments in a subpass
-        */
-        virtual uint32 GetNumColorAttachments(SubpassIndex subpassIndex) = 0;
-
-        /**
-         * @brief Gets the clear colors of every attachment (that has a clear load op)
-         * @return The clear colors of every attachment (that has a clear load op)
-         */
-        virtual const std::vector<Vec4>& GetClearColors() const = 0;
-
-        /**
-         * @brief Gets the native render pass object of the current RHI backend
-         * @return The native render pass object of the current RHI backend
-         */
-        virtual void* GetNativeHandle() = 0;
     };
 
     using RenderPassHandle = GraphicsRef<RenderPass>;

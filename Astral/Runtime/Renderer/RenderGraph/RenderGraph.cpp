@@ -613,9 +613,6 @@ namespace Astral {
 
             AE_LOG("Creating Render Pass: " << pass.GetName());
 
-            renderPass->BeginBuildingSubpass();
-
-
             const std::vector<RenderGraphPass::LocalAttachment>& passLocalAttachments = pass.GetAttachments();
 
             for (AttachmentIndex localAttachmentIndex : pass.GetColorAttachments())
@@ -671,7 +668,6 @@ namespace Astral {
                 attachmentIndex++;
             }
 
-            renderPass->EndBuildingSubpass();
             renderPass->EndBuildingRenderPass();
         }
 

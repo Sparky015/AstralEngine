@@ -268,7 +268,7 @@ namespace Astral {
             .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT, // <--- Enable writing to Alpha channel
         };
 
-        uint32 numColorAttachments = m_GraphicsDescription.RenderPass->GetNumColorAttachments(m_GraphicsDescription.SubpassIndex);
+        uint32 numColorAttachments = m_GraphicsDescription.RenderPass->GetColorAttachmentReferences().size();
         m_PipelineCreateInfos.ColorBlendAttachmentStates.reserve(numColorAttachments);
 
         for (int i = 0; i < numColorAttachments; i++)
