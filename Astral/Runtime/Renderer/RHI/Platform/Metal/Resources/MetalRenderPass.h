@@ -41,20 +41,6 @@ namespace Astral {
         AttachmentIndex DefineAttachment(const AttachmentDescription& attachmentDescription) override;
 
         /**
-         * @brief Indicates the start of defining a render pass subpass
-         */
-        void BeginBuildingSubpass() override;
-
-        /**
-         * @brief Adds an input attachment to the current subpass
-         * @param attachmentIndex The attachment index of the attachment to add as an input attachment
-         * @param optimalImageLayout The image layout to use for the attachment during the render pass
-         * @pre @ref BeginBuildingRenderPass and @ref BeginBuildingSubpass should be called first to indicate that the render pass
-         *           is being built as well as which subpass to add this attachment too
-         */
-        void AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
-
-        /**
          * @brief Adds a color attachment to the current subpass
          * @param attachmentIndex The attachment index of the attachment to add as an color attachment
          * @param optimalImageLayout The image layout to use for the attachment during the render pass
@@ -82,26 +68,6 @@ namespace Astral {
         void AddDepthStencilAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout) override;
 
         /**
-         * @brief Instructs the render pass to preserve an attachment if the attachment does not get read or written to for this subpass
-         * @param attachmentIndex The attachment index of the attachment to preserve
-         */
-        void PreserveAttachment(AttachmentIndex attachmentIndex) override;
-
-        /**
-         * @brief Indicates the end of building the current subpass
-         * @pre @ref BeginBuildingSubpass is called first to indicate the start of building the current subpass
-         */
-        SubpassIndex EndBuildingSubpass() override;
-
-        /**
-         * @brief Defines a subpass dependency between two subpasses
-         * @param sourceSubpass The source subpass
-         * @param destinationSubpass The destination subpass that depends on the source subpass
-         * @param subpassDependencyMasks Pipeline and access masks of the subpass dependency
-         */
-        void DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks) override;
-
-        /**
          * @brief Indicates the end of building the render pass
          * @pre @ref BeginBuildingRenderPass is called first to indicate the start of building the render pass
          */
@@ -111,19 +77,6 @@ namespace Astral {
         * @brief Cleans up and resets an existing render pass if applicable
         */
         void Invalidate() override;
-
-        /**
-        * @brief Gets the number of subpasses in the render pass
-        * @return The number of subpasses in the render pass
-        */
-        uint32 GetNumberOfSubpasses() override;
-
-        /**
-        * @brief Gets the number of color attachments in a subpass
-        * @param subpassIndex The subpass to get the number of color attachments from
-        * @return The number of color attachments in a subpass
-        */
-        uint32 GetNumColorAttachments(SubpassIndex subpassIndex) override;
 
         /**
          * @brief Gets the attachment description of an attachment
@@ -156,55 +109,9 @@ namespace Astral {
         */
         AttachmentReference GetDepthStencilAttachmentReference() const override;
 
-        /**
-         * @brief Gets the clear colors of every attachment (that has a clear load op)
-         * @return The clear colors of every attachment (that has a clear load op)
-         */
-        const std::vector<Vec4>& GetClearColors() const override;
-
-        /**
-         * @brief Gets the native render pass object of the current RHI backend
-         * @return The native render pass object of the current RHI backend
-         */
-        void* GetNativeHandle() override;
-
     private:
 
-        /**
-         * @brief Creates the render pass object based on the provided render pass definitions
-         */
-        void CreateRenderPass();
 
-        /**
-         * @brief Destroys the render pass object
-         */
-        void DestroyRenderPass();
-
-        // VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
-        // VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
-
-        void UpdateSubpassAttachmentLayouts();
-
-        struct SubpassAttachments
-        {
-            // std::vector<VkAttachmentReference> InputAttachments;
-            // std::vector<VkAttachmentReference> ColorAttachments;
-            // std::vector<VkAttachmentReference> ResolveAttachments;
-            // std::vector<VkAttachmentReference> DepthStencilAttachment;
-            std::vector<AttachmentIndex> PreserveAttachments;
-        };
-
-        MTL::Device* m_Device;
-
-        // std::vector<VkAttachmentDescription> m_RenderPassAttachments;
-        std::vector<SubpassAttachments> m_SubpassAttachments;
-        // std::vector<VkSubpassDescription> m_SubpassDescriptions;
-        // std::vector<VkSubpassDependency> m_SubpassDependencies;
-        std::vector<Vec4> m_ClearValues;
-
-        // VkRenderPass m_RenderPass;
-
-        uint32 m_CurrentSubpassIndex{0}; // Updated each time a new subpass is started and reset when a render pass is started
     };
 
 }

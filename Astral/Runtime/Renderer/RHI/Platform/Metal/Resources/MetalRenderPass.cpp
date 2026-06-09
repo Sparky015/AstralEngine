@@ -32,18 +32,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::BeginBuildingSubpass()
-    {
-
-    }
-
-
-    void MetalRenderPass::AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
-    {
-
-    }
-
-
     void MetalRenderPass::AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
     {
 
@@ -62,24 +50,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::PreserveAttachment(AttachmentIndex attachmentIndex)
-    {
-
-    }
-
-
-    SubpassIndex MetalRenderPass::EndBuildingSubpass()
-    {
-
-    }
-
-
-    void MetalRenderPass::DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks)
-    {
-
-    }
-
-
     void MetalRenderPass::EndBuildingRenderPass()
     {
 
@@ -87,18 +57,6 @@ namespace Astral {
 
 
     void MetalRenderPass::Invalidate()
-    {
-
-    }
-
-
-    uint32 MetalRenderPass::GetNumberOfSubpasses()
-    {
-
-    }
-
-
-    uint32 MetalRenderPass::GetNumColorAttachments(SubpassIndex subpassIndex)
     {
 
     }
@@ -129,36 +87,6 @@ namespace Astral {
 
 
     AttachmentReference MetalRenderPass::GetDepthStencilAttachmentReference() const
-    {
-
-    }
-
-
-    const std::vector<Vec4>& MetalRenderPass::GetClearColors() const
-    {
-
-    }
-
-
-    void* MetalRenderPass::GetNativeHandle()
-    {
-
-    }
-
-
-    void MetalRenderPass::CreateRenderPass()
-    {
-
-    }
-
-
-    void MetalRenderPass::DestroyRenderPass()
-    {
-
-    }
-
-
-    void MetalRenderPass::UpdateSubpassAttachmentLayouts()
     {
 
     }
