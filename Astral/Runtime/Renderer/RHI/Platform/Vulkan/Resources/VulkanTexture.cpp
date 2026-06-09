@@ -177,17 +177,29 @@ namespace Astral {
 
     void* VulkanTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
     {
-    	ASSERT(layer < m_NumLayers, "Specified layer does not exist in the texture!")
-    	ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
+    	ASSERT(layer < m_NumLayers || layer == -1, "Specified layer does not exist in the texture!")
+    	ASSERT(mipLevel < m_NumMipLevels || layer == -1, "Specified mip level does not exist in the texture!")
 
     	if (m_LayerMipImageViews.contains({layer, mipLevel})) { return m_LayerMipImageViews[{layer, mipLevel}]; }
 
+        if (layer == -1 && mipLevel == -1)
+        {
+            return m_ImageView;
+        }
+        else if (layer == -1)
+        {
+            return GetNativeMipMapImageView(mipLevel);
+        }
+        else if (mipLevel == -1)
+        {
+            return GetNativeLayerImageView(layer);
+        }
 
     	// Image view does not exist yet so create it
 
     	VkImageAspectFlags aspectFlags{};
 
-    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT)
+    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT || m_IsSwapchainOwned)
     	{
     		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
     	}
@@ -546,8 +558,6 @@ namespace Astral {
 
     void VulkanTexture::DestroyImageView()
     {
-    	vkDestroyImageView(m_Device, m_ImageView, nullptr);
-
     	for (VkImageView layerImageView : m_LayerImageViews)
     	{
     		if (layerImageView == nullptr) { continue; }
