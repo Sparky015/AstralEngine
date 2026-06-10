@@ -12,7 +12,6 @@
 #include "Renderer/Cameras/Camera.h"
 #include "Renderer/DrawList.h"
 #include "Renderer/RHI/RendererCommands.h"
-#include "Renderer/RHI/Resources/Framebuffer.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 #include <string_view>
@@ -48,8 +47,6 @@ namespace Astral {
         BufferHandle SceneDataBuffer;
         BufferHandle SceneLightsBuffer;
         DescriptorSetHandle SceneDataDescriptorSet;
-
-        FramebufferHandle WindowFramebuffer;
 
         Ref<EnvironmentMap> EnvironmentMap;
         DescriptorSetHandle EnvironmentMapDescriptorSet;

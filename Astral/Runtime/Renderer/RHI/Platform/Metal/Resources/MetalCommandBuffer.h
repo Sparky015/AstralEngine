@@ -79,14 +79,9 @@ namespace Astral {
         /**
          * @brief Begins a render pass using the given frame buffer
          * @param renderPassHandle The render pass being used
-         * @param frameBufferHandle The frame buffer to use with the render pass
+         * @param attachmentTextures The frame buffer to use with the render pass
          */
-        void BeginRenderPass(const RenderPassHandle& renderPassHandle, const FramebufferHandle& frameBufferHandle) override;
-
-        /**
-         * @brief Indicates the start of the next subpass
-         */
-        void NextSubpass() override;
+        void BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentTextures) override;
 
         /**
          * @brief Indicates the end of the render pass

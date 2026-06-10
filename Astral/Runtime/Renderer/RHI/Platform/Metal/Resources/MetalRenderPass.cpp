@@ -32,18 +32,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::BeginBuildingSubpass()
-    {
-
-    }
-
-
-    void MetalRenderPass::AddInputAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
-    {
-
-    }
-
-
     void MetalRenderPass::AddColorAttachment(AttachmentIndex attachmentIndex, ImageLayout optimalImageLayout)
     {
 
@@ -62,24 +50,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::PreserveAttachment(AttachmentIndex attachmentIndex)
-    {
-
-    }
-
-
-    SubpassIndex MetalRenderPass::EndBuildingSubpass()
-    {
-
-    }
-
-
-    void MetalRenderPass::DefineSubpassDependency(SubpassIndex sourceSubpass, SubpassIndex destinationSubpass, SubpassDependencyMasks subpassDependencyMasks)
-    {
-
-    }
-
-
     void MetalRenderPass::EndBuildingRenderPass()
     {
 
@@ -92,61 +62,31 @@ namespace Astral {
     }
 
 
-    void MetalRenderPass::BeginRenderPass(FramebufferHandle frameBufferHandle)
+    AttachmentDescription MetalRenderPass::GetAttachmentDescription(AttachmentIndex attachmentIndex) const
     {
 
     }
 
 
-    void MetalRenderPass::NextSubpass()
+    uint32 MetalRenderPass::GetNumAttachments() const
     {
 
     }
 
 
-    void MetalRenderPass::EndRenderPass()
+    const std::vector<AttachmentReference>& MetalRenderPass::GetColorAttachmentReferences() const
     {
 
     }
 
 
-    uint32 MetalRenderPass::GetNumberOfSubpasses()
+    const std::vector<AttachmentReference>& MetalRenderPass::GetResolveAttachmentReferences() const
     {
 
     }
 
 
-    uint32 MetalRenderPass::GetNumColorAttachments(SubpassIndex subpassIndex)
-    {
-
-    }
-
-
-    const std::vector<Vec4>& MetalRenderPass::GetClearColors() const
-    {
-
-    }
-
-
-    void* MetalRenderPass::GetNativeHandle()
-    {
-
-    }
-
-
-    void MetalRenderPass::CreateRenderPass()
-    {
-
-    }
-
-
-    void MetalRenderPass::DestroyRenderPass()
-    {
-
-    }
-
-
-    void MetalRenderPass::UpdateSubpassAttachmentLayouts()
+    AttachmentReference MetalRenderPass::GetDepthStencilAttachmentReference() const
     {
 
     }

@@ -91,7 +91,6 @@ set(ENGINE_SOURCE
         Renderer/RHI/Resources/Sampler.h
         Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
-        Renderer/RHI/Resources/Framebuffer.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
         Renderer/RHI/Resources/CommandQueue.h
@@ -188,8 +187,6 @@ set(VULKAN_RHI_FILES
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
-    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
-    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
     Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.cpp

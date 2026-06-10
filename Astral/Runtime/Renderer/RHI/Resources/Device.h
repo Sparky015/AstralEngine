@@ -7,7 +7,6 @@
 #pragma once
 
 #include "CommandQueue.h"
-#include "Framebuffer.h"
 #include "IndexBuffer.h"
 #include "PipelineState.h"
 #include "Renderpass.h"
@@ -31,7 +30,6 @@ namespace Astral {
         virtual CommandQueueHandle GetPrimaryCommandQueue() = 0;
         virtual CommandQueueHandle GetAsyncCommandQueue() = 0;
         virtual RenderPassHandle CreateRenderPass() = 0;
-        virtual FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) = 0;
         virtual ShaderHandle CreateShader(const ShaderSource& shaderSource) = 0;
         virtual PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) = 0;
         virtual PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) = 0;

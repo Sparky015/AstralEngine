@@ -38,7 +38,6 @@ namespace Astral {
         CommandQueueHandle GetPrimaryCommandQueue() override;
         CommandQueueHandle GetAsyncCommandQueue() override;
         RenderPassHandle CreateRenderPass() override;
-        FramebufferHandle CreateFramebuffer(RenderPassHandle renderPassHandle) override;
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
         PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& pipelineStateCreateInfo) override;
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override;

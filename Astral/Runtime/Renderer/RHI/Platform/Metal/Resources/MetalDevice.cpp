@@ -72,12 +72,6 @@ namespace Astral {
     }
 
 
-    FramebufferHandle MetalDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        return nullptr;
-    }
-
-
     ShaderHandle MetalDevice::CreateShader(const ShaderSource& shaderSource)
     {
         MetalShaderDesc shaderDesc = {

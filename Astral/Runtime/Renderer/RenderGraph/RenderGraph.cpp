@@ -123,11 +123,12 @@ namespace Astral {
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
             m_ExecutionContext.ViewportSize = m_OutputAttachmentDimensions;
 
+            TransitionAttachmentsToOptimalLayouts(commandBuffer, pass, swapchainImageIndex);
             TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
 
 
             commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
-            commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.Framebuffer);
+            commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.AttachmentResources);
 
             pass.Execute(m_ExecutionContext, sharedFrameContext);
 
@@ -413,8 +414,81 @@ namespace Astral {
             ImageMemoryBarrier imageMemoryBarrier = {};
             imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
             imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.OldLayout = externalAttachmentTexture->GetLayout();
+            imageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
             imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = externalAttachmentTexture;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = externalAttachmentTexture->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = externalAttachmentTexture->GetNumMipLevels(),
+                .BaseArrayLayer = 0,
+                .LayerCount = externalAttachmentTexture->GetNumLayers()
+            };
+
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+        }
+
+        commandBuffer->SetPipelineBarrier(pipelineBarrier);
+    }
+
+
+    void RenderGraph::TransitionAttachmentsToOptimalLayouts(CommandBufferHandle commandBuffer, const RenderGraphPass& pass, uint32 swapchainImageIndex)
+    {
+        PipelineBarrier pipelineBarrier = {};
+        pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+
+        for (const RenderGraphPass::LocalAttachment& localAttachment : pass.GetAttachments())
+        {
+            PassIndex passIndex = GetRenderPassIndex(pass);
+            ASSERT(passIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+            const RenderPassResources& localResources = m_RenderPassResources[passIndex][swapchainImageIndex];
+
+            AttachmentIndex localAttachmentIndex = pass.GetLocalAttachment(localAttachment.Name);
+            ASSERT(localAttachmentIndex != NullAttachmentIndex, "Render pass does not contain attachment by name " << localAttachment.Name << "!")
+
+            TextureHandle localAttachmentTexture = localResources.AttachmentTextures[localAttachmentIndex];
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            imageMemoryBarrier.NewLayout = localAttachment.OptimalImageLayout;
+            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            imageMemoryBarrier.Image = localAttachmentTexture;
+            imageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = localAttachmentTexture->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = localAttachmentTexture->GetNumMipLevels(),
+                .BaseArrayLayer = 0,
+                .LayerCount = localAttachmentTexture->GetNumLayers()
+            };
+
+            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+        }
+
+        for (const RenderGraphPass::ExternalAttachment& writeInputAttachment : pass.GetWriteInputAttachments())
+        {
+            PassIndex externalPassIndex = GetRenderPassIndex(*writeInputAttachment.OwningPass);
+            ASSERT(externalPassIndex != NullRenderPassIndex, "Render pass does not exist in render graph!")
+
+            const RenderPassResources& externalPassResources = m_RenderPassResources[externalPassIndex][swapchainImageIndex];
+
+            AttachmentIndex externalPassAttachmentIndex = writeInputAttachment.OwningPass->GetLocalAttachment(writeInputAttachment.Name);
+            ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << writeInputAttachment.Name << "!")
+
+            TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
+
+            ImageMemoryBarrier imageMemoryBarrier = {};
+            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            imageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            imageMemoryBarrier.NewLayout = writeInputAttachment.OptimalImageLayout;
             imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
             imageMemoryBarrier.Image = externalAttachmentTexture;
@@ -539,9 +613,6 @@ namespace Astral {
 
             AE_LOG("Creating Render Pass: " << pass.GetName());
 
-            renderPass->BeginBuildingSubpass();
-
-
             const std::vector<RenderGraphPass::LocalAttachment>& passLocalAttachments = pass.GetAttachments();
 
             for (AttachmentIndex localAttachmentIndex : pass.GetColorAttachments())
@@ -597,10 +668,7 @@ namespace Astral {
                 attachmentIndex++;
             }
 
-            renderPass->EndBuildingSubpass();
             renderPass->EndBuildingRenderPass();
-
-            RendererAPI::NameObject(renderPass, pass.GetName());
         }
 
         // ----------------------------------------------------------------------------------------------------------------------------------
@@ -723,16 +791,20 @@ namespace Astral {
             // resources used in this render pass should have been created in an earlier loop.
 
 
-            // Framebuffers
+            // Attachment Resources
             for (size_t i = 0; i < m_MaxFramesInFlight; i++)
             {
-                // Create the framebuffers for the render pass
-                passResources[i].Framebuffer = device.CreateFramebuffer(renderPass);
-                passResources[i].Framebuffer->BeginBuildingFramebuffer(passResourceDimensions.x, passResourceDimensions.y, passResourceDimensions.z);
+                // Initialize the attachment resources vector for the render pass
+                passResources[i].AttachmentResources = std::vector<AttachmentResource>();
 
                 for (const TextureHandle& attachmentTexture : m_RenderPassResources[renderPassIndex][i].AttachmentTextures)
                 {
-                    passResources[i].Framebuffer->AttachTexture(attachmentTexture);
+                    AttachmentResource attachmentResource = {
+                        .Resource = attachmentTexture,
+                        .MipLevel = FullSubresourceRange,
+                        .ArrayLayer = FullSubresourceRange
+                    };
+                    passResources[i].AttachmentResources.push_back(attachmentResource);
                 }
 
                 for (const RenderGraphPass::ExternalAttachment& externalAttachment : pass.GetWriteInputAttachments())
@@ -746,11 +818,13 @@ namespace Astral {
 
                     TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
 
-                    passResources[i].Framebuffer->AttachTexture(externalAttachmentTexture);
+                    AttachmentResource attachmentResource = {
+                        .Resource = externalAttachmentTexture,
+                        .MipLevel = FullSubresourceRange,
+                        .ArrayLayer = FullSubresourceRange
+                    };
+                    passResources[i].AttachmentResources.push_back(attachmentResource);
                 }
-
-                passResources[i].Framebuffer->EndBuildingFramebuffer();
-                RendererAPI::NameObject(passResources[i].Framebuffer, std::string(pass.GetName()) + "_Framebuffer_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
 
 
             // Descriptor Sets
@@ -768,9 +842,6 @@ namespace Astral {
                     ASSERT(externalPassAttachmentIndex != NullAttachmentIndex, "External render pass does not contain attachment by name " << externalAttachment.Name << "!")
 
                     TextureHandle externalAttachmentTexture = externalPassResources.AttachmentTextures[externalPassAttachmentIndex];
-
-
-                    ASSERT(passResources[i].Framebuffer->GetExtent() == (UVec2)passResourceDimensions, "External input texture does not match the dimensions of the target render pass!");
 
                     passResources[i].ReadAttachmentDescriptorSet->AddDescriptorImageSampler(externalAttachmentTexture, ShaderStage::FRAGMENT);
                 }

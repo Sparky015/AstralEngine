@@ -7,9 +7,6 @@
 #include "VulkanCommandBuffer.h"
 
 #include "Astral.h"
-#include "Astral.h"
-#include "Astral.h"
-#include "Astral.h"
 #include "Core/Engine.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
@@ -17,6 +14,7 @@
 #include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h"
 
+#include "glm/gtc/type_ptr.hpp"
 
 namespace Astral {
 
@@ -202,45 +200,122 @@ namespace Astral {
     }
 
 
-    void VulkanCommandBuffer::BeginRenderPass(const RenderPassHandle& renderPassHandle, const FramebufferHandle& frameBufferHandle)
+    void VulkanCommandBuffer::BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentResources)
     {
-        m_ActiveRenderPass = renderPassHandle;
+        ASSERT(attachmentResources.size() > 0, "No attachment resources were given to render pass!")
+        UVec2 extent = attachmentResources[0].Resource->GetDimensions();
+        uint32 layerCount = attachmentResources[0].Resource->GetNumLayers();
 
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-        VkFramebuffer framebuffer = (VkFramebuffer)frameBufferHandle->GetNativeHandle();
-        UVec2 extent = frameBufferHandle->GetExtent();
-        const std::vector<Vec4>& clearColors = renderPassHandle->GetClearColors();
-
-        VkRenderPassBeginInfo renderPassBeginInfo = {
-            .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+        VkRenderingInfo renderingInfo = {
+            .sType = VK_STRUCTURE_TYPE_RENDERING_INFO,
             .pNext = nullptr,
-            .renderPass = renderPass,
-            .framebuffer = framebuffer,
+            .flags = 0,
             .renderArea = {
                 .offset = {0,0},
                 .extent = {extent.x, extent.y}
             },
-            .clearValueCount = (uint32)clearColors.size(),
-            .pClearValues = (VkClearValue*)clearColors.data(), // VkClearValue and Vec4 have same data layout
+            .layerCount = layerCount,
+            .viewMask = 0,
+            .colorAttachmentCount = 0,
+            .pColorAttachments = nullptr,
+            .pDepthAttachment = nullptr,
+            .pStencilAttachment = nullptr,
         };
 
-        vkCmdBeginRenderPass(m_CommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-        m_ActiveRenderPass->BeginRenderPass(frameBufferHandle);
+        // ==== Populating the color attachments fields ========================================================
+
+        std::vector<VkRenderingAttachmentInfo> colorAttachments{};
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+        const std::vector<AttachmentReference>& resolveAttachmentReferences = renderPassHandle->GetResolveAttachmentReferences();
+
+        for (int i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            AttachmentResource colorAttachmentResource = attachmentResources[colorAttachmentReference.AttachmentIndex];
+            VkImageView colorImageView = (VkImageView)colorAttachmentResource.Resource->GetNativeImageView(colorAttachmentResource.ArrayLayer, colorAttachmentResource.MipLevel);
+
+            VkRenderingAttachmentInfo renderingAttachmentInfo = {
+                .sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+                .pNext = nullptr,
+                .imageView = colorImageView,
+                .imageLayout = ConvertImageLayoutToVkImageLayout(colorAttachmentReference.OptimalImageLayout),
+                .resolveMode = VK_RESOLVE_MODE_NONE,
+                .resolveImageView = nullptr,
+                .resolveImageLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                .loadOp = ConvertToVkLoadOp(colorAttachmentDescription.LoadOp),
+                .storeOp = ConvertToVkStoreOp(colorAttachmentDescription.StoreOp),
+                .clearValue = { .color = { .float32 = {
+                    colorAttachmentDescription.ClearColor.r,
+                    colorAttachmentDescription.ClearColor.g,
+                    colorAttachmentDescription.ClearColor.b,
+                    colorAttachmentDescription.ClearColor.a
+                }}},
+            };
+
+            if (i < resolveAttachmentReferences.size())
+            {
+                // A resolve attachment exists corresponding to this color attachment
+                const AttachmentReference& resolveAttachmentReference = resolveAttachmentReferences[i];
+                AttachmentResource resolveAttachmentResource = attachmentResources[resolveAttachmentReference.AttachmentIndex];
+                VkImageView resolveImageView = (VkImageView)resolveAttachmentResource.Resource->GetNativeImageView(resolveAttachmentResource.ArrayLayer, resolveAttachmentResource.MipLevel);
+
+                renderingAttachmentInfo.resolveMode = VK_RESOLVE_MODE_AVERAGE_BIT;
+                renderingAttachmentInfo.resolveImageView = resolveImageView;
+                renderingAttachmentInfo.resolveImageLayout = ConvertImageLayoutToVkImageLayout(resolveAttachmentReference.OptimalImageLayout);
+            }
+
+            colorAttachments.push_back(renderingAttachmentInfo);
+        }
+
+        renderingInfo.colorAttachmentCount = colorAttachments.size();
+        renderingInfo.pColorAttachments = colorAttachments.data();
+
+
+        // ==== Populating the depth/stencil attachment fields ========================================================
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+        VkRenderingAttachmentInfo depthAttachment{};
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+            AttachmentResource depthStencilAttachmentResource = attachmentResources[depthStencilAttachmentReference.AttachmentIndex];
+            VkImageView depthStencilImageView = (VkImageView)depthStencilAttachmentResource.Resource->GetNativeImageView(depthStencilAttachmentResource.ArrayLayer, depthStencilAttachmentResource.MipLevel);
+
+            // Depth stencil attachment exists
+             depthAttachment = {
+                .sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+                .pNext = nullptr,
+                .imageView = depthStencilImageView,
+                .imageLayout = ConvertImageLayoutToVkImageLayout(depthStencilAttachmentReference.OptimalImageLayout),
+                .resolveMode = VK_RESOLVE_MODE_NONE,
+                .resolveImageView = nullptr,
+                .resolveImageLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                .loadOp = ConvertToVkLoadOp(depthStencilAttachmentDescription.LoadOp),
+                .storeOp = ConvertToVkStoreOp(depthStencilAttachmentDescription.StoreOp),
+                 .clearValue = { .depthStencil = {
+                     .depth   = depthStencilAttachmentDescription.ClearColor.x,
+                     .stencil = static_cast<uint32_t>(depthStencilAttachmentDescription.ClearColor.y)
+                 }},
+            };
+
+            renderingInfo.pDepthAttachment = &depthAttachment;
+
+            ImageFormat imageFormat = depthStencilAttachmentResource.Resource->GetFormat();
+            if (IsStencilFormat(imageFormat))
+            {
+                renderingInfo.pStencilAttachment = &depthAttachment;
+            }
+        }
+
+        vkCmdBeginRendering(m_CommandBuffer, &renderingInfo);
     }
-
-
-    void VulkanCommandBuffer::NextSubpass()
-    {
-        vkCmdNextSubpass(m_CommandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-        m_ActiveRenderPass->NextSubpass();
-    }
-
 
     void VulkanCommandBuffer::EndRenderPass()
     {
-        vkCmdEndRenderPass(m_CommandBuffer);
-        m_ActiveRenderPass->EndRenderPass();
+        vkCmdEndRendering(m_CommandBuffer);
     }
 
 

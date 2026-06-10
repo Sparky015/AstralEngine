@@ -127,10 +127,11 @@ namespace Astral {
 
         /**
          * @brief  Gets the native image view handle of the texture at a specific layer and mip level
-         * @param layer The layer to view the image at
-         * @param mipLevel The mip level to view the image at
+         * @param layer The layer to view the image at. Make argument -1 to include all layers in texture.
+         * @param mipLevel The mip level to view the image at. Make argument -1 to include all mip map levels in texture.
          * @return The native image view of the texture
-         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend.
+         *
          */
         void* GetNativeImageView(uint32 layer, uint32 mipLevel) override;
 
