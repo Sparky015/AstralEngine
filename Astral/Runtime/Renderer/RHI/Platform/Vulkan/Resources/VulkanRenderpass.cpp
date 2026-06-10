@@ -68,7 +68,7 @@ namespace Astral {
 
     void VulkanRenderPass::EndBuildingRenderPass()
     {
-        // CreateRenderPass();
+
     }
 
 
