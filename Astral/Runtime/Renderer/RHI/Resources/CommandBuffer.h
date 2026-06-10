@@ -76,11 +76,6 @@ namespace Astral {
         virtual void BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentTextures) = 0;
 
         /**
-         * @brief Indicates the start of the next subpass
-         */
-        virtual void NextSubpass() = 0;
-
-        /**
          * @brief Indicates the end of the render pass
          */
         virtual void EndRenderPass() = 0;

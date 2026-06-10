@@ -313,13 +313,6 @@ namespace Astral {
         vkCmdBeginRendering(m_CommandBuffer, &renderingInfo);
     }
 
-
-    void VulkanCommandBuffer::NextSubpass()
-    {
-        // vkCmdNextSubpass(m_CommandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-    }
-
-
     void VulkanCommandBuffer::EndRenderPass()
     {
         vkCmdEndRendering(m_CommandBuffer);
