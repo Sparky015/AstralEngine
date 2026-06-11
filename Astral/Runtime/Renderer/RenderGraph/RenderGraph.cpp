@@ -37,7 +37,6 @@ namespace Astral {
         m_OutputRenderPassIndex = 0;
         m_OutputAttachmentName = "";
 
-        m_OffscreenOutputTargets.clear();
         m_OutputAttachmentDimensions = UVec2(0);
     }
 
@@ -55,36 +54,12 @@ namespace Astral {
     }
 
 
-    void RenderGraph::SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<TextureHandle>& offscreenTargets)
+    void RenderGraph::SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, UVec2 outputAttachmentDimensions)
     {
         m_OutputAttachmentName = attachmentName;
-
-        m_IsOutputRenderTarget = false;
-        m_OffscreenOutputTargets = offscreenTargets;
-        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
-
         m_OutputAttachmentPass = GetRenderPassIndex(pass);
         ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
-
-        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
-    }
-
-
-    void RenderGraph::SetOutputAttachment(const RenderGraphPass& pass, std::string_view attachmentName, const std::vector<RenderTargetHandle>& swapchainTargets)
-    {
-        m_OutputAttachmentName = attachmentName;
-        ASSERT(swapchainTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
-
-        m_IsOutputRenderTarget = true;
-        for (RenderTargetHandle renderTarget : swapchainTargets)
-        {
-            m_OffscreenOutputTargets.push_back(renderTarget->GetAsTexture());
-        }
-
-        m_OutputAttachmentPass = GetRenderPassIndex(pass);
-        ASSERT(m_OutputAttachmentPass != NullRenderPassIndex, "Attempting to set output attachment from render pass not in render graph!")
-
-        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
+        m_OutputAttachmentDimensions = outputAttachmentDimensions;
     }
 
 
@@ -100,11 +75,13 @@ namespace Astral {
     }
 
 
-    void RenderGraph::Execute(SharedFrameContext& sharedFrameContext, uint32 swapchainImageIndex)
+    void RenderGraph::Execute(SharedFrameContext& sharedFrameContext, uint32 swapchainImageIndex, const TextureHandle& outputAttachmentTexture)
     {
         PROFILE_SCOPE("RenderGraph::Execute")
 
         UpdateRenderGraphResourcesHold();
+        UpdateOutputAttachmentResourceReferences(outputAttachmentTexture, swapchainImageIndex);
+
         CommandBufferHandle& commandBuffer = sharedFrameContext.SceneCommandBuffer;
         m_ExecutionContext.CommandBuffer = commandBuffer;
 
@@ -180,33 +157,16 @@ namespace Astral {
     }
 
 
-    void RenderGraph::ResizeResources(const std::vector<TextureHandle>& offscreenTargets)
+    void RenderGraph::ResizeResources(UVec2 outputAttachmentDimensions)
     {
         PROFILE_SCOPE("RenderGraph::ResizeResources")
 
-        m_OffscreenOutputTargets = offscreenTargets;
-        ASSERT(m_OffscreenOutputTargets.size() == m_MaxFramesInFlight, "Render Graph: Number of output textures does not match the number of frames in flight!")
-        m_OutputAttachmentDimensions = m_OffscreenOutputTargets[0]->GetDimensions();
+        m_OutputAttachmentDimensions = outputAttachmentDimensions;
 
         AddRenderGraphResourcesToHold();
 
         m_RenderPassResources.clear();
         BuildRenderPassResources();
-    }
-
-
-    void RenderGraph::ResizeResources(const std::vector<RenderTargetHandle>& swapchainTargets)
-    {
-        PROFILE_SCOPE("RenderGraph::ResizeResources")
-
-        std::vector<TextureHandle> renderTargetTextures;
-
-        for (RenderTargetHandle renderTarget : swapchainTargets)
-        {
-            renderTargetTextures.push_back(renderTarget->GetAsTexture());
-        }
-
-        ResizeResources(renderTargetTextures);
     }
 
 
@@ -507,6 +467,31 @@ namespace Astral {
     }
 
 
+    void RenderGraph::UpdateOutputAttachmentResourceReferences(const TextureHandle& outputAttachmentTexture, uint32 swapchainImageIndex)
+    {
+        RenderGraphPass& outputAttachmentPass = m_Passes[m_OutputAttachmentPass];
+        RenderPassHandle& renderPassHandle = m_RenderPasses[m_OutputAttachmentPass];
+        AttachmentIndex outputAttachmentIndex = outputAttachmentPass.GetLocalAttachment(m_OutputAttachmentName);
+        RenderPassResources& outputAttachmentPassResources = m_RenderPassResources[m_OutputAttachmentPass][swapchainImageIndex];
+
+        // Update output attachment texture references
+        outputAttachmentPassResources.AttachmentResources[outputAttachmentIndex].Resource = outputAttachmentTexture;
+        outputAttachmentPassResources.AttachmentTextures[outputAttachmentIndex] = outputAttachmentTexture;
+
+        // Update render pass attachment texture layouts and format
+        for (RenderGraphPass::LocalAttachment& localAttachment : outputAttachmentPass.GetAttachments())
+        {
+            if (localAttachment.Name == m_OutputAttachmentName)
+            {
+                localAttachment.AttachmentDescription.InitialLayout = outputAttachmentTexture->GetLayout();
+                localAttachment.InitialLayout = outputAttachmentTexture->GetLayout();
+                localAttachment.AttachmentDescription.Format = outputAttachmentTexture->GetFormat();
+                renderPassHandle->UpdateAttachmentDefinition(outputAttachmentIndex, localAttachment.AttachmentDescription);
+            }
+        }
+    }
+
+
     void RenderGraph::BuildRenderPassObjects()
     {
         PROFILE_SCOPE("RenderGraph::BuildRenderPassObjects")
@@ -530,19 +515,6 @@ namespace Astral {
                 // Manage layout transitions
                 localAttachment.AttachmentDescription.InitialLayout = localAttachment.LastKnownLayout;
                 localAttachment.AttachmentDescription.FinalLayout = localAttachment.OptimalImageLayout;
-
-                if (renderPassIndex == m_OutputAttachmentPass && localAttachment.Name == m_OutputAttachmentName)
-                {
-                    localAttachment.AttachmentDescription.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
-                    localAttachment.InitialLayout = m_OffscreenOutputTargets[0]->GetLayout();
-                    localAttachment.AttachmentDescription.Format = m_OffscreenOutputTargets[0]->GetFormat();
-
-                    if (m_IsOutputRenderTarget && m_OffscreenOutputTargets[0]->GetLayout() == ImageLayout::UNDEFINED)
-                    {
-                        localAttachment.InitialLayout = ImageLayout::PRESENT_SRC_KHR;
-                    }
-                }
-
                 localAttachment.LastKnownLayout = localAttachment.AttachmentDescription.FinalLayout;
 
 
@@ -775,9 +747,8 @@ namespace Astral {
                 {
                     for (size_t i = 0; i < m_MaxFramesInFlight; i++)
                     {
-                        TextureHandle attachmentTexture = m_OffscreenOutputTargets[i];
+                        TextureHandle attachmentTexture = std::shared_ptr<Texture>(nullptr);
                         passResources[i].AttachmentTextures.push_back(attachmentTexture);
-                        RendererAPI::NameObject(attachmentTexture, std::string(localAttachment.Name) + "_" + std::to_string(i) + "_Batch_" + std::to_string(m_ResourceBatchNumber));
                     }
                 }
             }

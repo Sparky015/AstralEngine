@@ -72,6 +72,12 @@ namespace Astral {
     }
 
 
+    void VulkanRenderPass::UpdateAttachmentDefinition(AttachmentIndex attachmentIndex, const AttachmentDescription& attachmentDescription)
+    {
+        m_AttachmentDescriptions[attachmentIndex] = attachmentDescription;
+    }
+
+
     void VulkanRenderPass::Invalidate()
     {
 

@@ -78,6 +78,13 @@ namespace Astral {
         void EndBuildingRenderPass() override;
 
         /**
+         * @brief Updates the attachment definition of the attachment at the given index
+         * @param attachmentIndex The index of the attachment to update the description of
+         * @param attachmentDescription The new attachment description to update with
+         */
+        void UpdateAttachmentDefinition(AttachmentIndex attachmentIndex, const AttachmentDescription& attachmentDescription) override;
+
+        /**
         * @brief Cleans up and resets an existing render pass if applicable
         */
         void Invalidate() override;

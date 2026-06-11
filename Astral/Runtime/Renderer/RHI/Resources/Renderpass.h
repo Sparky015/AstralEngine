@@ -138,6 +138,13 @@ namespace Astral {
         virtual void EndBuildingRenderPass() = 0;
 
         /**
+         * @brief Updates the attachment definition of the attachment at the given index
+         * @param attachmentIndex The index of the attachment to update the description of
+         * @param attachmentDescription The new attachment description to update with
+         */
+        virtual void UpdateAttachmentDefinition(AttachmentIndex attachmentIndex, const AttachmentDescription& attachmentDescription) = 0;
+
+        /**
         * @brief Cleans up and resets an existing render pass if applicable
         */
         virtual void Invalidate() = 0;

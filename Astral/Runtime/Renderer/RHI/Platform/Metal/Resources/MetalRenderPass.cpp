@@ -56,6 +56,12 @@ namespace Astral {
     }
 
 
+    void MetalRenderPass::UpdateAttachmentDefinition(AttachmentIndex attachmentIndex, const AttachmentDescription& attachmentDescription)
+    {
+        
+    }
+
+
     void MetalRenderPass::Invalidate()
     {
 

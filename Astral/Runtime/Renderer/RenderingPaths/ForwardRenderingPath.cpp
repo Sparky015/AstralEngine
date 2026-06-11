@@ -155,7 +155,7 @@ namespace Astral {
         outRenderGraph.AddPass(lightingPass);
         outRenderGraph.AddPass(environmentMapPass);
         outRenderGraph.AddOutputPass(tonemappingPass);
-        outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
+        outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures[0]->GetDimensions());
         outRenderGraph.EndBuildingRenderGraph();
     }
 

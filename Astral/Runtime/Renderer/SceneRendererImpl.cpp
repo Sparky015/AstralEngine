@@ -465,7 +465,7 @@ namespace Astral {
         }
 
         // Viewport Rendering
-        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex);
+        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex, frameContext.OffscreenRenderTarget);
 
         // Editor UI rendering to swapchain image
         DrawEditorUI(commandBuffer, renderTarget);
@@ -876,7 +876,7 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        m_RenderGraph.ResizeResources(outputTextures);
+        m_RenderGraph.ResizeResources(outputTextures[0]->GetDimensions());
     }
 
 
