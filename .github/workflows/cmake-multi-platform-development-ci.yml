@@ -96,5 +96,8 @@ jobs:
       # Runs tests only for Debug builds
       if: matrix.build_type == 'Debug'
       working-directory: ${{ github.workspace }}/cmake-build-${{ matrix.build_type }}/Tests/Astral-Runtime
-      run: ctest -C ${{ matrix.build_type }}  --output-on-failure
+      run: |
+          cd Core && ctest -C ${{ matrix.build_type }} --output-on-failure
+          cd ../Profiler && ctest -C ${{ matrix.build_type }} --output-on-failure
+          cd ../Runtime && ctest -C ${{ matrix.build_type }}ctest -C ${{ matrix.build_type }}  --output-on-failure
 
