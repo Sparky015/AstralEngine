@@ -17,7 +17,6 @@ namespace Astral {
     public:
         virtual ~Shader() = default;
 
-        static Shader* CreateShaderProgram(const ShaderSource& vertexShader, const ShaderSource& fragmentShader);
         static GraphicsRef<Shader> CreateShader(const ShaderSource& shaderSource);
         virtual void* GetNativeHandle() = 0;
 

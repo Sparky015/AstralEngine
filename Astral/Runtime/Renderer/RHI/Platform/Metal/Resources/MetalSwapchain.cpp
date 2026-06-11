@@ -7,6 +7,7 @@
 #include "MetalSwapchain.h"
 
 #include "Core/Utilities/Asserts.h"
+#include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
 
@@ -31,11 +32,17 @@ namespace Astral {
     }
 
 
-    std::vector<RenderTargetHandle>& MetalSwapchain::GetRenderTargets()
+    ImageFormat MetalSwapchain::GetImageFormat()
     {
-        // Not possible for metal
-        AE_ERROR("This method is not supported for Metal!")
-        return m_RenderTargets; // Returns empty vector to not crash
+        MTL::PixelFormat swapchainImageFormat = m_CAMetalLayer->pixelFormat();
+        return ConvertMTLPixelFormatToImageFormat(swapchainImageFormat);
+    }
+
+
+    UVec2 MetalSwapchain::GetImageDimensions()
+    {
+        CGSize dimensions = m_CAMetalLayer->drawableSize();
+        return UVec2(dimensions.width, dimensions.height);
     }
 
 

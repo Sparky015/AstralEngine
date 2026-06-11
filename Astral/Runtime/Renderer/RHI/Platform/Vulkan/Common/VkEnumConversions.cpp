@@ -9,6 +9,7 @@
 #include "Core/Utilities/Error.h"
 
 namespace Astral {
+
     VkFormat ConvertImageFormatToVkFormat(ImageFormat imageFormat)
     {
         switch (imageFormat)
@@ -550,6 +551,22 @@ namespace Astral {
     }
 
 
+    VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage)
+    {
+        VkShaderStageFlags stageFlags;
+
+        switch (shaderStage)
+        {
+            case ShaderStage::VERTEX: stageFlags = VK_SHADER_STAGE_VERTEX_BIT; break;
+            case ShaderStage::FRAGMENT: stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+            case ShaderStage::COMPUTE: stageFlags = VK_SHADER_STAGE_COMPUTE_BIT; break;
+            default: stageFlags = VK_SHADER_STAGE_ALL;
+        }
+
+        return stageFlags;
+    }
+
+
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount)
     {
         VkSampleCountFlagBits vkSampleCount;
@@ -567,6 +584,29 @@ namespace Astral {
         }
 
         return vkSampleCount;
+    }
+
+
+    VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp)
+    {
+        switch (loadOp)
+        {
+            case AttachmentLoadOp::LOAD:   return VK_ATTACHMENT_LOAD_OP_LOAD;
+            case AttachmentLoadOp::CLEAR:  return VK_ATTACHMENT_LOAD_OP_CLEAR;
+            case AttachmentLoadOp::DONT_CARE: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            default: AE_ERROR("Invalid Load Op Given!");
+        }
+    }
+
+
+    VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp)
+    {
+        switch (storeOp)
+        {
+            case AttachmentStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+            case AttachmentStoreOp::DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            default: AE_ERROR("Invalid Store Op Given!");
+        }
     }
 
 

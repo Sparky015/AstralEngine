@@ -12,7 +12,7 @@ namespace Astral {
 
     bool GraphicsPipelineStateConfiguration::operator==(const GraphicsPipelineStateConfiguration& other) const
     {
-        return (RenderPass ? RenderPass->GetNativeHandle() : nullptr) == (other.RenderPass ? other.RenderPass->GetNativeHandle() : nullptr) &&
+        return (RenderPass ? RenderPass.get() : nullptr) == (other.RenderPass ? other.RenderPass.get() : nullptr) &&
                (VertexShader ? VertexShader->GetNativeHandle() : nullptr) == (other.VertexShader ? other.VertexShader->GetNativeHandle() : nullptr) &&
                (FragmentShader ? FragmentShader->GetNativeHandle() : nullptr) == (other.FragmentShader ? other.FragmentShader->GetNativeHandle() : nullptr) &&
                ShaderDataLayout.Descriptors == other.ShaderDataLayout.Descriptors &&

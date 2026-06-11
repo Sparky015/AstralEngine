@@ -7,6 +7,7 @@
 #include "DeferredRenderingPath.h"
 
 #include "Renderer/SceneRenderer.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral {
 
@@ -30,7 +31,7 @@ namespace Astral {
     }
 
 
-    void DeferredRenderingPath::BuildRenderGraph(RenderGraph& outRenderGraph, const std::vector<TextureHandle>& outputTextures)
+    void DeferredRenderingPath::BuildRenderGraph(RenderGraph& outRenderGraph, UVec2 outputAttachmentDimensions)
     {
         const RendererSettings& rendererSettings = SceneRenderer::GetRendererSettings();
 
@@ -189,7 +190,7 @@ namespace Astral {
         tonemappingPass.AddDependency(&environmentMapPass);
 
 
-        uint32 maxFramesInFlight = outputTextures.size();
+        uint32 maxFramesInFlight = RendererAPI::GetDevice().GetSwapchain().GetNumberOfImages();
         outRenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         outRenderGraph.AddPass(geometryPass);
         outRenderGraph.AddPass(shadowMapPass);
@@ -199,14 +200,14 @@ namespace Astral {
 
         switch (rendererSettings.DebugView)
         {
-            case RendererDebugView::NONE: outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
-            case RendererDebugView::GBUFFER_ALBEDO: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures); break;
-            case RendererDebugView::GBUFFER_ROUGHNESS: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputTextures); break;
-            case RendererDebugView::GBUFFER_METALLIC: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputTextures); break;
-            case RendererDebugView::GBUFFER_EMISSION: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputTextures); break;
-            case RendererDebugView::GBUFFER_NORMAL: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures); break;
-            case RendererDebugView::DEPTH: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputTextures); break;
-            default: outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
+            case RendererDebugView::NONE: outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputAttachmentDimensions); break;
+            case RendererDebugView::GBUFFER_ALBEDO: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputAttachmentDimensions); break;
+            case RendererDebugView::GBUFFER_ROUGHNESS: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputAttachmentDimensions); break;
+            case RendererDebugView::GBUFFER_METALLIC: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputAttachmentDimensions); break;
+            case RendererDebugView::GBUFFER_EMISSION: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputAttachmentDimensions); break;
+            case RendererDebugView::GBUFFER_NORMAL: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputAttachmentDimensions); break;
+            case RendererDebugView::DEPTH: outRenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputAttachmentDimensions); break;
+            default: outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputAttachmentDimensions); break;
         }
 
         outRenderGraph.EndBuildingRenderGraph();

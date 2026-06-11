@@ -295,14 +295,15 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
+        UVec2 outputAttachmentDimensions = outputTextures[0]->GetDimensions();
 
         if (m_RendererSettings.RendererType == RendererType::DEFERRED)
         {
-            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
+            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
         else if (m_RendererSettings.RendererType == RendererType::FORWARD)
         {
-            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
+            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
     }
 
@@ -311,14 +312,13 @@ namespace Astral {
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
 
 
         m_ImGuiRenderPass = device.CreateRenderPass();
         RenderPassHandle& imguiRenderPass = m_ImGuiRenderPass;
 
         AttachmentDescription renderTargetDescription = {
-            .Format = renderTargets[0]->GetImageFormat(),
+            .Format = swapchain.GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
@@ -328,9 +328,7 @@ namespace Astral {
 
         imguiRenderPass->BeginBuildingRenderPass();
         AttachmentIndex renderTargetIndex = imguiRenderPass->DefineAttachment(renderTargetDescription);
-        imguiRenderPass->BeginBuildingSubpass();
         imguiRenderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        imguiRenderPass->EndBuildingSubpass();
         imguiRenderPass->EndBuildingRenderPass();
     }
 
@@ -341,7 +339,6 @@ namespace Astral {
         RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        const std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
@@ -353,10 +350,10 @@ namespace Astral {
 
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-                .Dimensions = renderTargets[0]->GetDimensions(),
+                .Dimensions = swapchain.GetImageDimensions(),
                 .ImageData = nullptr,
                 .LayerCount = 1,
                 .MipMapCount = 1,
@@ -395,14 +392,6 @@ namespace Astral {
             context.SceneDataDescriptorSet->EndBuildingSet();
             std::string sceneDataDescriptorSetName = std::string("Scene_Data_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.SceneDataDescriptorSet, sceneDataDescriptorSetName);
-
-            context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            UVec2 frameBufferDimensions = renderingContext.GetWindowFramebufferDimensions();
-            context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
-            context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
-            context.WindowFramebuffer->EndBuildingFramebuffer();
-            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
-            RendererAPI::NameObject(context.WindowFramebuffer, windowFramebufferName);
 
 
             Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
@@ -475,7 +464,7 @@ namespace Astral {
         }
 
         // Viewport Rendering
-        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex);
+        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex, frameContext.OffscreenRenderTarget);
 
         // Editor UI rendering to swapchain image
         DrawEditorUI(commandBuffer, renderTarget);
@@ -502,23 +491,6 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(width, height);
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            SharedFrameContext& frameContext = m_FrameContexts[i];
-            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
-
-            framebuffer->BeginBuildingFramebuffer(width, height);
-            framebuffer->AttachRenderTarget(renderTargets[i]);
-            framebuffer->EndBuildingFramebuffer();
-
-            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
-            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
-
-            std::string swapchainRenderTarget = std::string("Swapchain_Render_Target_") + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTarget);
-        }
     }
 
 
@@ -528,25 +500,6 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(isVSyncEnabled);
-
-        Vec2 windowSize = Engine::Get().GetWindowManager().GetWindow().GetFramebufferDimensions();
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            SharedFrameContext& frameContext = m_FrameContexts[i];
-            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
-
-            framebuffer->BeginBuildingFramebuffer(windowSize.x, windowSize.y);
-            framebuffer->AttachRenderTarget(renderTargets[i]);
-            framebuffer->EndBuildingFramebuffer();
-
-            std::string windowFramebufferName = "Window_Framebuffer_" + std::to_string(i);
-            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
-            std::string swapchainRenderTargetName = "Swapchain_Render_Target_" + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTargetName);
-        }
     }
 
 
@@ -689,22 +642,39 @@ namespace Astral {
             pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
 
 
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
+            ImageMemoryBarrier viewportImageMemoryBarrier = {};
+            viewportImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            viewportImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            viewportImageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            viewportImageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            viewportImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.Image = offscreenRenderTarget;
+            viewportImageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
                 .BaseArrayLayer = 0,
                 .LayerCount = offscreenRenderTarget->GetNumLayers()
             };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+            ImageMemoryBarrier renderTargetImageMemoryBarrier = {};
+            renderTargetImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_MEMORY_READ_BIT;
+            renderTargetImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_MEMORY_WRITE_BIT;
+            renderTargetImageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            renderTargetImageMemoryBarrier.NewLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL;
+            renderTargetImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.Image = renderTarget->GetAsTexture();
+            renderTargetImageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+
+            pipelineBarrier.ImageMemoryBarriers.push_back(viewportImageMemoryBarrier);
+            pipelineBarrier.ImageMemoryBarriers.push_back(renderTargetImageMemoryBarrier);
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
         }
@@ -712,7 +682,12 @@ namespace Astral {
 
         // ImGui Rendering
         commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
+        AttachmentResource attachmentResource = {
+            .Resource = renderTarget->GetAsTexture(),
+            .MipLevel = FullSubresourceRange,
+            .ArrayLayer = FullSubresourceRange
+        };
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
         RendererAPI::CallImGuiDraws(commandBuffer);
         commandBuffer->EndRenderPass();
         commandBuffer->EndLabel();
@@ -724,22 +699,39 @@ namespace Astral {
             pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
 
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = initialLayout;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
+            ImageMemoryBarrier viewportImageMemoryBarrier = {};
+            viewportImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            viewportImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            viewportImageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            viewportImageMemoryBarrier.NewLayout = initialLayout;
+            viewportImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.Image = offscreenRenderTarget;
+            viewportImageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = 1,
                 .BaseArrayLayer = 0,
                 .LayerCount = 1
             };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            ImageMemoryBarrier renderTargetImageMemoryBarrier = {};
+            renderTargetImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_MEMORY_WRITE_BIT;
+            renderTargetImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_MEMORY_READ_BIT;
+            renderTargetImageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            renderTargetImageMemoryBarrier.NewLayout = ImageLayout::PRESENT_SRC_KHR;
+            renderTargetImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.Image = renderTarget->GetAsTexture();
+            renderTargetImageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(viewportImageMemoryBarrier);
+            pipelineBarrier.ImageMemoryBarriers.push_back(renderTargetImageMemoryBarrier);
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
         }
@@ -827,17 +819,14 @@ namespace Astral {
 
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
-
-
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
             SharedFrameContext& frameContext = m_FrameContexts[i];
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
@@ -867,7 +856,7 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        m_RenderGraph.ResizeResources(outputTextures);
+        m_RenderGraph.ResizeResources(outputTextures[0]->GetDimensions());
     }
 
 

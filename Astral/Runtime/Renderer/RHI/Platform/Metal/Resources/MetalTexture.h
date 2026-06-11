@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Renderer/RHI/Resources/Texture.h"
+#include "Renderer/RHI/Resources/Buffer.h"
 
 #include "Metal/MTLDevice.hpp"
 #include "Metal/MTLSampler.hpp"

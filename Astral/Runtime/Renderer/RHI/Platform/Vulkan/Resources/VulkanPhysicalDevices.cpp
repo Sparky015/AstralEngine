@@ -108,10 +108,20 @@ namespace Astral {
                 AE_LOG(j << ": flags " << m_Devices[i].memoryProperties.memoryTypes[j].propertyFlags
                       << ": heap " << m_Devices[i].memoryProperties.memoryTypes[j].heapIndex)
             }
+
+
+            // Get 1.3 vulkan features
+            m_Devices[i].features13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+            m_Devices[i].features13.pNext = nullptr;
+
+
+            // Get 1.2 vulkan features
             m_Devices[i].features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+            m_Devices[i].features12.pNext = &m_Devices[i].features13;
+
+
             m_Devices[i].featuresChain.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
             m_Devices[i].featuresChain.pNext = &m_Devices[i].features12;
-
             vkGetPhysicalDeviceFeatures2(m_Devices[i].physicalDevice, &m_Devices[i].featuresChain);
         }
     }

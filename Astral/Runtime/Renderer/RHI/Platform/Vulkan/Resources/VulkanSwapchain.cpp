@@ -72,6 +72,18 @@ namespace Astral {
     }
 
 
+    ImageFormat VulkanSwapchain::GetImageFormat()
+    {
+        return m_SwapchainImageFormat;
+    }
+
+
+    UVec2 VulkanSwapchain::GetImageDimensions()
+    {
+        return m_ImageDimensions;
+    }
+
+
     uint32 VulkanSwapchain::ChooseNumSwapchainImages(const VkSurfaceCapabilitiesKHR& capabilities)
     {
         uint32 requestedNumberOfImage = (m_NumberOfSwapchainImages < capabilities.minImageCount) ? capabilities.minImageCount : m_NumberOfSwapchainImages;

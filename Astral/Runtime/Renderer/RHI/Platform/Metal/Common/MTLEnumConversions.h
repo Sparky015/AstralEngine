@@ -22,6 +22,7 @@ namespace Astral {
     MTL::PixelFormat ConvertImageFormatToMTLPixelFormat(ImageFormat imageFormat);
     MTL::TextureUsage ConvertImageUsageToMTLTextureUsage(ImageUsageFlags imageUsageFlags);
     MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType);
+    ImageFormat ConvertMTLPixelFormatToImageFormat(MTL::PixelFormat pixelFormat);
 
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode);
     MTL::SamplerMinMagFilter ConvertSamplerFilterToMTLMinMagFilter(SamplerFilter samplerFilter);

@@ -8,7 +8,10 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
+#include "MetalDescriptorSet.h"
 #include "MetalIndexBuffer.h"
+#include "MetalRenderPass.h"
+#include "MetalShader.h"
 #include "MetalSwapchain.h"
 #include "MetalVertexBuffer.h"
 
@@ -61,19 +64,22 @@ namespace Astral {
 
     RenderPassHandle MetalDevice::CreateRenderPass()
     {
-        return nullptr;
-    }
+        MetalRenderPassDesc renderPassDesc = {
+            .Device = m_Device,
+        };
 
-
-    FramebufferHandle MetalDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        return nullptr;
+        return CreateGraphicsRef<MetalRenderPass>(renderPassDesc);
     }
 
 
     ShaderHandle MetalDevice::CreateShader(const ShaderSource& shaderSource)
     {
-        return nullptr;
+        MetalShaderDesc shaderDesc = {
+            .Device = m_Device,
+            .ShaderSource = shaderSource,
+        };
+
+        return CreateGraphicsRef<MetalShader>(shaderDesc);
     }
 
 
@@ -146,7 +152,12 @@ namespace Astral {
 
     DescriptorSetHandle MetalDevice::CreateDescriptorSet()
     {
-        return nullptr;
+        MetalDescriptorSetDesc metalDescriptorSetDesc
+        {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalDescriptorSet>(metalDescriptorSetDesc);
     }
 
 

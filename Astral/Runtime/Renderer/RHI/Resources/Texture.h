@@ -5,7 +5,6 @@
 #pragma once
 
 #include "Asset/Asset.h"
-#include "CommandBuffer.h"
 #include "Core/Math/Math.h"
 #include "Renderer/RHI/Common/GraphicsSmartPointers.h"
 #include "Renderer/RHI/Common/ImageFormats.h"

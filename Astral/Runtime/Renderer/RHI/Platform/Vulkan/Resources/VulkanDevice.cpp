@@ -13,7 +13,6 @@
 #include "VulkanCommandQueue.h"
 #include "VulkanRenderpass.h"
 #include "VulkanDescriptorSet.h"
-#include "VulkanFramebuffer.h"
 #include "VulkanPipelineState.h"
 #include "VulkanComputePipelineState.h"
 #include "VulkanShader.h"
@@ -121,19 +120,6 @@ namespace Astral {
         };
 
         return CreateGraphicsRef<VulkanRenderPass>(vulkanRenderpassDesc);
-    }
-
-
-    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-
-        VulkanFramebufferDesc vulkanFramebufferDesc = {
-            .Device = m_Device,
-            .RenderPass = renderPass
-        };
-
-        return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
     }
 
 
@@ -474,9 +460,14 @@ namespace Astral {
             VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME
         };
 
+        VkPhysicalDeviceVulkan13Features deviceFeatures13 = {
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+            .pNext = nullptr
+        };
+
         VkPhysicalDeviceVulkan12Features deviceFeatures12 = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
-            .pNext = nullptr
+            .pNext = &deviceFeatures13
         };
 
         VkPhysicalDeviceFeatures2 deviceFeaturesChain = {
@@ -520,6 +511,15 @@ namespace Astral {
         else
         {
             deviceFeatures12.shaderOutputLayer = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features13.dynamicRendering == VK_FALSE)
+        {
+            AE_WARN("Vulkan: Dynamic Rendering is not supported!")
+        }
+        else
+        {
+            deviceFeatures13.dynamicRendering = VK_TRUE;
         }
 
 
