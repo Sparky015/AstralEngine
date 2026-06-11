@@ -295,14 +295,15 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
+        UVec2 outputAttachmentDimensions = outputTextures[0]->GetDimensions();
 
         if (m_RendererSettings.RendererType == RendererType::DEFERRED)
         {
-            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
+            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
         else if (m_RendererSettings.RendererType == RendererType::FORWARD)
         {
-            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputTextures);
+            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
     }
 
@@ -311,14 +312,13 @@ namespace Astral {
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
 
 
         m_ImGuiRenderPass = device.CreateRenderPass();
         RenderPassHandle& imguiRenderPass = m_ImGuiRenderPass;
 
         AttachmentDescription renderTargetDescription = {
-            .Format = renderTargets[0]->GetImageFormat(),
+            .Format = swapchain.GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
@@ -339,7 +339,6 @@ namespace Astral {
         RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        const std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
@@ -351,10 +350,10 @@ namespace Astral {
 
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-                .Dimensions = renderTargets[0]->GetDimensions(),
+                .Dimensions = swapchain.GetImageDimensions(),
                 .ImageData = nullptr,
                 .LayerCount = 1,
                 .MipMapCount = 1,
@@ -492,14 +491,6 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(width, height);
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            SharedFrameContext& frameContext = m_FrameContexts[i];
-
-            std::string swapchainRenderTarget = std::string("Swapchain_Render_Target_") + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTarget);
-        }
     }
 
 
@@ -509,14 +500,6 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(isVSyncEnabled);
-
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            std::string swapchainRenderTargetName = "Swapchain_Render_Target_" + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTargetName);
-        }
     }
 
 
@@ -836,17 +819,14 @@ namespace Astral {
 
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
-
-
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
             SharedFrameContext& frameContext = m_FrameContexts[i];
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),

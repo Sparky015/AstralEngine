@@ -51,10 +51,16 @@ namespace Astral {
         uint32 GetNumberOfImages() override { return m_NumberOfSwapchainImages; }
 
         /**
-         * @brief  Gets the render targets in the swapchain
-         * @return The render targets in the swapchain
+        * @brief Get the swapchain images' format
+        * @return The swapchain images' format
+        */
+        ImageFormat GetImageFormat() override;
+
+        /**
+         * @brief Get the swapchain images' dimensions
+         * @return The swapchain images' dimensions
          */
-        std::vector<RenderTargetHandle>& GetRenderTargets() override { return m_RenderTargets; }
+        UVec2 GetImageDimensions() override;
 
         /**
          * @brief Recreates the swapchain with the specified dimensions

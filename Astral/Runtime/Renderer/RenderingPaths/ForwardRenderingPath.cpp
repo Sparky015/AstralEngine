@@ -7,6 +7,7 @@
 #include "ForwardRenderingPath.h"
 
 #include "Renderer/SceneRenderer.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral {
 
@@ -32,7 +33,7 @@ namespace Astral {
 
     static constexpr SampleCount ForwardMSAASampleCount = SampleCount::SAMPLE_4_BIT;
 
-    void ForwardRenderingPath::BuildRenderGraph(RenderGraph& outRenderGraph, const std::vector<TextureHandle>& outputTextures)
+    void ForwardRenderingPath::BuildRenderGraph(RenderGraph& outRenderGraph, UVec2 outputAttachmentDimensions)
     {
         const RendererSettings& rendererSettings = SceneRenderer::GetRendererSettings();
 
@@ -148,14 +149,14 @@ namespace Astral {
         tonemappingPass.AddDependency(&environmentMapPass);
 
 
-        uint32 maxFramesInFlight = outputTextures.size();
+        uint32 maxFramesInFlight = RendererAPI::GetDevice().GetSwapchain().GetNumberOfImages();
         outRenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
         outRenderGraph.AddPass(depthPrePass);
         outRenderGraph.AddPass(shadowMapPass);
         outRenderGraph.AddPass(lightingPass);
         outRenderGraph.AddPass(environmentMapPass);
         outRenderGraph.AddOutputPass(tonemappingPass);
-        outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures[0]->GetDimensions());
+        outRenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputAttachmentDimensions);
         outRenderGraph.EndBuildingRenderGraph();
     }
 
