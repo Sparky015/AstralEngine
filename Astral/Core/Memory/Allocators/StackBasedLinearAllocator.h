@@ -8,7 +8,6 @@
 
 
 #include "Core/CoreMacroDefinitions.h"
-#include "Debug/MemoryTracking/NewDeleteOverrides.h"
 #include <cstddef>
 
 namespace Astral {

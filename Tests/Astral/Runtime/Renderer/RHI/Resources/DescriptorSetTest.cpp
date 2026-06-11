@@ -39,7 +39,7 @@ namespace Astral {
         TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
 
         float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
-        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData));
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
 
 
         descriptorSet->BeginBuildingSet();
@@ -56,13 +56,13 @@ namespace Astral {
 
 
         float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
-        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData));
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
 
         float testData2[3] = {1.0f, 1.0, 0.0f};
-        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2));
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
 
         uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
-        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3));
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
 
 
         descriptorSet->BeginBuildingSet();
@@ -124,13 +124,13 @@ namespace Astral {
 
 
         float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
-        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData));
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::DEVICE_LOCAL);
 
         float testData2[3] = {1.0f, 1.0, 0.0f};
-        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2));
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
 
         uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
-        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3));
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
 
 
         descriptorSet->BeginBuildingSet();
@@ -177,13 +177,13 @@ namespace Astral {
 
 
         float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
-        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData));
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
 
         float testData2[3] = {1.0f, 1.0, 0.0f};
-        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2));
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
 
         uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
-        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3));
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
 
 
         descriptorSet->BeginBuildingSet();

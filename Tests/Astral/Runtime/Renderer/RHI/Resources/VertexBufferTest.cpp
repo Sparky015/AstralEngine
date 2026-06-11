@@ -27,7 +27,7 @@ namespace Astral {
         {
             VertexBufferLayout bufferLayout = {{Float, "TestFloat"}};
             std::array<uint32, 3> vertexData = {0, 1, 2};
-            VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout);
+            VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::DEVICE_LOCAL);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -37,7 +37,7 @@ namespace Astral {
         {
             VertexBufferLayout bufferLayout = {{Float, "TestFloat"}, {Float2, "TestVec2"}};
             std::array<uint32, 12> vertexData = {0, 1, 2, 4, 5, 6, 3, 6, 1, 6, 8, 9};
-            VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout);
+            VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::HOST_VISIBLE);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }

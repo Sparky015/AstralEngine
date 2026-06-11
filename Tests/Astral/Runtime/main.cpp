@@ -5,7 +5,6 @@
 */
 
 #include "Core/Engine.h"
-#include "Debug/MemoryTracking/MemoryTracker.h"
 #include "Core/Utilities/Loggers.h"
 #include "gtest/gtest.h"
 
@@ -19,7 +18,6 @@ public:
 
     void SetUp() override
     {
-        Astral::MemoryTracker::Get().Init();
         m_Engine = new Astral::Engine();
     }
 

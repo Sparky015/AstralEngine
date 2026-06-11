@@ -35,7 +35,7 @@ namespace Astral {
 
     TEST_F(AssetRegistryTest, RegisterRuntimeAsset_RegistersAssetAndStores)
     {
-        Ref<Asset> textureAsset = TestAssetRegistry.LoadAsset(AssetType::Texture, std::string(ASTRAL_TEST_ASSETS_DIRECTORY) + "Textures/PNG/SolidWhite.png");
+        Ref<Asset> textureAsset = TestAssetRegistry.LoadAsset(AssetType::Texture, std::string(ASTRAL_TEST_ASSETS_DIRECTORY) + "/Textures/PNG/SolidWhite.png");
         ASSERT_NE(textureAsset, nullptr);
 
         Ref<Texture> cachedTexture = TestAssetRegistry.GetAsset<Texture>("Temp://SolidWhiteTexture");

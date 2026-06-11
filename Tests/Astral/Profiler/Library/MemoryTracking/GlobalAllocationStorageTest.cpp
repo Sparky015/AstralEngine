@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Debug/MemoryTracking/GlobalAllocationStorage.h"
+#include "Profiler/MemoryTracking/GlobalAllocationStorage.h"
 
 
 class GlobalAllocationStorageTest : public ::testing::Test
