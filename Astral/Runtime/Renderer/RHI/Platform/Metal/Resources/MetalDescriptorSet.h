@@ -69,14 +69,6 @@ namespace Astral {
         void AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) override;
 
         /**
-         * @brief Adds a subpass input image descriptor to the descriptor set
-         * @param textureHandle The subpass input image to bind in the descriptor set
-         * @param bindStage The shader stage to make the binding active for
-         * @param imageLayout The image layout that the subpass input image will be in when accessed through the descriptor set
-         */
-        void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) override;
-
-        /**
          * @brief Indicates the end of building a descriptor set
          * @pre  @ref BeginBuildingSet is called before all descriptors are added to create the descriptor set
          */

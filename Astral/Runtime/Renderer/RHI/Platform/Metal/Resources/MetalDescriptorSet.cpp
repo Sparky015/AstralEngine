@@ -67,15 +67,6 @@ namespace Astral {
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_IMAGE);
     }
 
-
-    void MetalDescriptorSet::AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
-    {
-        m_NumberOfBindings++;
-        m_Textures.push_back(textureHandle);
-        m_DescriptorSetLayout.Descriptors.push_back(Descriptor::SUBPASS_INPUT_ATTACHMENT);
-    }
-
-
     void MetalDescriptorSet::EndBuildingSet()
     {
         CreateArgumentTable();
@@ -139,7 +130,7 @@ namespace Astral {
         Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[binding];
         ASSERT(descriptorType == Descriptor::IMAGE_SAMPLER, "Expected existing binding to be a image sampler when updating a binding using UpdateImageSamplerBinding")
 
-        // Finds the target binding buffer by counting the number of image samplers, storage images, or input attachments before the target binding
+        // Finds the target binding buffer by counting the number of image samplers and storage images before the target binding
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
@@ -168,7 +159,7 @@ namespace Astral {
         Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[binding];
         ASSERT(descriptorType == Descriptor::IMAGE_SAMPLER, "Expected existing binding to be a image sampler when updating a binding using UpdateImageSamplerBinding")
 
-        // Finds the target binding buffer by counting the number of image samplers, storage images, or input attachments before the target binding
+        // Finds the target binding buffer by counting the number of image samplers and storage images before the target binding
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
@@ -197,7 +188,7 @@ namespace Astral {
          Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[binding];
         ASSERT(descriptorType == Descriptor::STORAGE_IMAGE, "Expected existing binding to be a storage image when updating a binding using UpdateStorageImageBinding")
 
-        // Finds the target binding buffer by counting the number of image samplers, storage images, or input attachments before the target binding
+        // Finds the target binding buffer by counting the number of image samplers and storage images before the target binding
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
@@ -268,7 +259,7 @@ namespace Astral {
         Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[binding];
         ASSERT(descriptorType == Descriptor::IMAGE_SAMPLER, "Expected existing binding to be a image sampler when updating a binding using UpdateImageSamplerBinding")
 
-        // Finds the target binding buffer by counting the number of image samplers, storage images, or input attachments before the target binding
+        // Finds the target binding buffer by counting the number of image samplers and storage images before the target binding
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
@@ -289,7 +280,7 @@ namespace Astral {
          Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[binding];
         ASSERT(descriptorType == Descriptor::STORAGE_IMAGE, "Expected existing binding to be a storage image when updating a binding using UpdateStorageImageBinding")
 
-        // Finds the target binding buffer by counting the number of image samplers, storage images, or input attachments before the target binding
+        // Finds the target binding buffer by counting the number of image samplers and storage images before the target binding
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
