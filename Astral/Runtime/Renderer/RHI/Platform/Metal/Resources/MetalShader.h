@@ -33,14 +33,24 @@ namespace Astral {
     private:
 
         /**
-         * @brief Converts HLSL/GLSL source code into MSL
+         * @brief Converts SPIR-V IR into MSL source code
+         * @param shaderSource The GLSL shader source
+         * @return A vector with the SPIR-V bytecode
          */
-        void ConvertShaderToMSL(const ShaderSource& shaderSource);
+        std::vector<uint32> CompileGLSLToSPIRV(const ShaderSource& shaderSource);
+
+        /**
+         * @brief Converts SPIR-V IR into MSL source code
+         * @param spirv The compiled SPIR-V IR
+         * @return A string containing the MSL source code
+         */
+        std::string ConvertSPIRVToMSLSourceCode(const std::vector<uint32>& spirv);
 
         /**
          * @brief Compiles Metal Shading Language (MSL) source code into Metal IR
+         * @param mslSourceCode The MSL source code
          */
-        void CompileShaderLibrary(const std::string& MSLSourceCode);
+        void CompileShaderLibrary(const std::string& mslSourceCode);
 
         /**
          * @brief Releases the shader library from memory
@@ -53,11 +63,12 @@ namespace Astral {
         void CreateFunctionEntry();
 
         /**
-         * @brief Destroys the entry point function object
+         * @brief Releases the entry point function object
          */
-        void DestroyFunctionEntry();
+        void ReleaseFunctionEntry();
 
 
+        MTL::Device* m_Device;
         MTL::Library* m_Library;
         MTL::Function* m_Function;
     };

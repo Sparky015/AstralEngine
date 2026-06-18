@@ -1,0 +1,56 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v6.0.e3f9cf55)"
+    },
+    "extensionsUsed": [
+        "FB_ngon_encoding"
+    ],
+    "buffers": [
+        {
+            "byteLength": 0,
+            "uri": "Cerberus.aescene.bin"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Root Node",
+            "children": [
+                1
+            ]
+        },
+        {
+            "name": "Cerberus00_Fixed",
+            "matrix": [
+                0.0000022559845547220903,
+                1.0,
+                -90.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                -93.72016143798828,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "extras": {
+                "Mesh_MeshData": "Models/Cerberus/Cerberus_LP.FBX",
+                "Mesh_Material": "Models/Cerberus/Cerberus.astmat"
+            }
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}
