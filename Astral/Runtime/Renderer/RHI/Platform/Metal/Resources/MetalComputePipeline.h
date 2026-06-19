@@ -18,17 +18,19 @@ namespace Astral {
     struct MetalComputePipelineStateDesc
     {
         MTL::Device* Device;
+        ShaderHandle ComputeShader;
+        std::vector<DescriptorSetHandle> DescriptorSets;
     };
 
     /**
      * @brief A wrapper around a Metal compute pipeline with extra convenience functions
      */
-    class MetalComputePipelineState : public PipelineState // TODO
+    class MetalComputePipelineState : public PipelineState
     {
     public:
 
-        MetalComputePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc); // TODO
-        ~MetalComputePipelineState() override; // TODO
+        MetalComputePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc);
+        ~MetalComputePipelineState() override;
 
         /**
          * @brief Gets the pipeline type of this pipeline
@@ -56,7 +58,27 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Creates the Metal compute pipeline state
+         * @param computePipelineStateDesc The description of the pipeline to create
+         */
+        void CreatePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc);
 
+        /**
+         * @brief Releases the compute pipeline state
+         */
+        void ReleasePipelineState();
+
+        /**
+         * @brief Creates the descriptor set layout of the pipeline
+         */
+        void CreateDescriptorSetLayout(const MetalComputePipelineStateDesc& computePipelineStateDesc);
+
+
+        MTL::Device* m_Device;
+        MTL::ComputePipelineState* m_Pipeline;
+
+        std::vector<DescriptorSetLayout> m_DescriptorSetLayout;
     };
 
 }
