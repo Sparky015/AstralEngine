@@ -51,7 +51,7 @@ namespace Astral {
     };
 
     /**
-     * @brief RHI Texture Object
+     * @brief Defines a RHI texture interface with supporting functions for convenience
      */
     class Texture : public Asset
     {

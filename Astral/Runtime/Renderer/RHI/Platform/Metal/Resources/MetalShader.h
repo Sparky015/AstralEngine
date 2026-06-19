@@ -12,6 +12,9 @@
 
 namespace Astral {
 
+    /**
+    * @brief Information to create a Metal shader from
+    */
     struct MetalShaderDesc
     {
         MTL::Device* Device;
@@ -24,11 +27,14 @@ namespace Astral {
     class MetalShader : public Shader
     {
     public:
+        MetalShader(const MetalShaderDesc& shaderDesc);
+        ~MetalShader() override;
 
-        MetalShader(const MetalShaderDesc& shaderDesc); // TODO
-        ~MetalShader() override; // TODO
-
-        void* GetNativeHandle() override; // TODO
+        /**
+         * @brief Gets the native shader object handle
+         * @return The native shader object handle (MTL::Function*)
+         */
+        void* GetNativeHandle() override;
 
     private:
 

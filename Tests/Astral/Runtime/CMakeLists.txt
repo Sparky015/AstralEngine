@@ -20,6 +20,7 @@ set(TEST_FILES_GPU_REQUIRED
         Asset/AssetRegistryEnvironmentMapLoaderTest.cpp
         Asset/AssetRegistryCubeLUTLoaderTest.cpp
         Scenes/SceneLoaderTest.cpp
+        Renderer/RHI/Resources/ShaderTest.cpp
 )
 
 

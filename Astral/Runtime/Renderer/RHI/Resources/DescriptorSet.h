@@ -21,7 +21,6 @@ namespace Astral {
         STORAGE_BUFFER,
         UNIFORM_BUFFER,
         IMAGE_SAMPLER,
-        SUBPASS_INPUT_ATTACHMENT,
         STORAGE_IMAGE
     };
 
@@ -81,14 +80,6 @@ namespace Astral {
         virtual void AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
 
         /**
-         * @brief Adds a subpass input image descriptor to the descriptor set
-         * @param textureHandle The subpass input image to bind in the descriptor set
-         * @param bindStage The shader stage to make the binding active for
-         * @param imageLayout The image layout that the subpass input image will be in when accessed through the descriptor set
-         */
-        virtual void AddDescriptorSubpassInputAttachment(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
-
-        /**
          * @brief Indicates the end of building a descriptor set
          * @pre  @ref BeginBuildingSet is called before all descriptors are added to create the descriptor set
          */
@@ -134,13 +125,6 @@ namespace Astral {
         virtual void UpdateStorageImageBinding(uint32 binding, TextureHandle newTextureHandle, uint32 mipLevel, ImageLayout imageLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL) = 0;
 
         /**
-         * @brief Updates the descriptor set with a new subpass input image descriptor at the given binding
-         * @param binding The binding to update
-         * @param textureHandle The new subpass input image to bind in the descriptor set
-         */
-        virtual void UpdateSubpassInputAttachmentBinding(uint32 binding, TextureHandle textureHandle) = 0;
-
-        /**
          * @brief Gets the storage buffer at the given binding
          * @param binding The binding where the selected storage buffer is
          * @return The storage buffer at the given binding
@@ -167,13 +151,6 @@ namespace Astral {
          * @return The storage image at the given binding
          */
         virtual TextureHandle GetStorageImage(uint32 binding) = 0;
-
-        /**
-         * @brief Gets the subpass input image at the given binding
-         * @param binding The binding where the selected subpass input image is
-         * @return The subpass input image at the given binding
-         */
-        virtual TextureHandle GetSubpassInputAttachment(uint32 binding) = 0;
 
         /**
          * @brief Gets the descriptor layout of the descriptor set
