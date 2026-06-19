@@ -326,13 +326,19 @@ namespace Astral {
     void MetalDescriptorSet::CreateArgumentTable()
     {
         MTL4::ArgumentTableDescriptor* argumentTableDescriptor = MTL4::ArgumentTableDescriptor::alloc();
-        NS::Error* error = NS::Error::alloc();
+        NS::Error* error = nullptr;
 
         argumentTableDescriptor->setMaxBufferBindCount(m_Buffers.size());
         argumentTableDescriptor->setMaxSamplerStateBindCount(m_Textures.size());
         argumentTableDescriptor->setMaxTextureBindCount(m_Textures.size());
 
         m_ArgumentTable = m_Device->newArgumentTable(argumentTableDescriptor, &error);
+
+        if (m_ArgumentTable == nullptr)
+        {
+            AE_ERROR("Argument table failed to be created! Error: " << error->localizedDescription()->utf8String());
+            error->release();
+        }
     }
 
 

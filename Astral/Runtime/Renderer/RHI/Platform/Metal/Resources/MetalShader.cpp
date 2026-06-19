@@ -171,6 +171,7 @@ namespace Astral {
         if (m_Library == nullptr)
         {
             AE_ERROR("Shader failed to compile! Error: " << errorCode->localizedDescription()->utf8String())
+            errorCode->release();
         }
     }
 
