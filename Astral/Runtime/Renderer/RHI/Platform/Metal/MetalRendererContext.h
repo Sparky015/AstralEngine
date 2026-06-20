@@ -73,6 +73,11 @@ namespace Astral {
          */
         void ShutdownImGuiForAPIBackend() override; // TODO
 
+        /**
+         * @brief Gets the metal compiler
+         */
+        MTL4::Compiler* GetCompiler();
+
     private:
 
         /**
@@ -100,11 +105,36 @@ namespace Astral {
          */
         void AttachCALayerToWindow();
 
+        /**
+         * @brief Creates the metal pipeline serializer
+         */
+        void CreatePipelineDataSetSerializer();
+
+        /**
+         * @brief Releases the metal pipeline serializer
+         */
+        void ReleasePipelineDataSetSerializer();
+
+        /**
+         * @brief Creates the metal compiler
+         */
+        void CreateCompiler();
+
+        /**
+         * @brief Releases the metal compiler
+         */
+        void ReleaseCompiler();
+
+
+
 
         GLFWwindow* m_Window;
         CA::MetalLayer* m_CAMetalLayer;
         GraphicsOwnedPtr<Device> m_Device;
         GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
+
+        MTL4::Compiler* m_Compiler;
+        MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
     };
 
 }

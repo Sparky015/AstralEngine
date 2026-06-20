@@ -489,6 +489,23 @@ namespace Astral {
     }
 
 
+    MTL::VertexFormat ConvertShaderDataTypeToMTLVertexFormat(ShaderDataType shaderDataType)
+    {
+        switch (shaderDataType)
+        {
+            case Float:   return MTL::VertexFormatFloat;
+            case Float2:  return MTL::VertexFormatFloat2;
+            case Float3:  return MTL::VertexFormatFloat3;
+            case Float4:  return MTL::VertexFormatFloat4;
+            case Int:     return MTL::VertexFormatInt;
+            case Int2:    return MTL::VertexFormatInt2;
+            case Int3:    return MTL::VertexFormatInt3;
+            case Int4:    return MTL::VertexFormatInt4;
+            default:      AE_ERROR("Undefined shader data type conversion!"); return MTL::VertexFormatChar; // Define return statement in case AE_ERROR macro gets compiled out (but it shouldn't)
+        }
+    }
+
+
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode)
     {
         switch (samplerAddressMode)

@@ -28,11 +28,15 @@ namespace Astral {
         CreateDevice();
         AttachCALayerToWindow();
         m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
+        CreatePipelineDataSetSerializer();
+        CreateCompiler();
     }
 
 
     void MetalRenderingContext::Shutdown()
     {
+        ReleaseCompiler();
+        ReleasePipelineDataSetSerializer();
         m_PipelineStateCache.reset();
         DestroyDevice();
         ReleaseCAMetalLayer();
@@ -95,7 +99,10 @@ namespace Astral {
 
     void MetalRenderingContext::ReleaseCAMetalLayer()
     {
-        if (m_CAMetalLayer) { m_CAMetalLayer->release(); }
+        if (m_CAMetalLayer)
+        {
+            m_CAMetalLayer->release();
+        }
     }
 
 
@@ -110,6 +117,58 @@ namespace Astral {
 
         nsWindow.contentView.layer = caMetalLayer;
         nsWindow.contentView.wantsLayer = YES;
+    }
+
+
+    void MetalRenderingContext::CreatePipelineDataSetSerializer()
+    {
+        MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
+        MTL4::PipelineDataSetSerializerDescriptor* pipelineDataSetSerializerDescriptor = MTL4::PipelineDataSetSerializerDescriptor::alloc()->init();
+        m_PipelineDataSetSerializer = mtlDevice->newPipelineDataSetSerializer(pipelineDataSetSerializerDescriptor);
+        pipelineDataSetSerializerDescriptor->release();
+    }
+
+
+    void MetalRenderingContext::ReleasePipelineDataSetSerializer()
+    {
+        if (m_PipelineDataSetSerializer)
+        {
+            m_PipelineDataSetSerializer->release();
+        }
+    }
+
+
+    void MetalRenderingContext::CreateCompiler()
+    {
+        MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
+        NS::Error* error = nullptr;
+        MTL4::CompilerDescriptor* compilerDescriptor = MTL4::CompilerDescriptor::alloc()->init();
+        compilerDescriptor->setPipelineDataSetSerializer(m_PipelineDataSetSerializer);
+        m_Compiler = mtlDevice->newCompiler(compilerDescriptor, &error);
+
+        if (error)
+        {
+            AE_ERROR("Metal compiler failed to be created! " << error->localizedDescription()->utf8String());
+            error->release();
+        }
+
+        compilerDescriptor->release();
+    }
+
+
+    void MetalRenderingContext::ReleaseCompiler()
+    {
+        if (m_Compiler)
+        {
+            m_Compiler->release();
+            m_Compiler = nullptr;
+        }
+    }
+
+
+    MTL4::Compiler* MetalRenderingContext::GetCompiler()
+    {
+        return m_Compiler;
     }
 
 }
