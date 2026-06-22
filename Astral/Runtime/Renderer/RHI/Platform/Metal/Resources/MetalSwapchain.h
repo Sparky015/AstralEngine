@@ -14,6 +14,7 @@ namespace Astral {
 
     struct MetalSwapchainDesc
     {
+        MTL::Device* Device;
         CA::MetalLayer* CAMetalLayer;
     };
 
@@ -71,6 +72,7 @@ namespace Astral {
 
     private:
 
+        MTL::Device* m_Device;
         CA::MetalLayer* m_CAMetalLayer;
     };
 

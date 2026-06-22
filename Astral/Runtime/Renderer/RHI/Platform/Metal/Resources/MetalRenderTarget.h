@@ -9,6 +9,9 @@
 #include "Renderer/RHI/Resources/RenderTarget.h"
 #include "Renderer/RHI/Resources/Texture.h"
 
+#include "Metal/MTLDevice.hpp"
+#include "QuartzCore/CAMetalDrawable.hpp"
+
 namespace Astral {
 
     /**
@@ -16,7 +19,8 @@ namespace Astral {
     */
     struct MetalRenderTargetDesc
     {
-
+        MTL::Device* Device;
+        CA::MetalDrawable* Drawable;
     };
 
     /**
@@ -98,6 +102,10 @@ namespace Astral {
 
     private:
 
+        MTL::Device* m_Device;
+        CA::MetalDrawable* m_Drawable;
+
+        TextureHandle m_DrawableTexture;
     };
 
 }

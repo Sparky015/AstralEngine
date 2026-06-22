@@ -39,12 +39,22 @@ namespace Astral {
     };
 
     /**
+     * @brief A description of how to build a Metal texture from a Metal Drawable owned texture
+     */
+    struct MetalDrawableOwnedTextureDesc
+    {
+        MTL::Device* Device;
+        MTL::Texture* DrawableOwnedTexture;
+    };
+
+    /**
      * @brief A wrapper around a Metal texture supporting extra convenience functions
      */
     class MetalTexture : public Texture
     {
     public:
         explicit MetalTexture(const MetalTextureDesc& desc);
+        explicit MetalTexture(const MetalDrawableOwnedTextureDesc& desc);
         ~MetalTexture() override;
 
         /**
@@ -212,7 +222,6 @@ namespace Astral {
         uint32 m_Width;
         uint32 m_Height;
         ImageFormat m_ImageFormat;
-        ImageLayout m_ImageLayout;
         ImageUsageFlags m_ImageUsageFlags;
         uint32 m_NumLayers;
         uint32 m_NumMipLevels;
@@ -223,6 +232,8 @@ namespace Astral {
         SamplerFilter m_SamplerFilter;
         SamplerAddressMode m_SamplerAddressMode;
         bool m_IsAnisotropyEnabled;
+
+        bool m_IsSwapchainOwned;
     };
 
 }
