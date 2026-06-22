@@ -9,6 +9,7 @@
 #include "Renderer/RHI/Resources/PipelineState.h"
 
 #include "Metal/MTLDevice.hpp"
+#include "Metal/MTL4RenderPipeline.hpp"
 
 namespace Astral {
 
@@ -18,17 +19,25 @@ namespace Astral {
     struct MetalGraphicsPipelineStateDesc
     {
         MTL::Device* Device;
+        RenderPassHandle RenderPass;
+        ShaderHandle VertexShader;
+        ShaderHandle FragmentShader;
+        std::vector<DescriptorSetHandle> DescriptorSets;
+        const VertexBufferLayout& BufferLayout;
+        bool IsAlphaBlended;
+        SampleCount MSAASamples;
+        CullMode CullMode;
     };
 
     /**
      * @brief A wrapper around a Metal graphics pipeline with extra convenience functions
      */
-    class MetalGraphicsPipelineState : public PipelineState // TODO
+    class MetalGraphicsPipelineState : public PipelineState
     {
     public:
 
-        MetalGraphicsPipelineState(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc); // TODO
-        ~MetalGraphicsPipelineState() override; // TODO
+        MetalGraphicsPipelineState(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+        ~MetalGraphicsPipelineState() override;
 
         /**
          * @brief Gets the pipeline type of this pipeline
@@ -56,6 +65,35 @@ namespace Astral {
 
     private:
 
+
+        /**
+         * @brief Creates the Metal compute pipeline state
+         * @param graphicsPipelineStateDesc The description of the pipeline to create
+         */
+        void CreatePipelineState(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+
+        /**
+         * @brief Releases the compute pipeline state
+         */
+        void ReleasePipelineState();
+
+        void PopulatePipelineColorAttachmentDescriptor(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+
+        void PopulatePipelineVertexDescriptor(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+
+        void PopulateFunctionDescriptors(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+
+        /**
+         * @brief Creates the descriptor set layout of the pipeline
+         */
+        void CreateDescriptorSetLayout(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc);
+
+
+        MTL::Device* m_Device;
+        MTL4::RenderPipelineDescriptor* m_PipelineDescriptor;
+        MTL::RenderPipelineState* m_Pipeline;
+
+        std::vector<DescriptorSetLayout> m_DescriptorSetLayout;
 
     };
 

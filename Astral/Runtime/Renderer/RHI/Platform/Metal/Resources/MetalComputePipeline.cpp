@@ -19,6 +19,7 @@ namespace Astral {
 
     MetalComputePipelineState::~MetalComputePipelineState()
     {
+        ReleasePipelineState();
     }
 
 
