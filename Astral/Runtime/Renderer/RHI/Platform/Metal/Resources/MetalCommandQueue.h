@@ -23,12 +23,12 @@ namespace Astral {
     /**
      * @brief Wraps Metal command queue operations
      */
-    class MetalCommandQueue : public CommandQueue // TODO
+    class MetalCommandQueue : public CommandQueue
     {
     public:
 
-        MetalCommandQueue(const MetalCommandQueueDesc& commandQueueDesc); // TODO
-        ~MetalCommandQueue() override; // TODO
+        MetalCommandQueue(const MetalCommandQueueDesc& commandQueueDesc);
+        ~MetalCommandQueue() override;
 
         /**
          * @brief Submits a command buffer to a command queue
@@ -50,11 +50,6 @@ namespace Astral {
         void Present(RenderTargetHandle renderTarget) override;
 
         /**
-         * @brief Blocks the current thread until the command queue becomes idle
-         */
-        void WaitIdle() override;
-
-        /**
          * @brief Gets the native handle of the command queue
          * @return The native handle of the command queue
          */
@@ -62,7 +57,18 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Creates the MTL4 command queue
+         */
+        void CreateQueue(const MetalCommandQueueDesc& desc);
 
+        /**
+         * @brief Releases the command queue
+         */
+        void ReleaseQueue();
+
+        MTL::Device* m_Device;
+        MTL4::CommandQueue* m_Queue;
     };
 
 }

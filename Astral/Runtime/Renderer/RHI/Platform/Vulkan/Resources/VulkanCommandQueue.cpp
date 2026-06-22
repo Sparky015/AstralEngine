@@ -100,12 +100,6 @@ namespace Astral {
     }
 
 
-    void VulkanCommandQueue::WaitIdle()
-    {
-        vkQueueWaitIdle(m_Queue);
-    }
-
-
     void VulkanCommandQueue::GetQueue()
     {
         vkGetDeviceQueue(m_Device, m_QueueFamilyIndex, m_QueueIndex, &m_Queue);

@@ -39,11 +39,6 @@ namespace Astral {
         virtual void Present(RenderTargetHandle renderTarget) = 0;
 
         /**
-         * @brief Blocks the current thread until the command queue becomes idle
-         */
-        virtual void WaitIdle() = 0;
-
-        /**
          * @brief Gets the native handle of the command queue
          * @return The native handle of the command queue
          */
