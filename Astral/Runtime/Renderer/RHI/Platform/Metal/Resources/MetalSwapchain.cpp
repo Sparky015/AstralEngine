@@ -6,12 +6,14 @@
 
 #include "MetalSwapchain.h"
 
+#include "MetalRenderTarget.h"
 #include "Core/Utilities/Asserts.h"
 #include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
 
     MetalSwapchain::MetalSwapchain(const MetalSwapchainDesc& metalSwapchainDesc) :
+        m_Device(metalSwapchainDesc.Device),
         m_CAMetalLayer(metalSwapchainDesc.CAMetalLayer)
     {
         ASSERT(m_CAMetalLayer, "Metal Swapchain can not be created with null CA::MetalLayer")
@@ -22,7 +24,12 @@ namespace Astral {
     {
         CA::MetalDrawable* nextDrawable = m_CAMetalLayer->nextDrawable();
 
-        // TODO: Create render target abstraction for Metal
+        MetalRenderTargetDesc renderTargetDesc = {
+            .Device = m_Device,
+            .Drawable = nextDrawable
+        };
+
+         return CreateGraphicsRef<MetalRenderTarget>(renderTargetDesc);
     }
 
 

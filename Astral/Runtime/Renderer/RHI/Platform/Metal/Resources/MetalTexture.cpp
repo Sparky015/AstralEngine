@@ -27,6 +27,28 @@ namespace Astral {
     }
 
 
+    MetalTexture::MetalTexture(const MetalDrawableOwnedTextureDesc& desc) :
+        m_Device(desc.Device),
+        m_Texture(desc.DrawableOwnedTexture),
+        m_Sampler(nullptr),
+        m_Width(m_Texture->width()),
+        m_Height(m_Texture->height()),
+        m_ImageFormat(ConvertMTLPixelFormatToImageFormat(m_Texture->pixelFormat())),
+        m_ImageUsageFlags(IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
+        m_NumLayers(1),
+        m_NumMipLevels(1),
+        m_TextureType(TextureType::IMAGE_2D),
+        m_MemoryType(GPUMemoryType::DEVICE_LOCAL),
+        m_MSAASampleCount(SampleCount::SAMPLE_1_BIT),
+        m_SamplerFilter(SamplerFilter::LINEAR),
+        m_SamplerAddressMode(SamplerAddressMode::REPEAT),
+        m_IsAnisotropyEnabled(true),
+        m_IsSwapchainOwned(true)
+    {
+
+    }
+
+
     MetalTexture::~MetalTexture()
     {
         DestroyTexture();
@@ -131,7 +153,6 @@ namespace Astral {
         m_Width(other.m_Width),
         m_Height(other.m_Height),
         m_ImageFormat(other.m_ImageFormat),
-        m_ImageLayout(other.m_ImageLayout),
         m_ImageUsageFlags(other.m_ImageUsageFlags),
         m_NumLayers(other.m_NumLayers),
         m_NumMipLevels(other.m_NumMipLevels),
@@ -150,7 +171,6 @@ namespace Astral {
         other.m_Width = 0;
         other.m_Height = 0;
         other.m_ImageFormat = ImageFormat::UNDEFINED;
-        other.m_ImageLayout = ImageLayout::UNDEFINED;
         other.m_ImageUsageFlags = 0;
         other.m_NumLayers = 0;
         other.m_NumMipLevels = 0;
@@ -178,7 +198,6 @@ namespace Astral {
             m_Width = other.m_Width;
             m_Height = other.m_Height;
             m_ImageFormat = other.m_ImageFormat;
-            m_ImageLayout = other.m_ImageLayout;
             m_ImageUsageFlags = other.m_ImageUsageFlags;
             m_NumLayers = other.m_NumLayers;
             m_NumMipLevels = other.m_NumMipLevels;
@@ -198,7 +217,6 @@ namespace Astral {
             other.m_Width = 0;
             other.m_Height = 0;
             other.m_ImageFormat = ImageFormat::UNDEFINED;
-            other.m_ImageLayout = ImageLayout::UNDEFINED;
             other.m_ImageUsageFlags = 0;
             other.m_NumLayers = 0;
             other.m_NumMipLevels = 0;
@@ -247,7 +265,17 @@ namespace Astral {
 
     void MetalTexture::DestroyTexture()
     {
-        if (m_Texture) { m_Texture->release(); }
+        if (m_IsSwapchainOwned)
+        {
+            m_Texture = nullptr;
+            return;
+        }
+
+        if (m_Texture)
+        {
+            m_Texture->release();
+            m_Texture = nullptr;
+        }
     }
 
 
@@ -317,7 +345,7 @@ namespace Astral {
 
             CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
             commandQueueHandle->SubmitSync(commandBufferHandle);
-            commandQueueHandle->WaitIdle();
+            RendererAPI::GetDevice().WaitIdle();
         }
     }
 
