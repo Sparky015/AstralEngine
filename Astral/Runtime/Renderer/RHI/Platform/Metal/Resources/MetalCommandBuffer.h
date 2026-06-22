@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include "Metal/MTL4CommandEncoder.hpp"
+#include "Metal/MTL4ComputeCommandEncoder.hpp"
+#include "Metal/MTL4RenderCommandEncoder.hpp"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 
 #include "Metal/MTLDevice.hpp"
@@ -20,15 +23,22 @@ namespace Astral {
         MTL::Device* Device;
     };
 
+    enum class EncodingType
+    {
+        NONE,
+        RENDER,
+        COMPUTE
+    };
+
     /**
      * @brief Wraps Metal command buffer operations
      */
-    class MetalCommandBuffer : public CommandBuffer // TODO
+    class MetalCommandBuffer : public CommandBuffer
     {
     public:
 
-        MetalCommandBuffer(const MetalCommandBufferDesc& computePipelineStateDesc); // TODO
-        ~MetalCommandBuffer() override; // TODO
+        MetalCommandBuffer(const MetalCommandBufferDesc& commandBufferDesc);
+        ~MetalCommandBuffer() override;
 
         /**
          * @brief Opens command recording for the command buffer
@@ -149,7 +159,19 @@ namespace Astral {
 
     private:
 
+        void CreateCommandBuffer();
 
+        void ReleaseCommandBuffer();
+
+        MTL::Device* m_Device;
+        MTL4::CommandBuffer* m_CommandBuffer;
+
+        MTL4::ComputeCommandEncoder* m_ComputeCommandEncoder;
+        MTL4::RenderCommandEncoder* m_RenderCommandEncoder;
+        EncodingType m_ActiveEncodingType = EncodingType::NONE;
+
+        IndexBufferHandle m_BoundIndexBuffer = nullptr;
+        VertexBufferHandle m_BoundVertexBuffer = nullptr;
     };
 
 }
