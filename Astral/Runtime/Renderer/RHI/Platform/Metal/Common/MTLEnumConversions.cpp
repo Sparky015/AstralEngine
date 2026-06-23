@@ -506,6 +506,31 @@ namespace Astral {
     }
 
 
+    MTL::LoadAction ConvertAttachmentLoadOpToMTLLoadAction(AttachmentLoadOp attachmentLoadOp)
+    {
+        switch (attachmentLoadOp)
+        {
+            case AttachmentLoadOp::LOAD:        return MTL::LoadActionLoad;
+            case AttachmentLoadOp::CLEAR:       return MTL::LoadActionClear;
+            case AttachmentLoadOp::DONT_CARE:   return MTL::LoadActionDontCare;
+            case AttachmentLoadOp::NONE:        return MTL::LoadActionDontCare;
+            default: AE_ERROR("Undefined attachment load op input!")
+        }
+    }
+
+
+    MTL::StoreAction ConvertAttachmentStoreOpToMTLStoreAction(AttachmentStoreOp attachmentStoreOp)
+    {
+        switch (attachmentStoreOp)
+        {
+            case AttachmentStoreOp::STORE:      return MTL::StoreActionStore;
+            case AttachmentStoreOp::DONT_CARE:  return MTL::StoreActionDontCare;
+            case AttachmentStoreOp::NONE:       return MTL::StoreActionDontCare;
+            default: AE_ERROR("Undefined attachment store op input!")
+        }
+    }
+
+
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode)
     {
         switch (samplerAddressMode)

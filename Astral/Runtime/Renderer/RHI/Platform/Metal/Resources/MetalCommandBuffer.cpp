@@ -11,6 +11,7 @@
 #include "Metal/MTL4CommandBuffer.hpp"
 #include "Metal/MTL4RenderPass.hpp"
 #include "Metal/MTLBuffer.hpp"
+#include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
 
@@ -107,7 +108,7 @@ namespace Astral {
     }
 
 
-    void MetalCommandBuffer::BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentTextures)
+    void MetalCommandBuffer::BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentResources)
     {
         // ==== End the current computer encoder if applicable ====================
 
@@ -118,12 +119,121 @@ namespace Astral {
         }
 
 
-        // ==== Create a new render encoder ====================
+        ASSERT(attachmentResources.size() > 0, "No attachment resources were given to render pass!")
+        UVec2 extent = attachmentResources[0].Resource->GetDimensions();
+        uint32 layerCount = attachmentResources[0].Resource->GetNumLayers();
 
-        // TODO: Populate render pass descriptor
         MTL4::RenderPassDescriptor* renderPassDescriptor = MTL4::RenderPassDescriptor::alloc()->init();
-        renderPassDescriptor;
 
+        renderPassDescriptor->setDefaultRasterSampleCount(1);
+        renderPassDescriptor->setRenderTargetWidth(extent.x);
+        renderPassDescriptor->setRenderTargetHeight(extent.y);
+        renderPassDescriptor->setRenderTargetArrayLength(layerCount);
+        renderPassDescriptor->setSupportColorAttachmentMapping(false);
+
+
+        // ==== Populating the color attachments fields ========================================================
+
+        MTL::RenderPassColorAttachmentDescriptorArray* colorAttachmentDescriptorArray = renderPassDescriptor->colorAttachments();
+
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+        const std::vector<AttachmentReference>& resolveAttachmentReferences = renderPassHandle->GetResolveAttachmentReferences();
+
+        for (size_t i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            AttachmentResource colorAttachmentResource = attachmentResources[colorAttachmentReference.AttachmentIndex];
+            MTL::Texture* colorImage = (MTL::Texture*)colorAttachmentResource.Resource->GetNativeImageView(colorAttachmentResource.ArrayLayer, colorAttachmentResource.MipLevel);
+
+            MTL::RenderPassColorAttachmentDescriptor* colorAttachmentDescriptor = MTL::RenderPassColorAttachmentDescriptor::alloc()->init();
+
+            MTL::ClearColor clearColor = MTL::ClearColor(colorAttachmentDescription.ClearColor.r, colorAttachmentDescription.ClearColor.g,
+                                                         colorAttachmentDescription.ClearColor.b, colorAttachmentDescription.ClearColor.a);
+            uint32 mipLevel = (colorAttachmentResource.MipLevel == FullSubresourceRange) ? 0 : colorAttachmentResource.MipLevel;
+            uint32 arraySlice = (colorAttachmentResource.ArrayLayer == FullSubresourceRange) ? 0 : colorAttachmentResource.ArrayLayer;
+
+            colorAttachmentDescriptor->setClearColor(clearColor);
+            colorAttachmentDescriptor->setLevel(mipLevel);
+            colorAttachmentDescriptor->setLoadAction(ConvertAttachmentLoadOpToMTLLoadAction(colorAttachmentDescription.LoadOp));
+            colorAttachmentDescriptor->setSlice(arraySlice);
+            colorAttachmentDescriptor->setStoreAction(ConvertAttachmentStoreOpToMTLStoreAction(colorAttachmentDescription.StoreOp));
+            colorAttachmentDescriptor->setTexture(colorImage);
+
+
+            if (i < resolveAttachmentReferences.size())
+            {
+                // A resolve attachment exists corresponding to this color attachment
+                const AttachmentReference& resolveAttachmentReference = resolveAttachmentReferences[i];
+                AttachmentResource resolveAttachmentResource = attachmentResources[resolveAttachmentReference.AttachmentIndex];
+                MTL::Texture* resolveImageView = (MTL::Texture*)resolveAttachmentResource.Resource->GetNativeImageView(resolveAttachmentResource.ArrayLayer, resolveAttachmentResource.MipLevel);
+
+                uint32 resolveMipLevel = (resolveAttachmentResource.MipLevel == FullSubresourceRange) ? 0 : resolveAttachmentResource.MipLevel;
+                uint32 resolveArraySlice = (resolveAttachmentResource.ArrayLayer == FullSubresourceRange) ? 0 : resolveAttachmentResource.ArrayLayer;
+
+                colorAttachmentDescriptor->setResolveLevel(resolveMipLevel);
+                colorAttachmentDescriptor->setResolveSlice(resolveArraySlice);
+                colorAttachmentDescriptor->setResolveTexture(resolveImageView);
+            }
+
+            colorAttachmentDescriptorArray->setObject(colorAttachmentDescriptor, i);
+            colorAttachmentDescriptor->release();
+        }
+
+
+        // ==== Populating the depth/stencil attachment fields ========================================================
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            // Depth stencil attachment exists
+            MTL::RenderPassDepthAttachmentDescriptor* depthAttachmentDescriptor = MTL::RenderPassDepthAttachmentDescriptor::alloc()->init();
+
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+            AttachmentResource depthStencilAttachmentResource = attachmentResources[depthStencilAttachmentReference.AttachmentIndex];
+            MTL::Texture* depthStencilTexture = (MTL::Texture*)depthStencilAttachmentResource.Resource->GetNativeImageView(depthStencilAttachmentResource.ArrayLayer, depthStencilAttachmentResource.MipLevel);
+
+            uint32 depthStencilMipLevel = (depthStencilAttachmentResource.MipLevel == FullSubresourceRange) ? 0 : depthStencilAttachmentResource.MipLevel;
+            uint32 depthStencilArraySlice = (depthStencilAttachmentResource.ArrayLayer == FullSubresourceRange) ? 0 : depthStencilAttachmentResource.ArrayLayer;
+
+
+            depthAttachmentDescriptor->setClearDepth(depthStencilAttachmentDescription.ClearColor.x);
+            depthAttachmentDescriptor->setDepthResolveFilter(MTL::MultisampleDepthResolveFilterMin);
+            depthAttachmentDescriptor->setLevel(depthStencilMipLevel);
+            depthAttachmentDescriptor->setLoadAction(ConvertAttachmentLoadOpToMTLLoadAction(depthStencilAttachmentDescription.LoadOp));
+            depthAttachmentDescriptor->setSlice(depthStencilArraySlice);
+            depthAttachmentDescriptor->setStoreAction(ConvertAttachmentStoreOpToMTLStoreAction(depthStencilAttachmentDescription.StoreOp));
+            depthAttachmentDescriptor->setTexture(depthStencilTexture);
+
+
+            renderPassDescriptor->setDepthAttachment(depthAttachmentDescriptor);
+            depthAttachmentDescriptor->release();
+            depthAttachmentDescriptor = nullptr;
+
+            ImageFormat imageFormat = depthStencilAttachmentResource.Resource->GetFormat();
+            if (IsStencilFormat(imageFormat))
+            {
+                MTL::RenderPassStencilAttachmentDescriptor* stencilAttachmentDescriptor = MTL::RenderPassStencilAttachmentDescriptor::alloc()->init();
+
+                stencilAttachmentDescriptor->setClearStencil(depthStencilAttachmentDescription.ClearColor.y);
+                stencilAttachmentDescriptor->setStencilResolveFilter(MTL::MultisampleStencilResolveFilterDepthResolvedSample);
+                stencilAttachmentDescriptor->setLevel(depthStencilMipLevel);
+                stencilAttachmentDescriptor->setLoadAction(ConvertAttachmentLoadOpToMTLLoadAction(depthStencilAttachmentDescription.LoadOp));
+                stencilAttachmentDescriptor->setSlice(depthStencilArraySlice);
+                stencilAttachmentDescriptor->setStoreAction(ConvertAttachmentStoreOpToMTLStoreAction(depthStencilAttachmentDescription.StoreOp));
+                stencilAttachmentDescriptor->setTexture(depthStencilTexture);
+
+                renderPassDescriptor->setStencilAttachment(stencilAttachmentDescriptor);
+                stencilAttachmentDescriptor->release();
+                stencilAttachmentDescriptor = nullptr;
+            }
+        }
+
+
+        // ==== Create a new render encoder ====================
 
         m_RenderCommandEncoder = m_CommandBuffer->renderCommandEncoder(renderPassDescriptor);
         m_ActiveEncodingType = EncodingType::RENDER;

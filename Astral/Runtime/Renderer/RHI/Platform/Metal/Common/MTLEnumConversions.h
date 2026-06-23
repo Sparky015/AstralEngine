@@ -14,10 +14,11 @@
 #include "Renderer/RHI/Resources/VertexBufferLayout.h"
 
 #include "Metal/MTLPixelFormat.hpp"
+#include "Metal/MTLRenderPass.hpp"
 #include "Metal/MTLSampler.hpp"
 #include "Metal/MTLTexture.hpp"
 #include "Metal/MTLVertexDescriptor.hpp"
-
+#include "Renderer/RHI/Resources/Renderpass.h"
 
 
 namespace Astral {
@@ -27,7 +28,8 @@ namespace Astral {
     MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType);
     ImageFormat ConvertMTLPixelFormatToImageFormat(MTL::PixelFormat pixelFormat);
     MTL::VertexFormat ConvertShaderDataTypeToMTLVertexFormat(ShaderDataType shaderDataType);
-
+    MTL::LoadAction ConvertAttachmentLoadOpToMTLLoadAction(AttachmentLoadOp attachmentLoadOp);
+    MTL::StoreAction ConvertAttachmentStoreOpToMTLStoreAction(AttachmentStoreOp attachmentStoreOp);
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode);
     MTL::SamplerMinMagFilter ConvertSamplerFilterToMTLMinMagFilter(SamplerFilter samplerFilter);
 
