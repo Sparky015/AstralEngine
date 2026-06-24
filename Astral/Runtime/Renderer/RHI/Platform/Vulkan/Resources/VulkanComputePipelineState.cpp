@@ -18,6 +18,7 @@ namespace Astral {
         m_ComputeDescription(desc)
     {
         CreateComputePipelineStateObject();
+        m_CompiledComputeShader = desc.ComputeShader;
     }
 
 
@@ -25,6 +26,24 @@ namespace Astral {
     {
         DestroyPipelineLayout();
         DestroyPipelineState();
+    }
+
+
+    ShaderHandle VulkanComputePipelineState::GetCompiledVertexShader()
+    {
+        return nullptr;
+    }
+
+
+    ShaderHandle VulkanComputePipelineState::GetCompiledFragmentShader()
+    {
+        return nullptr;
+    }
+
+
+    ShaderHandle VulkanComputePipelineState::GetCompiledComputeShader()
+    {
+        return m_CompiledComputeShader;
     }
 
 

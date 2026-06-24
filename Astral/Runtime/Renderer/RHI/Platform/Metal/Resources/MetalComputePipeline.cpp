@@ -14,6 +14,7 @@ namespace Astral {
     {
         CreateDescriptorSetLayout(computePipelineStateDesc);
         CreatePipelineState(computePipelineStateDesc);
+        m_CompiledComputeShader = computePipelineStateDesc.ComputeShader;
     }
 
 
@@ -26,6 +27,24 @@ namespace Astral {
     PipelineType MetalComputePipelineState::GetPipelineType()
     {
         return PipelineType::COMPUTE;
+    }
+
+
+    ShaderHandle MetalComputePipelineState::GetCompiledVertexShader()
+    {
+        return nullptr;
+    }
+
+
+    ShaderHandle MetalComputePipelineState::GetCompiledFragmentShader()
+    {
+        return nullptr;
+    }
+
+
+    ShaderHandle MetalComputePipelineState::GetCompiledComputeShader()
+    {
+        return m_CompiledComputeShader;
     }
 
 

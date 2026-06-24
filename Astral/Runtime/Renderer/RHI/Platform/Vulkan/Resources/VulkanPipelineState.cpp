@@ -14,11 +14,14 @@
 namespace Astral {
 
     VulkanPipelineState::VulkanPipelineState(const VulkanGraphicsPipelineStateDesc& desc) :
-        m_GraphicsDescription(desc),
         m_Device(desc.Device),
+        m_GraphicsDescription(desc),
         m_ViewportDimensions()
     {
         CreateGraphicsPipelineStateObject();
+
+        m_CompiledVertexShader = desc.VertexShader;
+        m_CompiledFragmentShader = desc.FragmentShader;
     }
 
 
@@ -26,6 +29,24 @@ namespace Astral {
     {
         DestroyPipelineLayout();
         DestroyPipelineState();
+    }
+
+
+    ShaderHandle VulkanPipelineState::GetCompiledVertexShader()
+    {
+        return m_CompiledVertexShader;
+    }
+
+
+    ShaderHandle VulkanPipelineState::GetCompiledFragmentShader()
+    {
+        return m_CompiledFragmentShader;
+    }
+
+
+    ShaderHandle VulkanPipelineState::GetCompiledComputeShader()
+    {
+        return nullptr;
     }
 
 

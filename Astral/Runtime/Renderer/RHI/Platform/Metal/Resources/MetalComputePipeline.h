@@ -39,6 +39,24 @@ namespace Astral {
         PipelineType GetPipelineType() override;
 
         /**
+         * @brief Gets the vertex shader compiled by this pipeline
+         * @return The vertex shader compiled by this pipeline or nullptr if the pipeline did not use a vertex shader
+         */
+        ShaderHandle GetCompiledVertexShader() override;
+
+        /**
+         * @brief Gets the fragment shader compiled by this pipeline
+         * @return The fragment shader compiled by this pipeline or nullptr if the pipeline did not use a fragment shader
+         */
+        ShaderHandle GetCompiledFragmentShader() override;
+
+        /**
+         * @brief Gets the compute shader compiled by this pipeline
+         * @return The compute shader compiled by this pipeline or nullptr if the pipeline did not use a compute shader
+         */
+        ShaderHandle GetCompiledComputeShader() override;
+
+        /**
          * @brief Gets the descriptor set layouts of the pipeline
          * @return The descriptor set layouts of the pipeline
          */
@@ -79,6 +97,7 @@ namespace Astral {
         MTL::ComputePipelineState* m_Pipeline;
 
         std::vector<DescriptorSetLayout> m_DescriptorSetLayout;
+        ShaderHandle m_CompiledComputeShader;
     };
 
 }
