@@ -52,6 +52,16 @@ namespace Astral {
 
     void MetalCommandBuffer::BindPipeline(const PipelineStateHandle& pipeline)
     {
+        if (m_ActiveEncodingType != EncodingType::COMPUTE && pipeline->GetPipelineType() == PipelineType::COMPUTE)
+        {
+            // Switch to compute encoder if a compute pipeline is bound
+            m_ComputeCommandEncoder = m_CommandBuffer->computeCommandEncoder();
+            m_ActiveEncodingType = EncodingType::COMPUTE;
+            m_BoundPipeline = nullptr;
+            m_BoundIndexBuffer = nullptr;
+            m_BoundVertexBuffer = nullptr;
+        }
+
         if (m_ActiveEncodingType == EncodingType::RENDER)
         {
             ASSERT(pipeline->GetPipelineType() == PipelineType::GRAPHICS, "Given pipeline must be same type as active encoder (Render), but is not!")
@@ -64,6 +74,8 @@ namespace Astral {
             MTL::ComputePipelineState* computePipelineState = (MTL::ComputePipelineState*)pipeline->GetNativeHandle();
             m_ComputeCommandEncoder->setComputePipelineState(computePipelineState);
         }
+
+        m_BoundPipeline = pipeline;
     }
 
 
@@ -239,6 +251,9 @@ namespace Astral {
 
         m_RenderCommandEncoder = m_CommandBuffer->renderCommandEncoder(renderPassDescriptor);
         m_ActiveEncodingType = EncodingType::RENDER;
+        m_BoundPipeline = nullptr;
+        m_BoundIndexBuffer = nullptr;
+        m_BoundVertexBuffer = nullptr;
     }
 
 
@@ -278,17 +293,14 @@ namespace Astral {
 
     void MetalCommandBuffer::Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
     {
-        ASSERT(m_ActiveEncodingType == EncodingType::NONE || m_ActiveEncodingType == EncodingType::COMPUTE, "Render encoder must not be active when using this function (Dispatch)!")
+        ASSERT(m_ActiveEncodingType == EncodingType::COMPUTE, "Render encoder must not be active when using this function (Dispatch)!")
 
-        if (m_ActiveEncodingType != EncodingType::COMPUTE)
-        {
-            m_ComputeCommandEncoder = m_CommandBuffer->computeCommandEncoder();
-            m_ActiveEncodingType = EncodingType::COMPUTE;
-        }
+        const ShaderReflectionInfo& computeShaderReflectionInfo = m_BoundPipeline->GetCompiledComputeShader()->GetShaderReflectionInfo();
+        Vec3 workgroupSize = computeShaderReflectionInfo.WorkgroupDimensions;
 
-        MTL::Size groupSize = MTL::Size(groupCountX, groupCountY, groupCountZ);
-        MTL::Size localThreadGrid = MTL::Size(-1, -1, -1); // TODO: Use shader reflection from bound pipeline to query thread grid size
-        m_ComputeCommandEncoder->dispatchThreads(groupSize, localThreadGrid);
+        MTL::Size threadsPerGrid = MTL::Size(groupCountX, groupCountY, groupCountZ);
+        MTL::Size threadsPerThreadgroup = MTL::Size(workgroupSize.x, workgroupSize.y, workgroupSize.z);
+        m_ComputeCommandEncoder->dispatchThreads(threadsPerGrid, threadsPerThreadgroup);
     }
 
 

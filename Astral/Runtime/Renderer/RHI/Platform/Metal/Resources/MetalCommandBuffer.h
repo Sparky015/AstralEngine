@@ -187,6 +187,7 @@ namespace Astral {
         MTL4::RenderCommandEncoder* m_RenderCommandEncoder;
         EncodingType m_ActiveEncodingType = EncodingType::NONE;
 
+        PipelineStateHandle m_BoundPipeline = nullptr;
         IndexBufferHandle m_BoundIndexBuffer = nullptr;
         VertexBufferHandle m_BoundVertexBuffer = nullptr;
     };
