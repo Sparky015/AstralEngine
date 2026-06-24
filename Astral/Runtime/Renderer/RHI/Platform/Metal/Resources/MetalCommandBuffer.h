@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include "Metal/MTL4CommandEncoder.hpp"
+#include "Metal/MTL4ComputeCommandEncoder.hpp"
+#include "Metal/MTL4RenderCommandEncoder.hpp"
 #include "Renderer/RHI/Resources/CommandBuffer.h"
 
 #include "Metal/MTLDevice.hpp"
@@ -20,15 +23,22 @@ namespace Astral {
         MTL::Device* Device;
     };
 
+    enum class EncodingType
+    {
+        NONE,
+        RENDER,
+        COMPUTE
+    };
+
     /**
      * @brief Wraps Metal command buffer operations
      */
-    class MetalCommandBuffer : public CommandBuffer // TODO
+    class MetalCommandBuffer : public CommandBuffer
     {
     public:
 
-        MetalCommandBuffer(const MetalCommandBufferDesc& computePipelineStateDesc); // TODO
-        ~MetalCommandBuffer() override; // TODO
+        MetalCommandBuffer(const MetalCommandBufferDesc& commandBufferDesc);
+        ~MetalCommandBuffer() override;
 
         /**
          * @brief Opens command recording for the command buffer
@@ -79,9 +89,9 @@ namespace Astral {
         /**
          * @brief Begins a render pass using the given frame buffer
          * @param renderPassHandle The render pass being used
-         * @param attachmentTextures The frame buffer to use with the render pass
+         * @param attachmentResources The frame buffer to use with the render pass
          */
-        void BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentTextures) override;
+        void BeginRenderPass(const RenderPassHandle& renderPassHandle, const std::vector<AttachmentResource>& attachmentResources) override;
 
         /**
          * @brief Indicates the end of the render pass
@@ -149,7 +159,36 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Creates and stores a Metal 4 command buffer
+         */
+        void CreateCommandBuffer();
 
+        /**
+         * @brief Releases the stored Metal 4 command buffer
+         */
+        void ReleaseCommandBuffer();
+
+        /**
+         * @brief Acquires a Metal 4 command allocator from the Metal rendering context
+         */
+        void AcquireCommandAllocator();
+
+        /**
+         * @brief Releases the command allocator back to the Metal rendering context
+         */
+        void ReleaseCommandAllocator();
+
+        MTL::Device* m_Device;
+        MTL4::CommandBuffer* m_CommandBuffer;
+        MTL4::CommandAllocator* m_CommandAllocator;
+
+        MTL4::ComputeCommandEncoder* m_ComputeCommandEncoder;
+        MTL4::RenderCommandEncoder* m_RenderCommandEncoder;
+        EncodingType m_ActiveEncodingType = EncodingType::NONE;
+
+        IndexBufferHandle m_BoundIndexBuffer = nullptr;
+        VertexBufferHandle m_BoundVertexBuffer = nullptr;
     };
 
 }

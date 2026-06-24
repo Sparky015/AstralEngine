@@ -506,6 +506,31 @@ namespace Astral {
     }
 
 
+    MTL::LoadAction ConvertAttachmentLoadOpToMTLLoadAction(AttachmentLoadOp attachmentLoadOp)
+    {
+        switch (attachmentLoadOp)
+        {
+            case AttachmentLoadOp::LOAD:        return MTL::LoadActionLoad;
+            case AttachmentLoadOp::CLEAR:       return MTL::LoadActionClear;
+            case AttachmentLoadOp::DONT_CARE:   return MTL::LoadActionDontCare;
+            case AttachmentLoadOp::NONE:        return MTL::LoadActionDontCare;
+            default: AE_ERROR("Undefined attachment load op input!")
+        }
+    }
+
+
+    MTL::StoreAction ConvertAttachmentStoreOpToMTLStoreAction(AttachmentStoreOp attachmentStoreOp)
+    {
+        switch (attachmentStoreOp)
+        {
+            case AttachmentStoreOp::STORE:      return MTL::StoreActionStore;
+            case AttachmentStoreOp::DONT_CARE:  return MTL::StoreActionDontCare;
+            case AttachmentStoreOp::NONE:       return MTL::StoreActionDontCare;
+            default: AE_ERROR("Undefined attachment store op input!")
+        }
+    }
+
+
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode)
     {
         switch (samplerAddressMode)
@@ -528,6 +553,36 @@ namespace Astral {
             case SamplerFilter::LINEAR: return MTL::SamplerMinMagFilterLinear;
             default: AE_ERROR("Unsupported SamplerFilter given!")
         }
+    }
+
+
+    MTL::Stages ConvertPipelineStateFlagsToMTLStages(PipelineStageFlags pipelineStageFlags)
+    {
+        MTL::Stages mtlStages = 0;
+
+        if (pipelineStageFlags & PIPELINE_STAGE_TOP_OF_PIPE_BIT)                         { mtlStages |= MTL::StageAll; }
+        if (pipelineStageFlags & PIPELINE_STAGE_DRAW_INDIRECT_BIT)                       { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_VERTEX_INPUT_BIT)                        { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_VERTEX_SHADER_BIT)                       { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT)         { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT)      { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_GEOMETRY_SHADER_BIT)                     { mtlStages |= MTL::StageVertex; }
+        if (pipelineStageFlags & PIPELINE_STAGE_FRAGMENT_SHADER_BIT)                     { mtlStages |= MTL::StageFragment; }
+        if (pipelineStageFlags & PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)                { mtlStages |= MTL::StageFragment; }
+        if (pipelineStageFlags & PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT)                 { mtlStages |= MTL::StageFragment; }
+        if (pipelineStageFlags & PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)             { mtlStages |= MTL::StageFragment; }
+        if (pipelineStageFlags & PIPELINE_STAGE_COMPUTE_SHADER_BIT)                      { mtlStages |= MTL::StageDispatch; }
+        if (pipelineStageFlags & PIPELINE_STAGE_TRANSFER_BIT)                            { mtlStages |= MTL::StageBlit; }
+        if (pipelineStageFlags & PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)                      { mtlStages |= MTL::StageAll; }
+        if (pipelineStageFlags & PIPELINE_STAGE_HOST_BIT)                                { /* Not applicable */ }
+        if (pipelineStageFlags & PIPELINE_STAGE_ALL_GRAPHICS_BIT)                        { mtlStages |= MTL::StageAll; }
+        if (pipelineStageFlags & PIPELINE_STAGE_ALL_COMMANDS_BIT)                        { mtlStages |= MTL::StageAll; }
+        if (pipelineStageFlags & PIPELINE_STAGE_NONE)                                    { /* Not applicable */ }
+        if (pipelineStageFlags & PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT)        { mtlStages |= MTL::StageAccelerationStructure; }
+        if (pipelineStageFlags & PIPELINE_STAGE_RAY_TRACING_SHADER_BIT)                  { mtlStages |= MTL::StageDispatch; }
+        if (pipelineStageFlags & PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT)    { /* Not applicable */ }
+
+        return mtlStages;
     }
 
 }
