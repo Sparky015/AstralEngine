@@ -159,12 +159,29 @@ namespace Astral {
 
     private:
 
+        /**
+         * @brief Creates and stores a Metal 4 command buffer
+         */
         void CreateCommandBuffer();
 
+        /**
+         * @brief Releases the stored Metal 4 command buffer
+         */
         void ReleaseCommandBuffer();
+
+        /**
+         * @brief Acquires a Metal 4 command allocator from the Metal rendering context
+         */
+        void AcquireCommandAllocator();
+
+        /**
+         * @brief Releases the command allocator back to the Metal rendering context
+         */
+        void ReleaseCommandAllocator();
 
         MTL::Device* m_Device;
         MTL4::CommandBuffer* m_CommandBuffer;
+        MTL4::CommandAllocator* m_CommandAllocator;
 
         MTL4::ComputeCommandEncoder* m_ComputeCommandEncoder;
         MTL4::RenderCommandEncoder* m_RenderCommandEncoder;

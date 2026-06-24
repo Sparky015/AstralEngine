@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Metal/MTLCommandEncoder.hpp"
 #include "Renderer/RHI/Common/ImageFormats.h"
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
@@ -32,5 +33,6 @@ namespace Astral {
     MTL::StoreAction ConvertAttachmentStoreOpToMTLStoreAction(AttachmentStoreOp attachmentStoreOp);
     MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode);
     MTL::SamplerMinMagFilter ConvertSamplerFilterToMTLMinMagFilter(SamplerFilter samplerFilter);
+    MTL::Stages ConvertPipelineStateFlagsToMTLStages(PipelineStageFlags pipelineStageFlags);
 
 }

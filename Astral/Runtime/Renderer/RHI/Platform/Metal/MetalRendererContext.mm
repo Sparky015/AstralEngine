@@ -35,6 +35,7 @@ namespace Astral {
 
     void MetalRenderingContext::Shutdown()
     {
+        ReleaseAllCommandAllocatorPools();
         ReleaseCompiler();
         ReleasePipelineDataSetSerializer();
         m_PipelineStateCache.reset();
@@ -169,6 +170,86 @@ namespace Astral {
     MTL4::Compiler* MetalRenderingContext::GetCompiler()
     {
         return m_Compiler;
+    }
+
+
+
+
+
+    void MetalRenderingContext::ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator)
+    {
+        std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
+
+        std::thread::id executingThreadID = std::this_thread::get_id();
+        if (!m_CommandAllocators.contains(executingThreadID))
+        {
+            AE_WARN("[MetalRenderingContext] Given command allocator is not from this thread's command allocator pool!")
+            return;
+        }
+
+        CommandAllocatorPool& allocatorPool = m_CommandAllocators.at(executingThreadID);
+
+        if (allocatorPool.UsedCommandAllocators.contains(commandAllocator))
+        {
+            allocatorPool.UsedCommandAllocators.erase(commandAllocator);
+            allocatorPool.AvailableCommandAllocators.insert(commandAllocator);
+        }
+        else
+        {
+            AE_WARN("[MetalRenderingContext] Given command allocator was not acquired from this thread's command allocator pool!")
+        }
+    }
+
+    MTL4::CommandAllocator* MetalRenderingContext::AcquireThreadCommandAllocator()
+    {
+        std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
+
+        std::thread::id executingThreadID = std::this_thread::get_id();
+        if (!m_CommandAllocators.contains(executingThreadID))
+        {
+            // Create and populate a new command allocator pool for this thread
+            CommandAllocatorPool commandAllocatorPool{};
+            MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+
+            for (size_t i = 0; i < 3; i++)
+            {
+                MTL4::CommandAllocator* newCommandAllocator = device->newCommandAllocator();
+                commandAllocatorPool.AvailableCommandAllocators.insert(newCommandAllocator);
+            }
+            m_CommandAllocators.emplace(executingThreadID, commandAllocatorPool);
+        }
+
+        // Try to acquire a command allocator from this thread's command pool
+        CommandAllocatorPool& commandAllocatorPool = m_CommandAllocators.at(executingThreadID);
+
+        if (commandAllocatorPool.AvailableCommandAllocators.size() != 0)
+        {
+            MTL4::CommandAllocator* acquiredCommandAllocator = *commandAllocatorPool.AvailableCommandAllocators.begin();
+            commandAllocatorPool.AvailableCommandAllocators.erase(acquiredCommandAllocator);
+            commandAllocatorPool.UsedCommandAllocators.insert(acquiredCommandAllocator);
+            return acquiredCommandAllocator;
+        }
+        else
+        {
+            AE_WARN("[MetalRenderingContext] This thread's command allocator pool is all used! Can't acquire a command allocator!")
+            return nullptr;
+        }
+    }
+
+
+    void MetalRenderingContext::ReleaseAllCommandAllocatorPools()
+    {
+        for (auto& [threadID, commandAllocatorPool] : m_CommandAllocators)
+        {
+            for (MTL4::CommandAllocator* commandAllocator : commandAllocatorPool.AvailableCommandAllocators)
+            {
+                commandAllocator->release();
+            }
+            for (MTL4::CommandAllocator* commandAllocator : commandAllocatorPool.UsedCommandAllocators)
+            {
+                commandAllocator->release();
+            }
+        }
     }
 
 }

@@ -12,6 +12,8 @@
 #include <QuartzCore/QuartzCore.hpp>
 #include <GLFW/glfw3.h>
 
+#include "Core/Memory/Pools/ObjectPool.h"
+
 namespace Astral {
 
     /**
@@ -78,6 +80,17 @@ namespace Astral {
          */
         MTL4::Compiler* GetCompiler();
 
+        /**
+         * @brief Gets the command allocator for the executing thread
+         */
+        MTL4::CommandAllocator* AcquireThreadCommandAllocator();
+
+        /**
+         * @brief Releases the given command allocator back to the thread's command allocator pool
+         * @param commandAllocator The command allocator to release back to the thread's command allocator pool
+         */
+        void ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator);
+
     private:
 
         /**
@@ -125,7 +138,17 @@ namespace Astral {
          */
         void ReleaseCompiler();
 
+        /**
+         * @brief Releases all stored command allocators from memory
+         */
+        void ReleaseAllCommandAllocatorPools();
 
+
+        struct CommandAllocatorPool
+        {
+            std::unordered_set<MTL4::CommandAllocator*> AvailableCommandAllocators;
+            std::unordered_set<MTL4::CommandAllocator*> UsedCommandAllocators;
+        };
 
 
         GLFWwindow* m_Window;
@@ -135,6 +158,9 @@ namespace Astral {
 
         MTL4::Compiler* m_Compiler;
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
+
+        std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
+        std::mutex m_CommandAllocatorsMutex;
     };
 
 }

@@ -11,6 +11,8 @@
 #include "Metal/MTL4CommandBuffer.hpp"
 #include "Metal/MTL4RenderPass.hpp"
 #include "Metal/MTLBuffer.hpp"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 #include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
@@ -19,19 +21,20 @@ namespace Astral {
         m_Device(commandBufferDesc.Device)
     {
         CreateCommandBuffer();
+        AcquireCommandAllocator();
     }
 
 
     MetalCommandBuffer::~MetalCommandBuffer()
     {
+        ReleaseCommandAllocator();
         ReleaseCommandBuffer();
     }
 
 
     void MetalCommandBuffer::BeginRecording()
     {
-        // TODO: Get Command Allocator
-        m_CommandBuffer->beginCommandBuffer();
+        m_CommandBuffer->beginCommandBuffer(m_CommandAllocator);
     }
 
 
@@ -43,8 +46,7 @@ namespace Astral {
 
     void MetalCommandBuffer::Reset()
     {
-        // TODO: Get Command Allocator
-
+        m_CommandAllocator->reset();
     }
 
 
@@ -300,14 +302,23 @@ namespace Astral {
     {
         ASSERT(m_ActiveEncodingType != EncodingType::NONE, "Encoder must be active to use this function (SetPipelineBarrier)!")
 
+        MTL4::CommandEncoder* commandEncoder;
         if (m_ActiveEncodingType == EncodingType::RENDER)
         {
-            m_RenderCommandEncoder;
+            commandEncoder = m_RenderCommandEncoder;
         }
         else if (m_ActiveEncodingType == EncodingType::COMPUTE)
         {
-            m_ComputeCommandEncoder;
+            commandEncoder = m_ComputeCommandEncoder;
         }
+        else
+        {
+            AE_ERROR("Encoding type is not supported!")
+        }
+
+        MTL::Stages beforeStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.SourceStageMask);
+        MTL::Stages afterStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.DestinationStageMask);
+        commandEncoder->barrierAfterEncoderStages(beforeStages, afterStages, MTL4::VisibilityOptionNone);
     }
 
 
@@ -327,14 +338,21 @@ namespace Astral {
     {
         ASSERT(m_ActiveEncodingType != EncodingType::NONE, "Encoder must be active to use this function!")
 
+        MTL4::CommandEncoder* commandEncoder;
         if (m_ActiveEncodingType == EncodingType::RENDER)
         {
-            m_RenderCommandEncoder->insertDebugSignpost(NS::String::string(label.data(), NS::UTF8StringEncoding));
+            commandEncoder = m_RenderCommandEncoder;
         }
         else if (m_ActiveEncodingType == EncodingType::COMPUTE)
         {
-            m_ComputeCommandEncoder->insertDebugSignpost(NS::String::string(label.data(), NS::UTF8StringEncoding));
+            commandEncoder = m_ComputeCommandEncoder;
         }
+        else
+        {
+            AE_ERROR("Encoding type is not supported!")
+        }
+
+        commandEncoder->insertDebugSignpost(NS::String::string(label.data(), NS::UTF8StringEncoding));
     }
 
 
@@ -368,6 +386,21 @@ namespace Astral {
             m_CommandBuffer->release();
             m_CommandBuffer = nullptr;
         }
+    }
+
+
+    void MetalCommandBuffer::AcquireCommandAllocator()
+    {
+        MetalRenderingContext& context = static_cast<MetalRenderingContext&>(RendererAPI::GetContext());
+        m_CommandAllocator = context.AcquireThreadCommandAllocator();
+    }
+
+
+    void MetalCommandBuffer::ReleaseCommandAllocator()
+    {
+        MetalRenderingContext& context = static_cast<MetalRenderingContext&>(RendererAPI::GetContext());
+        context.ReleaseThreadCommandAllocator(m_CommandAllocator);
+        m_CommandAllocator = nullptr;
     }
 
 }
