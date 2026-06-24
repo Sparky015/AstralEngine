@@ -9,6 +9,7 @@
 #include "Renderer/RHI/Resources/Shader.h"
 
 #include "Metal/MTLDevice.hpp"
+#include "spirv-cross/spirv_msl.hpp"
 
 namespace Astral {
 
@@ -31,6 +32,12 @@ namespace Astral {
         ~MetalShader() override;
 
         /**
+         * @brief Gets the shader reflection information for the shader
+         * @return The shader reflection information for the shader
+         */
+        const ShaderReflectionInfo& GetShaderReflectionInfo() override;
+
+        /**
          * @brief Gets the native shader object handle
          * @return The native shader object handle (MTL::Function*)
          */
@@ -51,6 +58,12 @@ namespace Astral {
          * @return A string containing the MSL source code
          */
         std::string ConvertSPIRVToMSLSourceCode(const std::vector<uint32>& spirv);
+
+        /**
+         * @brief Populates the shader's reflection info
+         * @param compiler The SPIRV-Cross compiler to pull reflection data from
+         */
+        void PopulateShaderReflectionInfo(const spirv_cross::CompilerMSL& compiler);
 
         /**
          * @brief Compiles Metal Shading Language (MSL) source code into Metal IR
@@ -77,6 +90,8 @@ namespace Astral {
         MTL::Device* m_Device;
         MTL::Library* m_Library;
         MTL::Function* m_Function;
+
+        ShaderReflectionInfo m_ShaderReflectionInfo;
     };
 
 }

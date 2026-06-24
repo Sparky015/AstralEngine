@@ -36,6 +36,12 @@ namespace Astral {
     }
 
 
+    const ShaderReflectionInfo& MetalShader::GetShaderReflectionInfo()
+    {
+        return m_ShaderReflectionInfo;
+    }
+
+
     void* MetalShader::GetNativeHandle()
     {
         return m_Function;
@@ -45,6 +51,8 @@ namespace Astral {
     std::vector<uint32> MetalShader::CompileGLSLToSPIRV(const ShaderSource& shaderSource)
     {
         PROFILE_SCOPE("VulkanShader::CompileShader");
+        m_ShaderReflectionInfo.ShaderType = shaderSource.GetShaderType();
+        m_ShaderReflectionInfo.ShaderFileName = shaderSource.GetFileName();
 
         // Compiling to SPIR-V
         std::vector<uint32> SPIRV_Code;
@@ -154,9 +162,74 @@ namespace Astral {
         spirv_cross::CompilerMSL::Options compilerOptions;
         compilerOptions.platform = spirv_cross::CompilerMSL::Options::macOS;
         compilerOptions.set_msl_version(3, 2);
+        compilerOptions.argument_buffers = true;
 
         std::string mslSourceCode = compiler.compile();
+
+        PopulateShaderReflectionInfo(compiler);
+
         return mslSourceCode;
+    }
+
+
+    void MetalShader::PopulateShaderReflectionInfo(const spirv_cross::CompilerMSL& compiler)
+    {
+        // === Get the workgroup size of a compute shader if applicable =====================
+
+        if (m_ShaderReflectionInfo.ShaderType == ShaderType::COMPUTE_SHADER)
+        {
+            const spirv_cross::SPIREntryPoint& entryPoint = compiler.get_entry_point("main", spv::ExecutionModelGLCompute);
+            m_ShaderReflectionInfo.WorkgroupDimensions = Vec3(entryPoint.workgroup_size.x, entryPoint.workgroup_size.y, entryPoint.workgroup_size.z);
+        }
+
+
+        // === Get the counts of each shader resource type declared in the shader =====================
+
+        spirv_cross::ShaderResources shaderResources = compiler.get_shader_resources();
+        ShaderResourceCounts& resourceCounts = m_ShaderReflectionInfo.ShaderResourceCounts;
+        resourceCounts.CombinedSampledImagesCount = shaderResources.sampled_images.size();
+        resourceCounts.SeparateImagesCount = shaderResources.separate_images.size();
+        resourceCounts.SeparateSamplersCount = shaderResources.separate_samplers.size();
+        resourceCounts.StorageImages = shaderResources.storage_images.size();
+        resourceCounts.StorageBuffers = shaderResources.storage_buffers.size();
+        resourceCounts.UniformBuffers = shaderResources.uniform_buffers.size();
+        resourceCounts.PushConstants = shaderResources.push_constant_buffers.size();
+        resourceCounts.StageInputs = shaderResources.stage_inputs.size();
+        resourceCounts.StageOutputs = shaderResources.stage_outputs.size();
+
+
+        // === Get the resource binding layout of the shader =====================
+
+        std::vector<ShaderResourceBindSlot>& resourceDecorations = m_ShaderReflectionInfo.DeclaredResources;
+
+        std::array<spirv_cross::SmallVector<spirv_cross::Resource>*, 6> shaderResourceInfos =
+            {&shaderResources.sampled_images, &shaderResources.separate_images, &shaderResources.separate_samplers,
+            &shaderResources.storage_images, &shaderResources.storage_buffers, &shaderResources.uniform_buffers};
+
+        std::array<ShaderResourceType, 6> shaderResourceTypes = {
+            ShaderResourceType::COMBINED_SAMPLED_IMAGE, ShaderResourceType::SEPARATE_IMAGE, ShaderResourceType::SEPARATE_SAMPLER,
+            ShaderResourceType::STORAGE_IMAGE, ShaderResourceType::STORAGE_BUFFER, ShaderResourceType::UNIFORM_BUFFER
+        };
+
+        for (size_t i = 0; i < shaderResourceInfos.size(); i++)
+        {
+            for (const spirv_cross::Resource& resource : *shaderResourceInfos[i])
+            {
+                ShaderResourceBindSlot resourceBindSlot = {};
+                resourceBindSlot.DescriptorSet = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
+                resourceBindSlot.BindSlot = compiler.get_decoration(resource.id, spv::DecorationBinding);
+                resourceBindSlot.ResourceType = shaderResourceTypes[i];
+                resourceBindSlot.Name = compiler.get_name(resource.id);
+                resourceDecorations.push_back(resourceBindSlot);
+            }
+        }
+
+        std::ranges::sort(m_ShaderReflectionInfo.DeclaredResources,
+                          [](ShaderResourceBindSlot& resourceOne, ShaderResourceBindSlot& resourceTwo) {
+                              return (resourceOne.DescriptorSet < resourceTwo.DescriptorSet) ||
+                                     (resourceOne.DescriptorSet == resourceTwo.DescriptorSet && resourceOne.BindSlot < resourceTwo.BindSlot);
+                          }
+        );
     }
 
 
