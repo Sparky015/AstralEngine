@@ -55,11 +55,6 @@ namespace Astral {
         void Present(RenderTargetHandle renderTarget) override;
 
         /**
-         * @brief Blocks the current thread until the command queue becomes idle
-         */
-        void WaitIdle() override;
-
-        /**
          * @brief Gets the native handle of the command queue
          * @return The native handle of the command queue
          */

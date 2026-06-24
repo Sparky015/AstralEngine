@@ -777,7 +777,7 @@ namespace Astral {
         commandBufferHandle->EndRecording();
         CommandQueueHandle queueHandle = m_DeviceManager->GetPrimaryCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
-        queueHandle->WaitIdle();
+        RendererAPI::GetDevice().WaitIdle();
     }
 
 
@@ -908,7 +908,7 @@ namespace Astral {
         commandBufferHandle->EndRecording();
         CommandQueueHandle queueHandle = m_DeviceManager->GetPrimaryCommandQueue();
         queueHandle->SubmitSync(commandBufferHandle);
-        queueHandle->WaitIdle();
+        RendererAPI::GetDevice().WaitIdle();
     }
 
 
