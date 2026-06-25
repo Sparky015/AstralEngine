@@ -36,6 +36,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -54,6 +57,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().Create3DTexture(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -71,6 +77,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().Create2DTextureArray(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -88,6 +97,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().CreateCubemap(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -105,6 +117,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().Create1DTexture(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -123,6 +138,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -142,6 +160,9 @@ namespace Astral {
         };
         TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
 
+        ASSERT_NE(testTexture, nullptr);
+        ASSERT_NE(testTexture->GetNativeImage(), nullptr);
+        ASSERT_NE(testTexture->GetNativeImageView(), nullptr);
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
