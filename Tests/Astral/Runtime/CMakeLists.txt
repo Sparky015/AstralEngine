@@ -23,6 +23,7 @@ set(TEST_FILES_GPU_REQUIRED
         Renderer/RHI/Resources/ShaderTest.cpp
         Renderer/RHI/Resources/ComputePipelineTest.cpp
         Renderer/RHI/Resources/GraphicsPipelineTest.cpp
+        Renderer/RHI/Resources/BufferTest.cpp
 )
 
 
