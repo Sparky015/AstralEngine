@@ -10,9 +10,9 @@
 #include "Core/Utilities/Loggers.h"
 #include "Renderer/RHI/RendererAPI.h"
 
-#include "Metal/MTLBlitCommandEncoder.hpp"
-#include "Metal/MTLCommandBuffer.hpp"
 #include "Metal/MTLDevice.hpp"
+#include "Metal/MTL4CommandBuffer.hpp"
+#include "Metal/MTL4ComputeCommandEncoder.hpp"
 
 namespace Astral {
 
@@ -211,15 +211,15 @@ namespace Astral {
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
 
         CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
-        MTL::CommandBuffer* commandBuffer = (MTL::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+        MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
 
         commandBufferHandle->BeginRecording();
-        MTL::BlitCommandEncoder* blitEncoder = commandBuffer->blitCommandEncoder();
+        MTL4::ComputeCommandEncoder* computeCommandEncoder = commandBuffer->computeCommandEncoder();
 
-        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, m_Buffer, 0, size);
+        computeCommandEncoder->copyFromBuffer(metalStagingBuffer, 0, m_Buffer, 0, size);
 
-        blitEncoder->endEncoding();
+        computeCommandEncoder->endEncoding();
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
