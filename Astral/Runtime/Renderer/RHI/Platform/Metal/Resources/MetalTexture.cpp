@@ -8,12 +8,12 @@
 
 #include "MetalBuffer.h"
 #include "Core/Utilities/Asserts.h"
+#include "Metal/MTL4CommandBuffer.hpp"
 #include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 #include "Metal/MTLBuffer.hpp"
 #include "Metal/MTLCommandBuffer.hpp"
-#include "Metal/MTLBlitCommandEncoder.hpp"
 
 namespace Astral {
 
@@ -235,7 +235,7 @@ namespace Astral {
 
     void MetalTexture::CreateTexture(const MetalTextureDesc& desc)
     {
-        MTL::TextureDescriptor* textureDescriptor = MTL::TextureDescriptor::alloc();
+        MTL::TextureDescriptor* textureDescriptor = MTL::TextureDescriptor::alloc()->init();
         ASSERT(textureDescriptor, "MTL::TextureDescriptor failed to be allocated by Metal!")
 
         MTL::ResourceOptions resourceOptions = MTL::ResourceOptions();
@@ -257,7 +257,12 @@ namespace Astral {
         textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(desc.TextureType));
         textureDescriptor->setSampleCount(ConvertSampleCountToIntSampleCount(desc.MSAASampleCount));
 
-        desc.Device->newTexture(textureDescriptor);
+        if (desc.TextureType == TextureType::IMAGE_1D)
+        {
+            textureDescriptor->setHeight(1);
+        }
+
+        m_Texture = desc.Device->newTexture(textureDescriptor);
 
         textureDescriptor->release();
     }
@@ -281,7 +286,7 @@ namespace Astral {
 
     void MetalTexture::CreateSampler(const MetalTextureDesc& desc)
     {
-        MTL::SamplerDescriptor* samplerDescriptor = MTL::SamplerDescriptor::alloc();
+        MTL::SamplerDescriptor* samplerDescriptor = MTL::SamplerDescriptor::alloc()->init();
         ASSERT(samplerDescriptor, "MTL::SamplerDescriptor failed to be allocated by Metal!")
 
         samplerDescriptor->setMinFilter(ConvertSamplerFilterToMTLMinMagFilter(desc.SamplerFilter));
@@ -302,7 +307,7 @@ namespace Astral {
             samplerDescriptor->setMaxAnisotropy(1);
         }
 
-        desc.Device->newSamplerState(samplerDescriptor);
+        m_Sampler = desc.Device->newSamplerState(samplerDescriptor);
 
         samplerDescriptor->release();
     }
@@ -325,10 +330,10 @@ namespace Astral {
         if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL || desc.GenerateMipMaps)
         {
             CommandBufferHandle commandBufferHandle = RendererAPI::GetDevice().AllocateCommandBuffer();
-            MTL::CommandBuffer* commandBuffer = (MTL::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+            MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
             commandBufferHandle->BeginRecording();
-            MTL::BlitCommandEncoder* blitEncoder = commandBuffer->blitCommandEncoder();
+            MTL4::ComputeCommandEncoder* blitEncoder = commandBuffer->computeCommandEncoder();
 
             if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL)
             {
@@ -350,7 +355,7 @@ namespace Astral {
     }
 
 
-    void MetalTexture::UploadToPrivateTextureMemory(MTL::BlitCommandEncoder* blitEncoder, void* data, uint32 length)
+    void MetalTexture::UploadToPrivateTextureMemory(MTL4::ComputeCommandEncoder* blitEncoder, void* data, uint32 length)
     {
         MetalBufferDesc bufferDesc = {
             .Device = m_Device,
@@ -372,7 +377,7 @@ namespace Astral {
     }
 
 
-    void MetalTexture::CopyFromStagingBuffer(MTL::BlitCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length)
+    void MetalTexture::CopyFromStagingBuffer(MTL4::ComputeCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length)
     {
         ASSERT(length <= stagingBuffer.GetAllocatedSize(), "Data does not fit in buffer!")
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
@@ -380,7 +385,7 @@ namespace Astral {
     }
 
 
-    void MetalTexture::GenerateMipMaps(MTL::BlitCommandEncoder* blitEncoder)
+    void MetalTexture::GenerateMipMaps(MTL4::ComputeCommandEncoder* blitEncoder)
     {
         if (!RendererAPI::GetDevice().IsBlitSupportedByFormat(m_ImageFormat))
         {

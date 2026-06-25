@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Metal/MTL4ComputeCommandEncoder.hpp"
 #include "Renderer/RHI/Resources/Texture.h"
 #include "Renderer/RHI/Resources/Buffer.h"
 
@@ -192,7 +193,7 @@ namespace Astral {
         /**
          * @brief Uploads texture data on initial construction
          */
-        void UploadToPrivateTextureMemory(MTL::BlitCommandEncoder* blitEncoder, void* data, uint32 length);
+        void UploadToPrivateTextureMemory(MTL4::ComputeCommandEncoder* blitEncoder, void* data, uint32 length);
 
         /**
          * @brief Copies data to shared texture memory on initial construction
@@ -206,13 +207,13 @@ namespace Astral {
          * @param length The length of data to copy
          * @note This is only for private memory
          */
-        void CopyFromStagingBuffer(MTL::BlitCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length);
+        void CopyFromStagingBuffer(MTL4::ComputeCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length);
 
         /**
          * @brief Generates mip maps for texture
          * @param blitEncoder The blit encoder to use when generating mip maps
          */
-        void GenerateMipMaps(MTL::BlitCommandEncoder* blitEncoder);
+        void GenerateMipMaps(MTL4::ComputeCommandEncoder* blitEncoder);
 
 
         MTL::Device* m_Device;

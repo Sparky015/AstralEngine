@@ -8,11 +8,13 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
+#include "MetalCommandBuffer.h"
 #include "MetalDescriptorSet.h"
 #include "MetalIndexBuffer.h"
 #include "MetalRenderPass.h"
 #include "MetalShader.h"
 #include "MetalSwapchain.h"
+#include "MetalTexture.h"
 #include "MetalVertexBuffer.h"
 
 namespace Astral {
@@ -46,7 +48,11 @@ namespace Astral {
 
     CommandBufferHandle MetalDevice::AllocateCommandBuffer()
     {
-        return nullptr;
+        MetalCommandBufferDesc commandBufferDesc = {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalCommandBuffer>(commandBufferDesc);
     }
 
 
@@ -163,31 +169,131 @@ namespace Astral {
 
     TextureHandle MetalDevice::CreateTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_2D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::CreateCubemap(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::CUBEMAP,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create3DTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_3D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create1DTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_1D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create2DTextureArray(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_2D_ARRAY,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 

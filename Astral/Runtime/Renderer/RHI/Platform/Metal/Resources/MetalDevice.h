@@ -56,11 +56,40 @@ namespace Astral {
          */
         DescriptorSetHandle CreateDescriptorSet() override;
 
-        TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
-        TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override; // TODO
-        TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
-        TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) override; // TODO
-        TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) override; // TODO
+        /**
+         * @brief Creates a 2D texture object
+         * @param textureCreateInfo Info to create the texture with
+         * @return The created texture object
+         */
+        TextureHandle CreateTexture(const TextureCreateInfo& textureCreateInfo) override;
+
+        /**
+         * @brief Creates a cubemap texture object
+         * @param textureCreateInfo Info to create the cubemap texture with
+         * @return The created cubemap texture object
+         */
+        TextureHandle CreateCubemap(const TextureCreateInfo& textureCreateInfo) override;
+
+        /**
+         * @brief Creates a 3D texture object
+         * @param textureCreateInfo Info to create the 3D texture with
+         * @return The created 3D texture object
+         */
+        TextureHandle Create3DTexture(const TextureCreateInfo& textureCreateInfo) override;
+
+        /**
+         * @brief Creates a 1D texture object
+         * @param textureCreateInfo Info to create the 1D texture with
+         * @return The created 1D texture object
+         */
+        TextureHandle Create1DTexture(const TextureCreateInfo& textureCreateInfo) override;
+
+        /**
+         * @brief Creates a 2D texture array object
+         * @param textureCreateInfo Info to create the 2D texture array with
+         * @return The created 2D texture array object
+         */
+        TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) override;
 
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override; // TODO
         bool IsAnisotropySupported() override; // TODO
