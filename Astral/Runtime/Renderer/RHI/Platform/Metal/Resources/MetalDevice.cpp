@@ -9,6 +9,7 @@
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
 #include "MetalCommandBuffer.h"
+#include "MetalCommandQueue.h"
 #include "MetalDescriptorSet.h"
 #include "MetalIndexBuffer.h"
 #include "MetalRenderPass.h"
@@ -58,7 +59,11 @@ namespace Astral {
 
     CommandQueueHandle MetalDevice::GetPrimaryCommandQueue()
     {
-        return nullptr;
+        MetalCommandQueueDesc commandQueueDesc = {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalCommandQueue>(commandQueueDesc);
     }
 
 
