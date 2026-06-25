@@ -21,9 +21,14 @@ namespace Astral {
         ~RendererManager() override;
 
         /**
-         * @brief Initializes the rendering context and the scene renderer
+         * @brief Initializes the rendering context
          */
         void Init() override;
+
+        /**
+         * @brief Initializes the scene renderer
+         */
+        void InitOnlyRenderingContext();
 
         /**
          * @brief Shuts down the scene renderer and the rendering context

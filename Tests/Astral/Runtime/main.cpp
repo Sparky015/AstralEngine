@@ -7,6 +7,8 @@
 #include "Core/Engine.h"
 #include "Core/Utilities/Loggers.h"
 #include "gtest/gtest.h"
+#include "Renderer/RendererManager.h"
+#include "Window/WindowManager.h"
 
 
 class StubApplication : public Application::ApplicationModule {};
@@ -19,6 +21,8 @@ public:
     void SetUp() override
     {
         m_Engine = new Astral::Engine();
+        m_Engine->GetWindowManager().Init();
+        m_Engine->GetRendererManager().InitOnlyRenderingContext();
     }
 
     void TearDown() override
