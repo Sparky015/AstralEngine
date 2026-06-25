@@ -169,6 +169,12 @@ namespace Astral {
 
     VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
+        if (sizeInBytes == 0)
+        {
+            AE_WARN("Tried to create a buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanVertexBufferDesc vertexBufferDesc = {
             .Device = m_Device,
             .VertexData = vertexData,
@@ -184,6 +190,12 @@ namespace Astral {
 
     IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
+        if (sizeInBytes == 0)
+        {
+            AE_WARN("Tried to create a index buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanIndexBufferDesc indexBufferDesc = {
             .Device = m_Device,
             .IndexData = indexData,
@@ -198,6 +210,12 @@ namespace Astral {
 
     BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
+        if (size == 0)
+        {
+            AE_WARN("Tried to create a storage buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Size = size,
@@ -214,6 +232,12 @@ namespace Astral {
 
     BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
+        if (size == 0)
+        {
+            AE_WARN("Tried to create a uniform buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Size = size,
