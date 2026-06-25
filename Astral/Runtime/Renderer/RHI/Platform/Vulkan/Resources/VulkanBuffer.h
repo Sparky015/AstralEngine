@@ -93,6 +93,7 @@ namespace Astral {
          * @brief Changes the memory type used by this buffer to the requested type
          * @param memoryType The memory type to change the buffer to
          * @warning This forces a blocking wait while the GPU transfers the data between CPU to GPU or GPU to CPU memory
+         * @note Requires the usage flag BUFFER_USAGE_STREAMABLE
          */
         void ChangeMemoryType(GPUMemoryType memoryType) override;
 

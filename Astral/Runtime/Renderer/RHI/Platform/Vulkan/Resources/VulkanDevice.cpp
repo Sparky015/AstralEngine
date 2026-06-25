@@ -219,13 +219,22 @@ namespace Astral {
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .Usage = BUFFER_USAGE_STORAGE_BUFFER,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .Usage = BUFFER_USAGE_STORAGE_BUFFER | BUFFER_USAGE_STREAMABLE,
+            .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            bufferHandle->CopyDataToBuffer(data, size);
+        }
+        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+        }
+
         return bufferHandle;
     }
 
@@ -238,16 +247,25 @@ namespace Astral {
             return nullptr;
         }
 
-        VulkanBufferDesc storageBufferDesc = {
+        VulkanBufferDesc uniformBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .Usage = BUFFER_USAGE_UNIFORM_BUFFER,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .Usage = BUFFER_USAGE_UNIFORM_BUFFER | BUFFER_USAGE_STREAMABLE,
+            .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
         };
 
-        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(uniformBufferDesc);
+
+        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            bufferHandle->CopyDataToBuffer(data, size);
+        }
+        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+        }
+
         return bufferHandle;
     }
 

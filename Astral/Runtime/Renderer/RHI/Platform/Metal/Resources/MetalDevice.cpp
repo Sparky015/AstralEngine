@@ -137,7 +137,16 @@ namespace Astral {
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalStorageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            bufferHandle->CopyDataToBuffer(data, size);
+        }
+        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+        }
+
         return bufferHandle;
     }
 
@@ -151,7 +160,16 @@ namespace Astral {
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalUniformBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            bufferHandle->CopyDataToBuffer(data, size);
+        }
+        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+        {
+            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+        }
+
         return bufferHandle;
     }
 
