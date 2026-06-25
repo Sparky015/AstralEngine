@@ -164,6 +164,13 @@ namespace Astral {
         compilerOptions.set_msl_version(3, 2);
         compilerOptions.argument_buffers = true;
 
+        // Rebind the push constant buffer if applicable to bind slot 30
+        spirv_cross::MSLResourceBinding pushConstantResourceBinding{};
+        pushConstantResourceBinding.desc_set = spirv_cross::ResourceBindingPushConstantDescriptorSet;
+        pushConstantResourceBinding.binding = spirv_cross::ResourceBindingPushConstantBinding;
+        pushConstantResourceBinding.msl_buffer = 30;
+        compiler.add_msl_resource_binding(pushConstantResourceBinding);
+
         std::string mslSourceCode = compiler.compile();
 
         PopulateShaderReflectionInfo(compiler);

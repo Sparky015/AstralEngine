@@ -179,6 +179,17 @@ namespace Astral {
          */
         void ReleaseCommandAllocator();
 
+        /**
+         * @brief Creates the argument table for the command buffer
+         */
+        void CreateArgumentTable();
+
+        /**
+         * @brief Releases the command buffer argument table
+         */
+        void ReleaseArgumentTable();
+
+
         MTL::Device* m_Device;
         MTL4::CommandBuffer* m_CommandBuffer;
         MTL4::CommandAllocator* m_CommandAllocator;
@@ -190,6 +201,9 @@ namespace Astral {
         PipelineStateHandle m_BoundPipeline = nullptr;
         IndexBufferHandle m_BoundIndexBuffer = nullptr;
         VertexBufferHandle m_BoundVertexBuffer = nullptr;
+
+        MTL4::ArgumentTable* m_ArgumentTable;
+        std::vector<BufferHandle> m_PushConstants = {};
     };
 
 }

@@ -47,6 +47,7 @@ namespace Astral {
     void MetalCommandBuffer::Reset()
     {
         m_CommandAllocator->reset();
+        m_PushConstants.clear();
     }
 
 
@@ -306,7 +307,10 @@ namespace Astral {
 
     void MetalCommandBuffer::PushConstants(void* data, uint32 sizeInBytes)
     {
-        // TODO: Implement later with bindless
+        BufferHandle pushConstantBuffer = RendererAPI::GetDevice().CreateUniformBuffer(data, sizeInBytes, GPUMemoryType::HOST_VISIBLE);
+        m_PushConstants.push_back(pushConstantBuffer);
+        MTL::Buffer* mtlBuffer = (MTL::Buffer*)pushConstantBuffer->GetNativeHandle();
+        m_ArgumentTable->setAddress(mtlBuffer->gpuAddress(), 30);
     }
 
 
@@ -413,6 +417,36 @@ namespace Astral {
         MetalRenderingContext& context = static_cast<MetalRenderingContext&>(RendererAPI::GetContext());
         context.ReleaseThreadCommandAllocator(m_CommandAllocator);
         m_CommandAllocator = nullptr;
+    }
+
+
+    void MetalCommandBuffer::CreateArgumentTable()
+    {
+        MTL4::ArgumentTableDescriptor* argumentTableDescriptor = MTL4::ArgumentTableDescriptor::alloc();
+        NS::Error* error = nullptr;
+
+        constexpr uint32 maxSupportedResourceCount = 32;
+        argumentTableDescriptor->setMaxBufferBindCount(maxSupportedResourceCount);
+        argumentTableDescriptor->setMaxSamplerStateBindCount(maxSupportedResourceCount);
+        argumentTableDescriptor->setMaxTextureBindCount(maxSupportedResourceCount);
+
+        m_ArgumentTable = m_Device->newArgumentTable(argumentTableDescriptor, &error);
+
+        if (m_ArgumentTable == nullptr)
+        {
+            AE_ERROR("Argument table failed to be created! Error: " << error->localizedDescription()->utf8String());
+            error->release();
+        }
+    }
+
+
+    void MetalCommandBuffer::ReleaseArgumentTable()
+    {
+        if (m_ArgumentTable)
+        {
+            m_ArgumentTable->release();
+            m_ArgumentTable = nullptr;
+        }
     }
 
 }
