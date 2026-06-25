@@ -246,7 +246,7 @@ namespace Astral {
         NS::String* sourceCode = NS::String::string(mslSourceCode.c_str(), NS::StringEncoding::UTF8StringEncoding);
         MTL::CompileOptions* compileOptions = MTL::CompileOptions::alloc();
         compileOptions->setLanguageVersion(MTL::LanguageVersion3_2);
-        m_Device->newLibrary(sourceCode, &errorCode);
+        m_Library = m_Device->newLibrary(sourceCode, compileOptions, &errorCode);
 
         if (m_Library == nullptr)
         {
@@ -265,8 +265,8 @@ namespace Astral {
 
     void MetalShader::CreateFunctionEntry()
     {
-        NS::String* entryName = NS::String::string("main", NS::StringEncoding::UTF8StringEncoding);
-        m_Library->newFunction(entryName);
+        NS::String* entryName = NS::String::string("main0", NS::StringEncoding::UTF8StringEncoding);
+        m_Function = m_Library->newFunction(entryName);
     }
 
 
