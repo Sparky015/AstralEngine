@@ -27,8 +27,12 @@ namespace Astral {
         {
             std::array<uint32, 3> indices = {0, 1, 2};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::DEVICE_LOCAL);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 3);
         }
+
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -37,6 +41,9 @@ namespace Astral {
         {
             std::array<uint32, 7> indices = {0, 1, 2, 1, 2, 5, 2};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 7);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
@@ -47,6 +54,9 @@ namespace Astral {
         {
             std::array<uint32, 4> indices = {0, 1, 2, 1};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 4);
 
             void* bufferIndices;
@@ -63,6 +73,9 @@ namespace Astral {
         {
             std::array<uint32, 6> indices = {0, 1, 2, 1, 8, 4};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 6);
 
             void* bufferIndices;
@@ -79,6 +92,9 @@ namespace Astral {
         {
             std::array<uint32, 6> indices = {0, 1, 2, 1, 2, 3};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::DEVICE_LOCAL);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 6);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
@@ -89,6 +105,9 @@ namespace Astral {
         {
             std::array<uint32, 10> indices = {0, 1, 2, 1, 2, 3, 5, 4, 1, 0};
             IndexBufferHandle indexBuffer = RendererAPI::GetDevice().CreateIndexBuffer(indices.data(), sizeof(indices), GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(indexBuffer, nullptr);
+            ASSERT_NE(indexBuffer->GetNativeHandle(), nullptr);
             ASSERT_EQ(indexBuffer->GetCount(), 10);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);

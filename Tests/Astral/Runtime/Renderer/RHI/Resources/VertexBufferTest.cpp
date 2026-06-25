@@ -28,6 +28,9 @@ namespace Astral {
             VertexBufferLayout bufferLayout = {{Float, "TestFloat"}};
             std::array<uint32, 3> vertexData = {0, 1, 2};
             VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::DEVICE_LOCAL);
+
+            ASSERT_NE(vertexBuffer, nullptr);
+            ASSERT_NE(vertexBuffer->GetNativeHandle(), nullptr);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -38,6 +41,9 @@ namespace Astral {
             VertexBufferLayout bufferLayout = {{Float, "TestFloat"}, {Float2, "TestVec2"}};
             std::array<uint32, 12> vertexData = {0, 1, 2, 4, 5, 6, 3, 6, 1, 6, 8, 9};
             VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(vertexBuffer, nullptr);
+            ASSERT_NE(vertexBuffer->GetNativeHandle(), nullptr);
         }
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -48,6 +54,9 @@ namespace Astral {
             VertexBufferLayout bufferLayout = {{Float, "TestFloat"}, {Float2, "TestVec2"}};
             std::array<uint32, 12> vertexData = {0, 1, 2, 4, 5, 6, 3, 6, 1, 6, 8, 9};
             VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(vertexBuffer, nullptr);
+            ASSERT_NE(vertexBuffer->GetNativeHandle(), nullptr);
 
             void* bufferVertexData;
             vertexBuffer->MapPointer(&bufferVertexData);
@@ -64,6 +73,9 @@ namespace Astral {
             VertexBufferLayout bufferLayout = {{Float3, "TestVec3"}, {Float2, "TestVec2"}};
             std::array<uint32, 15> vertexData = {0, 1, 2, 4, 5, 6, 3, 6, 1, 6, 8, 9, 1, 6, 7};
             VertexBufferHandle vertexBuffer = RendererAPI::GetDevice().CreateVertexBuffer(vertexData.data(), sizeof(vertexData), bufferLayout, GPUMemoryType::HOST_VISIBLE);
+
+            ASSERT_NE(vertexBuffer, nullptr);
+            ASSERT_NE(vertexBuffer->GetNativeHandle(), nullptr);
 
             void* bufferVertexData;
             vertexBuffer->MapPointer(&bufferVertexData);
