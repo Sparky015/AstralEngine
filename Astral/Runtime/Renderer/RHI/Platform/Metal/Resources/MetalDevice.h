@@ -13,18 +13,27 @@
 
 namespace Astral {
 
+    /**
+     * @brief A description of how to build a Metal device
+     */
     struct MetalDeviceDesc
     {
         CA::MetalLayer* CAMetalLayer;
     };
 
+    /**
+     * @brief A wrapper around a Metal device supporting extra convenience functions
+     */
     class MetalDevice : public Device
     {
     public:
-        explicit MetalDevice(const MetalDeviceDesc& desc); // TODO
-        ~MetalDevice() override; // TODO
+        explicit MetalDevice(const MetalDeviceDesc& desc);
+        ~MetalDevice() override;
 
-        void Init() override; // TODO
+        /**
+         * @brief Initializes the Metal device
+         */
+        void Init() override;
 
         /**
          * @brief Gets the swapchain instance
@@ -59,8 +68,19 @@ namespace Astral {
          */
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
 
-        PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) override; // TODO
-        PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override; // TODO
+        /**
+         * @brief Creates a graphics pipeline state
+         * @param graphiscPipelineStateCreateInfo A description of how to create the graphics pipeline
+         * @return A graphics pipeline state handle
+         */
+        PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) override;
+
+        /**
+         * @brief Creates a compute pipeline state
+         * @param computePipelineStateCreateInfo A description of how to create the compute pipeline
+         * @return A compute pipeline state handle
+         */
+        PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override;
 
         /**
          * @brief Creates a vertex buffer

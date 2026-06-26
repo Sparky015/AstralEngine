@@ -10,7 +10,9 @@
 #include "MetalBuffer.h"
 #include "MetalCommandBuffer.h"
 #include "MetalCommandQueue.h"
+#include "MetalComputePipeline.h"
 #include "MetalDescriptorSet.h"
+#include "MetalGraphicsPipeline.h"
 #include "MetalIndexBuffer.h"
 #include "MetalRenderPass.h"
 #include "MetalShader.h"
@@ -96,13 +98,31 @@ namespace Astral {
 
     PipelineStateHandle MetalDevice::CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo)
     {
-        return nullptr;
+        MetalGraphicsPipelineStateDesc metalGraphicsPipelineDesc = {
+            .Device = m_Device,
+            .RenderPass = graphiscPipelineStateCreateInfo.RenderPass,
+            .VertexShader = graphiscPipelineStateCreateInfo.VertexShader,
+            .FragmentShader = graphiscPipelineStateCreateInfo.FragmentShader,
+            .DescriptorSets = graphiscPipelineStateCreateInfo.DescriptorSets,
+            .BufferLayout = graphiscPipelineStateCreateInfo.BufferLayout,
+            .IsAlphaBlended = graphiscPipelineStateCreateInfo.IsAlphaBlended,
+            .MSAASamples = graphiscPipelineStateCreateInfo.MSAASamples,
+            .CullMode = graphiscPipelineStateCreateInfo.CullMode
+        };
+
+        return CreateGraphicsRef<MetalGraphicsPipelineState>(metalGraphicsPipelineDesc);
     }
 
 
     PipelineStateHandle MetalDevice::CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo)
     {
-        return nullptr;
+        MetalComputePipelineStateDesc metalComputePipelineDesc = {
+            .Device = m_Device,
+            .ComputeShader = computePipelineStateCreateInfo.ComputeShader,
+            .DescriptorSets = computePipelineStateCreateInfo.DescriptorSets
+        };
+
+        return CreateGraphicsRef<MetalComputePipelineState>(metalComputePipelineDesc);
     }
 
 
