@@ -17,6 +17,8 @@
 #include "MetalSwapchain.h"
 #include "MetalTexture.h"
 #include "MetalVertexBuffer.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 namespace Astral {
 
@@ -59,11 +61,8 @@ namespace Astral {
 
     CommandQueueHandle MetalDevice::GetPrimaryCommandQueue()
     {
-        MetalCommandQueueDesc commandQueueDesc = {
-            .Device = m_Device
-        };
-
-        return CreateGraphicsRef<MetalCommandQueue>(commandQueueDesc);
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        return metalRenderingContext.GetPrimaryCommandQueue();
     }
 
 

@@ -27,6 +27,7 @@ namespace Astral {
         AllocateCAMetalLayer();
         CreateDevice();
         AttachCALayerToWindow();
+        CreatePrimaryCommandQueue();
         m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
         CreatePipelineDataSetSerializer();
         CreateCompiler();
@@ -39,6 +40,7 @@ namespace Astral {
         ReleaseCompiler();
         ReleasePipelineDataSetSerializer();
         m_PipelineStateCache.reset();
+        DestroyPrimaryCommandQueue();
         DestroyDevice();
         ReleaseCAMetalLayer();
     }
@@ -72,6 +74,18 @@ namespace Astral {
     void MetalRenderingContext::ShutdownImGuiForAPIBackend()
     {
 
+    }
+
+
+    CommandQueueHandle MetalRenderingContext::GetPrimaryCommandQueue()
+    {
+        return m_PrimaryCommandQueue;
+    }
+
+
+    MTL4::Compiler* MetalRenderingContext::GetCompiler()
+    {
+        return m_Compiler;
     }
 
 
@@ -139,6 +153,29 @@ namespace Astral {
     }
 
 
+    void MetalRenderingContext::CreatePrimaryCommandQueue()
+    {
+        MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+
+        MetalCommandQueueDesc commandQueueDesc = {
+            .Device = device
+        };
+
+        m_PrimaryCommandQueue = CreateGraphicsRef<MetalCommandQueue>(commandQueueDesc);
+    }
+
+
+    void MetalRenderingContext::DestroyPrimaryCommandQueue()
+    {
+        if (m_PrimaryCommandQueue)
+        {
+            m_PrimaryCommandQueue->WaitIdle();
+            m_PrimaryCommandQueue.reset();
+            m_PrimaryCommandQueue = nullptr;
+        }
+    }
+
+
     void MetalRenderingContext::CreateCompiler()
     {
         MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
@@ -165,15 +202,6 @@ namespace Astral {
             m_Compiler = nullptr;
         }
     }
-
-
-    MTL4::Compiler* MetalRenderingContext::GetCompiler()
-    {
-        return m_Compiler;
-    }
-
-
-
 
 
     void MetalRenderingContext::ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator)
