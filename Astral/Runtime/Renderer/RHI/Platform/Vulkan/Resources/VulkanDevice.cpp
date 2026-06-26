@@ -226,13 +226,16 @@ namespace Astral {
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
 
-        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        if (data != nullptr)
         {
-            bufferHandle->CopyDataToBuffer(data, size);
-        }
-        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
-        {
-            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
         }
 
         return bufferHandle;
@@ -257,13 +260,16 @@ namespace Astral {
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(uniformBufferDesc);
 
-        if (memoryType == GPUMemoryType::HOST_VISIBLE)
+        if (data != nullptr)
         {
-            bufferHandle->CopyDataToBuffer(data, size);
-        }
-        else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
-        {
-            bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
         }
 
         return bufferHandle;

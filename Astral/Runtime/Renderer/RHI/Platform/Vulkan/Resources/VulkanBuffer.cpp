@@ -87,12 +87,13 @@ namespace Astral {
 
     void VulkanBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
+        if (size == 0) { return; }
+
         if (!data)
         {
             AE_WARN("[VulkanBuffer::CopyDataToBuffer] Tried to copy data from a nullptr!")
             return;
         }
-
         if (m_MemoryType != GPUMemoryType::HOST_VISIBLE)
         {
             AE_WARN("[VulkanBuffer::CopyDataToBuffer] A host visible buffer is required to copy data to a buffer!")
