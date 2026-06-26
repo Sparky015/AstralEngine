@@ -359,7 +359,8 @@ namespace Astral {
 
     void MetalDevice::WaitIdle()
     {
-
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        metalRenderingContext.GetPrimaryCommandQueue()->WaitIdle();
     }
 
 
