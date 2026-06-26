@@ -75,6 +75,18 @@ namespace Astral {
     }
 
 
+    CommandQueueHandle MetalRenderingContext::GetPrimaryCommandQueue()
+    {
+        return m_PrimaryCommandQueue;
+    }
+
+
+    MTL4::Compiler* MetalRenderingContext::GetCompiler()
+    {
+        return m_Compiler;
+    }
+
+
     void MetalRenderingContext::CreateDevice()
     {
         MetalDeviceDesc metalDeviceDesc = {
@@ -139,6 +151,28 @@ namespace Astral {
     }
 
 
+    void MetalRenderingContext::CreatePrimaryCommandQueue()
+    {
+        MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+
+        MetalCommandQueueDesc commandQueueDesc = {
+            .Device = device
+        };
+
+        m_PrimaryCommandQueue = CreateGraphicsRef<MetalCommandQueue>(commandQueueDesc);
+    }
+
+
+    void MetalRenderingContext::DestroyPrimaryCommandQueue()
+    {
+        if (m_PrimaryCommandQueue)
+        {
+            m_PrimaryCommandQueue.reset();
+            m_PrimaryCommandQueue = nullptr;
+        }
+    }
+
+
     void MetalRenderingContext::CreateCompiler()
     {
         MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
@@ -165,15 +199,6 @@ namespace Astral {
             m_Compiler = nullptr;
         }
     }
-
-
-    MTL4::Compiler* MetalRenderingContext::GetCompiler()
-    {
-        return m_Compiler;
-    }
-
-
-
 
 
     void MetalRenderingContext::ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator)

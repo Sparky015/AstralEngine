@@ -8,11 +8,11 @@
 
 #include "Renderer/RHI/RendererContext.h"
 
+#include "Resources/MetalCommandQueue.h"
+
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include <GLFW/glfw3.h>
-
-#include "Core/Memory/Pools/ObjectPool.h"
 
 namespace Astral {
 
@@ -76,6 +76,11 @@ namespace Astral {
         void ShutdownImGuiForAPIBackend() override; // TODO
 
         /**
+         * @brief Gets the primary command queue
+         */
+        CommandQueueHandle GetPrimaryCommandQueue();
+
+        /**
          * @brief Gets the metal compiler
          */
         MTL4::Compiler* GetCompiler();
@@ -129,6 +134,16 @@ namespace Astral {
         void ReleasePipelineDataSetSerializer();
 
         /**
+         * @brief Creates the primary command queue RHI handle
+         */
+        void CreatePrimaryCommandQueue();
+
+        /**
+         * @brief Releases the primary command queue RHI handle
+         */
+        void DestroyPrimaryCommandQueue();
+
+        /**
          * @brief Creates the metal compiler
          */
         void CreateCompiler();
@@ -156,6 +171,7 @@ namespace Astral {
         GraphicsOwnedPtr<Device> m_Device;
         GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
 
+        CommandQueueHandle m_PrimaryCommandQueue;
         MTL4::Compiler* m_Compiler;
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
 
