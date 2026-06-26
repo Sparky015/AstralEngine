@@ -39,6 +39,11 @@ namespace Astral {
         virtual void Present(RenderTargetHandle renderTarget) = 0;
 
         /**
+         * @brief Blocks the current CPU thread until the queue's work is finished on the GPU
+         */
+        virtual void WaitIdle() = 0;
+
+        /**
          * @brief Gets the native handle of the command queue
          * @return The native handle of the command queue
          */

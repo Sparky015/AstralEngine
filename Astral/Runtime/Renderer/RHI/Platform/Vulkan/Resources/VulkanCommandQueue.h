@@ -55,6 +55,11 @@ namespace Astral {
         void Present(RenderTargetHandle renderTarget) override;
 
         /**
+        * @brief Blocks the current CPU thread until the queue's work is finished on the GPU
+        */
+        void WaitIdle() override;
+
+        /**
          * @brief Gets the native handle of the command queue
          * @return The native handle of the command queue
          */

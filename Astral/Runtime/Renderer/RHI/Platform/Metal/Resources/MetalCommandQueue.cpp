@@ -11,7 +11,8 @@
 
 namespace Astral {
 
-    MetalCommandQueue::MetalCommandQueue(const MetalCommandQueueDesc& commandQueueDesc)
+    MetalCommandQueue::MetalCommandQueue(const MetalCommandQueueDesc& commandQueueDesc) :
+        m_Device(commandQueueDesc.Device)
     {
         CreateQueue(commandQueueDesc);
     }
@@ -26,14 +27,45 @@ namespace Astral {
     void MetalCommandQueue::Submit(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
-        m_Queue->commit(&commandBuffer, 1);
+
+        MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
+        commitOptions->addFeedbackHandler([this, commandBuffer](MTL4::CommitFeedback* commitFeedback) {
+            std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+            if (m_ActiveCommandBuffers.contains(commandBuffer))
+            {
+                m_ActiveCommandBuffers.erase(commandBuffer);
+            }
+            lock.unlock();
+            m_ActiveCommandBufferTrackingCondition.notify_one();
+        });
+
+        m_Queue->commit(&commandBuffer, 1, commitOptions);
+
+        std::lock_guard lock(m_ActiveCommandBufferTrackingLock);
+        m_ActiveCommandBuffers.insert(commandBuffer);
     }
 
 
     void MetalCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
     {
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
-        m_Queue->commit(&commandBuffer, 1);
+
+        MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
+        commitOptions->addFeedbackHandler([this, commandBuffer](MTL4::CommitFeedback* commitFeedback) {
+            std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+            if (m_ActiveCommandBuffers.contains(commandBuffer))
+            {
+                m_ActiveCommandBuffers.erase(commandBuffer);
+            }
+            lock.unlock();
+            m_ActiveCommandBufferTrackingCondition.notify_one();
+        });
+
+        m_Queue->commit(&commandBuffer, 1, commitOptions);
+        commitOptions->release();
+
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+        m_ActiveCommandBuffers.insert(commandBuffer);
     }
 
 
@@ -41,6 +73,20 @@ namespace Astral {
     {
         MTL::Drawable* drawable = (MTL::Drawable*)renderTarget->GetNativeImage();
         m_Queue->signalDrawable(drawable);
+        drawable->present();
+    }
+
+
+    void MetalCommandQueue::WaitIdle()
+    {
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
+        m_ActiveCommandBufferTrackingCondition.wait(
+            lock,
+            [this]() {
+                return m_ActiveCommandBuffers.size() == 0;
+            }
+        );
     }
 
 
@@ -55,7 +101,7 @@ namespace Astral {
         MTL4::CommandQueueDescriptor* commandQueueDescriptor = MTL4::CommandQueueDescriptor::alloc()->init();
 
         NS::Error* error = nullptr;
-        m_Device->newMTL4CommandQueue(commandQueueDescriptor, &error);
+        m_Queue = m_Device->newMTL4CommandQueue(commandQueueDescriptor, &error);
 
         commandQueueDescriptor->release();
 
