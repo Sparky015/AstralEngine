@@ -23,7 +23,11 @@ namespace Astral {
         ASSERT(desc.Device, "The device passed to MetalTexture::MetalTexture cannot be nullptr!");
 
         CreateTexture(desc);
-        InitializeTextureData(desc);
+
+        if (desc.ImageData != nullptr && desc.ImageDataLength != 0)
+        {
+            InitializeTextureData(desc);
+        }
     }
 
 
