@@ -27,6 +27,8 @@ public:
 
     void TearDown() override
     {
+        m_Engine->GetRendererManager().Shutdown();
+        m_Engine->GetWindowManager().Shutdown();
         delete m_Engine;
         m_Engine = nullptr;
     }
