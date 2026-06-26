@@ -26,10 +26,25 @@ namespace Astral {
 
         void Init() override; // TODO
 
-        Swapchain& GetSwapchain() override; // TODO
-        CommandBufferHandle AllocateCommandBuffer() override; // TODO
-        CommandQueueHandle GetPrimaryCommandQueue() override; // TODO
-        CommandQueueHandle GetAsyncCommandQueue() override; // TODO
+        /**
+         * @brief Gets the swapchain instance
+         */
+        Swapchain& GetSwapchain() override;
+
+        /**
+         * @brief Allocates a command buffer from the metal rendering context
+         */
+        CommandBufferHandle AllocateCommandBuffer() override;
+
+        /**
+         * @brief Gets the primary command queue from the metal rendering context
+         */
+        CommandQueueHandle GetPrimaryCommandQueue() override;
+
+        /**
+         * @brief Gets a dedicated command queue for asynchronous operations
+         */
+        CommandQueueHandle GetAsyncCommandQueue() override;
 
         /**
          * @brief Creates an empty render pass object
@@ -43,11 +58,45 @@ namespace Astral {
          * @return The shader object
          */
         ShaderHandle CreateShader(const ShaderSource& shaderSource) override;
+
         PipelineStateHandle CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo) override; // TODO
         PipelineStateHandle CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo) override; // TODO
+
+        /**
+         * @brief Creates a vertex buffer
+         * @param vertexData The vertex data to populate the buffer with (or nullptr if the buffer should not be populated with data)
+         * @param sizeInBytes The length of the buffer to create
+         * @param bufferLayout The vertex attribute layout of the buffer
+         * @param memoryType The GPU memory type to create the buffer with
+         * @return A handle to the created vertex buffer
+         */
         VertexBufferHandle CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType) override;
+
+        /**
+         * @brief Creates an index buffer
+         * @param indexData The index data to populate the buffer with (or nullptr if the buffer should not be populated with data)
+         * @param sizeInBytes The length of the buffer to create
+         * @param memoryType The GPU memory type to create the buffer with
+         * @return A handle to the created index buffer
+         */
         IndexBufferHandle CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType) override;
+
+        /**
+         * @brief Creates a storage buffer
+         * @param data The index data to populate the buffer with (or nullptr if the buffer should not be populated with data)
+         * @param size The length of the buffer to create
+         * @param memoryType The GPU memory type to create the buffer with
+         * @return A handle to the created index buffer
+         */
         BufferHandle CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
+
+        /**
+         * @brief Creates a uniform buffer
+         * @param data The uniform data to populate the buffer with (or nullptr if the buffer should not be populated with data)
+         * @param size The length of the buffer to create
+         * @param memoryType The GPU memory type to create the buffer with
+         * @return A handle to the created uniform buffer
+         */
         BufferHandle CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType) override;
 
         /**
@@ -91,17 +140,61 @@ namespace Astral {
          */
         TextureHandle Create2DTextureArray(const TextureCreateInfo& textureCreateInfo) override;
 
+        /**
+         * @brief Checks if anisotropy is supported by the GPU device
+         * @return True if anisotropy is supported by the GPU device, false otherwise
+         */
         bool IsBlitSupportedByFormat(ImageFormat imageFormat) override; // TODO
-        bool IsAnisotropySupported() override; // TODO
-        float GetMaxAnisotropySupported() override; // TODO
 
-        std::string_view GetRenderingAPI() override; // TODO
-        std::string_view GetGPUVendor() override; // TODO
-        std::string_view GetGraphicsProcessorName() override; // TODO
+        /**
+         * @brief Checks if anisotropy is supported by the GPU device
+         * @return True if anisotropy is supported by the GPU device, false otherwise
+         */
+        bool IsAnisotropySupported() override;
 
-        void WaitIdle() override; // TODO
+        /**
+         * @brief Gets the max anisotropy supported by the GPU device
+         * @return The max anisotropy supported by the GPU device
+         */
+        float GetMaxAnisotropySupported() override;
 
+        /**
+         * @brief Gets the rendering API name and version
+         * @return The rendering API name and version
+         */
+        std::string_view GetRenderingAPI() override;
+
+        /**
+         * @brief Gets the GPU's vendor name
+         * @return The GPU's vendor name
+         */
+        std::string_view GetGPUVendor() override;
+
+        /**
+         * @brief Gets the graphics processor name
+         * @return The graphics processor name
+         */
+        std::string_view GetGraphicsProcessorName() override;
+
+        /**
+         * @brief Blocks the current CPU thread until the GPU finishes all of its work
+         */
+        void WaitIdle() override;
+
+        /**
+         * @brief Gets the native graphics API handle of the device
+         * @return The native graphics API handle of the device (MTL::Device*)
+         */
         void* GetNativeHandle() override;
+
+
+    protected:
+
+        /**
+         * @brief Allocates a swapchain instance
+         */
+        GraphicsOwnedPtr<Swapchain> CreateSwapchain(uint32 numberOfImages) override;
+
 
     private:
 
@@ -114,11 +207,6 @@ namespace Astral {
          * @brief Releases the device
          */
         void DestroyDevice();
-
-        /**
-         * @brief Allocates a swapchain instance
-         */
-        GraphicsOwnedPtr<Swapchain> CreateSwapchain(uint32 numberOfImages) override; // TODO
 
         /**
          * @brief Destroys the swapchain instance

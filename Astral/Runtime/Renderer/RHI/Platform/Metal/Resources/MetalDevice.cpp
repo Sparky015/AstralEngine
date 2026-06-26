@@ -68,7 +68,8 @@ namespace Astral {
 
     CommandQueueHandle MetalDevice::GetAsyncCommandQueue()
     {
-        return nullptr;
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        return metalRenderingContext.GetPrimaryCommandQueue();
     }
 
 
@@ -399,6 +400,7 @@ namespace Astral {
     GraphicsOwnedPtr<Swapchain> MetalDevice::CreateSwapchain(uint32 numberOfImages)
     {
         MetalSwapchainDesc metalSwapchainDesc = {
+            .Device = m_Device,
             .CAMetalLayer = m_CAMetalLayer
         };
 
