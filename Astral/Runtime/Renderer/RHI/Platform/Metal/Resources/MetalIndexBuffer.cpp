@@ -107,6 +107,8 @@ namespace Astral {
             m_IndexBuffer = MetalBuffer(indexBufferDesc);
             m_IndexBuffer.CopyDataToBuffer(desc.IndexData, desc.DataSize);
         }
+
+        m_DataSize = desc.DataSize;
     }
 
 }
