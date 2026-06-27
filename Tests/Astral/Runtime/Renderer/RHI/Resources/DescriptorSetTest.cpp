@@ -47,6 +47,13 @@ namespace Astral {
         descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer, ShaderStage::ALL);
         descriptorSet->EndBuildingSet();
 
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(1), testUniformBuffer);
+
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
 
@@ -70,6 +77,14 @@ namespace Astral {
         descriptorSet->AddDescriptorStorageBuffer(testStorageBuffer, ShaderStage::ALL);
         descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer2, ShaderStage::ALL);
         descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(0), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer2);
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -101,6 +116,18 @@ namespace Astral {
         descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
         descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
         descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(1), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(2), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(4), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(5), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(6), testTexture);
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -140,9 +167,21 @@ namespace Astral {
         descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
         descriptorSet->EndBuildingSet();
 
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+
+
         descriptorSet->UpdateUniformBinding(2, testUniformBuffer2);
         BufferHandle bindedBuffer = descriptorSet->GetUniformBuffer(2);
         ASSERT_EQ(bindedBuffer, testUniformBuffer2);
+
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
@@ -193,12 +232,20 @@ namespace Astral {
         descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
         descriptorSet->EndBuildingSet();
 
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+
         descriptorSet->UpdateImageSamplerBinding(3, testTexture2);
         TextureHandle bindedTexture = descriptorSet->GetImageSampler(3);
         ASSERT_EQ(bindedTexture, testTexture2);
 
         ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
     }
-
 
 }
