@@ -9,14 +9,15 @@
 #include "Core/Utilities/Asserts.h"
 #include "Metal/Metal.hpp"
 #include "Metal/MTL4ArgumentTable.hpp"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral {
 
     MetalDescriptorSet::MetalDescriptorSet(const MetalDescriptorSetDesc& descriptorSetDesc) :
         m_Device(descriptorSetDesc.Device),
-        m_ArgumentTable(nullptr),
+        m_ArgumentBuffer(nullptr),
         m_DescriptorSetLayout(),
-        m_NumberOfBindings(0),
+        m_NumLogicalBindings(0),
         m_Buffers(),
         m_Textures()
     {
@@ -38,33 +39,50 @@ namespace Astral {
 
     void MetalDescriptorSet::AddDescriptorStorageBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
-        m_NumberOfBindings++;
+        m_NumLogicalBindings++;
         m_Buffers.push_back(bufferHandle);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_BUFFER);
+
+        // Update logical to physical binding map
+        m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
+        m_NumPhysicalBindings += 1;
     }
 
 
     void MetalDescriptorSet::AddDescriptorUniformBuffer(BufferHandle bufferHandle, ShaderStage bindStage)
     {
-        m_NumberOfBindings++;
+        m_NumLogicalBindings++;
         m_Buffers.push_back(bufferHandle);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::UNIFORM_BUFFER);
+
+        // Update logical to physical binding map
+        m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
+        m_NumPhysicalBindings += 1;
     }
 
 
     void MetalDescriptorSet::AddDescriptorImageSampler(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
     {
-        m_NumberOfBindings++;
+        m_NumLogicalBindings++;
+
         m_Textures.push_back(textureHandle);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::IMAGE_SAMPLER);
+
+        // Update logical to physical binding map
+        m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
+        m_NumPhysicalBindings += 2; // For image binding and sampler binding
     }
 
 
     void MetalDescriptorSet::AddDescriptorStorageImage(TextureHandle textureHandle, ShaderStage bindStage, ImageLayout imageLayout)
     {
-        m_NumberOfBindings++;
+        m_NumLogicalBindings++;
         m_Textures.push_back(textureHandle);
         m_DescriptorSetLayout.Descriptors.push_back(Descriptor::STORAGE_IMAGE);
+
+        // Update logical to physical binding map
+        m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
+        m_NumPhysicalBindings += 1;
     }
 
     void MetalDescriptorSet::EndBuildingSet()
@@ -95,7 +113,13 @@ namespace Astral {
 
         MTL::Buffer* buffer = (MTL::Buffer*)newBufferHandle->GetNativeHandle();
         MTL::GPUAddress bufferGPUAddress = buffer->gpuAddress();
-        m_ArgumentTable->setAddress(bufferGPUAddress, binding);
+
+        // Set binding in argument buffer
+        uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
+        size_t* bufferPointer;
+        m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
+        bufferPointer[physicalBinding] = bufferGPUAddress;
+        m_ArgumentBuffer->UnmapPointer();
     }
 
 
@@ -120,7 +144,13 @@ namespace Astral {
 
         MTL::Buffer* buffer = (MTL::Buffer*)newBufferHandle->GetNativeHandle();
         MTL::GPUAddress bufferGPUAddress = buffer->gpuAddress();
-        m_ArgumentTable->setAddress(bufferGPUAddress, binding);
+
+        // Set binding in argument buffer
+        uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
+        size_t* bufferPointer;
+        m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
+        bufferPointer[physicalBinding] = bufferGPUAddress;
+        m_ArgumentBuffer->UnmapPointer();
     }
 
 
@@ -148,8 +178,14 @@ namespace Astral {
 
         MTL::ResourceID textureResourceID = texture->gpuResourceID();
         MTL::ResourceID samplerResourceID = sampler->gpuResourceID();
-        m_ArgumentTable->setResource(textureResourceID, binding);
-        m_ArgumentTable->setResource(samplerResourceID, binding);
+
+        // Set binding in argument buffer
+        uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
+        size_t* bufferPointer;
+        m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
+        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
+        bufferPointer[physicalBinding + 1] = *reinterpret_cast<size_t*>(&samplerResourceID);
+        m_ArgumentBuffer->UnmapPointer();
     }
 
 
@@ -177,8 +213,14 @@ namespace Astral {
 
         MTL::ResourceID textureResourceID = texture->gpuResourceID();
         MTL::ResourceID samplerResourceID = sampler->gpuResourceID();
-        m_ArgumentTable->setResource(textureResourceID, binding);
-        m_ArgumentTable->setResource(samplerResourceID, binding);
+
+        // Set binding in argument buffer
+        uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
+        size_t* bufferPointer;
+        m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
+        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
+        bufferPointer[physicalBinding + 1] = *reinterpret_cast<size_t*>(&samplerResourceID);
+        m_ArgumentBuffer->UnmapPointer();
     }
 
 
@@ -200,14 +242,15 @@ namespace Astral {
         }
 
         m_Textures[textureIndex] = newTextureHandle;
-
         MTL::Texture* texture = (MTL::Texture*)newTextureHandle->GetNativeImageView();
-        MTL::SamplerState* sampler = (MTL::SamplerState*)newTextureHandle->GetNativeSampler();
-
         MTL::ResourceID textureResourceID = texture->gpuResourceID();
-        MTL::ResourceID samplerResourceID = sampler->gpuResourceID();
-        m_ArgumentTable->setResource(textureResourceID, binding);
-        m_ArgumentTable->setResource(samplerResourceID, binding);
+
+        // Set binding in argument buffer
+        uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
+        size_t* bufferPointer;
+        m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
+        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
+        m_ArgumentBuffer->UnmapPointer();
     }
 
 
@@ -303,13 +346,13 @@ namespace Astral {
 
     void* MetalDescriptorSet::GetNativeLayout()
     {
-        return m_ArgumentTable;
+        return m_ArgumentBuffer->GetNativeHandle();
     }
 
 
     void* MetalDescriptorSet::GetNativeHandle()
     {
-        return m_ArgumentTable;
+        return m_ArgumentBuffer->GetNativeHandle();
     }
 
 
@@ -319,35 +362,30 @@ namespace Astral {
         m_DescriptorSetLayout.Descriptors.clear();
         m_Buffers.clear();
         m_Textures.clear();
-        m_NumberOfBindings = 0;
+        m_NumLogicalBindings = 0;
+        m_NumPhysicalBindings = 0;
+        m_LogicalToPhysicalBindingMap.clear();
     }
 
 
     void MetalDescriptorSet::CreateArgumentTable()
     {
-        MTL4::ArgumentTableDescriptor* argumentTableDescriptor = MTL4::ArgumentTableDescriptor::alloc();
-        NS::Error* error = nullptr;
+        uint32 maxBindingMemoryRequirement = sizeof(size_t) * (m_Buffers.size() + m_Textures.size() + m_Textures.size());
+        m_ArgumentBuffer = RendererAPI::GetDevice().CreateUniformBuffer(nullptr, maxBindingMemoryRequirement, GPUMemoryType::HOST_VISIBLE);
 
-        argumentTableDescriptor->setMaxBufferBindCount(m_Buffers.size());
-        argumentTableDescriptor->setMaxSamplerStateBindCount(m_Textures.size());
-        argumentTableDescriptor->setMaxTextureBindCount(m_Textures.size());
-
-        m_ArgumentTable = m_Device->newArgumentTable(argumentTableDescriptor, &error);
-
-        if (m_ArgumentTable == nullptr)
+        if (m_ArgumentBuffer == nullptr)
         {
-            AE_ERROR("Argument table failed to be created! Error: " << error->localizedDescription()->utf8String());
-            error->release();
+            AE_ERROR("Argument buffer failed to be created!")
         }
     }
 
 
     void MetalDescriptorSet::ReleaseArgumentTable()
     {
-        if (m_ArgumentTable)
+        if (m_ArgumentBuffer)
         {
-            m_ArgumentTable->release();
-            m_ArgumentTable = nullptr;
+            m_ArgumentBuffer.reset();
+            m_ArgumentBuffer = nullptr;
         }
     }
 
@@ -355,34 +393,34 @@ namespace Astral {
     void MetalDescriptorSet::UpdateDescriptorSets()
     {
         uint32 bufferIndex = 0;
-        uint32 samplerIndex = 0;
+        uint32 textureIndex = 0;
         for (uint32 i = 0; i < m_DescriptorSetLayout.Descriptors.size(); i++)
         {
             Descriptor descriptorType = m_DescriptorSetLayout.Descriptors[i];
 
-            if (descriptorType == Descriptor::UNIFORM_BUFFER || descriptorType == Descriptor::STORAGE_BUFFER)
+            if (descriptorType == Descriptor::UNIFORM_BUFFER)
             {
                 BufferHandle bufferHandle = m_Buffers[bufferIndex];
                 bufferIndex++;
-
-                MTL::Buffer* buffer = (MTL::Buffer*)bufferHandle->GetNativeHandle();
-                MTL::GPUAddress bufferGPUAddress = buffer->gpuAddress();
-                m_ArgumentTable->setAddress(bufferGPUAddress, i);
+                UpdateUniformBinding(i, bufferHandle);
             }
-            else if (descriptorType == Descriptor::IMAGE_SAMPLER ||
-                    descriptorType == Descriptor::STORAGE_IMAGE)
+            else if (descriptorType == Descriptor::STORAGE_BUFFER)
             {
-
-                TextureHandle textureHandle = m_Textures[samplerIndex];
-                samplerIndex++;
-
-                MTL::Texture* texture = (MTL::Texture*)textureHandle->GetNativeImageView();
-                MTL::SamplerState* sampler = (MTL::SamplerState*)textureHandle->GetNativeSampler();
-
-                MTL::ResourceID textureResourceID = texture->gpuResourceID();
-                MTL::ResourceID samplerResourceID = sampler->gpuResourceID();
-                m_ArgumentTable->setResource(textureResourceID, i);
-                m_ArgumentTable->setResource(samplerResourceID, i);
+                BufferHandle bufferHandle = m_Buffers[bufferIndex];
+                bufferIndex++;
+                UpdateStorageBufferBinding(i, bufferHandle);
+            }
+            else if (descriptorType == Descriptor::IMAGE_SAMPLER)
+            {
+                TextureHandle textureHandle = m_Textures[textureIndex];
+                textureIndex++;
+                UpdateImageSamplerBinding(i, textureHandle);
+            }
+            else if (descriptorType == Descriptor::STORAGE_IMAGE)
+            {
+                TextureHandle textureHandle = m_Textures[textureIndex];
+                textureIndex++;
+                UpdateStorageImageBinding(i, textureHandle, 0, ImageLayout::GENERAL); // Last two arguments do not get used for Metal
             }
         }
     }

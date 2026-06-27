@@ -184,13 +184,16 @@ namespace Astral {
 
 
         MTL::Device* m_Device;
-        MTL4::ArgumentTable* m_ArgumentTable;
+        BufferHandle m_ArgumentBuffer;
 
         DescriptorSetLayout m_DescriptorSetLayout;
-        uint32 m_NumberOfBindings;
+        uint32 m_NumLogicalBindings;
 
         std::vector<BufferHandle> m_Buffers;
         std::vector<TextureHandle> m_Textures;
+
+        std::vector<uint32> m_LogicalToPhysicalBindingMap;
+        uint32 m_NumPhysicalBindings;
     };
 
 }
