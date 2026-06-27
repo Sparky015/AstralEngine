@@ -82,18 +82,9 @@ namespace Astral {
 
     void MetalCommandBuffer::BindDescriptorSet(const DescriptorSetHandle& descriptorSet, uint32 binding)
     {
-        if (m_ActiveEncodingType == EncodingType::RENDER)
-        {
-            ASSERT(m_RenderCommandEncoder, "Render encoder must be active to use this function (BindDescriptorSet)!")
-            MTL4::ArgumentTable* argumentTable = (MTL4::ArgumentTable*)descriptorSet->GetNativeHandle();
-            m_RenderCommandEncoder->setArgumentTable(argumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment | MTL::RenderStageMesh);
-        }
-        else if (m_ActiveEncodingType == EncodingType::COMPUTE)
-        {
-            ASSERT(m_ComputeCommandEncoder, "Compute encoder must be active to use this function (BindDescriptorSet)!")
-            MTL4::ArgumentTable* argumentTable = (MTL4::ArgumentTable*)descriptorSet->GetNativeHandle();
-            m_ComputeCommandEncoder->setArgumentTable(argumentTable);
-        }
+        MTL::Buffer* argumentBuffer = (MTL::Buffer*)descriptorSet->GetNativeHandle();
+        MTL::GPUAddress argumentBufferAddress = argumentBuffer->gpuAddress();
+        m_ArgumentTable->setAddress(argumentBufferAddress, binding);
     }
 
 
