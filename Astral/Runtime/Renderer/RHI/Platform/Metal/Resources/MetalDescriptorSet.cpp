@@ -102,7 +102,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::STORAGE_BUFFER || descriptorAtBinding == Descriptor::UNIFORM_BUFFER)
             {
                 bufferIndex++;
@@ -133,7 +133,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::STORAGE_BUFFER || descriptorAtBinding == Descriptor::UNIFORM_BUFFER)
             {
                 bufferIndex++;
@@ -164,7 +164,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::IMAGE_SAMPLER || descriptorAtBinding == Descriptor::STORAGE_IMAGE)
             {
                 textureIndex++;
@@ -199,7 +199,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::IMAGE_SAMPLER || descriptorAtBinding == Descriptor::STORAGE_IMAGE)
             {
                 textureIndex++;
@@ -234,7 +234,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::IMAGE_SAMPLER || descriptorAtBinding == Descriptor::STORAGE_IMAGE)
             {
                 textureIndex++;
@@ -264,7 +264,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::STORAGE_BUFFER || descriptorAtBinding == Descriptor::UNIFORM_BUFFER)
             {
                 bufferIndex++;
@@ -285,7 +285,7 @@ namespace Astral {
         uint32 bufferIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::STORAGE_BUFFER || descriptorAtBinding == Descriptor::UNIFORM_BUFFER)
             {
                 bufferIndex++;
@@ -306,7 +306,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::IMAGE_SAMPLER || descriptorAtBinding == Descriptor::STORAGE_IMAGE)
             {
                 textureIndex++;
@@ -327,7 +327,7 @@ namespace Astral {
         uint32 textureIndex = 0;
         for (size_t i = 0; i < binding; i++)
         {
-            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[binding];
+            Descriptor descriptorAtBinding = m_DescriptorSetLayout.Descriptors[i];
             if (descriptorAtBinding == Descriptor::IMAGE_SAMPLER || descriptorAtBinding == Descriptor::STORAGE_IMAGE)
             {
                 textureIndex++;
