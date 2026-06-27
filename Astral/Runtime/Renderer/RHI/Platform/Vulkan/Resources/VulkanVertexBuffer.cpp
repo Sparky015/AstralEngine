@@ -101,7 +101,7 @@ namespace Astral {
             VulkanBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
+                .Usage = BUFFER_USAGE_VERTEX_BUFFER | BUFFER_USAGE_STREAMABLE,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
@@ -114,7 +114,7 @@ namespace Astral {
             VulkanBufferDesc vertexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_VERTEX_BUFFER,
+                .Usage = BUFFER_USAGE_VERTEX_BUFFER | BUFFER_USAGE_STREAMABLE,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
