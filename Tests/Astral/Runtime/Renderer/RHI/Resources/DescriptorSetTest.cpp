@@ -212,7 +212,7 @@ namespace Astral {
             .LayerCount = 1,
             .MipMapCount = 1,
         };
-        TextureHandle testTexture2 = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
+        TextureHandle testTexture2 = RendererAPI::GetDevice().CreateTexture(testTexture2CreateInfo);
 
 
         float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
