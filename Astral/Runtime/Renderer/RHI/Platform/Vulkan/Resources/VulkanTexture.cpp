@@ -436,6 +436,30 @@ namespace Astral {
         };
 
 
+        // Validate against edge cases and clamp inputs
+
+        if (desc.NumMipLevels > Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight))
+        {
+            uint32 clampedMipMapCount = Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight);
+            AE_WARN("Texture with dimensions (" << desc.ImageWidth << ", " << desc.ImageHeight << ") cannot support mip map count of "
+                    << desc.NumMipLevels << ". Clamping mip map level count to " << clampedMipMapCount << ". ");
+            imageCreateInfo.mipLevels = clampedMipMapCount;
+            m_NumMipLevels = clampedMipMapCount;
+        }
+        if (desc.NumLayers > 1 && (desc.TextureType != TextureType::IMAGE_2D_ARRAY && desc.TextureType != TextureType::CUBEMAP))
+        {
+            AE_WARN("Specified texture type does not support an array length of more than 1 (given " << desc.NumLayers << "). Clamping array length to 1!");
+            imageCreateInfo.arrayLayers = 1;
+            m_NumLayers = 1;
+        }
+        if (desc.NumMipLevels > 1 && desc.TextureType == TextureType::IMAGE_1D)
+        {
+            AE_WARN("Mip map level count of more than 1 is not supported with IMAGE_1D texture type. Clamping mip map level count to 1!");
+            imageCreateInfo.mipLevels = 1;
+            m_NumMipLevels = 1;
+        }
+
+
         VkResult result = vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image);
         ASSERT(result == VK_SUCCESS, "Failed to create image!");
     }

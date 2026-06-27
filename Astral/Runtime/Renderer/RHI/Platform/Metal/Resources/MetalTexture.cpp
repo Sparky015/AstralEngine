@@ -18,11 +18,25 @@
 namespace Astral {
 
     MetalTexture::MetalTexture(const MetalTextureDesc& desc) :
-        m_Device(desc.Device)
+        m_Device(desc.Device),
+        m_Width(desc.ImageWidth),
+        m_Height(desc.ImageHeight),
+        m_ImageFormat(desc.ImageFormat),
+        m_ImageUsageFlags(desc.ImageUsageFlags),
+        m_NumLayers(desc.NumLayers),
+        m_NumMipLevels(desc.NumMipLevels),
+        m_TextureType(desc.TextureType),
+        m_MemoryType(desc.MemoryType),
+        m_MSAASampleCount(desc.MSAASampleCount),
+        m_SamplerFilter(desc.SamplerFilter),
+        m_SamplerAddressMode(desc.SamplerAddressMode),
+        m_IsAnisotropyEnabled(desc.EnableAnisotropy),
+        m_IsSwapchainOwned(false)
     {
         ASSERT(desc.Device, "The device passed to MetalTexture::MetalTexture cannot be nullptr!");
 
         CreateTexture(desc);
+        CreateSampler(desc.SamplerFilter, desc.SamplerAddressMode, desc.EnableAnisotropy);
 
         if (desc.ImageData != nullptr && desc.ImageDataLength != 0)
         {
@@ -49,12 +63,13 @@ namespace Astral {
         m_IsAnisotropyEnabled(true),
         m_IsSwapchainOwned(true)
     {
-
+        CreateSampler(m_SamplerFilter, m_SamplerAddressMode, m_IsAnisotropyEnabled);
     }
 
 
     MetalTexture::~MetalTexture()
     {
+        DestroySampler();
         DestroyTexture();
     }
 
@@ -261,9 +276,32 @@ namespace Astral {
         textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(desc.TextureType));
         textureDescriptor->setSampleCount(ConvertSampleCountToIntSampleCount(desc.MSAASampleCount));
 
+
+        // Validate against edge cases and clamp inputs
+
         if (desc.TextureType == TextureType::IMAGE_1D)
         {
             textureDescriptor->setHeight(1);
+        }
+        if (desc.NumMipLevels > Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight))
+        {
+            uint32 clampedMipMapCount = Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight);
+            AE_WARN("Texture with dimensions (" << desc.ImageWidth << ", " << desc.ImageHeight << ") cannot support mip map count of "
+                    << desc.NumMipLevels << ". Clamping mip map level count to " << clampedMipMapCount << ". ");
+            textureDescriptor->setMipmapLevelCount(clampedMipMapCount);
+            m_NumMipLevels = clampedMipMapCount;
+        }
+        if (desc.NumLayers > 1 && desc.TextureType != TextureType::IMAGE_2D_ARRAY)
+        {
+            AE_WARN("Specified texture type does not support an array length of more than 1. Clamping array length to 1!");
+            textureDescriptor->setArrayLength(1);
+            m_NumLayers = 1;
+        }
+        if (desc.NumMipLevels > 1 && desc.TextureType == TextureType::IMAGE_1D)
+        {
+            AE_WARN("Mip map level count of more than 1 is not supported with IMAGE_1D texture type.. Clamping mip map level count to 1!");
+            textureDescriptor->setMipmapLevelCount(1);
+            m_NumMipLevels = 1;
         }
 
         m_Texture = desc.Device->newTexture(textureDescriptor);
@@ -288,20 +326,20 @@ namespace Astral {
     }
 
 
-    void MetalTexture::CreateSampler(const MetalTextureDesc& desc)
+    void MetalTexture::CreateSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotropy)
     {
         MTL::SamplerDescriptor* samplerDescriptor = MTL::SamplerDescriptor::alloc()->init();
         ASSERT(samplerDescriptor, "MTL::SamplerDescriptor failed to be allocated by Metal!")
 
-        samplerDescriptor->setMinFilter(ConvertSamplerFilterToMTLMinMagFilter(desc.SamplerFilter));
-        samplerDescriptor->setMagFilter(ConvertSamplerFilterToMTLMinMagFilter(desc.SamplerFilter));
+        samplerDescriptor->setMinFilter(ConvertSamplerFilterToMTLMinMagFilter(samplerFilter));
+        samplerDescriptor->setMagFilter(ConvertSamplerFilterToMTLMinMagFilter(samplerFilter));
         samplerDescriptor->setMipFilter(MTL::SamplerMipFilterLinear);
 
-        samplerDescriptor->setSAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(desc.SamplerAddressMode));
-        samplerDescriptor->setTAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(desc.SamplerAddressMode));
-        samplerDescriptor->setRAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(desc.SamplerAddressMode));
+        samplerDescriptor->setSAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(samplerAddressMode));
+        samplerDescriptor->setTAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(samplerAddressMode));
+        samplerDescriptor->setRAddressMode(ConvertSamplerAddressModeToMTLSamplerAddressMode(samplerAddressMode));
 
-        if (RendererAPI::GetDevice().IsAnisotropySupported() && desc.EnableAnisotropy)
+        if (RendererAPI::GetDevice().IsAnisotropySupported() && shouldEnableAnisotropy)
         {
             samplerDescriptor->setMaxAnisotropy(RendererAPI::GetDevice().GetMaxAnisotropySupported());
         }
@@ -311,7 +349,7 @@ namespace Astral {
             samplerDescriptor->setMaxAnisotropy(1);
         }
 
-        m_Sampler = desc.Device->newSamplerState(samplerDescriptor);
+        m_Sampler = m_Device->newSamplerState(samplerDescriptor);
 
         samplerDescriptor->release();
     }

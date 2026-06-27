@@ -176,9 +176,11 @@ namespace Astral {
 
         /**
          * @brief Creates the MTL::SamplerState object
-         * @param desc The texture desc including sampler flags for the texture
+         * @param samplerFilter The sampler filter to use
+         * @param samplerAddressMode The sampler address mode to use
+         * @param shouldEnableAnisotropy Enables anisotropy for the sampler when true
          */
-        void CreateSampler(const MetalTextureDesc& desc);
+        void CreateSampler(SamplerFilter samplerFilter, SamplerAddressMode samplerAddressMode, bool shouldEnableAnisotropy);
 
         /**
          * @brief Releases the MTL::SamplerState object
