@@ -290,6 +290,11 @@ namespace Astral {
 
     VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
     {
+        DestroyBuffer(m_Buffer); // Clean up old buffer and memory if one exists
+        FreeMemory(m_BufferMemory);
+        m_Buffer = nullptr;
+        m_BufferMemory = nullptr;
+
         m_UsageFlags = other.m_UsageFlags;
         m_UsedMemorySize = other.m_UsedMemorySize;
         m_DeviceMemoryProperties = other.m_DeviceMemoryProperties;
