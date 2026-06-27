@@ -9,6 +9,7 @@
 #include "Core/Utilities/Loggers.h"
 #include "gtest/gtest.h"
 #include "Renderer/RendererManager.h"
+#include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
 
@@ -25,10 +26,12 @@ public:
         m_Engine->GetWindowManager().Init();
         m_Engine->GetRendererManager().InitOnlyRenderingContext();
         m_Engine->GetAssetManager().Init();
+        m_Engine->GetSceneManager().Init();
     }
 
     void TearDown() override
     {
+        m_Engine->GetSceneManager().Shutdown();
         m_Engine->GetAssetManager().Shutdown();
         m_Engine->GetRendererManager().Shutdown();
         m_Engine->GetWindowManager().Shutdown();
