@@ -4,6 +4,7 @@
 * @date 9/21/25
 */
 
+#include "Asset/AssetManager.h"
 #include "Core/Engine.h"
 #include "Core/Utilities/Loggers.h"
 #include "gtest/gtest.h"
@@ -23,10 +24,12 @@ public:
         m_Engine = new Astral::Engine();
         m_Engine->GetWindowManager().Init();
         m_Engine->GetRendererManager().InitOnlyRenderingContext();
+        m_Engine->GetAssetManager().Init();
     }
 
     void TearDown() override
     {
+        m_Engine->GetAssetManager().Shutdown();
         m_Engine->GetRendererManager().Shutdown();
         m_Engine->GetWindowManager().Shutdown();
         delete m_Engine;
