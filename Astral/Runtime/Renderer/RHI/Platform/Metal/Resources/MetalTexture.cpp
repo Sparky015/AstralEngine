@@ -14,6 +14,7 @@
 
 #include "Metal/MTLBuffer.hpp"
 #include "Metal/MTLCommandBuffer.hpp"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 namespace Astral {
 
@@ -37,6 +38,10 @@ namespace Astral {
 
         CreateTexture(desc);
         CreateSampler(desc.SamplerFilter, desc.SamplerAddressMode, desc.EnableAnisotropy);
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(m_Texture);
 
         if (desc.ImageData != nullptr && desc.ImageDataLength != 0)
         {

@@ -9,6 +9,7 @@
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
 #include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 #include "Metal/MTLDevice.hpp"
 #include "Metal/MTL4CommandBuffer.hpp"
@@ -27,6 +28,11 @@ namespace Astral {
 
         CreateBuffer(&m_Buffer, metalBufferDesc.Size);
         m_BufferLength = m_Buffer->allocatedSize();
+
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(m_Buffer);
     }
 
 

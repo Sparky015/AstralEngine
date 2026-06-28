@@ -19,8 +19,14 @@ namespace Astral {
         CreateQueue(commandQueueDesc);
 
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        m_Queue->addResidencySet(residencySet);
+        MTL::ResidencySet* globalResidencySet = renderingContext.GetGlobalResidencySet();
+        m_Queue->addResidencySet(globalResidencySet);
+        globalResidencySet->commit();
+
+        CA::MetalLayer* swapchainMetalLayer = (CA::MetalLayer*)RendererAPI::GetDevice().GetSwapchain().GetNativeHandle();
+        MTL::ResidencySet* swapchainResidencySet = swapchainMetalLayer->residencySet();
+        m_Queue->addResidencySet(swapchainResidencySet);
+        swapchainResidencySet->commit();
     }
 
 
@@ -32,6 +38,10 @@ namespace Astral {
 
     void MetalCommandQueue::Submit(CommandBufferHandle commandBufferHandle, RenderTargetHandle renderTargetHandle)
     {
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->commit();
+
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
         MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
@@ -61,6 +71,10 @@ namespace Astral {
 
     void MetalCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
     {
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->commit();
+
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
         MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
