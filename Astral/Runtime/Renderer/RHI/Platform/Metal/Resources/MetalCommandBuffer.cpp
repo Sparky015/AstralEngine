@@ -110,6 +110,10 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (BindVertexBuffer)!")
         m_BoundVertexBuffer = vertexBuffer;
+
+        MTL::Buffer* mtlVertexBuffer = (MTL::Buffer*)vertexBuffer->GetNativeHandle();
+        MTL::GPUAddress bufferAddress = mtlVertexBuffer->gpuAddress();
+        m_ArgumentTable->setAddress(bufferAddress, 29);
     }
 
 

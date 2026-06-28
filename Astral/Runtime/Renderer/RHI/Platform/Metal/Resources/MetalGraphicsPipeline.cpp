@@ -151,7 +151,7 @@ namespace Astral {
             MTL::VertexAttributeDescriptor* vertexAttributeDescriptor = MTL::VertexAttributeDescriptor::alloc()->init();
 
             vertexAttributeDescriptor->setFormat(ConvertShaderDataTypeToMTLVertexFormat(attribute.DataType));
-            vertexAttributeDescriptor->setBufferIndex(0);
+            vertexAttributeDescriptor->setBufferIndex(29);
             vertexAttributeDescriptor->setOffset(offset);
             vertexDescriptor->attributes()->setObject(vertexAttributeDescriptor, i);
 
@@ -167,7 +167,7 @@ namespace Astral {
         vertexBufferLayoutDescriptor->setStepFunction(MTL::VertexStepFunctionPerVertex);
         vertexBufferLayoutDescriptor->setStepRate(1);
 
-        vertexDescriptor->layouts()->setObject(vertexBufferLayoutDescriptor, 0);
+        vertexDescriptor->layouts()->setObject(vertexBufferLayoutDescriptor, 29);
 
         m_PipelineDescriptor->setVertexDescriptor(vertexDescriptor);
 
@@ -179,16 +179,18 @@ namespace Astral {
     void MetalGraphicsPipelineState::PopulateFunctionDescriptors(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc)
     {
         MTL4::LibraryFunctionDescriptor* vertexFunctionDescriptor = MTL4::LibraryFunctionDescriptor::alloc()->init();
-        vertexFunctionDescriptor->setName(NS::String::string("main", NS::UTF8StringEncoding));
+        vertexFunctionDescriptor->setName(NS::String::string("main0", NS::UTF8StringEncoding));
         MTL::Library* vertexLibrary = (MTL::Library*)graphicsPipelineStateDesc.VertexShader->GetNativeHandle();
         vertexFunctionDescriptor->setLibrary(vertexLibrary);
         m_PipelineDescriptor->setVertexFunctionDescriptor(vertexFunctionDescriptor);
+        vertexFunctionDescriptor->release();
 
         MTL4::LibraryFunctionDescriptor* fragmentFunctionDescriptor = MTL4::LibraryFunctionDescriptor::alloc()->init();
-        fragmentFunctionDescriptor->setName(NS::String::string("main", NS::UTF8StringEncoding));
+        fragmentFunctionDescriptor->setName(NS::String::string("main0", NS::UTF8StringEncoding));
         MTL::Library* fragmentLibrary = (MTL::Library*)graphicsPipelineStateDesc.FragmentShader->GetNativeHandle();
         fragmentFunctionDescriptor->setLibrary(fragmentLibrary);
         m_PipelineDescriptor->setFragmentFunctionDescriptor(fragmentFunctionDescriptor);
+        fragmentFunctionDescriptor->release();
     }
 
 
