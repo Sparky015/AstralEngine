@@ -17,13 +17,16 @@
 
 namespace Astral {
 
-    MetalGraphicsPipelineState::MetalGraphicsPipelineState(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc)
+    MetalGraphicsPipelineState::MetalGraphicsPipelineState(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc) :
+        m_Device(graphicsPipelineStateDesc.Device),
+        m_PipelineDescriptor(nullptr),
+        m_Pipeline(nullptr),
+        m_DescriptorSetLayout(),
+        m_CompiledVertexShader(graphicsPipelineStateDesc.VertexShader),
+        m_CompiledFragmentShader(graphicsPipelineStateDesc.FragmentShader)
     {
         CreateDescriptorSetLayout(graphicsPipelineStateDesc);
         CreatePipelineState(graphicsPipelineStateDesc);
-
-        m_CompiledVertexShader = graphicsPipelineStateDesc.VertexShader;
-        m_CompiledFragmentShader = graphicsPipelineStateDesc.FragmentShader;
     }
 
 

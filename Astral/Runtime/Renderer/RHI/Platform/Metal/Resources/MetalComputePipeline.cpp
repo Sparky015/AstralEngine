@@ -10,11 +10,14 @@
 
 namespace Astral {
 
-    MetalComputePipelineState::MetalComputePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc)
+    MetalComputePipelineState::MetalComputePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc) :
+        m_Device(computePipelineStateDesc.Device),
+        m_Pipeline(nullptr),
+        m_DescriptorSetLayout(),
+        m_CompiledComputeShader(computePipelineStateDesc.ComputeShader)
     {
         CreateDescriptorSetLayout(computePipelineStateDesc);
         CreatePipelineState(computePipelineStateDesc);
-        m_CompiledComputeShader = computePipelineStateDesc.ComputeShader;
     }
 
 
