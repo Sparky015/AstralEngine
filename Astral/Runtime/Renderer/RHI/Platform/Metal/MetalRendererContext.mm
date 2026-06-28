@@ -236,7 +236,7 @@ namespace Astral {
             CommandAllocatorPool commandAllocatorPool{};
             MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
 
-            for (size_t i = 0; i < 3; i++)
+            for (size_t i = 0; i < 5; i++)
             {
                 MTL4::CommandAllocator* newCommandAllocator = device->newCommandAllocator();
                 commandAllocatorPool.AvailableCommandAllocators.insert(newCommandAllocator);
