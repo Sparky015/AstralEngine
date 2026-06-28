@@ -8,6 +8,8 @@
 
 #include "Metal/MTL4CommandQueue.hpp"
 #include "Metal/MTLDrawable.hpp"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 namespace Astral {
 
@@ -15,6 +17,10 @@ namespace Astral {
         m_Device(commandQueueDesc.Device)
     {
         CreateQueue(commandQueueDesc);
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        m_Queue->addResidencySet(residencySet);
     }
 
 

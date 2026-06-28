@@ -103,6 +103,11 @@ namespace Astral {
          */
         void ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator);
 
+        /**
+         * @brief Gets the global residency set for all resources
+         */
+        MTL::ResidencySet* GetGlobalResidencySet();
+
     private:
 
         /**
@@ -165,6 +170,10 @@ namespace Astral {
          */
         void ReleaseAllCommandAllocatorPools();
 
+        void CreateGlobalResidencySet();
+
+        void ReleaseGlobalResidencySet();
+
 
         struct CommandAllocatorPool
         {
@@ -181,6 +190,7 @@ namespace Astral {
         CommandQueueHandle m_PrimaryCommandQueue;
         MTL4::Compiler* m_Compiler;
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
+        MTL::ResidencySet* m_GlobalResidencySet;
 
         std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
         std::mutex m_CommandAllocatorsMutex;
@@ -192,6 +202,38 @@ namespace Astral {
     inline void MetalRenderingContext::MarkNewImGuiFrame()
     {
         ImGui_ImplMetal_NewFrame(m_ImGuiRenderPassAttachmentFormats);
+    }
+
+
+    inline MTL::ResidencySet* MetalRenderingContext::GetGlobalResidencySet()
+    {
+        return m_GlobalResidencySet;
+    }
+
+
+    inline void MetalRenderingContext::CreateGlobalResidencySet()
+    {
+        MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
+        NS::Error* error = nullptr;
+        MTL::ResidencySetDescriptor* residencySetDescriptor = MTL::ResidencySetDescriptor::alloc()->init();
+        m_GlobalResidencySet = mtlDevice->newResidencySet(residencySetDescriptor, &error);
+        residencySetDescriptor->release();
+
+        if (m_GlobalResidencySet == nullptr && error)
+        {
+            AE_ERROR("Residency set failed to be created! Error: " << error->localizedDescription()->utf8String())
+            error->release();
+        }
+    }
+
+
+    inline void MetalRenderingContext::ReleaseGlobalResidencySet()
+    {
+        if (m_GlobalResidencySet)
+        {
+            m_GlobalResidencySet->release();
+            m_GlobalResidencySet = nullptr;
+        }
     }
 
 

@@ -20,15 +20,17 @@ namespace Astral {
     MetalCommandBuffer::MetalCommandBuffer(const MetalCommandBufferDesc& commandBufferDesc) :
         m_Device(commandBufferDesc.Device)
     {
-        CreateCommandBuffer();
         AcquireCommandAllocator();
+        CreateArgumentTable();
+        CreateCommandBuffer();
     }
 
 
     MetalCommandBuffer::~MetalCommandBuffer()
     {
-        ReleaseCommandAllocator();
         ReleaseCommandBuffer();
+        ReleaseArgumentTable();
+        ReleaseCommandAllocator();
     }
 
 
@@ -85,6 +87,10 @@ namespace Astral {
         MTL::Buffer* argumentBuffer = (MTL::Buffer*)descriptorSet->GetNativeHandle();
         MTL::GPUAddress argumentBufferAddress = argumentBuffer->gpuAddress();
         m_ArgumentTable->setAddress(argumentBufferAddress, binding);
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(argumentBuffer);
     }
 
 
@@ -262,10 +268,17 @@ namespace Astral {
     void MetalCommandBuffer::DrawElementsIndexed(const IndexBufferHandle& indexBufferHandle)
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsIndexed)!")
+
+        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::StageAll);
+
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
         MTL::GPUAddress bufferAddress = indexBuffer->gpuAddress();
         uint32 bufferLength = indexBuffer->length();
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(indexBuffer);
 
         m_RenderCommandEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, numOfIndices, MTL::IndexTypeUInt32, bufferAddress, bufferLength);
     }
@@ -274,10 +287,17 @@ namespace Astral {
     void MetalCommandBuffer::DrawElementsInstanced(const IndexBufferHandle& indexBufferHandle, uint32 numberOfInstances)
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsInstanced)!")
+
+        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::StageAll);
+
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
         MTL::GPUAddress bufferAddress = indexBuffer->gpuAddress();
         uint32 bufferLength = indexBuffer->length();
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(indexBuffer);
 
         m_RenderCommandEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, numOfIndices, MTL::IndexTypeUInt32, bufferAddress, bufferLength, numberOfInstances);
     }
@@ -286,6 +306,8 @@ namespace Astral {
     void MetalCommandBuffer::Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
     {
         ASSERT(m_ActiveEncodingType == EncodingType::COMPUTE, "Render encoder must not be active when using this function (Dispatch)!")
+
+        m_ComputeCommandEncoder->setArgumentTable(m_ArgumentTable);
 
         const ShaderReflectionInfo& computeShaderReflectionInfo = m_BoundPipeline->GetCompiledComputeShader()->GetShaderReflectionInfo();
         Vec3 workgroupSize = computeShaderReflectionInfo.WorkgroupDimensions;
@@ -302,6 +324,10 @@ namespace Astral {
         m_PushConstants.push_back(pushConstantBuffer);
         MTL::Buffer* mtlBuffer = (MTL::Buffer*)pushConstantBuffer->GetNativeHandle();
         m_ArgumentTable->setAddress(mtlBuffer->gpuAddress(), 30);
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(mtlBuffer);
     }
 
 
@@ -428,10 +454,12 @@ namespace Astral {
         MTL4::ArgumentTableDescriptor* argumentTableDescriptor = MTL4::ArgumentTableDescriptor::alloc();
         NS::Error* error = nullptr;
 
-        constexpr uint32 maxSupportedResourceCount = 32;
-        argumentTableDescriptor->setMaxBufferBindCount(maxSupportedResourceCount);
-        argumentTableDescriptor->setMaxSamplerStateBindCount(maxSupportedResourceCount);
-        argumentTableDescriptor->setMaxTextureBindCount(maxSupportedResourceCount);
+        constexpr uint32 maxSupportedBufferCount = 31;
+        constexpr uint32 maxSupportedTextureCount = 31;
+        constexpr uint32 maxSupportedSamplerCount = 16;
+        argumentTableDescriptor->setMaxBufferBindCount(maxSupportedBufferCount);
+        argumentTableDescriptor->setMaxSamplerStateBindCount(maxSupportedSamplerCount);
+        argumentTableDescriptor->setMaxTextureBindCount(maxSupportedTextureCount);
 
         m_ArgumentTable = m_Device->newArgumentTable(argumentTableDescriptor, &error);
 

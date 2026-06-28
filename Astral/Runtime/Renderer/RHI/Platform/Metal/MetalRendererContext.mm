@@ -28,6 +28,7 @@ namespace Astral {
         AllocateCAMetalLayer();
         CreateDevice();
         AttachCALayerToWindow();
+        CreateGlobalResidencySet();
         CreatePrimaryCommandQueue();
         m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
         CreatePipelineDataSetSerializer();
@@ -42,6 +43,7 @@ namespace Astral {
         ReleasePipelineDataSetSerializer();
         m_PipelineStateCache.reset();
         DestroyPrimaryCommandQueue();
+        ReleaseGlobalResidencySet();
         DestroyDevice();
         ReleaseCAMetalLayer();
     }
