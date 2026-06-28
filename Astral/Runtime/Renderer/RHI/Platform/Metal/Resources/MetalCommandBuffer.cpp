@@ -42,6 +42,18 @@ namespace Astral {
 
     void MetalCommandBuffer::EndRecording()
     {
+        if (m_RenderCommandEncoder)
+        {
+            m_RenderCommandEncoder->endEncoding();
+            m_RenderCommandEncoder = nullptr;
+        }
+        if (m_ComputeCommandEncoder)
+        {
+            m_ComputeCommandEncoder->endEncoding();
+            m_ComputeCommandEncoder = nullptr;
+        }
+        m_ActiveEncodingType = EncodingType::NONE;
+
         m_CommandBuffer->endCommandBuffer();
     }
 
@@ -213,7 +225,6 @@ namespace Astral {
 
 
             depthAttachmentDescriptor->setClearDepth(depthStencilAttachmentDescription.ClearColor.x);
-            depthAttachmentDescriptor->setDepthResolveFilter(MTL::MultisampleDepthResolveFilterMin);
             depthAttachmentDescriptor->setLevel(depthStencilMipLevel);
             depthAttachmentDescriptor->setLoadAction(ConvertAttachmentLoadOpToMTLLoadAction(depthStencilAttachmentDescription.LoadOp));
             depthAttachmentDescriptor->setSlice(depthStencilArraySlice);
@@ -231,7 +242,6 @@ namespace Astral {
                 MTL::RenderPassStencilAttachmentDescriptor* stencilAttachmentDescriptor = MTL::RenderPassStencilAttachmentDescriptor::alloc()->init();
 
                 stencilAttachmentDescriptor->setClearStencil(depthStencilAttachmentDescription.ClearColor.y);
-                stencilAttachmentDescriptor->setStencilResolveFilter(MTL::MultisampleStencilResolveFilterDepthResolvedSample);
                 stencilAttachmentDescriptor->setLevel(depthStencilMipLevel);
                 stencilAttachmentDescriptor->setLoadAction(ConvertAttachmentLoadOpToMTLLoadAction(depthStencilAttachmentDescription.LoadOp));
                 stencilAttachmentDescriptor->setSlice(depthStencilArraySlice);
@@ -333,7 +343,11 @@ namespace Astral {
 
     void MetalCommandBuffer::SetPipelineBarrier(const PipelineBarrier& pipelineBarrier)
     {
-        ASSERT(m_ActiveEncodingType != EncodingType::NONE, "Encoder must be active to use this function (SetPipelineBarrier)!")
+        if (m_ActiveEncodingType == EncodingType::NONE)
+        {
+            AE_WARN("Encoder must be active to use this function (SetPipelineBarrier)! Skipping pipeline barrier!")
+            return;
+        }
 
         MTL4::CommandEncoder* commandEncoder;
         if (m_ActiveEncodingType == EncodingType::RENDER)
