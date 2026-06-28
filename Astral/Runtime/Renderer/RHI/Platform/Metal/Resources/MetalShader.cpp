@@ -44,6 +44,12 @@ namespace Astral {
 
     void* MetalShader::GetNativeHandle()
     {
+        return m_Library;
+    }
+
+
+    MTL::Function* MetalShader::GetFunctionHandle()
+    {
         return m_Function;
     }
 
@@ -163,9 +169,26 @@ namespace Astral {
         compilerOptions.platform = spirv_cross::CompilerMSL::Options::macOS;
         compilerOptions.set_msl_version(3, 2);
         compilerOptions.argument_buffers = true;
+        compiler.set_msl_options(compilerOptions);
+
+
 
         // Rebind the push constant buffer if applicable to bind slot 30
+
+        spv::ExecutionModel shaderStage;
+        switch (m_ShaderReflectionInfo.ShaderType)
+        {
+            case VERTEX_SHADER: shaderStage = spv::ExecutionModelVertex; break;
+            case FRAGMENT_SHADER: shaderStage = spv::ExecutionModelFragment; break;
+            case COMPUTE_SHADER: shaderStage = spv::ExecutionModelGLCompute; break;
+            case GEOMETRY_SHADER: shaderStage = spv::ExecutionModelGeometry; break;
+            case TESSELLATION_CONTROL_SHADER: shaderStage = spv::ExecutionModelTessellationControl; break;
+            case TESSELLATION_EVALUATION_SHADER: shaderStage = spv::ExecutionModelTessellationEvaluation; break;
+            case NONE: AE_ERROR("Invalid shader type!"); break;
+            default: AE_ERROR("Invalid shader type!"); break;
+        }
         spirv_cross::MSLResourceBinding pushConstantResourceBinding{};
+        pushConstantResourceBinding.stage = shaderStage;
         pushConstantResourceBinding.desc_set = spirv_cross::ResourceBindingPushConstantDescriptorSet;
         pushConstantResourceBinding.binding = spirv_cross::ResourceBindingPushConstantBinding;
         pushConstantResourceBinding.msl_buffer = 30;
