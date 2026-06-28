@@ -371,6 +371,8 @@ namespace Astral {
     void MetalDescriptorSet::CreateArgumentTable()
     {
         uint32 maxBindingMemoryRequirement = sizeof(size_t) * (m_Buffers.size() + m_Textures.size() + m_Textures.size());
+        maxBindingMemoryRequirement = std::max(1u, maxBindingMemoryRequirement);
+
         m_ArgumentBuffer = RendererAPI::GetDevice().CreateUniformBuffer(nullptr, maxBindingMemoryRequirement, GPUMemoryType::HOST_VISIBLE);
 
         if (m_ArgumentBuffer == nullptr)
