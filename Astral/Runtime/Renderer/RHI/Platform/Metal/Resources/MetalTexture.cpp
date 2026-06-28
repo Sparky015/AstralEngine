@@ -429,9 +429,10 @@ namespace Astral {
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
         AE_LOG("Staging Buffer Length: " << metalStagingBuffer->length())
         AE_LOG("Texture Buffer Length: " << m_Texture->buffer()->length())
-        uint32 sourceBytesPerRow = metalStagingBuffer->length();
+        uint32 sourceBytesPerRow = metalStagingBuffer->length() / m_Height;
+        uint32 sourceBytesPerImage = sourceBytesPerRow * m_Height;
         MTL::Size imageDimensions = MTL::Size(m_Width, m_Height, 1);
-        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, sourceBytesPerRow, sourceBytesPerRow, imageDimensions, m_Texture, 0, 0, MTL::Origin(0,0,0));
+        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, sourceBytesPerRow, sourceBytesPerImage, imageDimensions, m_Texture, 0, 0, MTL::Origin(0,0,0));
     }
 
 
