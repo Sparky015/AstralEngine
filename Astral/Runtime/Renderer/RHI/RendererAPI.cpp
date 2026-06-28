@@ -12,7 +12,11 @@
 
 namespace Astral {
 
+#ifdef ASTRAL_DEFAULT_RENDERING_API_VULKAN
+    RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
+#elif ASTRAL_DEFAULT_RENDERING_API_METAL
     RendererCommands* RendererAPI::s_RendererCommands = new MetalRendererCommands();
+#endif
 
 
     Device& RendererAPI::GetDevice()
