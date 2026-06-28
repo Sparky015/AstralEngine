@@ -247,7 +247,7 @@ namespace Astral {
         // ==== Populating ImGui render pass attachment formats struct ========================================================
 
         m_ImGuiRenderPassAttachmentFormats = AttachmentFormats{};
-
+        m_ImGuiRenderPassAttachmentFormats.SampleCount = 1;
 
         const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
 
