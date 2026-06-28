@@ -28,31 +28,36 @@ namespace Astral {
 
     void MetalRendererCommands::NameObject(BufferHandle bufferHandle, std::string_view name)
     {
-
+        MTL::Buffer* buffer = (MTL::Buffer*)bufferHandle->GetNativeHandle();
+        buffer->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
     void MetalRendererCommands::NameObject(DescriptorSetHandle descriptorSetHandle, std::string_view name)
     {
-
+        MTL::Buffer* buffer = (MTL::Buffer*)descriptorSetHandle->GetNativeHandle();
+        buffer->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
     void MetalRendererCommands::NameObject(TextureHandle textureHandle, std::string_view name)
     {
-
+        MTL::Texture* texture = (MTL::Texture*)textureHandle->GetNativeImage();
+        texture->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
     void MetalRendererCommands::NameObject(ShaderHandle shaderHandle, std::string_view name)
     {
-
+        MTL::Library* shaderLibrary = (MTL::Library*)shaderHandle->GetNativeHandle();
+        shaderLibrary->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
     void MetalRendererCommands::NameObject(CommandBufferHandle commandBufferHandle, std::string_view name)
     {
-
+        MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+        commandBuffer->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
