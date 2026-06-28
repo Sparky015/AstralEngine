@@ -74,6 +74,10 @@ namespace Astral {
 
     MetalTexture::~MetalTexture()
     {
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->removeAllocation(m_Texture);
+
         DestroySampler();
         DestroyTexture();
     }

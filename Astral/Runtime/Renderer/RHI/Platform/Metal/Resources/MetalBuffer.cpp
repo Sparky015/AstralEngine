@@ -28,11 +28,6 @@ namespace Astral {
 
         CreateBuffer(&m_Buffer, metalBufferDesc.Size);
         m_BufferLength = m_Buffer->allocatedSize();
-
-
-        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->addAllocation(m_Buffer);
     }
 
 
@@ -289,6 +284,10 @@ namespace Astral {
 
         *outBuffer = m_Device->newBuffer(bufferLength, resourceOptions);
         ASSERT(*outBuffer, "MetalBuffer failed to be created!")
+
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        residencySet->addAllocation(*outBuffer);
     }
 
 
@@ -296,6 +295,10 @@ namespace Astral {
     {
         if (buffer)
         {
+            MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+            MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+            residencySet->removeAllocation(buffer);
+
             buffer->release();
         }
     }
