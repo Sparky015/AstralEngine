@@ -6,6 +6,7 @@
 
 #include "MetalComputePipeline.h"
 
+#include "MetalShader.h"
 #include "Metal/MTLComputePipeline.hpp"
 
 namespace Astral {
@@ -72,11 +73,14 @@ namespace Astral {
     void MetalComputePipelineState::CreatePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc)
     {
         NS::Error* error = nullptr;
-        MTL::Function* function = (MTL::Function*)computePipelineStateDesc.ComputeShader->GetNativeHandle();
-        MTL::ComputePipelineDescriptor* pipelineDescriptor = MTL::ComputePipelineDescriptor::alloc();
+        GraphicsRef<MetalShader> metalCommandBuffer = std::static_pointer_cast<MetalShader>(computePipelineStateDesc.ComputeShader);
+        MTL::Function* function = metalCommandBuffer->GetFunctionHandle();;
+        MTL::ComputePipelineDescriptor* pipelineDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
         pipelineDescriptor->setComputeFunction(function);
 
         m_Pipeline = m_Device->newComputePipelineState(pipelineDescriptor, MTL::PipelineOptionNone, nullptr, &error);
+
+        pipelineDescriptor->release();
 
         if (m_Pipeline == nullptr)
         {

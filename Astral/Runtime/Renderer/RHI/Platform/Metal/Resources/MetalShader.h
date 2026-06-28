@@ -39,9 +39,15 @@ namespace Astral {
 
         /**
          * @brief Gets the native shader object handle
-         * @return The native shader object handle (MTL::Function*)
+         * @return The native shader object handle (MTL::Library*)
          */
         void* GetNativeHandle() override;
+
+        /**
+         * @brief Gets the main function handle of the shader
+         * @return the main function handle of the shader
+         */
+        MTL::Function* GetFunctionHandle();
 
     private:
 
