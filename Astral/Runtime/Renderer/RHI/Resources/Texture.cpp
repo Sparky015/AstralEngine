@@ -129,7 +129,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateCubemap(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -151,7 +151,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateCubemap(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -176,7 +176,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.Create3DTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.Create3DTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -201,7 +201,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.Create1DTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.Create1DTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -226,7 +226,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
