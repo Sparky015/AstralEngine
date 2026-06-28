@@ -8,11 +8,13 @@
 
 #include "Renderer/RHI/RendererContext.h"
 
-#include "Resources/MetalCommandQueue.h"
-
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include <GLFW/glfw3.h>
+
+#define IMGUI_IMPL_METAL_CPP
+#include "Common/MTLEnumConversions.h"
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h"
 
 namespace Astral {
 
@@ -68,12 +70,17 @@ namespace Astral {
         /**
          * @brief Initializes ImGui rendering backend
          */
-        void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override; // TODO
+        void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) override;
+
+        /**
+         * @brief Initializes a new frame for ImGui backend
+         */
+        void MarkNewImGuiFrame() override;
 
         /**
          * @brief Shuts down the ImGui rendering backend
          */
-        void ShutdownImGuiForAPIBackend() override; // TODO
+        void ShutdownImGuiForAPIBackend() override;
 
         /**
          * @brief Gets the primary command queue
@@ -177,7 +184,59 @@ namespace Astral {
 
         std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
         std::mutex m_CommandAllocatorsMutex;
+
+        AttachmentFormats m_ImGuiRenderPassAttachmentFormats;
     };
+
+
+    inline void MetalRenderingContext::MarkNewImGuiFrame()
+    {
+        ImGui_ImplMetal_NewFrame(m_ImGuiRenderPassAttachmentFormats);
+    }
+
+
+    inline void MetalRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
+    {
+        MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+        ImGui_ImplMetal_Init(device);
+
+
+
+        // ==== Populating ImGui render pass attachment formats struct ========================================================
+
+        m_ImGuiRenderPassAttachmentFormats = AttachmentFormats{};
+
+
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+
+        for (size_t i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            m_ImGuiRenderPassAttachmentFormats.ColorPixelFormat = ConvertImageFormatToMTLPixelFormat(colorAttachmentDescription.Format);
+            break;
+        }
+
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            // Depth stencil attachment exists
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+
+            m_ImGuiRenderPassAttachmentFormats.DepthPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
+            if (IsStencilFormat(depthStencilAttachmentDescription.Format))
+            {
+                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
+            }
+            else
+            {
+                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = MTL::PixelFormatInvalid;
+            }
+        }
+
+    }
 
 }
 

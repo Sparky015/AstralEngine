@@ -8,6 +8,7 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "Resources/MetalDevice.h"
+#include "Resources/MetalCommandQueue.h"
 
 #define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3native.h>
@@ -65,15 +66,11 @@ namespace Astral {
     void MetalRenderingContext::ClearNumValidationErrorsAndWarnings() {}
 
 
-    void MetalRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
-    {
-
-    }
 
 
     void MetalRenderingContext::ShutdownImGuiForAPIBackend()
     {
-
+        ImGui_ImplMetal_Shutdown();
     }
 
 

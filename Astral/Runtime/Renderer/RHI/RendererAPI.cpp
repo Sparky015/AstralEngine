@@ -5,13 +5,14 @@
 #include "RendererAPI.h"
 
 #include "Core/Engine.h"
+#include "Platform/Metal/MetalRendererCommands.h"
 #include "Platform/Vulkan/VulkanRendererCommands.h"
 #include "Renderer/RendererManager.h"
 
 
 namespace Astral {
 
-    RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
+    RendererCommands* RendererAPI::s_RendererCommands = new MetalRendererCommands();
 
 
     Device& RendererAPI::GetDevice()

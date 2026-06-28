@@ -157,6 +157,18 @@ namespace Astral {
          */
         void* GetNativeHandle() override;
 
+        /**
+         * @brief Gets the render command encoder of the command buffer
+         * @return The render command encoder of command buffer (this can be nullptr if the render encoder is not active)
+         */
+        MTL4::RenderCommandEncoder* GetRenderCommandEncoder();
+
+        /**
+         * @brief Gets the compute command encoder of the command buffer
+         * @return The compute command encoder of command buffer (this can be nullptr if the compute encoder is not active)
+         */
+        MTL4::ComputeCommandEncoder* GetComputeCommandEncoder();
+
     private:
 
         /**

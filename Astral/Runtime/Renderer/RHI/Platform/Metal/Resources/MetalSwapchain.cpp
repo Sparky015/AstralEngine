@@ -8,6 +8,7 @@
 
 #include "MetalRenderTarget.h"
 #include "Core/Utilities/Asserts.h"
+#include "Renderer/RHI/RendererAPI.h"
 #include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
@@ -17,6 +18,8 @@ namespace Astral {
         m_CAMetalLayer(metalSwapchainDesc.CAMetalLayer)
     {
         ASSERT(m_CAMetalLayer, "Metal Swapchain can not be created with null CA::MetalLayer")
+        UVec2 windowExtent = RendererAPI::GetContext().GetWindowFramebufferDimensions();
+        m_CAMetalLayer->setDrawableSize(CGSizeMake(windowExtent.x, windowExtent.y));
     }
 
 

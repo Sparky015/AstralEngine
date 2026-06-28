@@ -369,6 +369,18 @@ namespace Astral {
     }
 
 
+    MTL4::RenderCommandEncoder* MetalCommandBuffer::GetRenderCommandEncoder()
+    {
+        return m_RenderCommandEncoder;
+    }
+
+
+    MTL4::ComputeCommandEncoder* MetalCommandBuffer::GetComputeCommandEncoder()
+    {
+        return m_ComputeCommandEncoder;
+    }
+
+
     void MetalCommandBuffer::CreateCommandBuffer()
     {
         m_CommandBuffer = m_Device->newCommandBuffer();

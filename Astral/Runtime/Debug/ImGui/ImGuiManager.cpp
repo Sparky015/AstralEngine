@@ -12,6 +12,7 @@
 #include "ImPlot/implot.h"
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace Astral {
 
@@ -49,10 +50,7 @@ namespace Astral {
 
         ImGui_ImplGlfw_NewFrame();
 
-        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
-        {
-            ImGui_ImplVulkan_NewFrame();
-        }
+        RendererAPI::GetContext().MarkNewImGuiFrame();
 
         ImGui::NewFrame();
 
@@ -124,9 +122,13 @@ namespace Astral {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
+        if (SceneRenderer::GetRendererAPIBackend() == API::Vulkan)
         {
-            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Astral::Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
+            ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
+        }
+        if (SceneRenderer::GetRendererAPIBackend() == API::Metal)
+        {
+            ImGui_ImplGlfw_InitForOther((GLFWwindow*)Engine::Get().GetWindowManager().GetWindow().GetNativeWindow(), true);
         }
 
     }

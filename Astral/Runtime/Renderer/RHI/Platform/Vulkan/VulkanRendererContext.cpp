@@ -256,6 +256,12 @@ namespace Astral {
         std::vector<VkFormat> colorAttachmentFormats; // Temp var to hold color attachment formats for the lifetime of the pipelineRenderingCreateInfo variable (so that the memory does not get freed before the pipelineRenderingCreateInfo is used)
         PopulateVkPipelineRenderingCreateInfoHelper(renderPassHandle, &pipelineRenderingCreateInfo, colorAttachmentFormats);
 
+        ImGui_ImplVulkan_PipelineInfo pipelineInfoMain{};
+        pipelineInfoMain.RenderPass = nullptr;
+        pipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT,
+        pipelineInfoMain.Subpass = 0,
+        pipelineInfoMain.PipelineRenderingCreateInfo = pipelineRenderingCreateInfo;
+
         ImGui_ImplVulkan_InitInfo initInfo =
         {
             .Instance = m_Instance,
@@ -263,25 +269,26 @@ namespace Astral {
             .Device = (VkDevice)m_Device->GetNativeHandle(),
             .QueueFamily = m_QueueFamilyIndex,
             .Queue = (VkQueue)m_Device->GetPrimaryCommandQueue()->GetNativeHandle(),
-            .RenderPass = nullptr,
+            .DescriptorPoolSize = 9,
             .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
-            .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
-            .Subpass = 0,
-            .DescriptorPoolSize = 9,
+            .PipelineInfoMain = pipelineInfoMain,
             .UseDynamicRendering = true,
-            .PipelineRenderingCreateInfo = pipelineRenderingCreateInfo,
             .MinAllocationSize = 1024 * 1024,
         };
 
         ImGui_ImplVulkan_Init(&initInfo);
-        ImGui_ImplVulkan_CreateFontsTexture();
+    }
+
+
+    void VulkanRenderingContext::MarkNewImGuiFrame()
+    {
+        ImGui_ImplVulkan_NewFrame();
     }
 
 
     void VulkanRenderingContext::ShutdownImGuiForAPIBackend()
     {
-        ImGui_ImplVulkan_DestroyFontsTexture();
         ImGui_ImplVulkan_Shutdown();
     }
 
