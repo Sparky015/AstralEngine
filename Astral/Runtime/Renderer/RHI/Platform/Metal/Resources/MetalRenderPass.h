@@ -21,12 +21,12 @@ namespace Astral {
         MTL::Device* Device;
     };
 
-    class MetalRenderPass : public RenderPass // TODO
+    class MetalRenderPass : public RenderPass
     {
     public:
 
-        MetalRenderPass(const MetalRenderPassDesc& renderPassDesc); // TODO
-        ~MetalRenderPass() override; // TODO
+        MetalRenderPass(const MetalRenderPassDesc& renderPassDesc);
+        ~MetalRenderPass() override;
 
         /**
          * @brief Indicates the start of defining a render pass
@@ -118,7 +118,10 @@ namespace Astral {
 
     private:
 
-
+        std::vector<AttachmentDescription> m_AttachmentDescriptions;
+        std::vector<AttachmentReference> m_ColorAttachments;
+        std::vector<AttachmentReference> m_ResolveAttachments;
+        AttachmentReference m_DepthStencilAttachment;
     };
 
 }
