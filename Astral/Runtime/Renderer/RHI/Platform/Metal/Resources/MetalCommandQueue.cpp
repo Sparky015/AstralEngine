@@ -37,10 +37,17 @@ namespace Astral {
         MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
         commitOptions->addFeedbackHandler([this, commandBuffer](MTL4::CommitFeedback* commitFeedback) {
             std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
             if (m_ActiveCommandBuffers.contains(commandBuffer))
             {
                 m_ActiveCommandBuffers.erase(commandBuffer);
             }
+
+            if (commitFeedback->error())
+            {
+                AE_WARN("Commit Feedback Error: " << commitFeedback->error()->localizedDescription()->utf8String());
+            }
+
             lock.unlock();
             m_ActiveCommandBufferTrackingCondition.notify_one();
         });
@@ -59,10 +66,17 @@ namespace Astral {
         MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
         commitOptions->addFeedbackHandler([this, commandBuffer](MTL4::CommitFeedback* commitFeedback) {
             std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
             if (m_ActiveCommandBuffers.contains(commandBuffer))
             {
                 m_ActiveCommandBuffers.erase(commandBuffer);
             }
+
+            if (commitFeedback->error())
+            {
+                AE_WARN("Commit Feedback Error: " << commitFeedback->error()->localizedDescription()->utf8String());
+            }
+
             lock.unlock();
             m_ActiveCommandBufferTrackingCondition.notify_one();
         });
