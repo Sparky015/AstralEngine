@@ -119,6 +119,7 @@ namespace Astral {
     void MetalCommandQueue::CreateQueue(const MetalCommandQueueDesc& desc)
     {
         MTL4::CommandQueueDescriptor* commandQueueDescriptor = MTL4::CommandQueueDescriptor::alloc()->init();
+        commandQueueDescriptor->setLabel(NS::String::string("Global Command Queue",NS::UTF8StringEncoding));
 
         NS::Error* error = nullptr;
         m_Queue = m_Device->newMTL4CommandQueue(commandQueueDescriptor, &error);
