@@ -283,7 +283,7 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsIndexed)!")
 
-        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::StageAll);
+        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
 
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
@@ -302,7 +302,7 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsInstanced)!")
 
-        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::StageAll);
+        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
 
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
