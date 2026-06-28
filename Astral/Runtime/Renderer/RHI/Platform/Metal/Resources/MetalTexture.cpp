@@ -271,6 +271,7 @@ namespace Astral {
         textureDescriptor->setUsage(ConvertImageUsageToMTLTextureUsage(desc.ImageUsageFlags));
         textureDescriptor->setWidth(desc.ImageWidth);
         textureDescriptor->setHeight(desc.ImageHeight);
+        textureDescriptor->setDepth(1);
         textureDescriptor->setArrayLength(desc.NumLayers);
         textureDescriptor->setMipmapLevelCount(desc.NumMipLevels);
         textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(desc.TextureType));
@@ -363,9 +364,12 @@ namespace Astral {
 
     void MetalTexture::InitializeTextureData(const MetalTextureDesc& desc)
     {
+        uint32 imageSize = Texture::CalculateMipMapLevelSize(desc.ImageFormat, desc.ImageWidth,
+                                                                            desc.ImageHeight, 1, desc.NumLayers);
+
         if (m_MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
-            CopyToSharedTextureMemory(desc.ImageData, desc.ImageDataLength);
+            CopyToSharedTextureMemory(desc.ImageData, imageSize);
         }
 
         // Allocates a shared command buffer if a staging buffer copy or/and mip map generation is needed
@@ -379,7 +383,7 @@ namespace Astral {
 
             if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL)
             {
-                UploadToPrivateTextureMemory(blitEncoder, desc.ImageData, desc.ImageDataLength);
+                UploadToPrivateTextureMemory(blitEncoder, desc.ImageData, imageSize);
             }
 
             if (desc.GenerateMipMaps)
@@ -423,7 +427,11 @@ namespace Astral {
     {
         ASSERT(length <= stagingBuffer.GetAllocatedSize(), "Data does not fit in buffer!")
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
-        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, m_Texture->buffer(), 0, length);
+        AE_LOG("Staging Buffer Length: " << metalStagingBuffer->length())
+        AE_LOG("Texture Buffer Length: " << m_Texture->buffer()->length())
+        uint32 sourceBytesPerRow = metalStagingBuffer->length();
+        MTL::Size imageDimensions = MTL::Size(m_Width, m_Height, 1);
+        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, sourceBytesPerRow, sourceBytesPerRow, imageDimensions, m_Texture, 0, 0, MTL::Origin(0,0,0));
     }
 
 
