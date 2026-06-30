@@ -564,7 +564,14 @@ inline static CGSize MakeScaledSize(CGSize size, CGFloat scale)
 static void ImGui_ImplMetal_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 {
     ImGuiViewportDataMetal* data = (ImGuiViewportDataMetal*)viewport->RendererUserData;
-    data->MetalLayer.drawableSize = MakeScaledSize(CGSizeMake(size.x, size.y), viewport->DpiScale);
+    CGFloat scale = (CGFloat)viewport->DpiScale;
+#if TARGET_OS_OSX
+    void* handle = viewport->PlatformHandleRaw ? viewport->PlatformHandleRaw : viewport->PlatformHandle;
+    NSWindow* window = (__bridge NSWindow*)handle;
+    scale = window.backingScaleFactor;
+    data->MetalLayer.contentsScale = scale;
+#endif
+    data->MetalLayer.drawableSize = MakeScaledSize(CGSizeMake(size.x, size.y), scale);
 }
 
 static void ImGui_ImplMetal_RenderWindow(ImGuiViewport* viewport, void*)
@@ -585,11 +592,8 @@ static void ImGui_ImplMetal_RenderWindow(ImGuiViewport* viewport, void*)
     data->FirstFrame = false;
 
     float fb_scale = (float)window.backingScaleFactor;
-    if (data->MetalLayer.contentsScale != fb_scale)
-    {
-        data->MetalLayer.contentsScale = fb_scale;
-        data->MetalLayer.drawableSize = MakeScaledSize(window.frame.size, fb_scale);
-    }
+    data->MetalLayer.contentsScale = fb_scale;
+    data->MetalLayer.drawableSize = MakeScaledSize(CGSizeMake(viewport->Size.x, viewport->Size.y), fb_scale);
 #endif
 
     id <CAMetalDrawable> drawable = [data->MetalLayer nextDrawable];
