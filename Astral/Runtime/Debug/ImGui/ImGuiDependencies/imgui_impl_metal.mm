@@ -266,7 +266,7 @@ static void ImGui_ImplMetal_SetupRenderState(ImDrawData* draw_data, id<MTL4Comma
     [commandEncoder setRenderPipelineState:renderPipelineState];
 
     [bd->SharedMetalContext.tArgumentTable setAddress:vertexBuffer.buffer.gpuAddress+(uint64_t)vertexBufferOffset atIndex:0];
-    
+
 }
 
 // Metal Render function.
@@ -274,7 +274,6 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer>
 {
     ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
     MetalContext* ctx = bd->SharedMetalContext;
-    [ctx.tCmdQueue4 addResidencySet:ctx.tResidencySet];
 
     // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
     int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
@@ -310,6 +309,7 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer>
     [bd->SharedMetalContext.tResidencySet addAllocation:vertexBuffer.buffer];
     [bd->SharedMetalContext.tResidencySet commit];
     [bd->SharedMetalContext.tResidencySet requestResidency];
+    [commandBuffer useResidencySet:ctx.tResidencySet];
 
     ImGui_ImplMetal_SetupRenderState(draw_data, commandBuffer, commandEncoder, renderPipelineState, vertexBuffer, 0);
 
