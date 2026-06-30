@@ -1,5 +1,5 @@
 /**
-* @file MetalRendererContext.cpp
+* @file MetalRendererContext.mm
 * @author Andrew Fagan
 * @date 3/23/26
 */
@@ -9,6 +9,7 @@
 #include "Core/Utilities/Asserts.h"
 #include "Resources/MetalDevice.h"
 #include "Resources/MetalCommandQueue.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 #define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3native.h>
@@ -122,15 +123,24 @@ namespace Astral {
 
     void MetalRenderingContext::AttachCALayerToWindow()
     {
+        UVec2 windowExtent = RendererAPI::GetContext().GetWindowFramebufferDimensions();
+
         MTL::Device* metalDevice = (MTL::Device*)m_Device->GetNativeHandle();
         NSWindow* nsWindow = glfwGetCocoaWindow(m_Window);
 
         CAMetalLayer* caMetalLayer = (__bridge CAMetalLayer*)m_CAMetalLayer;
         caMetalLayer.device = (__bridge id<MTLDevice>)metalDevice;
         caMetalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+        caMetalLayer.drawableSize = NSMakeSize(windowExtent.x , windowExtent.y);
+        caMetalLayer.opaque = YES;
+        caMetalLayer.framebufferOnly = YES;
+        caMetalLayer.contentsScale = nsWindow.backingScaleFactor;
 
         nsWindow.contentView.layer = caMetalLayer;
         nsWindow.contentView.wantsLayer = YES;
+
+        NSView* nsView = nsWindow.contentView;
+        nsView.layer = caMetalLayer;
     }
 
 
