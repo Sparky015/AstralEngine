@@ -78,6 +78,16 @@ static void                     ImGui_ImplMetal_DestroyBackendData(){ IM_DELETE(
 
 static inline CFTimeInterval    GetMachAbsoluteTimeInSeconds()      { return (CFTimeInterval)(double)(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) / 1e9); }
 
+static void ImGui_ImplMetal_EnsureResidency(id<MTLResidencySet> residencySet, id<MTLAllocation> allocation)
+{
+    if (![residencySet containsAllocation:allocation])
+    {
+        [residencySet addAllocation:allocation];
+        [residencySet commit];
+        [residencySet requestResidency];
+    }
+}
+
 
 
 
@@ -152,13 +162,12 @@ bool ImGui_ImplMetal_Init(id<MTLDevice> device)
     bd->SharedMetalContext = [[MetalContext alloc] init];
     bd->SharedMetalContext.device = device;
 
-    MTL4ArgumentTableDescriptor* ptArgumentTableDescriptor = [MTL4ArgumentTableDescriptor new];
-    ptArgumentTableDescriptor.maxBufferBindCount = 2;
-    ptArgumentTableDescriptor.maxTextureBindCount = 1;
+    MTL4ArgumentTableDescriptor* argumentTableDescriptor = [MTL4ArgumentTableDescriptor new];
+    argumentTableDescriptor.maxBufferBindCount = 2;
+    argumentTableDescriptor.maxTextureBindCount = 1;
 
-    // Create the argument table.
     NSError *error = nil;
-    bd->SharedMetalContext.tArgumentTable = [device newArgumentTableWithDescriptor:ptArgumentTableDescriptor error:&error];
+    bd->SharedMetalContext.tArgumentTable = [device newArgumentTableWithDescriptor:argumentTableDescriptor error:&error];
     bd->SharedMetalContext.tEvent = [device newSharedEvent];
 
     // Create all residency sets with the same default configuration.
@@ -266,7 +275,6 @@ static void ImGui_ImplMetal_SetupRenderState(ImDrawData* draw_data, id<MTL4Comma
     [commandEncoder setRenderPipelineState:renderPipelineState];
 
     [bd->SharedMetalContext.tArgumentTable setAddress:vertexBuffer.buffer.gpuAddress+(uint64_t)vertexBufferOffset atIndex:0];
-
 }
 
 // Metal Render function.
@@ -281,7 +289,7 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer>
     if (fb_width <= 0 || fb_height <= 0 || draw_data->CmdLists.Size == 0)
         return;
 
-    // Catch up with texture updates. Most of the times, the list will have 1 element with an OK status, aka nothing to do.
+    // Catch up with texture updates.
     // (This almost always points to ImGui::GetPlatformIO().Textures[] but is part of ImDrawData to allow overriding or disabling texture updates).
     if (draw_data->Textures != nullptr)
         for (ImTextureData* tex : *draw_data->Textures)
@@ -367,6 +375,7 @@ void ImGui_ImplMetal_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer>
                 if (ImTextureID tex_id = pcmd->GetTexID())
                 {
                     id<MTLTexture> tTexture = (__bridge id<MTLTexture>)(void*)(intptr_t)(tex_id);
+                    ImGui_ImplMetal_EnsureResidency(bd->SharedMetalContext.tResidencySet, tTexture);
                     [bd->SharedMetalContext.tArgumentTable setTexture:tTexture.gpuResourceID atIndex:0];
                 }
 
