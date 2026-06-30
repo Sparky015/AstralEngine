@@ -9,6 +9,7 @@
 #include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h"
 #include "Renderer/RHI/RendererAPI.h"
 #include "Resources/MetalCommandBuffer.h"
+#include "Resources/MetalShader.h"
 
 namespace Astral {
 
@@ -51,6 +52,9 @@ namespace Astral {
     {
         MTL::Library* shaderLibrary = (MTL::Library*)shaderHandle->GetNativeHandle();
         shaderLibrary->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
+
+        GraphicsRef<MetalShader> metalShader = std::static_pointer_cast<MetalShader>(shaderHandle);
+        metalShader->GetFunctionHandle()->setLabel(NS::String::string(name.data(), NS::UTF8StringEncoding));
     }
 
 
