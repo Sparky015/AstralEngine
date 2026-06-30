@@ -42,6 +42,7 @@ namespace Astral {
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
         residencySet->commit();
 
+        MTL::Drawable* drawable = (MTL::Drawable*)renderTargetHandle->GetNativeImage();
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
         MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
@@ -62,6 +63,7 @@ namespace Astral {
             m_ActiveCommandBufferTrackingCondition.notify_one();
         });
 
+        m_Queue->wait(drawable);
         m_Queue->commit(&commandBuffer, 1, commitOptions);
 
         std::lock_guard lock(m_ActiveCommandBufferTrackingLock);
