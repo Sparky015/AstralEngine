@@ -128,6 +128,8 @@ namespace Astral {
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
+            m_WindowManager->Update(); // TODO: Remove subsystem update and call each subsystems update function directly for more controlled update order
+
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();
