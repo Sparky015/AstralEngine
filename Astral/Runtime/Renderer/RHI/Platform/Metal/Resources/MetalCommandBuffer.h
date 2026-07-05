@@ -208,14 +208,15 @@ namespace Astral {
 
         MTL4::ComputeCommandEncoder* m_ComputeCommandEncoder;
         MTL4::RenderCommandEncoder* m_RenderCommandEncoder;
-        EncodingType m_ActiveEncodingType = EncodingType::NONE;
+        EncodingType m_ActiveEncodingType;
 
-        PipelineStateHandle m_BoundPipeline = nullptr;
-        IndexBufferHandle m_BoundIndexBuffer = nullptr;
-        VertexBufferHandle m_BoundVertexBuffer = nullptr;
+        PipelineStateHandle m_BoundPipeline;
+        IndexBufferHandle m_BoundIndexBuffer;
+        VertexBufferHandle m_BoundVertexBuffer;
+        std::vector<DescriptorSetHandle> m_BoundDescriptorSets;
 
         MTL4::ArgumentTable* m_ArgumentTable;
-        std::vector<BufferHandle> m_PushConstants = {};
+        std::vector<BufferHandle> m_PushConstants;
     };
 
 }

@@ -455,7 +455,7 @@ namespace Astral {
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
         CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
 
-
+        commandBuffer->Reset();
         commandBuffer->BeginRecording();
 
         if (frameContext.IsEnvironmentMapIBLCalculationNeeded)
@@ -618,8 +618,8 @@ namespace Astral {
 
             commandBuffer->PushConstants(&prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
 
-            uint32 groupSizeX = std::max(mipWidth / 32, 1u);
-            uint32 groupSizeY = std::max(mipHeight / 32, 1u);
+            uint32 groupSizeX = std::max(mipWidth / 8, 1u);
+            uint32 groupSizeY = std::max(mipHeight / 8, 1u);
             commandBuffer->Dispatch(groupSizeX, groupSizeY, 1);
         }
 
@@ -636,6 +636,14 @@ namespace Astral {
         TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
         ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
         {
+            commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+            AttachmentResource attachmentResource = {
+                .Resource = renderTarget->GetAsTexture(),
+                .MipLevel = FullSubresourceRange,
+                .ArrayLayer = FullSubresourceRange
+            };
+            commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
+
             PipelineBarrier pipelineBarrier = {};
             pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
@@ -681,16 +689,9 @@ namespace Astral {
 
 
         // ImGui Rendering
-        commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        AttachmentResource attachmentResource = {
-            .Resource = renderTarget->GetAsTexture(),
-            .MipLevel = FullSubresourceRange,
-            .ArrayLayer = FullSubresourceRange
-        };
-        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
+
         RendererAPI::CallImGuiDraws(commandBuffer);
-        commandBuffer->EndRenderPass();
-        commandBuffer->EndLabel();
+
 
 
         {
@@ -734,6 +735,9 @@ namespace Astral {
             pipelineBarrier.ImageMemoryBarriers.push_back(renderTargetImageMemoryBarrier);
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
+
+            commandBuffer->EndRenderPass();
+            commandBuffer->EndLabel();
         }
 
     }

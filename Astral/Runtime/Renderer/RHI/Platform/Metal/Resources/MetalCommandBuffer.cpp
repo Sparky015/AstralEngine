@@ -18,7 +18,20 @@
 namespace Astral {
 
     MetalCommandBuffer::MetalCommandBuffer(const MetalCommandBufferDesc& commandBufferDesc) :
-        m_Device(commandBufferDesc.Device)
+        m_Device(commandBufferDesc.Device),
+        m_CommandBuffer(nullptr),
+        m_CommandAllocator(nullptr),
+        m_ComputeCommandEncoder(nullptr),
+        m_RenderCommandEncoder(nullptr),
+        m_ActiveEncodingType(EncodingType::NONE),
+
+        m_BoundPipeline(nullptr),
+        m_BoundIndexBuffer(nullptr),
+        m_BoundVertexBuffer(nullptr),
+        m_BoundDescriptorSets({}),
+
+        m_ArgumentTable(nullptr),
+        m_PushConstants({})
     {
         AcquireCommandAllocator();
         CreateArgumentTable();
@@ -31,6 +44,8 @@ namespace Astral {
         ReleaseCommandBuffer();
         ReleaseArgumentTable();
         ReleaseCommandAllocator();
+
+        m_BoundDescriptorSets.clear();
     }
 
 
@@ -67,6 +82,9 @@ namespace Astral {
 
     void MetalCommandBuffer::BindPipeline(const PipelineStateHandle& pipeline)
     {
+        if (m_BoundPipeline && pipeline->GetNativeHandle() == m_BoundPipeline->GetNativeHandle()) { return; } // Prevent redundant pipeline bind call
+        if (m_BoundPipeline && pipeline->GetDescriptorSetLayout() != m_BoundPipeline->GetDescriptorSetLayout()) { m_BoundDescriptorSets.clear(); }
+
         if (m_ActiveEncodingType != EncodingType::COMPUTE && pipeline->GetPipelineType() == PipelineType::COMPUTE)
         {
             // Switch to compute encoder if a compute pipeline is bound
@@ -96,6 +114,9 @@ namespace Astral {
 
     void MetalCommandBuffer::BindDescriptorSet(const DescriptorSetHandle& descriptorSet, uint32 binding)
     {
+        if (m_BoundDescriptorSets.size() <= binding) { m_BoundDescriptorSets.resize(binding + 1); }
+        if (m_BoundDescriptorSets[binding] && m_BoundDescriptorSets[binding]->GetNativeHandle() == descriptorSet->GetNativeHandle()) { return; } // Prevent redundant descriptor set bind call
+
         MTL::Buffer* argumentBuffer = (MTL::Buffer*)descriptorSet->GetNativeHandle();
         MTL::GPUAddress argumentBufferAddress = argumentBuffer->gpuAddress();
         m_ArgumentTable->setAddress(argumentBufferAddress, binding);
@@ -103,6 +124,8 @@ namespace Astral {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
         residencySet->addAllocation(argumentBuffer);
+
+        m_BoundDescriptorSets[binding] = descriptorSet;
     }
 
 
@@ -143,6 +166,7 @@ namespace Astral {
         if (m_ActiveEncodingType == EncodingType::COMPUTE && m_ComputeCommandEncoder)
         {
             m_ComputeCommandEncoder->endEncoding();
+            m_ComputeCommandEncoder->release();
             m_ComputeCommandEncoder = nullptr;
         }
 
@@ -273,6 +297,7 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (EndRenderPass)!")
         m_RenderCommandEncoder->endEncoding();
+        m_RenderCommandEncoder->release();
 
         m_RenderCommandEncoder = nullptr;
         m_ActiveEncodingType = EncodingType::NONE;
@@ -335,6 +360,10 @@ namespace Astral {
     void MetalCommandBuffer::PushConstants(void* data, uint32 sizeInBytes)
     {
         BufferHandle pushConstantBuffer = RendererAPI::GetDevice().CreateUniformBuffer(data, sizeInBytes, GPUMemoryType::HOST_VISIBLE);
+        char pushConstantName[30] = "";
+        snprintf(pushConstantName, sizeof(pushConstantName), "Push_Constant_%zu", m_PushConstants.size());
+        RendererAPI::NameObject(pushConstantBuffer, pushConstantName);
+
         m_PushConstants.push_back(pushConstantBuffer);
         MTL::Buffer* mtlBuffer = (MTL::Buffer*)pushConstantBuffer->GetNativeHandle();
         m_ArgumentTable->setAddress(mtlBuffer->gpuAddress(), 30);
@@ -369,7 +398,7 @@ namespace Astral {
 
         MTL::Stages beforeStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.SourceStageMask);
         MTL::Stages afterStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.DestinationStageMask);
-        commandEncoder->barrierAfterEncoderStages(beforeStages, afterStages, MTL4::VisibilityOptionNone);
+        commandEncoder->barrierAfterStages(MTL::StageVertex, beforeStages, MTL4::VisibilityOptionNone);
     }
 
 
@@ -461,6 +490,8 @@ namespace Astral {
 
     void MetalCommandBuffer::ReleaseCommandAllocator()
     {
+        Reset();
+
         MetalRenderingContext& context = static_cast<MetalRenderingContext&>(RendererAPI::GetContext());
         context.ReleaseThreadCommandAllocator(m_CommandAllocator);
         m_CommandAllocator = nullptr;

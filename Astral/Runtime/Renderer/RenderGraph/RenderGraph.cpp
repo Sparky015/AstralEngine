@@ -100,56 +100,61 @@ namespace Astral {
             m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
             m_ExecutionContext.ViewportSize = m_OutputAttachmentDimensions;
 
-            TransitionAttachmentsToOptimalLayouts(commandBuffer, pass, swapchainImageIndex);
-            TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
-
 
             commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
             commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.AttachmentResources);
 
+            TransitionAttachmentsToOptimalLayouts(commandBuffer, pass, swapchainImageIndex);
+            TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
+
             pass.Execute(m_ExecutionContext, sharedFrameContext);
+
+            if (i == m_ExecutionOrder.size() - 1)
+            {
+                // Transition all attachment layouts to their initial starting layout
+                PipelineBarrier pipelineBarrier = {};
+                pipelineBarrier.SourceStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+                pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+                pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
+                for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
+                {
+                    PassIndex renderPassIndex = m_ExecutionOrder[i];
+                    const RenderGraphPass& pass = m_Passes[renderPassIndex];
+                    RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
+
+                    for (size_t j = 0; j < renderPassResource.AttachmentTextures.size(); j++)
+                    {
+                        TextureHandle attachmentTexture = renderPassResource.AttachmentTextures[j];
+
+                        if (attachmentTexture->GetLayout() == pass.GetAttachments()[j].InitialLayout) { continue; }
+
+                        ImageMemoryBarrier imageMemoryBarrier = {};
+                        imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                        imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                        imageMemoryBarrier.OldLayout = attachmentTexture->GetLayout();
+                        imageMemoryBarrier.NewLayout = pass.GetAttachments()[j].InitialLayout;
+                        imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+                        imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+                        imageMemoryBarrier.Image = attachmentTexture;
+                        imageMemoryBarrier.ImageSubresourceRange = {
+                            .AspectMask = attachmentTexture->GetImageAspect(),
+                            .BaseMipLevel = 0,
+                            .LevelCount = attachmentTexture->GetNumMipLevels(),
+                            .BaseArrayLayer = 0,
+                            .LayerCount = attachmentTexture->GetNumLayers()
+                        };
+
+                        pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+                    }
+                }
+                commandBuffer->SetPipelineBarrier(pipelineBarrier);
+            }
 
             commandBuffer->EndRenderPass();
             commandBuffer->EndLabel();
         }
 
-        // Transition all attachment layouts to their initial starting layout
-        PipelineBarrier pipelineBarrier = {};
-        pipelineBarrier.SourceStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_VERTEX_SHADER_BIT | PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
-        for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
-        {
-            PassIndex renderPassIndex = m_ExecutionOrder[i];
-            const RenderGraphPass& pass = m_Passes[renderPassIndex];
-            RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
 
-            for (size_t j = 0; j < renderPassResource.AttachmentTextures.size(); j++)
-            {
-                TextureHandle attachmentTexture = renderPassResource.AttachmentTextures[j];
-
-                if (attachmentTexture->GetLayout() == pass.GetAttachments()[j].InitialLayout) { continue; }
-
-                ImageMemoryBarrier imageMemoryBarrier = {};
-                imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT | ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT | ACCESS_FLAGS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                imageMemoryBarrier.OldLayout = attachmentTexture->GetLayout();
-                imageMemoryBarrier.NewLayout = pass.GetAttachments()[j].InitialLayout;
-                imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-                imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-                imageMemoryBarrier.Image = attachmentTexture;
-                imageMemoryBarrier.ImageSubresourceRange = {
-                    .AspectMask = attachmentTexture->GetImageAspect(),
-                    .BaseMipLevel = 0,
-                    .LevelCount = attachmentTexture->GetNumMipLevels(),
-                    .BaseArrayLayer = 0,
-                    .LayerCount = attachmentTexture->GetNumLayers()
-                };
-
-                pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
-            }
-        }
-        commandBuffer->SetPipelineBarrier(pipelineBarrier);
 
         commandBuffer->EndLabel();
 
