@@ -164,6 +164,7 @@ namespace Astral {
     std::string MetalShader::ConvertSPIRVToMSLSourceCode(const std::vector<uint32>& spirv)
     {
         spirv_cross::CompilerMSL compiler(spirv);
+        PopulateShaderReflectionInfo(compiler);
 
         spirv_cross::CompilerMSL::Options compilerOptions;
         compilerOptions.platform = spirv_cross::CompilerMSL::Options::macOS;
@@ -187,16 +188,72 @@ namespace Astral {
             case NONE: AE_ERROR("Invalid shader type!"); break;
             default: AE_ERROR("Invalid shader type!"); break;
         }
+
+
+        uint32 currentDescriptorSetBinding = 0;
+        uint32 physicalBindingInArgumentBuffer = 0;
+        // TODO: make physical binding algo handle edge cases better
+        for (ShaderResourceBindSlot resourceBinding : m_ShaderReflectionInfo.DeclaredResources)
+        {
+            spirv_cross::MSLResourceBinding spvResourceBinding{};
+            spvResourceBinding.stage = shaderStage;
+            spvResourceBinding.desc_set = resourceBinding.DescriptorSet;
+            spvResourceBinding.binding = resourceBinding.BindSlot;
+
+            if (resourceBinding.DescriptorSet != currentDescriptorSetBinding)
+            {
+                currentDescriptorSetBinding = resourceBinding.DescriptorSet;
+                physicalBindingInArgumentBuffer = 0;
+            }
+
+            switch (resourceBinding.ResourceType)
+            {
+                case ShaderResourceType::COMBINED_SAMPLED_IMAGE:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::SampledImage;
+                    spvResourceBinding.msl_texture = physicalBindingInArgumentBuffer;
+                    spvResourceBinding.msl_sampler = physicalBindingInArgumentBuffer + 1;
+                    physicalBindingInArgumentBuffer += 2;
+                    break;
+                case ShaderResourceType::SEPARATE_IMAGE:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::Image;
+                    spvResourceBinding.msl_texture = physicalBindingInArgumentBuffer;
+                    physicalBindingInArgumentBuffer += 1;
+                    break;
+                case ShaderResourceType::SEPARATE_SAMPLER:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::Sampler;
+                    spvResourceBinding.msl_sampler = physicalBindingInArgumentBuffer;
+                    physicalBindingInArgumentBuffer += 1;
+                    break;
+                case ShaderResourceType::STORAGE_IMAGE:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::Image;
+                    spvResourceBinding.msl_texture = physicalBindingInArgumentBuffer;
+                    physicalBindingInArgumentBuffer += 1;
+                    break;
+                case ShaderResourceType::STORAGE_BUFFER:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::Struct;
+                    spvResourceBinding.msl_buffer = physicalBindingInArgumentBuffer;
+                    physicalBindingInArgumentBuffer += 1;
+                    break;
+                case ShaderResourceType::UNIFORM_BUFFER:
+                    spvResourceBinding.basetype = spirv_cross::SPIRType::Struct;
+                    spvResourceBinding.msl_buffer = physicalBindingInArgumentBuffer;
+                    physicalBindingInArgumentBuffer += 1;
+                    break;
+            }
+
+            compiler.add_msl_resource_binding(spvResourceBinding);
+        }
+
         spirv_cross::MSLResourceBinding pushConstantResourceBinding{};
         pushConstantResourceBinding.stage = shaderStage;
         pushConstantResourceBinding.desc_set = spirv_cross::ResourceBindingPushConstantDescriptorSet;
         pushConstantResourceBinding.binding = spirv_cross::ResourceBindingPushConstantBinding;
         pushConstantResourceBinding.msl_buffer = 30;
+
         compiler.add_msl_resource_binding(pushConstantResourceBinding);
 
         std::string mslSourceCode = compiler.compile();
 
-        PopulateShaderReflectionInfo(compiler);
 
         return mslSourceCode;
     }
