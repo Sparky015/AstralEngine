@@ -166,7 +166,6 @@ namespace Astral {
         if (m_ActiveEncodingType == EncodingType::COMPUTE && m_ComputeCommandEncoder)
         {
             m_ComputeCommandEncoder->endEncoding();
-            m_ComputeCommandEncoder->release();
             m_ComputeCommandEncoder = nullptr;
         }
 
@@ -297,7 +296,6 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (EndRenderPass)!")
         m_RenderCommandEncoder->endEncoding();
-        m_RenderCommandEncoder->release();
 
         m_RenderCommandEncoder = nullptr;
         m_ActiveEncodingType = EncodingType::NONE;
