@@ -17,6 +17,16 @@
 
 namespace Astral {
 
+    MetalBuffer::MetalBuffer() :
+        m_Device(nullptr),
+        m_Buffer(nullptr),
+        m_BufferLength(0),
+        m_UsedMemorySize(0),
+        m_MemoryType(GPUMemoryType::HOST_VISIBLE)
+    {
+    }
+
+
     MetalBuffer::MetalBuffer(const MetalBufferDesc& metalBufferDesc) :
         m_Device(metalBufferDesc.Device),
         m_Buffer(nullptr),
