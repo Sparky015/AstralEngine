@@ -39,7 +39,7 @@ namespace Astral{
         PROFILE_SCOPE("WindowManager::Init")
         AE_TRACE("Initializing Window Manager!")
 
-        m_UpdateListener.StartListening();
+        // m_UpdateListener.StartListening(); // TODO: Remove all references to update publishing/listening
 
         m_Window.reset( Window::ConstructWindow());
         m_Window->Init();
