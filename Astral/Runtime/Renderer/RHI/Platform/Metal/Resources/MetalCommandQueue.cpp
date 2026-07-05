@@ -66,6 +66,8 @@ namespace Astral {
         m_Queue->wait(drawable);
         m_Queue->commit(&commandBuffer, 1, commitOptions);
 
+        commitOptions->release();
+
         std::lock_guard lock(m_ActiveCommandBufferTrackingLock);
         m_ActiveCommandBuffers.insert(commandBuffer);
     }
