@@ -348,7 +348,7 @@ namespace Astral {
 
     bool MetalDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
     {
-        return false;
+        return true; // TODO: Find which formats support blit
     }
 
 
