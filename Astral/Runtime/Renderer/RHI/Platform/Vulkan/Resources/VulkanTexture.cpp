@@ -599,7 +599,7 @@ namespace Astral {
     void VulkanTexture::UploadDataToTexture(uint8* data, uint32 dataLength, bool generateMipMaps)
     {
     	// Calculates only the base texture size
-    	uint32 imageSize = Texture::CalculateMipMapLevelSize(ConvertVkFormatToImageFormat(m_Format), m_ImageWidth,
+    	uint32 imageSize = Texture::CalculateRequiredTextureMemory(ConvertVkFormatToImageFormat(m_Format), m_ImageWidth,
     																		m_ImageHeight, m_ImageDepth, m_NumLayers);
 
 
@@ -841,7 +841,7 @@ namespace Astral {
 
         		// Calculate memory usage info for next mipmap to see the image buffer has data for the next mipmap
 
-        		uint32 mipmapLevelSize = Texture::CalculateMipMapLevelSize(ConvertVkFormatToImageFormat(m_Format), mipWidth,
+        		uint32 mipmapLevelSize = Texture::CalculateRequiredTextureMemory(ConvertVkFormatToImageFormat(m_Format), mipWidth,
 																			mipHeight, mipDepth, m_NumLayers);
         		usedBuffer += mipmapLevelSize;
         		if (usedBuffer >= stagingBuffer.GetAllocatedSize()) { break; }

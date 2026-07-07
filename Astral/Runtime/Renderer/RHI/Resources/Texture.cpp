@@ -27,7 +27,7 @@ namespace Astral {
     }
 
 
-    uint32 Texture::CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers)
+    uint32 Texture::CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers)
     {
         uint32 levelSize = 0;
         if (IsCompressed(imageFormat))
@@ -47,6 +47,23 @@ namespace Astral {
         }
 
         return levelSize;
+    }
+
+
+    uint32 Texture::CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers, uint32 numMipLevels)
+    {
+        uint32 totalAllocationSize = 0;
+        uint32 mipWidth = width;
+        uint32 mipHeight = height;
+
+        for (uint32 i = 0; i < numMipLevels; i++)
+        {
+            totalAllocationSize += CalculateRequiredTextureMemory(imageFormat, mipWidth, mipHeight, depth, numLayers);
+            mipWidth /= 2;
+            mipHeight /= 2;
+        }
+
+        return totalAllocationSize;
     }
 
 

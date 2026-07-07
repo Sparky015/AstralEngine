@@ -165,15 +165,27 @@ namespace Astral {
         static uint32 CalculateMipMapLevels(uint32 width, uint32 height);
 
         /**
-         * @brief  Calculates the size of a mip map level based on the given dimensions
+         * @brief  Calculates the memory requirements of a base texture
          * @param  imageFormat The format of the texture
          * @param  width The width of the base texture
          * @param  height The height of the base texture
          * @param  depth The height of the base texture
          * @param  numLayers The number of layers the texture has
-         * @return The size of a mip map level based on the given dimensions
+         * @return The required memory size to support the texture (without mip maps)
          */
-        static uint32 CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers);
+        static uint32 CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers);
+
+        /**
+         * @brief  Calculates the memory requirements of a texture
+         * @param  imageFormat The format of the texture
+         * @param  width The width of the base texture
+         * @param  height The height of the base texture
+         * @param  depth The height of the base texture
+         * @param  numLayers The number of layers the texture has
+         * @param numMipLevels The number of mip maps in the texture mip map chain
+         * @return The required memory size to support the texture
+         */
+        static uint32 CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers, uint32 numMipLevels);
 
         /**
          * @brief  Creates a texture from a file path
