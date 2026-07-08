@@ -107,6 +107,12 @@ namespace Astral {
         uint32 GetNumMipLevels() override { return m_NumMipLevels; }
 
         /**
+         * @brief  Gets the MSAA sample count of the texture
+         * @return The MSAA sample count of the texture
+         */
+        SampleCount GetMSAASampleCount() override;
+
+        /**
          * @brief  Gets the native image view of a specific layer in the texture
          * @return The native image view of a specific layer in the texture or nullptr if the layer num is not valid
          * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
@@ -251,6 +257,7 @@ namespace Astral {
         VkImageLayout m_CurrentLayout;
         ImageUsageFlags m_ImageUsageFlags;
         ImageAspectFlags m_ImageAspect;
+        SampleCount m_MSAASampleCount;
         bool m_IsSwapchainOwned;
 
         uint32 m_NumLayers;

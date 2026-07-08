@@ -154,6 +154,12 @@ namespace Astral {
     }
 
 
+    SampleCount MetalTexture::GetMSAASampleCount()
+    {
+        return m_MSAASampleCount;
+    }
+
+
     void* MetalTexture::GetNativeSampler()
     {
         return m_Sampler;

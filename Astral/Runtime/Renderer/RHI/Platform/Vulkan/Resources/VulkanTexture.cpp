@@ -22,18 +22,22 @@ namespace Astral {
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
 		m_DeviceManager(desc.VulkanDevice),
         m_Device(desc.Device),
-		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
+        m_Image(),
+        m_Sampler(),
+        m_ImageView(),
         m_ImageWidth(desc.ImageWidth),
         m_ImageHeight(desc.ImageHeight),
+        m_ImageDepth(1),
 		m_Format(ConvertImageFormatToVkFormat(desc.ImageFormat)),
-        m_Image(),
-        m_ImageView(),
 		m_ImageUsageFlags(desc.ImageUsageFlags),
-        m_Sampler(),
+        m_MSAASampleCount(desc.MSAASampleCount),
+		m_IsSwapchainOwned(false),
         m_NumLayers(desc.NumLayers),
 		m_NumMipLevels(desc.NumMipLevels),
 		m_TextureType(desc.TextureType),
-		m_IsSwapchainOwned(false)
+		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
+        m_ImageMemory(VK_NULL_HANDLE),
+        m_AllocationSize(0)
     {
         CreateTexture(desc);
     	AllocateTextureMemory();
@@ -110,6 +114,12 @@ namespace Astral {
     void VulkanTexture::UpdateLayout(ImageLayout imageLayout)
     {
     	m_CurrentLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+    }
+
+
+    SampleCount VulkanTexture::GetMSAASampleCount()
+    {
+        return m_MSAASampleCount;
     }
 
 

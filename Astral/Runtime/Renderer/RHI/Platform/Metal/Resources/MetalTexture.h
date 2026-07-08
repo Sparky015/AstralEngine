@@ -113,6 +113,12 @@ namespace Astral {
         uint32 GetNumMipLevels() override;
 
         /**
+         * @brief  Gets the MSAA sample count of the texture
+         * @return The MSAA sample count of the texture
+         */
+        SampleCount GetMSAASampleCount() override;
+
+        /**
          * @brief  Gets the image sampler of the texture
          * @return The image sampler of the texture
          * @note   The void pointer maps to the native sampler handle of the selected renderer api backend
