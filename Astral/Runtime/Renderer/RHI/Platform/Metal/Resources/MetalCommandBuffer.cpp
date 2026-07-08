@@ -116,13 +116,6 @@ namespace Astral {
         MTL::GPUAddress argumentBufferAddress = argumentBuffer->gpuAddress();
         m_ArgumentTable->setAddress(argumentBufferAddress, binding);
 
-        AE_LOG("Descriptor Set " << binding << ": " )
-
-        for (uint i = 0; i < (argumentBuffer->length() / sizeof(MTL::ResourceID)); i++)
-        {
-            AE_LOG("Binding " << i << ": " << ((size_t*)argumentBuffer->contents())[i])
-        }
-
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
         residencySet->addAllocation(argumentBuffer);
