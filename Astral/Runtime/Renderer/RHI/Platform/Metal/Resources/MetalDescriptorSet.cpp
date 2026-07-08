@@ -224,7 +224,7 @@ namespace Astral {
 
         m_Textures[textureIndex] = newTextureHandle;
 
-        MTL::Texture* texture = (MTL::Texture*)newTextureHandle->GetNativeImageView();
+        MTL::Texture* texture = (MTL::Texture*)newTextureHandle->GetNativeMipMapImageView(mipLevel);
         MTL::SamplerState* sampler = (MTL::SamplerState*)newTextureHandle->GetNativeSampler();
 
         MTL::ResourceID textureResourceID = texture->gpuResourceID();
@@ -260,7 +260,7 @@ namespace Astral {
         }
 
         m_Textures[textureIndex] = newTextureHandle;
-        MTL::Texture* texture = (MTL::Texture*)newTextureHandle->GetNativeImageView();
+        MTL::Texture* texture = (MTL::Texture*)newTextureHandle->GetNativeMipMapImageView(mipLevel);
         MTL::ResourceID textureResourceID = texture->gpuResourceID();
 
         // Set binding in argument buffer

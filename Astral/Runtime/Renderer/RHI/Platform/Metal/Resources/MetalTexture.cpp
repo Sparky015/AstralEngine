@@ -174,19 +174,81 @@ namespace Astral {
 
     void* MetalTexture::GetNativeLayerImageView(uint32 layer)
     {
-        return m_Texture;
+        ASSERT(layer < m_NumLayers, "Specified layer does not exist in the texture!")
+
+        if (m_LayerMipImageViews.contains({layer, -1})) { return m_LayerMipImageViews[{layer, -1}]; }
+
+        // Image view does not exist yet, so create it
+
+        uint32 layersRange = 1;
+        if (m_TextureType == TextureType::CUBEMAP) { layersRange *= 6; }
+
+        MTL::Texture* layerImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
+                                                                 ConvertTextureTypeToMTLTextureType(m_TextureType),
+                                                                 NS::Range(0, m_NumMipLevels),
+                                                                 NS::Range(layer, layersRange)
+                                                                );
+
+        m_LayerMipImageViews[{layer, -1}] = layerImageView;
+        return layerImageView;
     }
 
 
     void* MetalTexture::GetNativeMipMapImageView(uint32 mipLevel)
     {
-        return m_Texture;
+        ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
+
+		if (m_LayerMipImageViews.contains({-1, mipLevel})) { return m_LayerMipImageViews[{-1, mipLevel}]; }
+
+    	// Image view does not exist yet, so create it
+
+        uint32 layersCount = m_NumLayers;
+        if (m_TextureType == TextureType::CUBEMAP) { layersCount *= 6; }
+
+    	MTL::Texture* mipLevelImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
+    	                                                             ConvertTextureTypeToMTLTextureType(m_TextureType),
+    	                                                             NS::Range(mipLevel, 1),
+    	                                                             NS::Range(0, layersCount)
+    	                                                            );
+
+    	m_LayerMipImageViews[{-1, mipLevel}] = mipLevelImageView;
+        return mipLevelImageView;
     }
 
 
     void* MetalTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
     {
-        return m_Texture;
+        ASSERT(layer < m_NumLayers || layer == -1, "Specified layer does not exist in the texture!")
+        ASSERT(mipLevel < m_NumMipLevels || layer == -1, "Specified mip level does not exist in the texture!")
+
+        if (m_LayerMipImageViews.contains({layer, mipLevel})) { return m_LayerMipImageViews[{layer, mipLevel}]; }
+
+        if (layer == -1 && mipLevel == -1)
+        {
+            return m_Texture;
+        }
+        else if (layer == -1)
+        {
+            return GetNativeMipMapImageView(mipLevel);
+        }
+        else if (mipLevel == -1)
+        {
+            return GetNativeLayerImageView(layer);
+        }
+
+        // Image view does not exist yet, so create it
+
+        uint32 layersRange = 1;
+        if (m_TextureType == TextureType::CUBEMAP) { layersRange *= 6; }
+
+        MTL::Texture* layerMipLevelImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
+                                                                         ConvertTextureTypeToMTLTextureType(m_TextureType),
+                                                                         NS::Range(mipLevel, 1),
+                                                                         NS::Range(layer, layersRange)
+                                                                        );
+
+        m_LayerMipImageViews[{layer, mipLevel}] = layerMipLevelImageView;
+        return layerMipLevelImageView;
     }
 
 
@@ -349,6 +411,14 @@ namespace Astral {
         {
             m_Texture->release();
             m_Texture = nullptr;
+        }
+
+        for (auto [layerMipInputPair, imageView]: m_LayerMipImageViews)
+        {
+            if (imageView)
+            {
+                imageView->release();
+            }
         }
     }
 

@@ -221,6 +221,8 @@ namespace Astral {
         MTL::Device* m_Device;
         MTL::Texture* m_Texture;
         MTL::SamplerState* m_Sampler;
+        std::map<std::pair<uint32, uint32>, MTL::Texture*> m_LayerMipImageViews;
+
 
         uint32 m_Width;
         uint32 m_Height;
