@@ -194,7 +194,6 @@ namespace Astral {
     }
 
 
-
     void MetalGraphicsPipelineState::CreateDescriptorSetLayout(const MetalGraphicsPipelineStateDesc& graphicsPipelineStateDesc)
     {
         m_DescriptorSetLayout.reserve(graphicsPipelineStateDesc.DescriptorSets.size());
