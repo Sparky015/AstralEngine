@@ -221,6 +221,7 @@ namespace Astral {
                 colorAttachmentDescriptor->setResolveLevel(resolveMipLevel);
                 colorAttachmentDescriptor->setResolveSlice(resolveArraySlice);
                 colorAttachmentDescriptor->setResolveTexture(resolveImageView);
+                colorAttachmentDescriptor->setStoreAction(colorAttachmentDescription.StoreOp == AttachmentStoreOp::STORE ? MTL::StoreActionStoreAndMultisampleResolve : MTL::StoreActionMultisampleResolve);
             }
 
             colorAttachmentDescriptorArray->setObject(colorAttachmentDescriptor, i);
