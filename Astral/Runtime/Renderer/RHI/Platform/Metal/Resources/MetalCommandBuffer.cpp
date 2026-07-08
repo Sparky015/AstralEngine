@@ -171,7 +171,7 @@ namespace Astral {
 
         MTL4::RenderPassDescriptor* renderPassDescriptor = MTL4::RenderPassDescriptor::alloc()->init();
 
-        renderPassDescriptor->setDefaultRasterSampleCount(1);
+        renderPassDescriptor->setDefaultRasterSampleCount(ConvertSampleCountToIntSampleCount(attachmentResources[0].Resource->GetMSAASampleCount()));
         renderPassDescriptor->setRenderTargetWidth(extent.x);
         renderPassDescriptor->setRenderTargetHeight(extent.y);
         renderPassDescriptor->setRenderTargetArrayLength(layerCount);
