@@ -170,6 +170,7 @@ namespace Astral {
         compilerOptions.platform = spirv_cross::CompilerMSL::Options::macOS;
         compilerOptions.set_msl_version(3, 2);
         compilerOptions.argument_buffers = true;
+        compilerOptions.force_active_argument_buffer_resources = true;
         compiler.set_msl_options(compilerOptions);
 
 
