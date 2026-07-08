@@ -23,6 +23,7 @@ namespace Astral {
         m_CommandAllocator(nullptr),
         m_ComputeCommandEncoder(nullptr),
         m_RenderCommandEncoder(nullptr),
+        m_EncoderAutoreleasePool(nullptr),
         m_ActiveEncodingType(EncodingType::NONE),
 
         m_BoundPipeline(nullptr),
@@ -59,13 +60,11 @@ namespace Astral {
     {
         if (m_RenderCommandEncoder)
         {
-            m_RenderCommandEncoder->endEncoding();
-            m_RenderCommandEncoder = nullptr;
+            AE_ERROR("EndRenderPass was not called before ending command buffer recording!")
         }
         if (m_ComputeCommandEncoder)
         {
-            m_ComputeCommandEncoder->endEncoding();
-            m_ComputeCommandEncoder = nullptr;
+            EndComputeEncoder();
         }
         m_ActiveEncodingType = EncodingType::NONE;
 
@@ -88,11 +87,7 @@ namespace Astral {
         if (m_ActiveEncodingType != EncodingType::COMPUTE && pipeline->GetPipelineType() == PipelineType::COMPUTE)
         {
             // Switch to compute encoder if a compute pipeline is bound
-            m_ComputeCommandEncoder = m_CommandBuffer->computeCommandEncoder();
-            m_ActiveEncodingType = EncodingType::COMPUTE;
-            m_BoundPipeline = nullptr;
-            m_BoundIndexBuffer = nullptr;
-            m_BoundVertexBuffer = nullptr;
+            BeginComputeEncoder();
         }
 
         if (m_ActiveEncodingType == EncodingType::RENDER)
@@ -120,6 +115,13 @@ namespace Astral {
         MTL::Buffer* argumentBuffer = (MTL::Buffer*)descriptorSet->GetNativeHandle();
         MTL::GPUAddress argumentBufferAddress = argumentBuffer->gpuAddress();
         m_ArgumentTable->setAddress(argumentBufferAddress, binding);
+
+        AE_LOG("Descriptor Set " << binding << ": " )
+
+        for (uint i = 0; i < (argumentBuffer->length() / sizeof(MTL::ResourceID)); i++)
+        {
+            AE_LOG("Binding " << i << ": " << ((size_t*)argumentBuffer->contents())[i])
+        }
 
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
@@ -165,10 +167,10 @@ namespace Astral {
 
         if (m_ActiveEncodingType == EncodingType::COMPUTE && m_ComputeCommandEncoder)
         {
-            m_ComputeCommandEncoder->endEncoding();
-            m_ComputeCommandEncoder = nullptr;
+            EndComputeEncoder();
         }
 
+        m_EncoderAutoreleasePool = NS::AutoreleasePool::alloc()->init(); // Autorelease pool for render encoder
 
         ASSERT(attachmentResources.size() > 0, "No attachment resources were given to render pass!")
         UVec2 extent = attachmentResources[0].Resource->GetDimensions();
@@ -289,6 +291,13 @@ namespace Astral {
         m_BoundPipeline = nullptr;
         m_BoundIndexBuffer = nullptr;
         m_BoundVertexBuffer = nullptr;
+
+        MTL::DepthStencilDescriptor* depthStencilDescriptor = MTL::DepthStencilDescriptor::alloc()->init();
+        depthStencilDescriptor->setDepthCompareFunction(MTL::CompareFunctionLessEqual);
+        depthStencilDescriptor->setDepthWriteEnabled(true);
+        MTL::DepthStencilState* depthStencilState = m_Device->newDepthStencilState(depthStencilDescriptor);
+        m_RenderCommandEncoder->setDepthStencilState(depthStencilState);
+        depthStencilDescriptor->release();
     }
 
 
@@ -299,6 +308,9 @@ namespace Astral {
 
         m_RenderCommandEncoder = nullptr;
         m_ActiveEncodingType = EncodingType::NONE;
+
+        m_EncoderAutoreleasePool->drain();
+        m_EncoderAutoreleasePool = nullptr;
     }
 
 
@@ -351,7 +363,7 @@ namespace Astral {
 
         MTL::Size threadsPerGrid = MTL::Size(groupCountX, groupCountY, groupCountZ);
         MTL::Size threadsPerThreadgroup = MTL::Size(workgroupSize.x, workgroupSize.y, workgroupSize.z);
-        m_ComputeCommandEncoder->dispatchThreads(threadsPerGrid, threadsPerThreadgroup);
+        m_ComputeCommandEncoder->dispatchThreadgroups(threadsPerGrid, threadsPerThreadgroup);
     }
 
 
@@ -396,7 +408,7 @@ namespace Astral {
 
         MTL::Stages beforeStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.SourceStageMask);
         MTL::Stages afterStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.DestinationStageMask);
-        commandEncoder->barrierAfterStages(MTL::StageVertex, beforeStages, MTL4::VisibilityOptionNone);
+        commandEncoder->barrierAfterStages(afterStages, beforeStages, MTL4::VisibilityOptionNone);
     }
 
 
@@ -525,6 +537,28 @@ namespace Astral {
             m_ArgumentTable->release();
             m_ArgumentTable = nullptr;
         }
+    }
+
+
+    void MetalCommandBuffer::BeginComputeEncoder()
+    {
+        m_EncoderAutoreleasePool = NS::AutoreleasePool::alloc()->init();
+
+        m_ComputeCommandEncoder = m_CommandBuffer->computeCommandEncoder();
+        m_ActiveEncodingType = EncodingType::COMPUTE;
+        m_BoundPipeline = nullptr;
+        m_BoundIndexBuffer = nullptr;
+        m_BoundVertexBuffer = nullptr;
+    }
+
+
+    void MetalCommandBuffer::EndComputeEncoder()
+    {
+        m_ComputeCommandEncoder->endEncoding();
+        m_ComputeCommandEncoder = nullptr;
+
+        m_EncoderAutoreleasePool->drain();
+        m_EncoderAutoreleasePool = nullptr;
     }
 
 }

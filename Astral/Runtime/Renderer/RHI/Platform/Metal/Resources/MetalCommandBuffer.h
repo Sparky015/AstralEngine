@@ -23,6 +23,9 @@ namespace Astral {
         MTL::Device* Device;
     };
 
+    /**
+    * @brief Describes the type of Metal command encoder
+    */
     enum class EncodingType
     {
         NONE,
@@ -201,6 +204,16 @@ namespace Astral {
          */
         void ReleaseArgumentTable();
 
+        /**
+         * @brief Creates a compute encoder and starts a compute pass
+         */
+        void BeginComputeEncoder();
+
+        /**
+         * @brief Ends the current compute encoder and compute pass
+         */
+        void EndComputeEncoder();
+
 
         MTL::Device* m_Device;
         MTL4::CommandBuffer* m_CommandBuffer;
@@ -208,6 +221,7 @@ namespace Astral {
 
         MTL4::ComputeCommandEncoder* m_ComputeCommandEncoder;
         MTL4::RenderCommandEncoder* m_RenderCommandEncoder;
+        NS::AutoreleasePool* m_EncoderAutoreleasePool;
         EncodingType m_ActiveEncodingType;
 
         PipelineStateHandle m_BoundPipeline;

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Renderer/RHI/RendererContext.h"
+#include "Core/Events/EventListener.h"
 
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -170,9 +171,20 @@ namespace Astral {
          */
         void ReleaseAllCommandAllocatorPools();
 
+        /**
+         * @brief Creates a global residency set for all metal resources created by engine
+         */
         void CreateGlobalResidencySet();
 
+        /**
+         * @brief Frees the global residency set
+         */
         void ReleaseGlobalResidencySet();
+
+        /**
+         * @brief Drains the current frame autorelease pool and then creates a new autorelease pool for the next frame
+         */
+        void DrainFrameAutoreleasePool();
 
 
         struct CommandAllocatorPool
@@ -185,100 +197,20 @@ namespace Astral {
         GLFWwindow* m_Window;
         CA::MetalLayer* m_CAMetalLayer;
         GraphicsOwnedPtr<Device> m_Device;
-        GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
-
         CommandQueueHandle m_PrimaryCommandQueue;
+
+        GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
         MTL4::Compiler* m_Compiler;
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
-        MTL::ResidencySet* m_GlobalResidencySet;
 
         std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
         std::mutex m_CommandAllocatorsMutex;
 
+        MTL::ResidencySet* m_GlobalResidencySet;
+        NS::AutoreleasePool* m_FrameAutoreleasePool;
+        EventListener<NewFrameEvent> m_NewFrameListener;
+
         AttachmentFormats m_ImGuiRenderPassAttachmentFormats;
     };
 
-
-    inline void MetalRenderingContext::MarkNewImGuiFrame()
-    {
-        ImGui_ImplMetal_NewFrame(m_ImGuiRenderPassAttachmentFormats);
-    }
-
-
-    inline MTL::ResidencySet* MetalRenderingContext::GetGlobalResidencySet()
-    {
-        return m_GlobalResidencySet;
-    }
-
-
-    inline void MetalRenderingContext::CreateGlobalResidencySet()
-    {
-        MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
-        NS::Error* error = nullptr;
-        MTL::ResidencySetDescriptor* residencySetDescriptor = MTL::ResidencySetDescriptor::alloc()->init();
-        m_GlobalResidencySet = mtlDevice->newResidencySet(residencySetDescriptor, &error);
-        residencySetDescriptor->release();
-
-        if (m_GlobalResidencySet == nullptr && error)
-        {
-            AE_ERROR("Residency set failed to be created! Error: " << error->localizedDescription()->utf8String())
-            error->release();
-        }
-    }
-
-
-    inline void MetalRenderingContext::ReleaseGlobalResidencySet()
-    {
-        if (m_GlobalResidencySet)
-        {
-            m_GlobalResidencySet->release();
-            m_GlobalResidencySet = nullptr;
-        }
-    }
-
-
-    inline void MetalRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
-    {
-        MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
-        ImGui_ImplMetal_Init(device);
-
-
-
-        // ==== Populating ImGui render pass attachment formats struct ========================================================
-
-        m_ImGuiRenderPassAttachmentFormats = AttachmentFormats{};
-        m_ImGuiRenderPassAttachmentFormats.SampleCount = 1;
-
-        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
-
-        for (size_t i = 0; i < colorAttachmentReferences.size(); i++)
-        {
-            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
-            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
-            m_ImGuiRenderPassAttachmentFormats.ColorPixelFormat = ConvertImageFormatToMTLPixelFormat(colorAttachmentDescription.Format);
-            break;
-        }
-
-
-        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
-
-        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
-        {
-            // Depth stencil attachment exists
-            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
-
-            m_ImGuiRenderPassAttachmentFormats.DepthPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
-            if (IsStencilFormat(depthStencilAttachmentDescription.Format))
-            {
-                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
-            }
-            else
-            {
-                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = MTL::PixelFormatInvalid;
-            }
-        }
-
-    }
-
 }
-

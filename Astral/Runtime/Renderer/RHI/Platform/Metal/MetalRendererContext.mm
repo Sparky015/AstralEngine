@@ -18,9 +18,14 @@
 namespace Astral {
 
     MetalRenderingContext::MetalRenderingContext(GLFWwindow* window) :
-        m_Window(window)
+        m_Window(window),
+        m_NewFrameListener(
+        {
+            EventListener<NewFrameEvent>{[this](NewFrameEvent e){ this->DrainFrameAutoreleasePool(); }}
+        })
     {
-
+        m_FrameAutoreleasePool = NS::AutoreleasePool::alloc()->init();
+        m_NewFrameListener.StartListening();
     }
 
 
@@ -69,6 +74,54 @@ namespace Astral {
     void MetalRenderingContext::ClearNumValidationErrorsAndWarnings() {}
 
 
+    void MetalRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
+    {
+        MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+        ImGui_ImplMetal_Init(device);
+
+
+
+        // ==== Populating ImGui render pass attachment formats struct ========================================================
+
+        m_ImGuiRenderPassAttachmentFormats = AttachmentFormats{};
+        m_ImGuiRenderPassAttachmentFormats.SampleCount = 1;
+
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+
+        for (size_t i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            m_ImGuiRenderPassAttachmentFormats.ColorPixelFormat = ConvertImageFormatToMTLPixelFormat(colorAttachmentDescription.Format);
+            break;
+        }
+
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            // Depth stencil attachment exists
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+
+            m_ImGuiRenderPassAttachmentFormats.DepthPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
+            if (IsStencilFormat(depthStencilAttachmentDescription.Format))
+            {
+                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = ConvertImageFormatToMTLPixelFormat(depthStencilAttachmentDescription.Format);
+            }
+            else
+            {
+                m_ImGuiRenderPassAttachmentFormats.StencilPixelFormat = MTL::PixelFormatInvalid;
+            }
+        }
+
+    }
+
+
+    void MetalRenderingContext::MarkNewImGuiFrame()
+    {
+        ImGui_ImplMetal_NewFrame(m_ImGuiRenderPassAttachmentFormats);
+    }
 
 
     void MetalRenderingContext::ShutdownImGuiForAPIBackend()
@@ -213,30 +266,6 @@ namespace Astral {
     }
 
 
-    void MetalRenderingContext::ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator)
-    {
-        std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
-
-        std::thread::id executingThreadID = std::this_thread::get_id();
-        if (!m_CommandAllocators.contains(executingThreadID))
-        {
-            AE_WARN("[MetalRenderingContext] Given command allocator is not from this thread's command allocator pool!")
-            return;
-        }
-
-        CommandAllocatorPool& allocatorPool = m_CommandAllocators.at(executingThreadID);
-
-        if (allocatorPool.UsedCommandAllocators.contains(commandAllocator))
-        {
-            allocatorPool.UsedCommandAllocators.erase(commandAllocator);
-            allocatorPool.AvailableCommandAllocators.insert(commandAllocator);
-        }
-        else
-        {
-            AE_WARN("[MetalRenderingContext] Given command allocator was not acquired from this thread's command allocator pool!")
-        }
-    }
-
     MTL4::CommandAllocator* MetalRenderingContext::AcquireThreadCommandAllocator()
     {
         std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
@@ -274,6 +303,37 @@ namespace Astral {
     }
 
 
+    void MetalRenderingContext::ReleaseThreadCommandAllocator(MTL4::CommandAllocator* commandAllocator)
+    {
+        std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
+
+        std::thread::id executingThreadID = std::this_thread::get_id();
+        if (!m_CommandAllocators.contains(executingThreadID))
+        {
+            AE_WARN("[MetalRenderingContext] Given command allocator is not from this thread's command allocator pool!")
+            return;
+        }
+
+        CommandAllocatorPool& allocatorPool = m_CommandAllocators.at(executingThreadID);
+
+        if (allocatorPool.UsedCommandAllocators.contains(commandAllocator))
+        {
+            allocatorPool.UsedCommandAllocators.erase(commandAllocator);
+            allocatorPool.AvailableCommandAllocators.insert(commandAllocator);
+        }
+        else
+        {
+            AE_WARN("[MetalRenderingContext] Given command allocator was not acquired from this thread's command allocator pool!")
+        }
+    }
+
+
+    MTL::ResidencySet* MetalRenderingContext::GetGlobalResidencySet()
+    {
+        return m_GlobalResidencySet;
+    }
+
+
     void MetalRenderingContext::ReleaseAllCommandAllocatorPools()
     {
         for (auto& [threadID, commandAllocatorPool] : m_CommandAllocators)
@@ -287,6 +347,44 @@ namespace Astral {
                 commandAllocator->release();
             }
         }
+    }
+
+
+    inline void MetalRenderingContext::CreateGlobalResidencySet()
+    {
+        MTL::Device* mtlDevice = (MTL::Device*)m_Device->GetNativeHandle();
+        NS::Error* error = nullptr;
+        MTL::ResidencySetDescriptor* residencySetDescriptor = MTL::ResidencySetDescriptor::alloc()->init();
+        m_GlobalResidencySet = mtlDevice->newResidencySet(residencySetDescriptor, &error);
+        residencySetDescriptor->release();
+
+        if (m_GlobalResidencySet == nullptr && error)
+        {
+            AE_ERROR("Residency set failed to be created! Error: " << error->localizedDescription()->utf8String())
+            error->release();
+        }
+    }
+
+
+    inline void MetalRenderingContext::ReleaseGlobalResidencySet()
+    {
+        if (m_GlobalResidencySet)
+        {
+            m_GlobalResidencySet->release();
+            m_GlobalResidencySet = nullptr;
+        }
+    }
+
+
+    void MetalRenderingContext::DrainFrameAutoreleasePool()
+    {
+        if (m_FrameAutoreleasePool)
+        {
+            m_FrameAutoreleasePool->drain();
+            m_FrameAutoreleasePool = nullptr;
+        }
+
+        m_FrameAutoreleasePool = NS::AutoreleasePool::alloc()->init();
     }
 
 }
