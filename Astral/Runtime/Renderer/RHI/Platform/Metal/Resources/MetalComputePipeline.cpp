@@ -8,6 +8,8 @@
 
 #include "MetalShader.h"
 #include "Metal/MTLComputePipeline.hpp"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 namespace Astral {
 
@@ -72,13 +74,22 @@ namespace Astral {
 
     void MetalComputePipelineState::CreatePipelineState(const MetalComputePipelineStateDesc& computePipelineStateDesc)
     {
-        NS::Error* error = nullptr;
-        GraphicsRef<MetalShader> metalCommandBuffer = std::static_pointer_cast<MetalShader>(computePipelineStateDesc.ComputeShader);
-        MTL::Function* function = metalCommandBuffer->GetFunctionHandle();;
-        MTL::ComputePipelineDescriptor* pipelineDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
-        pipelineDescriptor->setComputeFunction(function);
+        MTL4::LibraryFunctionDescriptor* computeFunctionDescriptor = MTL4::LibraryFunctionDescriptor::alloc()->init();
+        GraphicsRef<MetalShader> metalComputeShader = std::static_pointer_cast<MetalShader>(computePipelineStateDesc.ComputeShader);
+        MTL::Library* computeLibrary = (MTL::Library*)metalComputeShader->GetNativeHandle();
+        computeFunctionDescriptor->setLibrary(computeLibrary);
+        computeFunctionDescriptor->setName(NS::String::string("main0", NS::UTF8StringEncoding));
 
-        m_Pipeline = m_Device->newComputePipelineState(pipelineDescriptor, MTL::PipelineOptionNone, nullptr, &error);
+        MTL4::ComputePipelineDescriptor* pipelineDescriptor = MTL4::ComputePipelineDescriptor::alloc()->init();
+        pipelineDescriptor->setComputeFunctionDescriptor(computeFunctionDescriptor);
+        computeFunctionDescriptor->release();
+
+        MetalRenderingContext& renderingContext = static_cast<MetalRenderingContext&>(RendererAPI::GetContext());
+        MTL4::Compiler* compiler = renderingContext.GetCompiler();
+        MTL4::CompilerTaskOptions* options = MTL4::CompilerTaskOptions::alloc()->init();
+        NS::Error* error = nullptr;
+
+        m_Pipeline = compiler->newComputePipelineState(pipelineDescriptor, options, &error);
 
         pipelineDescriptor->release();
 
