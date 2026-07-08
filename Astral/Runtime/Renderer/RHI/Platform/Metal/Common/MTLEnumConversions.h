@@ -26,7 +26,7 @@ namespace Astral {
 
     MTL::PixelFormat ConvertImageFormatToMTLPixelFormat(ImageFormat imageFormat);
     MTL::TextureUsage ConvertImageUsageToMTLTextureUsage(ImageUsageFlags imageUsageFlags);
-    MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType);
+    MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType, SampleCount textureMSAASampleCount = SampleCount::SAMPLE_1_BIT);
     ImageFormat ConvertMTLPixelFormatToImageFormat(MTL::PixelFormat pixelFormat);
     MTL::VertexFormat ConvertShaderDataTypeToMTLVertexFormat(ShaderDataType shaderDataType);
     MTL::LoadAction ConvertAttachmentLoadOpToMTLLoadAction(AttachmentLoadOp attachmentLoadOp);

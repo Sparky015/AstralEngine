@@ -341,18 +341,33 @@ namespace Astral {
     }
 
 
-    MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType)
+    MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType, SampleCount textureMSAASampleCount)
     {
-        switch (textureType)
+        if (textureMSAASampleCount == SampleCount::SAMPLE_1_BIT)
         {
-            case TextureType::IMAGE_1D:         return MTL::TextureType1D;
-            case TextureType::IMAGE_2D:         return MTL::TextureType2D;
-            case TextureType::IMAGE_3D:         return MTL::TextureType3D;
-            case TextureType::CUBEMAP:          return MTL::TextureTypeCube;
-            case TextureType::IMAGE_2D_ARRAY:   return MTL::TextureType2DArray;
-            default: AE_ERROR("Unsupported texture type given!")
+            switch (textureType)
+            {
+                case TextureType::IMAGE_1D:         return MTL::TextureType1D;
+                case TextureType::IMAGE_2D:         return MTL::TextureType2D;
+                case TextureType::IMAGE_3D:         return MTL::TextureType3D;
+                case TextureType::CUBEMAP:          return MTL::TextureTypeCube;
+                case TextureType::IMAGE_2D_ARRAY:   return MTL::TextureType2DArray;
+                default: AE_ERROR("Unsupported texture type given!")
+            }
         }
-
+        else
+        {
+            // MSAA sample count is greater than 1 sample
+            switch (textureType)
+            {
+                case TextureType::IMAGE_1D:         AE_ERROR("Unsupported texture type given!");
+                case TextureType::IMAGE_2D:         return MTL::TextureType2DMultisample;
+                case TextureType::IMAGE_3D:         AE_ERROR("Unsupported texture type given!")
+                case TextureType::CUBEMAP:          AE_ERROR("Unsupported texture type given!")
+                case TextureType::IMAGE_2D_ARRAY:   return MTL::TextureType2DMultisampleArray;
+                default: AE_ERROR("Unsupported texture type given!")
+            }
+        }
     }
 
 

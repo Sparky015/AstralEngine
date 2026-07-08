@@ -184,7 +184,7 @@ namespace Astral {
         if (m_TextureType == TextureType::CUBEMAP) { layersRange *= 6; }
 
         MTL::Texture* layerImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
-                                                                 ConvertTextureTypeToMTLTextureType(m_TextureType),
+                                                                 ConvertTextureTypeToMTLTextureType(m_TextureType, m_MSAASampleCount),
                                                                  NS::Range(0, m_NumMipLevels),
                                                                  NS::Range(layer, layersRange)
                                                                 );
@@ -206,7 +206,7 @@ namespace Astral {
         if (m_TextureType == TextureType::CUBEMAP) { layersCount *= 6; }
 
     	MTL::Texture* mipLevelImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
-    	                                                             ConvertTextureTypeToMTLTextureType(m_TextureType),
+    	                                                             ConvertTextureTypeToMTLTextureType(m_TextureType, m_MSAASampleCount),
     	                                                             NS::Range(mipLevel, 1),
     	                                                             NS::Range(0, layersCount)
     	                                                            );
@@ -242,7 +242,7 @@ namespace Astral {
         if (m_TextureType == TextureType::CUBEMAP) { layersRange *= 6; }
 
         MTL::Texture* layerMipLevelImageView = m_Texture->newTextureView(ConvertImageFormatToMTLPixelFormat(m_ImageFormat),
-                                                                         ConvertTextureTypeToMTLTextureType(m_TextureType),
+                                                                         ConvertTextureTypeToMTLTextureType(m_TextureType, m_MSAASampleCount),
                                                                          NS::Range(mipLevel, 1),
                                                                          NS::Range(layer, layersRange)
                                                                         );
@@ -362,7 +362,7 @@ namespace Astral {
         textureDescriptor->setDepth(m_Depth);
         textureDescriptor->setArrayLength(m_NumLayers);
         textureDescriptor->setMipmapLevelCount(m_NumMipLevels);
-        textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(m_TextureType));
+        textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(m_TextureType, m_MSAASampleCount));
         textureDescriptor->setSampleCount(ConvertSampleCountToIntSampleCount(m_MSAASampleCount));
 
 
