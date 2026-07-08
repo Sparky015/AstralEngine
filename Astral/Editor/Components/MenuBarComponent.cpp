@@ -158,6 +158,27 @@ namespace Astral {
                 }
             }
 
+            if (ImGui::MenuItem("Set Project Asset Directory"))
+            {
+                nfdu8char_t* outPath;
+
+                nfdresult_t result = NFD_PickFolderU8(&outPath, nullptr);
+
+                if (result == NFD_OKAY)
+                {
+                    registry.SetAssetDirectoryPath(outPath);
+                    NFD_FreePathU8(outPath);
+                }
+                else if (result == NFD_CANCEL)
+                {
+                    AE_LOG("Pick Folder Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    AE_WARN("NFD Error: " << NFD_GetError())
+                }
+            }
+
             ImGui::EndMenu();
         }
 
