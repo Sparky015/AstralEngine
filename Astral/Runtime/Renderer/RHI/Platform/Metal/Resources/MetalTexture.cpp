@@ -22,6 +22,7 @@ namespace Astral {
         m_Device(desc.Device),
         m_Width(desc.ImageWidth),
         m_Height(desc.ImageHeight),
+        m_Depth(0),
         m_ImageFormat(desc.ImageFormat),
         m_ImageUsageFlags(desc.ImageUsageFlags),
         m_NumLayers(desc.NumLayers),
@@ -35,6 +36,21 @@ namespace Astral {
         m_IsSwapchainOwned(false)
     {
         ASSERT(desc.Device, "The device passed to MetalTexture::MetalTexture cannot be nullptr!");
+
+
+        if (m_TextureType == TextureType::IMAGE_3D)
+        {
+            m_Depth = m_Width;
+        }
+        else if (m_TextureType == TextureType::IMAGE_1D)
+        {
+            m_Height = 1;
+            m_Depth = 1;
+        }
+        else
+        {
+            m_Depth = 1;
+        }
 
         CreateTexture(desc);
         CreateSampler(desc.SamplerFilter, desc.SamplerAddressMode, desc.EnableAnisotropy);
@@ -56,6 +72,7 @@ namespace Astral {
         m_Sampler(nullptr),
         m_Width(m_Texture->width()),
         m_Height(m_Texture->height()),
+        m_Depth(1),
         m_ImageFormat(ConvertMTLPixelFormatToImageFormat(m_Texture->pixelFormat())),
         m_ImageUsageFlags(IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
         m_NumLayers(1),
@@ -276,15 +293,15 @@ namespace Astral {
         
         textureDescriptor->setResourceOptions(resourceOptions);
 
-        textureDescriptor->setPixelFormat(ConvertImageFormatToMTLPixelFormat(desc.ImageFormat));
-        textureDescriptor->setUsage(ConvertImageUsageToMTLTextureUsage(desc.ImageUsageFlags));
-        textureDescriptor->setWidth(desc.ImageWidth);
-        textureDescriptor->setHeight(desc.ImageHeight);
-        textureDescriptor->setDepth(1);
-        textureDescriptor->setArrayLength(desc.NumLayers);
-        textureDescriptor->setMipmapLevelCount(desc.NumMipLevels);
-        textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(desc.TextureType));
-        textureDescriptor->setSampleCount(ConvertSampleCountToIntSampleCount(desc.MSAASampleCount));
+        textureDescriptor->setPixelFormat(ConvertImageFormatToMTLPixelFormat(m_ImageFormat));
+        textureDescriptor->setUsage(ConvertImageUsageToMTLTextureUsage(m_ImageUsageFlags));
+        textureDescriptor->setWidth(m_Width);
+        textureDescriptor->setHeight(m_Height);
+        textureDescriptor->setDepth(m_Depth);
+        textureDescriptor->setArrayLength(m_NumLayers);
+        textureDescriptor->setMipmapLevelCount(m_NumMipLevels);
+        textureDescriptor->setTextureType(ConvertTextureTypeToMTLTextureType(m_TextureType));
+        textureDescriptor->setSampleCount(ConvertSampleCountToIntSampleCount(m_MSAASampleCount));
 
 
         // Validate against edge cases and clamp inputs
@@ -341,6 +358,7 @@ namespace Astral {
         MTL::SamplerDescriptor* samplerDescriptor = MTL::SamplerDescriptor::alloc()->init();
         ASSERT(samplerDescriptor, "MTL::SamplerDescriptor failed to be allocated by Metal!")
 
+        samplerDescriptor->setSupportArgumentBuffers(true);
         samplerDescriptor->setMinFilter(ConvertSamplerFilterToMTLMinMagFilter(samplerFilter));
         samplerDescriptor->setMagFilter(ConvertSamplerFilterToMTLMinMagFilter(samplerFilter));
         samplerDescriptor->setMipFilter(MTL::SamplerMipFilterLinear);
@@ -373,8 +391,14 @@ namespace Astral {
 
     void MetalTexture::InitializeTextureData(const MetalTextureDesc& desc)
     {
-        uint32 imageSize = Texture::CalculateMipMapLevelSize(desc.ImageFormat, desc.ImageWidth,
-                                                                            desc.ImageHeight, 1, desc.NumLayers);
+        uint32 imageSize = Texture::CalculateRequiredTextureMemory(m_ImageFormat, m_Width, m_Height, m_Depth, m_NumLayers, m_NumMipLevels);
+
+        if (m_TextureType == TextureType::CUBEMAP)
+        {
+            imageSize *= 6;
+        }
+
+        imageSize = std::min(imageSize, desc.ImageDataLength);
 
         if (m_MemoryType == GPUMemoryType::HOST_VISIBLE)
         {
@@ -390,10 +414,23 @@ namespace Astral {
             commandBufferHandle->BeginRecording();
             MTL4::ComputeCommandEncoder* blitEncoder = commandBuffer->computeCommandEncoder();
 
+
+            MetalBuffer stagingBuffer = {}; // Initialize buffer here, so it won't be deallocated before command buffer submission
             if (m_MemoryType == GPUMemoryType::DEVICE_LOCAL)
             {
-                UploadToPrivateTextureMemory(blitEncoder, desc.ImageData, imageSize);
+                // Upload to private texture
+
+                MetalBufferDesc bufferDesc = {
+                    .Device = m_Device,
+                    .Size = imageSize,
+                    .MemoryType = GPUMemoryType::HOST_VISIBLE,
+                };
+
+                stagingBuffer = MetalBuffer{bufferDesc};
+                stagingBuffer.CopyDataToBuffer(desc.ImageData, imageSize);
+                CopyFromStagingBuffer(blitEncoder, stagingBuffer, imageSize);
             }
+
 
             if (desc.GenerateMipMaps)
             {
@@ -427,8 +464,56 @@ namespace Astral {
 
     void MetalTexture::CopyToSharedTextureMemory(void* data, uint32 length)
     {
-        void* textureMemory = m_Texture->buffer()->contents();
-        memcpy(textureMemory, data, length);
+        uint32 usedData = 0;
+
+        uint32 mipWidth = m_Width;
+        uint32 mipHeight = m_Height;
+
+        for (uint32 mipLevel = 0; mipLevel < m_NumMipLevels; mipLevel++)
+        {
+            for (uint32 layer = 0; layer < m_NumLayers; layer++)
+            {
+                MTL::Region region{};
+                if (m_TextureType == TextureType::IMAGE_1D)
+                {
+                   region = MTL::Region::Make1D(0, mipWidth);
+                }
+                else if (m_TextureType == TextureType::IMAGE_2D)
+                {
+                   region = MTL::Region::Make2D(0, 0, mipWidth, mipHeight);
+                }
+                else if (m_TextureType == TextureType::IMAGE_3D)
+                {
+                    region = MTL::Region::Make3D(0, 0, 0, mipWidth, mipHeight, mipWidth);
+                }
+                else
+                {
+                    region = MTL::Region::Make2D(0, 0, mipWidth, mipHeight);
+                }
+
+                uint32 bytesPerRow = GetBytesPerTexel(m_ImageFormat) * mipWidth;
+                uint32 bytesPerImage = bytesPerRow * mipHeight;
+
+                if (m_TextureType == TextureType::CUBEMAP)
+                {
+                    for (uint32 face = 0; face < 6; face++)
+                    {
+                        if (length < usedData + bytesPerImage) { return; }
+                        m_Texture->replaceRegion(region, mipLevel, face, (uint8*)data + usedData, bytesPerRow, bytesPerImage);
+                        usedData += bytesPerImage;
+                    }
+                }
+                else
+                {
+                    if (length < usedData + bytesPerImage) { return; }
+                    m_Texture->replaceRegion(region, mipLevel, layer, (uint8*)data + usedData, bytesPerRow, bytesPerImage);
+                    usedData += bytesPerImage;
+                }
+            }
+
+            mipWidth /= 2;
+            mipHeight /= 2;
+        }
     }
 
 
@@ -436,12 +521,45 @@ namespace Astral {
     {
         ASSERT(length <= stagingBuffer.GetAllocatedSize(), "Data does not fit in buffer!")
         MTL::Buffer* metalStagingBuffer = (MTL::Buffer*)stagingBuffer.GetNativeHandle();
-        AE_LOG("Staging Buffer Length: " << metalStagingBuffer->length())
-        AE_LOG("Texture Buffer Length: " << m_Texture->buffer()->length())
-        uint32 sourceBytesPerRow = metalStagingBuffer->length() / m_Height;
-        uint32 sourceBytesPerImage = sourceBytesPerRow * m_Height;
-        MTL::Size imageDimensions = MTL::Size(m_Width, m_Height, 1);
-        blitEncoder->copyFromBuffer(metalStagingBuffer, 0, sourceBytesPerRow, sourceBytesPerImage, imageDimensions, m_Texture, 0, 0, MTL::Origin(0,0,0));
+
+        uint32 usedData = 0;
+        uint32 mipWidth = m_Width;
+        uint32 mipHeight = m_Height;
+
+        for (uint32 mipLevel = 0; mipLevel < m_NumMipLevels; mipLevel++)
+        {
+            MTL::Size imageDimensions = MTL::Size(mipWidth, mipHeight, 1);
+            if (m_TextureType == TextureType::IMAGE_3D)
+            {
+                imageDimensions.depth = mipWidth;
+            }
+
+            for (uint32 layer = 0; layer < m_NumLayers; layer++)
+            {
+                uint32 bytesPerRow = GetBytesPerTexel(m_ImageFormat) * mipWidth;
+                uint32 bytesPerImage = bytesPerRow * mipHeight;
+                uint32 bytePerMipLevel = bytesPerRow * mipHeight * imageDimensions.depth;
+
+                if (m_TextureType == TextureType::CUBEMAP)
+                {
+                    for (uint32 face = 0; face < 6; face++)
+                    {
+                        if (length < usedData + bytePerMipLevel) { return; }
+                        blitEncoder->copyFromBuffer(metalStagingBuffer, usedData, bytesPerRow, bytesPerImage, imageDimensions, m_Texture, face, mipLevel, MTL::Origin(0,0,0));
+                        usedData += bytesPerImage;
+                    }
+                }
+                else
+                {
+                    if (length < usedData + bytePerMipLevel) { return; }
+                    blitEncoder->copyFromBuffer(metalStagingBuffer, usedData, bytesPerRow, bytesPerImage, imageDimensions, m_Texture, layer, mipLevel, MTL::Origin(0,0,0));
+                    usedData += bytesPerImage;
+                }
+            }
+
+            mipWidth /= 2;
+            mipHeight /= 2;
+        }
     }
 
 

@@ -224,6 +224,7 @@ namespace Astral {
 
         uint32 m_Width;
         uint32 m_Height;
+        uint32 m_Depth;
         ImageFormat m_ImageFormat;
         ImageUsageFlags m_ImageUsageFlags;
         uint32 m_NumLayers;
