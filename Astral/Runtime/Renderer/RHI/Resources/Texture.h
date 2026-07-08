@@ -209,13 +209,13 @@ namespace Astral {
          * @brief  Creates a lut from the given data
          * @return The lut texture handle
          */
-        static GraphicsRef<Texture> Create3DTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
+        static GraphicsRef<Texture> Create3DTexture(void* data, uint32 dataLength, uint32 width, uint32 height, ImageFormat imageFormat);
 
         /**
          * @brief  Creates a lut from the given data
          * @return The lut texture handle
          */
-        static GraphicsRef<Texture> Create1DTexture(void* data, uint32 length, ImageFormat imageFormat);
+        static GraphicsRef<Texture> Create1DTexture(void* data, uint32 dataLength, uint32 pixelWidth, ImageFormat imageFormat);
 
         /**
          * @brief  Creates a texture from the image data

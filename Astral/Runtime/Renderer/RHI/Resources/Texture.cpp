@@ -174,7 +174,7 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::Create3DTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::Create3DTexture(void* data, uint32 dataLength, uint32 width, uint32 height, ImageFormat imageFormat)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
@@ -182,6 +182,7 @@ namespace Astral {
             .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .ImageDataLength = dataLength,
             .SamplerFilter = SamplerFilter::LINEAR,
             .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
             .EnableAnisotropy = false,
@@ -199,14 +200,15 @@ namespace Astral {
     }
 
 
-    GraphicsRef<Texture> Texture::Create1DTexture(void* data, uint32 length, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::Create1DTexture(void* data, uint32 dataLength, uint32 pixelWidth, ImageFormat imageFormat)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
             .UsageFlags = IMAGE_USAGE_SAMPLED_BIT,
-            .Dimensions = UVec2(length, length), // depth is inferred from the width and height since all three should be the same
+            .Dimensions = UVec2(pixelWidth, pixelWidth), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .ImageDataLength = dataLength,
             .SamplerFilter = SamplerFilter::LINEAR,
             .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
             .EnableAnisotropy = false,
