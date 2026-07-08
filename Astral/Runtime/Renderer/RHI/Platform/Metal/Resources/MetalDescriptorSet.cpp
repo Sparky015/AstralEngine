@@ -20,7 +20,8 @@ namespace Astral {
         m_DescriptorSetLayout(),
         m_NumLogicalBindings(0),
         m_Buffers(),
-        m_Textures()
+        m_Textures(),
+        m_NumPhysicalBindings(0)
     {
 
     }
@@ -125,7 +126,7 @@ namespace Astral {
 
         // Set binding in argument buffer
         uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
-        size_t* bufferPointer;
+        MTL::GPUAddress* bufferPointer;
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
         bufferPointer[physicalBinding] = bufferGPUAddress;
         m_ArgumentBuffer->UnmapPointer();
@@ -158,7 +159,7 @@ namespace Astral {
 
         // Set binding in argument buffer
         uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
-        size_t* bufferPointer;
+        MTL::GPUAddress* bufferPointer;
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
         bufferPointer[physicalBinding] = bufferGPUAddress;
         m_ArgumentBuffer->UnmapPointer();
@@ -194,10 +195,10 @@ namespace Astral {
 
         // Set binding in argument buffer
         uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
-        size_t* bufferPointer;
+        MTL::ResourceID* bufferPointer;
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
-        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
-        bufferPointer[physicalBinding + 1] = *reinterpret_cast<size_t*>(&samplerResourceID);
+        bufferPointer[physicalBinding] = textureResourceID;
+        bufferPointer[physicalBinding + 1] = samplerResourceID;
         m_ArgumentBuffer->UnmapPointer();
 
         AddResourceToResidencySet(newTextureHandle);
@@ -231,10 +232,10 @@ namespace Astral {
 
         // Set binding in argument buffer
         uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
-        size_t* bufferPointer;
+        MTL::ResourceID* bufferPointer;
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
-        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
-        bufferPointer[physicalBinding + 1] = *reinterpret_cast<size_t*>(&samplerResourceID);
+        bufferPointer[physicalBinding] = textureResourceID;
+        bufferPointer[physicalBinding + 1] = samplerResourceID;
         m_ArgumentBuffer->UnmapPointer();
 
         AddResourceToResidencySet(newTextureHandle);
@@ -264,9 +265,9 @@ namespace Astral {
 
         // Set binding in argument buffer
         uint32 physicalBinding = m_LogicalToPhysicalBindingMap[binding];
-        size_t* bufferPointer;
+        MTL::ResourceID* bufferPointer;
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
-        bufferPointer[physicalBinding] = *reinterpret_cast<size_t*>(&textureResourceID);
+        bufferPointer[physicalBinding] = textureResourceID;
         m_ArgumentBuffer->UnmapPointer();
 
         AddResourceToResidencySet(newTextureHandle);
