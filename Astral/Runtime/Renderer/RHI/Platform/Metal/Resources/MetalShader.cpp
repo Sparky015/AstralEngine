@@ -166,6 +166,10 @@ namespace Astral {
         spirv_cross::CompilerMSL compiler(spirv);
         PopulateShaderReflectionInfo(compiler);
 
+        spirv_cross::CompilerGLSL::Options commonOptions = compiler.get_common_options();
+        commonOptions.vertex.flip_vert_y = true;
+        compiler.set_common_options(commonOptions);
+
         spirv_cross::CompilerMSL::Options compilerOptions;
         compilerOptions.platform = spirv_cross::CompilerMSL::Options::macOS;
         compilerOptions.set_msl_version(3, 2);
