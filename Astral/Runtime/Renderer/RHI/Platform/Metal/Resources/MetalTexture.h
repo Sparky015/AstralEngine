@@ -54,6 +54,7 @@ namespace Astral {
     class MetalTexture : public Texture
     {
     public:
+        MetalTexture(); // Initializes empty null texture
         explicit MetalTexture(const MetalTextureDesc& desc);
         explicit MetalTexture(const MetalDrawableOwnedTextureDesc& desc);
         ~MetalTexture() override;
@@ -199,23 +200,9 @@ namespace Astral {
         void InitializeTextureData(const MetalTextureDesc& desc);
 
         /**
-         * @brief Uploads texture data on initial construction
-         */
-        void UploadToPrivateTextureMemory(MTL4::ComputeCommandEncoder* blitEncoder, void* data, uint32 length);
-
-        /**
          * @brief Copies data to shared texture memory on initial construction
          */
         void CopyToSharedTextureMemory(void* data, uint32 length);
-
-        /**
-         * @brief Copies texture data from a staging buffer to private memory
-         * @param blitEncoder
-         * @param stagingBuffer The staging buffer to copy from
-         * @param length The length of data to copy
-         * @note This is only for private memory
-         */
-        void CopyFromStagingBuffer(MTL4::ComputeCommandEncoder* blitEncoder, Buffer& stagingBuffer, uint32 length);
 
         /**
          * @brief Generates mip maps for texture
