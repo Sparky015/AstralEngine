@@ -298,6 +298,9 @@ namespace Astral {
     void MetalCommandBuffer::EndRenderPass()
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (EndRenderPass)!")
+
+        FlushQueuePipelineBarrier(m_RenderCommandEncoder);
+
         m_RenderCommandEncoder->endEncoding();
 
         m_RenderCommandEncoder = nullptr;
@@ -402,7 +405,10 @@ namespace Astral {
 
         MTL::Stages beforeStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.SourceStageMask);
         MTL::Stages afterStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.DestinationStageMask);
-        commandEncoder->barrierAfterStages(afterStages, beforeStages, MTL4::VisibilityOptionNone);
+
+        m_PipelineBarrierBeforeStages |= beforeStages;
+        m_PipelineBarrierAfterStages |= afterStages;
+        m_IsPipelineBarrierFlagsDirty = true;
     }
 
 
@@ -548,11 +554,25 @@ namespace Astral {
 
     void MetalCommandBuffer::EndComputeEncoder()
     {
+        FlushQueuePipelineBarrier(m_RenderCommandEncoder);
+
         m_ComputeCommandEncoder->endEncoding();
         m_ComputeCommandEncoder = nullptr;
 
         m_EncoderAutoreleasePool->drain();
         m_EncoderAutoreleasePool = nullptr;
+    }
+
+
+    void MetalCommandBuffer::FlushQueuePipelineBarrier(MTL4::CommandEncoder* commandEncoder)
+    {
+        if (m_IsPipelineBarrierFlagsDirty)
+        {
+            commandEncoder->barrierAfterQueueStages(m_PipelineBarrierAfterStages, m_PipelineBarrierBeforeStages, MTL4::VisibilityOptionDevice);
+            m_PipelineBarrierAfterStages = 0;
+            m_PipelineBarrierBeforeStages = 0;
+            m_IsPipelineBarrierFlagsDirty = false;
+        }
     }
 
 }

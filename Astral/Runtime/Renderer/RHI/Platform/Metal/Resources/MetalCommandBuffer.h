@@ -214,6 +214,11 @@ namespace Astral {
          */
         void EndComputeEncoder();
 
+        /**
+         * @brief Flushes the deferred pipeline barriers and resets the pipeline barrier flag states
+         */
+        void FlushQueuePipelineBarrier(MTL4::CommandEncoder* commandEncoder);
+
 
         MTL::Device* m_Device;
         MTL4::CommandBuffer* m_CommandBuffer;
@@ -231,6 +236,10 @@ namespace Astral {
 
         MTL4::ArgumentTable* m_ArgumentTable;
         std::vector<BufferHandle> m_PushConstants;
+
+        bool m_IsPipelineBarrierFlagsDirty;
+        MTL::Stages m_PipelineBarrierBeforeStages;
+        MTL::Stages m_PipelineBarrierAfterStages;
     };
 
 }
