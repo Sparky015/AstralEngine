@@ -50,7 +50,7 @@ namespace Astral {
     uint32 MetalBuffer::GetAllocatedSize() const
     {
         if (!m_Buffer) { AE_WARN("Buffer has not been created! Can't get allocated size!"); return 0; }
-        return m_Buffer->allocatedSize();
+        return m_BufferLength;
     }
 
 
