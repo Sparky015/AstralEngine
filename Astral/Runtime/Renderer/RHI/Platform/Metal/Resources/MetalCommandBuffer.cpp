@@ -30,6 +30,7 @@ namespace Astral {
         m_BoundIndexBuffer(nullptr),
         m_BoundVertexBuffer(nullptr),
         m_BoundDescriptorSets({}),
+        m_SetViewport(UVec2(0, 0)),
 
         m_ArgumentTable(nullptr),
 
@@ -149,11 +150,15 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (SetViewportAndScissor)!")
 
+        if (m_SetViewport == dimensions) { return; }
+
         MTL::Viewport viewport = MTL::Viewport(0, 0, dimensions.x, dimensions.y, 0, 1);
         m_RenderCommandEncoder->setViewport(viewport);
 
         MTL::ScissorRect scissorRect = MTL::ScissorRect(0, 0, dimensions.x, dimensions.y);
         m_RenderCommandEncoder->setScissorRect(scissorRect);
+
+        m_SetViewport = dimensions;
     }
 
 

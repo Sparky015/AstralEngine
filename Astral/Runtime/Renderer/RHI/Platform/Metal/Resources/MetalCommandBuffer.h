@@ -233,6 +233,7 @@ namespace Astral {
         IndexBufferHandle m_BoundIndexBuffer;
         VertexBufferHandle m_BoundVertexBuffer;
         std::vector<DescriptorSetHandle> m_BoundDescriptorSets;
+        UVec2 m_SetViewport;
 
         MTL4::ArgumentTable* m_ArgumentTable;
         std::vector<BufferHandle> m_PushConstants;
