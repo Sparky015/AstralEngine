@@ -32,8 +32,13 @@ namespace Astral {
         m_BoundDescriptorSets({}),
 
         m_ArgumentTable(nullptr),
+
         m_PushConstants({}),
-        m_CurrentPushConstantBufferOffset(0)
+        m_CurrentPushConstantBufferOffset(0),
+
+        m_IsPipelineBarrierFlagsDirty(false),
+        m_PipelineBarrierBeforeStages(0),
+        m_PipelineBarrierAfterStages(0)
     {
         AcquireCommandAllocator();
         CreateArgumentTable();
@@ -290,6 +295,8 @@ namespace Astral {
         MTL::DepthStencilState* depthStencilState = m_Device->newDepthStencilState(depthStencilDescriptor);
         m_RenderCommandEncoder->setDepthStencilState(depthStencilState);
         depthStencilDescriptor->release();
+
+        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
     }
 
 
@@ -313,7 +320,6 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsIndexed)!")
 
-        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
 
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
@@ -328,8 +334,6 @@ namespace Astral {
     {
         ASSERT(m_RenderCommandEncoder && m_ActiveEncodingType == EncodingType::RENDER, "Render encoder must be active to use this function (DrawElementsInstanced)!")
 
-        m_RenderCommandEncoder->setArgumentTable(m_ArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
-
         uint32 numOfIndices = indexBufferHandle->GetCount();
         MTL::Buffer* indexBuffer = (MTL::Buffer*)indexBufferHandle->GetNativeHandle();
         MTL::GPUAddress bufferAddress = indexBuffer->gpuAddress();
@@ -342,8 +346,6 @@ namespace Astral {
     void MetalCommandBuffer::Dispatch(uint32 groupCountX, uint32 groupCountY, uint32 groupCountZ)
     {
         ASSERT(m_ActiveEncodingType == EncodingType::COMPUTE, "Render encoder must not be active when using this function (Dispatch)!")
-
-        m_ComputeCommandEncoder->setArgumentTable(m_ArgumentTable);
 
         const ShaderReflectionInfo& computeShaderReflectionInfo = m_BoundPipeline->GetCompiledComputeShader()->GetShaderReflectionInfo();
         Vec3 workgroupSize = computeShaderReflectionInfo.WorkgroupDimensions;
@@ -526,6 +528,7 @@ namespace Astral {
         m_BoundPipeline = nullptr;
         m_BoundIndexBuffer = nullptr;
         m_BoundVertexBuffer = nullptr;
+        m_ComputeCommandEncoder->setArgumentTable(m_ArgumentTable);
     }
 
 
