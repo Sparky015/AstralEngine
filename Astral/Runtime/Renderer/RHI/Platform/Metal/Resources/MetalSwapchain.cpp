@@ -25,6 +25,8 @@ namespace Astral {
 
     GraphicsRef<RenderTarget> MetalSwapchain::AcquireNextImage()
     {
+        PROFILE_SCOPE("MetalSwapchain::AcquireNextImage")
+
         CA::MetalDrawable* nextDrawable = m_CAMetalLayer->nextDrawable();
 
         MetalRenderTargetDesc renderTargetDesc = {
