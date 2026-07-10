@@ -283,12 +283,12 @@ namespace Astral {
 
         if (SceneRenderer::GetRendererAPIBackend() == API::Metal)
         {
-            const TextureHandle& textureHandle = m_CurrentViewportTexture->GetImageSampler(0);
+            const TextureHandle& textureHandle = descriptorSet->GetImageSampler(0);
             return (ImTextureID)textureHandle->GetNativeImage();
         }
         else if (SceneRenderer::GetRendererAPIBackend() == API::Vulkan)
         {
-            return (ImTextureID)m_CurrentViewportTexture->GetNativeHandle();
+            return (ImTextureID)descriptorSet->GetNativeHandle();
         }
         else
         {
