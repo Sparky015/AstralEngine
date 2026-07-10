@@ -276,11 +276,24 @@ namespace Astral {
     }
 
 
-    DescriptorSetHandle SceneRendererImpl::GetViewportTexture()
+    ImTextureID SceneRendererImpl::GetViewportTexture()
     {
         DescriptorSetHandle descriptorSet = m_CurrentViewportTexture;
         m_CurrentViewportTexture = nullptr;
-        return descriptorSet;
+
+        if (SceneRenderer::GetRendererAPIBackend() == API::Metal)
+        {
+            const TextureHandle& textureHandle = m_CurrentViewportTexture->GetImageSampler(0);
+            return (ImTextureID)textureHandle->GetNativeImage();
+        }
+        else if (SceneRenderer::GetRendererAPIBackend() == API::Vulkan)
+        {
+            return (ImTextureID)m_CurrentViewportTexture->GetNativeHandle();
+        }
+        else
+        {
+            AE_ERROR("Undefined renderer backend api for GetViewportTexture")
+        }
     }
 
 

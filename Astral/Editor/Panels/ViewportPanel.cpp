@@ -52,9 +52,7 @@ namespace Astral {
             SceneRenderer::ResizeViewport(m_ContentRegionSize.x, m_ContentRegionSize.y);
         }
 
-        // TODO: Make scene renderer return ImTextureID directly and make this interface applicable to use both vulkan and metal
-        const TextureHandle& textureHandle = Astral::SceneRenderer::GetViewportTexture()->GetImageSampler(0);
-        ImGui::Image((ImTextureID)textureHandle->GetNativeImage(), m_ContentRegionSize);
+        ImGui::Image(SceneRenderer::GetViewportTexture(), m_ContentRegionSize);
     }
 
 

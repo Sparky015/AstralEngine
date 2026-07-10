@@ -67,7 +67,7 @@ namespace Astral {
     }
 
 
-    DescriptorSetHandle SceneRenderer::GetViewportTexture()
+    ImTextureID SceneRenderer::GetViewportTexture()
     {
         return m_Renderer->GetViewportTexture();
     }
