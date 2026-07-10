@@ -637,12 +637,6 @@ namespace Astral {
         ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
         {
             commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-            AttachmentResource attachmentResource = {
-                .Resource = renderTarget->GetAsTexture(),
-                .MipLevel = FullSubresourceRange,
-                .ArrayLayer = FullSubresourceRange
-            };
-            commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
 
             PipelineBarrier pipelineBarrier = {};
             pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -690,8 +684,17 @@ namespace Astral {
 
         // ImGui Rendering
 
+        AttachmentResource attachmentResource = {
+            .Resource = renderTarget->GetAsTexture(),
+            .MipLevel = FullSubresourceRange,
+            .ArrayLayer = FullSubresourceRange
+        };
+
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
+
         RendererAPI::CallImGuiDraws(commandBuffer);
 
+        commandBuffer->EndRenderPass();
 
 
         {
@@ -736,7 +739,6 @@ namespace Astral {
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
 
-            commandBuffer->EndRenderPass();
             commandBuffer->EndLabel();
         }
 
