@@ -383,26 +383,6 @@ namespace Astral {
 
     void MetalCommandBuffer::SetPipelineBarrier(const PipelineBarrier& pipelineBarrier)
     {
-        if (m_ActiveEncodingType == EncodingType::NONE)
-        {
-            AE_WARN("Encoder must be active to use this function (SetPipelineBarrier)! Skipping pipeline barrier!")
-            return;
-        }
-
-        MTL4::CommandEncoder* commandEncoder;
-        if (m_ActiveEncodingType == EncodingType::RENDER)
-        {
-            commandEncoder = m_RenderCommandEncoder;
-        }
-        else if (m_ActiveEncodingType == EncodingType::COMPUTE)
-        {
-            commandEncoder = m_ComputeCommandEncoder;
-        }
-        else
-        {
-            AE_ERROR("Encoding type is not supported!")
-        }
-
         MTL::Stages beforeStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.SourceStageMask);
         MTL::Stages afterStages = ConvertPipelineStateFlagsToMTLStages(pipelineBarrier.DestinationStageMask);
 
