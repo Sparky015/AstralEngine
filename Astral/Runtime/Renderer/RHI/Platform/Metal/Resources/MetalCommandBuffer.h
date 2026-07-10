@@ -236,6 +236,7 @@ namespace Astral {
 
         MTL4::ArgumentTable* m_ArgumentTable;
         std::vector<BufferHandle> m_PushConstants;
+        uint32 m_CurrentPushConstantBufferOffset = 0;
 
         bool m_IsPipelineBarrierFlagsDirty;
         MTL::Stages m_PipelineBarrierBeforeStages;

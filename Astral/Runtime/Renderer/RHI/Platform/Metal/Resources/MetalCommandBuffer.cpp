@@ -32,7 +32,8 @@ namespace Astral {
         m_BoundDescriptorSets({}),
 
         m_ArgumentTable(nullptr),
-        m_PushConstants({})
+        m_PushConstants({}),
+        m_CurrentPushConstantBufferOffset(0)
     {
         AcquireCommandAllocator();
         CreateArgumentTable();
@@ -76,6 +77,7 @@ namespace Astral {
     {
         m_CommandAllocator->reset();
         m_PushConstants.clear();
+        m_CurrentPushConstantBufferOffset = 0;
     }
 
 
@@ -366,18 +368,25 @@ namespace Astral {
 
     void MetalCommandBuffer::PushConstants(void* data, uint32 sizeInBytes)
     {
-        BufferHandle pushConstantBuffer = RendererAPI::GetDevice().CreateUniformBuffer(data, sizeInBytes, GPUMemoryType::HOST_VISIBLE);
-        char pushConstantName[30] = "";
-        snprintf(pushConstantName, sizeof(pushConstantName), "Push_Constant_%zu", m_PushConstants.size());
-        RendererAPI::NameObject(pushConstantBuffer, pushConstantName);
 
-        m_PushConstants.push_back(pushConstantBuffer);
+        if (m_PushConstants.size() == 0 || m_CurrentPushConstantBufferOffset + sizeInBytes > m_PushConstants.back()->GetAllocatedSize())
+        {
+            uint32 allocationSize = m_PushConstants.size() == 0 ? 8192 : m_PushConstants.back()->GetAllocatedSize() * 2;
+            BufferHandle newPushConstantBuffer = RendererAPI::GetDevice().CreateUniformBuffer(nullptr, allocationSize, GPUMemoryType::HOST_VISIBLE);
+            char pushConstantName[30] = "";
+            snprintf(pushConstantName, sizeof(pushConstantName), "Push_Constant_%zu", m_PushConstants.size());
+            RendererAPI::NameObject(newPushConstantBuffer, pushConstantName);
+            m_PushConstants.push_back(newPushConstantBuffer);
+            m_CurrentPushConstantBufferOffset = 0;
+        }
+
+        BufferHandle& pushConstantBuffer = m_PushConstants.back();
         MTL::Buffer* mtlBuffer = (MTL::Buffer*)pushConstantBuffer->GetNativeHandle();
-        m_ArgumentTable->setAddress(mtlBuffer->gpuAddress(), 30);
+        memcpy((uint8*)mtlBuffer->contents() + m_CurrentPushConstantBufferOffset, data, sizeInBytes);
 
-        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->addAllocation(mtlBuffer);
+        m_ArgumentTable->setAddress(mtlBuffer->gpuAddress() + m_CurrentPushConstantBufferOffset, 30);
+
+        m_CurrentPushConstantBufferOffset += sizeInBytes;
     }
 
 
