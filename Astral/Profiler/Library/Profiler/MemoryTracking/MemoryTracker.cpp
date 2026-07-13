@@ -55,7 +55,7 @@ namespace Astral {
     bool MemoryTracker::IsSceneActive() const
     {
 #ifdef ASTRAL_DISABLE_MEMORY_TRACKING
-        return;
+        return false;
 #endif
 
         std::shared_lock lock(m_Mutex);
