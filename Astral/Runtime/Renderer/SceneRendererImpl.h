@@ -75,7 +75,7 @@ namespace Astral {
          * @brief Gets the viewport texture of the current frame
          * @return The viewport texture of the current frame
          */
-        DescriptorSetHandle GetViewportTexture();
+        ImTextureID GetViewportTexture();
 
         /**
          * @brief Resizes the viewport being rendered to

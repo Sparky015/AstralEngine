@@ -5,13 +5,18 @@
 #include "RendererAPI.h"
 
 #include "Core/Engine.h"
+#include "Platform/Metal/MetalRendererCommands.h"
 #include "Platform/Vulkan/VulkanRendererCommands.h"
 #include "Renderer/RendererManager.h"
 
 
 namespace Astral {
 
+#ifdef ASTRAL_DEFAULT_RENDERING_API_VULKAN
     RendererCommands* RendererAPI::s_RendererCommands = new VulkanRendererCommands();
+#elif ASTRAL_DEFAULT_RENDERING_API_METAL
+    RendererCommands* RendererAPI::s_RendererCommands = new MetalRendererCommands();
+#endif
 
 
     Device& RendererAPI::GetDevice()
@@ -56,21 +61,9 @@ namespace Astral {
     }
 
 
-    void RendererAPI::NameObject(FramebufferHandle framebufferHandle, std::string_view name)
-    {
-        s_RendererCommands->NameObject(framebufferHandle, name);
-    }
-
-
     void RendererAPI::NameObject(CommandBufferHandle commandBufferHandle, std::string_view name)
     {
         s_RendererCommands->NameObject(commandBufferHandle, name);
-    }
-
-
-    void RendererAPI::NameObject(RenderPassHandle renderPassHandle, std::string_view name)
-    {
-        s_RendererCommands->NameObject(renderPassHandle, name);
     }
 
 

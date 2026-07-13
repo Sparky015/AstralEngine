@@ -43,6 +43,18 @@ namespace Astral {
         PROFILE_SCOPE("Engine::Engine");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
         m_Instance = this;
+    }
+
+
+    Engine::~Engine()
+    {
+
+    }
+
+
+    void Engine::Init()
+    {
+        PROFILE_SCOPE("Engine::Init");
 
         Astral::MemoryTracker::Get().Init();
 
@@ -64,9 +76,9 @@ namespace Astral {
     }
 
 
-    Engine::~Engine()
+    void Engine::Shutdown()
     {
-        PROFILE_SCOPE("Engine::~Engine");
+        PROFILE_SCOPE("Engine::Shutdown");
 
         AE_PROFILE_FUNCTION(NFD_Quit(), "NFD_Quit");
         AE_PROFILE_FUNCTION(glslang_finalize_process(), "glslang_finalize_process");
@@ -115,6 +127,8 @@ namespace Astral {
             m_DeltaTime.UpdateDeltaTime();
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
+
+            m_WindowManager->Update(); // TODO: Remove subsystem update and call each subsystems update function directly for more controlled update order
 
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );

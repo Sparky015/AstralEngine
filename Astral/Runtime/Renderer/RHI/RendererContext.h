@@ -71,6 +71,11 @@ namespace Astral {
         virtual void InitImGuiForAPIBackend(RenderPassHandle renderPassHandle) = 0;
 
         /**
+         * @brief Initializes a new frame for ImGui backend
+         */
+        virtual void MarkNewImGuiFrame() = 0;
+
+        /**
          * @brief Shuts down the ImGui rendering backend
          */
         virtual void ShutdownImGuiForAPIBackend() = 0;

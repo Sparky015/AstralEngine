@@ -29,7 +29,7 @@ namespace Astral {
     class MetalBuffer : public Buffer
     {
     public:
-        MetalBuffer() = default;
+        MetalBuffer();
         MetalBuffer(const MetalBufferDesc& metalBufferDesc);
         ~MetalBuffer() override;
 

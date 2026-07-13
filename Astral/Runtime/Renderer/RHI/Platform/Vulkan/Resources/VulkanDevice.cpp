@@ -13,7 +13,6 @@
 #include "VulkanCommandQueue.h"
 #include "VulkanRenderpass.h"
 #include "VulkanDescriptorSet.h"
-#include "VulkanFramebuffer.h"
 #include "VulkanPipelineState.h"
 #include "VulkanComputePipelineState.h"
 #include "VulkanShader.h"
@@ -124,19 +123,6 @@ namespace Astral {
     }
 
 
-    FramebufferHandle VulkanDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-
-        VulkanFramebufferDesc vulkanFramebufferDesc = {
-            .Device = m_Device,
-            .RenderPass = renderPass
-        };
-
-        return CreateGraphicsRef<VulkanFramebuffer>(vulkanFramebufferDesc);
-    }
-
-
     ShaderHandle VulkanDevice::CreateShader(const ShaderSource& shaderSource)
     {
         VulkanShaderDesc shaderDesc = {
@@ -183,6 +169,12 @@ namespace Astral {
 
     VertexBufferHandle VulkanDevice::CreateVertexBuffer(void* vertexData, uint32 sizeInBytes, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
     {
+        if (sizeInBytes == 0)
+        {
+            AE_WARN("Tried to create a buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanVertexBufferDesc vertexBufferDesc = {
             .Device = m_Device,
             .VertexData = vertexData,
@@ -198,6 +190,12 @@ namespace Astral {
 
     IndexBufferHandle VulkanDevice::CreateIndexBuffer(uint32* indexData, uint32 sizeInBytes, GPUMemoryType memoryType)
     {
+        if (sizeInBytes == 0)
+        {
+            AE_WARN("Tried to create a index buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanIndexBufferDesc indexBufferDesc = {
             .Device = m_Device,
             .IndexData = indexData,
@@ -212,32 +210,68 @@ namespace Astral {
 
     BufferHandle VulkanDevice::CreateStorageBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
+        if (size == 0)
+        {
+            AE_WARN("Tried to create a storage buffer of length zero!")
+            return nullptr;
+        }
+
         VulkanBufferDesc storageBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .Usage = BUFFER_USAGE_STORAGE_BUFFER,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .Usage = BUFFER_USAGE_STORAGE_BUFFER | BUFFER_USAGE_STREAMABLE,
+            .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (data != nullptr)
+        {
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
+        }
+
         return bufferHandle;
     }
 
 
     BufferHandle VulkanDevice::CreateUniformBuffer(void* data, uint32 size, GPUMemoryType memoryType)
     {
-        VulkanBufferDesc storageBufferDesc = {
+        if (size == 0)
+        {
+            AE_WARN("Tried to create a uniform buffer of length zero!")
+            return nullptr;
+        }
+
+        VulkanBufferDesc uniformBufferDesc = {
             .Device = m_Device,
             .Size = size,
-            .Usage = BUFFER_USAGE_UNIFORM_BUFFER,
-            .MemoryType = GPUMemoryType::HOST_VISIBLE,
+            .Usage = BUFFER_USAGE_UNIFORM_BUFFER | BUFFER_USAGE_STREAMABLE,
+            .MemoryType = memoryType,
             .DeviceMemoryProperties = m_PhysicalDevice.memoryProperties,
         };
 
-        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(storageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+        BufferHandle bufferHandle = CreateGraphicsRef<VulkanBuffer>(uniformBufferDesc);
+
+        if (data != nullptr)
+        {
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
+        }
+
         return bufferHandle;
     }
 
@@ -474,9 +508,14 @@ namespace Astral {
             VK_KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME
         };
 
+        VkPhysicalDeviceVulkan13Features deviceFeatures13 = {
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+            .pNext = nullptr
+        };
+
         VkPhysicalDeviceVulkan12Features deviceFeatures12 = {
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
-            .pNext = nullptr
+            .pNext = &deviceFeatures13
         };
 
         VkPhysicalDeviceFeatures2 deviceFeaturesChain = {
@@ -520,6 +559,15 @@ namespace Astral {
         else
         {
             deviceFeatures12.shaderOutputLayer = VK_TRUE;
+        }
+
+        if (m_PhysicalDevice.features13.dynamicRendering == VK_FALSE)
+        {
+            AE_WARN("Vulkan: Dynamic Rendering is not supported!")
+        }
+        else
+        {
+            deviceFeatures13.dynamicRendering = VK_TRUE;
         }
 
 

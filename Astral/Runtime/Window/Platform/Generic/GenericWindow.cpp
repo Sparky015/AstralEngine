@@ -41,11 +41,8 @@ namespace Astral {
             }
         }
 
-        if (Astral::SceneRenderer::GetRendererAPIBackend() == Astral::API::Vulkan)
-        {
-            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        }
 
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 

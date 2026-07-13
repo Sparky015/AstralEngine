@@ -32,7 +32,7 @@ size_t std::hash<Astral::GraphicsPipelineStateConfiguration>::operator()(const A
 
     if (config.RenderPass)
     {
-        Astral::HashCombine(seed, std::hash<void*>{}(config.RenderPass->GetNativeHandle()));
+        Astral::HashCombine(seed, std::hash<void*>{}(config.RenderPass.get()));
     } else {
         Astral::HashCombine(seed, 0);
     }

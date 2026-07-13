@@ -19,9 +19,11 @@
 #include "Renderer/RHI/Common/MemoryTypes.h"
 #include "Renderer/RHI/Common/PipelineRasterizerState.h"
 #include "Renderer/RHI/Common/SamplerSettings.h"
+#include "Renderer/RHI/Common/ShaderStage.h"
 #include "Renderer/RHI/Resources/Renderpass.h"
 
 #include <vulkan/vulkan_core.h>
+
 
 namespace Astral {
 
@@ -37,8 +39,10 @@ namespace Astral {
     VkCullModeFlags ConvertCullModeToVkCullModeFlags(CullMode cullMode);
     VkMemoryPropertyFlags ConvertMemoryPropertyFlagsToVkMemoryPropertyFlags(GPUMemoryType memoryType);
     VkBufferUsageFlags ConvertBufferUsageFlagsToVkBufferUsageFlags(BufferUsageFlags bufferUsageFlags);
-
+    VkShaderStageFlags GetVkShaderStageFromShaderStage(ShaderStage shaderStage);
     VkSampleCountFlagBits ConvertSampleCountToVkSampleCountBit(SampleCount sampleCount);
+    VkAttachmentLoadOp ConvertToVkLoadOp(AttachmentLoadOp loadOp);
+    VkAttachmentStoreOp ConvertToVkStoreOp(AttachmentStoreOp storeOp);
 
     ImageLayout ConvertVkImageLayoutToImageLayout(VkImageLayout imageLayout);
     ImageFormat ConvertVkFormatToImageFormat(VkFormat imageFormat);

@@ -350,4 +350,30 @@ namespace Astral {
      */
     Vec2 GetCompressedFormatBlockExtent(ImageFormat format);
 
+    /**
+     * @brief Checks if an image format is a floating point format
+     * @return True if an image format is a floating point format, false otherwise
+     */
+    bool IsFloatingPointFormat(ImageFormat imageFormat);
+
+    /**
+     * @brief Checks if an image format is an integer format
+     * @return True if an image format is an integer format, false otherwise
+     */
+    bool IsIntegerFormat(ImageFormat imageFormat);
+
+    /**
+     * @brief Checks if an image format is a depth buffer format (including combined depth-stencil formats)
+     * @return True if an image format is a depth buffer format (including combined depth-stencil formats)
+     */
+    bool IsDepthFormat(ImageFormat imageFormat);
+
+    /**
+     * @brief Checks if an image format is a stencil buffer format (including combined depth-stencil formats)
+     * @return True if an image format is a stencil buffer format (including combined depth-stencil formats)
+     */
+    bool IsStencilFormat(ImageFormat imageFormat);
+
+
+
 }

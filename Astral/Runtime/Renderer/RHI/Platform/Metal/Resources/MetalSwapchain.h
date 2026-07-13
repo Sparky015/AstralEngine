@@ -14,6 +14,7 @@ namespace Astral {
 
     struct MetalSwapchainDesc
     {
+        MTL::Device* Device;
         CA::MetalLayer* CAMetalLayer;
     };
 
@@ -38,7 +39,17 @@ namespace Astral {
          */
         uint32 GetNumberOfImages() override;
 
-        std::vector<RenderTargetHandle>& GetRenderTargets() override; // TODO
+        /**
+        * @brief Get the swapchain images' format
+        * @return The swapchain images' format
+        */
+        ImageFormat GetImageFormat() override;
+
+        /**
+         * @brief Get the swapchain images' dimensions
+         * @return The swapchain images' dimensions
+         */
+        UVec2 GetImageDimensions() override;
 
         /**
          * @brief Sets the dimensions of the render targets
@@ -61,7 +72,7 @@ namespace Astral {
 
     private:
 
-        std::vector<RenderTargetHandle> m_RenderTargets; // Always empty
+        MTL::Device* m_Device;
         CA::MetalLayer* m_CAMetalLayer;
     };
 

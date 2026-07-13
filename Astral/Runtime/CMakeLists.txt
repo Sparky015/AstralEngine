@@ -12,10 +12,6 @@ set(ENGINE_SOURCE
         Window/WindowEvents.h
         Debug/ImGui/ImGuiManager.h
         Debug/ImGui/ImGuiManager.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.cpp
-        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.cpp
         Debug/ImGui/ImGuiEvents.h
         Debug/EngineDebugInfoLogger.h
         Debug/EngineDebugInfoLogger.cpp
@@ -82,7 +78,8 @@ set(ENGINE_SOURCE
         Asset/Loaders/TextureLoader.cpp
 
         Core/SmartPointers.h
-
+        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_glfw.cpp
 
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.cpp
         Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h
@@ -91,7 +88,6 @@ set(ENGINE_SOURCE
         Renderer/RHI/Resources/Sampler.h
         Renderer/RHI/Resources/PipelineState.h
         Renderer/RHI/Resources/RenderTarget.h
-        Renderer/RHI/Resources/Framebuffer.h
         Renderer/RHI/Resources/Device.h
         Renderer/RHI/Resources/DescriptorSet.h
         Renderer/RHI/Resources/CommandQueue.h
@@ -144,6 +140,8 @@ set(ENGINE_SOURCE
         Core/Hashing/Hashes.cpp
         Core/Hashing/Hashes.h
         Renderer/RHI/Common/BufferUsageFlags.h
+        Renderer/RHI/Common/ShaderStage.h
+
         Renderer/RenderPasses/RenderPassExecutionContext.h
         Renderer/RenderPasses/CascadedShadowMapRenderPass.cpp
         Renderer/RenderPasses/CascadedShadowMapRenderPass.h
@@ -164,6 +162,10 @@ set(ENGINE_SOURCE
         Renderer/RenderingPaths/DeferredRenderingPath.h
         Renderer/RenderingPaths/ForwardRenderingPath.cpp
         Renderer/RenderingPaths/ForwardRenderingPath.h
+        Renderer/RHI/Platform/Metal/MetalRendererCommands.cpp
+        Renderer/RHI/Platform/Metal/MetalRendererCommands.h
+        Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
+
 )
 
 set(VULKAN_RHI_FILES
@@ -186,8 +188,6 @@ set(VULKAN_RHI_FILES
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderTarget.h
     Renderer/RHI/Platform/Vulkan/Resources/VulkanRenderpass.cpp
-    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.h
-    Renderer/RHI/Platform/Vulkan/Resources/VulkanFramebuffer.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanShader.h
     Renderer/RHI/Platform/Vulkan/Resources/VulkanPipelineState.cpp
@@ -207,11 +207,15 @@ set(VULKAN_RHI_FILES
     Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.h
     Renderer/RHI/Platform/Vulkan/Common/VkEnumConversions.cpp
     Renderer/RHI/Platform/Vulkan/Resources/VulkanComputePipelineState.cpp
+    Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.h
+    Debug/ImGui/ImGuiDependencies/imgui_impl_vulkan.cpp
 )
 
 set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/MetalRendererContext.mm
     Renderer/RHI/Platform/Metal/MetalRendererContext.h
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.cpp
+    Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalDevice.h
     Renderer/RHI/Platform/Metal/Resources/MetalSwapchain.cpp
@@ -222,6 +226,26 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalVertexBuffer.h
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalIndexBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalTexture.h
+    Renderer/RHI/Platform/Metal/Resources/MetalShader.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalShader.h
+    Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalDescriptorSet.h
+    Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalGraphicsPipeline.h
+    Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalComputePipeline.h
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderPass.h
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandBuffer.h
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
+    Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
+    Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h
+    Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
 )
 
 set(D3D12_RHI_FILES
@@ -424,7 +448,8 @@ target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM
 
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_METAL)
 
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)

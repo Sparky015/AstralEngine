@@ -8,9 +8,19 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "MetalBuffer.h"
+#include "MetalCommandBuffer.h"
+#include "MetalCommandQueue.h"
+#include "MetalComputePipeline.h"
+#include "MetalDescriptorSet.h"
+#include "MetalGraphicsPipeline.h"
 #include "MetalIndexBuffer.h"
+#include "MetalRenderPass.h"
+#include "MetalShader.h"
 #include "MetalSwapchain.h"
+#include "MetalTexture.h"
 #include "MetalVertexBuffer.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/MetalRendererContext.h"
 
 namespace Astral {
 
@@ -43,49 +53,76 @@ namespace Astral {
 
     CommandBufferHandle MetalDevice::AllocateCommandBuffer()
     {
-        return nullptr;
+        MetalCommandBufferDesc commandBufferDesc = {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalCommandBuffer>(commandBufferDesc);
     }
 
 
     CommandQueueHandle MetalDevice::GetPrimaryCommandQueue()
     {
-        return nullptr;
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        return metalRenderingContext.GetPrimaryCommandQueue();
     }
 
 
     CommandQueueHandle MetalDevice::GetAsyncCommandQueue()
     {
-        return nullptr;
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        return metalRenderingContext.GetPrimaryCommandQueue();
     }
 
 
     RenderPassHandle MetalDevice::CreateRenderPass()
     {
-        return nullptr;
-    }
+        MetalRenderPassDesc renderPassDesc = {
+            .Device = m_Device,
+        };
 
-
-    FramebufferHandle MetalDevice::CreateFramebuffer(RenderPassHandle renderPassHandle)
-    {
-        return nullptr;
+        return CreateGraphicsRef<MetalRenderPass>(renderPassDesc);
     }
 
 
     ShaderHandle MetalDevice::CreateShader(const ShaderSource& shaderSource)
     {
-        return nullptr;
+        MetalShaderDesc shaderDesc = {
+            .Device = m_Device,
+            .ShaderSource = shaderSource,
+        };
+
+        return CreateGraphicsRef<MetalShader>(shaderDesc);
     }
 
 
     PipelineStateHandle MetalDevice::CreateGraphicsPipelineState(const GraphicsPipelineStateCreateInfo& graphiscPipelineStateCreateInfo)
     {
-        return nullptr;
+        MetalGraphicsPipelineStateDesc metalGraphicsPipelineDesc = {
+            .Device = m_Device,
+            .RenderPass = graphiscPipelineStateCreateInfo.RenderPass,
+            .VertexShader = graphiscPipelineStateCreateInfo.VertexShader,
+            .FragmentShader = graphiscPipelineStateCreateInfo.FragmentShader,
+            .DescriptorSets = graphiscPipelineStateCreateInfo.DescriptorSets,
+            .BufferLayout = graphiscPipelineStateCreateInfo.BufferLayout,
+            .IsAlphaBlended = graphiscPipelineStateCreateInfo.IsAlphaBlended,
+            .MSAASamples = graphiscPipelineStateCreateInfo.MSAASamples,
+            .CullMode = graphiscPipelineStateCreateInfo.CullMode
+        };
+
+        return CreateGraphicsRef<MetalGraphicsPipelineState>(metalGraphicsPipelineDesc);
     }
 
 
     PipelineStateHandle MetalDevice::CreateComputePipelineState(const ComputePipelineStateCreateInfo& computePipelineStateCreateInfo)
     {
-        return nullptr;
+        MetalComputePipelineStateDesc metalComputePipelineDesc = {
+            .Device = m_Device,
+            .ComputeShader = computePipelineStateCreateInfo.ComputeShader,
+            .DescriptorSets = computePipelineStateCreateInfo.DescriptorSets
+        };
+
+        return CreateGraphicsRef<MetalComputePipelineState>(metalComputePipelineDesc);
     }
 
 
@@ -125,7 +162,19 @@ namespace Astral {
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalStorageBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (data != nullptr)
+        {
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
+        }
+
         return bufferHandle;
     }
 
@@ -139,86 +188,206 @@ namespace Astral {
         };
 
         BufferHandle bufferHandle = CreateGraphicsRef<MetalBuffer>(metalUniformBufferDesc);
-        bufferHandle->CopyDataToBuffer(data, size);
+
+        if (data != nullptr)
+        {
+            if (memoryType == GPUMemoryType::HOST_VISIBLE)
+            {
+                bufferHandle->CopyDataToBuffer(data, size);
+            }
+            else if (memoryType == GPUMemoryType::DEVICE_LOCAL)
+            {
+                bufferHandle->UploadToDeviceLocalBuffer(data, size);
+            }
+        }
+
         return bufferHandle;
     }
 
 
     DescriptorSetHandle MetalDevice::CreateDescriptorSet()
     {
-        return nullptr;
+        MetalDescriptorSetDesc metalDescriptorSetDesc
+        {
+            .Device = m_Device
+        };
+
+        return CreateGraphicsRef<MetalDescriptorSet>(metalDescriptorSetDesc);
     }
 
 
     TextureHandle MetalDevice::CreateTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_2D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::CreateCubemap(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::CUBEMAP,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create3DTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_3D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create1DTexture(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_1D,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     TextureHandle MetalDevice::Create2DTextureArray(const TextureCreateInfo& textureCreateInfo)
     {
-        return nullptr;
+        MetalTextureDesc metalTextureDesc
+        {
+            .Device = m_Device,
+            .ImageData = textureCreateInfo.ImageData,
+            .ImageDataLength = textureCreateInfo.ImageDataLength,
+            .MemoryType = GPUMemoryType::DEVICE_LOCAL,
+            .ImageFormat = textureCreateInfo.Format,
+            .ImageUsageFlags = textureCreateInfo.UsageFlags,
+            .ImageWidth = textureCreateInfo.Dimensions.x,
+            .ImageHeight = textureCreateInfo.Dimensions.y,
+            .NumLayers = textureCreateInfo.LayerCount,
+            .NumMipLevels = textureCreateInfo.MipMapCount,
+            .GenerateMipMaps = textureCreateInfo.GenerateMipMaps,
+            .TextureType = TextureType::IMAGE_2D_ARRAY,
+            .MSAASampleCount = textureCreateInfo.MSAASampleCount,
+            .SamplerFilter = textureCreateInfo.SamplerFilter,
+            .SamplerAddressMode = textureCreateInfo.SamplerAddressMode,
+            .EnableAnisotropy = textureCreateInfo.EnableAnisotropy,
+        };
+
+        return CreateGraphicsRef<MetalTexture>(metalTextureDesc);
     }
 
 
     bool MetalDevice::IsBlitSupportedByFormat(ImageFormat imageFormat)
     {
-        return false;
+        return true; // TODO: Find which formats support blit
     }
 
 
     bool MetalDevice::IsAnisotropySupported()
     {
-        return false;
+        return true; // Universal available based on gpu family feature set for Metal 4;
     }
 
 
     float MetalDevice::GetMaxAnisotropySupported()
     {
-        return 0;
+        return 16; // Universal limit based on gpu family feature set for Metal 4;
     }
 
 
     std::string_view MetalDevice::GetRenderingAPI()
     {
-
+        return "Metal 4";
     }
 
 
     std::string_view MetalDevice::GetGPUVendor()
     {
-
+        return "Apple";
     }
 
 
     std::string_view MetalDevice::GetGraphicsProcessorName()
     {
-
+        static char buffer[64];
+        snprintf(buffer, sizeof(buffer), "%s", m_Device->name()->cString(NS::ASCIIStringEncoding));
+        return buffer;
     }
 
 
     void MetalDevice::WaitIdle()
     {
-
+        MetalRenderingContext& metalRenderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        metalRenderingContext.GetPrimaryCommandQueue()->WaitIdle();
     }
 
 
@@ -231,6 +400,11 @@ namespace Astral {
     void MetalDevice::CreateDevice()
     {
         m_Device = MTL::CreateSystemDefaultDevice();
+
+        if (!m_Device->supportsFamily(MTL::GPUFamilyMetal4))
+        {
+            AE_ERROR("This device does not support Metal 4!")
+        }
     }
 
 
@@ -246,7 +420,8 @@ namespace Astral {
     GraphicsOwnedPtr<Swapchain> MetalDevice::CreateSwapchain(uint32 numberOfImages)
     {
         MetalSwapchainDesc metalSwapchainDesc = {
-
+            .Device = m_Device,
+            .CAMetalLayer = m_CAMetalLayer
         };
 
         return CreateGraphicsOwnedPtr<MetalSwapchain>(metalSwapchainDesc);

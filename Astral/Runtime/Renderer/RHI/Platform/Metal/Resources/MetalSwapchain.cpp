@@ -6,22 +6,35 @@
 
 #include "MetalSwapchain.h"
 
+#include "MetalRenderTarget.h"
 #include "Core/Utilities/Asserts.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
 
 namespace Astral {
 
     MetalSwapchain::MetalSwapchain(const MetalSwapchainDesc& metalSwapchainDesc) :
+        m_Device(metalSwapchainDesc.Device),
         m_CAMetalLayer(metalSwapchainDesc.CAMetalLayer)
     {
         ASSERT(m_CAMetalLayer, "Metal Swapchain can not be created with null CA::MetalLayer")
+        UVec2 windowExtent = RendererAPI::GetContext().GetWindowFramebufferDimensions();
+        m_CAMetalLayer->setDrawableSize(CGSizeMake(windowExtent.x, windowExtent.y));
     }
 
 
     GraphicsRef<RenderTarget> MetalSwapchain::AcquireNextImage()
     {
+        PROFILE_SCOPE("MetalSwapchain::AcquireNextImage")
+
         CA::MetalDrawable* nextDrawable = m_CAMetalLayer->nextDrawable();
 
-        // TODO: Create render target abstraction for Metal
+        MetalRenderTargetDesc renderTargetDesc = {
+            .Device = m_Device,
+            .Drawable = nextDrawable
+        };
+
+         return CreateGraphicsRef<MetalRenderTarget>(renderTargetDesc);
     }
 
 
@@ -31,11 +44,17 @@ namespace Astral {
     }
 
 
-    std::vector<RenderTargetHandle>& MetalSwapchain::GetRenderTargets()
+    ImageFormat MetalSwapchain::GetImageFormat()
     {
-        // Not possible for metal
-        AE_ERROR("This method is not supported for Metal!")
-        return m_RenderTargets; // Returns empty vector to not crash
+        MTL::PixelFormat swapchainImageFormat = m_CAMetalLayer->pixelFormat();
+        return ConvertMTLPixelFormatToImageFormat(swapchainImageFormat);
+    }
+
+
+    UVec2 MetalSwapchain::GetImageDimensions()
+    {
+        CGSize dimensions = m_CAMetalLayer->drawableSize();
+        return UVec2(dimensions.width, dimensions.height);
     }
 
 

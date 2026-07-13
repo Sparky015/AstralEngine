@@ -8,6 +8,7 @@
 
 #include "Core/Engine.h"
 #include "Core/Utilities/Loggers.h"
+#include "Profiler/App/ProfilerApp.h"
 
 #include "nfd.hpp"
 #include "imgui.h"
@@ -28,11 +29,10 @@ namespace Astral {
             if (ImGui::MenuItem("Load Profile"))
             {
                 nfdu8char_t* outPath;
-                nfdu8filteritem_t filters[1] = { { "Astral Scene", "aescene" }};
+                nfdu8filteritem_t filters[1] = { { "Astral Memory Profile", "ASTLMemProfile" }};
                 nfdopendialogu8args_t args = {0};
                 args.filterList = filters;
                 args.filterCount = 1;
-                // args.defaultPath = registry.GetAssetDirectoryPath().string().c_str();
 
                 nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
 
@@ -40,7 +40,7 @@ namespace Astral {
                 {
                     std::string outFilePath = std::string(outPath);
                     NFD_FreePathU8(outPath);
-                    // sceneManager.LoadScene(outFilePath); LOAD MEMORY PROFILE HERE
+                    ProfilerApp::Get().LoadMemoryScene(outFilePath);
                 }
                 else if (result == NFD_CANCEL)
                 {

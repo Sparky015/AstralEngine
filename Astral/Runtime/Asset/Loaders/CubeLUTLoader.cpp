@@ -87,8 +87,8 @@ namespace Astral::CubeLUTLoader {
                 return nullptr;
             }
 
-            cubeLUT.Shaper1D = Texture::Create1DTexture(shaperData.data(), shaperSize, ImageFormat::R32G32B32A32_SFLOAT);
-            cubeLUT.LUT3D = Texture::Create3DTexture(cubeLUTData.data(), cubeLUTSideLength, cubeLUTSideLength, ImageFormat::R32G32B32A32_SFLOAT);
+            cubeLUT.Shaper1D = Texture::Create1DTexture(shaperData.data(), shaperData.size() * sizeof(Vec4), shaperSize, ImageFormat::R32G32B32A32_SFLOAT);
+            cubeLUT.LUT3D = Texture::Create3DTexture(cubeLUTData.data(), cubeLUTData.size() * sizeof(Vec4), cubeLUTSideLength, cubeLUTSideLength, ImageFormat::R32G32B32A32_SFLOAT);
             cubeLUT.ShaperInputRange = shaperInputRange;
         }
 

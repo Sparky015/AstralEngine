@@ -107,6 +107,12 @@ namespace Astral {
         uint32 GetNumMipLevels() override { return m_NumMipLevels; }
 
         /**
+         * @brief  Gets the MSAA sample count of the texture
+         * @return The MSAA sample count of the texture
+         */
+        SampleCount GetMSAASampleCount() override;
+
+        /**
          * @brief  Gets the native image view of a specific layer in the texture
          * @return The native image view of a specific layer in the texture or nullptr if the layer num is not valid
          * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
@@ -127,10 +133,11 @@ namespace Astral {
 
         /**
          * @brief  Gets the native image view handle of the texture at a specific layer and mip level
-         * @param layer The layer to view the image at
-         * @param mipLevel The mip level to view the image at
+         * @param layer The layer to view the image at. Make argument -1 to include all layers in texture.
+         * @param mipLevel The mip level to view the image at. Make argument -1 to include all mip map levels in texture.
          * @return The native image view of the texture
-         * @note   The void pointer maps to the native image view handle of the selected renderer api backend
+         * @note   The void pointer maps to the native image view handle of the selected renderer api backend.
+         *
          */
         void* GetNativeImageView(uint32 layer, uint32 mipLevel) override;
 
@@ -155,6 +162,11 @@ namespace Astral {
          * @note   The void pointer maps to the native vulkan image view handle (VkImageView)
          */
         void* GetNativeImageView() override { return m_ImageView; }
+
+        VulkanTexture(const VulkanTexture&) = delete;
+        VulkanTexture& operator=(const VulkanTexture&) = delete;
+        VulkanTexture(VulkanTexture&& other) noexcept;
+        VulkanTexture& operator=(VulkanTexture&& other) noexcept;
 
     private:
 
@@ -228,29 +240,34 @@ namespace Astral {
 
 
         VulkanDevice* m_DeviceManager;
-        VkDevice m_Device;
-        VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
-        uint32 m_ImageWidth;
-        uint32 m_ImageHeight;
-        uint32 m_ImageDepth;
-        VkFormat m_Format;
-        VkImageLayout m_CurrentLayout;
 
+        VkDevice m_Device;
         VkImage m_Image;
-        VkDeviceMemory m_ImageMemory;
-        uint32 m_AllocationSize;
+        VkSampler m_Sampler;
+
         VkImageView m_ImageView;
-        ImageUsageFlags m_ImageUsageFlags;
         std::vector<VkImageView> m_LayerImageViews; // All layer image views are at mip 0
         std::map<std::pair<uint32, uint32>, VkImageView> m_LayerMipImageViews;
 
-        VkSampler m_Sampler;
+        uint32 m_ImageWidth;
+        uint32 m_ImageHeight;
+        uint32 m_ImageDepth;
+
+        VkFormat m_Format;
+        VkImageLayout m_CurrentLayout;
+        ImageUsageFlags m_ImageUsageFlags;
         ImageAspectFlags m_ImageAspect;
+        SampleCount m_MSAASampleCount;
+        bool m_IsSwapchainOwned;
+
         uint32 m_NumLayers;
         uint32 m_NumMipLevels;
         TextureType m_TextureType;
+        GPUMemoryType m_MemoryType;
 
-        bool m_IsSwapchainOwned;
+        VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
+        VkDeviceMemory m_ImageMemory;
+        uint32 m_AllocationSize;
     };
 
 }

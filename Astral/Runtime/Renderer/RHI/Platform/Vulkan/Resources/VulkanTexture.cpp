@@ -22,18 +22,22 @@ namespace Astral {
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
 		m_DeviceManager(desc.VulkanDevice),
         m_Device(desc.Device),
-		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
+        m_Image(),
+        m_Sampler(),
+        m_ImageView(),
         m_ImageWidth(desc.ImageWidth),
         m_ImageHeight(desc.ImageHeight),
+        m_ImageDepth(1),
 		m_Format(ConvertImageFormatToVkFormat(desc.ImageFormat)),
-        m_Image(),
-        m_ImageView(),
 		m_ImageUsageFlags(desc.ImageUsageFlags),
-        m_Sampler(),
+        m_MSAASampleCount(desc.MSAASampleCount),
+		m_IsSwapchainOwned(false),
         m_NumLayers(desc.NumLayers),
 		m_NumMipLevels(desc.NumMipLevels),
 		m_TextureType(desc.TextureType),
-		m_IsSwapchainOwned(false)
+		m_PhysicalDeviceMemoryProperties(desc.PhysicalDeviceMemoryProperties),
+        m_ImageMemory(VK_NULL_HANDLE),
+        m_AllocationSize(0)
     {
         CreateTexture(desc);
     	AllocateTextureMemory();
@@ -113,6 +117,12 @@ namespace Astral {
     }
 
 
+    SampleCount VulkanTexture::GetMSAASampleCount()
+    {
+        return m_MSAASampleCount;
+    }
+
+
     void* VulkanTexture::GetNativeMipMapImageView(uint32 mipLevel)
     {
 		ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
@@ -177,17 +187,29 @@ namespace Astral {
 
     void* VulkanTexture::GetNativeImageView(uint32 layer, uint32 mipLevel)
     {
-    	ASSERT(layer < m_NumLayers, "Specified layer does not exist in the texture!")
-    	ASSERT(mipLevel < m_NumMipLevels, "Specified mip level does not exist in the texture!")
+    	ASSERT(layer < m_NumLayers || layer == -1, "Specified layer does not exist in the texture!")
+    	ASSERT(mipLevel < m_NumMipLevels || layer == -1, "Specified mip level does not exist in the texture!")
 
     	if (m_LayerMipImageViews.contains({layer, mipLevel})) { return m_LayerMipImageViews[{layer, mipLevel}]; }
 
+        if (layer == -1 && mipLevel == -1)
+        {
+            return m_ImageView;
+        }
+        else if (layer == -1)
+        {
+            return GetNativeMipMapImageView(mipLevel);
+        }
+        else if (mipLevel == -1)
+        {
+            return GetNativeLayerImageView(layer);
+        }
 
     	// Image view does not exist yet so create it
 
     	VkImageAspectFlags aspectFlags{};
 
-    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT)
+    	if (m_ImageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT || m_ImageUsageFlags & ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT || m_IsSwapchainOwned)
     	{
     		aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
     	}
@@ -235,6 +257,130 @@ namespace Astral {
 
     	m_LayerMipImageViews[{layer, mipLevel}] = layerMipLevelImageView;
     	return layerMipLevelImageView;
+    }
+
+
+    VulkanTexture::VulkanTexture(VulkanTexture&& other) noexcept :
+        m_Device(other.m_Device),
+        m_Image(other.m_Image),
+        m_Sampler(other.m_Sampler),
+
+        m_ImageView(other.m_ImageView),
+        m_LayerImageViews(std::move(other.m_LayerImageViews)),
+        m_LayerMipImageViews(std::move(other.m_LayerMipImageViews)),
+
+        m_ImageWidth(other.m_ImageWidth),
+        m_ImageHeight(other.m_ImageHeight),
+        m_ImageDepth(other.m_ImageDepth),
+
+        m_Format(other.m_Format),
+        m_CurrentLayout(other.m_CurrentLayout),
+        m_ImageUsageFlags(other.m_ImageUsageFlags),
+        m_ImageAspect(other.m_ImageAspect),
+        m_IsSwapchainOwned(other.m_IsSwapchainOwned),
+
+        m_NumLayers(other.m_NumLayers),
+        m_NumMipLevels(other.m_NumMipLevels),
+        m_TextureType(other.m_TextureType),
+        m_MemoryType(other.m_MemoryType),
+
+        m_ImageMemory(other.m_ImageMemory),
+        m_AllocationSize(other.m_AllocationSize)
+    {
+        other.m_Device = nullptr;
+        other.m_Image = nullptr;
+        other.m_Sampler = nullptr;
+
+        other.m_ImageView = nullptr;
+
+        other.m_ImageWidth = 0;
+        other.m_ImageHeight = 0;
+        other.m_ImageDepth = 0;
+
+        other.m_Format = VK_FORMAT_UNDEFINED;
+        other.m_CurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        other.m_ImageUsageFlags = 0;
+        other.m_ImageAspect = 0;
+        other.m_IsSwapchainOwned = false;
+
+        other.m_NumLayers = 0;
+        other.m_NumMipLevels = 0;
+        other.m_TextureType = TextureType::IMAGE_1D;
+        other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+        other.m_ImageMemory = nullptr;
+        other.m_AllocationSize = 0;
+    }
+
+
+    VulkanTexture& VulkanTexture::operator=(VulkanTexture&& other) noexcept
+    {
+        if (this != &other)
+        {
+            // Clean up old texture, allocation, sampler and image views if they exists
+            DestroyImageSampler();
+
+            if (!m_IsSwapchainOwned)
+            {
+                DestroyImageView();
+                DestroyTexture();
+                FreeTextureMemory();
+            }
+
+
+            m_Device = other.m_Device;
+            m_Image = other.m_Image;
+            m_Sampler = other.m_Sampler;
+
+            m_ImageView = other.m_ImageView;
+            m_LayerImageViews = std::move(other.m_LayerImageViews);
+            m_LayerMipImageViews = std::move(other.m_LayerMipImageViews);
+
+            m_ImageWidth = other.m_ImageWidth;
+            m_ImageHeight = other.m_ImageHeight;
+            m_ImageDepth = other.m_ImageDepth;
+
+            m_Format = other.m_Format;
+            m_CurrentLayout = other.m_CurrentLayout;
+            m_ImageUsageFlags = other.m_ImageUsageFlags;
+            m_ImageAspect = other.m_ImageAspect;
+            m_IsSwapchainOwned = other.m_IsSwapchainOwned;
+
+            m_NumLayers = other.m_NumLayers;
+            m_NumMipLevels = other.m_NumMipLevels;
+            m_TextureType = other.m_TextureType;
+            m_MemoryType = other.m_MemoryType;
+
+            m_ImageMemory = other.m_ImageMemory;
+            m_AllocationSize = other.m_AllocationSize;
+
+
+            other.m_Device = nullptr;
+            other.m_Image = nullptr;
+            other.m_Sampler = nullptr;
+
+            other.m_ImageView = nullptr;
+
+            other.m_ImageWidth = 0;
+            other.m_ImageHeight = 0;
+            other.m_ImageDepth = 0;
+
+            other.m_Format = VK_FORMAT_UNDEFINED;
+            other.m_CurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            other.m_ImageUsageFlags = 0;
+            other.m_ImageAspect = 0;
+            other.m_IsSwapchainOwned = false;
+
+            other.m_NumLayers = 0;
+            other.m_NumMipLevels = 0;
+            other.m_TextureType = TextureType::IMAGE_1D;
+            other.m_MemoryType = GPUMemoryType::HOST_VISIBLE;
+
+            other.m_ImageMemory = nullptr;
+            other.m_AllocationSize = 0;
+        }
+
+        return *this;
     }
 
 
@@ -298,6 +444,30 @@ namespace Astral {
             .pQueueFamilyIndices = nullptr,
             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED
         };
+
+
+        // Validate against edge cases and clamp inputs
+
+        if (desc.NumMipLevels > Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight))
+        {
+            uint32 clampedMipMapCount = Texture::CalculateMipMapLevels(desc.ImageWidth, desc.ImageHeight);
+            AE_WARN("Texture with dimensions (" << desc.ImageWidth << ", " << desc.ImageHeight << ") cannot support mip map count of "
+                    << desc.NumMipLevels << ". Clamping mip map level count to " << clampedMipMapCount << ". ");
+            imageCreateInfo.mipLevels = clampedMipMapCount;
+            m_NumMipLevels = clampedMipMapCount;
+        }
+        if (desc.NumLayers > 1 && (desc.TextureType != TextureType::IMAGE_2D_ARRAY && desc.TextureType != TextureType::CUBEMAP))
+        {
+            AE_WARN("Specified texture type does not support an array length of more than 1 (given " << desc.NumLayers << "). Clamping array length to 1!");
+            imageCreateInfo.arrayLayers = 1;
+            m_NumLayers = 1;
+        }
+        if (desc.NumMipLevels > 1 && desc.TextureType == TextureType::IMAGE_1D)
+        {
+            AE_WARN("Mip map level count of more than 1 is not supported with IMAGE_1D texture type. Clamping mip map level count to 1!");
+            imageCreateInfo.mipLevels = 1;
+            m_NumMipLevels = 1;
+        }
 
 
         VkResult result = vkCreateImage(m_Device, &imageCreateInfo, nullptr, &m_Image);
@@ -390,6 +560,7 @@ namespace Astral {
     	VkResult result = vkCreateImageView(m_Device, &imageViewCreateInfo, nullptr, &m_ImageView);
     	ASSERT(result == VK_SUCCESS, "Failed to create image view!");
 
+        m_LayerMipImageViews[{-1, -1}] = m_ImageView;
 
 
     	// Create image views for image layers
@@ -421,8 +592,6 @@ namespace Astral {
 
     void VulkanTexture::DestroyImageView()
     {
-    	vkDestroyImageView(m_Device, m_ImageView, nullptr);
-
     	for (VkImageView layerImageView : m_LayerImageViews)
     	{
     		if (layerImageView == nullptr) { continue; }
@@ -440,7 +609,7 @@ namespace Astral {
     void VulkanTexture::UploadDataToTexture(uint8* data, uint32 dataLength, bool generateMipMaps)
     {
     	// Calculates only the base texture size
-    	uint32 imageSize = Texture::CalculateMipMapLevelSize(ConvertVkFormatToImageFormat(m_Format), m_ImageWidth,
+    	uint32 imageSize = Texture::CalculateRequiredTextureMemory(ConvertVkFormatToImageFormat(m_Format), m_ImageWidth,
     																		m_ImageHeight, m_ImageDepth, m_NumLayers);
 
 
@@ -682,7 +851,7 @@ namespace Astral {
 
         		// Calculate memory usage info for next mipmap to see the image buffer has data for the next mipmap
 
-        		uint32 mipmapLevelSize = Texture::CalculateMipMapLevelSize(ConvertVkFormatToImageFormat(m_Format), mipWidth,
+        		uint32 mipmapLevelSize = Texture::CalculateRequiredTextureMemory(ConvertVkFormatToImageFormat(m_Format), mipWidth,
 																			mipHeight, mipDepth, m_NumLayers);
         		usedBuffer += mipmapLevelSize;
         		if (usedBuffer >= stagingBuffer.GetAllocatedSize()) { break; }

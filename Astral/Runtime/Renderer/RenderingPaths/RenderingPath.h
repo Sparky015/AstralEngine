@@ -32,7 +32,7 @@ namespace Astral {
         /**
          * @brief Defines render pass resources and builds the render passes into a render graph
          */
-        virtual void BuildRenderGraph(RenderGraph& outRenderGraph, const std::vector<TextureHandle>& outputTextures) = 0;
+        virtual void BuildRenderGraph(RenderGraph& outRenderGraph, UVec2 outputAttachmentDimensions) = 0;
 
     private:
 

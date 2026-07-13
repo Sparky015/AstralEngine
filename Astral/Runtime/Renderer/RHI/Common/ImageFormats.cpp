@@ -458,4 +458,117 @@ namespace Astral {
     	}
 	}
 
+
+        bool IsFloatingPointFormat(ImageFormat imageFormat)
+    {
+        switch (imageFormat)
+        {
+            // 16-bit Float
+            case ImageFormat::R16_SFLOAT:
+            case ImageFormat::R16G16_SFLOAT:
+            case ImageFormat::R16G16B16_SFLOAT:
+            case ImageFormat::R16G16B16A16_SFLOAT:
+            // 32-bit Float
+            case ImageFormat::R32_SFLOAT:
+            case ImageFormat::R32G32_SFLOAT:
+            case ImageFormat::R32G32B32_SFLOAT:
+            case ImageFormat::R32G32B32A32_SFLOAT:
+            // Packed Floats
+            case ImageFormat::B10G11R11_UFLOAT_PACK32:
+            case ImageFormat::E5B9G9R9_UFLOAT_PACK32:
+            // Compressed Floats
+            case ImageFormat::BC6H_UFLOAT_BLOCK:
+            case ImageFormat::BC6H_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_4x4_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_5x4_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_5x5_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_6x5_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_6x6_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_8x5_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_8x6_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_8x8_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_10x5_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_10x6_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_10x8_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_10x10_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_12x10_SFLOAT_BLOCK:
+            case ImageFormat::ASTC_12x12_SFLOAT_BLOCK:
+            // Depth Floats
+            case ImageFormat::D32_SFLOAT:
+            case ImageFormat::D32_SFLOAT_S8_UINT:
+                return true;
+
+            default: return false;
+        }
+    }
+
+
+    bool IsIntegerFormat(ImageFormat imageFormat)
+    {
+        switch (imageFormat)
+        {
+            // 8-bit Int
+            case ImageFormat::R8_UINT:
+            case ImageFormat::R8_SINT:
+            case ImageFormat::R8G8_UINT:
+            case ImageFormat::R8G8_SINT:
+            case ImageFormat::R8G8B8_UINT:
+            case ImageFormat::R8G8B8_SINT:
+            case ImageFormat::B8G8R8_UINT:
+            case ImageFormat::B8G8R8_SINT:
+            case ImageFormat::R8G8B8A8_UINT:
+            case ImageFormat::R8G8B8A8_SINT:
+            case ImageFormat::B8G8R8A8_UINT:
+            case ImageFormat::B8G8R8A8_SINT:
+            // 16-bit Int
+            case ImageFormat::R16_UINT:
+            case ImageFormat::R16_SINT:
+            case ImageFormat::R16G16_UINT:
+            case ImageFormat::R16G16_SINT:
+            case ImageFormat::R16G16B16_UINT:
+            case ImageFormat::R16G16B16_SINT:
+            case ImageFormat::R16G16B16A16_UINT:
+            case ImageFormat::R16G16B16A16_SINT:
+            // 32-bit Int
+            case ImageFormat::R32_UINT:
+            case ImageFormat::R32_SINT:
+            case ImageFormat::R32G32_UINT:
+            case ImageFormat::R32G32_SINT:
+            case ImageFormat::R32G32B32_UINT:
+            case ImageFormat::R32G32B32_SINT:
+            case ImageFormat::R32G32B32A32_UINT:
+            case ImageFormat::R32G32B32A32_SINT:
+                return true;
+
+            default: return false;
+        }
+    }
+
+
+    bool IsDepthFormat(ImageFormat imageFormat)
+    {
+        switch (imageFormat)
+        {
+            case ImageFormat::D16_UNORM:
+            case ImageFormat::D32_SFLOAT:
+            case ImageFormat::D24_UNORM_S8_UINT:
+            case ImageFormat::D32_SFLOAT_S8_UINT:
+            case ImageFormat::D16_UNORM_S8_UINT:
+                return true;
+            default: return false;
+        }
+    }
+
+
+    bool IsStencilFormat(ImageFormat imageFormat)
+    {
+        switch (imageFormat)
+        {
+            case ImageFormat::D24_UNORM_S8_UINT: return true;
+            case ImageFormat::D32_SFLOAT_S8_UINT: return true;
+            case ImageFormat::D16_UNORM_S8_UINT: return true;
+            default: return false;
+        }
+    }
+
 }
