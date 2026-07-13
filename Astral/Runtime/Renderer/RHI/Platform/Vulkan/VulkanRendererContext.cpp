@@ -11,6 +11,7 @@
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
+#include "Common/VkEnumConversions.h"
 
 #ifdef ASTRAL_VULKAN_AVAILABLE
 #endif
@@ -30,7 +31,8 @@ namespace Astral {
         m_Window(window),
         m_WindowSurface(VK_NULL_HANDLE),
         m_QueueFamilyIndex(-1), // Wraps around to max uint32 to start with an invalid index
-        m_Device(VK_NULL_HANDLE)
+        m_Device(VK_NULL_HANDLE),
+        m_PipelineStateCache()
     {
     }
 
@@ -49,6 +51,7 @@ namespace Astral {
         m_QueueFamilyIndex = m_PhysicalDevices.SelectedQueueFamily();
 
         CreateDevice();
+        m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
     }
 
 
@@ -56,6 +59,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
+        m_PipelineStateCache.reset();
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
@@ -196,9 +200,67 @@ namespace Astral {
     }
 
 
+    static void PopulateVkPipelineRenderingCreateInfoHelper(const RenderPassHandle& renderPassHandle, VkPipelineRenderingCreateInfo* outRenderingCreateInfo, std::vector<VkFormat>& outColorAttachmentFormats)
+    {
+        if (outRenderingCreateInfo == nullptr) { return; }
+
+         *outRenderingCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
+            .pNext = nullptr,
+            .viewMask = 0,
+            .colorAttachmentCount = 0,
+            .pColorAttachmentFormats = nullptr,
+            .depthAttachmentFormat = VK_FORMAT_UNDEFINED,
+            .stencilAttachmentFormat = VK_FORMAT_UNDEFINED,
+        };
+
+
+        // ==== Populating the color attachments format fields ========================================================
+
+        const std::vector<AttachmentReference>& colorAttachmentReferences = renderPassHandle->GetColorAttachmentReferences();
+
+        for (int i = 0; i < colorAttachmentReferences.size(); i++)
+        {
+            const AttachmentReference& colorAttachmentReference = colorAttachmentReferences[i];
+            AttachmentDescription colorAttachmentDescription = renderPassHandle->GetAttachmentDescription(colorAttachmentReference.AttachmentIndex);
+            VkFormat vkAttachmentFormat = ConvertImageFormatToVkFormat(colorAttachmentDescription.Format);
+            outColorAttachmentFormats.push_back(vkAttachmentFormat);
+        }
+
+        outRenderingCreateInfo->colorAttachmentCount = outColorAttachmentFormats.size();
+        outRenderingCreateInfo->pColorAttachmentFormats = outColorAttachmentFormats.data();
+
+        // ==== Populating the depth/stencil attachment format fields ========================================================
+
+        AttachmentReference depthStencilAttachmentReference = renderPassHandle->GetDepthStencilAttachmentReference();
+
+        if (depthStencilAttachmentReference.AttachmentIndex != NullAttachmentIndex)
+        {
+            // Depth stencil attachment exists
+
+            AttachmentDescription depthStencilAttachmentDescription = renderPassHandle->GetAttachmentDescription(depthStencilAttachmentReference.AttachmentIndex);
+            VkFormat vkDepthStencilAttachmentFormat = ConvertImageFormatToVkFormat(depthStencilAttachmentDescription.Format);
+            outRenderingCreateInfo->depthAttachmentFormat = vkDepthStencilAttachmentFormat;
+
+            if (IsStencilFormat(depthStencilAttachmentDescription.Format))
+            {
+                outRenderingCreateInfo->stencilAttachmentFormat = vkDepthStencilAttachmentFormat;
+            }
+        }
+    }
+
+
     void VulkanRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
     {
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
+        VkPipelineRenderingCreateInfo pipelineRenderingCreateInfo{};
+        std::vector<VkFormat> colorAttachmentFormats; // Temp var to hold color attachment formats for the lifetime of the pipelineRenderingCreateInfo variable (so that the memory does not get freed before the pipelineRenderingCreateInfo is used)
+        PopulateVkPipelineRenderingCreateInfoHelper(renderPassHandle, &pipelineRenderingCreateInfo, colorAttachmentFormats);
+
+        ImGui_ImplVulkan_PipelineInfo pipelineInfoMain{};
+        pipelineInfoMain.RenderPass = nullptr;
+        pipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT,
+        pipelineInfoMain.Subpass = 0,
+        pipelineInfoMain.PipelineRenderingCreateInfo = pipelineRenderingCreateInfo;
 
         ImGui_ImplVulkan_InitInfo initInfo =
         {
@@ -207,24 +269,33 @@ namespace Astral {
             .Device = (VkDevice)m_Device->GetNativeHandle(),
             .QueueFamily = m_QueueFamilyIndex,
             .Queue = (VkQueue)m_Device->GetPrimaryCommandQueue()->GetNativeHandle(),
-            .RenderPass = renderPass,
+            .DescriptorPoolSize = 9,
             .MinImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
             .ImageCount = m_Device->GetSwapchain().GetNumberOfImages(),
-            .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
-            .Subpass = renderPassHandle->GetNumberOfSubpasses() - 1,
-            .DescriptorPoolSize = 9,
+            .PipelineInfoMain = pipelineInfoMain,
+            .UseDynamicRendering = true,
             .MinAllocationSize = 1024 * 1024,
         };
 
         ImGui_ImplVulkan_Init(&initInfo);
-        ImGui_ImplVulkan_CreateFontsTexture();
+    }
+
+
+    void VulkanRenderingContext::MarkNewImGuiFrame()
+    {
+        ImGui_ImplVulkan_NewFrame();
     }
 
 
     void VulkanRenderingContext::ShutdownImGuiForAPIBackend()
     {
-        ImGui_ImplVulkan_DestroyFontsTexture();
         ImGui_ImplVulkan_Shutdown();
+    }
+
+
+    PipelineStateCache& VulkanRenderingContext::GetPipelineStateCache()
+    {
+        return *m_PipelineStateCache;
     }
 
 

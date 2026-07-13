@@ -20,13 +20,22 @@ namespace Astral {
         ProfilerApp();
         ~ProfilerApp();
 
+        /**
+         * @brief Gets the ProfilerApp singleton instance
+         * @return The ProfilerApp singleton instance
+         */
+        static ProfilerApp& Get();
+
         void Init();
         void Shutdown();
+
+        void LoadMemoryScene(std::string filePath);
 
     private:
 
         void UpdateProfilerAppUI();
 
+        static ProfilerApp* m_Instance; // Pointing to memory on the stack
         bool m_ShowDebugWindow = true;
 
         SceneMetricsImporter m_SceneMetricsImporter;

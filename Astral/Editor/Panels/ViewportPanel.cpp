@@ -52,8 +52,7 @@ namespace Astral {
             SceneRenderer::ResizeViewport(m_ContentRegionSize.x, m_ContentRegionSize.y);
         }
 
-        DescriptorSetHandle viewportTexture = Astral::SceneRenderer::GetViewportTexture();
-        ImGui::Image((ImTextureID)viewportTexture->GetNativeHandle(), m_ContentRegionSize);
+        ImGui::Image(SceneRenderer::GetViewportTexture(), m_ContentRegionSize);
     }
 
 

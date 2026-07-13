@@ -65,7 +65,7 @@ namespace Astral::AllocatorUtils {
           case ASANRegionPermission::AccessGranted:
               ASAN_UNPOISON_MEMORY_REGION(startAddress, size);
               break;
-          default: ASTRAL_ERROR("Undefined ASANRegionPermission value was passed to SetMemoryRegionAccess!")
+          default: AE_ERROR("Undefined ASANRegionPermission value was passed to SetMemoryRegionAccess!");
       }
 #endif
     }

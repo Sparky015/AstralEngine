@@ -28,8 +28,12 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneRenderer::Shutdown");
 
-        m_Renderer->Shutdown();
-        m_Renderer.reset();
+        if (m_Renderer)
+        {
+            m_Renderer->Shutdown();
+            m_Renderer.reset();
+            m_Renderer = nullptr;
+        }
     }
 
 
@@ -69,7 +73,7 @@ namespace Astral {
     }
 
 
-    DescriptorSetHandle SceneRenderer::GetViewportTexture()
+    ImTextureID SceneRenderer::GetViewportTexture()
     {
         return m_Renderer->GetViewportTexture();
     }

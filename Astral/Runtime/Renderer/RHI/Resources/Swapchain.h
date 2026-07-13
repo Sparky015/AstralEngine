@@ -32,10 +32,16 @@ namespace Astral {
         virtual uint32 GetNumberOfImages() = 0;
 
         /**
-         * @brief  Gets the render targets in the swapchain
-         * @return The render targets in the swapchain
+         * @brief Get the swapchain images' format
+         * @return The swapchain images' format
          */
-        virtual std::vector<RenderTargetHandle>& GetRenderTargets() = 0;
+        virtual ImageFormat GetImageFormat() = 0;
+
+        /**
+         * @brief Get the swapchain images' dimensions
+         * @return The swapchain images' dimensions
+         */
+        virtual UVec2 GetImageDimensions() = 0;
 
         /**
          * @brief Recreates the swapchain with the specified dimensions

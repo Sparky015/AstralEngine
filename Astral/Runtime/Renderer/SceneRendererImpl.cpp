@@ -16,23 +16,15 @@
 #include "Renderer/RHI/Resources/RenderTarget.h"
 #include "Renderer/RHI/Resources/Shader.h"
 #include "Renderer/RendererManager.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Common/CubeLUT.h"
 #include "Debug/ImGui/ImGuiManager.h"
-#include "RHI/RendererAPI.h"
-#include "RHI/Resources/CommandBuffer.h"
-#include "RHI/Resources/RenderTarget.h"
-#include "RHI/Resources/Shader.h"
-#include "Renderer/RendererManager.h"
 #include "Scenes/SceneManager.h"
 #include "Window/WindowManager.h"
 
-#include <glm/gtc/type_ptr.hpp>
 
 #include <future>
 #include <numeric>
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -43,7 +35,7 @@ namespace Astral {
         m_WindowResizedListener = EventListener<FramebufferResizedEvent>{[this](FramebufferResizedEvent event) { ResizeWindowImages(event.Width, event.Height); }};
         m_WindowResizedListener.StartListening();
 
-        m_ViewportSize = RendererAPI::GetContext().GetFramebufferSize();
+        m_ViewportSize = RendererAPI::GetContext().GetWindowFramebufferDimensions();
         m_CurrentFrameIndex = 0;
 
 
@@ -72,31 +64,28 @@ namespace Astral {
         SetRendererSettings(rendererSettings);
 
 
-        m_PipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
-        m_CurrentViewportTexture.push(m_FrameContexts[1].OffscreenDescriptorSet);
+        PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
+        pipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
+        m_CurrentViewportTexture = m_FrameContexts[1].OffscreenDescriptorSet;
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        m_DeferredGeometryPassUnpackedShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassUnpacked.frag");
-        m_DeferredGeometryPassORMShader = registry.CreateAsset<Shader>("Shaders/DeferredGeometryPassORM.frag");
-        m_DeferredLightingShader = registry.CreateAsset<Shader>("Shaders/DeferredLightingPass.frag");
-        m_ForwardUnpackedLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassUnpacked.frag");
-        m_ForwardORMLightingShader = registry.CreateAsset<Shader>("Shaders/ForwardLightingPassORM.frag");
-        m_DepthWriteOnlyShader = registry.CreateAsset<Shader>("Shaders/DepthWriteOnly.frag");
-        m_ShadowMapShader = registry.CreateAsset<Shader>("Shaders/ShadowMap.vert");
 
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
-        m_RTT_ODT_LUT_DescriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
-        m_RTT_ODT_LUT_DescriptorSet->BeginBuildingSet();
-        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->LUT3D, ShaderStage::FRAGMENT);
-        m_RTT_ODT_LUT_DescriptorSet->AddDescriptorImageSampler(toneMappingLUT->Shaper1D, ShaderStage::FRAGMENT);
-        m_RTT_ODT_LUT_DescriptorSet->EndBuildingSet();
+        Device& device = RendererAPI::GetDevice();
+        Swapchain& swapchain = device.GetSwapchain();
+        uint32 numSwapchainImages = swapchain.GetNumberOfImages();
+
+        m_ForwardRendererPath.InitRenderPasses(numSwapchainImages);
+        m_DeferredRendererPath.InitRenderPasses(numSwapchainImages);
     }
 
 
     void SceneRendererImpl::Shutdown()
     {
         PROFILE_SCOPE("SceneRenderer::Shutdown")
+
+        m_DeferredRendererPath.ShutdownRenderPasses();
+        m_ForwardRendererPath.ShutdownRenderPasses();
+
         m_WindowResizedListener.StopListening();
 
         Device& device = RendererAPI::GetDevice();
@@ -129,7 +118,7 @@ namespace Astral {
         m_CurrentFrameIndex++;
         if (m_CurrentFrameIndex == 3) { m_CurrentFrameIndex = 0; }
 
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         frameContext.SceneRenderTarget = renderTarget;
 
         SceneData sceneData = {
@@ -145,8 +134,6 @@ namespace Astral {
             .NumShadowCascades = 3,
         };
 
-        m_SceneCamera = sceneDescription.Camera;
-
         frameContext.SceneDataBuffer->CopyDataToBuffer(&sceneData, sizeof(SceneData));
 
         if (sizeof(Light) * sceneData.NumLights > frameContext.SceneLightsBuffer->GetAllocatedSize())
@@ -155,7 +142,7 @@ namespace Astral {
             frameContext.SceneLightsBuffer->ReallocateMemory(currentBufferAllocation * 2);
             frameContext.SceneDataDescriptorSet->UpdateStorageBufferBinding(1, frameContext.SceneLightsBuffer); // Reallocation will create a new buffer, so re-add that buffer to descriptor set
         }
-        frameContext.SceneLightsBuffer->CopyDataToBuffer(sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
+        frameContext.SceneLightsBuffer->CopyDataToBuffer((void*)sceneDescription.Lights.data(), sizeof(Light) * sceneData.NumLights);
 
         if (sceneDescription.EnvironmentMap)
         {
@@ -190,17 +177,7 @@ namespace Astral {
         }
 
 
-        for (Light& light : sceneDescription.Lights)
-        {
-            if (light.LightType == LightType::DIRECTIONAL)
-            {
-                m_FirstDirectionalLightInScene = light;
-            }
-        }
-
-
-        m_SceneExposure = sceneDescription.Exposure;
-        m_SceneViewProjection = sceneDescription.Camera.GetViewProjectionMatrix();
+        frameContext.SceneDescription = sceneDescription;
 
 
         frameContext.MainList.Clear();
@@ -208,12 +185,25 @@ namespace Astral {
     }
 
 
+    void SceneRendererImpl::EndScene()
+    {
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
+        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
+
+        {
+            PROFILE_SCOPE("SceneRenderer::EndScene")
+            m_IsSceneStarted = false;
+        }
+
+        RenderScene();
+    }
 
 
     void SceneRendererImpl::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
 
         if (!mesh) { AE_WARN("Empty mesh submitted! Skipping!"); return; }
         if (!material) { AE_WARN("Empty material submitted! Skipping!"); return; }
@@ -245,7 +235,7 @@ namespace Astral {
     void SceneRendererImpl::RenderScene()
     {
         PROFILE_SCOPE("SceneRenderer::RenderScene")
-        
+
         Device& device = RendererAPI::GetDevice();
 
         FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
@@ -328,14 +318,7 @@ namespace Astral {
 
         if (isRenderGraphRebuildNeeded)
         {
-            if (m_RendererSettings.RendererType == RendererType::DEFERRED)
-            {
-                BuildRenderGraphForDeferred();
-            }
-            else if (m_RendererSettings.RendererType == RendererType::FORWARD)
-            {
-                BuildRenderGraphForForward();
-            }
+            BuildRenderGraph();
         }
     }
 
@@ -346,146 +329,29 @@ namespace Astral {
     }
 
 
-    DescriptorSetHandle SceneRendererImpl::GetViewportTexture()
+    ImTextureID SceneRendererImpl::GetViewportTexture()
     {
-        DescriptorSetHandle& descriptorSet = m_CurrentViewportTexture.front();
-        m_CurrentViewportTexture.pop();
-        return descriptorSet;
+        DescriptorSetHandle descriptorSet = m_CurrentViewportTexture;
+        m_CurrentViewportTexture = nullptr;
+
+        if (SceneRenderer::GetRendererAPIBackend() == API::Metal)
+        {
+            const TextureHandle& textureHandle = descriptorSet->GetImageSampler(0);
+            return (ImTextureID)textureHandle->GetNativeImage();
+        }
+        else if (SceneRenderer::GetRendererAPIBackend() == API::Vulkan)
+        {
+            return (ImTextureID)descriptorSet->GetNativeHandle();
+        }
+        else
+        {
+            AE_ERROR("Undefined renderer backend api for GetViewportTexture")
+        }
     }
 
 
-    void SceneRendererImpl::BuildRenderGraphForDeferred()
+    void SceneRendererImpl::BuildRenderGraph()
     {
-
-        AttachmentDescription albedoBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription metallicBufferDescription = {
-            .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription roughnessBufferDescription = {
-            .Format = ImageFormat::R8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription emissionBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription normalBufferDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0)
-        };
-
-        AttachmentDescription depthBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0)
-        };
-
-        RenderGraphPass geometryPass = RenderGraphPass(OutputAttachmentDimensions, "GBuffer Pass", [&](){ GeometryPass(); });
-        geometryPass.CreateColorAttachment(albedoBufferDescription, "GBuffer_Albedo", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(metallicBufferDescription, "GBuffer_Metallic", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(roughnessBufferDescription, "GBuffer_Roughness", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(emissionBufferDescription, "GBuffer_Emission", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateColorAttachment(normalBufferDescription, "GBuffer_Normals", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        geometryPass.CreateDepthStencilAttachment(depthBufferDescription, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightDepthBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .LayerCount = (uint32)m_RendererSettings.NumShadowCascades,
-            .TextureType = TextureType::IMAGE_2D_ARRAY
-        };
-
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
-        shadowMapPass.CreateDepthStencilAttachment(lightDepthBufferDescription, "Light_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightingTextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-
-        RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ DeferredLightingPass(); });
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Albedo", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Metallic", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Roughness", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Emission", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Normals", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Light_Depth_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-
-        lightingPass.CreateColorAttachment(lightingTextureDescription, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        lightingPass.AddDependency(&shadowMapPass);
-
-
-        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](){ EnvironmentMapPass(); });
-        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.LinkWriteInputAttachment(&geometryPass, "GBuffer_Depth_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription toneMappingOutputTextureDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
-        tonemappingPass.LinkReadInputAttachment(&lightingPass, "Deferred_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&environmentMapPass);
-
         std::vector<TextureHandle> outputTextures;
         constexpr int numFramesInFlight = 3;
         outputTextures.reserve(numFramesInFlight);
@@ -495,138 +361,16 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        uint32 maxFramesInFlight = m_FrameContexts.size();
+        UVec2 outputAttachmentDimensions = outputTextures[0]->GetDimensions();
 
-
-        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
-        m_RenderGraph.AddPass(geometryPass);
-        m_RenderGraph.AddPass(shadowMapPass);
-        m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(environmentMapPass);
-        m_RenderGraph.AddOutputPass(tonemappingPass);
-
-        switch (m_RendererSettings.DebugView)
+        if (m_RendererSettings.RendererType == RendererType::DEFERRED)
         {
-            case RendererDebugView::NONE: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
-            case RendererDebugView::GBUFFER_ALBEDO: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Albedo", outputTextures); break;
-            case RendererDebugView::GBUFFER_ROUGHNESS: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Roughness", outputTextures); break;
-            case RendererDebugView::GBUFFER_METALLIC: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Metallic", outputTextures); break;
-            case RendererDebugView::GBUFFER_EMISSION: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Emission", outputTextures); break;
-            case RendererDebugView::GBUFFER_NORMAL: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Normals", outputTextures); break;
-            case RendererDebugView::DEPTH: m_RenderGraph.SetOutputAttachment(geometryPass, "GBuffer_Depth_Buffer", outputTextures); break;
-            default: m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures); break;
+            m_DeferredRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
-
-        m_RenderGraph.EndBuildingRenderGraph();
-    }
-
-    static constexpr SampleCount ForwardMSAASampleCount = SampleCount::SAMPLE_4_BIT;
-
-    void SceneRendererImpl::BuildRenderGraphForForward()
-    {
-
-        AttachmentDescription depthMSAABufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .MSAASamples = ForwardMSAASampleCount
-        };
-
-        RenderGraphPass depthPrePass = RenderGraphPass(OutputAttachmentDimensions, "Depth Pre-Pass", [&](){ DepthPrePass(); });
-        depthPrePass.CreateDepthStencilAttachment(depthMSAABufferDescription, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription shadowMapBufferDescription = {
-            .Format = ImageFormat::D32_SFLOAT_S8_UINT,
-            .ImageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(1.0, 0.0, 0.0, 1.0),
-            .LayerCount = (uint32)m_RendererSettings.NumShadowCascades,
-            .TextureType = TextureType::IMAGE_2D_ARRAY
-        };
-
-        RenderGraphPass shadowMapPass = RenderGraphPass(Vec3(m_RendererSettings.ShadowMapResolution, m_RendererSettings.ShadowMapResolution, m_RendererSettings.NumShadowCascades), "Shadow Map Pass", [&](){ CascadedShadowMapsPass(); });
-        shadowMapPass.CreateDepthStencilAttachment(shadowMapBufferDescription, "Shadow_Map_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-        AttachmentDescription lightingMSAATextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
-            .MSAASamples = ForwardMSAASampleCount,
-        };
-
-
-        RenderGraphPass lightingPass = RenderGraphPass(OutputAttachmentDimensions, "Lighting Pass", [&](){ ForwardLightingPass(); });
-        lightingPass.LinkReadInputAttachment(&shadowMapPass, "Shadow_Map_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        lightingPass.CreateColorAttachment(lightingMSAATextureDescription, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        lightingPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        lightingPass.AddDependency(&shadowMapPass);
-
-        AttachmentDescription lightingResolveTextureDescription = {
-            .Format = ImageFormat::R16G16B16A16_SFLOAT,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::DONT_CARE,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .FinalLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 0.0, 1.0),
-        };
-
-        RenderGraphPass environmentMapPass = RenderGraphPass(OutputAttachmentDimensions, "Environment Map Pass", [&](){ MSAAEnvironmentPass(); });
-        environmentMapPass.LinkWriteInputAttachment(&lightingPass, "Forward_Lighting_MSAA_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.CreateResolveAttachment(lightingResolveTextureDescription, "Forward_Lighting_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        environmentMapPass.LinkWriteInputAttachment(&depthPrePass, "Forward_Depth_MSSA_Buffer", ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-
-
-
-        AttachmentDescription toneMappingOutputTextureDescription = {
-            .Format = ImageFormat::R8G8B8A8_UNORM,
-            .ImageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-            .LoadOp = AttachmentLoadOp::CLEAR,
-            .StoreOp = AttachmentStoreOp::STORE,
-            .InitialLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .FinalLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-            .ClearColor = Vec4(0.0, 0.0, 1.0, 1.0)
-        };
-
-        RenderGraphPass tonemappingPass = RenderGraphPass(OutputAttachmentDimensions, "Tonemapping Pass", [&](){ ToneMappingPass(); });
-        tonemappingPass.LinkReadInputAttachment(&environmentMapPass, "Forward_Lighting_Buffer", ImageLayout::SHADER_READ_ONLY_OPTIMAL);
-        tonemappingPass.CreateColorAttachment(toneMappingOutputTextureDescription, "Tonemapping_Output_Buffer", ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        tonemappingPass.AddDependency(&environmentMapPass);
-
-
-        std::vector<TextureHandle> outputTextures;
-        constexpr int numFramesInFlight = 3;
-        outputTextures.reserve(numFramesInFlight);
-        for (int i = 0; i < numFramesInFlight; i++)
+        else if (m_RendererSettings.RendererType == RendererType::FORWARD)
         {
-            TextureHandle offscreenOutput = m_FrameContexts[i].OffscreenRenderTarget;
-            outputTextures.push_back(offscreenOutput);
+            m_ForwardRendererPath.BuildRenderGraph(m_RenderGraph, outputAttachmentDimensions);
         }
-
-        uint32 maxFramesInFlight = m_FrameContexts.size();
-
-
-        m_RenderGraph.BeginBuildingRenderGraph(maxFramesInFlight, "World Rendering");
-        m_RenderGraph.AddPass(depthPrePass);
-        m_RenderGraph.AddPass(shadowMapPass);
-        m_RenderGraph.AddPass(lightingPass);
-        m_RenderGraph.AddPass(environmentMapPass);
-        m_RenderGraph.AddOutputPass(tonemappingPass);
-        m_RenderGraph.SetOutputAttachment(tonemappingPass, "Tonemapping_Output_Buffer", outputTextures);
-        m_RenderGraph.EndBuildingRenderGraph();
     }
 
 
@@ -634,14 +378,13 @@ namespace Astral {
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
 
 
         m_ImGuiRenderPass = device.CreateRenderPass();
         RenderPassHandle& imguiRenderPass = m_ImGuiRenderPass;
 
         AttachmentDescription renderTargetDescription = {
-            .Format = renderTargets[0]->GetImageFormat(),
+            .Format = swapchain.GetImageFormat(),
             .LoadOp = AttachmentLoadOp::CLEAR,
             .StoreOp = AttachmentStoreOp::STORE,
             .InitialLayout = ImageLayout::UNDEFINED,
@@ -651,9 +394,7 @@ namespace Astral {
 
         imguiRenderPass->BeginBuildingRenderPass();
         AttachmentIndex renderTargetIndex = imguiRenderPass->DefineAttachment(renderTargetDescription);
-        imguiRenderPass->BeginBuildingSubpass();
         imguiRenderPass->AddColorAttachment(renderTargetIndex, ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-        imguiRenderPass->EndBuildingSubpass();
         imguiRenderPass->EndBuildingRenderPass();
     }
 
@@ -664,22 +405,21 @@ namespace Astral {
         RenderingContext& renderingContext = RendererAPI::GetContext();
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        const std::vector<RenderTargetHandle>& renderTargets = swapchain.GetRenderTargets();
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
-            m_FrameContexts.emplace_back(FrameContext());
-            FrameContext& context = m_FrameContexts[i];
+            m_FrameContexts.emplace_back(SharedFrameContext());
+            SharedFrameContext& context = m_FrameContexts[i];
             context.MainList.Clear();
             context.ShadowMapList.Clear();
 
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-                .Dimensions = renderTargets[0]->GetDimensions(),
+                .Dimensions = swapchain.GetImageDimensions(),
                 .ImageData = nullptr,
                 .LayerCount = 1,
                 .MipMapCount = 1,
@@ -719,14 +459,6 @@ namespace Astral {
             std::string sceneDataDescriptorSetName = std::string("Scene_Data_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.SceneDataDescriptorSet, sceneDataDescriptorSetName);
 
-            context.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            UVec2 frameBufferDimensions = renderingContext.GetFramebufferSize();
-            context.WindowFramebuffer->BeginBuildingFramebuffer(frameBufferDimensions.x, frameBufferDimensions.y);
-            context.WindowFramebuffer->AttachRenderTarget(renderTargets[i]);
-            context.WindowFramebuffer->EndBuildingFramebuffer();
-            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
-            RendererAPI::NameObject(context.WindowFramebuffer, windowFramebufferName);
-
 
             Ref<EnvironmentMap> environmentMap = registry.CreateAsset<EnvironmentMap>("Cubemaps/pretoria_gardens_4k.hdr");
             context.EnvironmentMap = environmentMap;
@@ -758,17 +490,17 @@ namespace Astral {
             std::string environmentMapDescriptorSetName = std::string("Environment_Map_Descriptor_Set_") + std::to_string(i);
             RendererAPI::NameObject(context.EnvironmentMapDescriptorSet, environmentMapDescriptorSetName);
 
-            context.IsEnvironmentMapIBLCalculationNeeded = true;
-
             context.ShadowLightMatrices = device.CreateUniformBuffer(nullptr, sizeof(Mat4) * 8, GPUMemoryType::HOST_VISIBLE);
             context.ShadowLightMatricesDescriptorSet = device.CreateDescriptorSet();
             context.ShadowLightMatricesDescriptorSet->BeginBuildingSet();
             context.ShadowLightMatricesDescriptorSet->AddDescriptorUniformBuffer(context.ShadowLightMatrices, ShaderStage::ALL);
             context.ShadowLightMatricesDescriptorSet->EndBuildingSet();
+
+            context.IsEnvironmentMapIBLCalculationNeeded = true;
         }
 
 
-        FrameContext& context = m_FrameContexts[0];
+        SharedFrameContext& context = m_FrameContexts[0];
         m_EnvironmentMapStorageImagesSet = device.CreateDescriptorSet();
         m_EnvironmentMapStorageImagesSet->BeginBuildingSet();
         m_EnvironmentMapStorageImagesSet->AddDescriptorImageSampler(context.EnvironmentMap->Environment, ShaderStage::COMPUTE);
@@ -778,29 +510,53 @@ namespace Astral {
     }
 
 
+    void SceneRendererImpl::RenderScene()
+    {
+        PROFILE_SCOPE("SceneRenderer::RenderScene")
+
+        // TODO: Sort the meshes by material
+        Device& device = RendererAPI::GetDevice();
+
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
+        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
+
+        commandBuffer->Reset();
+        commandBuffer->BeginRecording();
+
+        if (frameContext.IsEnvironmentMapIBLCalculationNeeded)
+        {
+            ComputeEnvironmentIBL();
+        }
+
+        // Viewport Rendering
+        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex, frameContext.OffscreenRenderTarget);
+
+        // Editor UI rendering to swapchain image
+        DrawEditorUI(commandBuffer, renderTarget);
+
+        commandBuffer->EndRecording();
+
+
+        CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
+        commandQueue->Submit(commandBuffer, renderTarget);
+        commandQueue->Present(renderTarget);
+
+
+        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
+        if (m_CurrentViewportTexture == nullptr)
+        {
+            m_CurrentViewportTexture = m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet;
+        }
+    }
+
+
     void SceneRendererImpl::ResizeWindowImages(uint32 width, uint32 height)
     {
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(width, height);
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            FrameContext& frameContext = m_FrameContexts[i];
-            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
-
-            framebuffer->BeginBuildingFramebuffer(width, height);
-            framebuffer->AttachRenderTarget(renderTargets[i]);
-            framebuffer->EndBuildingFramebuffer();
-
-            std::string windowFramebufferName = std::string("Window_Framebuffer_") + std::to_string(i);
-            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
-
-            std::string swapchainRenderTarget = std::string("Swapchain_Render_Target_") + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTarget);
-        }
     }
 
 
@@ -810,585 +566,6 @@ namespace Astral {
         Swapchain& swapchain = device.GetSwapchain();
         device.WaitIdle();
         swapchain.RecreateSwapchain(isVSyncEnabled);
-
-        Vec2 windowSize = Engine::Get().GetWindowManager().GetWindow().GetFramebufferDimensions();
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
-
-        for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
-        {
-            FrameContext& frameContext = m_FrameContexts[i];
-            frameContext.WindowFramebuffer = device.CreateFramebuffer(m_ImGuiRenderPass);
-            FramebufferHandle framebuffer = frameContext.WindowFramebuffer;
-
-            framebuffer->BeginBuildingFramebuffer(windowSize.x, windowSize.y);
-            framebuffer->AttachRenderTarget(renderTargets[i]);
-            framebuffer->EndBuildingFramebuffer();
-
-            std::string windowFramebufferName = "Window_Framebuffer_" + std::to_string(i);
-            RendererAPI::NameObject(frameContext.WindowFramebuffer, windowFramebufferName);
-            std::string swapchainRenderTargetName = "Swapchain_Render_Target_" + std::to_string(i);
-            RendererAPI::NameObject(renderTargets[i]->GetAsTexture(), swapchainRenderTargetName);
-        }
-    }
-
-
-    void SceneRendererImpl::DepthPrePass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::DepthPrePass")
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        DescriptorSetHandle materialDescriptorSetSave = nullptr;
-        ShaderHandle materialShaderSave = nullptr;
-
-        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
-        {
-            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
-            Material& material = *frameContext.MainList.GetMaterials()[i];
-
-            if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
-            if (material.DescriptorSet == nullptr) { continue; }
-            materialDescriptorSetSave = material.DescriptorSet;
-            material.DescriptorSet = nullptr;
-
-            materialShaderSave = material.FragmentShader;
-            material.FragmentShader = m_DepthWriteOnlyShader;
-
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
-
-            material.DescriptorSet = materialDescriptorSetSave;
-            material.FragmentShader = materialShaderSave;
-
-            commandBuffer->BindPipeline(pipeline);
-            commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-            commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-
-            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
-
-            commandBuffer->PushConstants(&frameContext.MainList.GetTransforms()[i], sizeof(frameContext.MainList.GetTransforms()[i]));
-
-            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
-        }
-
-    }
-
-
-
-    void SceneRendererImpl::ForwardLightingPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::ForwardLightingPass")
-
-        struct ForwardLightingPassPushData
-        {
-            Mat4 ModelMatrix;
-            uint32 HasNormalMap;
-            uint32 HasDirectXNormals;
-            float CameraZNear;
-            float CameraZFar;
-            int32 NumShadowCascades;
-            uint32 ShowCascadeDebugView;
-            float ShadowMapBias;
-            float ShadowMapCascadeLogFactor;
-        };
-        static_assert(sizeof(ForwardLightingPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
-
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, executionContext.ReadAttachments, frameContext.ShadowLightMatricesDescriptorSet});
-
-
-        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
-        {
-            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
-            Material& material = *frameContext.MainList.GetMaterials()[i];
-
-            if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
-            if (material.DescriptorSet == nullptr) { continue; }
-
-            if (material.TextureConvention == TextureConvention::UNPACKED)
-            {
-                material.FragmentShader = m_ForwardUnpackedLightingShader;
-            }
-            else if (material.TextureConvention == TextureConvention::ORM_PACKED)
-            {
-                material.FragmentShader = m_ForwardORMLightingShader;
-            }
-
-            Ref<Shader> vertexShader = mesh.VertexShader;
-
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
-            commandBuffer->BindPipeline(pipeline);
-            commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-            commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-            commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
-            commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 2);
-            commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 3);
-            commandBuffer->BindDescriptorSet(material.DescriptorSet, 4);
-
-            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
-
-
-            ForwardLightingPassPushData pushConstantData = {
-                .ModelMatrix = frameContext.MainList.GetTransforms()[i],
-                .HasNormalMap = material.HasNormalMap,
-                .HasDirectXNormals = material.HasDirectXNormals,
-                .CameraZNear = m_SceneCamera.GetNearPlane(),
-                .CameraZFar = m_SceneCamera.GetFarPlane(),
-                .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-                .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
-                .ShadowMapBias = m_RendererSettings.ShadowMapBias,
-                .ShadowMapCascadeLogFactor = m_RendererSettings.ShadowMapCascadeLogFactor,
-            };
-
-            commandBuffer->PushConstants(&pushConstantData, sizeof(ForwardLightingPassPushData));
-
-            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
-        }
-
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
-    }
-
-
-    void SceneRendererImpl::MSAAEnvironmentPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::MSAAEnvironmentPass")
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
-        // Cubemap
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
-
-        Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
-        cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
-
-        Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
-
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE, ForwardMSAASampleCount);
-        commandBuffer->BindPipeline(cubemapPipeline);
-        commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-        commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
-
-        commandBuffer->BindVertexBuffer(cubemapMesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(cubemapMesh->IndexBuffer);
-
-        commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        commandBuffer->DrawElementsIndexed(cubemapMesh->IndexBuffer);
-    }
-
-
-    void SceneRendererImpl::GeometryPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::GeometryPass")
-
-        struct GeometryPassPushData
-        {
-            Mat4 ModelMatrix;
-            uint32 HasNormalMap;
-            uint32 HasDirectXNormals;
-        };
-        static_assert(sizeof(GeometryPassPushData) <= MaxPushConstantRange, "Push constant can not be greater than MaxPushConstantRange (usually 128) bytes in size");
-
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        for (uint32 i = 0; i < frameContext.MainList.Size(); i++)
-        {
-            Mesh& mesh = *frameContext.MainList.GetMeshes()[i];
-            Material& material = *frameContext.MainList.GetMaterials()[i];
-
-            if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
-            DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
-
-            if (material.TextureConvention == TextureConvention::UNPACKED)
-            {
-                material.FragmentShader = m_DeferredGeometryPassUnpackedShader;
-            }
-            else if (material.TextureConvention == TextureConvention::ORM_PACKED)
-            {
-                material.FragmentShader = m_DeferredGeometryPassORMShader;
-            }
-
-            PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, mesh, 0, CullMode::NONE);
-            commandBuffer->BindPipeline(pipeline);
-            commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-            GeometryPassPushData pushConstantData = {
-                .ModelMatrix = frameContext.MainList.GetTransforms()[i],
-                .HasNormalMap = material.HasNormalMap,
-                .HasDirectXNormals = material.HasDirectXNormals
-            };
-
-            commandBuffer->PushConstants(&pushConstantData, sizeof(GeometryPassPushData));
-
-            commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-            commandBuffer->BindDescriptorSet(materialDescriptorSet, 1);
-
-            commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh.IndexBuffer);
-
-            commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
-        }
-
-    }
-
-
-    void SceneRendererImpl::DeferredLightingPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::DeferredLightingPass")
-
-        struct DeferredLightingPushConstants
-        {
-            float CameraZNear;
-            float CameraZFar;
-            int32 NumShadowCascades;
-            uint32 ShowCascadeDebugView;
-            float ShadowMapBias;
-            float ShadowMapCascadeLogFactor;
-        };
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, frameContext.EnvironmentMapDescriptorSet, frameContext.ShadowLightMatricesDescriptorSet});
-
-        Ref<Mesh> mesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        mesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.MainList.GetMeshes().push_back(mesh); // Hold onto reference so it is not destroyed early
-        Material material{};
-        material.FragmentShader = m_DeferredLightingShader;
-        material.DescriptorSet = executionContext.ReadAttachments;
-
-        Ref<Shader> vertexShader = mesh->VertexShader;
-
-        PipelineStateHandle pipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, material, *mesh, 0, CullMode::NONE);
-        commandBuffer->BindPipeline(pipeline);
-        commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-        commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(frameContext.EnvironmentMapDescriptorSet, 1);
-        commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 2);
-        commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 3);
-
-        commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
-
-        DeferredLightingPushConstants deferredLightingPushConstants
-        {
-            .CameraZNear = m_SceneCamera.GetNearPlane(),
-            .CameraZFar = m_SceneCamera.GetFarPlane(),
-            .NumShadowCascades = m_RendererSettings.NumShadowCascades,
-            .ShowCascadeDebugView = m_RendererSettings.DebugView == RendererDebugView::CASCADED_SHADOW_MAP_BOUNDARIES,
-            .ShadowMapBias = m_RendererSettings.ShadowMapBias,
-            .ShadowMapCascadeLogFactor = m_RendererSettings.ShadowMapCascadeLogFactor
-        };
-
-        commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
-
-        commandBuffer->DrawElementsIndexed(mesh->IndexBuffer);
-
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
-    }
-
-
-
-    static std::vector<Vec4> GetFrustumCornersWorldSpace(const Mat4& projectionView)
-    {
-        const Mat4 cameraInverse = glm::inverse(projectionView);
-
-        std::vector<Vec4> frustumCorners;
-
-        // Loops to get each corner of the frustum
-        for (unsigned int x = 0; x < 2; ++x)
-        {
-            for (unsigned int y = 0; y < 2; ++y)
-            {
-                for (unsigned int z = 0; z < 2; ++z)
-                {
-                    const Vec4 point =
-                        cameraInverse * Vec4(
-                            2.0f * x - 1.0f,
-                            2.0f * y - 1.0f,
-                            2.0f * z - 1.0f,
-                            1.0f);
-                    frustumCorners.push_back(point / point.w);
-                }
-            }
-        }
-
-        return frustumCorners;
-    }
-
-
-    float SceneRendererImpl::CalcCascadeZFar(float zNear, float zFar, float cascadeNum, float totalCascades)
-    {
-        float blendFactor = m_RendererSettings.ShadowMapCascadeLogFactor;
-        const float logComponent = blendFactor * (zNear * std::pow((zFar / zNear), cascadeNum / totalCascades));
-        const float linearComponent = (1 - blendFactor) * (zNear + cascadeNum / totalCascades * (zFar - zNear));
-        return logComponent + linearComponent;
-    }
-
-
-    void SceneRendererImpl::CascadedShadowMapsPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::CascadedShadowMapsPass")
-
-        if (!m_RendererSettings.IsShadowsOn) { return; }
-        if (m_FirstDirectionalLightInScene.LightType != LightType::DIRECTIONAL) { return; }
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
-        m_LightSpaceMatrices.clear();
-
-        float zNear = m_SceneCamera.GetNearPlane();
-        float zFar = m_SceneCamera.GetFarPlane();
-        std::vector<float> frustumRanges;
-        frustumRanges.reserve(m_RendererSettings.NumShadowCascades);
-        frustumRanges.push_back(zNear);
-
-
-        for (uint32 i = 0; i < m_RendererSettings.NumShadowCascades; i++)
-        {
-            float cascadeZFar = CalcCascadeZFar(zNear, zFar, i + 1, m_RendererSettings.NumShadowCascades);
-            frustumRanges.push_back(cascadeZFar);
-            Camera subfrustumCamera = Camera(CameraType::PERSPECTIVE, m_SceneCamera.GetAspectRatio(), frustumRanges[i], cascadeZFar);
-            subfrustumCamera.SetPosition(m_SceneCamera.GetPosition());
-            subfrustumCamera.SetRotation(m_SceneCamera.GetRotation());
-            std::vector<Vec4> frustumCorners = GetFrustumCornersWorldSpace(subfrustumCamera.GetViewProjectionMatrix());
-
-
-            // Find center of frustum
-
-            Vec3 center = Vec3(0.0f);
-            for (auto& cornerPosition : frustumCorners)
-            {
-                center += Vec3(cornerPosition);
-            }
-            center /= frustumCorners.size();
-
-            const Vec3 lightDir = glm::normalize(m_FirstDirectionalLightInScene.Position);
-            Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
-
-            // Check if the light direction is parallel to the default up vector
-            if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
-            {
-                up = Vec3(0.0f, 0.0f, 1.0f);
-            }
-
-            Mat4 lightView = glm::lookAt(center - lightDir,
-                               center,
-                               up);
-
-
-            // Get the min and max positions of the frustum in world space
-            float minX = std::numeric_limits<float>::max();
-            float maxX = std::numeric_limits<float>::lowest();
-            float minY = std::numeric_limits<float>::max();
-            float maxY = std::numeric_limits<float>::lowest();
-            float minZ = std::numeric_limits<float>::max();
-            float maxZ = std::numeric_limits<float>::lowest();
-            for (const auto& cornerPosition : frustumCorners)
-            {
-                const Vec4 trf = lightView * cornerPosition;
-                minX = std::min(minX, trf.x);
-                maxX = std::max(maxX, trf.x);
-                minY = std::min(minY, trf.y);
-                maxY = std::max(maxY, trf.y);
-                minZ = std::min(minZ, trf.z);
-                maxZ = std::max(maxZ, trf.z);
-            }
-
-
-            // Snap to texel boundaries for stability
-            float shadowMapSize = m_RendererSettings.ShadowMapResolution;
-            float texelSizeX = (maxX - minX) / shadowMapSize;
-            float texelSizeY = (maxY - minY) / shadowMapSize;
-
-            minX = floor(minX / texelSizeX) * texelSizeX;
-            maxX = ceil(maxX / texelSizeX) * texelSizeX;
-            minY = floor(minY / texelSizeY) * texelSizeY;
-            maxY = ceil(maxY / texelSizeY) * texelSizeY;
-
-            float zMult = m_RendererSettings.ShadowMapZMultiplier;
-            const Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ * zMult, maxZ * zMult);
-
-
-            m_LightSpaceMatrices.push_back(lightProjection * lightView);
-        }
-
-        frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
-
-        ShaderHandle meshVertexShaderSave = nullptr;
-
-        for (uint32 i = 0; i < frameContext.ShadowMapList.Size(); i++)
-        {
-            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
-            Ref<Material>& material = frameContext.ShadowMapList.GetMaterials()[i];
-
-            if (material->ShaderModel != ShaderModel::PBR) { continue; }
-
-            Material shadowMapMaterial{};
-            shadowMapMaterial.FragmentShader = m_DepthWriteOnlyShader;
-            shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
-
-            meshVertexShaderSave = mesh->VertexShader;
-            mesh->VertexShader = m_ShadowMapShader;
-
-            PipelineStateHandle shadowMapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, *mesh, 0, CullMode::FRONT);
-
-            mesh->VertexShader = meshVertexShaderSave;
-
-            commandBuffer->BindPipeline(shadowMapPipeline);
-            commandBuffer->SetViewportAndScissor(Vec2(m_RendererSettings.ShadowMapResolution));
-
-            commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-            commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 1);
-
-
-            commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
-
-
-            commandBuffer->PushConstants(&frameContext.ShadowMapList.GetTransforms()[i], sizeof(Mat4));
-
-            commandBuffer->DrawElementsInstanced(mesh->IndexBuffer, m_RendererSettings.NumShadowCascades);
-        }
-    }
-
-
-    void SceneRendererImpl::EnvironmentMapPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::EnvironmentMapPass")
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
-        // Cubemap
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
-
-        Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
-        cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        frameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
-
-        Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
-        environmentMapMaterial.DescriptorSet = frameContext.EnvironmentMapDescriptorSet;
-
-        PipelineStateHandle cubemapPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE);
-        commandBuffer->BindPipeline(cubemapPipeline);
-        commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-        commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
-
-        commandBuffer->BindVertexBuffer(cubemapMesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(cubemapMesh->IndexBuffer);
-
-        commandBuffer->PushConstants(&activeScene.EnvironmentMapBlur, sizeof(activeScene.EnvironmentMapBlur));
-        commandBuffer->DrawElementsIndexed(cubemapMesh->IndexBuffer);
-    }
-
-
-
-    // For demo purposes to show benefits of ACES (ACES is used normally)
-    enum class ToneMappingDebugView : uint32
-    {
-        NO_DEBUG_VIEW,
-        DEBUG_VIEW_REINHARD,
-        DEBUG_VIEW_NO_TONE_MAPPING,
-    };
-
-
-    void SceneRendererImpl::ToneMappingPass()
-    {
-        PROFILE_SCOPE("SceneRendererImpl::ToneMappingPass")
-
-        struct ToneMappingPassPushConstants
-        {
-            float Exposure;
-            Vec2 ShaperInputRange;
-            ToneMappingDebugView ToneMappingDebugView;
-        };
-
-        const RenderGraphPassExecutionContext& executionContext = m_RenderGraph.GetExecutionContext();
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        CommandBufferHandle commandBuffer = executionContext.CommandBuffer;
-
-        AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-        Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
-
-        Ref<Mesh> quadMesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        frameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
-
-        m_PipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet, executionContext.ReadAttachments});
-
-        Material toneMapperMaterial{};
-        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
-        toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
-
-        PipelineStateHandle toneMappingPipeline = m_PipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, toneMapperMaterial, *quadMesh, 0, CullMode::NONE);
-        commandBuffer->BindPipeline(toneMappingPipeline);
-        commandBuffer->SetViewportAndScissor(m_ViewportSize);
-
-        commandBuffer->BindDescriptorSet(frameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(executionContext.ReadAttachments, 1);
-        commandBuffer->BindDescriptorSet(toneMapperMaterial.DescriptorSet, 2);
-
-        ToneMappingPassPushConstants toneMappingPushConstants;
-        toneMappingPushConstants.Exposure = m_SceneExposure;
-        toneMappingPushConstants.ShaperInputRange = toneMappingLUT->ShaperInputRange;
-        toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::NO_DEBUG_VIEW;
-
-
-        if (m_RendererSettings.DebugView == RendererDebugView::TONE_MAPPING_REINHARD)
-        {
-            toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::DEBUG_VIEW_REINHARD;
-        }
-        else if (m_RendererSettings.DebugView == RendererDebugView::TONE_MAPPING_NONE)
-        {
-            toneMappingPushConstants.ToneMappingDebugView = ToneMappingDebugView::DEBUG_VIEW_NO_TONE_MAPPING;
-        }
-
-        commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
-
-        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
-
-        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
-
-        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
     }
 
 
@@ -1396,7 +573,7 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneRendererImpl::ComputeEnvironmentIBL")
 
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
 
         // -------------- Compute Irradiance -------------------------------------------------
 
@@ -1434,14 +611,15 @@ namespace Astral {
 
         commandBuffer->BeginLabel("IrradianceMapCalculation", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
+        PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
+        pipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
         ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/ComputeIrradianceMap.comp");
         ;
-        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
+        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
         commandBuffer->BindPipeline(computePipeline);
         commandBuffer->BindDescriptorSet(m_EnvironmentMapStorageImagesSet, 0);
 
@@ -1459,7 +637,7 @@ namespace Astral {
             commandBuffer->Dispatch(groupCountSize, groupCountSize, 1);
         }
 
-        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+        pipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
     }
@@ -1478,14 +656,15 @@ namespace Astral {
 
         commandBuffer->BeginLabel("PrefilteredEnvironmentMapCalc", Vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
-        m_PipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
+        PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
+        pipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
         ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/ComputePrefilteredEnvironmentMap.comp");
 
-        PipelineStateHandle computePipeline = m_PipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
+        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
         commandBuffer->BindPipeline(computePipeline);
         commandBuffer->BindDescriptorSet(m_EnvironmentMapStorageImagesSet, 0);
 
@@ -1505,12 +684,12 @@ namespace Astral {
 
             commandBuffer->PushConstants(&prefilteredEnvironmentMapPushData, sizeof(prefilteredEnvironmentMapPushData));
 
-            uint32 groupSizeX = std::max(mipWidth / 32, 1u);
-            uint32 groupSizeY = std::max(mipHeight / 32, 1u);
+            uint32 groupSizeX = std::max(mipWidth / 8, 1u);
+            uint32 groupSizeY = std::max(mipHeight / 8, 1u);
             commandBuffer->Dispatch(groupSizeX, groupSizeY, 1);
         }
 
-        m_PipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
+        pipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
     }
@@ -1523,39 +702,65 @@ namespace Astral {
         TextureHandle offscreenRenderTarget = m_FrameContexts[m_CurrentFrameIndex].OffscreenRenderTarget;
         ImageLayout initialLayout = offscreenRenderTarget->GetLayout();
         {
+            commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
             PipelineBarrier pipelineBarrier = {};
             pipelineBarrier.SourceStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
             pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
 
 
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
+            ImageMemoryBarrier viewportImageMemoryBarrier = {};
+            viewportImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            viewportImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            viewportImageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            viewportImageMemoryBarrier.NewLayout = ImageLayout::SHADER_READ_ONLY_OPTIMAL;
+            viewportImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.Image = offscreenRenderTarget;
+            viewportImageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = offscreenRenderTarget->GetNumMipLevels(),
                 .BaseArrayLayer = 0,
                 .LayerCount = offscreenRenderTarget->GetNumLayers()
             };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+            ImageMemoryBarrier renderTargetImageMemoryBarrier = {};
+            renderTargetImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_MEMORY_READ_BIT;
+            renderTargetImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_MEMORY_WRITE_BIT;
+            renderTargetImageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            renderTargetImageMemoryBarrier.NewLayout = ImageLayout::COLOR_ATTACHMENT_OPTIMAL;
+            renderTargetImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.Image = renderTarget->GetAsTexture();
+            renderTargetImageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+
+            pipelineBarrier.ImageMemoryBarriers.push_back(viewportImageMemoryBarrier);
+            pipelineBarrier.ImageMemoryBarriers.push_back(renderTargetImageMemoryBarrier);
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
         }
 
 
         // ImGui Rendering
-        commandBuffer->BeginLabel("ImGui Render Draws", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, m_FrameContexts[renderTarget->GetImageIndex()].WindowFramebuffer);
+
+        AttachmentResource attachmentResource = {
+            .Resource = renderTarget->GetAsTexture(),
+            .MipLevel = FullSubresourceRange,
+            .ArrayLayer = FullSubresourceRange
+        };
+
+        commandBuffer->BeginRenderPass(m_ImGuiRenderPass, {attachmentResource});
+
         RendererAPI::CallImGuiDraws(commandBuffer);
+
         commandBuffer->EndRenderPass();
-        commandBuffer->EndLabel();
 
 
         {
@@ -1564,24 +769,43 @@ namespace Astral {
             pipelineBarrier.DestinationStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             pipelineBarrier.DependencyFlags = DependencyFlags::BY_REGION_BIT;
 
-            ImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
-            imageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
-            imageMemoryBarrier.NewLayout = initialLayout;
-            imageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
-            imageMemoryBarrier.Image = offscreenRenderTarget;
-            imageMemoryBarrier.ImageSubresourceRange = {
+            ImageMemoryBarrier viewportImageMemoryBarrier = {};
+            viewportImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_SHADER_READ_BIT;
+            viewportImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_COLOR_ATTACHMENT_WRITE_BIT;
+            viewportImageMemoryBarrier.OldLayout = offscreenRenderTarget->GetLayout();
+            viewportImageMemoryBarrier.NewLayout = initialLayout;
+            viewportImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            viewportImageMemoryBarrier.Image = offscreenRenderTarget;
+            viewportImageMemoryBarrier.ImageSubresourceRange = {
                 .AspectMask = offscreenRenderTarget->GetImageAspect(),
                 .BaseMipLevel = 0,
                 .LevelCount = 1,
                 .BaseArrayLayer = 0,
                 .LayerCount = 1
             };
-            pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
+
+            ImageMemoryBarrier renderTargetImageMemoryBarrier = {};
+            renderTargetImageMemoryBarrier.SourceAccessMask = ACCESS_FLAGS_MEMORY_WRITE_BIT;
+            renderTargetImageMemoryBarrier.DestinationAccessMask = ACCESS_FLAGS_MEMORY_READ_BIT;
+            renderTargetImageMemoryBarrier.OldLayout = ImageLayout::UNDEFINED;
+            renderTargetImageMemoryBarrier.NewLayout = ImageLayout::PRESENT_SRC_KHR;
+            renderTargetImageMemoryBarrier.SourceQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.DestinationQueueFamilyIndex = QueueFamilyIgnored;
+            renderTargetImageMemoryBarrier.Image = renderTarget->GetAsTexture();
+            renderTargetImageMemoryBarrier.ImageSubresourceRange = {
+                .AspectMask = offscreenRenderTarget->GetImageAspect(),
+                .BaseMipLevel = 0,
+                .LevelCount = 1,
+                .BaseArrayLayer = 0,
+                .LayerCount = 1
+            };
+            pipelineBarrier.ImageMemoryBarriers.push_back(viewportImageMemoryBarrier);
+            pipelineBarrier.ImageMemoryBarriers.push_back(renderTargetImageMemoryBarrier);
 
             commandBuffer->SetPipelineBarrier(pipelineBarrier);
+
+            commandBuffer->EndLabel();
         }
 
     }
@@ -1596,9 +820,13 @@ namespace Astral {
 
     bool SceneRendererImpl::ShouldCullMesh(const Mesh& mesh, const Mat4& modelTransform)
     {
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        Mat4 m_SceneViewProjection = frameContext.SceneDescription.Camera.GetViewProjectionMatrix();
+
         std::array<Vec4, 6> frustum;
         BoundingSphere worldSpaceBoundingSphere;
         worldSpaceBoundingSphere.Center = modelTransform * glm::vec4(mesh.BoundingSphere.Center, 1.0f);
+
 
         Vec3 scale;
         scale.x = glm::length(Vec3(modelTransform[0]));
@@ -1663,17 +891,14 @@ namespace Astral {
 
         Device& device = RendererAPI::GetDevice();
         Swapchain& swapchain = device.GetSwapchain();
-        std::vector<RenderTargetHandle> renderTargets = swapchain.GetRenderTargets();
         device.WaitIdle();
-
-
 
         for (int i = 0; i < swapchain.GetNumberOfImages(); i++)
         {
-            FrameContext& frameContext = m_FrameContexts[i];
+            SharedFrameContext& frameContext = m_FrameContexts[i];
 
             TextureCreateInfo textureCreateInfo = {
-                .Format = renderTargets[0]->GetImageFormat(),
+                .Format = swapchain.GetImageFormat(),
                 .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                 .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 .Dimensions = UVec2(width, height),
@@ -1690,8 +915,7 @@ namespace Astral {
         }
 
         uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
-        m_CurrentViewportTexture.pop();
-        m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
+        m_CurrentViewportTexture = m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet;
 
         // Resizing Render Graph
 
@@ -1704,7 +928,13 @@ namespace Astral {
             outputTextures.push_back(offscreenOutput);
         }
 
-        m_RenderGraph.ResizeResources(outputTextures);
+        m_RenderGraph.ResizeResources(outputTextures[0]->GetDimensions());
+    }
+
+
+    UVec2 SceneRendererImpl::GetViewportSize()
+    {
+        return m_ViewportSize;
     }
 
 

@@ -7,6 +7,7 @@
 #include "ProfilerApp.h"
 
 #include "Core/Engine.h"
+#include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
 #include "Window/WindowManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
@@ -18,12 +19,23 @@
 
 namespace Astral {
 
+    ProfilerApp* ProfilerApp::m_Instance = nullptr;
+
     ProfilerApp::ProfilerApp()
     {
+        PROFILE_SCOPE("ProfilerApp::ProfilerApp");
+        ASSERT(m_Instance == nullptr, "ProfilerApp has already been constructed!");
+        m_Instance = this;
     }
 
     ProfilerApp::~ProfilerApp()
     {
+    }
+
+
+    ProfilerApp& ProfilerApp::Get()
+    {
+        return *m_Instance;
     }
 
 
@@ -44,6 +56,12 @@ namespace Astral {
     void ProfilerApp::Shutdown()
     {
         m_RenderImGuiListener.StopListening();
+    }
+
+
+    void ProfilerApp::LoadMemoryScene(std::string filePath)
+    {
+        m_SceneMetricsImporter.ImportMemoryProfile(filePath);
     }
 
 

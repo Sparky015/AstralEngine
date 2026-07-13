@@ -136,26 +136,6 @@ namespace Astral {
     }
 
 
-    void VulkanRendererCommands::NameObject(FramebufferHandle framebufferHandle, std::string_view name)
-    {
-        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
-        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
-        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
-        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
-        VkFramebuffer framebuffer = (VkFramebuffer)framebufferHandle->GetNativeHandle();
-
-        VkDebugUtilsObjectNameInfoEXT nameInfo = {
-            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-            .pNext = nullptr,
-            .objectType = VK_OBJECT_TYPE_FRAMEBUFFER,
-            .objectHandle = (uint64)framebuffer,
-            .pObjectName = name.data(),
-        };
-
-        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
-    }
-
-
     void VulkanRendererCommands::NameObject(CommandBufferHandle commandBufferHandle, std::string_view name)
     {
         RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
@@ -170,27 +150,6 @@ namespace Astral {
             .pNext = nullptr,
             .objectType = VK_OBJECT_TYPE_COMMAND_BUFFER,
             .objectHandle = (uint64)commandBuffer,
-            .pObjectName = name.data(),
-        };
-
-        vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
-    }
-
-
-    void VulkanRendererCommands::NameObject(RenderPassHandle renderPassHandle, std::string_view name)
-    {
-        RenderingContext& context = Engine::Get().GetRendererManager().GetContext();
-        thread_local VkInstance instance = (VkInstance)context.GetInstanceHandle();
-        thread_local PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
-        VkDevice device = (VkDevice)context.GetDevice().GetNativeHandle();
-
-        VkRenderPass renderPass = (VkRenderPass)renderPassHandle->GetNativeHandle();
-
-        VkDebugUtilsObjectNameInfoEXT nameInfo = {
-            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
-            .pNext = nullptr,
-            .objectType = VK_OBJECT_TYPE_RENDER_PASS,
-            .objectHandle = (uint64)renderPass,
             .pObjectName = name.data(),
         };
 

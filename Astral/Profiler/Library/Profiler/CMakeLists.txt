@@ -69,18 +69,24 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    # DEBUG
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release
     target_compile_definitions(AstralProfilerAPI PUBLIC
             -DASTRAL_RELEASE_BUILD
-
+            -DTURN_OFF_PROFILER_MACRO
+            -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+            -DASTRAL_DISABLE_MEMORY_TRACKING
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")    # MinSizeRel
     target_compile_definitions(AstralProfilerAPI PUBLIC
             -DASTRAL_MINIMUM_SIZE_RELEASE_BUILD
+            -DTURN_OFF_PROFILER_MACRO
+            -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+            -DASTRAL_DISABLE_MEMORY_TRACKING
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")    # RelWithDebInfo
     target_compile_definitions(AstralProfilerAPI PUBLIC
             -DASTRAL_RELEASE_WITH_DEBUG_INFO_BUILD
-
+            -DTURN_OFF_LOGGING_CONSOLE_TO_FILE
+            -DASTRAL_DISABLE_MEMORY_TRACKING
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default

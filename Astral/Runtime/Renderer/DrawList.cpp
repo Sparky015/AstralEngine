@@ -48,7 +48,7 @@ namespace Astral {
     }
 
 
-    size_t DrawList::Size()
+    size_t DrawList::Size() const
     {
         return m_Transforms.size();
     }

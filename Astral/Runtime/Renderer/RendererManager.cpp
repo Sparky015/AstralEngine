@@ -30,10 +30,17 @@ namespace Astral {
     {
         PROFILE_SCOPE("RendererManager::Init");
         AE_TRACE("Initializing Renderer Manager!");
-        m_RenderContext.reset(Astral::RenderingContext::CreateRendererContext());
+        m_RenderContext.reset(RenderingContext::CreateRendererContext());
         m_RenderContext->Init();
-
         SceneRenderer::Init();
+    }
+
+
+    void RendererManager::InitOnlyRenderingContext()
+    {
+        PROFILE_SCOPE("RendererManager::InitOnlyRenderingContext");
+        m_RenderContext.reset(RenderingContext::CreateRendererContext());
+        m_RenderContext->Init();
     }
 
 

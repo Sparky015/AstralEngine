@@ -27,7 +27,7 @@ namespace Astral {
     }
 
 
-    uint32 Texture::CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers)
+    uint32 Texture::CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers)
     {
         uint32 levelSize = 0;
         if (IsCompressed(imageFormat))
@@ -47,6 +47,23 @@ namespace Astral {
         }
 
         return levelSize;
+    }
+
+
+    uint32 Texture::CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers, uint32 numMipLevels)
+    {
+        uint32 totalAllocationSize = 0;
+        uint32 mipWidth = width;
+        uint32 mipHeight = height;
+
+        for (uint32 i = 0; i < numMipLevels; i++)
+        {
+            totalAllocationSize += CalculateRequiredTextureMemory(imageFormat, mipWidth, mipHeight, depth, numLayers);
+            mipWidth /= 2;
+            mipHeight /= 2;
+        }
+
+        return totalAllocationSize;
     }
 
 
@@ -129,7 +146,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateCubemap(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -151,13 +168,13 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateCubemap(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateCubemap(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
 
 
-    GraphicsRef<Texture> Texture::Create3DTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::Create3DTexture(void* data, uint32 dataLength, uint32 width, uint32 height, ImageFormat imageFormat)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
@@ -165,6 +182,7 @@ namespace Astral {
             .UsageFlags = ImageUsageFlagBits::IMAGE_USAGE_SAMPLED_BIT,
             .Dimensions = UVec2(width, height), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .ImageDataLength = dataLength,
             .SamplerFilter = SamplerFilter::LINEAR,
             .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
             .EnableAnisotropy = false,
@@ -176,20 +194,21 @@ namespace Astral {
         {
             case API::Vulkan: return device.Create3DTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.Create3DTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
 
 
-    GraphicsRef<Texture> Texture::Create1DTexture(void* data, uint32 length, ImageFormat imageFormat)
+    GraphicsRef<Texture> Texture::Create1DTexture(void* data, uint32 dataLength, uint32 pixelWidth, ImageFormat imageFormat)
     {
         TextureCreateInfo textureCreateInfo = {
             .Format = imageFormat,
             .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
             .UsageFlags = IMAGE_USAGE_SAMPLED_BIT,
-            .Dimensions = UVec2(length, length), // depth is inferred from the width and height since all three should be the same
+            .Dimensions = UVec2(pixelWidth, pixelWidth), // depth is inferred from the width and height since all three should be the same
             .ImageData = (uint8*)data,
+            .ImageDataLength = dataLength,
             .SamplerFilter = SamplerFilter::LINEAR,
             .SamplerAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
             .EnableAnisotropy = false,
@@ -201,7 +220,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.Create1DTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.Create1DTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }
@@ -226,7 +245,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateTexture(textureCreateInfo);
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateTexture(textureCreateInfo);
             default: AE_ERROR("Invalid Renderer API");
         }
     }

@@ -10,6 +10,9 @@
 #include "Asset/Ref.h"
 #include "ECS/Components/PointLightComponent.h"
 #include "Renderer/Cameras/Camera.h"
+#include "Renderer/DrawList.h"
+#include "Renderer/RHI/RendererCommands.h"
+#include "Renderer/RHI/Resources/Renderpass.h"
 
 #include <string_view>
 
@@ -21,12 +24,39 @@ namespace Astral {
      */
     struct SceneDescription
     {
-        Camera& Camera;
-        std::vector<Light>& Lights;
+        Camera Camera;
+        std::vector<Light> Lights;
         Ref<EnvironmentMap> EnvironmentMap;
         float AmbientLightConstant;
         float Exposure;
     };
+
+
+    struct SharedFrameContext
+    {
+        SceneDescription SceneDescription;
+
+        DrawList MainList;
+        DrawList ShadowMapList;
+
+        TextureHandle OffscreenRenderTarget;
+        DescriptorSetHandle OffscreenDescriptorSet;
+
+        CommandBufferHandle SceneCommandBuffer;
+        RenderTargetHandle SceneRenderTarget;
+        BufferHandle SceneDataBuffer;
+        BufferHandle SceneLightsBuffer;
+        DescriptorSetHandle SceneDataDescriptorSet;
+
+        Ref<EnvironmentMap> EnvironmentMap;
+        DescriptorSetHandle EnvironmentMapDescriptorSet;
+
+        BufferHandle ShadowLightMatrices;
+        DescriptorSetHandle ShadowLightMatricesDescriptorSet;
+
+        bool IsEnvironmentMapIBLCalculationNeeded;
+    };
+
 
     /**
      * @enum RendererType

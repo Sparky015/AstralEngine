@@ -43,6 +43,18 @@ namespace Astral {
         PROFILE_SCOPE("Engine::Engine");
         ASSERT(m_Instance == nullptr, "Engine has already been initialized!");
         m_Instance = this;
+    }
+
+
+    Engine::~Engine()
+    {
+
+    }
+
+
+    void Engine::Init()
+    {
+        PROFILE_SCOPE("Engine::Init");
 
         Astral::MemoryTracker::Get().Init();
 
@@ -64,9 +76,9 @@ namespace Astral {
     }
 
 
-    Engine::~Engine()
+    void Engine::Shutdown()
     {
-        PROFILE_SCOPE("Engine::~Engine");
+        PROFILE_SCOPE("Engine::Shutdown");
 
         AE_PROFILE_FUNCTION(NFD_Quit(), "NFD_Quit");
         AE_PROFILE_FUNCTION(glslang_finalize_process(), "glslang_finalize_process");
@@ -115,8 +127,6 @@ namespace Astral {
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
-
-            // Render ImGui UI
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();

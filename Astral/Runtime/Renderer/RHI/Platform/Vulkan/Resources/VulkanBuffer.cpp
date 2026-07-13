@@ -87,7 +87,18 @@ namespace Astral {
 
     void VulkanBuffer::CopyDataToBuffer(void* data, uint32 size)
     {
-        if (!data) { return; }
+        if (size == 0) { return; }
+
+        if (!data)
+        {
+            AE_WARN("[VulkanBuffer::CopyDataToBuffer] Tried to copy data from a nullptr!")
+            return;
+        }
+        if (m_MemoryType != GPUMemoryType::HOST_VISIBLE)
+        {
+            AE_WARN("[VulkanBuffer::CopyDataToBuffer] A host visible buffer is required to copy data to a buffer!")
+            return;
+        }
 
         ASSERT(size <= m_BufferDeviceSize, "Data does not fit in buffer!")
 
@@ -131,6 +142,16 @@ namespace Astral {
     void VulkanBuffer::ChangeMemoryType(GPUMemoryType memoryType)
     {
         if (m_MemoryType == memoryType) { return; }
+
+        if ((m_UsageFlags & BUFFER_USAGE_GPU_ONLY) != 0 && memoryType == GPUMemoryType::HOST_VISIBLE)
+        {
+            AE_WARN("[VulkanBuffer::ChangeMemoryType] Can't change memory type to host visible for buffer with usage flag BUFFER_USAGE_GPU_ONLY")
+        }
+
+        if ((m_UsageFlags & BUFFER_USAGE_STREAMABLE) == 0)
+        {
+            AE_WARN("[VulkanBuffer::ChangeMemoryType] Can't change memory type for buffer without usage flag BUFFER_USAGE_STREAMABLE")
+        }
 
         if (memoryType == GPUMemoryType::DEVICE_LOCAL)
         {
@@ -269,6 +290,11 @@ namespace Astral {
 
     VulkanBuffer& VulkanBuffer::operator=(VulkanBuffer&& other) noexcept
     {
+        DestroyBuffer(m_Buffer); // Clean up old buffer and memory if one exists
+        FreeMemory(m_BufferMemory);
+        m_Buffer = nullptr;
+        m_BufferMemory = nullptr;
+
         m_UsageFlags = other.m_UsageFlags;
         m_UsedMemorySize = other.m_UsedMemorySize;
         m_DeviceMemoryProperties = other.m_DeviceMemoryProperties;

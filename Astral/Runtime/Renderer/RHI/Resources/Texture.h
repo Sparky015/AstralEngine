@@ -11,14 +11,13 @@
 #include "Renderer/RHI/Common/ImageLayouts.h"
 #include "Renderer/RHI/Common/ImageSubResourceRange.h"
 #include "Renderer/RHI/Common/ImageUsageFlags.h"
+#include "Renderer/RHI/Common/MemoryTypes.h"
 #include "Renderer/RHI/Common/SampleCount.h"
-
-#include "imgui/imgui.h"
-
-#include <string>
-#include <filesystem>
-
 #include "Renderer/RHI/Common/SamplerSettings.h"
+
+#include <filesystem>
+#include "imgui/imgui.h"
+#include <string>
 
 namespace Astral {
 
@@ -52,7 +51,7 @@ namespace Astral {
     };
 
     /**
-     * @brief RHI Texture Object
+     * @brief Defines a RHI texture interface with supporting functions for convenience
      */
     class Texture : public Asset
     {
@@ -94,7 +93,7 @@ namespace Astral {
          * @param imageLayout The image layout to update the texture to
          */
         virtual void UpdateLayout(ImageLayout imageLayout) = 0;
-
+        
         /**
          * @brief  Gets the image format of the texture
          * @return The image format of the texture
@@ -112,6 +111,12 @@ namespace Astral {
          * @return The number of mipmaps that the texture has
          */
         virtual uint32 GetNumMipLevels() = 0;
+
+        /**
+         * @brief  Gets the MSAA sample count of the texture
+         * @return The MSAA sample count of the texture
+         */
+        virtual SampleCount GetMSAASampleCount() = 0;
 
         /**
          * @brief  Gets the image sampler of the texture
@@ -166,15 +171,27 @@ namespace Astral {
         static uint32 CalculateMipMapLevels(uint32 width, uint32 height);
 
         /**
-         * @brief  Calculates the size of a mip map level based on the given dimensions
+         * @brief  Calculates the memory requirements of a base texture
          * @param  imageFormat The format of the texture
          * @param  width The width of the base texture
          * @param  height The height of the base texture
          * @param  depth The height of the base texture
          * @param  numLayers The number of layers the texture has
-         * @return The size of a mip map level based on the given dimensions
+         * @return The required memory size to support the texture (without mip maps)
          */
-        static uint32 CalculateMipMapLevelSize(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers);
+        static uint32 CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers);
+
+        /**
+         * @brief  Calculates the memory requirements of a texture
+         * @param  imageFormat The format of the texture
+         * @param  width The width of the base texture
+         * @param  height The height of the base texture
+         * @param  depth The height of the base texture
+         * @param  numLayers The number of layers the texture has
+         * @param numMipLevels The number of mip maps in the texture mip map chain
+         * @return The required memory size to support the texture
+         */
+        static uint32 CalculateRequiredTextureMemory(ImageFormat imageFormat, uint32 width, uint32 height, uint32 depth, uint32 numLayers, uint32 numMipLevels);
 
         /**
          * @brief  Creates a texture from a file path
@@ -198,13 +215,13 @@ namespace Astral {
          * @brief  Creates a lut from the given data
          * @return The lut texture handle
          */
-        static GraphicsRef<Texture> Create3DTexture(void* data, uint32 width, uint32 height, ImageFormat imageFormat);
+        static GraphicsRef<Texture> Create3DTexture(void* data, uint32 dataLength, uint32 width, uint32 height, ImageFormat imageFormat);
 
         /**
          * @brief  Creates a lut from the given data
          * @return The lut texture handle
          */
-        static GraphicsRef<Texture> Create1DTexture(void* data, uint32 length, ImageFormat imageFormat);
+        static GraphicsRef<Texture> Create1DTexture(void* data, uint32 dataLength, uint32 pixelWidth, ImageFormat imageFormat);
 
         /**
          * @brief  Creates a texture from the image data

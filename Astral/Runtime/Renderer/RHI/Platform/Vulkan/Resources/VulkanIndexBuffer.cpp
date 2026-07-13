@@ -92,7 +92,7 @@ namespace Astral {
             VulkanBufferDesc indexBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_INDEX_BUFFER,
+                .Usage = BUFFER_USAGE_INDEX_BUFFER | BUFFER_USAGE_STREAMABLE,
                 .MemoryType = GPUMemoryType::DEVICE_LOCAL,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };
@@ -105,7 +105,7 @@ namespace Astral {
             VulkanBufferDesc stagingBufferDesc = {
                 .Device = desc.Device,
                 .Size = desc.DataSize,
-                .Usage = BUFFER_USAGE_INDEX_BUFFER,
+                .Usage = BUFFER_USAGE_INDEX_BUFFER | BUFFER_USAGE_STREAMABLE,
                 .MemoryType = GPUMemoryType::HOST_VISIBLE,
                 .DeviceMemoryProperties = desc.DeviceMemoryProperties,
             };

@@ -27,7 +27,7 @@ namespace Astral {
         {
             case API::Vulkan: return device.CreateDescriptorSet();
             case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
-            case API::Metal: AE_ERROR("Metal is not supported yet!");
+            case API::Metal: return device.CreateDescriptorSet();
             default: AE_ERROR("Invalid Renderer API");
         }
     }
