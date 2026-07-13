@@ -63,6 +63,8 @@ set(CORE_SOURCE
     PlatformAbstraction/CreateProcess.cpp
     PlatformAbstraction/CreateProcess.h
         Containers/StringLiteral.h
+    Memory/Allocators/TLSFAllocator.cpp
+    Memory/Allocators/TLSFAllocator.h
 )
 
 set(UNIX_PLATFORM_FILES
