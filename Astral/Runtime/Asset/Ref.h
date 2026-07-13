@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Profiler/MemoryTracking/GenericRegionAllocator.h"
+#include "Profiler/MemoryTracking/Hooks/GenericRegionAllocator.h"
 
 #include <memory>
 

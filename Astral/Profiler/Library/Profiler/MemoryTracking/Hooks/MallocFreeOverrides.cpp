@@ -6,7 +6,8 @@
 
 #include "MallocFreeOverrides.h"
 
-#include "MemoryTracker.h"
+#include "../MemoryTracker.h"
+
 #include <cstdlib>
 
 namespace Astral {

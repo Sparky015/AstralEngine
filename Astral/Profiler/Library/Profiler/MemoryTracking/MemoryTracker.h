@@ -24,54 +24,68 @@ namespace Astral {
     {
     public:
 
-        /**@brief Gets the singleton instance of the MemoryTracker */
-        inline static MemoryTracker& Get()
-        {
-            static MemoryTracker instance = MemoryTracker();
-            return instance;
-        }
+        /**
+         * @brief Gets the singleton instance of the MemoryTracker
+         */
+        static MemoryTracker& Get();
 
-        /**@brief Initializes the necessary components of the MemoryTracker.
-         * @warning Call this before using the MemoryTracker */
+        /**
+         * @brief Initializes the MemoryTracker.
+         */
         void Init();
 
-        /**@brief Shuts down the MemoryTracker and its necessary components
-         * @note This will record all the pointers that have not been freed yet which means those pointers are memory leaks. */
+        /**
+         * @brief Shuts down the MemoryTracker
+         */
         void Shutdown();
 
-        /**@brief Begins a scene that records snapshots of the memory metrics to a file */
+        /**
+         * @brief Begins a scene that records snapshots of the memory metrics to a file
+         */
         void BeginScene(const char* sceneName);
 
-        /**@brief Tells whether a memory profiling scene is currently active or not. */
+        /**
+         * @brief Tells whether a memory profiling scene is currently active or not.
+         */
         [[nodiscard]] bool IsSceneActive() const;
 
-        /**@brief Ends the scene that records snapshots of the memory metrics to a file */
+        /**
+         * @brief Ends the scene that records snapshots of the memory metrics to a file
+         */
         void EndScene();
 
-        /**@brief Adds an allocated pointer to tracking and updates the metrics */
+        /**
+         * @brief Adds an allocated pointer to tracking and updates the metrics
+         */
         void AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType);
 
-        /**@brief Removes an allocated pointer from tracking and updates the metrics
-         * @param pointer The pointer to the allocated block being freed */
+        /**
+         * @brief Removes an allocated pointer from tracking and updates the metrics
+         * @param pointer The pointer to the allocated block being freed
+         */
         void RemoveAllocation(void* pointer);
 
-        /**@brief  */
+        /**
+         * @brief Enables memory tracking
+         */
         void EnableTracking();
 
-        /**@brief  */
+        /**
+         * @brief Disables memory tracking
+         */
         void DisableTracking();
 
-        /**@brief  */
+        /**
+         * @brief Checks if memory tracking is enabled
+         * @return True if memory tracking is enabled, false otherwise
+         */
         bool IsTrackingEnabled();
 
-
-        /**@brief Gets the memory metrics of the engine
-         * @return The memory metrics of the engine */
-        [[nodiscard]] const MemoryMetrics& GetMemoryMetrics() const
-        {
-            std::shared_lock lock(m_Mutex);
-            return m_MemoryMetrics;
-        }
+        /**
+         * @brief Gets the memory metrics
+         * @return The memory metrics
+         */
+        [[nodiscard]] const MemoryMetrics& GetMemoryMetrics() const;
 
 
         MemoryTracker(const MemoryTracker&) = delete;

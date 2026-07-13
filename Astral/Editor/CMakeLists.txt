@@ -46,3 +46,7 @@ target_include_directories(AstralEditor PRIVATE .)
 
 target_compile_definitions(AstralEditor PUBLIC -DASTRAL_EDITOR_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(AstralEditor PUBLIC -DCHESS_ASSET_DIR="${CMAKE_SOURCE_DIR}/Samples/Chess/Assets/")
+
+add_dependencies(AstralEditor
+    AstralProfiler
+)

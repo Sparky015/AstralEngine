@@ -141,6 +141,7 @@ namespace Astral {
 
         // Underlying type of std::thread::id is size_t. Cast std::thread::id to size_t for serialization purposes
 
+        // TODO: Maybe use some sort of static atomic + thread_local flag to track thread ID indices in an array to avoid hashing
 
         uint64 m_PeakMemoryUsage;
         uint64 m_TotalMemoryUsage;
