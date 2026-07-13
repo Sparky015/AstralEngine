@@ -185,21 +185,6 @@ namespace Astral {
     }
 
 
-    void SceneRendererImpl::EndScene()
-    {
-        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
-        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
-
-        {
-            PROFILE_SCOPE("SceneRenderer::EndScene")
-            m_IsSceneStarted = false;
-        }
-
-        RenderScene();
-    }
-
-
     void SceneRendererImpl::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
@@ -221,53 +206,13 @@ namespace Astral {
 
     void SceneRendererImpl::EndSceneSubmission()
     {
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        frameContext.MainList.SortByMaterial(m_SceneCamera.GetPosition());
-        frameContext.ShadowMapList.SortFrontToBack(m_SceneCamera.GetPosition());
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
+        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
 
         {
-            PROFILE_SCOPE("SceneRenderer::EndSceneSubmission")
+            PROFILE_SCOPE("SceneRenderer::EndScene")
             m_IsSceneStarted = false;
-        }
-    }
-
-
-    void SceneRendererImpl::RenderScene()
-    {
-        PROFILE_SCOPE("SceneRenderer::RenderScene")
-
-        Device& device = RendererAPI::GetDevice();
-
-        FrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
-
-
-        commandBuffer->BeginRecording();
-
-        if (frameContext.IsEnvironmentMapIBLCalculationNeeded)
-        {
-            ComputeEnvironmentIBL();
-        }
-
-        // Viewport Rendering
-        m_RenderGraph.Execute(commandBuffer, m_CurrentFrameIndex);
-
-        // Editor UI rendering to swapchain image
-        DrawEditorUI(commandBuffer, renderTarget);
-
-        commandBuffer->EndRecording();
-
-
-        CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
-        commandQueue->Submit(commandBuffer, renderTarget);
-        commandQueue->Present(renderTarget);
-
-
-        uint32 nextFrameIndex = (m_CurrentFrameIndex + 1) % 3;
-        if (m_CurrentViewportTexture.size() == 0)
-        {
-            m_CurrentViewportTexture.push(m_FrameContexts[nextFrameIndex].OffscreenDescriptorSet);
         }
     }
 
@@ -514,7 +459,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneRenderer::RenderScene")
 
-        // TODO: Sort the meshes by material
         Device& device = RendererAPI::GetDevice();
 
         SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
