@@ -162,9 +162,7 @@ set(ENGINE_SOURCE
         Renderer/RenderingPaths/DeferredRenderingPath.h
         Renderer/RenderingPaths/ForwardRenderingPath.cpp
         Renderer/RenderingPaths/ForwardRenderingPath.h
-        Renderer/RHI/Platform/Metal/MetalRendererCommands.cpp
-        Renderer/RHI/Platform/Metal/MetalRendererCommands.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
+
 
 )
 
@@ -246,6 +244,8 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
     Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h
     Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
+    Renderer/RHI/Platform/Metal/MetalRendererCommands.cpp
+    Renderer/RHI/Platform/Metal/MetalRendererCommands.h
 )
 
 set(D3D12_RHI_FILES
@@ -448,8 +448,8 @@ target_compile_definitions(AstralEngine PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM
 
 if (APPLE)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_MACOS)
-#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
-    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_METAL)
+    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_VULKAN)
+#    target_compile_definitions(AstralEngine PUBLIC -DASTRAL_DEFAULT_RENDERING_API_METAL)
 
 elseif (WIN32)
     target_compile_definitions(AstralEngine PUBLIC -DASTRAL_PLATFORM_WINDOWS)
