@@ -118,9 +118,8 @@ namespace Astral {
             }
         }
 
-
-
-
+        // Holds all the placeholder assets of async asset loads in order to wait on them later after queueing all asset loads
+        std::vector<Ref<Asset>> placeholderAssets = {};
 
         // Load entity data
         for (int i = 0; i < importedScene->mRootNode->mNumChildren; i++)
@@ -185,6 +184,7 @@ namespace Astral {
                     AE_LOG(placeholderMaterial->GetAssetID());
                     meshComponent.Material = placeholderMaterial;
                     //meshComponent.Material = registry.CreateAsset<Material>(materialResourceFilePath.C_Str());
+                    placeholderAssets.push_back(placeholderMaterial);
                 }
                 else
                 {
@@ -197,6 +197,7 @@ namespace Astral {
                     AE_LOG(placeholderMesh->GetAssetID());
                     meshComponent.MeshData = placeholderMesh;
                     //meshComponent.MeshData = registry.CreateAsset<Mesh>(meshDataResourceFilePath.C_Str());
+                    placeholderAssets.push_back(placeholderMesh);
                 }
                 else
                 {
@@ -275,6 +276,14 @@ namespace Astral {
             }
         }
 
+        // Block until the whole scene loads to avoid doing work rendering frames while the assets load
+        for (Ref<Asset>& placeholder : placeholderAssets)
+        {
+            while (registry.IsAsyncLoadPlaceholder(placeholder) && !registry.IsAsyncLoadRetrievalReady(placeholder))
+            {
+                std::this_thread::sleep_for(std::chrono::nanoseconds(500'000));
+            }
+        }
     }
 
 
