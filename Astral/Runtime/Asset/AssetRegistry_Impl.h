@@ -51,7 +51,8 @@ namespace Astral {
         //if (m_AsyncLoadRegistry.IsRegistered(filePath)) { return nullptr; }
 
         // Submit the asset load as an async task to the thread pool
-        std::future<Ref<Asset>> futureAsset = m_ThreadPool.SubmitTaskWithResult<Ref<Asset>>([filePath, this]() {
+        JobManager& jobManager = Engine::Get().GetJobManager();
+        std::future<Ref<Asset>> futureAsset = jobManager.GetThreadPool().SubmitTaskWithResult<Ref<Asset>>([filePath, this]() {
 
             // Load the asset from disk
             return LoadAssetWithChecks<AssetType>(filePath);
@@ -59,13 +60,14 @@ namespace Astral {
         }, 1.0f);
 
         // Generate the placeholder asset (placeholder asset is used to query status of async load)
-        AssetID placeholderID = AssignNextAvailableAssetID();
         Ref<AssetType> placeholderAsset = CreateRef<AssetType>();
         if (!placeholderAsset) { return nullptr; } // Early out if allocation fails
-        placeholderAsset->SetAssetID(placeholderID);
+
+        lock.unlock();
+        RegisterAsset(placeholderAsset, filePath); // RegisterAsset function has its own locks for thread safety
 
         // AsyncLoadRegistry stores a placeholder asset ID that is tied to this asset future
-        m_AsyncLoadRegistry.RegisterAsyncLoad(placeholderID, filePath, std::move(futureAsset));
+        m_AsyncLoadRegistry.RegisterAsyncLoad(placeholderAsset->GetAssetID(), filePath, std::move(futureAsset));
 
         return placeholderAsset;
     }
@@ -86,24 +88,33 @@ namespace Astral {
         }
 
         std::filesystem::path associatedFilePath = m_AsyncLoadRegistry.GetFilePathAssociatedWithPlaceHolder(asyncLoadPlaceholder->GetAssetID());
-        Ref<Asset> asset = m_AsyncLoadRegistry.GetAsyncLoadResult(asyncLoadPlaceholder->GetAssetID());
+        Ref<Asset> createdAsset = m_AsyncLoadRegistry.GetAsyncLoadResult(asyncLoadPlaceholder->GetAssetID());
 
-        if (!asset)
+        if (!createdAsset)
         {
             AE_WARN("Async asset load failed! (Asset is nullptr)")
             return nullptr;
         }
 
-        Ref<AssetType> assetDerivedType = std::static_pointer_cast<AssetType>(asset);
+        Ref<AssetType> createdAssetDerivedType = std::static_pointer_cast<AssetType>(createdAsset);
 
-        if (!assetDerivedType)
+        if (!createdAssetDerivedType)
         {
             AE_WARN("Failed to pointer cast to derived ref asset type!")
-            return assetDerivedType;
+            return createdAssetDerivedType;
         }
 
-        RegisterAsset(assetDerivedType, associatedFilePath);
-        return assetDerivedType;
+        Ref<AssetType> placeholderAsset = GetAsset<AssetType>(asyncLoadPlaceholder->GetAssetID());
+        if (placeholderAsset != nullptr)
+        {
+            *placeholderAsset = std::move(*createdAssetDerivedType);
+        }
+        else
+        {
+            UnloadAsset(asyncLoadPlaceholder->GetAssetID());
+        }
+
+        return placeholderAsset;
     }
 
 

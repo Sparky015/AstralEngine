@@ -6,7 +6,9 @@
 
 #include "AsyncLoadRegistry.h"
 
-#include "Debug/Utilities/Loggers.h"
+#include "AssetManager.h"
+#include "Core/Engine.h"
+#include "Core/Utilities/Loggers.h"
 
 namespace Astral {
 

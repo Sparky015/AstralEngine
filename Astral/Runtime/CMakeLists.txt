@@ -162,8 +162,8 @@ set(ENGINE_SOURCE
         Renderer/RenderingPaths/DeferredRenderingPath.h
         Renderer/RenderingPaths/ForwardRenderingPath.cpp
         Renderer/RenderingPaths/ForwardRenderingPath.h
-
-
+        Asset/AsyncLoadRegistry.cpp
+        Asset/AsyncLoadRegistry.h
 )
 
 set(VULKAN_RHI_FILES

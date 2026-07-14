@@ -11,7 +11,7 @@
 #include "AsyncLoadRegistry.h"
 #include "Core/Utilities/Loggers.h"
 #include "Core/SmartPointers.h"
-#include "Job/ThreadPool.h"
+#include "Job/JobManager.h"
 
 #include <unordered_map>
 #include <filesystem>
@@ -259,7 +259,6 @@ namespace Astral {
         std::unordered_map<AssetID, Ref<Asset>> m_AssetIDToAsset;
 
         AsyncLoadRegistry m_AsyncLoadRegistry;
-        ThreadPool m_ThreadPool;
         std::mutex m_RegistryMutex;
 
         AssetRegistryStats m_RegistryStats{};
