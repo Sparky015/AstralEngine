@@ -41,10 +41,10 @@ namespace Astral {
     }
 
 
-    bool AssetRegistry::IsAsyncLoadRetrievalReady(Ref<Asset> asset)
+    bool AssetRegistry::IsAsyncLoadRetrievalReady(Ref<Asset> placeholderAsset)
     {
-        if (!asset) { return false; }
-        return m_AsyncLoadRegistry.IsReady(asset->GetAssetID());
+        if (!placeholderAsset) { return false; }
+        return m_AsyncLoadRegistry.IsReady(placeholderAsset->GetAssetID());
     }
 
 

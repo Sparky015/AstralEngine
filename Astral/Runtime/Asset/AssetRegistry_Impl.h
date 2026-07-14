@@ -46,9 +46,7 @@ namespace Astral {
         // Check if the asset is already loaded first, if it is, return the current AssetID
         if (m_FilePathToAssetID.contains(filePath)) { return GetAsset<AssetType>(m_FilePathToAssetID.at(filePath)); }
 
-        // Check if the asset is already registered for an async load
-        // TODO: Make repeatedly requested assets get pointed to the same one asset load (MISSING ASSETS PROBLEM IS CAUSED HERE)
-        //if (m_AsyncLoadRegistry.IsRegistered(filePath)) { return nullptr; }
+        lock.unlock();
 
         // Submit the asset load as an async task to the thread pool
         JobManager& jobManager = Engine::Get().GetJobManager();
@@ -63,10 +61,11 @@ namespace Astral {
         Ref<AssetType> placeholderAsset = CreateRef<AssetType>();
         if (!placeholderAsset) { return nullptr; } // Early out if allocation fails
 
-        lock.unlock();
-        RegisterAsset(placeholderAsset, filePath); // RegisterAsset function has its own locks for thread safety
+        // Register the placeholder asset to the file path for future loads (RegisterAsset function has its own locks for thread safety)
+        RegisterAsset(placeholderAsset, filePath);
 
         // AsyncLoadRegistry stores a placeholder asset ID that is tied to this asset future
+        lock.lock();
         m_AsyncLoadRegistry.RegisterAsyncLoad(placeholderAsset->GetAssetID(), filePath, std::move(futureAsset));
 
         return placeholderAsset;
@@ -74,7 +73,7 @@ namespace Astral {
 
 
     template<typename AssetType> requires std::is_base_of_v<Asset, AssetType>
-    Ref<AssetType> AssetRegistry::FetchAndRegisterAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder)
+    Ref<AssetType> AssetRegistry::FetchAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder)
     {
         if (!asyncLoadPlaceholder)
         {
@@ -87,7 +86,6 @@ namespace Astral {
             return nullptr;
         }
 
-        std::filesystem::path associatedFilePath = m_AsyncLoadRegistry.GetFilePathAssociatedWithPlaceHolder(asyncLoadPlaceholder->GetAssetID());
         Ref<Asset> createdAsset = m_AsyncLoadRegistry.GetAsyncLoadResult(asyncLoadPlaceholder->GetAssetID());
 
         if (!createdAsset)
@@ -107,10 +105,11 @@ namespace Astral {
         Ref<AssetType> placeholderAsset = GetAsset<AssetType>(asyncLoadPlaceholder->GetAssetID());
         if (placeholderAsset != nullptr)
         {
-            *placeholderAsset = std::move(*createdAssetDerivedType);
+            *placeholderAsset = std::move(*createdAssetDerivedType); // Move the real asset into the placeholder's memory
         }
         else
         {
+            // Unload the placeholder from the asset registry if the async load failed to allow for load retries
             UnloadAsset(asyncLoadPlaceholder->GetAssetID());
         }
 

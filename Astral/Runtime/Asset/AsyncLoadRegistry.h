@@ -57,9 +57,12 @@ namespace Astral {
          */
         bool IsRegistered(AssetID placeholderAssetID);
 
-
+        /**
+         * @brief Gets the file path associated with a placeholder asset
+         * @param placeholderID The placeholder's asset ID
+         * @return The file path associated with a placeholder asset
+         */
         const std::filesystem::path& GetFilePathAssociatedWithPlaceHolder(AssetID placeholderID);
-
 
     private:
 

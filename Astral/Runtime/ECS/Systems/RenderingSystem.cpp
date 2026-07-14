@@ -72,12 +72,12 @@ namespace Astral {
             if (assetRegistry.IsAsyncLoadPlaceholder(meshComponent.Material))
             {
                 if (!assetRegistry.IsAsyncLoadRetrievalReady(meshComponent.Material)) { continue; }
-                meshComponent.Material = assetRegistry.FetchAndRegisterAsyncLoadResult<Material>(meshComponent.Material);
+                meshComponent.Material = assetRegistry.FetchAsyncLoadResult<Material>(meshComponent.Material);
             }
             if (assetRegistry.IsAsyncLoadPlaceholder(meshComponent.MeshData))
             {
                 if (!assetRegistry.IsAsyncLoadRetrievalReady(meshComponent.MeshData)) { continue; }
-                meshComponent.MeshData = assetRegistry.FetchAndRegisterAsyncLoadResult<Mesh>(meshComponent.MeshData);
+                meshComponent.MeshData = assetRegistry.FetchAsyncLoadResult<Mesh>(meshComponent.MeshData);
             }
 
             if (meshComponent.Material == nullptr) { continue; }

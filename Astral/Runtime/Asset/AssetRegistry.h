@@ -59,12 +59,29 @@ namespace Astral {
             requires std::is_base_of_v<Asset, AssetType>
         Ref<AssetType> CreateAssetAsync(const std::filesystem::path& filePath);
 
+        /**
+         * @brief Checks if an asset is a async load placeholder
+         * @param asset The asset to check
+         * @return True if the asset is a async load placeholder, false otherwise
+         */
         bool IsAsyncLoadPlaceholder(Ref<Asset> asset);
-        bool IsAsyncLoadRetrievalReady(Ref<Asset> asset);
 
+        /**
+         * @brief Checks if an async load is ready to retrieve
+         * @param placeholderAsset The placeholder for the async load (Use IsAsyncLoadPlaceholder to verify an asset is a placeholder)
+         * @return True if the async load is ready to retrieve, false otherwise
+         */
+        bool IsAsyncLoadRetrievalReady(Ref<Asset> placeholderAsset);
+
+        /**
+         * @brief Fetches an async load result and populates the placeholder's memory with the result
+         * @param asyncLoadPlaceholder The placeholder for the async load (Use IsAsyncLoadPlaceholder to verify an asset is a placeholder)
+         * @return The populated placeholder or nullptr if the async load failed
+         * @note Use IsAsyncLoadRetrievalReady to check if the async load is ready to fetch
+         */
         template <typename AssetType>
             requires std::is_base_of_v<Asset, AssetType>
-        Ref<AssetType> FetchAndRegisterAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder);
+        Ref<AssetType> FetchAsyncLoadResult(Ref<Asset> asyncLoadPlaceholder);
 
         /**
          * @brief Takes an already loaded asset and registers it into the Asset Registry with the given file path.
