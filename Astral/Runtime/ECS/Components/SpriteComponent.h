@@ -16,10 +16,10 @@ namespace Astral {
     {
         SpriteComponent() :
             Material(nullptr),
-            MeshData(Engine::Get().GetAssetManager().GetRegistry().GetAsset<Mesh>("Meshes/Quad.obj")) {}
+            MeshData(Engine::Get().GetAssetManager().GetRegistry().CreateAsset<Mesh>("Meshes/Quad.obj")) {}
         explicit SpriteComponent(Ref<Material> material) :
             Material(material),
-            MeshData(Engine::Get().GetAssetManager().GetRegistry().GetAsset<Mesh>("Meshes/Quad.obj")) {}
+            MeshData(Engine::Get().GetAssetManager().GetRegistry().CreateAsset<Mesh>("Meshes/Quad.obj")) {}
         explicit SpriteComponent(Ref<Material> material, Ref<Mesh> mesh) :
             Material(material),
             MeshData(mesh) {}

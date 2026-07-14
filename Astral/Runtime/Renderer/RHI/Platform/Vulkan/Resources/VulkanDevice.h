@@ -231,16 +231,6 @@ namespace Astral {
         void DestroyDevice();
 
         /**
-         * @brief Creates the command pool object
-         */
-        void CreateCommandPool();
-
-        /**
-         * @brief Destroys the command pool object
-         */
-        void DestroyMemoryPool();
-
-        /**
          * @brief Allocates a swapchain instance
          */
         GraphicsOwnedPtr<Swapchain> CreateSwapchain(uint32 numberOfImages) override;
@@ -256,7 +246,6 @@ namespace Astral {
         GLFWwindow* m_Window;
 
         VkDevice m_Device;
-        VkCommandPool m_CommandPool;
         GraphicsOwnedPtr<Swapchain> m_Swapchain;
     };
 

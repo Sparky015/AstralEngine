@@ -162,8 +162,8 @@ set(ENGINE_SOURCE
         Renderer/RenderingPaths/DeferredRenderingPath.h
         Renderer/RenderingPaths/ForwardRenderingPath.cpp
         Renderer/RenderingPaths/ForwardRenderingPath.h
-
-
+        Asset/AsyncLoadRegistry.cpp
+        Asset/AsyncLoadRegistry.h
 )
 
 set(VULKAN_RHI_FILES
@@ -255,6 +255,8 @@ set(D3D12_RHI_FILES
     Renderer/RHI/Platform/D3D12/Resources/D3D12Device.h
     Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.cpp
     Renderer/RHI/Platform/D3D12/Resources/D3D12Swapchain.h
+        Asset/AsyncLoadRegistry.cpp
+        Asset/AsyncLoadRegistry.h
 )
 
 if (WIN32 OR APPLE OR LINUX)

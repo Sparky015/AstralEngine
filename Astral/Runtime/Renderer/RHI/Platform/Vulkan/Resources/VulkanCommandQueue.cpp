@@ -31,6 +31,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanCommandQueue::Submit")
 
+        std::unique_lock lock{m_QueueMutex};
+
         VkPipelineStageFlags waitFlags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTargetHandle->GetRenderCompleteSemaphore();
@@ -58,6 +60,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanCommandQueue::SubmitSync")
 
+        std::unique_lock lock{m_QueueMutex};
+
         VkCommandBuffer commandBuffer =(VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
         VkSubmitInfo submitInfo = {
@@ -81,6 +85,8 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanCommandQueue::Present")
 
+        std::unique_lock lock{m_QueueMutex};
+
         uint32 imageIndex = renderTarget->GetImageIndex();
         VkSemaphore renderCompleteSemaphore = (VkSemaphore)renderTarget->GetRenderCompleteSemaphore();
         VkSwapchainKHR swapchain = (VkSwapchainKHR)m_Swapchain.GetNativeHandle();
@@ -102,12 +108,16 @@ namespace Astral {
 
     void VulkanCommandQueue::WaitIdle()
     {
+        std::unique_lock lock{m_QueueMutex};
+
         vkQueueWaitIdle(m_Queue);
     }
 
 
     void VulkanCommandQueue::GetQueue()
     {
+        std::unique_lock lock{m_QueueMutex};
+
         vkGetDeviceQueue(m_Device, m_QueueFamilyIndex, m_QueueIndex, &m_Queue);
     }
 
