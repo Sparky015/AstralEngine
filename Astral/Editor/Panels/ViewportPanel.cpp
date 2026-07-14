@@ -1,0 +1,121 @@
+/**
+* @file ViewportPanel.cpp
+* @author Andrew Fagan
+* @date 3/1/2025
+*/
+
+#include "ViewportPanel.h"
+
+#include "Renderer/SceneRenderer.h"
+
+#include "imgui.h"
+#include "ImGuizmo.h"
+#include "SceneHierarchyPanel.h"
+#include "ECS/Entity.h"
+#include "Scenes/SceneManager.h"
+#include "ECS/Systems/RenderingSystem.h"
+#include "glm/gtc/type_ptr.inl"
+#include "Input/InputState.h"
+
+
+namespace Astral {
+
+    ImVec2 ViewportPanel::m_ContentRegionSize{};
+
+    void ViewportPanel::Show()
+    {
+        PROFILE_SCOPE("ViewportPanel::Show")
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0,0));
+        ImGui::Begin("Viewport##EditorViewport", nullptr);
+
+        // Engine does not update input for client if the viewport is not active, so that the editor can take inputs
+        // and the user can type things without moving the camera in the viewport or do other things in the client
+        if (ImGui::IsWindowFocused()) { InputState::EnableTrackingInputs(); }
+        else { InputState::DisableTrackingInputs(); }
+
+        ViewportPanel::ShowViewportRender();
+        ViewportPanel::ShowGizmo();
+
+        ImGui::End();
+        ImGui::PopStyleVar();
+    }
+
+
+    void ViewportPanel::ShowViewportRender()
+    {
+
+        if (m_ContentRegionSize.x != ImGui::GetContentRegionAvail().x ||
+            m_ContentRegionSize.y != ImGui::GetContentRegionAvail().y)
+        {
+            m_ContentRegionSize = ImGui::GetContentRegionAvail();
+            SceneRenderer::ResizeViewport(m_ContentRegionSize.x, m_ContentRegionSize.y);
+        }
+
+        ImGui::Image(SceneRenderer::GetViewportTexture(), m_ContentRegionSize);
+    }
+
+
+    void ViewportPanel::ShowGizmo()
+    {
+        Scene& scene = Engine::Get().GetSceneManager().GetActiveScene();
+        ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+        Entity selectedEntity = SceneHierarchyPanel::GetSelectedEntity();
+
+        const ImVec2 imagePosition = ImGui::GetItemRectMin();
+        ImVec2 buttonPosition = ImVec2(imagePosition.x + 10, imagePosition.y + 10);
+        ImGui::SetCursorScreenPos(buttonPosition);
+
+        static ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+        if (ImGui::Button("T"))
+        {
+            operation = ImGuizmo::TRANSLATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("R"))
+        {
+            operation = ImGuizmo::ROTATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("S"))
+        {
+            operation = ImGuizmo::SCALE;
+        }
+
+        if (selectedEntity.GetID() != NULL_ENTITY)
+        {
+            TransformComponent transformComponent;
+            ecs.GetComponent(selectedEntity, transformComponent);
+
+            Mat4 transformMatrix{};
+            ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(transformComponent.position), glm::value_ptr(transformComponent.rotation), glm::value_ptr(transformComponent.scale), glm::value_ptr(transformMatrix));
+
+            ImGuizmo::BeginFrame();
+            ImGuizmo::SetDrawlist();
+            ImGuizmo::AllowAxisFlip(false);
+            ImGuizmo::Enable(true);
+
+            Camera& camera = scene.PrimaryCamera;
+            ImVec2 windowPos = ImGui::GetWindowPos();
+            ImGuizmo::SetRect(windowPos.x, windowPos.y, m_ContentRegionSize.x, m_ContentRegionSize.y);
+            Mat4 yUpProjection = camera.GetProjectionMatrix();
+            yUpProjection[1][1] *= -1;
+            ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(yUpProjection), operation, ImGuizmo::MODE::WORLD, glm::value_ptr(transformMatrix));
+
+            if (ImGuizmo::IsUsing())
+            {
+                ImGuizmo::DecomposeMatrixToComponents(
+                    glm::value_ptr(transformMatrix),
+                    glm::value_ptr(transformComponent.position),
+                    glm::value_ptr(transformComponent.rotation),
+                    glm::value_ptr(transformComponent.scale)
+                );
+
+                ecs.UpdateComponent(selectedEntity, transformComponent);
+            }
+
+
+        }
+    }
+
+}
