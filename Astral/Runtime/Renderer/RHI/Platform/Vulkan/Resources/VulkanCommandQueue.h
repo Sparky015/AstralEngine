@@ -78,6 +78,7 @@ namespace Astral {
         uint32 m_QueueIndex;
 
         VkQueue m_Queue;
+        mutable std::shared_mutex m_QueueMutex;
     };
 
 }
