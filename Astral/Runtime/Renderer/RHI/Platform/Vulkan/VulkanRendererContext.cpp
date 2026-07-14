@@ -60,6 +60,7 @@ namespace Astral {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
         m_PipelineStateCache.reset();
+        ReleaseAllThreadCommandPools();
         DestroyDevice();
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
@@ -293,6 +294,37 @@ namespace Astral {
     }
 
 
+    VkCommandPool VulkanRenderingContext::GetThreadCommandPool()
+    {
+        std::lock_guard lock(m_CommandPoolsMutex); // Lock in case of a thread adding new command allocator
+
+        std::thread::id executingThreadID = std::this_thread::get_id();
+        if (!m_ThreadCommandPools.contains(executingThreadID))
+        {
+            // Create and populate a new command allocator pool for this thread
+            VkDevice device = (VkDevice)m_Device->GetNativeHandle();
+
+            VkCommandPoolCreateInfo commandPoolCreateInfo = {
+                .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+                .pNext = nullptr,
+                .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+                .queueFamilyIndex = m_QueueFamilyIndex
+            };
+
+            VkCommandPool newThreadCommandPool = nullptr;
+            VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &newThreadCommandPool);
+            ASSERT(result == VK_SUCCESS, "Vulkan command pool failed to create!");
+
+            m_ThreadCommandPools.emplace(executingThreadID, newThreadCommandPool);
+        }
+
+        // Try to acquire a command allocator from this thread's command pool
+        VkCommandPool commandPool = m_ThreadCommandPools.at(executingThreadID);
+
+        return commandPool;
+    }
+
+
     PipelineStateCache& VulkanRenderingContext::GetPipelineStateCache()
     {
         return *m_PipelineStateCache;
@@ -347,6 +379,17 @@ namespace Astral {
         }
 
         return VK_FALSE;
+    }
+
+
+    void VulkanRenderingContext::ReleaseAllThreadCommandPools()
+    {
+        VkDevice device = (VkDevice)m_Device->GetNativeHandle();
+
+        for (auto& [threadID, commandAllocatorPool] : m_ThreadCommandPools)
+        {
+            vkDestroyCommandPool(device, commandAllocatorPool, nullptr);
+        }
     }
 
 }

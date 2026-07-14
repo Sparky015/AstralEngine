@@ -84,6 +84,11 @@ namespace Astral {
          */
         void ShutdownImGuiForAPIBackend() override;
 
+        /**
+         * @brief Gets the command pool for the executing thread
+         */
+        VkCommandPool GetThreadCommandPool();
+
     private:
 
         void CreateInstance();
@@ -104,6 +109,8 @@ namespace Astral {
                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                 void* pUserData);
 
+        void ReleaseAllThreadCommandPools();
+
         VkInstance m_Instance;
         VkDebugUtilsMessengerEXT m_DebugMessenger;
 
@@ -117,6 +124,9 @@ namespace Astral {
 
         GraphicsOwnedPtr<Device> m_Device;
         GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
+
+        std::unordered_map<std::thread::id, VkCommandPool> m_ThreadCommandPools;
+        std::mutex m_CommandPoolsMutex;
     };
 
 }
