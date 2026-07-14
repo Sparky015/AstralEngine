@@ -12,6 +12,8 @@
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
 #include "Common/VkEnumConversions.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Resources/VulkanCommandQueue.h"
 
 #ifdef ASTRAL_VULKAN_AVAILABLE
 #endif
@@ -52,6 +54,7 @@ namespace Astral {
 
         CreateDevice();
         m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
+        CreateCommandQueues();
     }
 
 
@@ -59,9 +62,11 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
+        DestroyCommandQueues();
         m_PipelineStateCache.reset();
         ReleaseAllThreadCommandPools();
         DestroyDevice();
+
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
         DestroyInstance();
@@ -294,6 +299,18 @@ namespace Astral {
     }
 
 
+    CommandQueueHandle VulkanRenderingContext::GetPrimaryCommandQueue()
+    {
+        return m_PrimaryCommandQueue;
+    }
+
+
+    CommandQueueHandle VulkanRenderingContext::GetAsyncCommandQueue()
+    {
+        return m_AsyncCommandQueue;
+    }
+
+
     VkCommandPool VulkanRenderingContext::GetThreadCommandPool()
     {
         std::lock_guard lock(m_CommandPoolsMutex); // Lock in case of a thread adding new command allocator
@@ -379,6 +396,41 @@ namespace Astral {
         }
 
         return VK_FALSE;
+    }
+
+
+    void VulkanRenderingContext::CreateCommandQueues()
+    {
+        VkDevice vkDevice = (VkDevice)m_Device->GetNativeHandle();
+        Swapchain& swapchain = RendererAPI::GetDevice().GetSwapchain();
+
+        VulkanCommandQueueDesc primaryCommandQueueDesc = {
+            .Device = vkDevice,
+            .Swapchain = swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = 0
+        };
+
+        m_PrimaryCommandQueue = CreateGraphicsRef<VulkanCommandQueue>(primaryCommandQueueDesc);
+
+        uint32 asyncQueueIndex = 1;
+        while (m_PhysicalDevices.SelectedDevice().queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
+
+        VulkanCommandQueueDesc asyncCommandQueueDesc = {
+            .Device = vkDevice,
+            .Swapchain = swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = asyncQueueIndex
+        };
+
+        m_AsyncCommandQueue = CreateGraphicsRef<VulkanCommandQueue>(asyncCommandQueueDesc);
+    }
+
+
+    void VulkanRenderingContext::DestroyCommandQueues()
+    {
+        m_PrimaryCommandQueue.reset();
+        m_AsyncCommandQueue.reset();
     }
 
 

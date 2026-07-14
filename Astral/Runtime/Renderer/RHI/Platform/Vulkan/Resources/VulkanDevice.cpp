@@ -88,29 +88,15 @@ namespace Astral {
 
     GraphicsRef<CommandQueue> VulkanDevice::GetPrimaryCommandQueue()
     {
-        VulkanCommandQueueDesc commandQueueDesc = {
-            .Device = m_Device,
-            .Swapchain = *m_Swapchain,
-            .QueueFamilyIndex = m_QueueFamilyIndex,
-            .QueueIndex = 0
-        };
-
-        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+        VulkanRenderingContext& vulkanRenderingContext = (VulkanRenderingContext&)RendererAPI::GetContext();
+        return vulkanRenderingContext.GetPrimaryCommandQueue();
     }
 
 
     CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
     {
-        uint32 asyncQueueIndex = 1;
-        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
-
-        VulkanCommandQueueDesc commandQueueDesc = {
-            .Device = m_Device,
-            .Swapchain = *m_Swapchain,
-            .QueueFamilyIndex = m_QueueFamilyIndex,
-            .QueueIndex = asyncQueueIndex
-        };
-        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+        VulkanRenderingContext& vulkanRenderingContext = (VulkanRenderingContext&)RendererAPI::GetContext();
+        return vulkanRenderingContext.GetAsyncCommandQueue();
     }
 
 
