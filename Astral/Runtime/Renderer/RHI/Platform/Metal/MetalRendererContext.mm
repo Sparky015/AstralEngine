@@ -334,6 +334,12 @@ namespace Astral {
     }
 
 
+    std::mutex& MetalRenderingContext::GetGlobalResidencySetMutex()
+    {
+        return m_GlobalResidencySetMutex;
+    }
+
+
     void MetalRenderingContext::ReleaseAllCommandAllocatorPools()
     {
         for (auto& [threadID, commandAllocatorPool] : m_CommandAllocators)
@@ -363,6 +369,8 @@ namespace Astral {
             AE_ERROR("Residency set failed to be created! Error: " << error->localizedDescription()->utf8String())
             error->release();
         }
+
+        m_GlobalResidencySet->requestResidency();
     }
 
 

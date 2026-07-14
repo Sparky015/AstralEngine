@@ -20,13 +20,21 @@ namespace Astral {
 
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* globalResidencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
         m_Queue->addResidencySet(globalResidencySet);
-        globalResidencySet->commit();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        globalResidencySet->commit(); // This is not thread safe
+        residencySetLock.unlock();
+
+
+        // This is the only place where the swapchain residency set is accessed so no lock
 
         CA::MetalLayer* swapchainMetalLayer = (CA::MetalLayer*)RendererAPI::GetDevice().GetSwapchain().GetNativeHandle();
         MTL::ResidencySet* swapchainResidencySet = swapchainMetalLayer->residencySet();
         m_Queue->addResidencySet(swapchainResidencySet);
-        swapchainResidencySet->commit();
+        swapchainResidencySet->commit(); // This is not thread safe
     }
 
 
@@ -40,7 +48,12 @@ namespace Astral {
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->commit();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        residencySet->commit(); // This is not thread safe
+        residencySetLock.unlock();
+
 
         MTL::Drawable* drawable = (MTL::Drawable*)renderTargetHandle->GetNativeImage();
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
@@ -60,16 +73,18 @@ namespace Astral {
             }
 
             lock.unlock();
-            m_ActiveCommandBufferTrackingCondition.notify_one();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
         });
+
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+        m_ActiveCommandBuffers.insert(commandBuffer);
+        lock.unlock();
 
         m_Queue->wait(drawable);
         m_Queue->commit(&commandBuffer, 1, commitOptions);
 
         commitOptions->release();
 
-        std::lock_guard lock(m_ActiveCommandBufferTrackingLock);
-        m_ActiveCommandBuffers.insert(commandBuffer);
     }
 
 
@@ -77,7 +92,11 @@ namespace Astral {
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
         residencySet->commit();
+        residencySetLock.unlock();
 
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
@@ -96,14 +115,15 @@ namespace Astral {
             }
 
             lock.unlock();
-            m_ActiveCommandBufferTrackingCondition.notify_one();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
         });
-
-        m_Queue->commit(&commandBuffer, 1, commitOptions);
-        commitOptions->release();
 
         std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
         m_ActiveCommandBuffers.insert(commandBuffer);
+        lock.unlock();
+
+        m_Queue->commit(&commandBuffer, 1, commitOptions);
+        commitOptions->release();
     }
 
 

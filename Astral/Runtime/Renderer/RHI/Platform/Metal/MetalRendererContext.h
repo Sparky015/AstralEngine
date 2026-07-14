@@ -106,8 +106,14 @@ namespace Astral {
 
         /**
          * @brief Gets the global residency set for all resources
+         * @note The residency set is not thread safe, synchronize with the global residency set mutex (get with GetGlobalResidencySetMutex)
          */
         MTL::ResidencySet* GetGlobalResidencySet();
+
+        /**
+         * @brief Gets the global residency set mutex (residency set operations are not thread safe)
+         */
+        std::mutex& GetGlobalResidencySetMutex();
 
     private:
 
@@ -207,6 +213,7 @@ namespace Astral {
         std::mutex m_CommandAllocatorsMutex;
 
         MTL::ResidencySet* m_GlobalResidencySet;
+        std::mutex m_GlobalResidencySetMutex;
         NS::AutoreleasePool* m_FrameAutoreleasePool;
         EventListener<NewFrameEvent> m_NewFrameListener;
 
