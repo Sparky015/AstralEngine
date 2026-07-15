@@ -6,10 +6,13 @@
 
 #pragma once
 
+#include "Allocator.h"
 #include "AllocatorUtils.h"
 #include "Core/Utilities/Asserts.h"
 
+
 #include <cstring>
+
 
 namespace Astral {
 
@@ -17,7 +20,7 @@ namespace Astral {
      * @brief Allocator that gives memory out in fixed size blocks.
      * @thread_safety This class is not thread safe.
      */
-    class PoolAllocator
+    class PoolAllocator : public IAllocator
     {
     public:
 
@@ -37,28 +40,51 @@ namespace Astral {
         void Free(void* elementPtr);
 
         /**
+         * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
+         */
+        void Reset() override;
+
+        /**
+         * @brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated.
+         */
+        [[nodiscard]] size_t GetUsedBlockSize() const; // TODO
+
+        /**
+         * @brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate
+         */
+        [[nodiscard]] size_t GetCapacity() const noexcept override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        [[nodiscard]] size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] AllocatorType GetAllocatorType() const override;
+
+        /**
          * @brief Checks if there is at least one memory block that can be allocated.
          * @return True if there is at least one memory block that can be allocated, false otherwise
          */
-        [[nodiscard]] constexpr bool CanAllocateMoreBlocks() const noexcept { return m_FreeListHead != nullptr; }
+        [[nodiscard]] bool CanAllocateMoreBlocks() const noexcept;
 
         /**
          * @brief Gets the number of blocks this pool allocator can allocate.
          * @return The number of blocks this pool allocator can allocate.
          */
-        [[nodiscard]] constexpr size_t GetNumberOfBlocks() const noexcept { return m_NumberOfBlocks; }
+        [[nodiscard]] size_t GetNumberOfBlocks() const noexcept;
 
         /**
          * @brief Gets the size of the memory block this pool allocator allocates.
          * @return The size of the memory block this pool allocator allocates.
          */
-        [[nodiscard]] constexpr size_t GetIndividualBlockSize() const noexcept { return m_BlockSize; }
-
-        /**
-         * @brief Gets the number of bytes this allocator can allocate out.
-         * @return The number of bytes this allocator can allocate out.
-         */
-        [[nodiscard]] constexpr size_t GetTotalSize() const noexcept { return m_NumberOfBlocks * m_BlockSize; }
+        [[nodiscard]] size_t GetIndividualBlockSize() const noexcept;
 
 
         // Deleting copy constructor and operator because copied blocks that were in use won't be able to be freed.

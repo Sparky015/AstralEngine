@@ -6,7 +6,7 @@
 
 #pragma once
 
-
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
 #include "Core/FixedIntegerTypes.h"
 #include "Utilities/Asserts.h"
@@ -16,6 +16,7 @@
 #include <memory>
 #include <new>
 
+
 namespace Astral {
 
     /**
@@ -23,7 +24,8 @@ namespace Astral {
      *        can be allocated to store temporary data.
      * @thread_safety This class is not thread safe.
      */
-    class RingAllocator {
+    class RingAllocator : public IAllocator
+    {
     public:
 
         explicit RingAllocator(size_t memoryBlockSize);
@@ -38,15 +40,34 @@ namespace Astral {
         [[nodiscard]] void* Allocate(size_t size, uint16 alignment);
 
         /**
-         * @brief Resets ALL memory that the allocator owns. Everything gets deallocated.
+         * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
          */
-        void Reset();
+        void Reset() override;
+
+        /**
+         * @brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated.
+         */
+        [[nodiscard]] size_t GetUsedBlockSize() const override; // TODO
 
         /**
          * @brief Gets the memory capacity of the allocator.
-         * @return The max number of bytes the allocator can allocate.
+         * @return The max number of bytes the allocator can allocate
+         * @note The max number of bytes might not be able to be used if more than one allocation is made due to overhead depending on allocator type
          */
-        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
+        [[nodiscard]] size_t GetCapacity() const override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        [[nodiscard]] size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] AllocatorType GetAllocatorType() const override;
 
         /**
          * @brief Checks if an allocation of the given size can be allocated with the available space in the allocator
@@ -65,15 +86,7 @@ namespace Astral {
          *         false if it will not be wrapped.
          * @note Either the entire allocation will wrap around or the allocation won't wrap.
          */
-        [[nodiscard]] bool DoesAllocationWrap(size_t size, size_t alignment) const
-        {
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { return true; };
-            void* testAddress = (void*)m_CurrentMarker;
-            size_t space = m_EndBlockAddress - m_CurrentMarker;
-            if (!std::align(alignment, size, testAddress, space)) { return true; }
-
-            return false;
-        }
+        [[nodiscard]] bool DoesAllocationWrap(size_t size, size_t alignment) const;
 
         /**
          * @brief Doubles the size of the internal buffer of the allocator.

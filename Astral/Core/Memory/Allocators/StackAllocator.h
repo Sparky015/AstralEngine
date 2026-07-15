@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
 #include "Core/FixedIntegerTypes.h"
 
@@ -16,15 +17,12 @@ namespace Astral {
      * @brief Stack-like allocator that allocates memory in a last in first out order. This means that the user can
      *        deallocate only the most recent unfreed memory allocation.
      * @thread_safety This class is not thread safe.
-     * @note Copying is not allowed with this allocator.
      */
-    class StackAllocator
+    class StackAllocator : public IAllocator
     {
     public:
-
         explicit StackAllocator(size_t memoryBlockSize);
         ~StackAllocator();
-
 
         using Marker = unsigned char*;
 
@@ -55,21 +53,33 @@ namespace Astral {
         void Deallocate(void* ptr, size_t sizeOfAllocatedBlock);
 
         /**
-         * @brief Resets ALL memory that the allocator owns. Everything gets deallocated.
+         * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
          */
-        void Reset();
+        void Reset() override;
 
         /**
          * @brief Gets the amount of memory currently allocated out by the allocator.
          * @return The number of bytes currently allocated.
          */
-        [[nodiscard]] size_t GetUsedBlockSize() const { return m_CurrentMarker - m_StartBlockAddress; }
+        [[nodiscard]] size_t GetUsedBlockSize() const override;
 
         /**
          * @brief Gets the memory capacity of the allocator.
-         * @return The max number of bytes the allocator can allocate.
+         * @return The max number of bytes the allocator can allocate
          */
-        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
+        [[nodiscard]] size_t GetCapacity() const override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        [[nodiscard]] size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] AllocatorType GetAllocatorType() const override;
 
         /**
          * @brief Doubles the size of the internal buffer of the allocator.

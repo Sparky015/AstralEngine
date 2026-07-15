@@ -14,6 +14,7 @@
 namespace Astral {
 
     TLSFAllocator::TLSFAllocator(size_t memoryPoolSize) :
+        m_MemoryPoolSize(memoryPoolSize),
         m_FirstLevelLists(nullptr),
         m_NumFirstLevelIndex(0),
         m_NumSecondLevelIndex(0)
@@ -76,7 +77,36 @@ namespace Astral {
     }
 
 
-// ======= Block Header ===================================
+    void TLSFAllocator::Reset()
+    {
+        InitializeTLSFStructure(m_FirstLevelLists, m_MemoryPoolSize);
+    }
+
+
+    size_t TLSFAllocator::GetUsedBlockSize() const
+    {
+    }
+
+
+    size_t TLSFAllocator::GetCapacity() const
+    {
+        return GetOwnedMemorySize() - GetTLSFStructureSize();
+    }
+
+
+    size_t TLSFAllocator::GetOwnedMemorySize() const
+    {
+        return m_MemoryPoolSize;
+    }
+
+
+    AllocatorType TLSFAllocator::GetAllocatorType() const
+    {
+        return AllocatorType::TLSF;
+    }
+
+
+    // ======= Block Header ===================================
 
     size_t TLSFAllocator::BlockHeader::GetBlockSize()
     {
@@ -328,6 +358,12 @@ namespace Astral {
         freeBlockHeader->SetIsLastPoolPhysicalBlock(false);
 
         return remainingBlock;
+    }
+
+
+    size_t TLSFAllocator::GetTLSFStructureSize() const
+    {
+        return m_NumSecondLevelIndex * sizeof(void*) - (m_NumFirstLevelIndex - m_MinimumBlockSize);
     }
 
 }

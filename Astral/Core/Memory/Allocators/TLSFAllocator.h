@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Allocator.h"
 #include "Core/FixedIntegerTypes.h"
 
 namespace Astral {
@@ -13,7 +14,7 @@ namespace Astral {
     /**
      * @brief A Two-Level Segregated Fit Allocator
      */
-    class TLSFAllocator
+    class TLSFAllocator : public IAllocator
     {
     public:
         /**
@@ -34,6 +35,36 @@ namespace Astral {
          * @brief Returns the given memory block to the allocator
          */
         void Free(void* memoryBlock);
+
+        /**
+         * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
+         */
+        void Reset() override;
+
+        /**
+         * @brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated.
+         */
+        [[nodiscard]] size_t GetUsedBlockSize() const override; // TODO
+
+        /**
+         * @brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate
+         * @note The max number of bytes might not be able to be used if more than one allocation is made due to overhead depending on allocator type
+         */
+        [[nodiscard]] size_t GetCapacity() const override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        [[nodiscard]] size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] AllocatorType GetAllocatorType() const override;
 
     private:
 
@@ -192,7 +223,14 @@ namespace Astral {
          */
         void* SplitMemoryBlock(void* memoryBlock, size_t reducedBlockSize);
 
+        /**
+         * @brief Calculates the memory footprint of the TLSF structure
+         * @return The memory footprint of the TLSF structure
+         */
+        size_t GetTLSFStructureSize() const;
 
+
+        size_t m_MemoryPoolSize;
         uintptr_t** m_FirstLevelLists = nullptr;
 
         /// The number of first-level segregated classes. Classes are a power of two apart from each other.

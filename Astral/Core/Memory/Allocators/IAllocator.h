@@ -20,18 +20,11 @@ namespace Astral {
         TLSF
     };
 
-    class Allocator
+    class IAllocator
     {
     public:
-        virtual ~Allocator() = default;
-
-        /**
-         * @brief Allocates a memory block of the given size with the given required alignment.
-         * @param size Size of the requested allocated block
-         * @param alignment The alignment requirement for the allocation
-         * @return A pointer to the allocated block or nullptr if the allocation failed.
-         */
-        virtual void* Allocate(size_t size, uint16 alignment) = 0;
+        IAllocator() = default;
+        virtual ~IAllocator() = default;
 
         /**
          * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
@@ -68,8 +61,8 @@ namespace Astral {
         /// The new allocator will copy the same address range (some of that will include addresses in use by the user).
         /// Because the new allocator's memory is freshly allocated, no one has the pointers to the new allocator's memory
         /// for the data in use, so they can't be freed.
-        Allocator(const Allocator& other) = delete;
-        Allocator& operator=(const Allocator& other) = delete;
+        IAllocator(const IAllocator& other) = delete;
+        IAllocator& operator=(const IAllocator& other) = delete;
 
     };
 

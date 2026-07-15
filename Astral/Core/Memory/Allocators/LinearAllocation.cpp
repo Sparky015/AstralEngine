@@ -63,6 +63,30 @@ namespace Astral {
     }
 
 
+    size_t LinearAllocator::GetUsedBlockSize() const
+    {
+        return m_CurrentMarker - m_StartBlockAddress;
+    }
+
+
+    size_t LinearAllocator::GetCapacity() const
+    {
+        return m_EndBlockAddress - m_StartBlockAddress;
+    }
+
+
+    size_t LinearAllocator::GetOwnedMemorySize() const
+    {
+        return GetCapacity();
+    }
+
+
+    AllocatorType LinearAllocator::GetAllocatorType() const
+    {
+        return AllocatorType::LINEAR;
+    }
+
+
     bool LinearAllocator::ResizeBuffer()
     {
         if (GetUsedBlockSize() != 0) { return false; }

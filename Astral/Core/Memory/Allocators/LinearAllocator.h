@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
 #include "FixedIntegerTypes.h"
 #include "Utilities/Asserts.h"
@@ -15,6 +16,7 @@
 #include <memory>
 #include <new>
 
+
 namespace Astral {
 
     /**
@@ -23,7 +25,8 @@ namespace Astral {
      *          It's all or nothing.
      * @thread_safety This class is not thread safe.
      */
-    class LinearAllocator {
+    class LinearAllocator : public IAllocator
+    {
     public:
 
         explicit LinearAllocator(size_t memoryBlockSize);
@@ -40,19 +43,31 @@ namespace Astral {
         /**
          * @brief Resets ALL memory that the allocator owns. Everything gets deallocated.
          */
-        void Reset();
+        void Reset() override;
 
         /**
          * @brief Gets the amount of memory currently allocated out by the allocator.
          * @return The number of bytes currently allocated.
          */
-        [[nodiscard]] size_t GetUsedBlockSize() const { return m_CurrentMarker - m_StartBlockAddress; }
+        [[nodiscard]] size_t GetUsedBlockSize() const override;
 
         /**
          * @brief Gets the memory capacity of the allocator.
          * @return The max number of bytes the allocator can allocate.
          */
-        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
+        [[nodiscard]] size_t GetCapacity() const override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        AllocatorType GetAllocatorType() const override;
 
         /**
          * @brief Doubles the size of the internal buffer of the allocator.
