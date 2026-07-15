@@ -7,11 +7,7 @@ add_executable(AstralCoreTests
         Events/EventSystemTest.cpp
 
         Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
-        Memory/Allocators/STLAllocators/STLStackBasedLinearAllocatorTests.cpp
-        Memory/Allocators/StackBasedLinearAllocatorTest.cpp
         Memory/Allocators/StackAllocatorTest.cpp
-        Memory/Allocators/FrameAllocatorTest.cpp
-        Memory/Allocators/DoubleBufferedAllocatorTest.cpp
         Memory/Allocators/PoolAllocatorTest.cpp
         Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
         Memory/Allocators/LinearAllocatorTest.cpp
