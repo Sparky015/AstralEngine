@@ -18,9 +18,7 @@ set(CORE_SOURCE
     Memory/Allocators/AlignedAllocator.h
     Memory/Allocators/AllocatorUtils.cpp
     Memory/Allocators/AllocatorUtils.h
-        Memory/Allocators/FrameAllocator.cpp
-    Memory/Allocators/FrameAllocator.h
-    Memory/Allocators/LinearAllocation.cpp
+        Memory/Allocators/LinearAllocation.cpp
     Memory/Allocators/LinearAllocator.h
     Memory/Allocators/PoolAllocator.cpp
     Memory/Allocators/PoolAllocator.h
