@@ -47,6 +47,10 @@ namespace Astral {
         [[nodiscard]] virtual size_t GetOwnedMemorySize() const = 0;
 
 
+        /// Deleting copy constructor and operator because the copied data in use won't be able to be freed.
+        /// The new allocator will copy the same address range (some of that will include addresses in use by the user).
+        /// Because the new allocator's memory is freshly allocated, no one has the pointers to the new allocator's memory
+        /// for the data in use, so they can't be freed.
         Allocator(const Allocator& other) = delete;
         Allocator& operator=(const Allocator& other) = delete;
 
