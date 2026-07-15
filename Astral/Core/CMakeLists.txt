@@ -58,7 +58,7 @@ set(CORE_SOURCE
     Containers/StringLiteral.h
     Memory/Allocators/TLSFAllocator.cpp
     Memory/Allocators/TLSFAllocator.h
-    Memory/Allocators/Allocator.h
+    Memory/Allocators/IAllocator.h
 )
 
 set(UNIX_PLATFORM_FILES

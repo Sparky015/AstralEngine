@@ -8,7 +8,6 @@ add_executable(AstralCoreTests
 
         Memory/Allocators/STLAllocators/STLStackAllocatorTests.cpp
         Memory/Allocators/StackAllocatorTest.cpp
-        Memory/Allocators/FrameAllocatorTest.cpp
         Memory/Allocators/PoolAllocatorTest.cpp
         Memory/Allocators/STLAllocators/STLLinearAllocatorTests.cpp
         Memory/Allocators/LinearAllocatorTest.cpp

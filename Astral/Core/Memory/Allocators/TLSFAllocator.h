@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Allocator.h"
+#include "IAllocator.h"
 #include "Core/FixedIntegerTypes.h"
 
 namespace Astral {

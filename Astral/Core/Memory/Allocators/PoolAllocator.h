@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Allocator.h"
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
 #include "Core/Utilities/Asserts.h"
 

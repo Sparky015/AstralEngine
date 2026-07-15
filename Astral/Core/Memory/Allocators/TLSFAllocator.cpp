@@ -85,6 +85,7 @@ namespace Astral {
 
     size_t TLSFAllocator::GetUsedBlockSize() const
     {
+        return 0; //TODO
     }
 
 
