@@ -14,14 +14,11 @@ set(CORE_SOURCE
 
     Memory/Allocators/STLAllocators/STLLinearAllocator.h
     Memory/Allocators/STLAllocators/STLStackAllocator.h
-    Memory/Allocators/STLAllocators/STLStackBasedLinearAllocator.h
-    Memory/Allocators/AlignedAllocator.cpp
+        Memory/Allocators/AlignedAllocator.cpp
     Memory/Allocators/AlignedAllocator.h
     Memory/Allocators/AllocatorUtils.cpp
     Memory/Allocators/AllocatorUtils.h
-    Memory/Allocators/DoubleBufferedAllocator.cpp
-    Memory/Allocators/DoubleBufferedAllocator.h
-    Memory/Allocators/FrameAllocator.cpp
+        Memory/Allocators/FrameAllocator.cpp
     Memory/Allocators/FrameAllocator.h
     Memory/Allocators/LinearAllocation.cpp
     Memory/Allocators/LinearAllocator.h
@@ -31,9 +28,7 @@ set(CORE_SOURCE
     Memory/Allocators/RingAllocator.h
     Memory/Allocators/StackAllocator.cpp
     Memory/Allocators/StackAllocator.h
-    Memory/Allocators/StackBasedLinearAllocator.h
-    Memory/Allocators/StackBasedLinearAllocator_impl.h
-    Memory/Pools/ObjectPool.h
+        Memory/Pools/ObjectPool.h
 
     Time/Clock.cpp
     Time/Clock.h
