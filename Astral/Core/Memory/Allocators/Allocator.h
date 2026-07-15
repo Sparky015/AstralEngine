@@ -10,6 +10,16 @@
 
 namespace Astral {
 
+    enum class AllocatorType
+    {
+        LINEAR,
+        STACK,
+        RING,
+        POOL,
+        SLAB,
+        TLSF
+    };
+
     class Allocator
     {
     public:
@@ -26,7 +36,7 @@ namespace Astral {
         /**
          * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
          */
-        void Reset();
+        virtual void Reset() = 0;
 
         /**
          * @brief Gets the amount of memory currently allocated out by the allocator.
@@ -36,7 +46,8 @@ namespace Astral {
 
         /**
          * @brief Gets the memory capacity of the allocator.
-         * @return The max number of bytes the allocator can allocate.
+         * @return The max number of bytes the allocator can allocate
+         * @note The max number of bytes might not be able to be used if more than one allocation is made due to overhead depending on allocator type
          */
         [[nodiscard]] virtual size_t GetCapacity() const = 0;
 
@@ -45,6 +56,12 @@ namespace Astral {
          * @return The total owned memory size of an allocator (including overhead)
          */
         [[nodiscard]] virtual size_t GetOwnedMemorySize() const = 0;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] virtual AllocatorType GetAllocatorType() const = 0;
 
 
         /// Deleting copy constructor and operator because the copied data in use won't be able to be freed.
