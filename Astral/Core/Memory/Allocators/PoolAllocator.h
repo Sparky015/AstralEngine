@@ -7,7 +7,7 @@
 #pragma once
 
 #include "AllocatorUtils.h"
-#include "Utilities/Asserts.h"
+#include "Core/Utilities/Asserts.h"
 
 #include <cstring>
 

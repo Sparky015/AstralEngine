@@ -8,10 +8,7 @@
 #pragma once
 
 #include "AllocatorUtils.h"
-#include "FixedIntegerTypes.h"
-#include "Utilities/Asserts.h"
-
-#include <memory>
+#include "Core/FixedIntegerTypes.h"
 
 namespace Astral {
 
