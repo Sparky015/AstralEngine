@@ -57,7 +57,7 @@ namespace Astral {
         /**
          * @brief Adds an allocated pointer to tracking and updates the metrics
          */
-        void AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType);
+        void AddAllocation(void* pointer, size_t size, MemoryRegion region, MemoryTrackerAllocatorType allocatorType);
 
         /**
          * @brief Removes an allocated pointer from tracking and updates the metrics

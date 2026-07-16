@@ -821,7 +821,6 @@ namespace Astral {
         CommandBufferHandle commandBufferHandle = m_DeviceManager->AllocateCommandBuffer();
         VkCommandBuffer commandBuffer = (VkCommandBuffer)commandBufferHandle->GetNativeHandle();
 
-
     	commandBufferHandle->BeginRecording();
 
         {

@@ -81,6 +81,40 @@ namespace Astral {
     }
 
 
+    size_t RingAllocator::GetUsedBlockSize() const
+    {
+    }
+
+
+    size_t RingAllocator::GetCapacity() const
+    {
+        return m_EndBlockAddress - m_StartBlockAddress;
+    }
+
+
+    size_t RingAllocator::GetOwnedMemorySize() const
+    {
+        return GetCapacity();
+    }
+
+
+    AllocatorType RingAllocator::GetAllocatorType() const
+    {
+        return AllocatorType::RING;
+    }
+
+
+    bool RingAllocator::DoesAllocationWrap(size_t size, size_t alignment) const
+    {
+        if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { return true; };
+        void* testAddress = (void*)m_CurrentMarker;
+        size_t space = m_EndBlockAddress - m_CurrentMarker;
+        if (!std::align(alignment, size, testAddress, space)) { return true; }
+
+        return false;
+    }
+
+
     bool RingAllocator::ResizeBuffer()
     {
         return ResizeInternalMemoryBlock();

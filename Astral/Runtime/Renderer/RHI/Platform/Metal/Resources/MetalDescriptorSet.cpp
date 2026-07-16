@@ -48,8 +48,6 @@ namespace Astral {
         // Update logical to physical binding map
         m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
         m_NumPhysicalBindings += 1;
-
-        AddResourceToResidencySet(bufferHandle);
     }
 
 
@@ -62,8 +60,6 @@ namespace Astral {
         // Update logical to physical binding map
         m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
         m_NumPhysicalBindings += 1;
-
-        AddResourceToResidencySet(bufferHandle);
     }
 
 
@@ -77,8 +73,6 @@ namespace Astral {
         // Update logical to physical binding map
         m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
         m_NumPhysicalBindings += 2; // For image binding and sampler binding
-
-        AddResourceToResidencySet(textureHandle);
     }
 
 
@@ -91,8 +85,6 @@ namespace Astral {
         // Update logical to physical binding map
         m_LogicalToPhysicalBindingMap.push_back(m_NumPhysicalBindings);
         m_NumPhysicalBindings += 1;
-
-        AddResourceToResidencySet(textureHandle);
     }
 
     void MetalDescriptorSet::EndBuildingSet()
@@ -130,8 +122,6 @@ namespace Astral {
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
         bufferPointer[physicalBinding] = bufferGPUAddress;
         m_ArgumentBuffer->UnmapPointer();
-
-        AddResourceToResidencySet(newBufferHandle);
     }
 
 
@@ -163,8 +153,6 @@ namespace Astral {
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
         bufferPointer[physicalBinding] = bufferGPUAddress;
         m_ArgumentBuffer->UnmapPointer();
-
-        AddResourceToResidencySet(newBufferHandle);
     }
 
 
@@ -200,8 +188,6 @@ namespace Astral {
         bufferPointer[physicalBinding] = textureResourceID;
         bufferPointer[physicalBinding + 1] = samplerResourceID;
         m_ArgumentBuffer->UnmapPointer();
-
-        AddResourceToResidencySet(newTextureHandle);
     }
 
 
@@ -237,8 +223,6 @@ namespace Astral {
         bufferPointer[physicalBinding] = textureResourceID;
         bufferPointer[physicalBinding + 1] = samplerResourceID;
         m_ArgumentBuffer->UnmapPointer();
-
-        AddResourceToResidencySet(newTextureHandle);
     }
 
 
@@ -269,8 +253,6 @@ namespace Astral {
         m_ArgumentBuffer->MapPointer(reinterpret_cast<void**>(&bufferPointer));
         bufferPointer[physicalBinding] = textureResourceID;
         m_ArgumentBuffer->UnmapPointer();
-
-        AddResourceToResidencySet(newTextureHandle);
     }
 
 
@@ -445,24 +427,6 @@ namespace Astral {
                 UpdateStorageImageBinding(i, textureHandle, 0, ImageLayout::GENERAL); // Last two arguments do not get used for Metal
             }
         }
-    }
-
-
-    void MetalDescriptorSet::AddResourceToResidencySet(const TextureHandle& texture)
-    {
-        MTL::Texture* mtlTexture = (MTL::Texture*)texture->GetNativeImage();
-        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->addAllocation(mtlTexture);
-    }
-
-
-    void MetalDescriptorSet::AddResourceToResidencySet(const BufferHandle& buffer)
-    {
-        MTL::Buffer* mtlBuffer = (MTL::Buffer*)buffer->GetNativeHandle();
-        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->addAllocation(mtlBuffer);
     }
 
 }

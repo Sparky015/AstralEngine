@@ -84,6 +84,21 @@ namespace Astral {
          */
         void ShutdownImGuiForAPIBackend() override;
 
+        /**
+         * @brief Gets the primary command queue
+         */
+        CommandQueueHandle GetPrimaryCommandQueue();
+
+        /**
+         * @brief Gets the async command queue
+         */
+        CommandQueueHandle GetAsyncCommandQueue();
+
+        /**
+         * @brief Gets the command pool for the executing thread
+         */
+        VkCommandPool GetThreadCommandPool();
+
     private:
 
         void CreateInstance();
@@ -104,6 +119,18 @@ namespace Astral {
                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                 void* pUserData);
 
+        /**
+         * @brief Creates the primary command queue RHI handle
+         */
+        void CreateCommandQueues();
+
+        /**
+         * @brief Releases the primary command queue RHI handle
+         */
+        void DestroyCommandQueues();
+
+        void ReleaseAllThreadCommandPools();
+
         VkInstance m_Instance;
         VkDebugUtilsMessengerEXT m_DebugMessenger;
 
@@ -117,6 +144,12 @@ namespace Astral {
 
         GraphicsOwnedPtr<Device> m_Device;
         GraphicsOwnedPtr<PipelineStateCache> m_PipelineStateCache;
+
+        CommandQueueHandle m_PrimaryCommandQueue;
+        CommandQueueHandle m_AsyncCommandQueue;
+
+        std::unordered_map<std::thread::id, VkCommandPool> m_ThreadCommandPools;
+        std::mutex m_CommandPoolsMutex;
     };
 
 }

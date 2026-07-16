@@ -182,16 +182,6 @@ namespace Astral {
          */
         void UpdateDescriptorSets();
 
-        /**
-         * @brief Adds texture resource to global residency set
-         */
-        void AddResourceToResidencySet(const TextureHandle& texture);
-
-        /**
-         * @brief Adds buffer resource to global residency set
-         */
-        void AddResourceToResidencySet(const BufferHandle& buffer);
-
 
         MTL::Device* m_Device;
         BufferHandle m_ArgumentBuffer;

@@ -6,9 +6,9 @@
 
 #pragma once
 
-
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
-#include "FixedIntegerTypes.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Utilities/Asserts.h"
 
 #include <cstddef>
@@ -16,58 +16,84 @@
 #include <memory>
 #include <new>
 
+
 namespace Astral {
 
-    /**@brief This is an allocator that allows for a continuous stream of allocations. It is basically a buffer that
+    /**
+     * @brief This is an allocator that allows for a continuous stream of allocations. It is basically a buffer that
      *        can be allocated to store temporary data.
-     * @thread_safety This class is NOT thread safe. */
-    class RingAllocator {
+     * @thread_safety This class is not thread safe.
+     */
+    class RingAllocator : public IAllocator
+    {
     public:
 
         explicit RingAllocator(size_t memoryBlockSize);
         ~RingAllocator();
 
-        /**@brief Allocates a memory block of the given size with the given required alignment.
+        /**
+         * @brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
-         * @param outAllocatedPointer An output parameter that is populated with a pointer to allocated block.
-         * @return A pointer to the allocated block if successful and nullptr if the allocation failed.*/
+         * @return A pointer to the allocated block if successful and nullptr if the allocation failed.
+         */
         [[nodiscard]] void* Allocate(size_t size, uint16 alignment);
 
-        /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void Reset();
+        /**
+         * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
+         */
+        void Reset() override;
 
-        /**@brief Gets the memory capacity of the allocator.
-         * @return The max number of bytes the allocator can allocate. */
-        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
+        /**
+         * @brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated.
+         */
+        [[nodiscard]] size_t GetUsedBlockSize() const override; // TODO
 
-        /**@brief Checks if an allocation of the given size can be allocated with the available space in the allocator
+        /**
+         * @brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate
+         * @note The max number of bytes might not be able to be used if more than one allocation is made due to overhead depending on allocator type
+         */
+        [[nodiscard]] size_t GetCapacity() const override;
+
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        [[nodiscard]] size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        [[nodiscard]] AllocatorType GetAllocatorType() const override;
+
+        /**
+         * @brief Checks if an allocation of the given size can be allocated with the available space in the allocator
          * @param size The size of the allocation being checked
          * @return True if an allocation of the given size can be allocated and false if
-         *         the allocation will fail due to not enough space in the allocator. */
+         *         the allocation will fail due to not enough space in the allocator.
+         */
         [[nodiscard]] bool CanAllocate(size_t size) const { return size <= GetCapacity(); }
 
-        /**@brief Checks if an allocation will wrap to the start of the allocator's memory block.
+        /**
+         * @brief Checks if an allocation will wrap to the start of the allocator's memory block.
          *        (This is due to the ring aspect of the ring allocator)
          * @param size The size of the allocation
          * @param alignment The alignment of the allocation
          * @return True if the allocation will be wrapped to the start of the allocator's memory block and
          *         false if it will not be wrapped.
-         * @note Either the entire allocation will wrap around or the allocation won't wrap. */
-        [[nodiscard]] bool DoesAllocationWrap(size_t size, size_t alignment) const
-        {
-            if (AllocatorUtils::DoesCauseOverflow(m_CurrentMarker, size, m_EndBlockAddress)) { return true; };
-            void* testAddress = (void*)m_CurrentMarker;
-            size_t space = m_EndBlockAddress - m_CurrentMarker;
-            if (!std::align(alignment, size, testAddress, space)) { return true; }
+         * @note Either the entire allocation will wrap around or the allocation won't wrap.
+         */
+        [[nodiscard]] bool DoesAllocationWrap(size_t size, size_t alignment) const;
 
-            return false;
-        }
-
-        /**@brief Doubles the size of the internal buffer of the allocator.
+        /**
+         * @brief Doubles the size of the internal buffer of the allocator.
          * @return True if the resize operation succeeded and false if the allocation failed.
          * @warning This will invalidate all data currently in the memory of the allocator. Only use this when you are sure
-         *          that the memory previously allocated won't be read/wrote to again. */
+         *          that the memory previously allocated won't be read/wrote to again.
+         */
         [[nodiscard]] bool ResizeBuffer();
 
 
@@ -86,11 +112,14 @@ namespace Astral {
 
     private:
 
-        /** @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
+        /**
+         *  @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
          *         allocator is empty.
          *  @return True if the resize allocation succeeds and false if it fails.
-         *  @remark Function will exit early and maintain current allocator capacity if the resize allocation fails.  */
+         *  @remark Function will exit early and maintain current allocator capacity if the resize allocation fails.
+         */
         [[nodiscard]] bool ResizeInternalMemoryBlock();
+
 
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;
