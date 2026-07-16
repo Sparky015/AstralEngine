@@ -46,7 +46,7 @@ namespace Astral {
     }
 
 
-    enum AllocatorType : uint8
+    enum MemoryTrackerAllocatorType : uint8
     {
         STACK,
         RING,
@@ -63,7 +63,7 @@ namespace Astral {
     };
 
 
-    inline const char* AllocatorTypeToString(AllocatorType allocatorType)
+    inline const char* AllocatorTypeToString(MemoryTrackerAllocatorType allocatorType)
     {
         switch (allocatorType)
         {
@@ -87,7 +87,7 @@ namespace Astral {
         void* pointer;
         size_t size;
         MemoryRegion region;
-        AllocatorType allocatorType;
+        MemoryTrackerAllocatorType allocatorType;
         std::thread::id threadID;
     };
 
@@ -96,7 +96,7 @@ namespace Astral {
         uintptr_t pointer;
         size_t size;
         MemoryRegion region;
-        AllocatorType allocatorType;
+        MemoryTrackerAllocatorType allocatorType;
         size_t threadIDHash;
 
         MSGPACK_DEFINE(pointer, size, region, allocatorType, threadIDHash)
@@ -142,20 +142,20 @@ namespace msgpack {
 
             // Serialization support for Core::AllocatorType
             template<>
-            struct convert<Astral::AllocatorType>
+            struct convert<Astral::MemoryTrackerAllocatorType>
             {
-                msgpack::object const& operator()(msgpack::object const& o, Astral::AllocatorType& v) const
+                msgpack::object const& operator()(msgpack::object const& o, Astral::MemoryTrackerAllocatorType& v) const
                 {
-                    v = static_cast<Astral::AllocatorType>(o.as<uint8_t>());
+                    v = static_cast<Astral::MemoryTrackerAllocatorType>(o.as<uint8_t>());
                     return o;
                 }
             };
 
             template<>
-            struct pack<Astral::AllocatorType>
+            struct pack<Astral::MemoryTrackerAllocatorType>
             {
                 template <typename Stream>
-                packer<Stream>& operator()(msgpack::packer<Stream>& o, Astral::AllocatorType const& v) const
+                packer<Stream>& operator()(msgpack::packer<Stream>& o, Astral::MemoryTrackerAllocatorType const& v) const
                         {
                     o.pack(static_cast<uint8_t>(v));
                     return o;

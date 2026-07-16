@@ -38,7 +38,7 @@ namespace Astral {
             size_t allocationSize = n * sizeof(T);
             void* ptr = malloc(allocationSize);
             if (!ptr) throw std::bad_alloc();
-            Astral::MemoryTracker::Get().AddAllocation(ptr, allocationSize, m_MemoryRegion, Astral::AllocatorType::NEW_OPERATOR);
+            Astral::MemoryTracker::Get().AddAllocation(ptr, allocationSize, m_MemoryRegion, Astral::MemoryTrackerAllocatorType::NEW_OPERATOR);
             return static_cast<pointer>(ptr);
         }
 
