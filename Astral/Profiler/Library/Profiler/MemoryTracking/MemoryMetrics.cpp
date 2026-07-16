@@ -89,14 +89,14 @@ namespace Astral {
     }
 
 
-    size_t MemoryMetrics::GetAllocatorTypeUsage(AllocatorType allocatorType) const
+    size_t MemoryMetrics::GetAllocatorTypeUsage(MemoryTrackerAllocatorType allocatorType) const
     {
         if (!m_MemoryUsageByAllocator.contains(allocatorType)) { return 0; }
         return m_MemoryUsageByAllocator.at(allocatorType);
     }
 
 
-    size_t MemoryMetrics::GetAllocatorTypePeakUsage(AllocatorType allocatorType) const
+    size_t MemoryMetrics::GetAllocatorTypePeakUsage(MemoryTrackerAllocatorType allocatorType) const
     {
         if (!m_PeakMemoryUsageByAllocator.contains(allocatorType)) { return 0; }
         return m_PeakMemoryUsageByAllocator.at(allocatorType);

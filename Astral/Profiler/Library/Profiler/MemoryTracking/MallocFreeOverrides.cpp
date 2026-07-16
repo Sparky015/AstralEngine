@@ -15,7 +15,7 @@ namespace Astral {
     {
         void* ptr = malloc(size);
         if (!ptr) [[unlikely]] { return nullptr; }
-        Astral::MemoryTracker::Get().AddAllocation(ptr, size, region, Astral::AllocatorType::MALLOC);
+        Astral::MemoryTracker::Get().AddAllocation(ptr, size, region, Astral::MemoryTrackerAllocatorType::MALLOC);
         return ptr;
     }
 
@@ -24,7 +24,7 @@ namespace Astral {
         void* newPtr = realloc(ptr, size);
         if (!newPtr) { return nullptr; }
         Astral::MemoryTracker::Get().RemoveAllocation(ptr);
-        Astral::MemoryTracker::Get().AddAllocation(newPtr, size, region, Astral::AllocatorType::MALLOC);
+        Astral::MemoryTracker::Get().AddAllocation(newPtr, size, region, Astral::MemoryTrackerAllocatorType::MALLOC);
         return newPtr;
     }
 

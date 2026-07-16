@@ -66,7 +66,7 @@ TEST_F(GlobalAllocationStorageTest, FreePointer_DoesNothingWhenGivenNullptr)
 TEST_F(GlobalAllocationStorageTest, IsPointerStored_ReturnsTrueWhenPointerIsStored)
 {
     void* pointer = std::malloc(4);
-    Astral::AllocationData allocationData = {pointer, 4, Astral::MemoryRegion::UNKNOWN, Astral::AllocatorType::NEW_OPERATOR};
+    Astral::AllocationData allocationData = {pointer, 4, Astral::MemoryRegion::UNKNOWN, Astral::MemoryTrackerAllocatorType::NEW_OPERATOR};
 
     EXPECT_FALSE(m_Storage.IsPointerStored(pointer));
 

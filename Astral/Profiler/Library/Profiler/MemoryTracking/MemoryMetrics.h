@@ -37,7 +37,7 @@ namespace Astral {
         MemoryMetrics();
         ~MemoryMetrics() = default;
 
-        using AllocatorTypeMap = std::unordered_map<AllocatorType, size_t, std::hash<AllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const AllocatorType, size_t>>>;
+        using AllocatorTypeMap = std::unordered_map<MemoryTrackerAllocatorType, size_t, std::hash<MemoryTrackerAllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryTrackerAllocatorType, size_t>>>;
         using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryRegion, size_t>>>;
         using ThreadMap = std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const size_t, size_t>>>;
 
@@ -77,11 +77,11 @@ namespace Astral {
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetAllocatorTypeUsage(AllocatorType allocatorType) const;
+        [[nodiscard]] size_t GetAllocatorTypeUsage(MemoryTrackerAllocatorType allocatorType) const;
 
         /**@brief Retrieves memory usage metrics for the allocator type.
          * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetAllocatorTypePeakUsage(AllocatorType allocatorType) const;
+        [[nodiscard]] size_t GetAllocatorTypePeakUsage(MemoryTrackerAllocatorType allocatorType) const;
 
 
         /**@brief Retrieves memory usage metrics for the allocator type.

@@ -21,7 +21,7 @@ namespace Astral {
         ~SceneMetricsStorage();
 
         using DataPointStorage = std::vector<size_t>;
-        using AllocatorTypeStorageMap = std::unordered_map<AllocatorType, DataPointStorage, std::hash<AllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const AllocatorType, DataPointStorage>>>;
+        using AllocatorTypeStorageMap = std::unordered_map<MemoryTrackerAllocatorType, DataPointStorage, std::hash<MemoryTrackerAllocatorType>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryTrackerAllocatorType, DataPointStorage>>>;
         using MemoryRegionStorageMap = std::unordered_map<MemoryRegion, DataPointStorage, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryRegion, DataPointStorage>>>;
         using ThreadStorageMap = std::unordered_map<size_t, DataPointStorage, std::hash<size_t>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const size_t, DataPointStorage>>>;
 
@@ -30,7 +30,7 @@ namespace Astral {
             std::vector<uintptr_t> PointerStorage{};
             std::vector<size_t> SizeStorage{};
             std::vector<MemoryRegion> RegionStorage{};
-            std::vector<AllocatorType> AllocatorTypeStorage{};
+            std::vector<MemoryTrackerAllocatorType> AllocatorTypeStorage{};
             std::vector<size_t> ThreadIDStorage{};
         };
 
@@ -43,10 +43,10 @@ namespace Astral {
         [[nodiscard]] const DataPointStorage& GetGlobalTotalAllocationsOverTime() const { return m_TotalAllocationsOverTime; }
         [[nodiscard]] const DataPointStorage& GetGlobalActiveAllocationsOverTime() const { return m_TotalActiveAllocationsOverTime; }
 
-        [[nodiscard]] const DataPointStorage& GetAllocatorMemoryUsageOverTime(AllocatorType type) const { return m_MemoryUsageByAllocatorOverTime.at(type); }
-        [[nodiscard]] const DataPointStorage& GetAllocatorPeakMemoryUsageOverTime(AllocatorType type) const { return m_PeakMemoryUsageByAllocatorOverTime.at(type); }
-        [[nodiscard]] const DataPointStorage& GetAllocatorActiveAllocationsOverTime(AllocatorType type) const { return m_ActiveAllocationsByAllocatorOverTime.at(type); }
-        [[nodiscard]] const DataPointStorage& GetAllocatorTotalAllocationsOverTime(AllocatorType type) const { return m_TotalAllocationsByAllocatorOverTime.at(type); }
+        [[nodiscard]] const DataPointStorage& GetAllocatorMemoryUsageOverTime(MemoryTrackerAllocatorType type) const { return m_MemoryUsageByAllocatorOverTime.at(type); }
+        [[nodiscard]] const DataPointStorage& GetAllocatorPeakMemoryUsageOverTime(MemoryTrackerAllocatorType type) const { return m_PeakMemoryUsageByAllocatorOverTime.at(type); }
+        [[nodiscard]] const DataPointStorage& GetAllocatorActiveAllocationsOverTime(MemoryTrackerAllocatorType type) const { return m_ActiveAllocationsByAllocatorOverTime.at(type); }
+        [[nodiscard]] const DataPointStorage& GetAllocatorTotalAllocationsOverTime(MemoryTrackerAllocatorType type) const { return m_TotalAllocationsByAllocatorOverTime.at(type); }
 
         [[nodiscard]] const AllocatorTypeStorageMap& GetAllocatorMemoryUsageOverTimeIterable() const { return m_MemoryUsageByAllocatorOverTime; }
         [[nodiscard]] const AllocatorTypeStorageMap& GetAllocatorPeakMemoryUsageOverTimeIterable() const { return m_PeakMemoryUsageByAllocatorOverTime; }
