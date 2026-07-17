@@ -188,6 +188,13 @@ namespace Astral {
         void SetMemoryBlockFreeListHead(void* memoryBlockHead, uint32 blockFirstLevelIndex, uint32 blockSecondLevelIndex);
 
         /**
+         * @brief Sets the first memory block in the segregated list
+         * @param memoryBlockHead The memory block to make the head in the segregated list
+         * @param size Size of the associated free list
+         */
+        void SetMemoryBlockFreeListHead(void* memoryBlockHead, uint32 size);
+
+        /**
          * @brief Finds a block suitable to the memory block size requirement
          * @param memoryBlockSize The requested memory block size
          * @return A pointer to a suitable memory block for the requested memory block size
@@ -233,6 +240,8 @@ namespace Astral {
 
 
         size_t m_MemoryPoolSize;
+        size_t m_NumBlocksCurrentlyAllocated = 0;
+        size_t m_SizeOfCurrentlyAllocatedBlocks = 0;
         uintptr_t** m_FirstLevelLists = nullptr;
 
         /// The number of first-level segregated classes. Classes are a power of two apart from each other.
