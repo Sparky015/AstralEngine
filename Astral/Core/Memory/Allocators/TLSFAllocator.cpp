@@ -128,7 +128,7 @@ namespace Astral {
 
     // ======= Block Header ===================================
 
-    size_t TLSFAllocator::BlockHeader::GetBlockSize()
+    size_t TLSFAllocator::BlockHeader::GetBlockSize() const
     {
         return this->SizeAndFlags & ~(0b11);
     }
@@ -160,19 +160,19 @@ namespace Astral {
     }
 
 
-    bool TLSFAllocator::BlockHeader::IsBlockFree()
+    bool TLSFAllocator::BlockHeader::IsBlockFree() const
     {
         return (this->SizeAndFlags & 0b01);
     }
 
 
-    bool TLSFAllocator::BlockHeader::IsLastPoolPhysicalBlock()
+    bool TLSFAllocator::BlockHeader::IsLastPoolPhysicalBlock() const
     {
         return (this->SizeAndFlags & 0b10);
     }
 
 
-    void* TLSFAllocator::BlockHeader::GetPreviousBlock()
+    void* TLSFAllocator::BlockHeader::GetPreviousBlock() const
     {
         return this->PreviousBlock;
     }
@@ -184,7 +184,7 @@ namespace Astral {
     }
 
 
-    void* TLSFAllocator::BlockHeader::GetNextFreeBlock()
+    void* TLSFAllocator::BlockHeader::GetNextFreeBlock() const
     {
         return this->NextFreeBlock;
     }
@@ -196,7 +196,7 @@ namespace Astral {
     }
 
 
-    void* TLSFAllocator::BlockHeader::GetPreviousFreeBlock()
+    void* TLSFAllocator::BlockHeader::GetPreviousFreeBlock() const
     {
         return this->PreviousFreeBlock;
     }

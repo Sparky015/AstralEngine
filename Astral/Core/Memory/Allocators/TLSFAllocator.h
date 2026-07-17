@@ -77,7 +77,7 @@ namespace Astral {
              * @brief Gets the memory block's size
              * @return The memory block's size
              */
-            size_t GetBlockSize();
+            size_t GetBlockSize() const;
 
             /**
              * @brief Sets the memory block's size
@@ -89,7 +89,7 @@ namespace Astral {
              * @brief Gets the isBlockFree flag in the block header
              * @return The isBlockFree flag value in the block header
              */
-            bool IsBlockFree();
+            bool IsBlockFree() const;
 
             /**
              * @brief Sets the isBlockFree flag in the block header
@@ -101,7 +101,7 @@ namespace Astral {
              * @brief Gets the isLastPoolPhysicalBlock flag in the block header
              * @return The isLastPoolPhysicalBlock flag value in the block header
              */
-            bool IsLastPoolPhysicalBlock();
+            bool IsLastPoolPhysicalBlock() const;
 
             /**
              * @brief Sets the isLastPoolPhysicalBlock flag in the block header
@@ -113,7 +113,7 @@ namespace Astral {
              * @brief Gets the previous block pointer in the block header (can be nullptr)
              * @return The previous block pointer in the block header (can be nullptr)
              */
-            void* GetPreviousBlock();
+            void* GetPreviousBlock() const;
 
             /**
              * @brief Sets the previous block pointer in the block header (can be nullptr)
@@ -125,7 +125,7 @@ namespace Astral {
              * @brief Gets the next free block pointer in the block header (can be nullptr)
              * @return The previous block pointer in the block header (can be nullptr)
              */
-            void* GetNextFreeBlock();
+            void* GetNextFreeBlock() const;
 
             /**
              * @brief Sets the next free block pointer in the block header (can be nullptr)
@@ -137,7 +137,7 @@ namespace Astral {
              * @brief Gets the previous free block pointer in the block header (can be nullptr)
              * @return The previous free block pointer in the block header (can be nullptr)
              */
-            void* GetPreviousFreeBlock();
+            void* GetPreviousFreeBlock() const;
 
             /**
              * @brief Gets the previous free block pointer in the block header (can be nullptr)
@@ -222,6 +222,8 @@ namespace Astral {
          * @return The remaining leftover block
          */
         void* SplitMemoryBlock(void* memoryBlock, size_t reducedBlockSize);
+
+        // ================================================================
 
         /**
          * @brief Calculates the memory footprint of the TLSF structure
