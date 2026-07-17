@@ -58,7 +58,6 @@ namespace Astral {
                 uint32 secondLevelIndex{};
                 size_t remainingBlockSize = remainingBlock->GetBlockSize();
                 Mapping(remainingBlockSize, &firstLevelIndex, &secondLevelIndex);
-                AllocatorUtils::SetMemoryRegionAccess(remainingBlock, sizeof(BlockHeader), ASANRegionPermission::AccessRestricted);
 
                 InsertBlock(remainingBlock, firstLevelIndex, secondLevelIndex);
             }
@@ -72,12 +71,13 @@ namespace Astral {
         void* userMemory = (void*)((uintptr_t)suitableMemoryBlock + m_UsedBlockHeaderSize);
         AllocatorUtils::SetMemoryRegionAccess(userMemory, selectedBlockMemorySize, ASANRegionPermission::AccessGranted);
 
-        printf("Allocating block (%zu)", (uintptr_t)userMemory);
+        printf("Allocating block (%p)", (uintptr_t)userMemory);
 
         m_SizeOfCurrentlyAllocatedBlocks += selectedBlockMemorySize;
         m_NumBlocksCurrentlyAllocated++;
 
         printf("\nTLSF Allocator:\nCurrent Allocated Capacity: %zu\nNumber Currently Allocated Blocks: %zu\nTotal Capacity Used: %zu\n", m_SizeOfCurrentlyAllocatedBlocks, m_NumBlocksCurrentlyAllocated, GetUsedBlockSize());
+        ASSERT(((uintptr_t)userMemory & (uintptr_t)(0b1111)) == 0, "not 16 byte aligned")
         return userMemory;
     }
 
@@ -86,7 +86,7 @@ namespace Astral {
     {
         if (!memoryBlock) { return; }
 
-        printf("Freeing block (%zu)", (uintptr_t)memoryBlock);
+        printf("Freeing block (%p)", (uintptr_t)memoryBlock);
 
         BlockHeader* usedBlockHeader = (BlockHeader*)((uintptr_t)memoryBlock - m_UsedBlockHeaderSize);
         AllocatorUtils::SetMemoryRegionAccess(usedBlockHeader, sizeof(BlockHeader), ASANRegionPermission::AccessGranted);
@@ -242,14 +242,23 @@ namespace Astral {
         // Initialize first memory block
 
         BlockHeader* firstMemoryBlock = (BlockHeader*)&m_FirstLevelLists[m_NumFirstLevelIndex * m_NumSecondLevelIndex];
-        firstMemoryBlock->SetBlockSize(memoryPoolSize - GetTLSFStructureSize() - m_UsedBlockHeaderSize);
+
+        uint32 alignmentBytesNeeded = 0;
+        if ((uintptr_t)firstMemoryBlock % 16 != 0)
+        {
+            // Round up to next 16 byte boundary
+            alignmentBytesNeeded = 16 - ((uintptr_t)firstMemoryBlock % 16); // bytes needed to reach 16 byte boundary
+            firstMemoryBlock = (BlockHeader*)((uintptr_t)firstMemoryBlock + alignmentBytesNeeded);
+        }
+
+        firstMemoryBlock->SetBlockSize(memoryPoolSize - GetTLSFStructureSize() - m_UsedBlockHeaderSize - alignmentBytesNeeded);
         firstMemoryBlock->SetIsLastPoolPhysicalBlock(true);
         firstMemoryBlock->SetIsBlockFree(false);
         firstMemoryBlock->SetNextFreeBlock(nullptr);
         firstMemoryBlock->SetPreviousFreeBlock(nullptr);
         firstMemoryBlock->SetPreviousBlock(nullptr);
 
-        printf("Initialized block (%zu)\n", (uintptr_t)firstMemoryBlock);
+        printf("Initialized block (%p)\n", (uintptr_t)firstMemoryBlock);
 
         uint32 blockFirstLevelIndex = 0;
         uint32 blockSecondLevelIndex = 0;
@@ -328,7 +337,7 @@ namespace Astral {
             memoryBlockFreeList = GetMemoryBlockFreeList(blockFirstLevelIndex, blockSecondLevelIndex);
         }
 
-        printf("Finding suitable block (%zu)\n", (uintptr_t)memoryBlockFreeList);
+        printf("Finding suitable block (%p)\n", (uintptr_t)memoryBlockFreeList);
 
         return memoryBlockFreeList;
     }
@@ -361,7 +370,7 @@ namespace Astral {
 
         void* userMemory = (void*)((uintptr_t)memoryBlock + m_UsedBlockHeaderSize);
 
-        printf("Inserting block (%zu)\n", (uintptr_t)memoryBlock);
+        printf("Inserting block (%p)\n", (uintptr_t)memoryBlock);
 
         AllocatorUtils::SetMemoryRegionAccess(userMemory, memoryBlockSize, ASANRegionPermission::AccessRestricted);
         AllocatorUtils::SetMemoryRegionAccess(memoryBlock, sizeof(m_UsedBlockHeaderSize), ASANRegionPermission::AccessRestricted);
@@ -400,7 +409,7 @@ namespace Astral {
 
         if (blockHeader != memoryBlock)
         {
-            printf("Coalescing block (%zu) into (%zu)\n", (uintptr_t)memoryBlock, (uintptr_t)blockHeader);
+            printf("Coalescing block (%p) into (%p)\n", (uintptr_t)memoryBlock, (uintptr_t)blockHeader);
         }
         else
         {
@@ -454,7 +463,7 @@ namespace Astral {
         AllocatorUtils::SetMemoryRegionAccess(userMemory, freeBlockHeader->GetBlockSize(), ASANRegionPermission::AccessGranted);
         AllocatorUtils::SetMemoryRegionAccess(freeBlockHeader, sizeof(m_UsedBlockHeaderSize), ASANRegionPermission::AccessRestricted);
 
-        printf("Removing block (%zu)\n", (uintptr_t)memoryBlockFreeList);
+        printf("Removing block (%p)\n", (uintptr_t)memoryBlockFreeList);
     }
 
 
@@ -463,6 +472,13 @@ namespace Astral {
         if (memoryBlock == nullptr) { return nullptr; }
 
         BlockHeader* freeBlockHeader = (BlockHeader*)memoryBlock;
+
+        if (reducedBlockSize % 16 != 0)
+        {
+            // Round up to next 16 byte boundary
+            uint32 bytesNeeded = 16 - (reducedBlockSize % 16); // bytes needed to reach 16 byte boundary
+            reducedBlockSize += bytesNeeded;
+        }
 
         if (freeBlockHeader->GetBlockSize() - reducedBlockSize <= sizeof(BlockHeader) + m_MinimumBlockSize)
         {
@@ -488,7 +504,7 @@ namespace Astral {
         freeBlockHeader->SetNextFreeBlock(nullptr); // Outside scope of function
         freeBlockHeader->SetPreviousFreeBlock(nullptr);
 
-        printf("Splitting free block (%zu) into remaining block (%zu)\n", (uintptr_t)freeBlockHeader, (uintptr_t)remainingBlock);
+        printf("Splitting free block (%p) into remaining block (%p)\n", (uintptr_t)freeBlockHeader, (uintptr_t)remainingBlock);
 
         return remainingBlock;
     }

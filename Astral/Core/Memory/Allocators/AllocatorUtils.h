@@ -62,9 +62,12 @@ namespace Astral::AllocatorUtils {
       switch (accessType)
       {
           case ASANRegionPermission::AccessRestricted:
+                printf("\nPoisoning %p to %p\n", startAddress, (uintptr_t)startAddress + size);
               ASAN_POISON_MEMORY_REGION(startAddress, size);
               break;
           case ASANRegionPermission::AccessGranted:
+        printf("\nUnpoisoning %p to %p\n", startAddress, (uintptr_t)startAddress + size);
+
               ASAN_UNPOISON_MEMORY_REGION(startAddress, size);
               break;
           default: AE_ERROR("Undefined ASANRegionPermission value was passed to SetMemoryRegionAccess!");
