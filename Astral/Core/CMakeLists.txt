@@ -59,6 +59,8 @@ set(CORE_SOURCE
     Memory/Allocators/TLSFAllocator.cpp
     Memory/Allocators/TLSFAllocator.h
     Memory/Allocators/IAllocator.h
+    Memory/Allocators/EngineMalloc.cpp
+    Memory/Allocators/EngineMalloc.h
 )
 
 set(UNIX_PLATFORM_FILES
