@@ -88,7 +88,7 @@ namespace Astral {
     }
 
 
-    void MetalCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
+    void MetalCommandQueue::Submit(CommandBufferHandle commandBufferHandle)
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();

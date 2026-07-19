@@ -41,7 +41,7 @@ namespace Astral {
          * @brief Submits a command buffer to a command queue without a fence or semaphore to signal
          * @param commandBufferHandle The command buffer to submit to the command queue
          */
-        void SubmitSync(CommandBufferHandle commandBufferHandle) override;
+        void Submit(CommandBufferHandle commandBufferHandle) override;
 
         /**
          * @brief Presents a render target to the screen

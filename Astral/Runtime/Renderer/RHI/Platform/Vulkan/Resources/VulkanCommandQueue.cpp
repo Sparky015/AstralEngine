@@ -56,7 +56,7 @@ namespace Astral {
     }
 
 
-    void VulkanCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
+    void VulkanCommandQueue::Submit(CommandBufferHandle commandBufferHandle)
     {
         PROFILE_SCOPE("VulkanCommandQueue::SubmitSync")
 
