@@ -33,6 +33,19 @@ namespace Astral {
         virtual void Submit(CommandBufferHandle commandBufferHandle) = 0;
 
         /**
+         * @brief Submits a batch of command buffers to a command queue with the render target fence and semaphore to signal
+         * @param commandBufferHandles The command buffer to submit to the command queue
+         * @param renderTargetHandle The render target with a fence and semaphores to submit with the command buffer for the frame
+         */
+        virtual void Submit(const std::vector<CommandBufferHandle>& commandBufferHandles, RenderTargetHandle renderTargetHandle) = 0;
+
+        /**
+         * @brief Submits a batch of command buffers to a command queue
+         * @param commandBufferHandles The command buffer to submit to the command queue
+         */
+        virtual void Submit(const std::vector<CommandBufferHandle>& commandBufferHandles) = 0;
+
+        /**
          * @brief Presents a render target to the screen
          * @param renderTarget The render target to present to the screen
          */
