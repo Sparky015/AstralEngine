@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Global flags for all libraries and executables being built
 if (APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")#-fsanitize=address
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")#-fsanitize=address
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()

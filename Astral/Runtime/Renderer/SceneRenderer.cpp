@@ -79,7 +79,7 @@ namespace Astral {
     }
 
 
-    RendererDebugStats SceneRenderer::GetRendererDebugStats()
+    const RendererDebugStats& SceneRenderer::GetRendererDebugStats()
     {
         return RendererAPI::s_RendererCommands->GetRendererDebugStats();
     }

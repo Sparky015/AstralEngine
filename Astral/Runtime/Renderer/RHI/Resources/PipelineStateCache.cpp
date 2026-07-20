@@ -27,23 +27,11 @@ namespace Astral {
     }
 
 
-    void PipelineStateCache::SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet)
+    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, const std::
+                                                                vector<DescriptorSetHandle>& descriptorSetStack, SampleCount msaaSampleCount)
     {
-        PROFILE_SCOPE("PipelineStateCache::SetDescriptorSetStack")
-        m_DescriptorSetStack = std::vector<DescriptorSetHandle>();
-        m_DescriptorSetStack.push_back(descriptorSet);
-    }
+        std::unique_lock lock(m_PipelineCacheMutex);
 
-
-    void PipelineStateCache::SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets)
-    {
-        PROFILE_SCOPE("PipelineStateCache::SetDescriptorSetStack")
-        m_DescriptorSetStack = descriptorSets;
-    }
-
-
-    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, SampleCount msaaSampleCount)
-    {
         // Build pipeline configuration struct
         m_GraphicsPipelineStateConfigurationCache.RenderPass = renderPass;
         m_GraphicsPipelineStateConfigurationCache.VertexShader = mesh.VertexShader;
@@ -71,7 +59,7 @@ namespace Astral {
         // Pipeline doesn't exist yet, so we create it now
 
         // Set up descriptor set layouts of the pipeline
-        std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
+        std::vector<DescriptorSetHandle> descriptorSets = descriptorSetStack;
         if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
 
         GraphicsPipelineStateCreateInfo pipelineStateObjectCreateInfo = {
@@ -92,8 +80,11 @@ namespace Astral {
         return pipelineStateObject;
     }
 
-    PipelineStateHandle PipelineStateCache::GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet)
+    PipelineStateHandle PipelineStateCache::GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet, const std::vector<DescriptorSetHandle>&
+                                                               descriptorSetStack)
     {
+        std::unique_lock lock(m_PipelineCacheMutex);
+
         // Build compute pipeline configuration struct
 
         ComputePipelineStateConfiguration pipelineStateConfiguration = {
@@ -110,7 +101,7 @@ namespace Astral {
         // Pipeline doesn't exist yet, so we create it now
 
         // Set up descriptor set layouts of the pipeline
-        std::vector<DescriptorSetHandle> descriptorSets = m_DescriptorSetStack;
+        std::vector<DescriptorSetHandle> descriptorSets = descriptorSetStack;
         if (descriptorSet) { descriptorSets.push_back(descriptorSet); }
 
         ComputePipelineStateCreateInfo pipelineStateObjectCreateInfo = {

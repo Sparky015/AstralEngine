@@ -54,7 +54,7 @@ namespace Astral {
             }
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet});
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 

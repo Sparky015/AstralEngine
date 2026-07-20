@@ -42,13 +42,12 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack({sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, renderGraphPassExecutionContext.ReadAttachments, sharedFrameContext.ShadowLightMatricesDescriptorSet});
 
 
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
             Mesh& mesh = *sharedFrameContext.MainList.GetMeshes()[i];
-            Material& material = *sharedFrameContext.MainList.GetMaterials()[i];
+            Material material = *sharedFrameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
@@ -63,9 +62,7 @@ namespace Astral {
                 material.FragmentShader = m_ForwardORMLightingShader;
             }
 
-            Ref<Shader> vertexShader = mesh.VertexShader;
-
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, renderGraphPassExecutionContext.ReadAttachments, sharedFrameContext.ShadowLightMatricesDescriptorSet}, SampleCount::SAMPLE_4_BIT);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
@@ -99,7 +96,6 @@ namespace Astral {
             commandBuffer->DrawElementsIndexed(mesh.IndexBuffer);
         }
 
-        pipelineStateCache.SetDescriptorSetStack({sharedFrameContext.SceneDataDescriptorSet});
     }
 
 

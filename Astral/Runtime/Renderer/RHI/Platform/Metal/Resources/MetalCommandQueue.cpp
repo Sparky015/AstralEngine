@@ -138,7 +138,7 @@ namespace Astral {
         residencySetLock.unlock();
 
         std::vector<MTL4::CommandBuffer*> mtlCommandBuffers = {};
-        mtlCommandBuffers.resize(commandBufferHandles.size());
+        mtlCommandBuffers.reserve(commandBufferHandles.size());
 
         for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
         {
@@ -195,7 +195,7 @@ namespace Astral {
         residencySetLock.unlock();
 
         std::vector<MTL4::CommandBuffer*> mtlCommandBuffers = {};
-        mtlCommandBuffers.resize(commandBufferHandles.size());
+        mtlCommandBuffers.reserve(commandBufferHandles.size());
 
         for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
         {

@@ -39,8 +39,6 @@ namespace Astral {
     class PipelineStateCache
     {
     public:
-        void SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet);
-        void SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
@@ -49,26 +47,27 @@ namespace Astral {
          * @param mesh A mesh that contains the vertex shader being used and the vertex buffer layout being used
          * @param subpassIndex The index of the subpass the pipeline is being used in
          * @param cullMode
+         * @param descriptorSetStack
          * @param msaaSampleCount
          * @warning The material's descriptor set will be added on top of the PipelineStateCache's descriptor set stack
          */
-        PipelineStateHandle GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex,
-                                                CullMode cullMode, SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
+        PipelineStateHandle GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, const std::vector<DescriptorSetHandle>& descriptorSetStack, SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
          * @param computeShader The compute shader for the pipeline
          * @param descriptorSet The descriptor set being used in addition to the PipelineStateCache's descriptor set stack
+         * @param descriptorSetStack
          * @warning The given descriptor set argument will be added on top of the PipelineStateCache's descriptor set stack
          */
-        PipelineStateHandle GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet);
+        PipelineStateHandle GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet, const std::vector<DescriptorSetHandle>& descriptorSetStack);
 
     private:
 
         GraphicsPipelineStateConfiguration m_GraphicsPipelineStateConfigurationCache{}; // Cached memory for checking if pipeline already exists
-        std::vector<DescriptorSetHandle> m_DescriptorSetStack{};
         std::unordered_map<GraphicsPipelineStateConfiguration, PipelineStateHandle> m_GraphicsPipelineCache;
         std::unordered_map<ComputePipelineStateConfiguration, PipelineStateHandle> m_ComputePipelineCache;
+        std::mutex m_PipelineCacheMutex;
     };
 
 }

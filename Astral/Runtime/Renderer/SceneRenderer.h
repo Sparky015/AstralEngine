@@ -82,7 +82,7 @@ namespace Astral {
          * @brief Gets debug stats for the renderer
          * @return The debug stats for the renderer
          */
-        static RendererDebugStats GetRendererDebugStats();
+        static const RendererDebugStats& GetRendererDebugStats();
 
         /**
          * @brief Gets the renderer path being used

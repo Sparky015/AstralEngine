@@ -36,14 +36,13 @@ namespace Astral {
 
         Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
         cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        sharedFrameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
         Material environmentMapMaterial{};
         environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
         environmentMapMaterial.DescriptorSet = sharedFrameContext.EnvironmentMapDescriptorSet;
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        PipelineStateHandle cubemapPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE, m_MSAASampleCount);
+        PipelineStateHandle cubemapPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet}, m_MSAASampleCount);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 

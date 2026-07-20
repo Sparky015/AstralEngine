@@ -88,7 +88,7 @@ namespace Astral {
         std::unique_lock lock{m_QueueMutex};
 
         std::vector<VkCommandBuffer> vkCommandBuffers = {};
-        vkCommandBuffers.resize(commandBufferHandles.size());
+        vkCommandBuffers.reserve(commandBufferHandles.size());
 
         for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
         {
@@ -125,7 +125,7 @@ namespace Astral {
         std::unique_lock lock{m_QueueMutex};
 
         std::vector<VkCommandBuffer> vkCommandBuffers = {};
-        vkCommandBuffers.resize(commandBufferHandles.size());
+        vkCommandBuffers.reserve(commandBufferHandles.size());
 
         for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
         {

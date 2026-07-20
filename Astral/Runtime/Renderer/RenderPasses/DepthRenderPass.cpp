@@ -23,28 +23,21 @@ namespace Astral {
         PROFILE_SCOPE("DepthRenderPass::Execute")
 
         CommandBufferHandle commandBuffer = renderGraphPassExecutionContext.CommandBuffer;
-        DescriptorSetHandle materialDescriptorSetSave = nullptr;
-        ShaderHandle materialShaderSave = nullptr;
 
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
             Mesh& mesh = *sharedFrameContext.MainList.GetMeshes()[i];
-            Material& material = *sharedFrameContext.MainList.GetMaterials()[i];
+            Material material = *sharedFrameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
             if (material.DescriptorSet == nullptr) { continue; }
-            materialDescriptorSetSave = material.DescriptorSet;
-            material.DescriptorSet = nullptr;
 
-            materialShaderSave = material.FragmentShader;
             material.FragmentShader = m_DepthWriteOnlyShader;
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet}, SampleCount::SAMPLE_4_BIT);
 
-            material.DescriptorSet = materialDescriptorSetSave;
-            material.FragmentShader = materialShaderSave;
 
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);

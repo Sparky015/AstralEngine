@@ -36,18 +36,16 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack({sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, sharedFrameContext.ShadowLightMatricesDescriptorSet});
 
         Ref<Mesh> mesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        mesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        sharedFrameContext.MainList.GetMeshes().push_back(mesh); // Hold onto reference so it is not destroyed early
+        Mesh deferredLightingMesh = *mesh;
+        deferredLightingMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+
         Material material{};
         material.FragmentShader = m_DeferredLightingShader;
         material.DescriptorSet = renderGraphPassExecutionContext.ReadAttachments;
 
-        Ref<Shader> vertexShader = mesh->VertexShader;
-
-        PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, *mesh, 0, CullMode::NONE);
+        PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, deferredLightingMesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, sharedFrameContext.ShadowLightMatricesDescriptorSet});
         commandBuffer->BindPipeline(pipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
@@ -56,8 +54,8 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(sharedFrameContext.ShadowLightMatricesDescriptorSet, 2);
         commandBuffer->BindDescriptorSet(renderGraphPassExecutionContext.ReadAttachments, 3);
 
-        commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
+        commandBuffer->BindVertexBuffer(deferredLightingMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(deferredLightingMesh.IndexBuffer);
 
         const RendererSettings& rendererSettings = SceneRenderer::GetRendererSettings();
 
@@ -73,9 +71,7 @@ namespace Astral {
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
 
-        commandBuffer->DrawElementsIndexed(mesh->IndexBuffer);
-
-        pipelineStateCache.SetDescriptorSetStack({sharedFrameContext.SceneDataDescriptorSet});
+        commandBuffer->DrawElementsIndexed(deferredLightingMesh.IndexBuffer);
     }
 
 

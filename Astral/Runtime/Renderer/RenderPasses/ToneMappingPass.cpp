@@ -53,17 +53,16 @@ namespace Astral {
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
         Ref<Mesh> quadMesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        quadMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
-        sharedFrameContext.MainList.GetMeshes().push_back(quadMesh); // Hold onto reference so it is not destroyed early
+        Mesh toneMappingMesh = *quadMesh;
+        toneMappingMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack({sharedFrameContext.SceneDataDescriptorSet, renderGraphPassExecutionContext.ReadAttachments});
 
         Material toneMapperMaterial{};
         toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
         toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
-        PipelineStateHandle toneMappingPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, toneMapperMaterial, *quadMesh, 0, CullMode::NONE);
+        PipelineStateHandle toneMappingPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, toneMapperMaterial, toneMappingMesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, renderGraphPassExecutionContext.ReadAttachments});
         commandBuffer->BindPipeline(toneMappingPipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
@@ -88,12 +87,11 @@ namespace Astral {
 
         commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
 
-        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
-        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
+        commandBuffer->BindVertexBuffer(toneMappingMesh.VertexBuffer);
+        commandBuffer->BindIndexBuffer(toneMappingMesh.IndexBuffer);
 
-        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
+        commandBuffer->DrawElementsIndexed(toneMappingMesh.IndexBuffer);
 
-        pipelineStateCache.SetDescriptorSetStack(sharedFrameContext.SceneDataDescriptorSet);
     }
 
 

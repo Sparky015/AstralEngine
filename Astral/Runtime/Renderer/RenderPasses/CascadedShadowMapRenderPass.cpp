@@ -146,27 +146,22 @@ namespace Astral {
 
         frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
 
-        ShaderHandle meshVertexShaderSave = nullptr;
-
         for (uint32 i = 0; i < frameContext.ShadowMapList.Size(); i++)
         {
-            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
             Ref<Material>& material = frameContext.ShadowMapList.GetMaterials()[i];
-
             if (material->ShaderModel != ShaderModel::PBR) { continue; }
 
             Material shadowMapMaterial{};
             shadowMapMaterial.FragmentShader = m_FragmentDepthWriteOnlyShader;
             shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
 
-            meshVertexShaderSave = mesh->VertexShader;
-            mesh->VertexShader = m_VertexCascadedShadowMapShader;
+            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
+            Mesh cascadedShadowMapMesh = *mesh;
+            cascadedShadowMapMesh.VertexShader = m_VertexCascadedShadowMapShader;
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            pipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
-            PipelineStateHandle shadowMapPipeline = pipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, *mesh, 0, CullMode::FRONT);
+            PipelineStateHandle shadowMapPipeline = pipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, cascadedShadowMapMesh, 0, CullMode::FRONT, {frameContext.SceneDataDescriptorSet});
 
-            mesh->VertexShader = meshVertexShaderSave;
 
             commandBuffer->BindPipeline(shadowMapPipeline);
             commandBuffer->SetViewportAndScissor(Vec2(rendererSettings.ShadowMapResolution));
@@ -175,13 +170,13 @@ namespace Astral {
             commandBuffer->BindDescriptorSet(frameContext.ShadowLightMatricesDescriptorSet, 1);
 
 
-            commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
-            commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
+            commandBuffer->BindVertexBuffer(cascadedShadowMapMesh.VertexBuffer);
+            commandBuffer->BindIndexBuffer(cascadedShadowMapMesh.IndexBuffer);
 
 
             commandBuffer->PushConstants(&frameContext.ShadowMapList.GetTransforms()[i], sizeof(Mat4));
 
-            commandBuffer->DrawElementsInstanced(mesh->IndexBuffer, rendererSettings.NumShadowCascades);
+            commandBuffer->DrawElementsInstanced(cascadedShadowMapMesh.IndexBuffer, rendererSettings.NumShadowCascades);
         }
     }
 
