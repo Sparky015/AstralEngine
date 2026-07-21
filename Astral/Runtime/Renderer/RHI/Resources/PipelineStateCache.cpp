@@ -29,7 +29,7 @@ namespace Astral {
 
     PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const GraphicsPipelineStateConfiguration& graphicsPipelineStateConfiguration, const std::vector<DescriptorSetHandle>& descriptorSetStack)
     {
-        std::shared_lock readerLock(m_PipelineCacheMutex);
+        std::shared_lock readerLock(m_PipelineCacheRWLock);
 
         // If the pipeline was created already, return it
         if (m_GraphicsPipelineCache.contains(graphicsPipelineStateConfiguration)) { return m_GraphicsPipelineCache[graphicsPipelineStateConfiguration]; }
@@ -52,7 +52,7 @@ namespace Astral {
         Device& device = RendererAPI::GetDevice();
 
         readerLock.unlock();
-        std::unique_lock writerLock(m_PipelineCacheMutex);
+        std::unique_lock writerLock(m_PipelineCacheRWLock);
 
         PipelineStateHandle pipelineStateObject = device.CreateGraphicsPipelineState(pipelineStateObjectCreateInfo);
         m_GraphicsPipelineCache[graphicsPipelineStateConfiguration] = pipelineStateObject;
@@ -64,7 +64,7 @@ namespace Astral {
     PipelineStateHandle PipelineStateCache::GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet, const std::vector<DescriptorSetHandle>&
                                                                descriptorSetStack)
     {
-        std::unique_lock lock(m_PipelineCacheMutex);
+        std::unique_lock lock(m_PipelineCacheRWLock);
 
         // Build compute pipeline configuration struct
 

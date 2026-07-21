@@ -59,6 +59,10 @@ set(CORE_SOURCE
     Memory/Allocators/TLSFAllocator.cpp
     Memory/Allocators/TLSFAllocator.h
     Memory/Allocators/IAllocator.h
+    Threading/Locks/RWLock.cpp
+    Threading/Locks/RWLock.h
+    Threading/Locks/SpinLock.cpp
+    Threading/Locks/SpinLock.h
 )
 
 set(UNIX_PLATFORM_FILES
