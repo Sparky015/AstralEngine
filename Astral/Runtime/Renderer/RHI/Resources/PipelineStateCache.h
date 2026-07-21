@@ -12,6 +12,7 @@
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/Common/Material.h"
 #include "Core/Hashing/Hashes.h"
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
 
 namespace Astral {
 
@@ -62,7 +63,7 @@ namespace Astral {
         GraphicsPipelineStateConfiguration m_GraphicsPipelineStateConfigurationCache{}; // Cached memory for checking if pipeline already exists
         std::unordered_map<GraphicsPipelineStateConfiguration, PipelineStateHandle> m_GraphicsPipelineCache;
         std::unordered_map<ComputePipelineStateConfiguration, PipelineStateHandle> m_ComputePipelineCache;
-        std::shared_mutex m_PipelineCacheMutex;
+        ReaderBiasedRWLock m_PipelineCacheRWLock;
     };
 
 }
