@@ -41,7 +41,20 @@ namespace Astral {
          * @brief Submits a command buffer to a command queue without a fence or semaphore to signal
          * @param commandBufferHandle The command buffer to submit to the command queue
          */
-        void SubmitSync(CommandBufferHandle commandBufferHandle) override;
+        void Submit(CommandBufferHandle commandBufferHandle) override;
+
+        /**
+         * @brief Submits a batch of command buffers to a command queue with the render target fence and semaphore to signal
+         * @param commandBufferHandles The command buffer to submit to the command queue
+         * @param renderTargetHandle The render target with a fence and semaphores to submit with the command buffer for the frame
+         */
+        void Submit(const std::vector<CommandBufferHandle>& commandBufferHandles, RenderTargetHandle renderTargetHandle) override;
+
+        /**
+         * @brief Submits a batch of command buffers to a command queue
+         * @param commandBufferHandles The command buffer to submit to the command queue
+         */
+        void Submit(const std::vector<CommandBufferHandle>& commandBufferHandles) override;
 
         /**
          * @brief Presents a render target to the screen

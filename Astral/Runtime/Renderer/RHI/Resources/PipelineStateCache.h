@@ -12,6 +12,7 @@
 #include "Renderer/Common/Mesh.h"
 #include "Renderer/Common/Material.h"
 #include "Core/Hashing/Hashes.h"
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
 
 namespace Astral {
 
@@ -23,7 +24,8 @@ namespace Astral {
         DescriptorSetLayout ShaderDataLayout;
         VertexBufferLayout VertexBufferLayout;
         bool IsAlphaBlended;
-        SampleCount MSAASampleCount;
+        CullMode CullMode;
+        SampleCount MSAASampleCount = SampleCount::SAMPLE_1_BIT;
 
         bool operator==(const GraphicsPipelineStateConfiguration& other) const;
     };
@@ -39,36 +41,29 @@ namespace Astral {
     class PipelineStateCache
     {
     public:
-        void SetDescriptorSetStack(const DescriptorSetHandle& descriptorSet);
-        void SetDescriptorSetStack(const std::vector<DescriptorSetHandle>& descriptorSets);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
-         * @param renderPass The render pass of the graphics pipeline
-         * @param material A material that contains the fragment shader being used and the descriptor set being used
-         * @param mesh A mesh that contains the vertex shader being used and the vertex buffer layout being used
-         * @param subpassIndex The index of the subpass the pipeline is being used in
-         * @param cullMode
-         * @param msaaSampleCount
-         * @warning The material's descriptor set will be added on top of the PipelineStateCache's descriptor set stack
+         * @param graphicsPipelineStateConfiguration The configuration of the pipeline to get
+         * @param descriptorSetStack A stack of descriptor sets that form the desired pipeline descriptor set layout
          */
-        PipelineStateHandle GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex,
-                                                CullMode cullMode, SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
+        PipelineStateHandle GetGraphicsPipeline(const GraphicsPipelineStateConfiguration& graphicsPipelineStateConfiguration, const std::vector<DescriptorSetHandle>& descriptorSetStack);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
          * @param computeShader The compute shader for the pipeline
          * @param descriptorSet The descriptor set being used in addition to the PipelineStateCache's descriptor set stack
+         * @param descriptorSetStack
          * @warning The given descriptor set argument will be added on top of the PipelineStateCache's descriptor set stack
          */
-        PipelineStateHandle GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet);
+        PipelineStateHandle GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet, const std::vector<DescriptorSetHandle>& descriptorSetStack);
 
     private:
 
         GraphicsPipelineStateConfiguration m_GraphicsPipelineStateConfigurationCache{}; // Cached memory for checking if pipeline already exists
-        std::vector<DescriptorSetHandle> m_DescriptorSetStack{};
         std::unordered_map<GraphicsPipelineStateConfiguration, PipelineStateHandle> m_GraphicsPipelineCache;
         std::unordered_map<ComputePipelineStateConfiguration, PipelineStateHandle> m_ComputePipelineCache;
+        ReaderBiasedRWLock m_PipelineCacheRWLock;
     };
 
 }

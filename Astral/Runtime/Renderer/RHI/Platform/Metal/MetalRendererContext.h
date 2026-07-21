@@ -210,6 +210,7 @@ namespace Astral {
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
 
         std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
+        std::unordered_map<MTL4::CommandAllocator*, std::thread::id> m_CommandAllocatorOwnedThread;
         std::mutex m_CommandAllocatorsMutex;
 
         MTL::ResidencySet* m_GlobalResidencySet;

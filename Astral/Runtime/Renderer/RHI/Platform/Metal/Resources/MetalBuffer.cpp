@@ -234,7 +234,7 @@ namespace Astral {
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
-        commandQueueHandle->SubmitSync(commandBufferHandle);
+        commandQueueHandle->Submit(commandBufferHandle);
         commandQueueHandle->WaitIdle();
     }
 

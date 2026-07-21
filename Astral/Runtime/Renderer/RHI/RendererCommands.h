@@ -24,9 +24,9 @@ namespace Astral {
 
     struct RendererDebugStats
     {
-        uint32 NumberOfDrawCalls;
-        uint32 NumberOfTriangles;
-        uint32 NumberOfVertices;
+        std::atomic_uint32_t NumberOfDrawCalls;
+        std::atomic_uint32_t NumberOfTriangles;
+        std::atomic_uint32_t NumberOfVertices;
     };
 
     class RendererCommands {
@@ -53,8 +53,13 @@ namespace Astral {
         RendererDebugStats m_DebugStatsThisFrame = {};
         RendererDebugStats m_DebugStatsLastFrame = {};
         EventListener<NewFrameEvent> m_NewFrameListener{[this](NewFrameEvent) {
-            m_DebugStatsLastFrame = m_DebugStatsThisFrame;
-            m_DebugStatsThisFrame = {};
+            m_DebugStatsLastFrame.NumberOfDrawCalls.store(m_DebugStatsThisFrame.NumberOfDrawCalls);
+            m_DebugStatsLastFrame.NumberOfTriangles.store(m_DebugStatsThisFrame.NumberOfTriangles);
+            m_DebugStatsLastFrame.NumberOfVertices.store(m_DebugStatsThisFrame.NumberOfVertices);
+
+            m_DebugStatsThisFrame.NumberOfDrawCalls.store(0);
+            m_DebugStatsThisFrame.NumberOfTriangles.store(0);
+            m_DebugStatsThisFrame.NumberOfVertices.store(0);
         }};
 
     private:

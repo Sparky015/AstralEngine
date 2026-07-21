@@ -280,6 +280,7 @@ namespace Astral {
             for (size_t i = 0; i < 5; i++)
             {
                 MTL4::CommandAllocator* newCommandAllocator = device->newCommandAllocator();
+                m_CommandAllocatorOwnedThread[newCommandAllocator] = executingThreadID;
                 commandAllocatorPool.AvailableCommandAllocators.insert(newCommandAllocator);
             }
             m_CommandAllocators.emplace(executingThreadID, commandAllocatorPool);
@@ -297,8 +298,11 @@ namespace Astral {
         }
         else
         {
-            AE_WARN("[MetalRenderingContext] This thread's command allocator pool is all used! Can't acquire a command allocator!")
-            return nullptr;
+            MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
+            MTL4::CommandAllocator* newCommandAllocator = device->newCommandAllocator();
+            m_CommandAllocatorOwnedThread[newCommandAllocator] = executingThreadID;
+            commandAllocatorPool.UsedCommandAllocators.insert(newCommandAllocator);
+            return newCommandAllocator;
         }
     }
 
@@ -307,14 +311,20 @@ namespace Astral {
     {
         std::lock_guard lock(m_CommandAllocatorsMutex); // Lock in case of a thread adding new command allocator
 
-        std::thread::id executingThreadID = std::this_thread::get_id();
-        if (!m_CommandAllocators.contains(executingThreadID))
+        if (!m_CommandAllocatorOwnedThread.contains(commandAllocator))
+        {
+            AE_WARN("[MetalRenderingContext] Given command allocator is not tracked by the metal renderer context!")
+            return;
+        }
+
+        std::thread::id ownedThreadID = m_CommandAllocatorOwnedThread.at(commandAllocator);
+        if (!m_CommandAllocators.contains(ownedThreadID))
         {
             AE_WARN("[MetalRenderingContext] Given command allocator is not from this thread's command allocator pool!")
             return;
         }
 
-        CommandAllocatorPool& allocatorPool = m_CommandAllocators.at(executingThreadID);
+        CommandAllocatorPool& allocatorPool = m_CommandAllocators.at(ownedThreadID);
 
         if (allocatorPool.UsedCommandAllocators.contains(commandAllocator))
         {

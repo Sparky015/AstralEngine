@@ -65,7 +65,6 @@ namespace Astral {
 
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack(m_FrameContexts[0].SceneDataDescriptorSet);
         m_CurrentViewportTexture = m_FrameContexts[1].OffscreenDescriptorSet;
 
         Engine::Get().GetRendererManager().GetContext().InitImGuiForAPIBackend(m_ImGuiRenderPass);
@@ -466,27 +465,36 @@ namespace Astral {
 
         SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
         RenderTargetHandle renderTarget = frameContext.SceneRenderTarget;
-        CommandBufferHandle commandBuffer = frameContext.SceneCommandBuffer;
+        CommandBufferHandle uiPassCommandBuffer = frameContext.SceneCommandBuffer;
 
-        commandBuffer->Reset();
-        commandBuffer->BeginRecording();
+
 
         if (frameContext.IsEnvironmentMapIBLCalculationNeeded)
         {
             ComputeEnvironmentIBL();
         }
 
+        uiPassCommandBuffer->Reset();
+        uiPassCommandBuffer->BeginRecording();
+
         // Viewport Rendering
-        m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex, frameContext.OffscreenRenderTarget);
+        const std::vector<CommandBufferHandle>& renderPassCommandBuffers = m_RenderGraph.Execute(frameContext, m_CurrentFrameIndex, frameContext.OffscreenRenderTarget);
 
         // Editor UI rendering to swapchain image
-        DrawEditorUI(commandBuffer, renderTarget);
+        DrawEditorUI(uiPassCommandBuffer, renderTarget);
 
-        commandBuffer->EndRecording();
+        uiPassCommandBuffer->EndRecording();
+
+        std::vector<CommandBufferHandle> finalCommandBufferBatch = {};
+        for (const CommandBufferHandle& renderPassCommandBuffer : renderPassCommandBuffers)
+        {
+            finalCommandBufferBatch.push_back(renderPassCommandBuffer);
+        }
+        finalCommandBufferBatch.push_back(uiPassCommandBuffer);
 
 
         CommandQueueHandle commandQueue = device.GetPrimaryCommandQueue();
-        commandQueue->Submit(commandBuffer, renderTarget);
+        commandQueue->Submit(finalCommandBufferBatch, renderTarget);
         commandQueue->Present(renderTarget);
 
 
@@ -562,11 +570,10 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
         ShaderHandle irradianceCalcShader = registry.CreateAsset<Shader>("Shaders/ComputeIrradianceMap.comp");
         ;
-        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet);
+        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(irradianceCalcShader, m_EnvironmentMapStorageImagesSet, {});
         commandBuffer->BindPipeline(computePipeline);
         commandBuffer->BindDescriptorSet(m_EnvironmentMapStorageImagesSet, 0);
 
@@ -584,7 +591,6 @@ namespace Astral {
             commandBuffer->Dispatch(groupCountSize, groupCountSize, 1);
         }
 
-        pipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
     }
@@ -607,11 +613,10 @@ namespace Astral {
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        pipelineStateCache.SetDescriptorSetStack(std::vector<DescriptorSetHandle>{});
 
         ShaderHandle prefilterCalcShader = registry.CreateAsset<Shader>("Shaders/ComputePrefilteredEnvironmentMap.comp");
 
-        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet);
+        PipelineStateHandle computePipeline = pipelineStateCache.GetComputePipeline(prefilterCalcShader, m_EnvironmentMapStorageImagesSet, {});
         commandBuffer->BindPipeline(computePipeline);
         commandBuffer->BindDescriptorSet(m_EnvironmentMapStorageImagesSet, 0);
 
@@ -636,7 +641,6 @@ namespace Astral {
             commandBuffer->Dispatch(groupSizeX, groupSizeY, 1);
         }
 
-        pipelineStateCache.SetDescriptorSetStack(frameContext.SceneDataDescriptorSet);
 
         commandBuffer->EndLabel();
     }

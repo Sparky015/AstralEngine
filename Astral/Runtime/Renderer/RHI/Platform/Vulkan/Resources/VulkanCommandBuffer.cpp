@@ -517,6 +517,7 @@ namespace Astral {
     void VulkanCommandBuffer::FreeCommandBuffer()
     {
         vkFreeCommandBuffers(m_Device, m_CommandPool, 1, &m_CommandBuffer);
+        m_CommandBuffer = nullptr;
     }
 
 }

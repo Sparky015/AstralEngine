@@ -77,7 +77,9 @@ namespace Astral {
          * @note  Barriers and layout transitions happen automatically between render passes if needed
          * @pre   @ref EndBuildingRenderGraph is called first to create render graph and its resources
          */
-        void Execute(SharedFrameContext& sharedFrameContext, uint32 swapchainImageIndex, const TextureHandle& outputAttachmentTexture);
+        const std::vector<CommandBufferHandle>& Execute(SharedFrameContext& sharedFrameContext,
+                                                        uint32 swapchainImageIndex,
+                                                        const TextureHandle& outputAttachmentTexture);
 
         /**
          * @brief Recreates the render graph resources (textures, framebuffers, and descriptor sets)
@@ -179,12 +181,12 @@ namespace Astral {
 
         // Contains the order of render passes to execute in such that dependencies are ran first
         std::vector<PassIndex> m_ExecutionOrder;
-        RenderGraphPassExecutionContext m_ExecutionContext{};
         // Contains the RHI objects needed to execute all render passes that are in the execution order
         std::vector<RenderPassHandle> m_RenderPasses;
         RenderGraphResources m_RenderPassResources;
         uint32 m_MaxFramesInFlight{0};
 
+        std::vector<std::vector<CommandBufferHandle>> m_RenderPassCommandBuffers;
 
         // Vectors to hold render graph resources after a resize, so they don't get deleted while being used on the gpu
         std::vector<RenderGraphResources> m_RenderPassResourcesHold;

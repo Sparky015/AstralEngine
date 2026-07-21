@@ -366,7 +366,7 @@ namespace Astral {
 
         if (m_PushConstants.size() == 0 || m_CurrentPushConstantBufferOffset + sizeInBytes > m_PushConstants.back()->GetAllocatedSize())
         {
-            uint32 allocationSize = m_PushConstants.size() == 0 ? 8192 : m_PushConstants.back()->GetAllocatedSize() * 2;
+            uint32 allocationSize = m_PushConstants.size() == 0 ? 32768 : m_PushConstants.back()->GetAllocatedSize() * 2;
             BufferHandle newPushConstantBuffer = RendererAPI::GetDevice().CreateUniformBuffer(nullptr, allocationSize, GPUMemoryType::HOST_VISIBLE);
             char pushConstantName[30] = "";
             snprintf(pushConstantName, sizeof(pushConstantName), "Push_Constant_%zu", m_PushConstants.size());
