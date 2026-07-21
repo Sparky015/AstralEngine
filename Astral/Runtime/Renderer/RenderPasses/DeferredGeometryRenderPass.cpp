@@ -35,6 +35,20 @@ namespace Astral {
         CommandBufferHandle commandBuffer = renderGraphPassExecutionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
 
+
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = nullptr;
+        pipelineConfig.FragmentShader = nullptr;
+        pipelineConfig.ShaderDataLayout ={};
+        pipelineConfig.VertexBufferLayout = {};
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet, nullptr};
+
+
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
             Mesh& mesh = *sharedFrameContext.MainList.GetMeshes()[i];
@@ -42,19 +56,22 @@ namespace Astral {
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
 
-            DescriptorSetHandle& materialDescriptorSet = material.DescriptorSet;
+            pipelineConfig.VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout();
+            pipelineConfig.VertexShader = mesh.VertexShader;
+            descriptorSetStack[1] = material.DescriptorSet;
+            pipelineConfig.ShaderDataLayout = material.DescriptorSet->GetDescriptorSetLayout();
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = m_DeferredGeometryPassUnpackedShader;
+                pipelineConfig.FragmentShader = m_DeferredGeometryPassUnpackedShader;
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = m_DeferredGeometryPassORMShader;
+                pipelineConfig.FragmentShader = m_DeferredGeometryPassORMShader;
             }
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet});
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
@@ -67,7 +84,7 @@ namespace Astral {
             commandBuffer->PushConstants(&pushConstantData, sizeof(GeometryPassPushData));
 
             commandBuffer->BindDescriptorSet(sharedFrameContext.SceneDataDescriptorSet, 0);
-            commandBuffer->BindDescriptorSet(materialDescriptorSet, 1);
+            commandBuffer->BindDescriptorSet(material.DescriptorSet, 1);
 
             commandBuffer->BindVertexBuffer(mesh.VertexBuffer);
             commandBuffer->BindIndexBuffer(mesh.IndexBuffer);

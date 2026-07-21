@@ -53,22 +53,30 @@ namespace Astral {
         Ref<CubeLUT> toneMappingLUT = registry.CreateAsset<CubeLUT>("LUTs/ACEScg_to_sRGB_RRT_ODT.cube");
 
         Ref<Mesh> quadMesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        Mesh toneMappingMesh = *quadMesh;
-        toneMappingMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
 
-        Material toneMapperMaterial{};
-        toneMapperMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");
-        toneMapperMaterial.DescriptorSet = m_RTT_ODT_LUT_DescriptorSet;
 
-        PipelineStateHandle toneMappingPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, toneMapperMaterial, toneMappingMesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, renderGraphPassExecutionContext.ReadAttachments});
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        pipelineConfig.FragmentShader = registry.CreateAsset<Shader>("Shaders/ToneMapping.frag");;
+        pipelineConfig.ShaderDataLayout = m_RTT_ODT_LUT_DescriptorSet->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = quadMesh->VertexBuffer->GetBufferLayout();
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {{sharedFrameContext.SceneDataDescriptorSet, renderGraphPassExecutionContext.ReadAttachments, m_RTT_ODT_LUT_DescriptorSet}};
+
+
+        PipelineStateHandle toneMappingPipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
         commandBuffer->BindPipeline(toneMappingPipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
         commandBuffer->BindDescriptorSet(sharedFrameContext.SceneDataDescriptorSet, 0);
         commandBuffer->BindDescriptorSet(renderGraphPassExecutionContext.ReadAttachments, 1);
-        commandBuffer->BindDescriptorSet(toneMapperMaterial.DescriptorSet, 2);
+        commandBuffer->BindDescriptorSet(m_RTT_ODT_LUT_DescriptorSet, 2);
 
         ToneMappingPassPushConstants toneMappingPushConstants;
         toneMappingPushConstants.Exposure = sharedFrameContext.SceneDescription.Exposure;
@@ -87,10 +95,10 @@ namespace Astral {
 
         commandBuffer->PushConstants(&toneMappingPushConstants, sizeof(toneMappingPushConstants));
 
-        commandBuffer->BindVertexBuffer(toneMappingMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(toneMappingMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(quadMesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(quadMesh->IndexBuffer);
 
-        commandBuffer->DrawElementsIndexed(toneMappingMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(quadMesh->IndexBuffer);
 
     }
 

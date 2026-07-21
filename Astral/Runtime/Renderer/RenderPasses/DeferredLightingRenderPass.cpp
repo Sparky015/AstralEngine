@@ -34,18 +34,23 @@ namespace Astral {
 
         CommandBufferHandle commandBuffer = renderGraphPassExecutionContext.CommandBuffer;
         AssetRegistry& registry = Engine::Get().GetAssetManager().GetRegistry();
-
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
 
         Ref<Mesh> mesh = registry.CreateAsset<Mesh>("Meshes/Quad.obj");
-        Mesh deferredLightingMesh = *mesh;
-        deferredLightingMesh.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
 
-        Material material{};
-        material.FragmentShader = m_DeferredLightingShader;
-        material.DescriptorSet = renderGraphPassExecutionContext.ReadAttachments;
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = registry.CreateAsset<Shader>("Shaders/NoTransform.vert");
+        pipelineConfig.FragmentShader = m_DeferredLightingShader;
+        pipelineConfig.ShaderDataLayout = renderGraphPassExecutionContext.ReadAttachments->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = mesh->VertexBuffer->GetBufferLayout();
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_1_BIT;
 
-        PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, deferredLightingMesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, sharedFrameContext.ShadowLightMatricesDescriptorSet});
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, sharedFrameContext.ShadowLightMatricesDescriptorSet, renderGraphPassExecutionContext.ReadAttachments};
+
+        PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
         commandBuffer->BindPipeline(pipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
@@ -54,8 +59,8 @@ namespace Astral {
         commandBuffer->BindDescriptorSet(sharedFrameContext.ShadowLightMatricesDescriptorSet, 2);
         commandBuffer->BindDescriptorSet(renderGraphPassExecutionContext.ReadAttachments, 3);
 
-        commandBuffer->BindVertexBuffer(deferredLightingMesh.VertexBuffer);
-        commandBuffer->BindIndexBuffer(deferredLightingMesh.IndexBuffer);
+        commandBuffer->BindVertexBuffer(mesh->VertexBuffer);
+        commandBuffer->BindIndexBuffer(mesh->IndexBuffer);
 
         const RendererSettings& rendererSettings = SceneRenderer::GetRendererSettings();
 
@@ -71,7 +76,7 @@ namespace Astral {
 
         commandBuffer->PushConstants(&deferredLightingPushConstants, sizeof(deferredLightingPushConstants));
 
-        commandBuffer->DrawElementsIndexed(deferredLightingMesh.IndexBuffer);
+        commandBuffer->DrawElementsIndexed(mesh->IndexBuffer);
     }
 
 

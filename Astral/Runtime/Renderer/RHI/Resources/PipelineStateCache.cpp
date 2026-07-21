@@ -27,58 +27,39 @@ namespace Astral {
     }
 
 
-    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, const std::
-                                                                vector<DescriptorSetHandle>& descriptorSetStack, SampleCount msaaSampleCount)
+    PipelineStateHandle PipelineStateCache::GetGraphicsPipeline(const GraphicsPipelineStateConfiguration& graphicsPipelineStateConfiguration, const std::vector<DescriptorSetHandle>& descriptorSetStack)
     {
-        std::unique_lock lock(m_PipelineCacheMutex);
-
-        // Build pipeline configuration struct
-        m_GraphicsPipelineStateConfigurationCache.RenderPass = renderPass;
-        m_GraphicsPipelineStateConfigurationCache.VertexShader = mesh.VertexShader;
-        m_GraphicsPipelineStateConfigurationCache.FragmentShader = material.FragmentShader;
-        m_GraphicsPipelineStateConfigurationCache.VertexBufferLayout.CopyAttributes(mesh.VertexBuffer->GetBufferLayout());
-        m_GraphicsPipelineStateConfigurationCache.IsAlphaBlended = material.IsAlphaBlended;
-        m_GraphicsPipelineStateConfigurationCache.MSAASampleCount = msaaSampleCount;
-
-        if (material.DescriptorSet)
-        {
-            const std::vector<Descriptor>& descriptors = material.DescriptorSet->GetDescriptorSetLayout().Descriptors;
-            m_GraphicsPipelineStateConfigurationCache.ShaderDataLayout.Descriptors.assign(descriptors.begin(), descriptors.end());
-        }
-        else
-        {
-            m_GraphicsPipelineStateConfigurationCache.ShaderDataLayout.Descriptors.clear();
-        }
+        std::shared_lock readerLock(m_PipelineCacheMutex);
 
         // If the pipeline was created already, return it
-        if (m_GraphicsPipelineCache.contains(m_GraphicsPipelineStateConfigurationCache)) { return m_GraphicsPipelineCache[m_GraphicsPipelineStateConfigurationCache]; }
+        if (m_GraphicsPipelineCache.contains(graphicsPipelineStateConfiguration)) { return m_GraphicsPipelineCache[graphicsPipelineStateConfiguration]; }
 
-
-        Device& device = RendererAPI::GetDevice();
 
         // Pipeline doesn't exist yet, so we create it now
 
-        // Set up descriptor set layouts of the pipeline
-        std::vector<DescriptorSetHandle> descriptorSets = descriptorSetStack;
-        if (material.DescriptorSet) { descriptorSets.push_back(material.DescriptorSet); }
-
         GraphicsPipelineStateCreateInfo pipelineStateObjectCreateInfo = {
-            .RenderPass = renderPass,
-            .VertexShader = mesh.VertexShader,
-            .FragmentShader = material.FragmentShader,
-            .DescriptorSets = descriptorSets,
-            .BufferLayout = mesh.VertexBuffer->GetBufferLayout(),
-            .SubpassIndex = subpassIndex,
-            .IsAlphaBlended = material.IsAlphaBlended,
-            .MSAASamples = m_GraphicsPipelineStateConfigurationCache.MSAASampleCount,
-            .CullMode = cullMode
+            .RenderPass = graphicsPipelineStateConfiguration.RenderPass,
+            .VertexShader = graphicsPipelineStateConfiguration.VertexShader,
+            .FragmentShader = graphicsPipelineStateConfiguration.FragmentShader,
+            .DescriptorSets = descriptorSetStack,
+            .BufferLayout = graphicsPipelineStateConfiguration.VertexBufferLayout,
+            .SubpassIndex = 0,
+            .IsAlphaBlended = graphicsPipelineStateConfiguration.IsAlphaBlended,
+            .MSAASamples = graphicsPipelineStateConfiguration.MSAASampleCount,
+            .CullMode = graphicsPipelineStateConfiguration.CullMode
         };
 
+        Device& device = RendererAPI::GetDevice();
+
+        readerLock.unlock();
+        std::unique_lock writerLock(m_PipelineCacheMutex);
+
         PipelineStateHandle pipelineStateObject = device.CreateGraphicsPipelineState(pipelineStateObjectCreateInfo);
-        m_GraphicsPipelineCache[m_GraphicsPipelineStateConfigurationCache] = pipelineStateObject;
+        m_GraphicsPipelineCache[graphicsPipelineStateConfiguration] = pipelineStateObject;
 
         return pipelineStateObject;
     }
+
 
     PipelineStateHandle PipelineStateCache::GetComputePipeline(ShaderHandle computeShader, DescriptorSetHandle descriptorSet, const std::vector<DescriptorSetHandle>&
                                                                descriptorSetStack)

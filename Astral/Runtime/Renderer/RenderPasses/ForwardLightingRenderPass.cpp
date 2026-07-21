@@ -43,26 +43,42 @@ namespace Astral {
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
 
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = nullptr;
+        pipelineConfig.FragmentShader = nullptr;
+        pipelineConfig.ShaderDataLayout = {};
+        pipelineConfig.VertexBufferLayout = {};
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_4_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, renderGraphPassExecutionContext.ReadAttachments, sharedFrameContext.ShadowLightMatricesDescriptorSet, nullptr};
+
 
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
             Mesh& mesh = *sharedFrameContext.MainList.GetMeshes()[i];
-            Material material = *sharedFrameContext.MainList.GetMaterials()[i];
+            Material& material = *sharedFrameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
             if (material.DescriptorSet == nullptr) { continue; }
+
+            pipelineConfig.VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout();
+            pipelineConfig.VertexShader = mesh.VertexShader;
+            descriptorSetStack[4] = material.DescriptorSet;
+            pipelineConfig.ShaderDataLayout = material.DescriptorSet->GetDescriptorSetLayout();
 
             if (material.TextureConvention == TextureConvention::UNPACKED)
             {
-                material.FragmentShader = m_ForwardUnpackedLightingShader;
+                pipelineConfig.FragmentShader = m_ForwardUnpackedLightingShader;
             }
             else if (material.TextureConvention == TextureConvention::ORM_PACKED)
             {
-                material.FragmentShader = m_ForwardORMLightingShader;
+                pipelineConfig.FragmentShader = m_ForwardORMLightingShader;
             }
 
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet, renderGraphPassExecutionContext.ReadAttachments, sharedFrameContext.ShadowLightMatricesDescriptorSet}, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 

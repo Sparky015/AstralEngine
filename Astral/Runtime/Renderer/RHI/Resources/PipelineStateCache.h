@@ -23,7 +23,8 @@ namespace Astral {
         DescriptorSetLayout ShaderDataLayout;
         VertexBufferLayout VertexBufferLayout;
         bool IsAlphaBlended;
-        SampleCount MSAASampleCount;
+        CullMode CullMode;
+        SampleCount MSAASampleCount = SampleCount::SAMPLE_1_BIT;
 
         bool operator==(const GraphicsPipelineStateConfiguration& other) const;
     };
@@ -42,16 +43,10 @@ namespace Astral {
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
-         * @param renderPass The render pass of the graphics pipeline
-         * @param material A material that contains the fragment shader being used and the descriptor set being used
-         * @param mesh A mesh that contains the vertex shader being used and the vertex buffer layout being used
-         * @param subpassIndex The index of the subpass the pipeline is being used in
-         * @param cullMode
-         * @param descriptorSetStack
-         * @param msaaSampleCount
-         * @warning The material's descriptor set will be added on top of the PipelineStateCache's descriptor set stack
+         * @param graphicsPipelineStateConfiguration The configuration of the pipeline to get
+         * @param descriptorSetStack A stack of descriptor sets that form the desired pipeline descriptor set layout
          */
-        PipelineStateHandle GetGraphicsPipeline(const RenderPassHandle& renderPass, Material& material, Mesh& mesh, uint32 subpassIndex, CullMode cullMode, const std::vector<DescriptorSetHandle>& descriptorSetStack, SampleCount msaaSampleCount = SampleCount::SAMPLE_1_BIT);
+        PipelineStateHandle GetGraphicsPipeline(const GraphicsPipelineStateConfiguration& graphicsPipelineStateConfiguration, const std::vector<DescriptorSetHandle>& descriptorSetStack);
 
         /**
          * @brief Retrieves a graphics pipeline from the cache with the same parameters given or creates a new graphics pipeline if one does not exist.
@@ -67,7 +62,7 @@ namespace Astral {
         GraphicsPipelineStateConfiguration m_GraphicsPipelineStateConfigurationCache{}; // Cached memory for checking if pipeline already exists
         std::unordered_map<GraphicsPipelineStateConfiguration, PipelineStateHandle> m_GraphicsPipelineCache;
         std::unordered_map<ComputePipelineStateConfiguration, PipelineStateHandle> m_ComputePipelineCache;
-        std::mutex m_PipelineCacheMutex;
+        std::shared_mutex m_PipelineCacheMutex;
     };
 
 }

@@ -24,19 +24,31 @@ namespace Astral {
 
         CommandBufferHandle commandBuffer = renderGraphPassExecutionContext.CommandBuffer;
 
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = nullptr;
+        pipelineConfig.FragmentShader = m_DepthWriteOnlyShader;
+        pipelineConfig.ShaderDataLayout = sharedFrameContext.SceneDataDescriptorSet->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = {};
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_4_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet};
+
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
             Mesh& mesh = *sharedFrameContext.MainList.GetMeshes()[i];
-            Material material = *sharedFrameContext.MainList.GetMaterials()[i];
+            Material& material = *sharedFrameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
             if (material.DescriptorSet == nullptr) { continue; }
 
-            material.FragmentShader = m_DepthWriteOnlyShader;
+            pipelineConfig.VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout();
+            pipelineConfig.VertexShader = mesh.VertexShader;
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, {sharedFrameContext.SceneDataDescriptorSet}, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
 
 
             commandBuffer->BindPipeline(pipeline);
