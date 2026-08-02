@@ -162,10 +162,6 @@ set(ENGINE_SOURCE
         Renderer/RenderingPaths/DeferredRenderingPath.h
         Renderer/RenderingPaths/ForwardRenderingPath.cpp
         Renderer/RenderingPaths/ForwardRenderingPath.h
-        Renderer/RHI/Platform/Metal/MetalRendererCommands.cpp
-        Renderer/RHI/Platform/Metal/MetalRendererCommands.h
-        Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
-
 )
 
 set(VULKAN_RHI_FILES
@@ -244,8 +240,10 @@ set(METAL_RHI_FILES
     Renderer/RHI/Platform/Metal/Resources/MetalCommandQueue.h
     Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.cpp
     Renderer/RHI/Platform/Metal/Resources/MetalRenderTarget.h
-    Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h
-    Debug/ImGui/ImGuiDependencies/imgui_impl_metal.mm
+    Renderer/RHI/Platform/Metal/MetalRendererCommands.cpp
+    Renderer/RHI/Platform/Metal/MetalRendererCommands.h
+    Debug/ImGui/ImGuiDependencies/imgui_impl_metal4.mm
+    Debug/ImGui/ImGuiDependencies/imgui_impl_metal4.h
 )
 
 set(D3D12_RHI_FILES
