@@ -88,6 +88,7 @@ struct ImGui_Metal4_ConstantData
 @property (nonatomic, assign) NSUInteger                    framesInFlight;
 @property (nonatomic, assign) NSUInteger                    currentFrameSlot;
 @property (nonatomic, strong) NSMutableArray<NSMutableArray<MetalBuffer*>*>* bufferCaches;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray<MetalBuffer*>*>* pendingReturnBuffers; // per-slot: buffers used this frame, returned to cache only after GPU completion
 @property (nonatomic, strong) NSObject*                     bufferCacheLock;
 @property (nonatomic, assign) double                        lastBufferCachePurge;
 @property (nonatomic, strong) NSArray<id<MTLSharedEvent>>*  events; // for tracking when a commands are complete to reset allocator
@@ -104,6 +105,10 @@ struct ImGui_ImplMetal4_Data
 {
     MetalContext*                SharedMetalContext;
     id<MTL4RenderCommandEncoder> RenderCommandEncoder;
+    int                           DebugSamplerLinearCount = 0;
+    int                           DebugSamplerNearestCount = 0;
+    int                           DebugDrawCount = 0;
+    int                           DebugTexBindCount = 0;
 
     ImGui_ImplMetal4_Data()       { memset((void*)this, 0, sizeof(*this)); }
 };
@@ -161,6 +166,18 @@ void ImGui_ImplMetal4_NewFrame(AttachmentFormats attachmentFormats, int frameInF
     uint64_t waitValue = [bd->SharedMetalContext.eventValues[slot] unsignedLongLongValue];
     [bd->SharedMetalContext.events[frameInFlightIndex] waitUntilSignaledValue:waitValue timeoutMS:UINT64_MAX];
     [bd->SharedMetalContext.commandAllocators[frameInFlightIndex] reset];
+
+    // GPU has completed this slot's work: safe to recycle this slot's pending buffers back into the cache.
+    {
+        NSMutableArray<MetalBuffer*>* pending = bd->SharedMetalContext.pendingReturnBuffers[slot];
+        @synchronized(bd->SharedMetalContext.bufferCacheLock)
+        {
+            NSMutableArray<MetalBuffer*>* slotCache = bd->SharedMetalContext.bufferCaches[slot];
+            for (MetalBuffer* b in pending)
+                [slotCache addObject:b];
+            [pending removeAllObjects];
+        }
+    }
 }
 
 static void ImGui_ImplMetal4_SetupRenderState(ImDrawData* draw_data, id<MTL4CommandBuffer> commandBuffer,
@@ -218,13 +235,17 @@ static void ImGui_ImplMetal4_SetupRenderState(ImDrawData* draw_data, id<MTL4Comm
 }
 
 static void ImGui_ImplMetal4_DrawCallback_ResetRenderState(const ImDrawList*, const ImDrawCmd*)  {} // Intentionally empty. Used as an identifier for rendering loop to call its code. Simpler to implement this way.
-static void ImGui_ImplMetal4_DrawCallback_SetSamplerLinear(const ImDrawList*, const ImDrawCmd*)  { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateLinear.gpuResourceID atIndex:0]; }
-static void ImGui_ImplMetal4_DrawCallback_SetSamplerNearest(const ImDrawList*, const ImDrawCmd*) { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateNearest.gpuResourceID atIndex:0]; }
+static void ImGui_ImplMetal4_DrawCallback_SetSamplerLinear(const ImDrawList*, const ImDrawCmd*)  { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); bd->DebugSamplerLinearCount++; [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateLinear.gpuResourceID atIndex:0]; }
+static void ImGui_ImplMetal4_DrawCallback_SetSamplerNearest(const ImDrawList*, const ImDrawCmd*) { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); bd->DebugSamplerNearestCount++; [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateNearest.gpuResourceID atIndex:0]; }
 
 void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer> commandBuffer, id<MTL4RenderCommandEncoder> commandEncoder)
 {
     ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData();
     MetalContext* ctx = bd->SharedMetalContext;
+    bd->DebugSamplerLinearCount = 0;
+    bd->DebugSamplerNearestCount = 0;
+    bd->DebugDrawCount = 0;
+    bd->DebugTexBindCount = 0;
 
     // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
     int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
@@ -237,7 +258,9 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
     if (draw_data->Textures != nullptr)
         for (ImTextureData* tex : *draw_data->Textures)
             if (tex->Status != ImTextureStatus_OK)
+            {
                 ImGui_ImplMetal4_UpdateTexture(tex);
+            }
 
     // Try to retrieve a render pipeline state that is compatible with the framebuffer config for this frame
     // The hit rate for this cache should be very near 100%.
@@ -330,6 +353,7 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
                     id<MTLTexture> texture = (__bridge id<MTLTexture>)(void*)(intptr_t)tex_id;
                     [bd->SharedMetalContext.residencySet addAllocation:texture];
                     [bd->SharedMetalContext.argumentTable setTexture:texture.gpuResourceID atIndex:0];
+                    bd->DebugTexBindCount++;
                 }
 
                 [bd->SharedMetalContext.argumentTable setAddress:(vertexBuffer.buffer.gpuAddress + vertexBufferOffset + (pcmd->VtxOffset * sizeof(ImDrawVert))) attributeStride:sizeof(ImDrawVert) atIndex:0];
@@ -340,6 +364,7 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
                                     indexType:sizeof(ImDrawIdx) == 2 ? MTLIndexTypeUInt16 : MTLIndexTypeUInt32
                                   indexBuffer:indexBuffer.buffer.gpuAddress + indexBufferCmdOffset
                             indexBufferLength:indexBuffer.buffer.length - indexBufferCmdOffset];
+                bd->DebugDrawCount++;
             }
         }
 
@@ -348,11 +373,13 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
     }
 
     MetalContext* sharedMetalContext = bd->SharedMetalContext;
-    @synchronized(sharedMetalContext.bufferCacheLock)
     {
-        NSMutableArray<MetalBuffer*>* slotCache = sharedMetalContext.bufferCaches[sharedMetalContext.currentFrameSlot];
-        [slotCache addObject:vertexBuffer];
-        [slotCache addObject:indexBuffer];
+        NSMutableArray<MetalBuffer*>* pending = sharedMetalContext.pendingReturnBuffers[sharedMetalContext.currentFrameSlot];
+        @synchronized(sharedMetalContext.bufferCacheLock)
+        {
+            [pending addObject:vertexBuffer];
+            [pending addObject:indexBuffer];
+        }
     }
 
     // Commit residency set
@@ -526,9 +553,14 @@ bool ImGui_ImplMetal4_Init(id<MTLDevice> device, id<MTL4CommandQueue> commandQue
     bd->SharedMetalContext.commandQueue = commandQueue;
     bd->SharedMetalContext.framesInFlight = (NSUInteger)framesInFlight;
     NSMutableArray<NSMutableArray<MetalBuffer*>*>* bufferCaches = [NSMutableArray array];
+    NSMutableArray<NSMutableArray<MetalBuffer*>*>* pendingReturn = [NSMutableArray array];
     for (NSUInteger i = 0; i < framesInFlight; i++)
+    {
         [bufferCaches addObject:[NSMutableArray array]];
+        [pendingReturn addObject:[NSMutableArray array]];
+    }
     bd->SharedMetalContext.bufferCaches = bufferCaches;
+    bd->SharedMetalContext.pendingReturnBuffers = pendingReturn;
 
     ImGui_ImplMetal_InitMultiViewportSupport();
     return true;
