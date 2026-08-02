@@ -79,7 +79,8 @@ struct ImGui_Metal4_ConstantData
 @property (nonatomic, strong) id<MTLDevice>                 device;
 @property (nonatomic, strong) id<MTL4CommandQueue>          commandQueue;
 @property (nonatomic, strong) id<MTLDepthStencilState>      depthStencilState;
-@property (nonatomic, strong) id<MTL4ArgumentTable>         argumentTable;
+// One argument table per command buffer — tables are live mutable; sharing across in-flight CBs races GPU reads.
+@property (nonatomic, strong) NSMapTable<id<MTL4CommandBuffer>, id<MTL4ArgumentTable>>* argumentTablesForCommandBuffers;
 @property (nonatomic, strong) id<MTLSamplerState>           samplerStateLinear;
 @property (nonatomic, strong) id<MTLSamplerState>           samplerStateNearest;
 @property (nonatomic, strong) id<MTLResidencySet>           residencySet;
@@ -97,6 +98,7 @@ struct ImGui_Metal4_ConstantData
 @property (nonatomic, strong) NSMutableArray<NSMutableArray<id<MTLBuffer>>*>*  constantBuffers;
 @property (nonatomic) uint64_t                              constantBufferChunkCount;
 @property (nonatomic) uint64_t                              currentConstantBufferIndex;
+- (id<MTL4ArgumentTable>)argumentTableForCommandBuffer:(id<MTL4CommandBuffer>)commandBuffer;
 - (MetalBuffer*)dequeueReusableBufferOfLength:(NSUInteger)length device:(id<MTLDevice>)device;
 - (id<MTLRenderPipelineState>)renderPipelineStateForFramebufferDescriptor:(FramebufferDescriptor*)descriptor device:(id<MTLDevice>)device;
 @end
@@ -105,6 +107,7 @@ struct ImGui_ImplMetal4_Data
 {
     MetalContext*                SharedMetalContext;
     id<MTL4RenderCommandEncoder> RenderCommandEncoder;
+    id<MTL4ArgumentTable>        CurrentArgumentTable; // set for duration of RenderDrawData; used by sampler draw callbacks
     int                           DebugSamplerLinearCount = 0;
     int                           DebugSamplerNearestCount = 0;
     int                           DebugDrawCount = 0;
@@ -184,8 +187,10 @@ static void ImGui_ImplMetal4_SetupRenderState(ImDrawData* draw_data, id<MTL4Comm
     id<MTL4RenderCommandEncoder> commandEncoder, id<MTLRenderPipelineState> renderPipelineState,
     MetalBuffer* vertexBuffer, size_t vertexBufferOffset)
 {
-    IM_UNUSED(commandBuffer);
     ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData();
+    id<MTL4ArgumentTable> argumentTable = bd->CurrentArgumentTable;
+    if (argumentTable == nil)
+        argumentTable = [bd->SharedMetalContext argumentTableForCommandBuffer:commandBuffer];
     [commandEncoder setCullMode:MTLCullModeNone];
     [commandEncoder setDepthStencilState:bd->SharedMetalContext.depthStencilState];
 
@@ -226,7 +231,6 @@ static void ImGui_ImplMetal4_SetupRenderState(ImDrawData* draw_data, id<MTL4Comm
 
     memcpy(&constantBufferContents->ModelViewProjectionMatrix[currentIndex], ortho_projection, sizeof(ortho_projection));
 
-    id<MTL4ArgumentTable> argumentTable = bd->SharedMetalContext.argumentTable;
     [argumentTable setAddress:constantBuffer.gpuAddress+(uint64_t)currentIndex * sizeof(constantBufferContents->ModelViewProjectionMatrix[0]) atIndex:1];
     [argumentTable setAddress:(vertexBuffer.buffer.gpuAddress + vertexBufferOffset) attributeStride:sizeof(ImDrawVert) atIndex:0];
     [argumentTable setSamplerState:bd->SharedMetalContext.samplerStateLinear.gpuResourceID atIndex:0];
@@ -235,8 +239,20 @@ static void ImGui_ImplMetal4_SetupRenderState(ImDrawData* draw_data, id<MTL4Comm
 }
 
 static void ImGui_ImplMetal4_DrawCallback_ResetRenderState(const ImDrawList*, const ImDrawCmd*)  {} // Intentionally empty. Used as an identifier for rendering loop to call its code. Simpler to implement this way.
-static void ImGui_ImplMetal4_DrawCallback_SetSamplerLinear(const ImDrawList*, const ImDrawCmd*)  { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); bd->DebugSamplerLinearCount++; [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateLinear.gpuResourceID atIndex:0]; }
-static void ImGui_ImplMetal4_DrawCallback_SetSamplerNearest(const ImDrawList*, const ImDrawCmd*) { ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData(); bd->DebugSamplerNearestCount++; [bd->SharedMetalContext.argumentTable setSamplerState:bd->SharedMetalContext.samplerStateNearest.gpuResourceID atIndex:0]; }
+static void ImGui_ImplMetal4_DrawCallback_SetSamplerLinear(const ImDrawList*, const ImDrawCmd*)
+{
+    ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData();
+    bd->DebugSamplerLinearCount++;
+    IM_ASSERT(bd->CurrentArgumentTable != nil);
+    [bd->CurrentArgumentTable setSamplerState:bd->SharedMetalContext.samplerStateLinear.gpuResourceID atIndex:0];
+}
+static void ImGui_ImplMetal4_DrawCallback_SetSamplerNearest(const ImDrawList*, const ImDrawCmd*)
+{
+    ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData();
+    bd->DebugSamplerNearestCount++;
+    IM_ASSERT(bd->CurrentArgumentTable != nil);
+    [bd->CurrentArgumentTable setSamplerState:bd->SharedMetalContext.samplerStateNearest.gpuResourceID atIndex:0];
+}
 
 void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer> commandBuffer, id<MTL4RenderCommandEncoder> commandEncoder)
 {
@@ -280,6 +296,8 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
     MetalBuffer* indexBuffer = [ctx dequeueReusableBufferOfLength:indexBufferLength device:commandBuffer.device];
 
     bd->RenderCommandEncoder = commandEncoder;
+    // Isolate binds to this command buffer so concurrent/in-flight CBs do not share a live table.
+    bd->CurrentArgumentTable = [ctx argumentTableForCommandBuffer:commandBuffer];
 
     // check if more chunks are required
     const int chunksRequired = 1 + (int)((float)bd->SharedMetalContext.currentConstantBufferIndex / (float)METAL_IMGUI_VIEWPORTS_PER_CHUNK);
@@ -352,11 +370,11 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
                 {
                     id<MTLTexture> texture = (__bridge id<MTLTexture>)(void*)(intptr_t)tex_id;
                     [bd->SharedMetalContext.residencySet addAllocation:texture];
-                    [bd->SharedMetalContext.argumentTable setTexture:texture.gpuResourceID atIndex:0];
+                    [bd->CurrentArgumentTable setTexture:texture.gpuResourceID atIndex:0];
                     bd->DebugTexBindCount++;
                 }
 
-                [bd->SharedMetalContext.argumentTable setAddress:(vertexBuffer.buffer.gpuAddress + vertexBufferOffset + (pcmd->VtxOffset * sizeof(ImDrawVert))) attributeStride:sizeof(ImDrawVert) atIndex:0];
+                [bd->CurrentArgumentTable setAddress:(vertexBuffer.buffer.gpuAddress + vertexBufferOffset + (pcmd->VtxOffset * sizeof(ImDrawVert))) attributeStride:sizeof(ImDrawVert) atIndex:0];
 
                 size_t indexBufferCmdOffset = indexBufferOffset + (pcmd->IdxOffset * sizeof(ImDrawIdx));
                 [commandEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
@@ -385,6 +403,7 @@ void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data, id<MTL4CommandBuffer
     // Commit residency set
     [bd->SharedMetalContext.residencySet commit];
     bd->RenderCommandEncoder = nil;
+    bd->CurrentArgumentTable = nil;
 }
 
 static void ImGui_ImplMetal4_DestroyTexture(ImTextureData* tex)
@@ -497,17 +516,8 @@ bool ImGui_ImplMetal4_CreateDeviceObjects(id<MTLDevice> device)
     bd->SharedMetalContext.constantBufferChunkCount = 1;
     bd->SharedMetalContext.events = events;
     bd->SharedMetalContext.eventValues = eventValues;
-
-    MTL4ArgumentTableDescriptor* argumentTableDescriptor = [[MTL4ArgumentTableDescriptor alloc] init];
-    argumentTableDescriptor.maxBufferBindCount = 2; // vertex buffer + constant buffer
-    argumentTableDescriptor.maxTextureBindCount = 1; // font atlas or user texture
-    argumentTableDescriptor.maxSamplerStateBindCount = 2;
-    argumentTableDescriptor.supportAttributeStrides = YES; // required: vertex buffer is bound via setAddress:stride:atIndex: for stage_in fetch
-
     bd->SharedMetalContext.commandAllocators = commandAllocators;
-
-    bd->SharedMetalContext.argumentTable = [device newArgumentTableWithDescriptor:argumentTableDescriptor error:&error];
-    IM_ASSERT(bd->SharedMetalContext.argumentTable != nil && error == nil);
+    // Argument tables are created lazily per command buffer in -argumentTableForCommandBuffer:
 
     ImGui_ImplMetal_CreateDeviceObjectsForPlatformWindows();
     return true;
@@ -523,6 +533,8 @@ void ImGui_ImplMetal4_DestroyDeviceObjects()
             ImGui_ImplMetal4_DestroyTexture(tex);
 
     [bd->SharedMetalContext.renderPipelineStateCache removeAllObjects];
+    [bd->SharedMetalContext.argumentTablesForCommandBuffers removeAllObjects];
+    bd->CurrentArgumentTable = nil;
     bd->SharedMetalContext.samplerStateLinear = nil;
     bd->SharedMetalContext.samplerStateNearest = nil;
     ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows();
@@ -664,6 +676,8 @@ void ImGui_ImplMetal4_Shutdown()
     if ((self = [super init]))
     {
         self.renderPipelineStateCache = [NSMutableDictionary dictionary];
+        // Weak keys: do not extend CB lifetime; entry drops when the CB is released.
+        self.argumentTablesForCommandBuffers = [NSMapTable weakToStrongObjectsMapTable];
         self.bufferCacheLock = [[NSObject alloc] init];
         _lastBufferCachePurge = GetMachAbsoluteTimeInSeconds();
     }
@@ -672,6 +686,29 @@ void ImGui_ImplMetal4_Shutdown()
 
 - (void)dealloc
 {
+}
+
+- (id<MTL4ArgumentTable>)argumentTableForCommandBuffer:(id<MTL4CommandBuffer>)commandBuffer
+{
+    IM_ASSERT(commandBuffer != nil);
+    id<MTL4ArgumentTable> table = [self.argumentTablesForCommandBuffers objectForKey:commandBuffer];
+    if (table != nil)
+        return table;
+
+    MTL4ArgumentTableDescriptor* argumentTableDescriptor = [[MTL4ArgumentTableDescriptor alloc] init];
+    argumentTableDescriptor.maxBufferBindCount = 2; // vertex buffer + constant buffer
+    argumentTableDescriptor.maxTextureBindCount = 1; // font atlas or user texture
+    argumentTableDescriptor.maxSamplerStateBindCount = 2;
+    argumentTableDescriptor.supportAttributeStrides = YES; // required: vertex buffer is bound via setAddress:stride:atIndex: for stage_in fetch
+    argumentTableDescriptor.initializeBindings = YES;
+    // Label is set on the descriptor only — MTL4ArgumentTable.label is readonly after creation.
+    argumentTableDescriptor.label = [NSString stringWithFormat:@"ImGui ArgTable cb=%p", (__bridge void*)commandBuffer];
+
+    NSError* error = nil;
+    table = [self.device newArgumentTableWithDescriptor:argumentTableDescriptor error:&error];
+    IM_ASSERT(table != nil && error == nil);
+    [self.argumentTablesForCommandBuffers setObject:table forKey:commandBuffer];
+    return table;
 }
 
 - (MetalBuffer*)dequeueReusableBufferOfLength:(NSUInteger)length device:(id<MTLDevice>)device
@@ -833,6 +870,7 @@ struct ImGuiViewportDataMetal
     CAMetalLayer*               MetalLayer;
     id<MTLCommandQueue>         CommandQueue;
     MTL4RenderPassDescriptor*   RenderPassDescriptor;
+    id<MTL4CommandBuffer>       CommandBuffer; // reusable Metal 4 CB — one argument table maps to this CB
     void*                       Handle = nullptr;
     bool                        FirstFrame = true;
 };
@@ -869,7 +907,14 @@ static void ImGui_ImplMetal_DestroyWindow(ImGuiViewport* viewport)
 {
     // The main viewport (owned by the application) will always have RendererUserData == 0 since we didn't create the data for it.
     if (ImGuiViewportDataMetal* data = (ImGuiViewportDataMetal*)viewport->RendererUserData)
+    {
+        // Dropping the CB key removes its argument-table map entry (weak-to-strong NSMapTable).
+        data->CommandBuffer = nil;
+        data->CommandQueue = nil;
+        data->MetalLayer = nil;
+        data->RenderPassDescriptor = nil;
         IM_DELETE(data);
+    }
     viewport->RendererUserData = nullptr;
 }
 
@@ -924,7 +969,12 @@ static void ImGui_ImplMetal_RenderWindow(ImGuiViewport* viewport, void*)
         renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
 
     ImGui_ImplMetal4_Data* bd = ImGui_ImplMetal4_GetBackendData();
-    id <MTL4CommandBuffer> commandBuffer = [bd->SharedMetalContext.device newCommandBuffer];
+    if (data->CommandBuffer == nil)
+    {
+        data->CommandBuffer = [bd->SharedMetalContext.device newCommandBuffer];
+        data->CommandBuffer.label = @"ImGui Secondary Viewport CommandBuffer";
+    }
+    id <MTL4CommandBuffer> commandBuffer = data->CommandBuffer;
     [commandBuffer beginCommandBufferWithAllocator:bd->SharedMetalContext.commandAllocators[bd->SharedMetalContext.currentFrameSlot]];
 
     id <MTL4RenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
