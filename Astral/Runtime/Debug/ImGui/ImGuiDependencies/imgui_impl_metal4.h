@@ -52,7 +52,7 @@ IMGUI_IMPL_API bool ImGui_ImplMetal4_Init(id<MTLDevice> device, id<MTL4CommandQu
 // IMGUI_IMPL_API void ImGui_ImplMetal4_Shutdown();
 // frameInFlightIndex must match the slot you use to index your own per-frame-in-flight resources
 // (e.g. the same index used to pick your command buffer/allocator), and must be < framesInFlight passed to Init().
-// IMGUI_IMPL_API void ImGui_ImplMetal4_NewFrame(AttachmentFormats attachmentFormats, int frameInFlightIndex);
+// IMGUI_IMPL_API void ImGui_ImplMetal4_NewFrame(AttachmentFormats attachmentFormats);
 IMGUI_IMPL_API void ImGui_ImplMetal4_RenderDrawData(ImDrawData* drawData,
                                                    id<MTL4CommandBuffer> commandBuffer,
                                                    id<MTL4RenderCommandEncoder> commandEncoder);
@@ -88,7 +88,7 @@ namespace MTL4 { class CommandQueue; class CommandBuffer; class RenderPassDescri
 // Follow "Getting Started" link and check examples/ folder to learn about using backends!
 IMGUI_IMPL_API bool ImGui_ImplMetal4_Init(MTL::Device* device, MTL4::CommandQueue* commandQueue, int framesInFlight);
 IMGUI_IMPL_API void ImGui_ImplMetal4_Shutdown();
-IMGUI_IMPL_API void ImGui_ImplMetal4_NewFrame(AttachmentFormats attachmentFormats, int frameInFlightIndex);
+IMGUI_IMPL_API void ImGui_ImplMetal4_NewFrame(AttachmentFormats attachmentFormats);
 IMGUI_IMPL_API void ImGui_ImplMetal4_RenderDrawData(ImDrawData* draw_data,
                                                    MTL4::CommandBuffer* commandBuffer,
                                                    MTL4::RenderCommandEncoder* commandEncoder);

@@ -210,7 +210,6 @@ namespace Astral {
         NS::AutoreleasePool* m_FrameAutoreleasePool;
         EventListener<NewFrameEvent> m_NewFrameListener;
 
-        uint32 m_ImGuiFrameIndex = 0;
         uint32 m_ImGuiFramesInFlight = 3;
         AttachmentFormats m_ImGuiRenderPassAttachmentFormats;
     };

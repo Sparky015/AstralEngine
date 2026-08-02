@@ -121,9 +121,7 @@ namespace Astral {
 
     void MetalRenderingContext::MarkNewImGuiFrame()
     {
-        m_ImGuiFrameIndex++;
-        if (m_ImGuiFrameIndex == m_ImGuiFramesInFlight) { m_ImGuiFrameIndex = 0; }
-        ImGui_ImplMetal4_NewFrame(m_ImGuiRenderPassAttachmentFormats, m_ImGuiFrameIndex);
+        ImGui_ImplMetal4_NewFrame(m_ImGuiRenderPassAttachmentFormats);
     }
 
 
