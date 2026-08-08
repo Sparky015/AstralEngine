@@ -10,6 +10,25 @@
 
 namespace Astral {
 
-    size_t AllocationsListPanel(const SceneMetricsStorage& storage);
+    class AllocationsListPanel
+    {
+    public:
+
+        /**
+         * @brief Renders the Allocations List ImGui panel
+         * @param storage The scene metrics to use for the allocations list
+         */
+        void Show(const SceneMetricsStorage& storage);
+
+        /**
+         * @brief Gets the selected point index in the allocations list
+         * @return The selected point index in the allocations list or -1 if no point was selected
+         */
+        int GetSelectedPoint();
+
+    private:
+
+        int m_SelectedPointIndex = -1;
+    };
 
 }

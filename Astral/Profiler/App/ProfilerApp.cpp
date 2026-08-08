@@ -78,27 +78,28 @@ namespace Astral {
         {
             if (ImGui::BeginTabItem("Global"))
             {
-                GlobalGraphView(m_SceneMetricsImporter.GetSceneMetrics());
+                m_GraphsView.ShowGlobalGraphView(m_SceneMetricsImporter.GetSceneMetrics());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Allocator"))
             {
-                AllocatorGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                m_GraphsView.ShowAllocatorGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Region"))
             {
-                RegionGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                m_GraphsView.ShowRegionGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Thread"))
             {
-                ThreadGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                m_GraphsView.ShowThreadGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
                 ImGui::EndTabItem();
             }
+
 
             ImGui::EndTabBar();
         }

@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include "MemoryDebugWindow.h"
 
 #include "Components/MenuComponent.h"
 #include "Core/Events/EventListener.h"
 #include "Debug/ImGui/ImGuiEvents.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Views/GraphViews.h"
 
 namespace Astral {
 
@@ -39,6 +40,7 @@ namespace Astral {
         bool m_ShowDebugWindow = true;
 
         SceneMetricsImporter m_SceneMetricsImporter;
+        GraphView m_GraphsView = {};
 
         Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener{[this](RenderImGuiEvent e){ UpdateProfilerAppUI(); }};
     };
