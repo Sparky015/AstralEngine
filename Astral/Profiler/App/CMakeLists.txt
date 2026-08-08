@@ -15,8 +15,6 @@ add_executable(AstralProfiler
     Panels/MemoryGraphPanel.cpp
     Panels/MemoryGraphPanel.h
 
-    MemoryDebugWindow.cpp
-    MemoryDebugWindow.h
     ProfilerAppModule.cpp
     ProfilerApp.cpp
     ProfilerApp.h
