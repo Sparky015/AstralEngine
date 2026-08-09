@@ -7,6 +7,7 @@
 
 #include "Core/Utilities/Asserts.h"
 #include "ImPlot/implot.h"
+#include "Profiler/App/Panels/AllocationsListPanel.h"
 
 namespace Astral {
 
@@ -38,6 +39,8 @@ namespace Astral {
         ASSERT(dataStorage.size() == metricsStorage.GetSnapshotCount(), "Dataset size does not match the expected snapshot count!");
 
         ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, maxTime);
+
+        AllocationsListPanel::SetListPlotLimitsFilterIn(Vec2(ImPlot::GetPlotLimits().X.Min, ImPlot::GetPlotLimits().X.Max));
     }
 
 
