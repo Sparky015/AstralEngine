@@ -38,38 +38,31 @@ namespace Astral {
     static const SceneMetricsStorage* localScopeStorage = nullptr;
     const char* AllocationsListPanel::AllocationDataArrayGetter(void* data, int idx)
     {
-        static char buffer[200];
-
         int storageIndex = -1;
         if (viewMode == AllocationsViewMode::GROUPED_BY_ALLOCATION_ORDER)
         {
-            AllocationDataSerializeable* items = (AllocationDataSerializeable*)data;
-            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].pointer, items[idx].size);
             storageIndex = idx;
         }
         else if (viewMode == AllocationsViewMode::GROUPED_BY_SIZE)
         {
             std::pair<AllocationDataSerializeable, int>* items = (std::pair<AllocationDataSerializeable, int>*)data;
-            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].first.pointer, items[idx].first.size);
             storageIndex = items[idx].second;
         }
 
         // Filters
-        if (m_FilterInPlotLimits != Vec2(0) && !(m_FilterInPlotLimits.x <= localScopeStorage->GetAllocationTimes()[storageIndex] && localScopeStorage->GetAllocationTimes()[storageIndex] <= m_FilterInPlotLimits.y))
+        if (ShouldFilterAllocationOut(*localScopeStorage, storageIndex)) { return nullptr; }
+
+        static char buffer[200];
+
+        if (viewMode == AllocationsViewMode::GROUPED_BY_ALLOCATION_ORDER)
         {
-            return nullptr;
+            AllocationDataSerializeable* items = (AllocationDataSerializeable*)data;
+            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].pointer, items[idx].size);
         }
-        if (m_FilterInThreadID != 0 && localScopeStorage->GetAllocationDataOverTime()[storageIndex].threadIDHash != m_FilterInThreadID)
+        else if (viewMode == AllocationsViewMode::GROUPED_BY_SIZE)
         {
-            return nullptr;
-        }
-        if (m_FilterInMemoryRegion != MemoryRegion::MEMORY_REGION_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].region != m_FilterInMemoryRegion)
-        {
-            return nullptr;
-        }
-        if (m_FilterInAllocatorType != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].allocatorType != m_FilterInAllocatorType)
-        {
-            return nullptr;
+            std::pair<AllocationDataSerializeable, int>* items = (std::pair<AllocationDataSerializeable, int>*)data;
+            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].first.pointer, items[idx].first.size);
         }
 
         return buffer;
@@ -122,7 +115,7 @@ namespace Astral {
             int filteredOutCount = 0;
             for (int i = 0; i < allocationData.size(); i++)
             {
-                if (AllocationDataArrayGetter((void*)allocationData.data(), i) == nullptr)
+                if (ShouldFilterAllocationOut(storage, i))
                 {
                     filteredOutCount++;
                 }
@@ -206,7 +199,7 @@ namespace Astral {
 
                 for (int j = 0; j < allocationNumbers[i]; j++)
                 {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + dataOffsets[i]), j) == nullptr)
+                    if (ShouldFilterAllocationOut(storage, m_SortedAllocationData[dataOffsets[i] + j].second))
                     {
                         filteredOutCount++;
                     }
@@ -261,16 +254,6 @@ namespace Astral {
             }
             if (ImGui::TreeNode(smallLabel))
             {
-                int filteredOutCount = 0;
-                for (int i = 0; i < numberOfSmallAllocations; i++)
-                {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + smallDataOffset), i) == nullptr)
-                    {
-                        filteredOutCount++;
-                    }
-                }
-                ImGui::Text("Filtered-In Allocations: %d", numberOfSmallAllocations - filteredOutCount);
-
                 if (ImGuiCustomListBox("##SmallAllocations", &smallSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + smallDataOffset, numberOfSmallAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = smallDataOffset + smallSelectedIndex;
@@ -281,16 +264,6 @@ namespace Astral {
             }
             if (ImGui::TreeNode(mediumLabel))
             {
-                int filteredOutCount = 0;
-                for (int i = 0; i < numberOfMediumAllocations; i++)
-                {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + mediumDataOffset), i) == nullptr)
-                    {
-                        filteredOutCount++;
-                    }
-                }
-                ImGui::Text("Filtered-In Allocations: %d", numberOfMediumAllocations - filteredOutCount);
-
                 if (ImGuiCustomListBox("##MediumAllocations", &mediumSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + mediumDataOffset, numberOfMediumAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = mediumDataOffset + mediumSelectedIndex;
@@ -301,16 +274,6 @@ namespace Astral {
             }
             if (ImGui::TreeNode(largeLabel))
             {
-                int filteredOutCount = 0;
-                for (int i = 0; i < numberOfLargeAllocations; i++)
-                {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + largeDataOffset), i) == nullptr)
-                    {
-                        filteredOutCount++;
-                    }
-                }
-                ImGui::Text("Filtered-In Allocations: %d", numberOfLargeAllocations - filteredOutCount);
-
                 if (ImGuiCustomListBox("##LargeAllocations", &largeSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + largeDataOffset, numberOfLargeAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = largeDataOffset + largeSelectedIndex;
@@ -386,6 +349,29 @@ namespace Astral {
         }
 
         return value_changed;
+    }
+
+
+    bool AllocationsListPanel::ShouldFilterAllocationOut(const SceneMetricsStorage& storage, int storageIndex)
+    {
+        if (m_FilterInPlotLimits != Vec2(0) && !(m_FilterInPlotLimits.x <= localScopeStorage->GetAllocationTimes()[storageIndex] && localScopeStorage->GetAllocationTimes()[storageIndex] <= m_FilterInPlotLimits.y))
+        {
+            return true;
+        }
+        if (m_FilterInThreadID != 0 && localScopeStorage->GetAllocationDataOverTime()[storageIndex].threadIDHash != m_FilterInThreadID)
+        {
+            return true;
+        }
+        if (m_FilterInMemoryRegion != MemoryRegion::MEMORY_REGION_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].region != m_FilterInMemoryRegion)
+        {
+            return true;
+        }
+        if (m_FilterInAllocatorType != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].allocatorType != m_FilterInAllocatorType)
+        {
+            return true;
+        }
+
+        return false;
     }
 
 

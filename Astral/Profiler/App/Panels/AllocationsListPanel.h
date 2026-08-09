@@ -65,6 +65,12 @@ namespace Astral {
         bool ImGuiCustomListBox(const char* label, int* current_item, const char* (* getter)(void* user_data, int idx), void* user_data, int items_count, int height_in_items);
 
         /**
+         * @brief Checks if an allocation should be filtered out with the current set filters
+         * @return True if the allocation should be filtered out, false otherwise
+         */
+        static bool ShouldFilterAllocationOut(const SceneMetricsStorage& storage, int storageIndex);
+
+        /**
          * @brief A getter for the custom imgui list box that supports filtering out indices of data
          * @param data The data to retrieve an item name from
          * @param idx The index to retrieve data from
