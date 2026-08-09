@@ -182,20 +182,47 @@ namespace Astral {
             if (mediumAllocationsEndIndex == -1) { mediumAllocationsEndIndex = m_SortedAllocationData.size() - 1; }
 
             int numberOfTinyAllocations = tinyAllocationsEndIndex + 1;
-            static char tinyLabel[100] = "";
-            snprintf(tinyLabel, 100, "Tiny (<= 128 bytes)  -  %d total allocations/frees ##AllocationsListPanel", numberOfTinyAllocations);
-
-            static char smallLabel[100] = "";
             int numberOfSmallAllocations = smallAllocationsEndIndex - tinyAllocationsEndIndex;
-            snprintf(smallLabel, 100, "Small (129 - 1024 bytes)  -  %d total allocations/frees ##AllocationsListPanel", numberOfSmallAllocations);
-
-            static char mediumLabel[100] = "";
             int numberOfMediumAllocations = mediumAllocationsEndIndex - smallAllocationsEndIndex;
-            snprintf(mediumLabel, 100, "Medium (1025 - 8192 bytes)  -  %d total allocations/frees ##AllocationsListPanel", numberOfMediumAllocations);
-
-            static char largeLabel[100] = "";
             int numberOfLargeAllocations = m_SortedAllocationData.size() - numberOfTinyAllocations - numberOfSmallAllocations - numberOfMediumAllocations;
-            snprintf(largeLabel, 100, "Large (> 8 KB)  -  %d total allocations/frees ##AllocationsListPanel", numberOfLargeAllocations);
+
+            int smallDataOffset = numberOfTinyAllocations;
+            int mediumDataOffset = numberOfTinyAllocations + numberOfSmallAllocations;
+            int largeDataOffset = numberOfTinyAllocations + numberOfSmallAllocations + numberOfMediumAllocations;
+
+            int tinyAllocationsFilteredIn = 0;
+            int smallAllocationsFilteredIn = 0;
+            int mediumAllocationsFilteredIn = 0;
+            int largeAllocationsFilteredIn = 0;
+
+            std::array<int, 4> allocationNumbers = {numberOfTinyAllocations, numberOfSmallAllocations, numberOfMediumAllocations, numberOfLargeAllocations};
+            std::array<int*, 4> outFilterInAllocationCount = {&tinyAllocationsFilteredIn, &smallAllocationsFilteredIn, &mediumAllocationsFilteredIn, &largeAllocationsFilteredIn};
+            std::array<int, 4> dataOffsets = {0, smallDataOffset, mediumDataOffset, largeDataOffset};
+
+            // Count number of allocations filtered out among tiny, small, medium, and large allocations
+            for (int i = 0; i < 4; i++)
+            {
+                int filteredOutCount = 0;
+
+                for (int j = 0; j < allocationNumbers[i]; j++)
+                {
+                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + dataOffsets[i]), j) == nullptr)
+                    {
+                        filteredOutCount++;
+                    }
+                }
+                *outFilterInAllocationCount[i] = allocationNumbers[i] - filteredOutCount;
+            }
+
+            static char tinyLabel[150] = "";
+            static char smallLabel[150] = "";
+            static char mediumLabel[150] = "";
+            static char largeLabel[150] = "";
+
+            snprintf(tinyLabel, sizeof(tinyLabel),     "Tiny (<= 128 bytes)         -  %d allocations/frees filtered in   /  %d total allocations/frees  ##TinyAllocationsListPanel", tinyAllocationsFilteredIn, numberOfTinyAllocations);
+            snprintf(smallLabel, sizeof(smallLabel),   "Small (129 - 1024 bytes)    -  %d allocations/frees filtered in   /  %d total allocations/frees  ##SmallAllocationsListPanel", smallAllocationsFilteredIn, numberOfSmallAllocations);
+            snprintf(mediumLabel, sizeof(mediumLabel), "Medium (1025 - 8192 bytes)  -  %d allocations/frees filtered in   /  %d total allocations/frees  ##MediumAllocationsListPanel", mediumAllocationsFilteredIn, numberOfMediumAllocations);
+            snprintf(largeLabel, sizeof(largeLabel),   "Large (> 8 KB)              -  %d allocations/frees filtered in   /  %d total allocations/frees  ##LargeAllocationsListPanel", largeAllocationsFilteredIn, numberOfLargeAllocations);
 
 
             int tinySelectedIndex = -1;
@@ -210,30 +237,20 @@ namespace Astral {
             }
             else if (sortedSelectedPointSize <= 1024)
             {
-                smallSelectedIndex = m_SortedSelectedPointIndex - numberOfTinyAllocations;
+                smallSelectedIndex = m_SortedSelectedPointIndex - smallDataOffset;
             }
             else if (sortedSelectedPointSize <= 8192)
             {
-                mediumSelectedIndex = m_SortedSelectedPointIndex - numberOfTinyAllocations - numberOfSmallAllocations;
+                mediumSelectedIndex = m_SortedSelectedPointIndex - mediumDataOffset;
             }
             else
             {
-                largeSelectedIndex = m_SortedSelectedPointIndex - numberOfTinyAllocations - numberOfSmallAllocations - numberOfMediumAllocations;
+                largeSelectedIndex = m_SortedSelectedPointIndex - largeDataOffset;
             }
 
 
             if (ImGui::TreeNode(tinyLabel))
             {
-                int filteredOutCount = 0;
-                for (int i = 0; i < numberOfTinyAllocations; i++)
-                {
-                    if (AllocationDataArrayGetter((void*)m_SortedAllocationData.data(), i) == nullptr)
-                    {
-                        filteredOutCount++;
-                    }
-                }
-                ImGui::Text("Filtered-In Allocations: %d", numberOfTinyAllocations - filteredOutCount);
-
                 if (ImGuiCustomListBox("##TinyAllocations", &tinySelectedIndex, AllocationDataArrayGetter, (void*)m_SortedAllocationData.data(), numberOfTinyAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = tinySelectedIndex;
@@ -244,21 +261,19 @@ namespace Astral {
             }
             if (ImGui::TreeNode(smallLabel))
             {
-                int smallOffset = numberOfTinyAllocations;
-
                 int filteredOutCount = 0;
                 for (int i = 0; i < numberOfSmallAllocations; i++)
                 {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + smallOffset), i) == nullptr)
+                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + smallDataOffset), i) == nullptr)
                     {
                         filteredOutCount++;
                     }
                 }
                 ImGui::Text("Filtered-In Allocations: %d", numberOfSmallAllocations - filteredOutCount);
 
-                if (ImGuiCustomListBox("##SmallAllocations", &smallSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + smallOffset, numberOfSmallAllocations, 10))
+                if (ImGuiCustomListBox("##SmallAllocations", &smallSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + smallDataOffset, numberOfSmallAllocations, 10))
                 {
-                    m_SortedSelectedPointIndex = smallOffset + smallSelectedIndex;
+                    m_SortedSelectedPointIndex = smallDataOffset + smallSelectedIndex;
                     m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
@@ -266,21 +281,19 @@ namespace Astral {
             }
             if (ImGui::TreeNode(mediumLabel))
             {
-                int mediumOffset = numberOfTinyAllocations + numberOfSmallAllocations;
-
                 int filteredOutCount = 0;
                 for (int i = 0; i < numberOfMediumAllocations; i++)
                 {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + mediumOffset), i) == nullptr)
+                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + mediumDataOffset), i) == nullptr)
                     {
                         filteredOutCount++;
                     }
                 }
                 ImGui::Text("Filtered-In Allocations: %d", numberOfMediumAllocations - filteredOutCount);
 
-                if (ImGuiCustomListBox("##MediumAllocations", &mediumSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + mediumOffset, numberOfMediumAllocations, 10))
+                if (ImGuiCustomListBox("##MediumAllocations", &mediumSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + mediumDataOffset, numberOfMediumAllocations, 10))
                 {
-                    m_SortedSelectedPointIndex = mediumOffset + mediumSelectedIndex;
+                    m_SortedSelectedPointIndex = mediumDataOffset + mediumSelectedIndex;
                     m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
@@ -288,21 +301,19 @@ namespace Astral {
             }
             if (ImGui::TreeNode(largeLabel))
             {
-                int largeOffset = numberOfTinyAllocations + numberOfSmallAllocations + numberOfMediumAllocations;
-
                 int filteredOutCount = 0;
                 for (int i = 0; i < numberOfLargeAllocations; i++)
                 {
-                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + largeOffset), i) == nullptr)
+                    if (AllocationDataArrayGetter((void*)(m_SortedAllocationData.data() + largeDataOffset), i) == nullptr)
                     {
                         filteredOutCount++;
                     }
                 }
                 ImGui::Text("Filtered-In Allocations: %d", numberOfLargeAllocations - filteredOutCount);
 
-                if (ImGuiCustomListBox("##LargeAllocations", &largeSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + largeOffset, numberOfLargeAllocations, 10))
+                if (ImGuiCustomListBox("##LargeAllocations", &largeSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + largeDataOffset, numberOfLargeAllocations, 10))
                 {
-                    m_SortedSelectedPointIndex = largeOffset + largeSelectedIndex;
+                    m_SortedSelectedPointIndex = largeDataOffset + largeSelectedIndex;
                     m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
