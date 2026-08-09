@@ -29,6 +29,8 @@ namespace Astral {
     private:
 
         int m_SelectedPointIndex = -1;
+        int m_SortedSelectedPointIndex = -1;
+        std::vector<std::pair<AllocationDataSerializeable, int>> m_SortedAllocationData = {}; // Container to cache sorted allocation data with .second containing a index mapping to the original allocation data order
     };
 
 }
