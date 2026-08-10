@@ -15,7 +15,7 @@
 
 #define IMGUI_IMPL_METAL_CPP
 #include "Common/MTLEnumConversions.h"
-#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h"
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal4.h"
 
 namespace Astral {
 
@@ -218,6 +218,7 @@ namespace Astral {
         NS::AutoreleasePool* m_FrameAutoreleasePool;
         EventListener<NewFrameEvent> m_NewFrameListener;
 
+        uint32 m_ImGuiFramesInFlight = 3;
         AttachmentFormats m_ImGuiRenderPassAttachmentFormats;
     };
 

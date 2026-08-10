@@ -77,8 +77,9 @@ namespace Astral {
     void MetalRenderingContext::InitImGuiForAPIBackend(RenderPassHandle renderPassHandle)
     {
         MTL::Device* device = (MTL::Device*)m_Device->GetNativeHandle();
-        ImGui_ImplMetal_Init(device);
-
+        CommandQueueHandle commandQueue = m_Device->GetPrimaryCommandQueue();
+        MTL4::CommandQueue* mtlCommandQueue = (MTL4::CommandQueue*)commandQueue->GetNativeHandle();
+        ImGui_ImplMetal4_Init(device, mtlCommandQueue, 3);
 
 
         // ==== Populating ImGui render pass attachment formats struct ========================================================
@@ -120,13 +121,13 @@ namespace Astral {
 
     void MetalRenderingContext::MarkNewImGuiFrame()
     {
-        ImGui_ImplMetal_NewFrame(m_ImGuiRenderPassAttachmentFormats);
+        ImGui_ImplMetal4_NewFrame(m_ImGuiRenderPassAttachmentFormats);
     }
 
 
     void MetalRenderingContext::ShutdownImGuiForAPIBackend()
     {
-        ImGui_ImplMetal_Shutdown();
+        ImGui_ImplMetal4_Shutdown();
     }
 
 
