@@ -34,35 +34,28 @@ namespace Astral {
     }
 
 
-    void AssetRegistry::LoadScene(const std::filesystem::path& filePath)
+    bool AssetRegistry::IsAsyncLoadPlaceholder(Ref<Asset> asset)
     {
-        PROFILE_SCOPE("AssetRegistry::LoadScene")
-
-        if (filePath.is_relative())
-        {
-            std::filesystem::path fullPath = filePath;
-            GetAbsolutePath(fullPath);
-            ASSERT(std::filesystem::exists(fullPath), "Given scene file path does not exist! (" << fullPath << ")")
-            SceneLoader::LoadSceneAssets(fullPath);
-        }
-        else
-        {
-            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath << ")")
-            SceneLoader::LoadSceneAssets(filePath);
-        }
+        if (!asset) { return false; }
+        return m_AsyncLoadRegistry.IsRegistered(asset->GetAssetID());
     }
 
 
-    void AssetRegistry::SerializeScene(Scene& scene, const std::filesystem::path& filePath)
+    bool AssetRegistry::IsAsyncLoadRetrievalReady(Ref<Asset> placeholderAsset)
     {
-        SceneLoader::SerializeScene(scene, filePath);
+        if (!placeholderAsset) { return false; }
+        return m_AsyncLoadRegistry.IsReady(placeholderAsset->GetAssetID());
     }
 
 
     void AssetRegistry::UnloadAsset(AssetID assetID)
     {
+        std::unique_lock lock(m_RegistryMutex); // Lock for the asset ID exists read check
+
         if (!m_AssetIDToFilePath.contains(assetID)) { return; }
         const std::filesystem::path& assetFilePath = m_AssetIDToFilePath.at(assetID);
+
+        lock.unlock(); // Unlock for the UnloadAsset function as it has its own lock
 
         UnloadAsset(assetFilePath);
 
@@ -73,6 +66,8 @@ namespace Astral {
 
     void AssetRegistry::UnloadAsset(const std::filesystem::path& assetFilePath)
     {
+        std::unique_lock lock(m_RegistryMutex); // Lock for the registry read/writes
+
         // Check if the asset is loaded first. Exit early if not loaded.
         AssetID assetID = GetAssetIDFromFilePath(assetFilePath);
         if (assetID == NullAssetID) { return; }
@@ -103,6 +98,31 @@ namespace Astral {
             case AssetType::CubeLUT: return CubeLUTLoader::LoadAsset(filePath);
             default: AE_ERROR("Invalid asset type value given!");
         }
+    }
+
+
+    void AssetRegistry::LoadScene(const std::filesystem::path& filePath)
+    {
+        PROFILE_SCOPE("AssetRegistry::LoadScene")
+
+        if (filePath.is_relative())
+        {
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            ASSERT(std::filesystem::exists(fullPath), "Given scene file path does not exist! (" << fullPath << ")")
+            SceneLoader::LoadSceneAssets(fullPath);
+        }
+        else
+        {
+            ASSERT(std::filesystem::exists(filePath), "Given scene file path does not exist! (" << filePath << ")")
+            SceneLoader::LoadSceneAssets(filePath);
+        }
+    }
+
+
+    void AssetRegistry::SerializeScene(Scene& scene, const std::filesystem::path& filePath)
+    {
+        SceneLoader::SerializeScene(scene, filePath);
     }
 
 
@@ -180,6 +200,33 @@ namespace Astral {
         }
 
         return canonicalDirectory != canonicalAssetPath && dirIt == canonicalDirectory.end();
+    }
+
+
+    bool AssetRegistry::DoesAssetFilePathExist(const std::filesystem::path& filePath)
+    {
+        if (filePath.is_relative())
+        {
+            std::filesystem::path fullPath = filePath;
+            GetAbsolutePath(fullPath);
+            if (!std::filesystem::exists(fullPath))
+            {
+                if (fullPath == "") { return false; }
+                AE_WARN("Trying to register asset with file path that does not exist! (\"" << fullPath.string() << "\")")
+                return false;
+            }
+        }
+        else
+        {
+            if (!std::filesystem::exists(filePath))
+            {
+                if (filePath == "") { return false; }
+                AE_WARN("Trying to register asset with file path that does not exist! (" << filePath.string() << ")")
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

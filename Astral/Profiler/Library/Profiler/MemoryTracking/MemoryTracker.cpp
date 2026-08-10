@@ -59,7 +59,7 @@ namespace Astral {
     }
 
 
-    void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, AllocatorType allocatorType)
+    void MemoryTracker::AddAllocation(void* pointer, size_t size, MemoryRegion region, MemoryTrackerAllocatorType allocatorType)
     {
 #ifndef ASTRAL_DISABLE_MEMORY_TRACKING
         if (!IsTrackingEnabled()) { return; }

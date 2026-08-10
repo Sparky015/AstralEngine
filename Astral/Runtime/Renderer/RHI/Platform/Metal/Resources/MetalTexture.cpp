@@ -81,7 +81,11 @@ namespace Astral {
 
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
         residencySet->addAllocation(m_Texture);
+        residencySetLock.unlock();
 
         if (desc.ImageData != nullptr && desc.ImageDataLength != 0)
         {
@@ -117,9 +121,13 @@ namespace Astral {
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
         if (m_Texture)
         {
+            std::unique_lock residencySetLock(globalResidencySetMutex);
             residencySet->removeAllocation(m_Texture);
+            residencySetLock.unlock();
         }
 
         DestroySampler();
@@ -332,11 +340,15 @@ namespace Astral {
     {
         if (this != &other)
         {
-            MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
-            MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
             if (m_Texture)
             {
+                MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+                MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+                std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+                std::unique_lock residencySetLock(globalResidencySetMutex);
                 residencySet->removeAllocation(m_Texture);
+                residencySetLock.unlock();
             }
 
             DestroyTexture(); // Clean up old texture and sampler if one exists
@@ -348,6 +360,7 @@ namespace Astral {
 
             m_Width = other.m_Width;
             m_Height = other.m_Height;
+            m_Depth = other.m_Depth;
             m_ImageFormat = other.m_ImageFormat;
             m_ImageUsageFlags = other.m_ImageUsageFlags;
             m_NumLayers = other.m_NumLayers;
@@ -359,6 +372,7 @@ namespace Astral {
             m_SamplerFilter = other.m_SamplerFilter;
             m_SamplerAddressMode = other.m_SamplerAddressMode;
             m_IsAnisotropyEnabled = other.m_IsAnisotropyEnabled;
+            m_IsSwapchainOwned = other.m_IsSwapchainOwned;
 
 
             other.m_Device = nullptr;
@@ -367,6 +381,7 @@ namespace Astral {
 
             other.m_Width = 0;
             other.m_Height = 0;
+            other.m_Depth = 0;
             other.m_ImageFormat = ImageFormat::UNDEFINED;
             other.m_ImageUsageFlags = 0;
             other.m_NumLayers = 0;
@@ -378,6 +393,7 @@ namespace Astral {
             other.m_SamplerFilter = SamplerFilter::LINEAR;
             other.m_SamplerAddressMode = SamplerAddressMode::REPEAT;
             other.m_IsAnisotropyEnabled = false;
+            other.m_IsSwapchainOwned = false;
         }
 
         return *this;
@@ -552,7 +568,7 @@ namespace Astral {
             commandBufferHandle->EndRecording();
 
             CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
-            commandQueueHandle->SubmitSync(commandBufferHandle);
+            commandQueueHandle->Submit(commandBufferHandle);
             commandQueueHandle->WaitIdle();
         }
     }

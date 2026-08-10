@@ -23,8 +23,18 @@ namespace Astral {
         PROFILE_SCOPE("DepthRenderPass::Execute")
 
         CommandBufferHandle commandBuffer = renderGraphPassExecutionContext.CommandBuffer;
-        DescriptorSetHandle materialDescriptorSetSave = nullptr;
-        ShaderHandle materialShaderSave = nullptr;
+
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = nullptr;
+        pipelineConfig.FragmentShader = m_DepthWriteOnlyShader;
+        pipelineConfig.ShaderDataLayout = sharedFrameContext.SceneDataDescriptorSet->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = {};
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_4_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet};
 
         for (uint32 i = 0; i < sharedFrameContext.MainList.Size(); i++)
         {
@@ -32,19 +42,14 @@ namespace Astral {
             Material& material = *sharedFrameContext.MainList.GetMaterials()[i];
 
             if (material.ShaderModel != ShaderModel::PBR) { continue; }
-
             if (material.DescriptorSet == nullptr) { continue; }
-            materialDescriptorSetSave = material.DescriptorSet;
-            material.DescriptorSet = nullptr;
 
-            materialShaderSave = material.FragmentShader;
-            material.FragmentShader = m_DepthWriteOnlyShader;
+            pipelineConfig.VertexBufferLayout = mesh.VertexBuffer->GetBufferLayout();
+            pipelineConfig.VertexShader = mesh.VertexShader;
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, material, mesh, 0, CullMode::NONE, SampleCount::SAMPLE_4_BIT);
+            PipelineStateHandle pipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
 
-            material.DescriptorSet = materialDescriptorSetSave;
-            material.FragmentShader = materialShaderSave;
 
             commandBuffer->BindPipeline(pipeline);
             commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);

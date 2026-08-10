@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "IAllocator.h"
 #include "AllocatorUtils.h"
 #include "FixedIntegerTypes.h"
 #include "Utilities/Asserts.h"
@@ -15,38 +16,64 @@
 #include <memory>
 #include <new>
 
+
 namespace Astral {
 
-    /**@brief A heap-based linear allocator. Deallocate method does nothing. Reset method deallocates the whole memory block.
+    /**
+     * @brief A heap-based linear allocator. Deallocate method does nothing. Reset method deallocates the whole memory block.
      * @warning You have to use the Reset method to Deallocate memory. It deallocates all memory being used.
      *          It's all or nothing.
-     * @thread_safety This class is NOT thread safe. */
-    class LinearAllocator {
+     * @thread_safety This class is not thread safe.
+     */
+    class LinearAllocator : public IAllocator
+    {
     public:
 
         explicit LinearAllocator(size_t memoryBlockSize);
         ~LinearAllocator();
 
-        /**@brief Allocates a memory block of the given size with the given required alignment.
+        /**
+         * @brief Allocates a memory block of the given size with the given required alignment.
          * @param size Size of the requested allocated block
          * @param alignment The alignment requirement for the allocation
-         * @return A pointer to the allocated block if successful and nullptr if the allocation failed.*/
+         * @return A pointer to the allocated block if successful and nullptr if the allocation failed.
+         */
         [[nodiscard]] void* Allocate(size_t size, uint16 alignment);
 
-        /**@brief Resets ALL memory that the allocator owns. Everything gets deallocated. */
-        void Reset();
+        /**
+         * @brief Resets ALL memory that the allocator owns. Everything gets deallocated.
+         */
+        void Reset() override;
 
-        /**@brief Gets the amount of memory currently allocated out by the allocator.
-         * @return The number of bytes currently allocated. */
-        [[nodiscard]] size_t GetUsedBlockSize() const { return m_CurrentMarker - m_StartBlockAddress; }
+        /**
+         * @brief Gets the amount of memory currently allocated out by the allocator.
+         * @return The number of bytes currently allocated.
+         */
+        [[nodiscard]] size_t GetUsedBlockSize() const override;
 
-        /**@brief Gets the memory capacity of the allocator.
-         * @return The max number of bytes the allocator can allocate. */
-        [[nodiscard]] size_t GetCapacity() const { return m_EndBlockAddress - m_StartBlockAddress; }
+        /**
+         * @brief Gets the memory capacity of the allocator.
+         * @return The max number of bytes the allocator can allocate.
+         */
+        [[nodiscard]] size_t GetCapacity() const override;
 
-        /**@brief Doubles the size of the internal buffer of the allocator.
+        /**
+         * @brief Gets the total owned memory size of an allocator (including overhead)
+         * @return The total owned memory size of an allocator (including overhead)
+         */
+        size_t GetOwnedMemorySize() const override;
+
+        /**
+         * @brief Gets the allocator's type
+         * @return The allocator's type
+         */
+        AllocatorType GetAllocatorType() const override;
+
+        /**
+         * @brief Doubles the size of the internal buffer of the allocator.
          * @return True if the resize operation succeeded and false if the allocation failed or if the allocator was not empty.
-         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing. */
+         * @note Only resizes when the allocator is empty. If it is not empty then this function does nothing.
+         */
         [[nodiscard]] bool ResizeBuffer();
 
 
@@ -65,11 +92,14 @@ namespace Astral {
 
     private:
 
-        /** @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
+        /**
+         *  @brief Attempts to resize the internal buffer of the allocator. This should only be used when the
          *         allocator is empty.
          *  @return True if the resize allocation succeeds and false if it fails.
-         *  @remark Function will exit early and maintain current allocator capacity if the resize allocation fails.  */
+         *  @remark Function will exit early and maintain current allocator capacity if the resize allocation fails.
+         */
         [[nodiscard]] bool ResizeInternalMemoryBlock();
+
 
         unsigned char* m_StartBlockAddress;
         unsigned char* m_EndBlockAddress;

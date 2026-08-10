@@ -11,7 +11,7 @@ namespace Astral {
     PoolAllocator::PoolAllocator(size_t blockSize, size_t numberOfBlocks) :
             m_NumberOfBlocks(numberOfBlocks),
             m_BlockSize(blockSize),
-            m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(GetTotalSize())}
+            m_MemoryBlock{(unsigned char*)AllocatorUtils::AllocMaxAlignedBlock(GetCapacity())}
     {
         ASSERT(m_MemoryBlock, "Memory block allocation failed");
 
@@ -23,7 +23,7 @@ namespace Astral {
         }
         *reinterpret_cast<void**>(&m_MemoryBlock[blockSize * (numberOfBlocks - 1)]) = nullptr;
 
-        AllocatorUtils::SetMemoryRegionAccess(m_MemoryBlock, GetTotalSize(), ASANRegionPermission::AccessRestricted);
+        AllocatorUtils::SetMemoryRegionAccess(m_MemoryBlock, PoolAllocator::GetCapacity(), ASANRegionPermission::AccessRestricted);
     }
 
 
@@ -63,13 +63,70 @@ namespace Astral {
     {
         [[unlikely]] if (!elementPtr) return;
         ASSERT(!IsPointerFree(elementPtr), "Double free of memory block pointer has occurred!")
-        ASSERT(elementPtr >= &m_MemoryBlock[0] && elementPtr <= &m_MemoryBlock[GetTotalSize() - 1], "Pointer does not fall within this pool's memory block.")
+        ASSERT(elementPtr >= &m_MemoryBlock[0] && elementPtr <= &m_MemoryBlock[GetCapacity() - 1], "Pointer does not fall within this pool's memory block.")
 
         // Pushing pointer onto the free list
         void* nextPointer = m_FreeListHead; // Can be nullptr
         m_FreeListHead = elementPtr;
         *static_cast<void**>(elementPtr) = nextPointer;
         AllocatorUtils::SetMemoryRegionAccess(elementPtr, GetIndividualBlockSize(), ASANRegionPermission::AccessRestricted);
+    }
+
+
+    void PoolAllocator::Reset()
+    {
+        AllocatorUtils::SetMemoryRegionAccess(m_MemoryBlock, PoolAllocator::GetCapacity(), ASANRegionPermission::AccessGranted);
+
+        m_FreeListHead = &m_MemoryBlock[0];
+        for (size_t i = 0; i < m_NumberOfBlocks - 1; i++)
+        {
+            // The next free element's address is stored in the memory space of the previous free element
+            *reinterpret_cast<void**>(&m_MemoryBlock[m_BlockSize * i]) = &m_MemoryBlock[m_BlockSize * (i + 1)];
+        }
+        *reinterpret_cast<void**>(&m_MemoryBlock[m_BlockSize * (m_NumberOfBlocks - 1)]) = nullptr;
+    }
+
+
+    size_t PoolAllocator::GetUsedBlockSize() const
+    {
+        uint32 usedBlocks = 0;
+
+    }
+
+
+    size_t PoolAllocator::GetCapacity() const noexcept
+    {
+        return m_NumberOfBlocks * m_BlockSize;
+    }
+
+
+    size_t PoolAllocator::GetOwnedMemorySize() const
+    {
+        return GetCapacity();
+    }
+
+
+    AllocatorType PoolAllocator::GetAllocatorType() const
+    {
+        return AllocatorType::POOL;
+    }
+
+
+    bool PoolAllocator::CanAllocateMoreBlocks() const noexcept
+    {
+        return m_FreeListHead != nullptr;
+    }
+
+
+    size_t PoolAllocator::GetNumberOfBlocks() const noexcept
+    {
+        return m_NumberOfBlocks;
+    }
+
+
+    size_t PoolAllocator::GetIndividualBlockSize() const noexcept
+    {
+        return m_BlockSize;
     }
 
 

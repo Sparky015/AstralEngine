@@ -104,9 +104,33 @@ namespace Astral {
     }
 
 
+    AllocatorType StackAllocator::GetAllocatorType() const
+    {
+        return AllocatorType::STACK;
+    }
+
+
     void StackAllocator::Reset()
     {
         m_CurrentMarker = m_StartBlockAddress;
+    }
+
+
+    size_t StackAllocator::GetUsedBlockSize() const
+    {
+        return m_CurrentMarker - m_StartBlockAddress;
+    }
+
+
+    size_t StackAllocator::GetCapacity() const
+    {
+        return m_EndBlockAddress - m_StartBlockAddress;
+    }
+
+
+    size_t StackAllocator::GetOwnedMemorySize() const
+    {
+        return GetCapacity();
     }
 
 

@@ -186,7 +186,7 @@ namespace Astral {
 
         VkPipeline m_Pipeline;
         VkPipelineLayout m_PipelineLayout;
-        std::vector<DescriptorSetLayout> m_DescriptorSetLayout;
+        std::vector<DescriptorSetLayout> m_DescriptorSetLayout{};
         VkPushConstantRange m_PushConstantRange;
 
         UVec2 m_ViewportDimensions;

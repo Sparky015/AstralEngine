@@ -23,6 +23,8 @@
 
 #include "VulkanIndexBuffer.h"
 #include "VulkanTexture.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Vulkan/VulkanRendererContext.h"
 
 namespace Astral {
 
@@ -32,7 +34,6 @@ namespace Astral {
             m_WindowSurface(desc.WindowSurface),
             m_Window(desc.Window),
             m_Device(VK_NULL_HANDLE),
-            m_CommandPool(VK_NULL_HANDLE),
             m_Swapchain(nullptr)
     {
     }
@@ -41,7 +42,6 @@ namespace Astral {
     VulkanDevice::~VulkanDevice()
     {
         DestroySwapchain();
-        DestroyMemoryPool();
         DestroyDevice();
     }
 
@@ -49,7 +49,6 @@ namespace Astral {
     void VulkanDevice::Init()
     {
         CreateDevice();
-        CreateCommandPool();
         m_Swapchain = VulkanDevice::CreateSwapchain(3);
     }
 
@@ -76,9 +75,11 @@ namespace Astral {
 
     GraphicsRef<CommandBuffer> VulkanDevice::AllocateCommandBuffer()
     {
+        VulkanRenderingContext& vulkanRenderingContext = (VulkanRenderingContext&)RendererAPI::GetContext();
+
         VulkanCommandBufferDesc vulkanCommandBufferDesc = {
             .Device = m_Device,
-            .CommandPool = m_CommandPool
+            .CommandPool = vulkanRenderingContext.GetThreadCommandPool()
         };
 
         return CreateGraphicsRef<VulkanCommandBuffer>(vulkanCommandBufferDesc);
@@ -87,29 +88,15 @@ namespace Astral {
 
     GraphicsRef<CommandQueue> VulkanDevice::GetPrimaryCommandQueue()
     {
-        VulkanCommandQueueDesc commandQueueDesc = {
-            .Device = m_Device,
-            .Swapchain = *m_Swapchain,
-            .QueueFamilyIndex = m_QueueFamilyIndex,
-            .QueueIndex = 0
-        };
-
-        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+        VulkanRenderingContext& vulkanRenderingContext = (VulkanRenderingContext&)RendererAPI::GetContext();
+        return vulkanRenderingContext.GetPrimaryCommandQueue();
     }
 
 
     CommandQueueHandle VulkanDevice::GetAsyncCommandQueue()
     {
-        uint32 asyncQueueIndex = 1;
-        while (m_PhysicalDevice.queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
-
-        VulkanCommandQueueDesc commandQueueDesc = {
-            .Device = m_Device,
-            .Swapchain = *m_Swapchain,
-            .QueueFamilyIndex = m_QueueFamilyIndex,
-            .QueueIndex = asyncQueueIndex
-        };
-        return CreateGraphicsRef<VulkanCommandQueue>(commandQueueDesc);
+        VulkanRenderingContext& vulkanRenderingContext = (VulkanRenderingContext&)RendererAPI::GetContext();
+        return vulkanRenderingContext.GetAsyncCommandQueue();
     }
 
 
@@ -592,26 +579,6 @@ namespace Astral {
     void VulkanDevice::DestroyDevice()
     {
         vkDestroyDevice(m_Device, nullptr);
-    }
-
-
-    void VulkanDevice::CreateCommandPool()
-    {
-        VkCommandPoolCreateInfo commandPoolCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-            .queueFamilyIndex = m_QueueFamilyIndex
-        };
-
-        VkResult result = vkCreateCommandPool(m_Device, &commandPoolCreateInfo, nullptr, &m_CommandPool);
-        ASSERT(result == VK_SUCCESS, "Vulkan command pool failed to create!");
-    }
-
-
-    void VulkanDevice::DestroyMemoryPool()
-    {
-        vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
     }
 
 }

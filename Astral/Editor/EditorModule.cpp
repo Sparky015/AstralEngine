@@ -34,9 +34,6 @@ namespace Astral {
             window.SetWindowName("Astral Editor");
             window.SetWindowDimensions(1600, 900);
             m_Editor.Init();
-
-
-            Astral::AssetRegistry registry = Engine::Get().GetAssetManager().GetRegistry();
         }
 
         void Update(const Astral::DeltaTime& deltaTime) override

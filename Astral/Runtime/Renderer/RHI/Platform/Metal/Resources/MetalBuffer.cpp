@@ -234,7 +234,7 @@ namespace Astral {
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle commandQueueHandle = RendererAPI::GetDevice().GetPrimaryCommandQueue();
-        commandQueueHandle->SubmitSync(commandBufferHandle);
+        commandQueueHandle->Submit(commandBufferHandle);
         commandQueueHandle->WaitIdle();
     }
 
@@ -295,9 +295,14 @@ namespace Astral {
         *outBuffer = m_Device->newBuffer(bufferLength, resourceOptions);
         ASSERT(*outBuffer, "MetalBuffer failed to be created!")
 
+
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
         residencySet->addAllocation(*outBuffer);
+        residencySetLock.unlock();
     }
 
 
@@ -307,7 +312,11 @@ namespace Astral {
         {
             MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
             MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+            std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+            std::unique_lock residencySetLock(globalResidencySetMutex);
             residencySet->removeAllocation(buffer);
+            residencySetLock.unlock();
 
             buffer->release();
         }

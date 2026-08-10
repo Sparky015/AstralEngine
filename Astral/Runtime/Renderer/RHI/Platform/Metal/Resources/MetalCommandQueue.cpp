@@ -20,13 +20,21 @@ namespace Astral {
 
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* globalResidencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
         m_Queue->addResidencySet(globalResidencySet);
-        globalResidencySet->commit();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        globalResidencySet->commit(); // This is not thread safe
+        residencySetLock.unlock();
+
+
+        // This is the only place where the swapchain residency set is accessed so no lock
 
         CA::MetalLayer* swapchainMetalLayer = (CA::MetalLayer*)RendererAPI::GetDevice().GetSwapchain().GetNativeHandle();
         MTL::ResidencySet* swapchainResidencySet = swapchainMetalLayer->residencySet();
         m_Queue->addResidencySet(swapchainResidencySet);
-        swapchainResidencySet->commit();
+        swapchainResidencySet->commit(); // This is not thread safe
     }
 
 
@@ -40,7 +48,12 @@ namespace Astral {
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
-        residencySet->commit();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        residencySet->commit(); // This is not thread safe
+        residencySetLock.unlock();
+
 
         MTL::Drawable* drawable = (MTL::Drawable*)renderTargetHandle->GetNativeImage();
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
@@ -60,24 +73,30 @@ namespace Astral {
             }
 
             lock.unlock();
-            m_ActiveCommandBufferTrackingCondition.notify_one();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
         });
+
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+        m_ActiveCommandBuffers.insert(commandBuffer);
+        lock.unlock();
 
         m_Queue->wait(drawable);
         m_Queue->commit(&commandBuffer, 1, commitOptions);
 
         commitOptions->release();
 
-        std::lock_guard lock(m_ActiveCommandBufferTrackingLock);
-        m_ActiveCommandBuffers.insert(commandBuffer);
     }
 
 
-    void MetalCommandQueue::SubmitSync(CommandBufferHandle commandBufferHandle)
+    void MetalCommandQueue::Submit(CommandBufferHandle commandBufferHandle)
     {
         MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
         MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
         residencySet->commit();
+        residencySetLock.unlock();
 
         MTL4::CommandBuffer* commandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
 
@@ -96,14 +115,126 @@ namespace Astral {
             }
 
             lock.unlock();
-            m_ActiveCommandBufferTrackingCondition.notify_one();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
         });
-
-        m_Queue->commit(&commandBuffer, 1, commitOptions);
-        commitOptions->release();
 
         std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
         m_ActiveCommandBuffers.insert(commandBuffer);
+        lock.unlock();
+
+        m_Queue->commit(&commandBuffer, 1, commitOptions);
+        commitOptions->release();
+    }
+
+
+    void MetalCommandQueue::Submit(const std::vector<CommandBufferHandle>& commandBufferHandles, RenderTargetHandle renderTargetHandle)
+    {
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        residencySet->commit();
+        residencySetLock.unlock();
+
+        std::vector<MTL4::CommandBuffer*> mtlCommandBuffers = {};
+        mtlCommandBuffers.reserve(commandBufferHandles.size());
+
+        for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
+        {
+            MTL4::CommandBuffer* vkCommandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+            mtlCommandBuffers.push_back(vkCommandBuffer);
+        }
+
+        MTL::Drawable* drawable = (MTL::Drawable*)renderTargetHandle->GetNativeImage();
+
+        MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
+        commitOptions->addFeedbackHandler([this, mtlCommandBuffers](MTL4::CommitFeedback* commitFeedback) {
+            std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
+            for (MTL4::CommandBuffer* mtlCommandBuffer : mtlCommandBuffers)
+            {
+                if (m_ActiveCommandBuffers.contains(mtlCommandBuffer))
+                {
+                    m_ActiveCommandBuffers.erase(mtlCommandBuffer);
+                }
+            }
+
+
+            if (commitFeedback->error())
+            {
+                AE_WARN("Commit Feedback Error: " << commitFeedback->error()->localizedDescription()->utf8String());
+            }
+
+            lock.unlock();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
+        });
+
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
+        for (MTL4::CommandBuffer* mtlCommandBuffer : mtlCommandBuffers)
+        {
+            m_ActiveCommandBuffers.insert(mtlCommandBuffer);
+        }
+        lock.unlock();
+
+        m_Queue->wait(drawable);
+        m_Queue->commit(mtlCommandBuffers.data(), mtlCommandBuffers.size(), commitOptions);
+        commitOptions->release();
+    }
+
+
+    void MetalCommandQueue::Submit(const std::vector<CommandBufferHandle>& commandBufferHandles)
+    {
+        MetalRenderingContext& renderingContext = (MetalRenderingContext&)RendererAPI::GetContext();
+        MTL::ResidencySet* residencySet = renderingContext.GetGlobalResidencySet();
+        std::mutex& globalResidencySetMutex = renderingContext.GetGlobalResidencySetMutex();
+
+        std::unique_lock residencySetLock(globalResidencySetMutex);
+        residencySet->commit();
+        residencySetLock.unlock();
+
+        std::vector<MTL4::CommandBuffer*> mtlCommandBuffers = {};
+        mtlCommandBuffers.reserve(commandBufferHandles.size());
+
+        for (const CommandBufferHandle& commandBufferHandle : commandBufferHandles)
+        {
+            MTL4::CommandBuffer* vkCommandBuffer = (MTL4::CommandBuffer*)commandBufferHandle->GetNativeHandle();
+            mtlCommandBuffers.push_back(vkCommandBuffer);
+        }
+
+        MTL4::CommitOptions* commitOptions = MTL4::CommitOptions::alloc()->init();
+        commitOptions->addFeedbackHandler([this, mtlCommandBuffers](MTL4::CommitFeedback* commitFeedback) {
+            std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
+            for (MTL4::CommandBuffer* mtlCommandBuffer : mtlCommandBuffers)
+            {
+                if (m_ActiveCommandBuffers.contains(mtlCommandBuffer))
+                {
+                    m_ActiveCommandBuffers.erase(mtlCommandBuffer);
+                }
+            }
+
+
+            if (commitFeedback->error())
+            {
+                AE_WARN("Commit Feedback Error: " << commitFeedback->error()->localizedDescription()->utf8String());
+            }
+
+            lock.unlock();
+            m_ActiveCommandBufferTrackingCondition.notify_all();
+        });
+
+        std::unique_lock lock(m_ActiveCommandBufferTrackingLock);
+
+        for (MTL4::CommandBuffer* mtlCommandBuffer : mtlCommandBuffers)
+        {
+            m_ActiveCommandBuffers.insert(mtlCommandBuffer);
+        }
+        lock.unlock();
+
+        m_Queue->commit(mtlCommandBuffers.data(), mtlCommandBuffers.size(), commitOptions);
+        commitOptions->release();
     }
 
 

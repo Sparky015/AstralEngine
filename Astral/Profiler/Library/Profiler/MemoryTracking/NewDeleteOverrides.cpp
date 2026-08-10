@@ -3,19 +3,16 @@
 //
 
 #include "NewDeleteOverrides.h"
-
+#include "MemoryTracker.h"
 
 #include <cstdlib>
 #include <iostream>
-
-#include "MemoryTracker.h"
-
 
 void* operator new(std::size_t size)
 {
     void* pointer = malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Astral::MemoryTracker::Get().AddAllocation(pointer, size, Astral::MemoryRegion::UNKNOWN, Astral::AllocatorType::NEW_OPERATOR);
+    Astral::MemoryTracker::Get().AddAllocation(pointer, size, Astral::MemoryRegion::UNKNOWN, Astral::MemoryTrackerAllocatorType::NEW_OPERATOR);
     return pointer;
 }
 
@@ -24,7 +21,7 @@ void* operator new[](std::size_t size)
 {
     void* pointer = malloc(size);
     if (!pointer) throw std::bad_alloc();
-    Astral::MemoryTracker::Get().AddAllocation(pointer, size, Astral::MemoryRegion::UNKNOWN, Astral::AllocatorType::NEW_OPERATOR);
+    Astral::MemoryTracker::Get().AddAllocation(pointer, size, Astral::MemoryRegion::UNKNOWN, Astral::MemoryTrackerAllocatorType::NEW_OPERATOR);
     return pointer;
 }
 

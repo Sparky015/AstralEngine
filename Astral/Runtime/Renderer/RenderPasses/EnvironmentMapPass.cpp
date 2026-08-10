@@ -35,20 +35,27 @@ namespace Astral {
         Scene& activeScene = Engine::Get().GetSceneManager().GetActiveScene();
 
         Ref<Mesh> cubemapMesh = registry.CreateAsset<Mesh>("Meshes/Cube.obj");
-        cubemapMesh->VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");
-        sharedFrameContext.MainList.GetMeshes().push_back(cubemapMesh); // Hold onto reference so it is not destroyed early
 
-        Material environmentMapMaterial{};
-        environmentMapMaterial.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
-        environmentMapMaterial.DescriptorSet = sharedFrameContext.EnvironmentMapDescriptorSet;
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = registry.CreateAsset<Shader>("Shaders/Cubemap.vert");;
+        pipelineConfig.FragmentShader = registry.CreateAsset<Shader>("Shaders/EnvironmentMap.frag");
+        pipelineConfig.ShaderDataLayout = sharedFrameContext.EnvironmentMapDescriptorSet->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = cubemapMesh->VertexBuffer->GetBufferLayout();
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::NONE;
+        pipelineConfig.MSAASampleCount = m_MSAASampleCount;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {sharedFrameContext.SceneDataDescriptorSet, sharedFrameContext.EnvironmentMapDescriptorSet};
+
 
         PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-        PipelineStateHandle cubemapPipeline = pipelineStateCache.GetGraphicsPipeline(renderGraphPassExecutionContext.RenderPass, environmentMapMaterial, *cubemapMesh, 0, CullMode::NONE, m_MSAASampleCount);
+        PipelineStateHandle cubemapPipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
         commandBuffer->BindPipeline(cubemapPipeline);
         commandBuffer->SetViewportAndScissor(renderGraphPassExecutionContext.ViewportSize);
 
         commandBuffer->BindDescriptorSet(sharedFrameContext.SceneDataDescriptorSet, 0);
-        commandBuffer->BindDescriptorSet(environmentMapMaterial.DescriptorSet, 1);
+        commandBuffer->BindDescriptorSet(sharedFrameContext.EnvironmentMapDescriptorSet, 1);
 
         commandBuffer->BindVertexBuffer(cubemapMesh->VertexBuffer);
         commandBuffer->BindIndexBuffer(cubemapMesh->IndexBuffer);

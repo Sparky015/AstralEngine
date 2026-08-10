@@ -55,6 +55,7 @@ namespace Astral {
         PROFILE_SCOPE("RenderingSystem::SubmitMeshComponents")
 
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+        AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
 
         ECS::ComponentView<MeshComponent>& meshDisplay = ecs.GetView<MeshComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();
@@ -66,6 +67,18 @@ namespace Astral {
 
             const TransformComponent& transformComponent = transformDisplay[entityID];
             MeshComponent& meshComponent = meshDisplay[entityID];
+
+            // Check if the material or mesh is a placeholder for an async asset load
+            if (assetRegistry.IsAsyncLoadPlaceholder(meshComponent.Material))
+            {
+                if (!assetRegistry.IsAsyncLoadRetrievalReady(meshComponent.Material)) { continue; }
+                meshComponent.Material = assetRegistry.FetchAsyncLoadResult<Material>(meshComponent.Material);
+            }
+            if (assetRegistry.IsAsyncLoadPlaceholder(meshComponent.MeshData))
+            {
+                if (!assetRegistry.IsAsyncLoadRetrievalReady(meshComponent.MeshData)) { continue; }
+                meshComponent.MeshData = assetRegistry.FetchAsyncLoadResult<Mesh>(meshComponent.MeshData);
+            }
 
             if (meshComponent.Material == nullptr) { continue; }
             if (meshComponent.MeshData == nullptr) { continue; }
@@ -82,6 +95,7 @@ namespace Astral {
         PROFILE_SCOPE("RenderingSystem::SubmitSpriteComponents")
 
         ECS& ecs = Engine::Get().GetSceneManager().GetECS();
+        AssetRegistry& assetRegistry = Engine::Get().GetAssetManager().GetRegistry();
 
         ECS::ComponentView<SpriteComponent>& spriteDisplay = ecs.GetView<SpriteComponent>();
         const ECS::ComponentView<TransformComponent>& transformDisplay = ecs.GetView<TransformComponent>();

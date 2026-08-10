@@ -12,6 +12,8 @@
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
 #include "Common/VkEnumConversions.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Resources/VulkanCommandQueue.h"
 
 #ifdef ASTRAL_VULKAN_AVAILABLE
 #endif
@@ -52,6 +54,7 @@ namespace Astral {
 
         CreateDevice();
         m_PipelineStateCache = CreateGraphicsOwnedPtr<PipelineStateCache>();
+        CreateCommandQueues();
     }
 
 
@@ -59,8 +62,11 @@ namespace Astral {
     {
         PROFILE_SCOPE("VulkanRenderingContext::Shutdown");
 
+        DestroyCommandQueues();
         m_PipelineStateCache.reset();
+        ReleaseAllThreadCommandPools();
         DestroyDevice();
+
         DestroyWindowSurface();
         DestroyDebugMessageCallback();
         DestroyInstance();
@@ -293,6 +299,49 @@ namespace Astral {
     }
 
 
+    CommandQueueHandle VulkanRenderingContext::GetPrimaryCommandQueue()
+    {
+        return m_PrimaryCommandQueue;
+    }
+
+
+    CommandQueueHandle VulkanRenderingContext::GetAsyncCommandQueue()
+    {
+        return m_AsyncCommandQueue;
+    }
+
+
+    VkCommandPool VulkanRenderingContext::GetThreadCommandPool()
+    {
+        std::lock_guard lock(m_CommandPoolsMutex); // Lock in case of a thread adding new command allocator
+
+        std::thread::id executingThreadID = std::this_thread::get_id();
+        if (!m_ThreadCommandPools.contains(executingThreadID))
+        {
+            // Create and populate a new command allocator pool for this thread
+            VkDevice device = (VkDevice)m_Device->GetNativeHandle();
+
+            VkCommandPoolCreateInfo commandPoolCreateInfo = {
+                .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+                .pNext = nullptr,
+                .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+                .queueFamilyIndex = m_QueueFamilyIndex
+            };
+
+            VkCommandPool newThreadCommandPool = nullptr;
+            VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &newThreadCommandPool);
+            ASSERT(result == VK_SUCCESS, "Vulkan command pool failed to create!");
+
+            m_ThreadCommandPools.emplace(executingThreadID, newThreadCommandPool);
+        }
+
+        // Try to acquire a command allocator from this thread's command pool
+        VkCommandPool commandPool = m_ThreadCommandPools.at(executingThreadID);
+
+        return commandPool;
+    }
+
+
     PipelineStateCache& VulkanRenderingContext::GetPipelineStateCache()
     {
         return *m_PipelineStateCache;
@@ -347,6 +396,52 @@ namespace Astral {
         }
 
         return VK_FALSE;
+    }
+
+
+    void VulkanRenderingContext::CreateCommandQueues()
+    {
+        VkDevice vkDevice = (VkDevice)m_Device->GetNativeHandle();
+        Swapchain& swapchain = RendererAPI::GetDevice().GetSwapchain();
+
+        VulkanCommandQueueDesc primaryCommandQueueDesc = {
+            .Device = vkDevice,
+            .Swapchain = swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = 0
+        };
+
+        m_PrimaryCommandQueue = CreateGraphicsRef<VulkanCommandQueue>(primaryCommandQueueDesc);
+
+        uint32 asyncQueueIndex = 1;
+        while (m_PhysicalDevices.SelectedDevice().queueFamilyProperties[m_QueueFamilyIndex].queueCount <= asyncQueueIndex) { asyncQueueIndex--; }
+
+        VulkanCommandQueueDesc asyncCommandQueueDesc = {
+            .Device = vkDevice,
+            .Swapchain = swapchain,
+            .QueueFamilyIndex = m_QueueFamilyIndex,
+            .QueueIndex = asyncQueueIndex
+        };
+
+        m_AsyncCommandQueue = CreateGraphicsRef<VulkanCommandQueue>(asyncCommandQueueDesc);
+    }
+
+
+    void VulkanRenderingContext::DestroyCommandQueues()
+    {
+        m_PrimaryCommandQueue.reset();
+        m_AsyncCommandQueue.reset();
+    }
+
+
+    void VulkanRenderingContext::ReleaseAllThreadCommandPools()
+    {
+        VkDevice device = (VkDevice)m_Device->GetNativeHandle();
+
+        for (auto& [threadID, commandAllocatorPool] : m_ThreadCommandPools)
+        {
+            vkDestroyCommandPool(device, commandAllocatorPool, nullptr);
+        }
     }
 
 }
