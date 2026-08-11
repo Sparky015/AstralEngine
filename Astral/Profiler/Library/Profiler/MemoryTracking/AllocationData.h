@@ -23,6 +23,7 @@ namespace Astral {
         ENTITY_COMPONENT_SYSTEM,
         DEBUG,
         CORE,
+        GPU,
         UNKNOWN,
 
         MEMORY_REGION_END
@@ -39,6 +40,7 @@ namespace Astral {
             case ENTITY_COMPONENT_SYSTEM: return "ECS";
             case DEBUG: return "Debug";
             case CORE: return "Core";
+            case GPU: return "GPU";
             case UNKNOWN: return "Unknown Region";
             case MEMORY_REGION_END: return "Enum Memory Region End Marker";
             default: AE_ERROR("Memory region value not valid!");
@@ -58,6 +60,7 @@ namespace Astral {
         ALIGNED_ALLOCATOR,
         NEW_OPERATOR,
         MALLOC,
+        GPU_DRIVER_ALLOCATOR,
 
         ALLOCATOR_TYPE_END
     };

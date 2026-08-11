@@ -91,6 +91,9 @@ namespace Astral {
         {
             InitializeTextureData(desc);
         }
+
+        MTL::ResourceID gpuResourceID = m_Texture->gpuResourceID();
+        MemoryTracker::Get().AddAllocation((void*)gpuResourceID._impl, m_Texture->allocatedSize(), MemoryRegion::GPU, MemoryTrackerAllocatorType::GPU_DRIVER_ALLOCATOR);
     }
 
 
@@ -125,6 +128,9 @@ namespace Astral {
 
         if (m_Texture)
         {
+            MTL::ResourceID gpuResourceID = m_Texture->gpuResourceID();
+            MemoryTracker::Get().RemoveAllocation((void*)gpuResourceID._impl);
+
             std::unique_lock residencySetLock(globalResidencySetMutex);
             residencySet->removeAllocation(m_Texture);
             residencySetLock.unlock();
