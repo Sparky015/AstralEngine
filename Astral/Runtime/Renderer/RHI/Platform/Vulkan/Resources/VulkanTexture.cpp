@@ -22,9 +22,9 @@ namespace Astral {
     VulkanTexture::VulkanTexture(const VulkanTextureDesc& desc) :
 		m_DeviceManager(desc.VulkanDevice),
         m_Device(desc.Device),
-        m_Image(),
-        m_Sampler(),
-        m_ImageView(),
+        m_Image(VK_NULL_HANDLE),
+        m_Sampler(VK_NULL_HANDLE),
+        m_ImageView(VK_NULL_HANDLE),
         m_ImageWidth(desc.ImageWidth),
         m_ImageHeight(desc.ImageHeight),
         m_ImageDepth(1),
@@ -61,23 +61,27 @@ namespace Astral {
     			TransitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, m_CurrentLayout);
     		}
     	}
+
+        void* GPUAddressTrackingAlias = &m_ImageMemory;
+        MemoryTracker::Get().AddAllocation(GPUAddressTrackingAlias, m_AllocationSize, MemoryRegion::GPU, MemoryTrackerAllocatorType::GPU_DRIVER_ALLOCATOR);
     }
 
 
     VulkanTexture::VulkanTexture(VkDevice device, VkImage image, VkImageView imageView, ImageLayout layout, ImageFormat format, uint32 width, uint32 height) :
 		m_DeviceManager(nullptr),
 		m_Device(device),
-		m_PhysicalDeviceMemoryProperties(),
+        m_Image(image),
+        m_Sampler(VK_NULL_HANDLE),
+        m_ImageView(imageView),
 		m_ImageWidth(width),
 		m_ImageHeight(height),
 		m_Format(ConvertImageFormatToVkFormat(format)),
 		m_CurrentLayout(ConvertImageLayoutToVkImageLayout(layout)),
-		m_Image(image),
-		m_ImageView(imageView),
-		m_Sampler(),
+		m_IsSwapchainOwned(true),
         m_NumLayers(1),
 		m_TextureType(TextureType::IMAGE_2D),
-		m_IsSwapchainOwned(true)
+		m_PhysicalDeviceMemoryProperties()
+
     {
     	CreateImageSampler(SamplerFilter::LINEAR, SamplerAddressMode::REPEAT, false);
 
@@ -107,6 +111,9 @@ namespace Astral {
     		DestroyImageView();
     		DestroyTexture();
     		FreeTextureMemory();
+
+    	    void* GPUAddressTrackingAlias = &m_ImageMemory;
+        	MemoryTracker::Get().RemoveAllocation(GPUAddressTrackingAlias);
     	}
     }
 
