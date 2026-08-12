@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Core/Memory/Pools/ObjectPool.h"
+#include "Core/Memory/Allocators/SlabAllocator.h"
 #include <cstring>
 #include <unordered_set>
 
@@ -28,32 +28,32 @@ private:
     int a;
 };
 
-class ObjectPoolTest : public ::testing::Test
+class SlabAllocatorTest : public ::testing::Test
 {
 public:
     static constexpr int DEFAULT_ALLOCATION_SIZE = 3;
-    Astral::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator = Astral::ObjectPool<TestStructOne, DEFAULT_ALLOCATION_SIZE>{};
+    Astral::SlabAllocator<TestStructOne, DEFAULT_ALLOCATION_SIZE> testAllocator = Astral::SlabAllocator<TestStructOne, DEFAULT_ALLOCATION_SIZE>{};
 };
 
 
-TEST_F(ObjectPoolTest, InitWithElementConstructor_CompilesWithNoDefaultConstructor)
+TEST_F(SlabAllocatorTest, InitWithElementConstructor_CompilesWithNoDefaultConstructor)
 {
     // Default pool allocator holds 3 instances of TestStruct
     NonDefaultConstructorClass testElement = NonDefaultConstructorClass(152);
-    Astral::ObjectPool<NonDefaultConstructorClass, 2> testAllocator = Astral::ObjectPool<NonDefaultConstructorClass, 2>(testElement);
-    NonDefaultConstructorClass* object1Ptr = testAllocator.Acquire();
-    NonDefaultConstructorClass* object2Ptr = testAllocator.Acquire();
+    Astral::SlabAllocator<NonDefaultConstructorClass, 2> testAllocator = Astral::SlabAllocator<NonDefaultConstructorClass, 2>(testElement);
+    NonDefaultConstructorClass* object1Ptr = testAllocator.Allocate();
+    NonDefaultConstructorClass* object2Ptr = testAllocator.Allocate();
 
     EXPECT_EQ(object1Ptr->GetElementValue(), object2Ptr->GetElementValue());
 }
 
-TEST_F(ObjectPoolTest, Allocate_ReturnsNullptrWhenOutOfSpace)
+TEST_F(SlabAllocatorTest, Allocate_ReturnsNullptrWhenOutOfSpace)
 {
     // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Acquire();
-    TestStructOne* testStructPtr2 = testAllocator.Acquire();
-    TestStructOne* testStructPtr3 = testAllocator.Acquire();
-    TestStructOne* testStructPtr4 = testAllocator.Acquire();
+    TestStructOne* testStructPtr = testAllocator.Allocate();
+    TestStructOne* testStructPtr2 = testAllocator.Allocate();
+    TestStructOne* testStructPtr3 = testAllocator.Allocate();
+    TestStructOne* testStructPtr4 = testAllocator.Allocate();
 
     EXPECT_NE(testStructPtr, nullptr);
     EXPECT_NE(testStructPtr2, nullptr);
@@ -63,12 +63,12 @@ TEST_F(ObjectPoolTest, Allocate_ReturnsNullptrWhenOutOfSpace)
 }
 
 
-TEST_F(ObjectPoolTest, Allocate_InstanceKeepsStateOverAllocates)
+TEST_F(SlabAllocatorTest, Allocate_InstanceKeepsStateOverAllocates)
 {
     // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Acquire();
-    [[maybe_unused]] TestStructOne* testStructPtr2 = testAllocator.Acquire();
-    [[maybe_unused]] TestStructOne* testStructPtr3 = testAllocator.Acquire();
+    TestStructOne* testStructPtr = testAllocator.Allocate();
+    [[maybe_unused]] TestStructOne* testStructPtr2 = testAllocator.Allocate();
+    [[maybe_unused]] TestStructOne* testStructPtr3 = testAllocator.Allocate();
 
     // testAllocator now has no more instances to allocate
 
@@ -81,11 +81,11 @@ TEST_F(ObjectPoolTest, Allocate_InstanceKeepsStateOverAllocates)
     *testStructPtr = differentTestStruct;
 
     // Free only one instance
-    testAllocator.Release(testStructPtr);
+    testAllocator.Free(testStructPtr);
     testStructPtr = nullptr;
 
     // Now only one instance is available and it was the previous instance freed
-    TestStructOne* newTestStructPtr = testAllocator.Acquire();
+    TestStructOne* newTestStructPtr = testAllocator.Allocate();
 
     // Now compare the instance to see if it is still the values form differentTestStruct. They should be the same
     // because the instances should not be reset.
@@ -94,32 +94,32 @@ TEST_F(ObjectPoolTest, Allocate_InstanceKeepsStateOverAllocates)
     EXPECT_EQ(newTestStructPtr->c, differentTestStruct.c);
 }
 
-TEST_F(ObjectPoolTest, Free_CanFreeInAnyOrder)
+TEST_F(SlabAllocatorTest, Free_CanFreeInAnyOrder)
 {
     // Default pool allocator holds 3 instances of TestStruct
-    TestStructOne* testStructPtr = testAllocator.Acquire();
-    TestStructOne* testStructPtr2 = testAllocator.Acquire();
-    TestStructOne* testStructPtr3 = testAllocator.Acquire();
+    TestStructOne* testStructPtr = testAllocator.Allocate();
+    TestStructOne* testStructPtr2 = testAllocator.Allocate();
+    TestStructOne* testStructPtr3 = testAllocator.Allocate();
 
-    testAllocator.Release(testStructPtr);
+    testAllocator.Free(testStructPtr);
 
     // Should be able to allocate in freed slot
-    TestStructOne* testStructPtr4 = testAllocator.Acquire();
+    TestStructOne* testStructPtr4 = testAllocator.Allocate();
     EXPECT_EQ(testStructPtr, testStructPtr4);
 
-    testAllocator.Release(testStructPtr3);
-    testAllocator.Release(testStructPtr2);
-    testAllocator.Release(testStructPtr4);
+    testAllocator.Free(testStructPtr3);
+    testAllocator.Free(testStructPtr2);
+    testAllocator.Free(testStructPtr4);
 }
 
-TEST_F(ObjectPoolTest, Allocate_DoesNotReuseUnfreeddAddresses)
+TEST_F(SlabAllocatorTest, Allocate_DoesNotReuseUnfreeddAddresses)
 {
     std::unordered_set<TestStructOne*> allocatedAddresses;
 
     // Allocate all slots
-    TestStructOne* ptr1 = testAllocator.Acquire();
-    TestStructOne* ptr2 = testAllocator.Acquire();
-    TestStructOne* ptr3 = testAllocator.Acquire();
+    TestStructOne* ptr1 = testAllocator.Allocate();
+    TestStructOne* ptr2 = testAllocator.Allocate();
+    TestStructOne* ptr3 = testAllocator.Allocate();
 
     // Track allocated addresses
     allocatedAddresses.insert(ptr1);
@@ -127,11 +127,11 @@ TEST_F(ObjectPoolTest, Allocate_DoesNotReuseUnfreeddAddresses)
     allocatedAddresses.insert(ptr3);
 
     // Free middle pointer
-    testAllocator.Release(ptr2);
+    testAllocator.Free(ptr2);
     allocatedAddresses.erase(ptr2);
 
     // New allocation should return ptr2's address
-    TestStructOne* newPtr = testAllocator.Acquire();
+    TestStructOne* newPtr = testAllocator.Allocate();
     EXPECT_EQ(newPtr, ptr2);
 
     // Verify no addresses are reused
@@ -139,11 +139,11 @@ TEST_F(ObjectPoolTest, Allocate_DoesNotReuseUnfreeddAddresses)
     allocatedAddresses.insert(newPtr);
 
     // Attempt allocation when full
-    EXPECT_EQ(testAllocator.Acquire(), nullptr);
+    EXPECT_EQ(testAllocator.Allocate(), nullptr);
 
     // Cleanup
     for (auto ptr : allocatedAddresses) {
-        testAllocator.Release(ptr);
+        testAllocator.Free(ptr);
     }
 }
 

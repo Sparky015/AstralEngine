@@ -14,11 +14,11 @@ set(CORE_SOURCE
 
     Memory/Allocators/STLAllocators/STLLinearAllocator.h
     Memory/Allocators/STLAllocators/STLStackAllocator.h
-        Memory/Allocators/AlignedAllocator.cpp
+    Memory/Allocators/AlignedAllocator.cpp
     Memory/Allocators/AlignedAllocator.h
     Memory/Allocators/AllocatorUtils.cpp
     Memory/Allocators/AllocatorUtils.h
-        Memory/Allocators/LinearAllocation.cpp
+    Memory/Allocators/LinearAllocation.cpp
     Memory/Allocators/LinearAllocator.h
     Memory/Allocators/PoolAllocator.cpp
     Memory/Allocators/PoolAllocator.h
@@ -26,7 +26,7 @@ set(CORE_SOURCE
     Memory/Allocators/RingAllocator.h
     Memory/Allocators/StackAllocator.cpp
     Memory/Allocators/StackAllocator.h
-        Memory/Pools/ObjectPool.h
+    Memory/Allocators/SlabAllocator.h
 
     Time/Clock.cpp
     Time/Clock.h
@@ -61,6 +61,7 @@ set(CORE_SOURCE
     Memory/Allocators/IAllocator.h
     Memory/Allocators/EngineMalloc.cpp
     Memory/Allocators/EngineMalloc.h
+        Memory/Allocators/SlabAllocator_Impl.h
 )
 
 set(UNIX_PLATFORM_FILES
