@@ -5,8 +5,6 @@
 ---------------
 Welcome to the Astral project codebase!
 
-![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
-
 ![PancakeWithSmore](Documentation/Assets/Videos/PancakesWithSmore_Short.gif)
 
 ### Notable Features
@@ -29,6 +27,8 @@ Welcome to the Astral project codebase!
 Find more details on the above features [here](Documentation/FeatureDetails.md)
 
 Visit my website for pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
+
+![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
 
 ### How to Build
 
