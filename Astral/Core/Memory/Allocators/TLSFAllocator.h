@@ -258,7 +258,7 @@ namespace Astral {
         /// Defines the minimum block size. For implementation reasons, the MBS constant is set to 16 bytes.
         static constexpr uint32 m_MinimumBlockSize = 16;
 
-        std::unordered_map<void*, size_t> m_DebugBlocks;
+        // std::unordered_map<BlockHeader*, size_t> m_DebugBlocks;
         size_t m_DebugInitialAlignmentBytes = 0;
         void AssertMemoryUsage();
     };
