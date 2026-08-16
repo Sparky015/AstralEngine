@@ -40,10 +40,11 @@ TEST_F(TLSFAllocatorTest, Fuzz)
     Astral::TLSFAllocator allocator = Astral::TLSFAllocator(1'000'000);
 
     void* pointers[10000];
-    void* pointers2[10000];
-    for (size_t j = 0; j < 500; j++)
+    static constexpr int allocFreeIterations = 1000;
+
+    for (size_t j = 0; j < 5000; j++)
     {
-        for (uint32 i = 0; i < 100; i++)
+        for (uint32 i = 0; i < allocFreeIterations; i++)
         {
             int allocationSize  = std::rand() % 1024;
             pointers[i] = allocator.Allocate(allocationSize);
@@ -53,22 +54,7 @@ TEST_F(TLSFAllocatorTest, Fuzz)
             }
         }
 
-        for (uint32 i = 0; i < 100; i++)
-        {
-            int allocationSize  = std::rand() % 1024;
-            pointers2[i] = allocator.Allocate(allocationSize);
-            if (pointers2[i])
-            {
-                memset(pointers2[i], 191, allocationSize);
-            }
-        }
-
-        for (uint32 i = 0; i < 100; i++)
-        {
-            allocator.Free(pointers2[i]);
-        }
-
-        for (uint32 i = 0; i < 100; i++)
+        for (uint32 i = 0; i < allocFreeIterations; i++)
         {
             allocator.Free(pointers[i]);
         }
