@@ -9,7 +9,7 @@
 namespace Astral {
 
     EngineMalloc::EngineMalloc() :
-        m_TLSFAllocator(TLSFAllocator(4'000'000))
+        m_TLSFAllocator(TLSFAllocator(50'000'000))
     {
     }
 
@@ -23,6 +23,11 @@ namespace Astral {
 
     void* EngineMalloc::Allocate(size_t size)
     {
+        if (size > 128'000)
+        {
+            return malloc(size);
+        }
+
         std::unique_lock lock(m_AllocatorMutex);
         return m_TLSFAllocator.Allocate(size);
     }
@@ -31,7 +36,15 @@ namespace Astral {
     void EngineMalloc::Free(void* pointer)
     {
         std::unique_lock lock(m_AllocatorMutex);
-        m_TLSFAllocator.Free(pointer);
+
+        if (m_TLSFAllocator.DoesOwnPointer(pointer))
+        {
+            m_TLSFAllocator.Free(pointer);
+        }
+        else
+        {
+            free(pointer);
+        }
     }
 
 }
