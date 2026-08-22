@@ -62,6 +62,7 @@ set(CORE_SOURCE
     Memory/Allocators/EngineMalloc.cpp
     Memory/Allocators/EngineMalloc.h
         Memory/Allocators/SlabAllocator_Impl.h
+        Memory/Allocators/STLAllocators/STLTLSFAllocator.h
 )
 
 set(UNIX_PLATFORM_FILES
