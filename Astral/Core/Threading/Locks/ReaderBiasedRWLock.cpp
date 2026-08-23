@@ -12,7 +12,7 @@ namespace Astral {
 
     ReaderBiasedRWLock::ReaderBiasedRWLock() :
         m_ReaderCounts(std::thread::hardware_concurrency()),
-        m_WriterActive(false),
+        m_WriterActive(),
         m_WriterLock()
     {
 
