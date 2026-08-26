@@ -6,7 +6,7 @@
 
 #include "MetalRendererCommands.h"
 
-#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h"
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal4.h"
 #include "Renderer/RHI/RendererAPI.h"
 #include "Resources/MetalCommandBuffer.h"
 #include "Resources/MetalShader.h"
@@ -22,7 +22,7 @@ namespace Astral {
         commandBufferHandle->EndRecording();
 
         CommandQueueHandle queueHandle = RendererAPI::GetDevice().GetAsyncCommandQueue();
-        queueHandle->SubmitSync(commandBufferHandle);
+        queueHandle->Submit(commandBufferHandle);
         queueHandle->WaitIdle();
     }
 
@@ -74,7 +74,7 @@ namespace Astral {
 
         if (drawData)
         {
-            ImGui_ImplMetal_RenderDrawData(drawData, commandBuffer, renderCommandEncoder);
+            ImGui_ImplMetal4_RenderDrawData(drawData, commandBuffer, renderCommandEncoder);
         }
     }
 

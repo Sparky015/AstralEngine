@@ -38,6 +38,8 @@ namespace Astral {
         m_OutputAttachmentName = "";
 
         m_OutputAttachmentDimensions = UVec2(0);
+
+        m_RenderPassCommandBuffers.resize(m_MaxFramesInFlight);
     }
 
 
@@ -75,43 +77,62 @@ namespace Astral {
     }
 
 
-    void RenderGraph::Execute(SharedFrameContext& sharedFrameContext, uint32 swapchainImageIndex, const TextureHandle& outputAttachmentTexture)
+    const std::vector<CommandBufferHandle>& RenderGraph::Execute(SharedFrameContext& sharedFrameContext,
+                                                                 uint32 swapchainImageIndex,
+                                                                 const TextureHandle& outputAttachmentTexture)
     {
         PROFILE_SCOPE("RenderGraph::Execute")
 
         UpdateRenderGraphResourcesHold();
         UpdateOutputAttachmentResourceReferences(outputAttachmentTexture, swapchainImageIndex);
 
-        CommandBufferHandle& commandBuffer = sharedFrameContext.SceneCommandBuffer;
-        m_ExecutionContext.CommandBuffer = commandBuffer;
+        std::vector<std::future<void>> renderPassFutures = {};
+        m_RenderPassCommandBuffers[swapchainImageIndex].clear();
+        m_RenderPassCommandBuffers[swapchainImageIndex].resize(m_ExecutionOrder.size(), nullptr);
 
-
-        commandBuffer->BeginLabel(m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
         for (size_t i = 0; i < m_ExecutionOrder.size(); i++)
         {
-            PassIndex renderPassIndex = m_ExecutionOrder[i];
-            const RenderGraphPass& pass = m_Passes[renderPassIndex];
-            RenderPassHandle rhiRenderPass = m_RenderPasses[renderPassIndex];
-            RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
+            ThreadPool& threadPool = Engine::Get().GetJobManager().GetThreadPool();
 
+            std::future<void> renderPassFuture = threadPool.SubmitTask(
+                [this, i, swapchainImageIndex, &sharedFrameContext]()
+                {
+                    CommandBufferHandle renderPassCommandBuffer = RendererAPI::GetDevice().AllocateCommandBuffer();
+                    renderPassCommandBuffer->BeginRecording();
 
-            m_ExecutionContext.RenderPass = rhiRenderPass;
-            m_ExecutionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
-            m_ExecutionContext.ViewportSize = m_OutputAttachmentDimensions;
+                    PassIndex renderPassIndex = m_ExecutionOrder[i];
+                    const RenderGraphPass& pass = m_Passes[renderPassIndex];
+                    RenderPassHandle rhiRenderPass = m_RenderPasses[renderPassIndex];
+                    RenderPassResources& renderPassResource = m_RenderPassResources[renderPassIndex][swapchainImageIndex];
+                    m_RenderPassCommandBuffers[swapchainImageIndex][i] = renderPassCommandBuffer;
 
-            TransitionAttachmentsToOptimalLayouts(commandBuffer, pass, swapchainImageIndex);
-            TransitionReadAttachmentLayouts(commandBuffer, pass, swapchainImageIndex);
+                    RenderGraphPassExecutionContext executionContext = {};
+                    executionContext.RenderPass = rhiRenderPass;
+                    executionContext.ReadAttachments = renderPassResource.ReadAttachmentDescriptorSet;
+                    executionContext.ViewportSize = m_OutputAttachmentDimensions;
+                    executionContext.CommandBuffer = renderPassCommandBuffer;
 
-            commandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
-            commandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.AttachmentResources);
+                    renderPassCommandBuffer->BeginLabel(m_DebugName, Vec4(1.0 , 1.0, 0, 1.0));
 
+                    TransitionAttachmentsToOptimalLayouts(renderPassCommandBuffer, pass, swapchainImageIndex);
+                    TransitionReadAttachmentLayouts(renderPassCommandBuffer, pass, swapchainImageIndex);
 
-            pass.Execute(m_ExecutionContext, sharedFrameContext);
+                    renderPassCommandBuffer->BeginLabel(pass.GetName(), Vec4(1.0 , 0.0, 1.0, 1.0));
+                    renderPassCommandBuffer->BeginRenderPass(rhiRenderPass, renderPassResource.AttachmentResources);
 
+                    pass.Execute(executionContext, sharedFrameContext);
 
-            commandBuffer->EndRenderPass();
-            commandBuffer->EndLabel();
+                    renderPassCommandBuffer->EndRenderPass();
+
+                    renderPassCommandBuffer->EndLabel();
+
+                    renderPassCommandBuffer->EndRecording();
+                },
+                0.8
+            );
+
+            renderPassFutures.emplace_back(std::move(renderPassFuture));
         }
 
 
@@ -151,12 +172,14 @@ namespace Astral {
                 pipelineBarrier.ImageMemoryBarriers.push_back(imageMemoryBarrier);
             }
         }
-        commandBuffer->SetPipelineBarrier(pipelineBarrier);
+        sharedFrameContext.SceneCommandBuffer->SetPipelineBarrier(pipelineBarrier);
 
+        for (std::future<void>& renderPassCommandBufferFuture : renderPassFutures)
+        {
+            renderPassCommandBufferFuture.wait();
+        }
 
-        commandBuffer->EndLabel();
-
-        m_ExecutionContext = {};
+        return m_RenderPassCommandBuffers[swapchainImageIndex];
     }
 
 

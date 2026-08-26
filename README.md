@@ -3,189 +3,39 @@
 [![CI Build](https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform-development-ci.yml/badge.svg)](https://github.com/Sparky015/AstralEngine/actions/workflows/cmake-multi-platform-development-ci.yml)
 
 ---------------
-Welcome to the Astral Engine project codebase!
-
-This project is a Work-In-Progress with no official first release.
-
-It is continuously being updated and improved as I can get to more things.
-
-Project Lifetime: April 2024 - Present
-
-In the future, Astral Engine will become a 3D engine targeting open world environments with focus on particles
-and the environment, but there is a lot of stuff to do to get there.
-
-Visit my website for more information, pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
-
-![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
+Welcome to the Astral project codebase!
 
 ![PancakeWithSmore](Documentation/Assets/Videos/PancakesWithSmore_Short.gif)
 
-
 ### Notable Features
 
-#### TLDR
 
-* Physically-Based Vulkan HDR Renderer
+#### Rendering Engine
+* Physically-Based HDR Renderer
 * Frame/Render Graph
-* Renderer Hardware Interface (RHI)
-* Editor
-* Scene System
-* Asset Manager
-* Academy Color Encoding System (ACES) Color Workflow
-* Custom Allocators (Experimental Proof of Concept)
-* Memory Profiling Tool Suite (Experimental)
+* Vulkan and Metal 4 Support with a Renderer Hardware Interface (RHI) 
+* Multithreaded Asset Manager
+* Editor and Scene Serialization System
+
+#### Performance and Memory Profiling Toolkit
+* Memory Profiling Tool Suite
 * Visual Scope Profiler
-* Entity-Component-System (ECS)
+* Custom Allocators
+* Thread Pool
+* Custom Reader-Biased RW Lock
 
+Find more details on the above features [here](Documentation/FeatureDetails.md)
 
+Visit my website for pictures, and higher quality videos: [https://sparky015.github.io](https://sparky015.github.io)
 
-### Feature Details
-
----
-
-#### Physically-Based Vulkan HDR Renderer 
-
-Created a Vulkan based renderer that uses the Cook-Torrence BRDF to implement physically based rendering as well as Image
-Based Lighting for the environment. The renderer supports two modes, forward and deferred. The forward renderer consists 
-of a pre depth pass, cascaded shadow map pass, lighting pass, environment map pass, tone mapping pass, and the deferred renderer consists of a 
-geometry pass, cascaded shadow map pass, lighting pass, environment map pass, and tone mapping pass. Forward uses MSAA x4 while
-deferred does not have AA at the moment (looking into TAA in the future). Additionally, both paths use compute shaders to calculate irradiance
-and prefiltered environment maps one time for each environment map that is set.
-
-#### Frame/Render Graph
-
-Designed and implemented Frame/Render Graph to manage render pass resources and execution as well as memory barriers for 
-synchronization. The Frame Graph allows the user to define any render passes and attachment specs for each render pass, and
-the Frame Graph will create all the necessary textures, render passes, frame buffers, and descriptor sets for each render pass,
-and facilitate the synchronization needed between render passes. It also culls any render passes that don't contribute
-to the final output image. The user can also recreate the Render Graph as many times as they want during rendering
-and the render graph will manage the creation of new resources the user requested as well as making sure the resources 
-being used on the GPU do not get deleted.
-
-#### Renderer Hardware Interface (RHI)
-
-Created an abstraction layer to manage renderer API usage in order to support multiple rendering APIs in the future
-(looking into implemented DX12 in the future) and allow for easy API usage for higher level systems while allowing for
-switching APIs without any diverging code in the high level systems.
-
-#### Editor 
-
-Built an editor that I can compose new game scenes with and allow for saving scenes and switching to different scenes without using a
-different executable. Users can compose scenes by adding and removing entities, adding components to entities and changing
-entity component data, changing environment settings like the environment map, exposure and ambient light modifier, changing 
-camera properties, and more!
-
-#### Scene System 
-
-Designed and implemented a scene system that will allow users to compose scenes with entities, environment maps, and more 
-and save the scene to a file and load scenes from files. Right now it is loading whole scenes at a time and storing them
-in the asset cache, but in the future, I will implement a way to unload scenes from the asset cache.
-
-#### Asset Manager 
-
-Created an asset manager that can load in assets from files and cache their data to improve loading times
-and memory efficiency. Currently, the asset loads are single threaded, but in the future, I want to look into 
-multithreaded asset loading to improve loading times as well as not blocking the main thread in order to have a 
-smooth UI/UX.
-
-#### Academy Color Encoding System (ACES) Color Workflow
-
-ACES 2.0 has been implemented for high quality color management, resulting in more vibrant and accurate colors. 
-All rendering is done in the ACEScg space with the ACES filmic look being applied. For the input display transform, all 
-color inputs being converted from sRGB to AP1 primaries to place them in the ACEScg space. After rendering is done, 
-I use a OCIO baked lut that contains the Reference Rendering Transform and the Output Display Transform which converts
-the final colors from the ACEScg space to the sRGB space with gamma applied while also applying tone mapping for standard
-dynamic range displays.
-
-#### Custom Allocators (Experimental Proof of Concept)
-
-This includes tailored allocators for the engine to help reduce allocations where it is possible and improve performance
-when the situation allows for it.
-
-A list of the custom allocators follows:
-Stack allocator, linear allocator, custom alignment allocator, frame allocator, double buffered allocator, pool allocator,
-ring allocator/buffer, and stack-based linear allocator (plus an object pool class).
-
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Core/Memory%20Allocators/Information.md).
-
-Future allocators to be written: Slab Allocator
-
-- Note that I am still polishing this feature, but it is functionally done. It has not been used in the engine yet.
-
-#### Memory Profiling Tool Suite (Experimental)
-
-This includes real time memory allocation stats, a scene-based memory profiling with file exports and visualizer tool, 
-and scope-based allocation profiling tool.
-
-You can find more detailed information about this (including the why's) [here](Documentation/Astral-Runtime/Profiling%20Tools/Memory%20Tracking%20&%20Visualization/Information.md).
-
-- Note that this is only available in debug builds, and that I am still polishing and optimizing this feature, but it is functionally done.
-
-#### Visual Scope Profiler
-
-This provides the user a macro to profile a scope to know how long it takes to complete as well as how many allocations
-took place in the scope. It then outputs this data to a json file that can be loaded into Chrome's trace tool or perfetto's
-trace tool to view visually.
-
-#### Entity-Component-System (ECS) 
-
-Created a entity component system to compose scenes with entities that you can attach data components to, and every frame,
-a system will operate on entities with certain component types. Right now, it is a basic implementation to get things up 
-and running, but in the future, I want to implement sparse sets into the ECS for better performance when it is necessary.
-
-View the planning documentation [here](Documentation/Astral-Runtime/ECS/)
-
-
-----
-
-
-### Screenshot of Current Engine State
-
----
-
-
-![AstralEditorScreenshot](Documentation/Assets/Astral_Engine_Editor_Screenshot.png)
-This picture contains the Amazon Lumberyard Bistro sample in the Editor. Note: This is from branch with the GPU performance
-timers being worked on (123-performance-counters-for-render-passes)
-
-### Roadmap
-
------
-
-1. Compute Shader Frame Graph Integration 
-2. The below TODO Render Passes
-3. Native Scripting
-4. GPU-Driven Renderer
-5. GPU Particle System
-6. Volumetric Lighting
-7. Forward+ Rendering Path
-8. Terrain System 
-9. Vegetation and Grass and Mesh Skinning 
-10. Multithreaded Asset System 
-11. Tile-Based Asset Streaming  
-12. LOD System
-13. Audio System
-14. Physics System
-15. Render Thread
-
-
-### TODO Render Passes
-
-* Transparent Objects Forward Pass
-* SSAO
-* TAA
-* Bloom
-* Omni-Directional Shadow Maps
-
-
-
+![Bistro](Documentation/Assets/Videos/Bistro_Short.gif)
 
 ### How to Build
 
 -----
 
 Supported Compilers: MSVC, AppleClang, and Clang
-Supported Platforms: Windows and macOS    (Linux coming in the future)
+Supported Platforms: Windows and macOS   
 
 Astral uses CMake for the build system.
 
@@ -194,13 +44,15 @@ make sure to switch the target to your desired target that you want to run.
 
 Requirements include:
 - git
-- Python 3.x 
-- Vulkan SDK
 - CMake ver. 3.28+ (Note: The below examples require cmake to be available on the command line)
 - A supported C++20 compiler
 - 64-bit CPU
+- Vulkan SDK (if targeting Vulkan) 
+- Windows: GPU support for Vulkan 1.3
+- macOS: GPU support for Metal 4 if targeting Metal 4 backend, or support for Metal 3 if targeting Vulkan backend
 
-Note: The project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
+
+Note: If targeting Vulkan, the project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
       The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
 
 
@@ -291,7 +143,7 @@ Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to
 
 -----
 
-This project is using C++20 currently and mainly for [[unlikely]], [[likely]], consteval, and constexpr improvements (maybe modules in the future).
+This project is using C++20 currently and mainly for [[unlikely]], [[likely]], consteval, and constexpr improvements 
 
 
 I am looking to switch to C++23 when the stacktraces feature is actually implemented by

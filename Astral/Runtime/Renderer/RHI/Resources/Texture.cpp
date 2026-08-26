@@ -71,7 +71,6 @@ namespace Astral {
     {
         int width;
         int height;
-        int bpp; // bytes per pixel
         ImageFormat imageFormat;
         unsigned char* data;
 
@@ -104,10 +103,12 @@ namespace Astral {
         }
         else
         {
-            data = stbi_load(filePath.string().c_str(), &width, &height, &bpp, 4);
+            int desiredChannels = 4;
+            int channelsInFile{};
+            data = stbi_load(filePath.string().c_str(), &width, &height, &channelsInFile, desiredChannels);
             imageFormat = ImageFormat::R8G8B8A8_SRGB;
 
-            textureCreateInfo.ImageDataLength = width * height * bpp;
+            textureCreateInfo.ImageDataLength = width * height * desiredChannels;
             textureCreateInfo.LayerCount = 1;
             textureCreateInfo.MipMapCount = Texture::CalculateMipMapLevels(width, height);
             textureCreateInfo.GenerateMipMaps = true;

@@ -27,8 +27,8 @@ namespace Astral {
 
     void DrawCallsPerFrameComponent()
     {
-        ImGui::Text("Draw Calls/Frame: %d", Astral::SceneRenderer::GetRendererDebugStats().NumberOfDrawCalls);
-        ImGui::Text("Triangles/Frame: %d", Astral::SceneRenderer::GetRendererDebugStats().NumberOfTriangles);
+        ImGui::Text("Draw Calls/Frame: %d", Astral::SceneRenderer::GetRendererDebugStats().NumberOfDrawCalls.load());
+        ImGui::Text("Triangles/Frame: %d", Astral::SceneRenderer::GetRendererDebugStats().NumberOfTriangles.load());
     }
 
     void RendererAPIComponent()

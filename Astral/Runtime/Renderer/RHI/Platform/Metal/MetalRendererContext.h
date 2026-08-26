@@ -15,7 +15,7 @@
 
 #define IMGUI_IMPL_METAL_CPP
 #include "Common/MTLEnumConversions.h"
-#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal.h"
+#include "Debug/ImGui/ImGuiDependencies/imgui_impl_metal4.h"
 
 namespace Astral {
 
@@ -210,6 +210,7 @@ namespace Astral {
         MTL4::PipelineDataSetSerializer* m_PipelineDataSetSerializer;
 
         std::unordered_map<std::thread::id, CommandAllocatorPool> m_CommandAllocators;
+        std::unordered_map<MTL4::CommandAllocator*, std::thread::id> m_CommandAllocatorOwnedThread;
         std::mutex m_CommandAllocatorsMutex;
 
         MTL::ResidencySet* m_GlobalResidencySet;
@@ -217,6 +218,7 @@ namespace Astral {
         NS::AutoreleasePool* m_FrameAutoreleasePool;
         EventListener<NewFrameEvent> m_NewFrameListener;
 
+        uint32 m_ImGuiFramesInFlight = 3;
         AttachmentFormats m_ImGuiRenderPassAttachmentFormats;
     };
 

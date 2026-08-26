@@ -146,27 +146,31 @@ namespace Astral {
 
         frameContext.ShadowLightMatrices->CopyDataToBuffer(m_LightSpaceMatrices.data(), sizeof(Mat4) * m_LightSpaceMatrices.size());
 
-        ShaderHandle meshVertexShaderSave = nullptr;
+        GraphicsPipelineStateConfiguration pipelineConfig = {};
+        pipelineConfig.RenderPass = renderGraphPassExecutionContext.RenderPass;
+        pipelineConfig.VertexShader = m_VertexCascadedShadowMapShader;
+        pipelineConfig.FragmentShader = m_FragmentDepthWriteOnlyShader;
+        pipelineConfig.ShaderDataLayout = frameContext.ShadowLightMatricesDescriptorSet->GetDescriptorSetLayout();
+        pipelineConfig.VertexBufferLayout = {};
+        pipelineConfig.IsAlphaBlended = false;
+        pipelineConfig.CullMode = CullMode::FRONT;
+        pipelineConfig.MSAASampleCount = SampleCount::SAMPLE_1_BIT;
+
+        std::vector<DescriptorSetHandle> descriptorSetStack = {frameContext.SceneDataDescriptorSet, frameContext.ShadowLightMatricesDescriptorSet};
 
         for (uint32 i = 0; i < frameContext.ShadowMapList.Size(); i++)
         {
-            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
             Ref<Material>& material = frameContext.ShadowMapList.GetMaterials()[i];
-
             if (material->ShaderModel != ShaderModel::PBR) { continue; }
 
-            Material shadowMapMaterial{};
-            shadowMapMaterial.FragmentShader = m_FragmentDepthWriteOnlyShader;
-            shadowMapMaterial.DescriptorSet = frameContext.ShadowLightMatricesDescriptorSet;
-
-            meshVertexShaderSave = mesh->VertexShader;
-            mesh->VertexShader = m_VertexCascadedShadowMapShader;
+            Ref<Mesh>& mesh = frameContext.ShadowMapList.GetMeshes()[i];
+            if (pipelineConfig.VertexBufferLayout != mesh->VertexBuffer->GetBufferLayout())
+            {
+                pipelineConfig.VertexBufferLayout = mesh->VertexBuffer->GetBufferLayout();
+            }
 
             PipelineStateCache& pipelineStateCache = RendererAPI::GetContext().GetPipelineStateCache();
-            pipelineStateCache.SetDescriptorSetStack({frameContext.SceneDataDescriptorSet});
-            PipelineStateHandle shadowMapPipeline = pipelineStateCache.GetGraphicsPipeline(executionContext.RenderPass, shadowMapMaterial, *mesh, 0, CullMode::FRONT);
-
-            mesh->VertexShader = meshVertexShaderSave;
+            PipelineStateHandle shadowMapPipeline = pipelineStateCache.GetGraphicsPipeline(pipelineConfig, descriptorSetStack);
 
             commandBuffer->BindPipeline(shadowMapPipeline);
             commandBuffer->SetViewportAndScissor(Vec2(rendererSettings.ShadowMapResolution));
