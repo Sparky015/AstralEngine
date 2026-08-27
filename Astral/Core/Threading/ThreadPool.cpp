@@ -116,6 +116,12 @@ namespace Astral {
     }
 
 
+    size_t ThreadPool::GetThreadCount() const
+    {
+        return m_Threads.size();
+    }
+
+
     void ThreadPool::Task::Execute()
     {
         TaskCallback();
