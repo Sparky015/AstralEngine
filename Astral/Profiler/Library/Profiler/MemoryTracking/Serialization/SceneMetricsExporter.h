@@ -94,8 +94,6 @@ namespace Astral {
         size_t m_NumberOfSnapshots;
 
         std::stack<std::pair<cpptrace::raw_trace, int>> m_RawTraceProcessQueue;
-        // std::vector<cpptrace::raw_trace> m_RawTraceBuffer;
-
         std::vector<std::string> m_ResolvedStacktraceBuffer;
     };
 

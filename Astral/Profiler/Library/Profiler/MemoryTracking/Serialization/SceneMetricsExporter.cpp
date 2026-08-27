@@ -97,7 +97,6 @@ namespace Astral {
 
             cpptrace::raw_trace currentTrace = cpptrace::raw_trace::current(2);
 
-            // m_RawTraceBuffer.push_back(std::move(currentTrace));
             m_RawTraceProcessQueue.push({std::move(currentTrace), m_RawTraceProcessQueue.size()});
 
             Astral::MemoryTracker::Get().EnableTracking();
@@ -276,49 +275,6 @@ namespace Astral {
 
             processingFutures.push_back(std::move(processingFuture));
         }
-
-        // SPLIT BUFFER - PER THREAD CACHE
-
-        // float numberOfThreads = m_ProcessingThreadPool.GetThreadCount();
-        // float numberOfRawTraces = m_RawTraceBuffer.size();
-        // uint32 rawTracePerThread = std::ceil(numberOfRawTraces / numberOfThreads);
-        // m_ResolvedStacktraceBuffer.clear();
-        // m_ResolvedStacktraceBuffer.resize(numberOfRawTraces);
-        // std::vector<std::future<void>> processingFutures = {};
-        //
-        // static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
-        // .addresses(cpptrace::formatter::address_mode::none)
-        // .snippets(false)
-        // .colors(cpptrace::formatter::color_mode::none)
-        // .paths(cpptrace::formatter::path_mode::full);
-        // for (int i = 0; i < numberOfThreads; i++)
-        // {
-        //     std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
-        //         [this, i, rawTracePerThread]() {
-        //             int startIndex = i * rawTracePerThread;
-        //             std::unordered_map<cpptrace::raw_trace, std::string> m_TraceCache = {};
-        //
-        //             for (int j = startIndex; j < startIndex + rawTracePerThread; j++)
-        //             {
-        //                 if (j >= this->m_RawTraceBuffer.size()) { break; }
-        //
-        //                 if (m_TraceCache.contains(this->m_RawTraceBuffer[j]))
-        //                 {
-        //                     this->m_ResolvedStacktraceBuffer[j] = m_TraceCache.at(this->m_RawTraceBuffer[j]);
-        //                     continue;
-        //                 }
-        //
-        //                 cpptrace::stacktrace stacktrace = this->m_RawTraceBuffer[j].resolve();
-        //                 this->m_ResolvedStacktraceBuffer[j] = std::move(m_StacktraceFormatter.format(stacktrace));
-        //
-        //                 m_TraceCache[this->m_RawTraceBuffer[j]] = this->m_ResolvedStacktraceBuffer[j];
-        //             }
-        //         },
-        //         1.0
-        //     );
-        //
-        //     processingFutures.push_back(std::move(processingFuture));
-        // }
 
         for (std::future<void>& future : processingFutures)
         {
