@@ -27,6 +27,7 @@ add_library(AstralProfilerAPI
         MemoryTracking/Serialization/SceneMetricsImporter.h
         MemoryTracking/Serialization/SceneMetricsStorage.cpp
         MemoryTracking/Serialization/SceneMetricsStorage.h
+        MemoryTracking/Serialization/cpptraceOperators.h
 )
 
 
