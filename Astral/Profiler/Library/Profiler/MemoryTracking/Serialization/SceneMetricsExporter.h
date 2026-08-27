@@ -15,11 +15,14 @@
 #include <cpptrace/formatting.hpp>
 #include <fstream>
 
+#include "Core/Threading/ThreadPool.h"
 
 
 namespace Astral {
 
-    /**@brief Exports snapshots of the memory metrics to a file */
+    /**
+     * @brief Exports snapshots of the memory metrics to a file
+     */
     class SceneMetricsExporter
     {
     public:
@@ -28,33 +31,57 @@ namespace Astral {
 
         void InitExportFile();
 
-        /**@brief Starts recording the memory metrics to a file.
+        /**
+         * @brief Starts recording the memory metrics to a file.
          * @param sceneName The name of the scene.
-         * @return True if the opening the export file succeeded and false if the file failed to open. */
+         * @return True if the opening the export file succeeded and false if the file failed to open.
+         */
         [[nodiscard]] bool BeginScene(const char* sceneName);
 
-        /**@brief Stops recording the memory metrics to a file and close export file */
+        /**
+         * @brief Stops recording the memory metrics to a file and close export file
+         */
         void EndScene();
 
-        /**@brief Checks if a scene is currently active
-         * @return True if the scene is active and false if not */
+        /**
+         * @brief Checks if a scene is currently active
+         * @return True if the scene is active and false if not
+         */
         [[nodiscard]] bool IsSceneActive() const { return m_IsSceneActive; }
 
-        /**@brief Checks if the export file is open
-         * @return True if the export file is open and false if not */
+        /**
+         * @brief Checks if the export file is open
+         * @return True if the export file is open and false if not
+         */
         [[nodiscard]] bool IsExportFileOpen() const { return GetExportFile().is_open(); }
 
-        /**@brief Takes the current state of the MemoryMetrics and exports to a file */
+        /**
+         * @brief Takes the current state of the MemoryMetrics and exports to a file
+         */
         void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData);
 
     private:
 
-        /**@brief Opens a file for exporting scene memory metrics
-         * @param sceneName The name of the scene (for labeling purposes) */
+        /**
+         * @brief Opens a file for exporting scene memory metrics
+         * @param sceneName The name of the scene (for labeling purposes)
+         */
         void OpenExportFile(const char* sceneName);
 
-        /**@brief Closes the file for exporting scene memory metrics */
+        /**
+         * @brief Closes the file for exporting scene memory metrics
+         */
         void CloseExportFile();
+
+        /**
+         * @brief Processes the raw trace buffer into resolved stacktraces
+         */
+        void ProcessRawTraces();
+
+        /**
+         * @brief Writes the processed stacktraces to the scene export file
+         */
+        void WriteProcessedStacktracesToFile();
 
         [[nodiscard]] std::fstream& GetExportFile() const
         {
@@ -65,6 +92,11 @@ namespace Astral {
         Clock m_SceneClock;
         bool m_IsSceneActive;
         size_t m_NumberOfSnapshots;
+
+        std::stack<std::pair<cpptrace::raw_trace, int>> m_RawTraceProcessQueue;
+        // std::vector<cpptrace::raw_trace> m_RawTraceBuffer;
+
+        std::vector<std::string> m_ResolvedStacktraceBuffer;
     };
 
 }

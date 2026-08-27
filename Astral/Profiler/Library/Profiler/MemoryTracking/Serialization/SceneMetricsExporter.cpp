@@ -4,8 +4,12 @@
 * @date 2/8/25
 */
 
+
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
+#include "Core/Threading/Locks/SpinLock.h"
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Loggers.h"
+#include "cpptraceOperators.h"
 #include "SceneMetricsExporter.h"
 #include "Profiler/MemoryTracking/MemoryTracker.h"
 
@@ -14,6 +18,7 @@
 #include <iostream>
 #include <cpptrace/formatting.hpp>
 #include "cpptrace/cpptrace.hpp"
+#include <unordered_map>
 
 namespace Astral {
 
@@ -48,6 +53,12 @@ namespace Astral {
     {
         [[likely]] if (m_IsSceneActive)
         {
+            MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+            ProcessRawTraces();
+            WriteProcessedStacktracesToFile();
+            MemoryTracker::Get().EnableTracking();
+
+
             // Pack the number of memory metrics snapshots in the file at the end
             msgpack::pack(GetExportFile(), m_NumberOfSnapshots);
 
@@ -83,15 +94,13 @@ namespace Astral {
             msgpack::pack(GetExportFile(), allocationDataSerializable);
 
             Astral::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
-            static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
-                .addresses(cpptrace::formatter::address_mode::none)
-                .snippets(false)
-                .colors(cpptrace::formatter::color_mode::none)
-                .paths(cpptrace::formatter::path_mode::full);
-            msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2)));
+
+            cpptrace::raw_trace currentTrace = cpptrace::raw_trace::current(2);
+
+            // m_RawTraceBuffer.push_back(std::move(currentTrace));
+            m_RawTraceProcessQueue.push({std::move(currentTrace), m_RawTraceProcessQueue.size()});
 
             Astral::MemoryTracker::Get().EnableTracking();
-
         }
 
     }
@@ -196,6 +205,134 @@ namespace Astral {
          }
 
         MemoryTracker::Get().EnableTracking();
+    }
+
+
+    void SceneMetricsExporter::ProcessRawTraces()
+    {
+        ThreadPool m_ProcessingThreadPool;
+
+        // QUEUE BASED
+
+        float numberOfThreads = m_ProcessingThreadPool.GetThreadCount();
+        float numberOfRawTraces = m_RawTraceProcessQueue.size();
+        uint32 rawTracePerThread = std::ceil(numberOfRawTraces / numberOfThreads);
+        m_ResolvedStacktraceBuffer.clear();
+        m_ResolvedStacktraceBuffer.resize(numberOfRawTraces);
+        std::vector<std::future<void>> processingFutures = {};
+
+        static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
+            .addresses(cpptrace::formatter::address_mode::none)
+            .snippets(false)
+            .colors(cpptrace::formatter::color_mode::none)
+            .paths(cpptrace::formatter::path_mode::full);
+
+
+        std::unordered_map<cpptrace::raw_trace, std::string> m_TraceCache = {};
+        Astral::ReaderBiasedRWLock cacheMutex = {};
+        Astral::SpinLock queueMutex = {};
+
+        printf("Total raw traces: %zu\n", m_RawTraceProcessQueue.size());
+
+        for (int i = 0; i < numberOfThreads; i++)
+        {
+            std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
+                [this, i, rawTracePerThread, &m_TraceCache, &cacheMutex, &queueMutex]() {
+                    int startIndex = i * rawTracePerThread;
+                    printf("Thread %d -> Processing %d to %d\n", i, startIndex, startIndex + rawTracePerThread);
+
+                    while (true)
+                    {
+                        std::unique_lock queueLock{queueMutex};
+                        if (m_RawTraceProcessQueue.empty()) { break; }
+                        std::pair<cpptrace::raw_trace, int> tracePair = m_RawTraceProcessQueue.top();
+                        m_RawTraceProcessQueue.pop();
+                        queueLock.unlock();
+
+                        int traceIndex = tracePair.second;
+                        cpptrace::raw_trace& rawTrace = tracePair.first;
+
+                        std::shared_lock cacheReadLock{cacheMutex};
+                        if (m_TraceCache.contains(rawTrace))
+                        {
+                            this->m_ResolvedStacktraceBuffer[traceIndex] = m_TraceCache.at(rawTrace);
+                            cacheReadLock.unlock();
+                            continue;
+                        }
+                        cacheReadLock.unlock();
+
+                        cpptrace::stacktrace stacktrace = rawTrace.resolve();
+                        this->m_ResolvedStacktraceBuffer[traceIndex] = std::move(m_StacktraceFormatter.format(stacktrace));
+
+                        std::unique_lock cacheWriteLock{cacheMutex};
+                        m_TraceCache[rawTrace] = this->m_ResolvedStacktraceBuffer[traceIndex];
+                        cacheWriteLock.unlock();
+                    }
+
+                    printf("Thread %d finished\n", i);
+                },
+                1.0
+            );
+
+            processingFutures.push_back(std::move(processingFuture));
+        }
+
+        // SPLIT BUFFER - PER THREAD CACHE
+
+        // float numberOfThreads = m_ProcessingThreadPool.GetThreadCount();
+        // float numberOfRawTraces = m_RawTraceBuffer.size();
+        // uint32 rawTracePerThread = std::ceil(numberOfRawTraces / numberOfThreads);
+        // m_ResolvedStacktraceBuffer.clear();
+        // m_ResolvedStacktraceBuffer.resize(numberOfRawTraces);
+        // std::vector<std::future<void>> processingFutures = {};
+        //
+        // static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
+        // .addresses(cpptrace::formatter::address_mode::none)
+        // .snippets(false)
+        // .colors(cpptrace::formatter::color_mode::none)
+        // .paths(cpptrace::formatter::path_mode::full);
+        // for (int i = 0; i < numberOfThreads; i++)
+        // {
+        //     std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
+        //         [this, i, rawTracePerThread]() {
+        //             int startIndex = i * rawTracePerThread;
+        //             std::unordered_map<cpptrace::raw_trace, std::string> m_TraceCache = {};
+        //
+        //             for (int j = startIndex; j < startIndex + rawTracePerThread; j++)
+        //             {
+        //                 if (j >= this->m_RawTraceBuffer.size()) { break; }
+        //
+        //                 if (m_TraceCache.contains(this->m_RawTraceBuffer[j]))
+        //                 {
+        //                     this->m_ResolvedStacktraceBuffer[j] = m_TraceCache.at(this->m_RawTraceBuffer[j]);
+        //                     continue;
+        //                 }
+        //
+        //                 cpptrace::stacktrace stacktrace = this->m_RawTraceBuffer[j].resolve();
+        //                 this->m_ResolvedStacktraceBuffer[j] = std::move(m_StacktraceFormatter.format(stacktrace));
+        //
+        //                 m_TraceCache[this->m_RawTraceBuffer[j]] = this->m_ResolvedStacktraceBuffer[j];
+        //             }
+        //         },
+        //         1.0
+        //     );
+        //
+        //     processingFutures.push_back(std::move(processingFuture));
+        // }
+
+        for (std::future<void>& future : processingFutures)
+        {
+            future.wait();
+        }
+    }
+
+
+    void SceneMetricsExporter::WriteProcessedStacktracesToFile()
+    {
+        for (std::string& stacktrace : m_ResolvedStacktraceBuffer)
+        {
+            msgpack::pack(GetExportFile(), stacktrace);
+        }
     }
 
 }
