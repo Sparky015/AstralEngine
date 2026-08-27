@@ -231,14 +231,10 @@ namespace Astral {
         Astral::ReaderBiasedRWLock cacheMutex = {};
         Astral::SpinLock queueMutex = {};
 
-        printf("Total raw traces: %zu\n", m_RawTraceProcessQueue.size());
-
         for (int i = 0; i < numberOfThreads; i++)
         {
             std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
-                [this, i, rawTracePerThread, &m_TraceCache, &cacheMutex, &queueMutex]() {
-                    int startIndex = i * rawTracePerThread;
-                    printf("Thread %d -> Processing %d to %d\n", i, startIndex, startIndex + rawTracePerThread);
+                [this, &m_TraceCache, &cacheMutex, &queueMutex]() {
 
                     while (true)
                     {
@@ -267,8 +263,6 @@ namespace Astral {
                         m_TraceCache[rawTrace] = this->m_ResolvedStacktraceBuffer[traceIndex];
                         cacheWriteLock.unlock();
                     }
-
-                    printf("Thread %d finished\n", i);
                 },
                 1.0
             );
