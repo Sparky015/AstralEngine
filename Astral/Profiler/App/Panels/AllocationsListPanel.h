@@ -78,7 +78,7 @@ namespace Astral {
          */
         static const char* AllocationDataArrayGetter(void* data, int idx);
 
-        int m_SelectedPointIndex = -1;
+        int m_SelectedPointIndex = 0;
         int m_SortedSelectedPointIndex = -1;
         std::vector<std::pair<AllocationDataSerializeable, int>> m_SortedAllocationData = {}; // Container to cache sorted allocation data with .second containing a index mapping to the original allocation data order
 

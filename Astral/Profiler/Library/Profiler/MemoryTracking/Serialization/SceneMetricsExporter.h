@@ -6,16 +6,16 @@
 
 #pragma once
 
+#include "Core/Threading/ThreadPool.h"
+#include "Core/Threading/Locks/SpinLock.h"
+#include "Core/Time/Clock.h"
 #include "Profiler/MemoryTracking/MemoryMetrics.h"
 #include "MemoryMetricsSnapshot.h"
-
-#include "Core/Time/Clock.h"
 
 #include "msgpack.hpp"
 #include <cpptrace/formatting.hpp>
 #include <fstream>
 
-#include "Core/Threading/ThreadPool.h"
 
 
 namespace Astral {
@@ -34,9 +34,10 @@ namespace Astral {
         /**
          * @brief Starts recording the memory metrics to a file.
          * @param sceneName The name of the scene.
+         * @param initialMemoryMetrics
          * @return True if the opening the export file succeeded and false if the file failed to open.
          */
-        [[nodiscard]] bool BeginScene(const char* sceneName);
+        [[nodiscard]] bool BeginScene(const char* sceneName, const MemoryMetrics& initialMemoryMetrics);
 
         /**
          * @brief Stops recording the memory metrics to a file and close export file
@@ -56,9 +57,19 @@ namespace Astral {
         [[nodiscard]] bool IsExportFileOpen() const { return GetExportFile().is_open(); }
 
         /**
-         * @brief Takes the current state of the MemoryMetrics and exports to a file
+         * @brief Saves the current scene time to a buffer for deferred processing
          */
-        void RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData);
+        void SaveSceneProfilingTimeToBuffer();
+
+        /**
+         * @brief Saves the memory allocator operation data to a buffer for deferred processing
+         */
+        void SaveOperationDataToBuffer(const AllocationData& allocationData, bool isFreeOperation);
+
+        /**
+         * @brief Records the raw stacktrace of the current stack and saves it to a buffer for deferred processing
+         */
+        void CaptureRawStacktraceToBuffer();
 
     private:
 
@@ -81,7 +92,7 @@ namespace Astral {
         /**
          * @brief Writes the processed stacktraces to the scene export file
          */
-        void WriteProcessedStacktracesToFile();
+        void WriteBufferedDataToFile();
 
         [[nodiscard]] std::fstream& GetExportFile() const
         {
@@ -90,9 +101,15 @@ namespace Astral {
         }
 
         Clock m_SceneClock;
-        bool m_IsSceneActive;
-        size_t m_NumberOfSnapshots;
+        std::atomic_bool m_IsSceneActive;
+        std::atomic_size_t m_NumberOfSnapshots;
 
+        std::vector<size_t> m_TimepointBuffer;
+        std::vector<AllocationDataSerializeable> m_AllocationDataBuffer;
+
+        SpinLock m_RawTraceQueueLock;
+        SpinLock m_OperationTimeBufferLock;
+        SpinLock m_OperationDataBufferLock;
         std::stack<std::pair<cpptrace::raw_trace, int>> m_RawTraceProcessQueue;
         std::vector<std::string> m_ResolvedStacktraceBuffer;
     };

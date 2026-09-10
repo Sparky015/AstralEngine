@@ -35,7 +35,7 @@ namespace Astral {
         (void)GetExportFile();
     }
 
-    bool SceneMetricsExporter::BeginScene(const char* sceneName)
+    bool SceneMetricsExporter::BeginScene(const char* sceneName, const MemoryMetrics& initialMemoryMetrics)
     {
         [[unlikely]] if (m_IsSceneActive)
         {
@@ -45,6 +45,9 @@ namespace Astral {
         OpenExportFile(sceneName);
         m_IsSceneActive = true;
         m_SceneClock.Reset();
+
+        msgpack::pack(GetExportFile(), initialMemoryMetrics);
+
         return IsExportFileOpen();
     }
 
@@ -55,12 +58,11 @@ namespace Astral {
         {
             MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
             ProcessRawTraces();
-            WriteProcessedStacktracesToFile();
+            WriteBufferedDataToFile();
             MemoryTracker::Get().EnableTracking();
 
-
             // Pack the number of memory metrics snapshots in the file at the end
-            msgpack::pack(GetExportFile(), m_NumberOfSnapshots);
+            msgpack::pack(GetExportFile(), m_NumberOfSnapshots.load());
 
             CloseExportFile();
         }
@@ -70,38 +72,61 @@ namespace Astral {
     }
 
 
-    void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData)
+    void SceneMetricsExporter::SaveSceneProfilingTimeToBuffer()
     {
-
-        if (GetExportFile().fail())
+        if (m_IsSceneActive)
         {
-            std::cout << "Memory profiling export file is in a failed state!\n";
-            return;
-        }
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
 
+            std::unique_lock bufferLock{m_OperationTimeBufferLock};
+            m_TimepointBuffer.push_back(m_SceneClock.GetTimeMicroseconds());
+            bufferLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+    void SceneMetricsExporter::SaveOperationDataToBuffer(const AllocationData& allocationData, bool isFreeOperation)
+    {
         if (m_IsSceneActive)
         {
             AllocationDataSerializeable allocationDataSerializable{};
             allocationDataSerializable.pointer = (uintptr_t)allocationData.pointer;
             allocationDataSerializable.region = allocationData.region;
-            allocationDataSerializable.size = allocationData.size;
+            allocationDataSerializable.size = isFreeOperation == false ? allocationData.size : allocationData.size * -1;
             allocationDataSerializable.allocatorType = allocationData.allocatorType;
-            allocationDataSerializable.threadIDHash = memoryMetrics.GetThreadIDHash(allocationData.threadID);
+            allocationDataSerializable.threadIDHash = std::hash<std::thread::id>{}(allocationData.threadID);
 
             m_NumberOfSnapshots++;
-            msgpack::pack(GetExportFile(), memoryMetrics);
-            msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
-            msgpack::pack(GetExportFile(), allocationDataSerializable);
 
-            Astral::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
+
+            std::unique_lock bufferLock{m_OperationDataBufferLock};
+            m_AllocationDataBuffer.push_back(allocationDataSerializable);
+            bufferLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+
+    void SceneMetricsExporter::CaptureRawStacktraceToBuffer()
+    {
+        if (m_IsSceneActive)
+        {
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations caused by cpptrace from being picked up by the memory tracker
 
             cpptrace::raw_trace currentTrace = cpptrace::raw_trace::current(2);
 
+            std::unique_lock writeLock{m_RawTraceQueueLock};
             m_RawTraceProcessQueue.push({std::move(currentTrace), m_RawTraceProcessQueue.size()});
+            writeLock.unlock();
 
-            Astral::MemoryTracker::Get().EnableTracking();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
         }
-
     }
 
 
@@ -277,12 +302,36 @@ namespace Astral {
     }
 
 
-    void SceneMetricsExporter::WriteProcessedStacktracesToFile()
+    void SceneMetricsExporter::WriteBufferedDataToFile()
     {
-        for (std::string& stacktrace : m_ResolvedStacktraceBuffer)
+        if (m_TimepointBuffer.size() != m_AllocationDataBuffer.size() || m_AllocationDataBuffer.size() != m_ResolvedStacktraceBuffer.size())
         {
+            // Clear buffers and reset backing memory
+            m_TimepointBuffer.resize(0);
+            m_AllocationDataBuffer.resize(0);
+            m_ResolvedStacktraceBuffer.resize(0);
+
+            AE_WARN("Buffered data sizes do not match! Can not write data to file!")
+            return;
+        }
+
+        for (size_t i = 0; i < m_TimepointBuffer.size(); i++)
+        {
+            size_t operationTimepoint = m_TimepointBuffer[i];
+            AllocationDataSerializeable& operationAllocationData = m_AllocationDataBuffer[i];
+            std::string& stacktrace = m_ResolvedStacktraceBuffer[i];
+
+            if (operationAllocationData.pointer == 0) { continue; } // Skipped operation due to pointer not being tracked during deferred processing
+
+            msgpack::pack(GetExportFile(), operationTimepoint);
+            msgpack::pack(GetExportFile(), operationAllocationData);
             msgpack::pack(GetExportFile(), stacktrace);
         }
+
+        // Clear buffers and reset backing memory
+        m_TimepointBuffer.resize(0);
+        m_AllocationDataBuffer.resize(0);
+        m_ResolvedStacktraceBuffer.resize(0);
     }
 
 }

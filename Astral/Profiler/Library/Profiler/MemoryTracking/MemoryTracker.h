@@ -7,6 +7,7 @@
 #pragma once
 
 #include "AllocationData.h"
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
 #include "GlobalAllocationStorage.h"
 #include "MemoryMetrics.h"
 #include "Serialization/SceneMetricsExporter.h"
@@ -82,6 +83,23 @@ namespace Astral {
         bool IsTrackingEnabled();
 
         /**
+         * @brief Enables the thread recursive guard
+         * @note This protects the memory profiler from tracking allocations made internally by the profiler
+         */
+        void EnableThreadRecursiveGuard();
+
+        /**
+         * @brief Disables the thread recursive guard
+         */
+        void DisableThreadRecursiveGuard();
+
+        /**
+         * @brief Checks if the thread recursive guard is enabled
+         * @return True if the thread recursive guard is enabled, false otherwise
+         */
+        bool IsThreadRecursiveGuardEnabled();
+
+        /**
          * @brief Gets the memory metrics
          * @return The memory metrics
          */
@@ -97,13 +115,36 @@ namespace Astral {
         MemoryTracker();
         ~MemoryTracker();
 
-        mutable std::shared_mutex m_Mutex;
+        struct DeferredTrackingOperation
+        {
+            AllocationData AllocationData; // Used only for allocation operations
+            uint64 OperationNumber;
+            bool IsAddingAllocation;
+            void* Pointer; // Used only for free operations
+        };
+
+        void DeferOperationTracking(const DeferredTrackingOperation& operation);
+        void ProcessDeferredOperations();
+        void ProcessorWorkerThreadMain();
+
+        mutable std::shared_mutex m_MemoryProfilerMutex;
 
         GlobalAllocationStorage m_GlobalAllocationStorage;
         SceneMetricsExporter m_SceneMetricsExporter;
         MemoryMetrics m_MemoryMetrics;
-
         std::atomic<bool> m_IsTrackingEnabled;
+
+        Astral::ReaderBiasedRWLock m_ThreadOperationBuffersRWMutex;
+        std::unordered_map<std::thread::id, std::vector<DeferredTrackingOperation>> m_ThreadOperationBuffers;
+        std::atomic<uint64> m_OperationCount;
+        static thread_local bool m_IsThreadRecursiveGuardEnabled;
+
+        std::jthread m_DeferredOperationsProcessor;
+        std::mutex m_ProcessorMutex;
+        std::condition_variable m_ProcessorConditionalVariable;
+        std::atomic<bool> m_ShouldProcessOperations;
+        std::atomic<bool> m_ShouldStopProcessingOperations;
+        std::atomic<bool> m_IsSceneStartEndSyncEnabled;
     };
 
 }

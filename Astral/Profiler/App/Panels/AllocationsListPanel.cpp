@@ -57,12 +57,12 @@ namespace Astral {
         if (viewMode == AllocationsViewMode::GROUPED_BY_ALLOCATION_ORDER)
         {
             AllocationDataSerializeable* items = (AllocationDataSerializeable*)data;
-            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].pointer, items[idx].size);
+            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].pointer, (size_t)items[idx].size);
         }
         else if (viewMode == AllocationsViewMode::GROUPED_BY_SIZE)
         {
             std::pair<AllocationDataSerializeable, int>* items = (std::pair<AllocationDataSerializeable, int>*)data;
-            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].first.pointer, items[idx].first.size);
+            snprintf(buffer, sizeof(buffer), "%p | Size: %zu bytes", items[idx].first.pointer, (size_t)items[idx].first.size);
         }
 
         return buffer;

@@ -56,8 +56,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("Engine::Init");
 
-        Astral::MemoryTracker::Get().Init();
-
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
         m_ImGuiManager->Init();
@@ -68,7 +66,6 @@ namespace Astral {
         m_SceneManager->Init();
         m_JobManager->Init();
         m_ApplicationModule->Init();
-
 
         AE_PROFILE_FUNCTION(cpuinfo_initialize(), "cpuinfo_initialize");
         AE_PROFILE_FUNCTION(glslang_initialize_process(), "glslang_initialize_process");
@@ -98,8 +95,6 @@ namespace Astral {
         m_ImGuiManager.reset();
         m_WindowManager->Shutdown();
         m_WindowManager.reset();
-
-        Astral::MemoryTracker::Get().Shutdown();
     }
 
 

@@ -15,6 +15,7 @@ int main()
         Astral::LogEngineDebugInfo(); // Need to set up window and rendering context before calling this.
         engine.Run();
         engine.Shutdown();
+        Astral::MemoryTracker::Get().Shutdown();
     }
 
 

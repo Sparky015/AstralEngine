@@ -112,30 +112,49 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
         unpacker.buffer_consumed(buffer.size());
 
         msgpack::object_handle objectHandle;
-        MemoryMetrics tempMemoryMetrics;
-        AllocationDataSerializeable allocationData;
+        unpacker.next(objectHandle);
+        MemoryMetrics memoryMetricsBuilder = objectHandle.get().as<MemoryMetrics>(); // initial memory metrics at scene start
+
+        AllocationDataSerializeable allocationDataSerialized;
         float allocationTime = 0.0f;
         std::string stacktrace;
+
         for (size_t i = 0; i < m_SceneMetricsStorage.GetExpectedSnapshotCount(); i++)
         {
             PROFILE_SCOPE("Looping through snapshots")
             try
             {
                 unpacker.next(objectHandle);
-                // LOG(objectHandle.get());
-                tempMemoryMetrics = objectHandle.get().as<MemoryMetrics>();
-
-                unpacker.next(objectHandle);
                 allocationTime = objectHandle.get().as<size_t>();
 
                 unpacker.next(objectHandle);
-                allocationData = objectHandle.get().as<AllocationDataSerializeable>();
+                allocationDataSerialized = objectHandle.get().as<AllocationDataSerializeable>();
 
                 unpacker.next(objectHandle);
                 stacktrace = objectHandle.get().as<std::string>();
 
-                m_SceneMetricsStorage.AppendSnapshot(tempMemoryMetrics, allocationTime, allocationData, stacktrace);
+                // if the size is negative, then by file serialization definition, the operation was a free. Otherwise, the operation was an allocation.
+                bool isAllocationOperation = allocationDataSerialized.size >= 0;
+                allocationDataSerialized.size = (isAllocationOperation ? allocationDataSerialized.size : (allocationDataSerialized.size * -1));
 
+                AllocationData allocationData = {
+                    .pointer = (void*)allocationDataSerialized.pointer,
+                    .size = (size_t)allocationDataSerialized.size,
+                    .region = allocationDataSerialized.region,
+                    .allocatorType = allocationDataSerialized.allocatorType,
+                    .threadID = *(std::thread::id*)&allocationDataSerialized.threadIDHash
+                };
+
+                if (isAllocationOperation)
+                {
+                    memoryMetricsBuilder.TrackAllocation(allocationData);
+                }
+                else
+                {
+                    memoryMetricsBuilder.TrackDeallocation(allocationData);
+                }
+
+                m_SceneMetricsStorage.AppendSnapshot(memoryMetricsBuilder, allocationTime, allocationDataSerialized, stacktrace);
             }
             catch (std::bad_cast&)
             {
