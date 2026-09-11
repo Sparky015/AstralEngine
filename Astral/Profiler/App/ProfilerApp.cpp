@@ -65,6 +65,12 @@ namespace Astral {
     }
 
 
+    ProfilerSceneDataCache& ProfilerApp::GetSceneDataCache()
+    {
+        return m_SceneDataCache;
+    }
+
+
     void ProfilerApp::UpdateProfilerAppUI()
     {
         PROFILE_SCOPE("ProfilerApp::UpdateProfilerAppUI")

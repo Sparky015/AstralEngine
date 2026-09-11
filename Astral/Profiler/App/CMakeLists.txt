@@ -21,6 +21,10 @@ add_executable(AstralProfiler
 
     Views/GraphViews.cpp
     Views/GraphViews.h
+    ProfilerSceneDataCache.cpp
+    ProfilerSceneDataCache.h
+    SceneStacktracePrefixTree.cpp
+    SceneStacktracePrefixTree.h
 )
 
 
