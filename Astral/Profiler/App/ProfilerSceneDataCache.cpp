@@ -10,7 +10,7 @@
 
 namespace Astral {
 
-    void ProfilerSceneDataCache::InitializeCache(SceneMetricsStorage* sceneMetricsStorage)
+    void ProfilerSceneDataCache::InitializeCache(const SceneMetricsStorage* sceneMetricsStorage)
     {
         if (!sceneMetricsStorage)
         {
@@ -56,7 +56,7 @@ namespace Astral {
     }
 
 
-    SceneMetricsStorage& ProfilerSceneDataCache::GetSceneMetricsStorage()
+    const SceneMetricsStorage& ProfilerSceneDataCache::GetSceneMetricsStorage()
     {
         return *m_SceneMetricsStorage;
     }
@@ -65,6 +65,12 @@ namespace Astral {
     std::vector<std::pair<AllocationDataSerializeable, int>>& ProfilerSceneDataCache::GetAllocationDataSortedBySize()
     {
         return m_SortedBySizeAllocationData;
+    }
+
+
+    SceneStacktracePrefixTree& ProfilerSceneDataCache::GetStacktracePrefixTree()
+    {
+        return m_SceneStacktracePrefixTree;
     }
 
 }

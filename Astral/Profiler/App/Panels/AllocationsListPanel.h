@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Core/Math/Math.h"
+#include "Profiler/App/SceneStacktracePrefixTree.h"
 #include "Profiler/MemoryTracking/Serialization/SceneMetricsStorage.h"
 
 namespace Astral {
@@ -78,9 +79,13 @@ namespace Astral {
          */
         static const char* AllocationDataArrayGetter(void* data, int idx);
 
+        /**
+         * @brief Displays the node and its children in ImGui tree
+         */
+        void DisplayPrefixNode(StacktracePrefixNode prefixNode);
+
         int m_SelectedPointIndex = 0;
         int m_SortedSelectedPointIndex = -1;
-        std::vector<std::pair<AllocationDataSerializeable, int>> m_SortedAllocationData = {}; // Container to cache sorted allocation data with .second containing a index mapping to the original allocation data order
 
         static Vec2 m_FilterInPlotLimits;
         static size_t m_FilterInThreadID;

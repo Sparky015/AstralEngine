@@ -62,6 +62,8 @@ namespace Astral {
     void ProfilerApp::LoadMemoryScene(std::string filePath)
     {
         m_SceneMetricsImporter.ImportMemoryProfile(filePath);
+        const SceneMetricsStorage& storageTest = m_SceneMetricsImporter.GetSceneMetrics();
+        m_SceneDataCache.InitializeCache(&storageTest);
     }
 
 

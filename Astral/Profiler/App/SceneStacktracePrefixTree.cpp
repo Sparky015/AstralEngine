@@ -22,16 +22,23 @@ namespace Astral {
             getline(stringstream, frame, '\n'); // Always ignore first line which is always "Stack trace (most recent call first):"
             while (getline(stringstream, frame, '\n'))
             {
+                std::stringstream frameStringstream = std::stringstream(frame);
+                getline(frameStringstream, frame, 'x'); // Removes the frame number - x should always be in the address of the symbol (weird inconsistency can happen where there can be two spaces in between frame number and addresses when not using x)
+                getline(frameStringstream, frame, ' '); // Removes the remaining part of the address
+                getline(frameStringstream, frame, ' '); // Removes the "at" between the address and the symbol name
+                getline(frameStringstream, frame, '\n'); // Puts the remaining part (the symbol name and file path) into 'frame'
+
                 frames.push_back(frame);
             }
         }
 
 
         StacktracePrefixNode* currentNode = &m_Root;
-        for (std::string& frame : frames)
+        for (int i = frames.size() - 1; i >= 0; i--)
         {
-            currentNode->InclusiveMemoryOperations++;
+            std::string& frame = frames[i];
             currentNode = &currentNode->FrameToChildNode[frame];
+            currentNode->InclusiveMemoryOperations++;
         }
     }
 

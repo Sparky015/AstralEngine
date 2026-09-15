@@ -10,6 +10,8 @@
 #include "imgui_internal.h"
 #include "ImPlot/implot.h"
 
+#include "Profiler/App/ProfilerApp.h"
+
 namespace Astral {
 
     Vec2 AllocationsListPanel::m_FilterInPlotLimits = {};
@@ -20,7 +22,8 @@ namespace Astral {
     enum class AllocationsViewMode
     {
         GROUPED_BY_ALLOCATION_ORDER,
-        GROUPED_BY_SIZE
+        GROUPED_BY_SIZE,
+        GROUPED_BY_CALL_TREE
     };
 
     static std::string_view AllocationsViewModeToString(AllocationsViewMode allocationsViewMode)
@@ -29,6 +32,7 @@ namespace Astral {
         {
             case AllocationsViewMode::GROUPED_BY_ALLOCATION_ORDER: return "Allocations in Order";
             case AllocationsViewMode::GROUPED_BY_SIZE:             return "Group by Size";
+            case AllocationsViewMode::GROUPED_BY_CALL_TREE:        return "Call Tree";
         }
         return "Undefined Case!";
     }
@@ -96,6 +100,10 @@ namespace Astral {
             {
                 viewMode = AllocationsViewMode::GROUPED_BY_SIZE;
             }
+            if (ImGui::Selectable("Call Tree"))
+            {
+                viewMode = AllocationsViewMode::GROUPED_BY_CALL_TREE;
+            }
 
             ImGui::EndCombo();
         }
@@ -128,56 +136,48 @@ namespace Astral {
         else if (viewMode == AllocationsViewMode::GROUPED_BY_SIZE)
         {
             const std::vector<AllocationDataSerializeable>& allocationData = storage.GetAllocationDataOverTime();
-            m_SortedAllocationData.resize(allocationData.size());
 
-            for (int i = 0; i < allocationData.size(); i++)
-            {
-                m_SortedAllocationData[i].first = allocationData[i];
-                m_SortedAllocationData[i].second = i;
-            }
-            std::ranges::stable_sort(m_SortedAllocationData, [](const std::pair<AllocationDataSerializeable, int>& p1, const std::pair<AllocationDataSerializeable, int>& p2) {
-                return p1.first.size < p2.first.size;
-            });
+            std::vector<std::pair<AllocationDataSerializeable, int>>& sortedAllocationData = ProfilerApp::Get().GetSceneDataCache().GetAllocationDataSortedBySize();
 
             int tinyAllocationsEndIndex = -1;
             int smallAllocationsEndIndex = -1;
             int mediumAllocationsEndIndex = -1;
 
 
-            for (int i = 0; i < m_SortedAllocationData.size(); i++)
+            for (int i = 0; i < sortedAllocationData.size(); i++)
             {
-                if (m_SortedAllocationData[i].first.size > 128)
+                if (sortedAllocationData[i].first.size > 128)
                 {
                     tinyAllocationsEndIndex = i - 1;
                     break;
                 }
             }
-            if (tinyAllocationsEndIndex == -1) { tinyAllocationsEndIndex = m_SortedAllocationData.size() - 1; }
+            if (tinyAllocationsEndIndex == -1) { tinyAllocationsEndIndex = sortedAllocationData.size() - 1; }
 
-            for (int i = tinyAllocationsEndIndex; i < m_SortedAllocationData.size(); i++)
+            for (int i = tinyAllocationsEndIndex; i < sortedAllocationData.size(); i++)
             {
-                if (m_SortedAllocationData[i].first.size > 1024)
+                if (sortedAllocationData[i].first.size > 1024)
                 {
                     smallAllocationsEndIndex = i - 1;
                     break;
                 }
             }
-            if (smallAllocationsEndIndex == -1) { smallAllocationsEndIndex = m_SortedAllocationData.size() - 1; }
+            if (smallAllocationsEndIndex == -1) { smallAllocationsEndIndex = sortedAllocationData.size() - 1; }
 
-            for (int i = smallAllocationsEndIndex; i < m_SortedAllocationData.size(); i++)
+            for (int i = smallAllocationsEndIndex; i < sortedAllocationData.size(); i++)
             {
-                if (m_SortedAllocationData[i].first.size > 8192)
+                if (sortedAllocationData[i].first.size > 8192)
                 {
                     mediumAllocationsEndIndex = i - 1;
                     break;
                 }
             }
-            if (mediumAllocationsEndIndex == -1) { mediumAllocationsEndIndex = m_SortedAllocationData.size() - 1; }
+            if (mediumAllocationsEndIndex == -1) { mediumAllocationsEndIndex = sortedAllocationData.size() - 1; }
 
             int numberOfTinyAllocations = tinyAllocationsEndIndex + 1;
             int numberOfSmallAllocations = smallAllocationsEndIndex - tinyAllocationsEndIndex;
             int numberOfMediumAllocations = mediumAllocationsEndIndex - smallAllocationsEndIndex;
-            int numberOfLargeAllocations = m_SortedAllocationData.size() - numberOfTinyAllocations - numberOfSmallAllocations - numberOfMediumAllocations;
+            int numberOfLargeAllocations = sortedAllocationData.size() - numberOfTinyAllocations - numberOfSmallAllocations - numberOfMediumAllocations;
 
             int smallDataOffset = numberOfTinyAllocations;
             int mediumDataOffset = numberOfTinyAllocations + numberOfSmallAllocations;
@@ -199,7 +199,7 @@ namespace Astral {
 
                 for (int j = 0; j < allocationNumbers[i]; j++)
                 {
-                    if (ShouldFilterAllocationOut(storage, m_SortedAllocationData[dataOffsets[i] + j].second))
+                    if (ShouldFilterAllocationOut(storage, sortedAllocationData[dataOffsets[i] + j].second))
                     {
                         filteredOutCount++;
                     }
@@ -222,7 +222,7 @@ namespace Astral {
             int smallSelectedIndex = -1;
             int mediumSelectedIndex = -1;
             int largeSelectedIndex = -1;
-            size_t sortedSelectedPointSize = m_SortedAllocationData[m_SortedSelectedPointIndex].first.size;
+            size_t sortedSelectedPointSize = sortedAllocationData[m_SortedSelectedPointIndex].first.size;
 
             if (sortedSelectedPointSize <= 128)
             {
@@ -244,45 +244,62 @@ namespace Astral {
 
             if (ImGui::TreeNode(tinyLabel))
             {
-                if (ImGuiCustomListBox("##TinyAllocations", &tinySelectedIndex, AllocationDataArrayGetter, (void*)m_SortedAllocationData.data(), numberOfTinyAllocations, 10))
+                if (ImGuiCustomListBox("##TinyAllocations", &tinySelectedIndex, AllocationDataArrayGetter, (void*)sortedAllocationData.data(), numberOfTinyAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = tinySelectedIndex;
-                    m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
+                    m_SelectedPointIndex = sortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
                 ImGui::TreePop();
             }
             if (ImGui::TreeNode(smallLabel))
             {
-                if (ImGuiCustomListBox("##SmallAllocations", &smallSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + smallDataOffset, numberOfSmallAllocations, 10))
+                if (ImGuiCustomListBox("##SmallAllocations", &smallSelectedIndex, AllocationDataArrayGetter, sortedAllocationData.data() + smallDataOffset, numberOfSmallAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = smallDataOffset + smallSelectedIndex;
-                    m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
+                    m_SelectedPointIndex = sortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
                 ImGui::TreePop();
             }
             if (ImGui::TreeNode(mediumLabel))
             {
-                if (ImGuiCustomListBox("##MediumAllocations", &mediumSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + mediumDataOffset, numberOfMediumAllocations, 10))
+                if (ImGuiCustomListBox("##MediumAllocations", &mediumSelectedIndex, AllocationDataArrayGetter, sortedAllocationData.data() + mediumDataOffset, numberOfMediumAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = mediumDataOffset + mediumSelectedIndex;
-                    m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
+                    m_SelectedPointIndex = sortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
                 ImGui::TreePop();
             }
             if (ImGui::TreeNode(largeLabel))
             {
-                if (ImGuiCustomListBox("##LargeAllocations", &largeSelectedIndex, AllocationDataArrayGetter, m_SortedAllocationData.data() + largeDataOffset, numberOfLargeAllocations, 10))
+                if (ImGuiCustomListBox("##LargeAllocations", &largeSelectedIndex, AllocationDataArrayGetter, sortedAllocationData.data() + largeDataOffset, numberOfLargeAllocations, 10))
                 {
                     m_SortedSelectedPointIndex = largeDataOffset + largeSelectedIndex;
-                    m_SelectedPointIndex = m_SortedAllocationData[m_SortedSelectedPointIndex].second;
+                    m_SelectedPointIndex = sortedAllocationData[m_SortedSelectedPointIndex].second;
                 }
                 ImGui::Spacing();
                 ImGui::TreePop();
             }
 
+        }
+        else if (viewMode == AllocationsViewMode::GROUPED_BY_CALL_TREE)
+        {
+            SceneStacktracePrefixTree& stacktracePrefixTree = ProfilerApp::Get().GetSceneDataCache().GetStacktracePrefixTree();
+            const StacktracePrefixNode& root = stacktracePrefixTree.GetPrefixTreeRoot();
+
+
+            for (auto& [frameName, node] : root.FrameToChildNode)
+            {
+                std::string nameAndCount = std::string("Operations: ") + std::to_string(node.InclusiveMemoryOperations) + "  |||  " + frameName;
+                if (ImGui::TreeNode(nameAndCount.c_str()))
+                {
+                    DisplayPrefixNode(node);
+                    ImGui::Spacing();
+                    ImGui::TreePop();
+                }
+            }
         }
 
         ImGui::End();
@@ -396,6 +413,21 @@ namespace Astral {
     void AllocationsListPanel::SetListAllocatorFilterIn(MemoryTrackerAllocatorType allocatorType)
     {
         m_FilterInAllocatorType = allocatorType;
+    }
+
+
+    void AllocationsListPanel::DisplayPrefixNode(StacktracePrefixNode prefixNode)
+    {
+        for (auto& [frameName, node] : prefixNode.FrameToChildNode)
+        {
+            std::string nameAndCount = std::string("Operations: ") + std::to_string(node.InclusiveMemoryOperations) + "  |||  " + frameName;
+            if (ImGui::TreeNode(nameAndCount.c_str()))
+            {
+                DisplayPrefixNode(node);
+                ImGui::Spacing();
+                ImGui::TreePop();
+            }
+        }
     }
 
 }
