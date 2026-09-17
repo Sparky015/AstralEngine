@@ -8,14 +8,15 @@
 #include "AllocationData.h"
 #include "Core/Events/EventListener.h"
 #include "GlobalAllocationStorage.h"
-// #include "Core/EngineLoopEvents.h"
 #include "msgpack.hpp"
 
 namespace Astral {
 
-    /**@struct FrameAllocationData
+    /**
+     * @struct FrameAllocationData
      * @brief Stores memory usage data for a frame.
-     * Tracks number of allocations and frees as well as total allocated and freed bytes */
+     * Tracks number of allocations and frees as well as total allocated and freed bytes
+     */
     struct FrameAllocationData
     {
         FrameAllocationData() : AllocatedBytes(0), NumberOfAllocations(0) {}
@@ -26,14 +27,14 @@ namespace Astral {
     };
 
 
-    /**@class MemoryMetrics
+    /**
+     * @class MemoryMetrics
      * @brief Stores memory usage stats for the engine.
-     * @note This class is NOT thread safe. */
+     * @note This class is NOT thread safe.
+     */
     class MemoryMetrics
     {
     public:
-
-
         MemoryMetrics();
         ~MemoryMetrics() = default;
 
@@ -41,106 +42,202 @@ namespace Astral {
         using MemoryRegionMap = std::unordered_map<MemoryRegion, size_t, std::hash<MemoryRegion>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const MemoryRegion, size_t>>>;
         using ThreadMap = std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<>, NoTrackingSTLAllocator<std::pair<const size_t, size_t>>>;
 
-        /**@brief Initializes necessary components for MemoryMetrics. Call before using MemoryMetrics */
+        /**
+         * @brief Initializes necessary components for MemoryMetrics. Call before using MemoryMetrics
+         */
         void Init();
 
-        /**@brief Shuts down necessary components for MemoryMetrics. Call when done using MemoryMetrics */
+        /**
+         * @brief Shuts down necessary components for MemoryMetrics. Call when done using MemoryMetrics
+         */
         void Shutdown();
 
-        /**@brief Marks a new allocation and adds the allocation data to the memory metrics
-         * @param allocationData The detail information of the allocation being added. */
+        /**
+         * @brief Marks a new allocation and adds the allocation data to the memory metrics
+         * @param allocationData The detail information of the allocation being added.
+         */
         void TrackAllocation(const AllocationData& allocationData);
 
-        /**@brief Marks a new deallocation and removes the allocation data from the memory metrics
-         * @param allocationData The detailed information of the allocation being removed. */
+        /**
+         * @brief Marks a new deallocation and removes the allocation data from the memory metrics
+         * @param allocationData The detailed information of the allocation being removed.
+         */
         void TrackDeallocation(const AllocationData& allocationData);
 
-        /**@brief Retrieves the peak allocated bytes over the course of the program
-         * @return The peak memory usage of the program */
-        [[nodiscard]] size_t GetPeakMemoryUsage() const { return m_PeakMemoryUsage; }
+        /**
+         * @brief Retrieves the peak allocated bytes over the course of the program
+         * @return The peak memory usage of the program
+         */
+        [[nodiscard]] size_t GetPeakMemoryUsage() const;
 
-        /**@brief Retrieves the total allocated bytes over the course of the program
-         * @return The total memory usage of the program */
-        [[nodiscard]] size_t GetTotalMemoryUsage() const { return m_TotalMemoryUsage; }
+        /**
+         * @brief Retrieves the total allocated bytes over the course of the program
+         * @return The total memory usage of the program
+         */
+        [[nodiscard]] size_t GetTotalMemoryUsage() const;
 
-        /**@brief Retrieves the current active allocations (Number of allocations that were allocated but not freed yet)
-         * @return The current active allocation count */
-        [[nodiscard]] size_t GetTotalActiveAllocations() const { return m_TotalActiveAllocations; }
+        /**
+         * @brief Retrieves the current active allocations (Number of allocations that were allocated but not freed yet)
+         * @return The current active allocation count
+         */
+        [[nodiscard]] size_t GetTotalActiveAllocations() const;
 
-        /**@brief Retrieves the current total allocations made
-            * @return The current total allocation count */
-        [[nodiscard]] size_t GetTotalAllocations() const { return m_TotalAllocations; }
+        /**
+         * @brief Retrieves the current total allocations made
+         * @return The current total allocation count
+         */
+        [[nodiscard]] size_t GetTotalAllocations() const;
 
-        /**@brief Retrieves memory usage metrics for the current frame
-         * @return The memory usage metrics of the current frame */
-        [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const { return m_OldFrameAllocationData; }
+        /**
+         * @brief Retrieves memory usage metrics for the current frame
+         * @return The memory usage metrics of the current frame
+         */
+        [[nodiscard]] const FrameAllocationData& GetFrameAllocationData() const;
 
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the memory usage of the given allocator type
+         * @param allocatorType The allocator type to get the memory usage of
+         * @return The memory usage of the given allocator type
+         */
         [[nodiscard]] size_t GetAllocatorTypeUsage(MemoryTrackerAllocatorType allocatorType) const;
 
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the peak memory usage of the given allocator type
+         * @param allocatorType The allocator type to get the peak memory usage of
+         * @return The peak memory usage of the given allocator type
+         */
         [[nodiscard]] size_t GetAllocatorTypePeakUsage(MemoryTrackerAllocatorType allocatorType) const;
 
-
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the memory usage of the given memory region
+         * @param memoryRegion The memory region to get the memory usage of
+         * @return The memory usage of the given memory region
+         */
         [[nodiscard]] size_t GetMemoryRegionUsage(MemoryRegion memoryRegion) const;
 
-
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the peak memory usage of the given memory region
+         * @param memoryRegion The memory region to get the peak memory usage of
+         * @return The peak memory usage of the given memory region
+         */
         [[nodiscard]] size_t GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const;
 
-
-
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the memory usage of the given thread
+         * @param threadID The thread ID of the thread to get the memory usage of
+         * @return The memory usage of the given thread
+         */
         [[nodiscard]] size_t GetThreadUsage(std::thread::id threadID) const;
 
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
+        /**
+         * @brief Gets the peak memory usage of the given thread
+         * @param threadID The thread ID of the thread to get the peak memory usage of
+         * @return The peak memory usage of the given thread
+         */
         [[nodiscard]] size_t GetThreadPeakUsage(std::thread::id threadID) const;
 
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetThreadActiveAllocations(const std::thread::id threadID) const;
+        /**
+         * @brief Gets the active allocation count of the given thread
+         * @param threadID The thread ID of the thread to get the active allocation count of
+         * @return The active allocation count of the given thread
+         */
+        [[nodiscard]] size_t GetThreadActiveAllocations(std::thread::id threadID) const;
 
-        /**@brief Retrieves memory usage metrics for the allocator type.
-         * @return The memory usage metrics of the allocator type */
-        [[nodiscard]] size_t GetThreadTotalAllocations(const std::thread::id threadID) const;
+        /**
+         * @brief Gets the total allocation count of the given thread
+         * @param threadID The thread ID of the thread to get the total allocation count of
+         * @return The total allocation count of the given thread
+         */
+        [[nodiscard]] size_t GetThreadTotalAllocations(std::thread::id threadID) const;
+
+        /**
+         * @brief Gets an iterable data structure of the memory usages by allocator type
+         * @return An iterable data structure of the memory usages by allocator type
+         */
+        [[nodiscard]] const AllocatorTypeMap& GetMemoryUsageByAllocatorIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the peak memory usages by allocator type
+        * @return An iterable data structure of the peak memory usages by allocator type
+        */
+        [[nodiscard]] const AllocatorTypeMap& GetPeakMemoryUsageByAllocatorIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the active allocations by allocator type
+        * @return An iterable data structure of the active allocations by allocator type
+        */
+        [[nodiscard]] const AllocatorTypeMap& GetActiveAllocationsByAllocatorIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the total allocations by allocator type
+        * @return An iterable data structure of the total allocations by allocator type
+        */
+        [[nodiscard]] const AllocatorTypeMap& GetTotalAllocationsByAllocatorIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the memory usage by memory region
+        * @return An iterable data structure of the memory usage by memory region
+        */
+        [[nodiscard]] const MemoryRegionMap& GetMemoryUsageByRegionIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the peak memory usage by memory region
+        * @return An iterable data structure of the peak memory usage by memory region
+        */
+        [[nodiscard]] const MemoryRegionMap& GetPeakMemoryUsageByRegionIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the active allocations by memory region
+        * @return An iterable data structure of the active allocations by memory region
+        */
+        [[nodiscard]] const MemoryRegionMap& GetActiveAllocationsByRegionIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the total allocations by memory region
+        * @return An iterable data structure of the total allocations by memory region
+        */
+        [[nodiscard]] const MemoryRegionMap& GetTotalAllocationsByRegionIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the memory usage by thread
+        * @return An iterable data structure of the memory usage by thread
+        */
+        [[nodiscard]] const ThreadMap& GetMemoryUsageByThreadIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the peak memory usage by thread
+        * @return An iterable data structure of the peak memory usage by thread
+        */
+        [[nodiscard]] const ThreadMap& GetPeakMemoryUsageByThreadIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the active allocations by thread
+        * @return An iterable data structure of the active allocations by thread
+        */
+        [[nodiscard]] const ThreadMap& GetActiveAllocationsByThreadIterable() const;
+
+        /**
+        * @brief Gets an iterable data structure of the total allocations by thread
+        * @return An iterable data structure of the total allocations by thread
+        */
+        [[nodiscard]] const ThreadMap& GetTotalAllocationsByThreadIterable() const;
+
+        /**
+         * @brief Calculates the thread ID hash of the given thread ID
+         * @param id The thread ID to hash
+         * @return The hash of the given thread ID
+         */
+        [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const;
 
 
-        [[nodiscard]] const AllocatorTypeMap& GetMemoryUsageByAllocatorIterable() const { return m_MemoryUsageByAllocator; }
-        [[nodiscard]] const AllocatorTypeMap& GetPeakMemoryUsageByAllocatorIterable() const { return m_PeakMemoryUsageByAllocator; }
-        [[nodiscard]] const AllocatorTypeMap& GetActiveAllocationsByAllocatorIterable() const { return m_ActiveAllocationsByAllocator; }
-        [[nodiscard]] const AllocatorTypeMap& GetTotalAllocationsByAllocatorIterable() const { return m_TotalAllocationsByAllocator; }
-
-        [[nodiscard]] const MemoryRegionMap& GetMemoryUsageByRegionIterable() const { return m_MemoryUsageByRegion; }
-        [[nodiscard]] const MemoryRegionMap& GetPeakMemoryUsageByRegionIterable() const { return m_PeakMemoryUsageByRegion; }
-        [[nodiscard]] const MemoryRegionMap& GetActiveAllocationsByRegionIterable() const { return m_ActiveAllocationsByRegion; }
-        [[nodiscard]] const MemoryRegionMap& GetTotalAllocationsByRegionIterable() const { return m_TotalAllocationsByRegion; }
-
-        [[nodiscard]] const ThreadMap& GetMemoryUsageByThreadIterable() const { return m_MemoryUsageByThread; }
-        [[nodiscard]] const ThreadMap& GetPeakMemoryUsageByThreadIterable() const { return m_PeakMemoryUsageByThread; }
-        [[nodiscard]] const ThreadMap& GetActiveAllocationsByThreadIterable() const { return m_ActiveAllocationsByThread; }
-        [[nodiscard]] const ThreadMap& GetTotalAllocationsByThreadIterable() const { return m_TotalAllocationsByThread; }
-
-        [[nodiscard]] size_t GetThreadIDHash(const std::thread::id& id) const { return std::hash<std::thread::id>{}(id); }
-
-        // There is no need for copying this class.
         MemoryMetrics(const MemoryMetrics&) = delete;
         MemoryMetrics& operator=(const MemoryMetrics&) = delete;
         MemoryMetrics(MemoryMetrics&&) noexcept = default;
         MemoryMetrics& operator=(MemoryMetrics&&) noexcept = default;
 
     private:
-        // TODO: Switch from a hashmap to an array for memory regions and allocator types because the size is known at compile time
-        // and the enum values translate to indices easily
 
-        // Underlying type of std::thread::id is size_t. Cast std::thread::id to size_t for serialization purposes
-
+        // TODO: Switch from a hashmap to an array for memory regions and allocator types because the size is known at compile time and the enum values translate to indices easily
         // TODO: Maybe use some sort of static atomic + thread_local flag to track thread ID indices in an array to avoid hashing
 
         uint64 m_PeakMemoryUsage;

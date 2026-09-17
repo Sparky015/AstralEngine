@@ -60,12 +60,9 @@ namespace Astral {
 
 
         m_IsSceneStartEndSyncEnabled = true;
-        m_ShouldProcessOperations = true;
-        m_ProcessorConditionalVariable.notify_one();
+        ProcessDeferredOperationsBuffer();
 
         std::unique_lock lock(m_MemoryProfilerMutex);
-
-        while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
 
         bool successFlag = m_SceneMetricsExporter.BeginScene(sceneName, m_MemoryMetrics);
         if (!successFlag) { AE_LOG("Memory profiling scene \"" << sceneName << "\" failed to start!") }
@@ -90,10 +87,7 @@ namespace Astral {
 #endif
 
         m_IsSceneStartEndSyncEnabled = true;
-        m_ShouldProcessOperations = true;
-        m_ProcessorConditionalVariable.notify_one();
-
-        while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
+        ProcessDeferredOperationsBuffer();
 
         std::unique_lock lock(m_MemoryProfilerMutex);
         m_SceneMetricsExporter.EndScene();
@@ -178,9 +172,174 @@ namespace Astral {
     }
 
 
-    const MemoryMetrics& MemoryTracker::GetMemoryMetrics() const
+    void MemoryTracker::ProcessDeferredOperationsBuffer()
     {
-        return m_MemoryMetrics;
+        m_ShouldProcessOperations = true;
+        m_ProcessorConditionalVariable.notify_one();
+        while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
+    }
+
+
+    size_t MemoryTracker::GetPeakMemoryUsage() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetPeakMemoryUsage();
+    }
+
+
+    size_t MemoryTracker::GetTotalMemoryUsage() const
+    {
+        std::shared_lock readerLock{m_MemoryMetricsRWLock};
+        return m_MemoryMetrics.GetTotalMemoryUsage();
+    }
+
+
+    size_t MemoryTracker::GetTotalActiveAllocations() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetTotalActiveAllocations();
+    }
+
+
+    size_t MemoryTracker::GetTotalAllocations() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetTotalAllocations();
+    }
+
+
+    FrameAllocationData MemoryTracker::GetFrameAllocationData() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetFrameAllocationData();
+    }
+
+
+    size_t MemoryTracker::GetAllocatorTypeUsage(MemoryTrackerAllocatorType allocatorType) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetAllocatorTypeUsage(allocatorType);
+    }
+
+
+    size_t MemoryTracker::GetAllocatorTypePeakUsage(MemoryTrackerAllocatorType allocatorType) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetAllocatorTypePeakUsage(allocatorType);
+    }
+
+
+    size_t MemoryTracker::GetMemoryRegionUsage(MemoryRegion memoryRegion) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetMemoryRegionUsage(memoryRegion);
+    }
+
+
+    size_t MemoryTracker::GetMemoryRegionPeakUsage(MemoryRegion memoryRegion) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetMemoryRegionPeakUsage(memoryRegion);
+    }
+
+
+    size_t MemoryTracker::GetThreadUsage(std::thread::id threadID) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetThreadUsage(threadID);
+    }
+
+
+    size_t MemoryTracker::GetThreadPeakUsage(std::thread::id threadID) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetThreadPeakUsage(threadID);
+    }
+
+
+    size_t MemoryTracker::GetThreadActiveAllocations(const std::thread::id threadID) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetThreadActiveAllocations(threadID);
+    }
+
+
+    size_t MemoryTracker::GetThreadTotalAllocations(const std::thread::id threadID) const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetThreadTotalAllocations(threadID);
+    }
+
+    MemoryMetrics::AllocatorTypeMap MemoryTracker::GetMemoryUsageByAllocatorIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetMemoryUsageByAllocatorIterable();
+    }
+
+    MemoryMetrics::AllocatorTypeMap MemoryTracker::GetPeakMemoryUsageByAllocatorIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetPeakMemoryUsageByAllocatorIterable();
+    }
+
+    MemoryMetrics::AllocatorTypeMap MemoryTracker::GetActiveAllocationsByAllocatorIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetActiveAllocationsByAllocatorIterable();
+    }
+
+    MemoryMetrics::AllocatorTypeMap MemoryTracker::GetTotalAllocationsByAllocatorIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetTotalAllocationsByAllocatorIterable();
+    }
+
+    MemoryMetrics::MemoryRegionMap MemoryTracker::GetMemoryUsageByRegionIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetMemoryUsageByRegionIterable();
+    }
+
+    MemoryMetrics::MemoryRegionMap MemoryTracker::GetPeakMemoryUsageByRegionIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetPeakMemoryUsageByRegionIterable();
+    }
+
+    MemoryMetrics::MemoryRegionMap MemoryTracker::GetActiveAllocationsByRegionIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetActiveAllocationsByRegionIterable();
+    }
+
+    MemoryMetrics::MemoryRegionMap MemoryTracker::GetTotalAllocationsByRegionIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetTotalAllocationsByRegionIterable();
+    }
+
+    MemoryMetrics::ThreadMap MemoryTracker::GetMemoryUsageByThreadIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetMemoryUsageByThreadIterable();
+    }
+
+    MemoryMetrics::ThreadMap MemoryTracker::GetPeakMemoryUsageByThreadIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetPeakMemoryUsageByThreadIterable();
+    }
+
+    MemoryMetrics::ThreadMap MemoryTracker::GetActiveAllocationsByThreadIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetActiveAllocationsByThreadIterable();
+    }
+
+    MemoryMetrics::ThreadMap MemoryTracker::GetTotalAllocationsByThreadIterable() const
+    {
+        std::shared_lock readerLock(m_MemoryMetricsRWLock);
+        return m_MemoryMetrics.GetTotalAllocationsByThreadIterable();
     }
 
 
@@ -272,6 +431,8 @@ namespace Astral {
                     }
 
                     m_GlobalAllocationStorage.AddPointer(operation.AllocationData);
+
+                    std::unique_lock memoryMetricsWriteLock(m_MemoryMetricsRWLock);
                     m_MemoryMetrics.TrackAllocation(operation.AllocationData);
                 }
                 else
@@ -294,7 +455,10 @@ namespace Astral {
                         m_SceneMetricsExporter.SaveOperationDataToBuffer(allocationData, true);
                     }
 
+                    std::unique_lock memoryMetricsWriteLock(m_MemoryMetricsRWLock);
                     m_MemoryMetrics.TrackDeallocation(allocationData);
+                    memoryMetricsWriteLock.unlock();
+
                     m_GlobalAllocationStorage.FreePointer(operation.Pointer);
                 }
             }

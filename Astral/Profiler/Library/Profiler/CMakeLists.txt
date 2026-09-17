@@ -65,6 +65,7 @@ target_include_directories(AstralProfilerAPI PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPa
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    # DEBUG
     target_compile_definitions(AstralProfilerAPI PUBLIC
             -DASTRAL_DEBUG_BUILD
+            #-DASTRAL_SCOPE_MEMORY_ALLOCATION_PROFILER_ENABLED
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release

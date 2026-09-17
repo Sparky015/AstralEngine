@@ -6,7 +6,7 @@
 
 #include <chrono>
 
-/** Profiles a scope and outputs the time to the console. */
+/** Profiles a scope and outputs the time to disk. */
 #ifndef TURN_OFF_PROFILER_MACRO
 #define PROFILE_SCOPE(title) Astral::Macros::macro_SCOPE_PROFILER localScopedProfiler = Astral::Macros::macro_SCOPE_PROFILER(title);
 #else
@@ -29,10 +29,10 @@ namespace Astral::Macros {
         ~macro_SCOPE_PROFILER() noexcept;
     private:
         const char* m_title;
-        const std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_EndTime;
         size_t m_StartAllocationCount;
-        size_t m_EndAllocationCount{};
+        size_t m_EndAllocationCount;
     };
 
 }
