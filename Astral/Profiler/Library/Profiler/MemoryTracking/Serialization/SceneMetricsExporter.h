@@ -11,11 +11,9 @@
 
 #include "Core/Time/Clock.h"
 
-#include "msgpack.hpp"
 #include <cpptrace/formatting.hpp>
 #include <fstream>
-
-
+#include <stack>
 
 namespace Astral {
 

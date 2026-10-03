@@ -14,6 +14,7 @@
 #include <iostream>
 #include <cpptrace/formatting.hpp>
 #include "cpptrace/cpptrace.hpp"
+#include "msgpack.hpp"
 
 namespace Astral {
 

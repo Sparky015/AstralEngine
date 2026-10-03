@@ -68,5 +68,5 @@ elseif (APPLE AND TARGET VulkanDependencies)
             spirv-cross-glsl
     )
 
-    target_include_directories()
+    target_include_directories(VulkanDependencies INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../spirv-cross/include)
 endif ()
