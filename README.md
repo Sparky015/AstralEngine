@@ -111,60 +111,8 @@ Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to
 
 -----
 
-- main --> The branch for releases   (no actual releases have happened yet)
-- development -> All work is done in this branch or a branch based from it
-- feature-X -> Branches for feature work to be done on
-- experimental-X -> Branches for to explore the potential and limits of a new feature idea
+- main      --> Latest development
+- bug-X     --> Branches for bug fix work to be done on
+- feature-X --> Branches for feature work to be done on
+- doc-X     --> Branches for changing or adding documentation
 
-
-
-### Dependencies and Third Party Libraries
-
------
-
-- GLFW: For a cross-platform window
-- GLAD: For loading OpenGL 
-- cpuinfo: For detecting the cpu name, amount of cores, and other info
-- glm: For math 
-- googletest: For unit testing
-- imgui: For debug menus and the editor UI
-- ImPlot: For graphing memory profiling data
-- msgpack: For serialization and deserialization
-- stb_image: For loading image files
-- cpptrace: For generating stacktraces (temporary, waiting for C++23 stacktraces to be implemented)
-- nativefiledialog-extended: For native file dialog windows on macOS and Windows
-- Half: For half float support
-- gli: For loading .ktx and .dds files
-- ImGuizmo: For gizmos in the editor for things like moving entities or rotating them
-- yaml-cpp: For saving things like material files to disk (scene files in the future)
-
-
-### Current C++ Version (C++20)
-
------
-
-This project is using C++20 currently and mainly for [[unlikely]], [[likely]], consteval, and constexpr improvements 
-
-
-I am looking to switch to C++23 when the stacktraces feature is actually implemented by
-all the major compilers. Also, std::unreachable would be useful.
-
-
-### Testing Environment
-
----- 
-
-#### Tested IDEs:
-
-macOS: CLion and Xcode     
-Windows: CLion and Visual Studio   
-
-#### Hardware used for Testing: 
-
-macOS is tested using a MacBook M1 Pro       
-Windows is tested using a PC with a Ryzen 5600X and Nvidia RTX 3070 Ti
-
-#### Tested Compiler Versions:
-
-MacOS: AppleClang 16.0.0, Clang 19.1.7      
-Windows: MSVC 19.43
