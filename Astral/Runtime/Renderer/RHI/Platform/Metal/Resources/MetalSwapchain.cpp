@@ -1,0 +1,79 @@
+/**
+* @file MetalSwapchain.cpp
+* @author Andrew Fagan
+* @date 3/23/26
+*/
+
+#include "MetalSwapchain.h"
+
+#include "MetalRenderTarget.h"
+#include "Core/Utilities/Asserts.h"
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Platform/Metal/Common/MTLEnumConversions.h"
+
+namespace Astral {
+
+    MetalSwapchain::MetalSwapchain(const MetalSwapchainDesc& metalSwapchainDesc) :
+        m_Device(metalSwapchainDesc.Device),
+        m_CAMetalLayer(metalSwapchainDesc.CAMetalLayer)
+    {
+        ASSERT(m_CAMetalLayer, "Metal Swapchain can not be created with null CA::MetalLayer")
+        UVec2 windowExtent = RendererAPI::GetContext().GetWindowFramebufferDimensions();
+        m_CAMetalLayer->setDrawableSize(CGSizeMake(windowExtent.x, windowExtent.y));
+    }
+
+
+    GraphicsRef<RenderTarget> MetalSwapchain::AcquireNextImage()
+    {
+        PROFILE_SCOPE("MetalSwapchain::AcquireNextImage")
+
+        CA::MetalDrawable* nextDrawable = m_CAMetalLayer->nextDrawable();
+
+        MetalRenderTargetDesc renderTargetDesc = {
+            .Device = m_Device,
+            .Drawable = nextDrawable
+        };
+
+         return CreateGraphicsRef<MetalRenderTarget>(renderTargetDesc);
+    }
+
+
+    uint32 MetalSwapchain::GetNumberOfImages()
+    {
+        return m_CAMetalLayer->maximumDrawableCount();
+    }
+
+
+    ImageFormat MetalSwapchain::GetImageFormat()
+    {
+        MTL::PixelFormat swapchainImageFormat = m_CAMetalLayer->pixelFormat();
+        return ConvertMTLPixelFormatToImageFormat(swapchainImageFormat);
+    }
+
+
+    UVec2 MetalSwapchain::GetImageDimensions()
+    {
+        CGSize dimensions = m_CAMetalLayer->drawableSize();
+        return UVec2(dimensions.width, dimensions.height);
+    }
+
+
+    void MetalSwapchain::RecreateSwapchain(uint32 width, uint32 height)
+    {
+        m_CAMetalLayer->setDrawableSize(CGSizeMake(width, height));
+    }
+
+
+    void MetalSwapchain::RecreateSwapchain(bool isVSyncEnabled)
+    {
+        m_CAMetalLayer->setDisplaySyncEnabled(isVSyncEnabled);
+    }
+
+
+    void* MetalSwapchain::GetNativeHandle()
+    {
+        return m_CAMetalLayer;
+    }
+
+}
+

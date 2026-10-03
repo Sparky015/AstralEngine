@@ -1,0 +1,27 @@
+//
+// Created by Andrew Fagan on 11/29/24.
+//
+
+#include "VertexBuffer.h"
+
+#include "Core/Engine.h"
+#include "Core/Utilities/Error.h"
+#include "Renderer/RendererManager.h"
+#include "Renderer/RHI/RendererCommands.h"
+
+namespace Astral {
+
+    VertexBufferHandle VertexBuffer::CreateVertexBuffer(float* vertexData, uint32 size, VertexBufferLayout& bufferLayout, GPUMemoryType memoryType)
+    {
+        Device& device = Engine::Get().GetRendererManager().GetContext().GetDevice();
+
+        switch (RendererCommands::GetAPI())
+        {
+            case API::Vulkan: return device.CreateVertexBuffer(vertexData, size, bufferLayout, memoryType);
+            case API::DirectX12: AE_ERROR("DirectX12 is not supported yet!");
+            case API::Metal: return device.CreateVertexBuffer(vertexData, size, bufferLayout, memoryType);
+            default: AE_ERROR("Invalid Renderer API");
+        }
+    }
+
+} // Renderer

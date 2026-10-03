@@ -1,0 +1,251 @@
+/**
+* @file DescriptorSetTest.cpp
+* @author Andrew Fagan
+* @date 9/21/25
+*/
+
+
+#include "gtest/gtest.h"
+
+#include "Renderer/RHI/RendererAPI.h"
+#include "Renderer/RHI/Resources/DescriptorSet.h"
+
+namespace Astral {
+
+    class DescriptorSetTests : public ::testing::Test
+    {
+    public:
+
+        void SetUp() override
+        {
+            RendererAPI::GetContext().ClearNumValidationErrorsAndWarnings();
+        }
+
+    };
+
+    TEST_F(DescriptorSetTests, BuildSet_CorrectlyCreatesDescriptorSetWithoutError)
+    {
+        DescriptorSetHandle descriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+
+        TextureCreateInfo testTextureCreateInfo = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Layout = ImageLayout::GENERAL,
+            .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .Dimensions = Vec2(20, 20),
+            .ImageData = nullptr,
+            .LayerCount = 1,
+            .MipMapCount = 1,
+        };
+        TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
+
+        float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
+
+
+        descriptorSet->BeginBuildingSet();
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer, ShaderStage::ALL);
+        descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(1), testUniformBuffer);
+
+        ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
+    }
+
+    TEST_F(DescriptorSetTests, BuildSet_2_CorrectlyCreatesDescriptorSetWithoutError)
+    {
+        DescriptorSetHandle descriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+
+
+        float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
+
+        float testData2[3] = {1.0f, 1.0, 0.0f};
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
+
+        uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
+
+
+        descriptorSet->BeginBuildingSet();
+        descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorStorageBuffer(testStorageBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer2, ShaderStage::ALL);
+        descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(0), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer2);
+
+        ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
+    }
+
+
+    TEST_F(DescriptorSetTests, BuildSet_3_CorrectlyCreatesDescriptorSetWithoutError)
+    {
+        DescriptorSetHandle descriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+
+
+        TextureCreateInfo testTextureCreateInfo = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Layout = ImageLayout::GENERAL,
+            .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .Dimensions = Vec2(40, 40),
+            .ImageData = nullptr,
+            .LayerCount = 1,
+            .MipMapCount = 1,
+        };
+        TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
+
+
+        descriptorSet->BeginBuildingSet();
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(1), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(2), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(4), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(5), testTexture);
+        ASSERT_EQ(descriptorSet->GetImageSampler(6), testTexture);
+
+        ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
+    }
+
+
+    TEST_F(DescriptorSetTests, UpdateUniformBinding_CorrectlyUpdatesBindingWithoutError)
+    {
+        DescriptorSetHandle descriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+
+
+        TextureCreateInfo testTextureCreateInfo = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Layout = ImageLayout::GENERAL,
+            .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .Dimensions = Vec2(40, 40),
+            .ImageData = nullptr,
+            .LayerCount = 1,
+            .MipMapCount = 1,
+        };
+        TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
+
+
+        float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::DEVICE_LOCAL);
+
+        float testData2[3] = {1.0f, 1.0, 0.0f};
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
+
+        uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
+
+
+        descriptorSet->BeginBuildingSet();
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorStorageBuffer(testStorageBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->EndBuildingSet();
+
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+
+
+        descriptorSet->UpdateUniformBinding(2, testUniformBuffer2);
+        BufferHandle bindedBuffer = descriptorSet->GetUniformBuffer(2);
+        ASSERT_EQ(bindedBuffer, testUniformBuffer2);
+
+
+        ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
+    }
+
+
+    TEST_F(DescriptorSetTests, UpdateUniformBinding_2_CorrectlyUpdatesBindingWithoutError)
+    {
+        DescriptorSetHandle descriptorSet = RendererAPI::GetDevice().CreateDescriptorSet();
+
+
+        TextureCreateInfo testTextureCreateInfo = {
+            .Format = ImageFormat::R8G8B8A8_UNORM,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .Dimensions = Vec2(40, 40),
+            .ImageData = nullptr,
+            .LayerCount = 1,
+            .MipMapCount = 1,
+        };
+        TextureHandle testTexture = RendererAPI::GetDevice().CreateTexture(testTextureCreateInfo);
+
+        TextureCreateInfo testTexture2CreateInfo = {
+            .Format = ImageFormat::R32G32B32A32_SFLOAT,
+            .Layout = ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            .UsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            .Dimensions = Vec2(10, 10),
+            .ImageData = nullptr,
+            .LayerCount = 1,
+            .MipMapCount = 1,
+        };
+        TextureHandle testTexture2 = RendererAPI::GetDevice().CreateTexture(testTexture2CreateInfo);
+
+
+        float testData[4] = {1.0f, 0.0, 0.0f, 1.0f};
+        BufferHandle testUniformBuffer = RendererAPI::GetDevice().CreateUniformBuffer(&testData, sizeof(testData), GPUMemoryType::HOST_VISIBLE);
+
+        float testData2[3] = {1.0f, 1.0, 0.0f};
+        BufferHandle testUniformBuffer2 = RendererAPI::GetDevice().CreateUniformBuffer(&testData2, sizeof(testData2), GPUMemoryType::HOST_VISIBLE);
+
+        uint32 testData3[8] = {1, 0, 3, 1, 4, 1, 7, 3};
+        BufferHandle testStorageBuffer = RendererAPI::GetDevice().CreateStorageBuffer(&testData3, sizeof(testData3), GPUMemoryType::DEVICE_LOCAL);
+
+
+        descriptorSet->BeginBuildingSet();
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->AddDescriptorStorageBuffer(testStorageBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorUniformBuffer(testUniformBuffer, ShaderStage::ALL);
+        descriptorSet->AddDescriptorImageSampler(testTexture, ShaderStage::ALL);
+        descriptorSet->EndBuildingSet();
+
+        ASSERT_NE(descriptorSet, nullptr);
+        ASSERT_NE(descriptorSet->GetNativeHandle(), nullptr);
+        ASSERT_NE(descriptorSet->GetNativeLayout(), nullptr);
+
+        ASSERT_EQ(descriptorSet->GetImageSampler(0), testTexture);
+        ASSERT_EQ(descriptorSet->GetStorageBuffer(1), testStorageBuffer);
+        ASSERT_EQ(descriptorSet->GetUniformBuffer(2), testUniformBuffer);
+        ASSERT_EQ(descriptorSet->GetImageSampler(3), testTexture);
+
+        descriptorSet->UpdateImageSamplerBinding(3, testTexture2);
+        TextureHandle bindedTexture = descriptorSet->GetImageSampler(3);
+        ASSERT_EQ(bindedTexture, testTexture2);
+
+        ASSERT_EQ(RendererAPI::GetContext().GetNumValidationErrorsAndWarnings(), 0);
+    }
+
+}

@@ -15,4 +15,7 @@ add_subdirectory(assimp)
 add_subdirectory(gli)
 add_subdirectory(ImGuizmo)
 add_subdirectory(yaml-cpp)
-
+add_subdirectory(spirv-cross)
+add_subdirectory(MetalDependencies)
+add_subdirectory(D3D12Dependencies)
+add_subdirectory(VulkanDependencies)

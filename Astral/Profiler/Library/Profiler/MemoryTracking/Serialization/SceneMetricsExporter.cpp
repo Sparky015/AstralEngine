@@ -1,0 +1,338 @@
+/**
+* @file SceneMetricsExporter.cpp
+* @author Andrew Fagan
+* @date 2/8/25
+*/
+
+
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
+#include "Core/Threading/Locks/SpinLock.h"
+#include "Core/Utilities/Error.h"
+#include "Core/Utilities/Loggers.h"
+#include "cpptraceOperators.h"
+#include "SceneMetricsExporter.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
+
+#include <chrono>
+#include <filesystem>
+#include <iostream>
+#include <cpptrace/formatting.hpp>
+#include "cpptrace/cpptrace.hpp"
+#include <unordered_map>
+
+namespace Astral {
+
+    SceneMetricsExporter::SceneMetricsExporter() : m_IsSceneActive(false), m_NumberOfSnapshots(0)
+    {
+    }
+
+    void SceneMetricsExporter::InitExportFile()
+    {
+        // Initializes the export file before any scenes start to prevent heap allocations being recorded as a
+        // part of a scope's allocations when opening the export file for the first time. (Reference to PROFILE_SCOPE macro)
+        // Basically, it avoids an allocation from being made on the first BeginScene() to avoid messing up
+        // the memory tracking metrics.
+        (void)GetExportFile();
+    }
+
+    bool SceneMetricsExporter::BeginScene(const char* sceneName, const MemoryMetrics& initialMemoryMetrics)
+    {
+        [[unlikely]] if (m_IsSceneActive)
+        {
+            CloseExportFile();
+            AE_ERROR("Can't begin a new scene when a scene is already active!")
+        }
+        OpenExportFile(sceneName);
+        m_IsSceneActive = true;
+        m_SceneClock.Reset();
+
+        msgpack::pack(GetExportFile(), initialMemoryMetrics);
+
+        return IsExportFileOpen();
+    }
+
+
+    void SceneMetricsExporter::EndScene()
+    {
+        [[likely]] if (m_IsSceneActive)
+        {
+            MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+            ProcessRawTraces();
+            WriteBufferedDataToFile();
+            MemoryTracker::Get().EnableTracking();
+
+            // Pack the number of memory metrics snapshots in the file at the end
+            msgpack::pack(GetExportFile(), m_NumberOfSnapshots.load());
+
+            CloseExportFile();
+        }
+
+        m_NumberOfSnapshots = 0;
+        m_IsSceneActive = false;
+    }
+
+
+    void SceneMetricsExporter::SaveSceneProfilingTimeToBuffer()
+    {
+        if (m_IsSceneActive)
+        {
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
+
+            std::unique_lock bufferLock{m_OperationTimeBufferLock};
+            m_TimepointBuffer.push_back(m_SceneClock.GetTimeMicroseconds());
+            bufferLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+    void SceneMetricsExporter::SaveOperationDataToBuffer(const AllocationData& allocationData, bool isFreeOperation)
+    {
+        if (m_IsSceneActive)
+        {
+            AllocationDataSerializeable allocationDataSerializable{};
+            allocationDataSerializable.pointer = (uintptr_t)allocationData.pointer;
+            allocationDataSerializable.region = allocationData.region;
+            allocationDataSerializable.size = isFreeOperation == false ? allocationData.size : allocationData.size * -1;
+            allocationDataSerializable.allocatorType = allocationData.allocatorType;
+            allocationDataSerializable.threadIDHash = std::hash<std::thread::id>{}(allocationData.threadID);
+
+            m_NumberOfSnapshots++;
+
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
+
+            std::unique_lock bufferLock{m_OperationDataBufferLock};
+            m_AllocationDataBuffer.push_back(allocationDataSerializable);
+            bufferLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+
+    void SceneMetricsExporter::CaptureRawStacktraceToBuffer()
+    {
+        if (m_IsSceneActive)
+        {
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+
+            cpptrace::raw_trace currentTrace = cpptrace::raw_trace::current(2);
+
+            std::unique_lock writeLock{m_RawTraceQueueLock};
+            m_RawTraceProcessQueue.push({std::move(currentTrace), m_RawTraceProcessQueue.size()});
+            writeLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+
+    void SceneMetricsExporter::OpenExportFile(const char* sceneName)
+    {
+        MemoryTracker::Get().DisableTracking();
+
+        constexpr int MAX_SCENE_NAME_LENGTH = 90;
+        unsigned int sceneNameLength = std::strlen(sceneName);
+        if (sceneNameLength > MAX_SCENE_NAME_LENGTH) { sceneNameLength = MAX_SCENE_NAME_LENGTH; }
+
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+        std::tm localTime = *std::localtime(&now_c);
+        char yearMonthBuffer[8];
+        char dayBuffer[7];
+        char timeBuffer[10];
+
+        snprintf(yearMonthBuffer, sizeof(yearMonthBuffer), "%d-%d", localTime.tm_year + 1900, localTime.tm_mon + 1);
+        std::strftime(dayBuffer, sizeof(dayBuffer), "Day-%d", &localTime);
+        std::strftime(timeBuffer, sizeof(timeBuffer), "%H-%M-%S", &localTime);
+
+        constexpr std::string_view logFileDir = LOG_FILE_DIR;
+        char filePathBuffer[logFileDir.length() + 105];
+
+        std::memcpy(filePathBuffer, LOG_FILE_DIR, logFileDir.length());
+        filePathBuffer[logFileDir.length()] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        std::memcpy(filePathBuffer + logFileDir.length(), yearMonthBuffer, std::strlen(yearMonthBuffer));
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer)] = '/';
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + 1] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        std::memcpy(filePathBuffer + logFileDir.length() + std::strlen(yearMonthBuffer) + 1, dayBuffer, std::strlen(dayBuffer));
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + std::strlen(dayBuffer) + 1] = '/';
+        filePathBuffer[logFileDir.length() + std::strlen(yearMonthBuffer) + std::strlen(dayBuffer) + 2] = '\0';
+        std::filesystem::create_directories(filePathBuffer);
+
+        char fileNameBuffer[150];
+        const char* filePrefix = "MemoryProfile_";
+        const char* fileExtension = ".ASTLMemProfile";
+
+        memcpy(fileNameBuffer, filePrefix, strlen(filePrefix));
+        memcpy(fileNameBuffer + strlen(filePrefix), sceneName, sceneNameLength);
+        fileNameBuffer[strlen(filePrefix) + sceneNameLength] = '_';
+        memcpy(fileNameBuffer + strlen(filePrefix) + sceneNameLength + 1, timeBuffer, strlen(timeBuffer));
+        memcpy(fileNameBuffer + strlen(filePrefix) + sceneNameLength + strlen(timeBuffer), fileExtension, strlen(fileExtension));
+        fileNameBuffer[strlen(filePrefix) + sceneNameLength + std::strlen(timeBuffer) + strlen(fileExtension)] = '\0';
+
+        const int pathLength = std::strlen(filePathBuffer);
+        std::memcpy(filePathBuffer + pathLength, fileNameBuffer, std::strlen(fileNameBuffer));
+        filePathBuffer[pathLength + std::strlen(fileNameBuffer)] = '\0';
+
+
+        // std::cout << "Stream state before open:" << std::endl;
+        // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+        // std::cout << "- good(): " << GetExportFile().good() << std::endl;
+        // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+        // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+        GetExportFile().open(filePathBuffer, std::ios::out | std::ios::binary);
+
+        // std::cout << "Stream state after open:" << std::endl;
+        // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+        // std::cout << "- good(): " << GetExportFile().good() << std::endl;
+        // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+        // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+        MemoryTracker::Get().EnableTracking();
+    }
+
+
+    void SceneMetricsExporter::CloseExportFile()
+    {
+        MemoryTracker::Get().DisableTracking();
+
+         if (GetExportFile().is_open())
+         {
+             // Log the stream state after opening
+             std::cout << "Stream state before close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+             GetExportFile().close();
+             // GetExportFile().clear();
+
+             std::cout << "Stream state after close:" << std::endl;
+             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
+             std::cout << "- good(): " << GetExportFile().good() << std::endl;
+             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
+             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
+
+             if (GetExportFile().is_open())
+             {
+                 std::cout << "Memory profiling export file failed to close!";
+             }
+         }
+
+        MemoryTracker::Get().EnableTracking();
+    }
+
+
+    void SceneMetricsExporter::ProcessRawTraces()
+    {
+        ThreadPool m_ProcessingThreadPool;
+
+        // QUEUE BASED
+
+        float numberOfThreads = m_ProcessingThreadPool.GetThreadCount();
+        float numberOfRawTraces = m_RawTraceProcessQueue.size();
+        uint32 rawTracePerThread = std::ceil(numberOfRawTraces / numberOfThreads);
+        m_ResolvedStacktraceBuffer.clear();
+        m_ResolvedStacktraceBuffer.resize(numberOfRawTraces);
+        std::vector<std::future<void>> processingFutures = {};
+
+        static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
+            .addresses(cpptrace::formatter::address_mode::none)
+            .snippets(false)
+            .colors(cpptrace::formatter::color_mode::none)
+            .paths(cpptrace::formatter::path_mode::full);
+
+
+        std::unordered_map<cpptrace::raw_trace, std::string> m_TraceCache = {};
+        Astral::ReaderBiasedRWLock cacheMutex = {};
+        Astral::SpinLock queueMutex = {};
+
+        for (int i = 0; i < numberOfThreads; i++)
+        {
+            std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
+                [this, &m_TraceCache, &cacheMutex, &queueMutex]() {
+
+                    while (true)
+                    {
+                        std::unique_lock queueLock{queueMutex};
+                        if (m_RawTraceProcessQueue.empty()) { break; }
+                        std::pair<cpptrace::raw_trace, int> tracePair = m_RawTraceProcessQueue.top();
+                        m_RawTraceProcessQueue.pop();
+                        queueLock.unlock();
+
+                        int traceIndex = tracePair.second;
+                        cpptrace::raw_trace& rawTrace = tracePair.first;
+
+                        std::shared_lock cacheReadLock{cacheMutex};
+                        if (m_TraceCache.contains(rawTrace))
+                        {
+                            this->m_ResolvedStacktraceBuffer[traceIndex] = m_TraceCache.at(rawTrace);
+                            cacheReadLock.unlock();
+                            continue;
+                        }
+                        cacheReadLock.unlock();
+
+                        cpptrace::stacktrace stacktrace = rawTrace.resolve();
+                        this->m_ResolvedStacktraceBuffer[traceIndex] = std::move(m_StacktraceFormatter.format(stacktrace));
+
+                        std::unique_lock cacheWriteLock{cacheMutex};
+                        m_TraceCache[rawTrace] = this->m_ResolvedStacktraceBuffer[traceIndex];
+                        cacheWriteLock.unlock();
+                    }
+                },
+                1.0
+            );
+
+            processingFutures.push_back(std::move(processingFuture));
+        }
+
+        for (std::future<void>& future : processingFutures)
+        {
+            future.wait();
+        }
+    }
+
+
+    void SceneMetricsExporter::WriteBufferedDataToFile()
+    {
+        if (m_TimepointBuffer.size() != m_AllocationDataBuffer.size() || m_AllocationDataBuffer.size() != m_ResolvedStacktraceBuffer.size())
+        {
+            // Clear buffers and reset backing memory
+            m_TimepointBuffer.resize(0);
+            m_AllocationDataBuffer.resize(0);
+            m_ResolvedStacktraceBuffer.resize(0);
+
+            AE_WARN("Buffered data sizes do not match! Can not write data to file!")
+            return;
+        }
+
+        for (size_t i = 0; i < m_TimepointBuffer.size(); i++)
+        {
+            size_t operationTimepoint = m_TimepointBuffer[i];
+            AllocationDataSerializeable& operationAllocationData = m_AllocationDataBuffer[i];
+            std::string& stacktrace = m_ResolvedStacktraceBuffer[i];
+
+            if (operationAllocationData.pointer == 0) { continue; } // Skipped operation due to pointer not being tracked during deferred processing
+
+            msgpack::pack(GetExportFile(), operationTimepoint);
+            msgpack::pack(GetExportFile(), operationAllocationData);
+            msgpack::pack(GetExportFile(), stacktrace);
+        }
+
+        // Clear buffers and reset backing memory
+        m_TimepointBuffer.resize(0);
+        m_AllocationDataBuffer.resize(0);
+        m_ResolvedStacktraceBuffer.resize(0);
+    }
+
+}
+

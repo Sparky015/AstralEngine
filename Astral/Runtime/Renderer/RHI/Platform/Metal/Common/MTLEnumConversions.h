@@ -1,0 +1,38 @@
+/**
+* @file MTLEnumConversions.h
+* @author Andrew Fagan
+* @date 4/11/26
+*/
+
+#pragma once
+
+#include "Metal/MTLCommandEncoder.hpp"
+#include "Renderer/RHI/Common/ImageFormats.h"
+#include "Renderer/RHI/Common/ImageLayouts.h"
+#include "Renderer/RHI/Common/ImageUsageFlags.h"
+#include "Renderer/RHI/Common/SamplerSettings.h"
+#include "Renderer/RHI/Resources/Texture.h"
+#include "Renderer/RHI/Resources/VertexBufferLayout.h"
+
+#include "Metal/MTLPixelFormat.hpp"
+#include "Metal/MTLRenderPass.hpp"
+#include "Metal/MTLSampler.hpp"
+#include "Metal/MTLTexture.hpp"
+#include "Metal/MTLVertexDescriptor.hpp"
+#include "Renderer/RHI/Resources/Renderpass.h"
+
+
+namespace Astral {
+
+    MTL::PixelFormat ConvertImageFormatToMTLPixelFormat(ImageFormat imageFormat);
+    MTL::TextureUsage ConvertImageUsageToMTLTextureUsage(ImageUsageFlags imageUsageFlags);
+    MTL::TextureType ConvertTextureTypeToMTLTextureType(TextureType textureType, SampleCount textureMSAASampleCount = SampleCount::SAMPLE_1_BIT);
+    ImageFormat ConvertMTLPixelFormatToImageFormat(MTL::PixelFormat pixelFormat);
+    MTL::VertexFormat ConvertShaderDataTypeToMTLVertexFormat(ShaderDataType shaderDataType);
+    MTL::LoadAction ConvertAttachmentLoadOpToMTLLoadAction(AttachmentLoadOp attachmentLoadOp);
+    MTL::StoreAction ConvertAttachmentStoreOpToMTLStoreAction(AttachmentStoreOp attachmentStoreOp);
+    MTL::SamplerAddressMode ConvertSamplerAddressModeToMTLSamplerAddressMode(SamplerAddressMode samplerAddressMode);
+    MTL::SamplerMinMagFilter ConvertSamplerFilterToMTLMinMagFilter(SamplerFilter samplerFilter);
+    MTL::Stages ConvertPipelineStateFlagsToMTLStages(PipelineStageFlags pipelineStageFlags);
+
+}
