@@ -38,11 +38,18 @@ namespace Astral {
 
         CreateBuffer(&m_Buffer, metalBufferDesc.Size);
         m_BufferLength = m_Buffer->allocatedSize();
+
+        MemoryTracker::Get().AddAllocation((void*)m_Buffer->gpuAddress(), m_BufferLength, MemoryRegion::GPU, MemoryTrackerAllocatorType::GPU_DRIVER_ALLOCATOR);
     }
 
 
     MetalBuffer::~MetalBuffer()
     {
+        if (m_Buffer)
+        {
+            MemoryTracker::Get().RemoveAllocation((void*)m_Buffer->gpuAddress());
+        }
+
         DestroyBuffer(m_Buffer);
     }
 

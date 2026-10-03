@@ -89,6 +89,36 @@ namespace Astral {
     }
 
 
+    size_t MemoryMetrics::GetPeakMemoryUsage() const
+    {
+        return m_PeakMemoryUsage;
+    }
+
+
+    size_t MemoryMetrics::GetTotalMemoryUsage() const
+    {
+        return m_TotalMemoryUsage;
+    }
+
+
+    size_t MemoryMetrics::GetTotalActiveAllocations() const
+    {
+        return m_TotalActiveAllocations;
+    }
+
+
+    size_t MemoryMetrics::GetTotalAllocations() const
+    {
+        return m_TotalAllocations;
+    }
+
+
+    const FrameAllocationData& MemoryMetrics::GetFrameAllocationData() const
+    {
+        return m_OldFrameAllocationData;
+    }
+
+
     size_t MemoryMetrics::GetAllocatorTypeUsage(MemoryTrackerAllocatorType allocatorType) const
     {
         if (!m_MemoryUsageByAllocator.contains(allocatorType)) { return 0; }
@@ -142,6 +172,84 @@ namespace Astral {
     {
         if (!m_TotalAllocationsByThread.contains(GetThreadIDHash(threadID))) { return 0; }
         return m_TotalAllocationsByThread.at(GetThreadIDHash(threadID));
+    }
+
+
+    const MemoryMetrics::AllocatorTypeMap& MemoryMetrics::GetMemoryUsageByAllocatorIterable() const
+    {
+        return m_MemoryUsageByAllocator;
+    }
+
+
+    const MemoryMetrics::AllocatorTypeMap& MemoryMetrics::GetPeakMemoryUsageByAllocatorIterable() const
+    {
+        return m_PeakMemoryUsageByAllocator;
+    }
+
+
+    const MemoryMetrics::AllocatorTypeMap& MemoryMetrics::GetActiveAllocationsByAllocatorIterable() const
+    {
+        return m_ActiveAllocationsByAllocator;
+    }
+
+
+    const MemoryMetrics::AllocatorTypeMap& MemoryMetrics::GetTotalAllocationsByAllocatorIterable() const
+    {
+        return m_TotalAllocationsByAllocator;
+    }
+
+
+    const MemoryMetrics::MemoryRegionMap& MemoryMetrics::GetMemoryUsageByRegionIterable() const
+    {
+        return m_MemoryUsageByRegion;
+    }
+
+
+    const MemoryMetrics::MemoryRegionMap& MemoryMetrics::GetPeakMemoryUsageByRegionIterable() const
+    {
+        return m_PeakMemoryUsageByRegion;
+    }
+
+
+    const MemoryMetrics::MemoryRegionMap& MemoryMetrics::GetActiveAllocationsByRegionIterable() const
+    {
+        return m_ActiveAllocationsByRegion;
+    }
+
+
+    const MemoryMetrics::MemoryRegionMap& MemoryMetrics::GetTotalAllocationsByRegionIterable() const
+    {
+        return m_TotalAllocationsByRegion;
+    }
+
+
+    const MemoryMetrics::ThreadMap& MemoryMetrics::GetMemoryUsageByThreadIterable() const
+    {
+        return m_MemoryUsageByThread;
+    }
+
+
+    const MemoryMetrics::ThreadMap& MemoryMetrics::GetPeakMemoryUsageByThreadIterable() const
+    {
+        return m_PeakMemoryUsageByThread;
+    }
+
+
+    const MemoryMetrics::ThreadMap& MemoryMetrics::GetActiveAllocationsByThreadIterable() const
+    {
+        return m_ActiveAllocationsByThread;
+    }
+
+
+    const MemoryMetrics::ThreadMap& MemoryMetrics::GetTotalAllocationsByThreadIterable() const
+    {
+        return m_TotalAllocationsByThread;
+    }
+
+
+    size_t MemoryMetrics::GetThreadIDHash(const std::thread::id& id) const
+    {
+        return std::hash<std::thread::id>{}(id);
     }
 
 }

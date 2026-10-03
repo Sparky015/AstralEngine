@@ -16,6 +16,7 @@
 #include "Editor/Components/Settings/InputStateComponents.h"
 #include "Editor/Components/Settings/MemoryComponents.h"
 #include "Editor/Components/Settings/EngineComponents.h"
+#include "Profiler/MemoryTracking/MemoryTracker.h"
 
 #include "imgui/imgui.h"
 
@@ -70,6 +71,7 @@ namespace Astral {
 
         if (ImGui::TreeNode("Memory"))
         {
+            MemoryTracker::Get().ProcessDeferredOperationsBuffer(); // Update memory statistics to include most recent allocations/frees
             ImGui::Spacing();
 
             PeakMemoryUsage();

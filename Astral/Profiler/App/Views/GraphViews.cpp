@@ -14,11 +14,12 @@
 
 namespace Astral {
 
-    void GlobalGraphView(const SceneMetricsStorage& sceneMetricsStorage)
+    void GraphView::ShowGlobalGraphView(const SceneMetricsStorage& sceneMetricsStorage)
     {
         // Settings tab content
         MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-        size_t selectedDataPoint = AllocationsListPanel(sceneMetricsStorage);
+        m_AllocationListsPanel.Show(sceneMetricsStorage);
+        size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::GLOBAL, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
@@ -26,10 +27,11 @@ namespace Astral {
     }
 
 
-    void AllocatorGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
+    void GraphView::ShowAllocatorGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
     {
         MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-        size_t selectedDataPoint = AllocationsListPanel(sceneMetricsStorage);
+        m_AllocationListsPanel.Show(sceneMetricsStorage);
+        size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::ALLOCATOR, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
@@ -37,10 +39,11 @@ namespace Astral {
     }
 
 
-    void RegionGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
+    void GraphView::ShowRegionGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
     {
         MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-        size_t selectedDataPoint = AllocationsListPanel(sceneMetricsStorage);
+        m_AllocationListsPanel.Show(sceneMetricsStorage);
+        size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::REGION, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
@@ -48,10 +51,11 @@ namespace Astral {
 
     }
 
-    void ThreadGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
+    void GraphView::ShowThreadGraphsView(const SceneMetricsStorage& sceneMetricsStorage)
     {
         MemoryGraphSelection graphSelection = ShowGraphSelectorPanel();
-        size_t selectedDataPoint = AllocationsListPanel(sceneMetricsStorage);
+        m_AllocationListsPanel.Show(sceneMetricsStorage);
+        size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::THREAD, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);

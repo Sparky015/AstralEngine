@@ -98,7 +98,7 @@ namespace Astral {
 
     static constexpr uint32 EnvironmentMapIrradianceSize = 64;
 
-    void SceneRendererImpl::BeginScene(const SceneDescription& sceneDescription)
+    void SceneRendererImpl::BeginSceneSubmission(const SceneDescription& sceneDescription)
     {
         PROFILE_SCOPE("SceneRenderer::BeginScene")
         Device& device = RendererAPI::GetDevice();
@@ -110,7 +110,7 @@ namespace Astral {
         if (renderTarget == nullptr)
         {
             SetVSync(m_RendererSettings.IsVSyncEnabled); // This rebuilds the swapchain with the same settings and handles synchronizing resources
-            return BeginScene(sceneDescription);
+            return BeginSceneSubmission(sceneDescription);
         }
 
         m_IsSceneStarted = true;
@@ -184,21 +184,6 @@ namespace Astral {
     }
 
 
-    void SceneRendererImpl::EndScene()
-    {
-        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
-        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
-        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
-
-        {
-            PROFILE_SCOPE("SceneRenderer::EndScene")
-            m_IsSceneStarted = false;
-        }
-
-        RenderScene();
-    }
-
-
     void SceneRendererImpl::Submit(const Ref<Mesh>& mesh, const Ref<Material>& material, const Mat4& transform)
     {
         ASSERT(m_IsSceneStarted, "Scene has not been started! Use SceneRenderer::BeginScene")
@@ -215,6 +200,19 @@ namespace Astral {
         }
 
         frameContext.MainList.Submit(mesh, material, transform);
+    }
+
+
+    void SceneRendererImpl::EndSceneSubmission()
+    {
+        SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
+        frameContext.MainList.SortByMaterial(frameContext.SceneDescription.Camera.GetPosition());
+        frameContext.ShadowMapList.SortFrontToBack(frameContext.SceneDescription.Camera.GetPosition());
+
+        {
+            PROFILE_SCOPE("SceneRenderer::EndScene")
+            m_IsSceneStarted = false;
+        }
     }
 
 
@@ -460,7 +458,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("SceneRenderer::RenderScene")
 
-        // TODO: Sort the meshes by material
         Device& device = RendererAPI::GetDevice();
 
         SharedFrameContext& frameContext = m_FrameContexts[m_CurrentFrameIndex];
