@@ -6,10 +6,6 @@
 
 #include "../MemoryTracker.h"
 
-#include <cstdlib>
-#include <iostream>
-
-
 void* operator new(std::size_t size)
 {
     void* pointer = malloc(size);

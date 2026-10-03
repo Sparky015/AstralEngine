@@ -13,7 +13,7 @@ add_executable(AstralCoreTests
         Memory/Allocators/LinearAllocatorTest.cpp
         Memory/Allocators/AllocatorUtilsTest.cpp
         Memory/Allocators/RingAllocatorTest.cpp
-        Memory/Pools/ObjectPoolTest.cpp
+        Memory/Allocators/SlabAllocatorTest.cpp
         Memory/Allocators/TLSFAllocatorTest.cpp
 
         Time/ClockTest.cpp

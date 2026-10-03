@@ -10,9 +10,7 @@
 #include "AllocatorUtils.h"
 #include "Core/Utilities/Asserts.h"
 
-
 #include <cstring>
-
 
 namespace Astral {
 
