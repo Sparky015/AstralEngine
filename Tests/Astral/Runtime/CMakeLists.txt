@@ -63,5 +63,5 @@ target_compile_definitions(AstralRuntimeTestsWithGPU PRIVATE -DASTRAL_TEST_SCENE
 
 
 include(GoogleTest)
-#gtest_discover_tests(AstralRuntimeTestsWithoutGPU DISCOVERY_MODE PRE_TEST)
+gtest_discover_tests(AstralRuntimeTestsWithoutGPU DISCOVERY_MODE PRE_TEST)
 
