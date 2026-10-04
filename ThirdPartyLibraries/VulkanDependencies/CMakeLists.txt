@@ -63,9 +63,6 @@ elseif (APPLE AND TARGET VulkanDependencies)
             SPIRV-Tools
             SPIRV-Tools-diff
             SPIRV-Tools-opt
-            spirv-cross-core
-            spirv-cross-cpp
-            spirv-cross-glsl
     )
 
     target_include_directories(VulkanDependencies INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../spirv-cross/include)
