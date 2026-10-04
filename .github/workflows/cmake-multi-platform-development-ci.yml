@@ -40,7 +40,7 @@ jobs:
       
       matrix:
         os: [windows-latest]
-        build_type: [Debug]
+        build_type: [Debug, Release]
 
     steps:
     - name: Checkout repository
@@ -107,14 +107,13 @@ jobs:
 
   macos-build:
     runs-on: macos-latest
-    needs: windows-build
 
     strategy:
       fail-fast: true
 
       matrix:
         os: [macos-latest]
-        build_type: [Debug]
+        build_type: [Debug, Release]
 
     steps:
       - name: Checkout repository
