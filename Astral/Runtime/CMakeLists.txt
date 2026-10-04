@@ -439,6 +439,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
             -DASTRAL_DEBUG_BUILD
 
     )
+else ()
+    message(FATAL_ERROR "Build type is not set so build-type based macros do not get set!")
 endif()
 
 
