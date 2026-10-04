@@ -228,7 +228,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
     uint32 size = GetParam();
     AE_LOG("Testing size: " << size)
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         if (!allocatedAddress) { continue;}
@@ -238,7 +238,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress);
     }
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
@@ -251,7 +251,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress2);
     }
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
@@ -264,7 +264,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress2);
     }
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
@@ -277,7 +277,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress2);
     }
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
@@ -296,7 +296,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress4);
     }
 
-    for (uint i = 0; i < 500; i++)
+    for (uint32 i = 0; i < 500; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
@@ -308,7 +308,7 @@ TEST_P(TLSFAllocatorTest, Allocate2_ReturnsUseableAddresses)
         testAllocator.Free(allocatedAddress4);
     }
 
-    for (uint i = 0; i < 10; i++)
+    for (uint32 i = 0; i < 10; i++)
     {
         char* allocatedAddress = (char*)testAllocator.Allocate(size);
         char* allocatedAddress2 = (char*)testAllocator.Allocate(size);
