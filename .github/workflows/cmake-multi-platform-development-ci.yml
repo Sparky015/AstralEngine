@@ -35,7 +35,7 @@ jobs:
       fail-fast: true
       
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [windows-latest]
         build_type: [Debug]
 
     steps:
@@ -109,7 +109,7 @@ jobs:
       fail-fast: true
 
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [macos-latest]
         build_type: [Debug]
 
     steps:
