@@ -27,5 +27,5 @@ target_include_directories(AstralCoreTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdParty
 target_include_directories(AstralCoreTests PUBLIC ${CMAKE_SOURCE_DIR}/Astral/Core/)
 
 include(GoogleTest)
-gtest_discover_tests(AstralCoreTests)
+gtest_discover_tests(AstralCoreTests DISCOVERY_TIMEOUT 60)
 
