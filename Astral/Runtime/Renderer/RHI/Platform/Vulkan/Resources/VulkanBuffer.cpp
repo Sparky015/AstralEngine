@@ -30,10 +30,30 @@ namespace Astral {
 
         CreateBuffer(&m_Buffer, m_UsedMemorySize);
         m_BufferDeviceSize = AllocateMemory(&m_BufferMemory, m_Buffer);
+
+
+        VkBufferDeviceAddressInfo bufferDeviceAddressInfo = {
+            .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+            .pNext = nullptr,
+            .buffer = m_Buffer
+        };
+        VkDeviceAddress deviceAddress = vkGetBufferDeviceAddress(m_Device, &bufferDeviceAddressInfo);
+        MemoryTracker::Get().AddAllocation((void*)deviceAddress, m_BufferDeviceSize, MemoryRegion::GPU, MemoryTrackerAllocatorType::GPU_DRIVER_ALLOCATOR);
     }
 
     VulkanBuffer::~VulkanBuffer()
     {
+        if (m_Buffer)
+        {
+            VkBufferDeviceAddressInfo bufferDeviceAddressInfo = {
+                .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+                .pNext = nullptr,
+                .buffer = m_Buffer
+            };
+            VkDeviceAddress deviceAddress = vkGetBufferDeviceAddress(m_Device, &bufferDeviceAddressInfo);
+            MemoryTracker::Get().RemoveAllocation((void*)deviceAddress);
+        }
+
         DestroyBuffer(m_Buffer);
         FreeMemory(m_BufferMemory);
     }

@@ -15,14 +15,16 @@ add_executable(AstralProfiler
     Panels/MemoryGraphPanel.cpp
     Panels/MemoryGraphPanel.h
 
-    MemoryDebugWindow.cpp
-    MemoryDebugWindow.h
     ProfilerAppModule.cpp
     ProfilerApp.cpp
     ProfilerApp.h
 
     Views/GraphViews.cpp
     Views/GraphViews.h
+    ProfilerSceneDataCache.cpp
+    ProfilerSceneDataCache.h
+    SceneStacktracePrefixTree.cpp
+    SceneStacktracePrefixTree.h
 )
 
 

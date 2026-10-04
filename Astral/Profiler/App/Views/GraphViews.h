@@ -6,13 +6,24 @@
 
 #pragma once
 
-#include "../ProfilerApp.h"
+#include "Profiler/App/Panels/AllocationsListPanel.h"
 
 namespace Astral {
 
-    void GlobalGraphView(const SceneMetricsStorage& sceneMetricsStorage);
-    void AllocatorGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
-    void RegionGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
-    void ThreadGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
+    class GraphView
+    {
+    public:
+
+        void ShowGlobalGraphView(const SceneMetricsStorage& sceneMetricsStorage);
+        void ShowAllocatorGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
+        void ShowRegionGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
+        void ShowThreadGraphsView(const SceneMetricsStorage& sceneMetricsStorage);
+
+    private:
+
+        AllocationsListPanel m_AllocationListsPanel = {};
+    };
+
+
 
 }

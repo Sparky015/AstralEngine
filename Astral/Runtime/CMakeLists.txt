@@ -439,7 +439,6 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
             -DASTRAL_DEBUG_BUILD
 
     )
-
 endif()
 
 

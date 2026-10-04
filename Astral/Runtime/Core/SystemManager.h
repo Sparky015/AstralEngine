@@ -21,6 +21,10 @@ public:
 
 protected:
 
-    Astral::EventListener<SubSystemUpdateEvent> m_UpdateListener;
+    void EnableImGuiRenderingCallback();
+    void DisableImGuiRenderingCallback();
+
+private:
+
     Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener;
 };

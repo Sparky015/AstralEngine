@@ -31,6 +31,11 @@ namespace Astral {
         void InitOnlyRenderingContext();
 
         /**
+         * @brief Executes the rendering of submitted objects
+         */
+        void Update() override;
+
+        /**
          * @brief Shuts down the scene renderer and the rendering context
          */
         void Shutdown() override;

@@ -3,10 +3,8 @@
 //
 
 #include "NewDeleteOverrides.h"
-#include "MemoryTracker.h"
 
-#include <cstdlib>
-#include <iostream>
+#include "../MemoryTracker.h"
 
 void* operator new(std::size_t size)
 {

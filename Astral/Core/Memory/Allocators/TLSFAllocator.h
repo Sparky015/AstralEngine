@@ -8,6 +8,10 @@
 
 #include "IAllocator.h"
 #include "Core/FixedIntegerTypes.h"
+#include "Profiler/Library/Profiler/MemoryTracking/NoTrackingSTLAllocator.h"
+
+#include <unordered_map>
+
 
 namespace Astral {
 
@@ -37,6 +41,13 @@ namespace Astral {
         void Free(void* memoryBlock);
 
         /**
+         * @brief Checks if a pointer is owned by the allocator
+         * @return True if the allocator owns the pointer
+         * @note Pointer can be free or in use
+         */
+        bool DoesOwnPointer(void* pointer);
+
+        /**
          * @brief Resets all memory that the allocator owns. Every previous allocation is deallocated.
          */
         void Reset() override;
@@ -45,7 +56,7 @@ namespace Astral {
          * @brief Gets the amount of memory currently allocated out by the allocator.
          * @return The number of bytes currently allocated.
          */
-        [[nodiscard]] size_t GetUsedBlockSize() const override; // TODO
+        [[nodiscard]] size_t GetUsedBlockSize() const override;
 
         /**
          * @brief Gets the memory capacity of the allocator.
@@ -188,6 +199,13 @@ namespace Astral {
         void SetMemoryBlockFreeListHead(void* memoryBlockHead, uint32 blockFirstLevelIndex, uint32 blockSecondLevelIndex);
 
         /**
+         * @brief Sets the first memory block in the segregated list
+         * @param memoryBlockHead The memory block to make the head in the segregated list
+         * @param size Size of the associated free list
+         */
+        void SetMemoryBlockFreeListHead(void* memoryBlockHead, uint32 size);
+
+        /**
          * @brief Finds a block suitable to the memory block size requirement
          * @param memoryBlockSize The requested memory block size
          * @return A pointer to a suitable memory block for the requested memory block size
@@ -233,6 +251,8 @@ namespace Astral {
 
 
         size_t m_MemoryPoolSize;
+        size_t m_NumBlocksCurrentlyAllocated = 0;
+        size_t m_SizeOfCurrentlyAllocatedBlocks = 0;
         uintptr_t** m_FirstLevelLists = nullptr;
 
         /// The number of first-level segregated classes. Classes are a power of two apart from each other.
@@ -246,6 +266,11 @@ namespace Astral {
 
         /// Defines the minimum block size. For implementation reasons, the MBS constant is set to 16 bytes.
         static constexpr uint32 m_MinimumBlockSize = 16;
+
+        std::unordered_map<const BlockHeader*, size_t, std::hash<const BlockHeader*>, std::equal_to<const void*>, NoTrackingSTLAllocator<std::pair<const BlockHeader* const, size_t>>> m_DebugBlocks;
+        size_t m_DebugInitialAlignmentBytes = 0;
+        void AssertMemoryUsage();
+        void ValidateBlockHeaders();
     };
 
 

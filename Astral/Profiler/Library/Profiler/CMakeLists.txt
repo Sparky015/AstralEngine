@@ -5,19 +5,20 @@ add_library(AstralProfilerAPI
         Instrumentation/ScopeProfiler.h
 
         MemoryTracking/AllocationData.h
-        MemoryTracking/GenericRegionAllocator.cpp
-        MemoryTracking/GenericRegionAllocator.h
         MemoryTracking/GlobalAllocationStorage.cpp
         MemoryTracking/GlobalAllocationStorage.h
-        MemoryTracking/MallocFreeOverrides.cpp
-        MemoryTracking/MallocFreeOverrides.h
         MemoryTracking/MemoryMetrics.cpp
         MemoryTracking/MemoryMetrics.h
         MemoryTracking/MemoryTracker.cpp
         MemoryTracking/MemoryTracker.h
-        MemoryTracking/NewDeleteOverrides.cpp
-        MemoryTracking/NewDeleteOverrides.h
         MemoryTracking/NoTrackingSTLAllocator.h
+
+        MemoryTracking/Hooks/GenericRegionAllocator.cpp
+        MemoryTracking/Hooks/GenericRegionAllocator.h
+        MemoryTracking/Hooks/MallocFreeOverrides.cpp
+        MemoryTracking/Hooks/MallocFreeOverrides.h
+        MemoryTracking/Hooks/NewDeleteOverrides.cpp
+        MemoryTracking/Hooks/NewDeleteOverrides.h
 
         MemoryTracking/Serialization/MemoryMetricsSnapshot.h
         MemoryTracking/Serialization/SceneMetricsExporter.cpp
@@ -26,6 +27,7 @@ add_library(AstralProfilerAPI
         MemoryTracking/Serialization/SceneMetricsImporter.h
         MemoryTracking/Serialization/SceneMetricsStorage.cpp
         MemoryTracking/Serialization/SceneMetricsStorage.h
+        MemoryTracking/Serialization/cpptraceOperators.h
 )
 
 
@@ -63,6 +65,7 @@ target_include_directories(AstralProfilerAPI PUBLIC "${CMAKE_SOURCE_DIR}/ThirdPa
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")    # DEBUG
     target_compile_definitions(AstralProfilerAPI PUBLIC
             -DASTRAL_DEBUG_BUILD
+            #-DASTRAL_SCOPE_MEMORY_ALLOCATION_PROFILER_ENABLED
     )
 
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")    # Release

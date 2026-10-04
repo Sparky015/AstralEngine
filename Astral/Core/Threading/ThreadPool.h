@@ -63,6 +63,12 @@ namespace Astral {
         std::future<ResultType> SubmitTaskWithResult(std::function<ResultType()>&& callback, float priority, int32 affinity = -1);
 
         /**
+         * @brief Gets the number of threads in the thread pool
+         * @return The number of threads in the thread pool
+         */
+        size_t GetThreadCount() const;
+
+        /**
          * @struct Task
          * @brief Defines a task/job that a thread pool can execute
          */

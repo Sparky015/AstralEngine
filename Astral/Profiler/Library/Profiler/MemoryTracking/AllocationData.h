@@ -23,6 +23,7 @@ namespace Astral {
         ENTITY_COMPONENT_SYSTEM,
         DEBUG,
         CORE,
+        GPU,
         UNKNOWN,
 
         MEMORY_REGION_END
@@ -39,6 +40,7 @@ namespace Astral {
             case ENTITY_COMPONENT_SYSTEM: return "ECS";
             case DEBUG: return "Debug";
             case CORE: return "Core";
+            case GPU: return "GPU";
             case UNKNOWN: return "Unknown Region";
             case MEMORY_REGION_END: return "Enum Memory Region End Marker";
             default: AE_ERROR("Memory region value not valid!");
@@ -58,6 +60,7 @@ namespace Astral {
         ALIGNED_ALLOCATOR,
         NEW_OPERATOR,
         MALLOC,
+        GPU_DRIVER_ALLOCATOR,
 
         ALLOCATOR_TYPE_END
     };
@@ -76,6 +79,7 @@ namespace Astral {
             case ALIGNED_ALLOCATOR: return "Aligned Allocator";
             case NEW_OPERATOR: return "New Operator";
             case MALLOC: return "Malloc";
+            case GPU_DRIVER_ALLOCATOR: return "GPU Driver Allocator";
             case ALLOCATOR_TYPE_END: return "Enum Memory Region End Marker";
             default: AE_ERROR("Memory region value not valid!");
         }
@@ -94,7 +98,7 @@ namespace Astral {
     struct AllocationDataSerializeable
     {
         uintptr_t pointer;
-        size_t size;
+        int64 size;
         MemoryRegion region;
         MemoryTrackerAllocatorType allocatorType;
         size_t threadIDHash;
