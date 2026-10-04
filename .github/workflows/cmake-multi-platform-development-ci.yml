@@ -93,7 +93,7 @@ jobs:
 
     - name: Build
       # Builds the project using the generated build system
-      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} -j
+      run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} -j 2 # Standard Windows runner has 2 cores
 
     - name: Test
       # Runs tests only for Debug builds
@@ -167,7 +167,7 @@ jobs:
 
       - name: Build
         # Builds the project using the generated build system
-        run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} -j
+        run: cmake --build ${{ github.workspace }}/cmake-build-${{ matrix.build_type }} --config ${{ matrix.build_type }} -j 3  # Standard macOS runner has 3 cores
 
       - name: Test
         # Runs tests only for Debug builds
