@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "AllocationData.h"
-#include "MemoryTracker.h"
+#include "../AllocationData.h"
+#include "../MemoryTracker.h"
 
 
 namespace Astral {

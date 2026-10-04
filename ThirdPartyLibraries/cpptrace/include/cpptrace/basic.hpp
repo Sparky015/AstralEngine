@@ -69,6 +69,18 @@ namespace cpptrace {
         inline const_iterator end() const noexcept { return frames.end(); }
         inline const_iterator cbegin() const noexcept { return frames.cbegin(); }
         inline const_iterator cend() const noexcept { return frames.cend(); }
+
+        bool operator==(const cpptrace::raw_trace& other) const
+        {
+            if (frames.size() != other.frames.size()) { return false; }
+
+            for (int i = 0; i < frames.size(); i++)
+            {
+                if (frames[i] != other.frames[i]) { return false; }
+            }
+
+            return true;
+        }
     };
 
     struct CPPTRACE_EXPORT object_frame {

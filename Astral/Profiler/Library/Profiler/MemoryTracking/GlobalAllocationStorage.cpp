@@ -6,25 +6,9 @@
 
 #include "GlobalAllocationStorage.h"
 
-#include <iostream>
-
 #include "MemoryTracker.h"
 
 namespace Astral {
-
-    GlobalAllocationStorage::~GlobalAllocationStorage()
-    {
-        // Print out all the remaining pointers in storage. They are considered leaked pointers.
-        // std::cout << "Number of leaked pointers: " << m_Storage.size() << "\n";
-        // for (auto [pointer, allocationData] : m_Storage)
-        // {
-        //     if (allocationData.threadID == std::this_thread::get_id())
-        //     {
-        //         std::cout << "Leaked pointer " << pointer << " of size " << allocationData.size << " on thread " << std::hash<std::thread::id>{}(allocationData.threadID) << "\n";
-        //     }
-        // }
-    }
-
 
     void GlobalAllocationStorage::AddPointer(const AllocationData& allocationData)
     {
@@ -54,6 +38,12 @@ namespace Astral {
     const AllocationData& GlobalAllocationStorage::GetPointerData(const void* pointer) const
     {
         return m_Storage.at(pointer);
+    }
+
+
+    size_t GlobalAllocationStorage::GetAllocationEntryCount() const
+    {
+        return m_NumberOfEntries;
     }
 
 }

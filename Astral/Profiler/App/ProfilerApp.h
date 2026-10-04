@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include "MemoryDebugWindow.h"
-
 #include "Components/MenuComponent.h"
+#include "ProfilerSceneDataCache.h"
 #include "Core/Events/EventListener.h"
 #include "Debug/ImGui/ImGuiEvents.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
+#include "Views/GraphViews.h"
 
 namespace Astral {
 
@@ -26,10 +27,27 @@ namespace Astral {
          */
         static ProfilerApp& Get();
 
+        /**
+         * @brief Initializes the profiler
+         */
         void Init();
+
+        /**
+         * @brief Shuts down the profiler
+         */
         void Shutdown();
 
+        /**
+         * @brief Loads a memory profile from the given file path
+         * @param filePath The file path of the memory profile to load from disk
+         */
         void LoadMemoryScene(std::string filePath);
+
+        /**
+         * @brief Gets the scene's data cache for preprocessed data
+         * @return The scene's data cache for preprocessed data
+         */
+        ProfilerSceneDataCache& GetSceneDataCache();
 
     private:
 
@@ -39,6 +57,8 @@ namespace Astral {
         bool m_ShowDebugWindow = true;
 
         SceneMetricsImporter m_SceneMetricsImporter;
+        GraphView m_GraphsView = {};
+        ProfilerSceneDataCache m_SceneDataCache;
 
         Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener{[this](RenderImGuiEvent e){ UpdateProfilerAppUI(); }};
     };

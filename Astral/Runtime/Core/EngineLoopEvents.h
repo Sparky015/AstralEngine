@@ -4,11 +4,6 @@
 
 #pragma once
 
-struct SubSystemUpdateEvent
-{
-    SubSystemUpdateEvent() = default;
-};
-
 struct NewFrameEvent
 {
     NewFrameEvent() = default;

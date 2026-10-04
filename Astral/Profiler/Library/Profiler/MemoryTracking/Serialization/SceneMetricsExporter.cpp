@@ -4,8 +4,12 @@
 * @date 2/8/25
 */
 
+
+#include "Core/Threading/Locks/ReaderBiasedRWLock.h"
+#include "Core/Threading/Locks/SpinLock.h"
 #include "Core/Utilities/Error.h"
 #include "Core/Utilities/Loggers.h"
+#include "cpptraceOperators.h"
 #include "SceneMetricsExporter.h"
 #include "Profiler/MemoryTracking/MemoryTracker.h"
 
@@ -14,6 +18,7 @@
 #include <iostream>
 #include <cpptrace/formatting.hpp>
 #include "cpptrace/cpptrace.hpp"
+#include "msgpack.hpp"
 
 namespace Astral {
 
@@ -30,7 +35,7 @@ namespace Astral {
         (void)GetExportFile();
     }
 
-    bool SceneMetricsExporter::BeginScene(const char* sceneName)
+    bool SceneMetricsExporter::BeginScene(const char* sceneName, const MemoryMetrics& initialMemoryMetrics)
     {
         [[unlikely]] if (m_IsSceneActive)
         {
@@ -40,6 +45,9 @@ namespace Astral {
         OpenExportFile(sceneName);
         m_IsSceneActive = true;
         m_SceneClock.Reset();
+
+        msgpack::pack(GetExportFile(), initialMemoryMetrics);
+
         return IsExportFileOpen();
     }
 
@@ -48,8 +56,13 @@ namespace Astral {
     {
         [[likely]] if (m_IsSceneActive)
         {
+            MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+            ProcessRawTraces();
+            WriteBufferedDataToFile();
+            MemoryTracker::Get().EnableTracking();
+
             // Pack the number of memory metrics snapshots in the file at the end
-            msgpack::pack(GetExportFile(), m_NumberOfSnapshots);
+            msgpack::pack(GetExportFile(), m_NumberOfSnapshots.load());
 
             CloseExportFile();
         }
@@ -59,41 +72,61 @@ namespace Astral {
     }
 
 
-    void SceneMetricsExporter::RecordMemoryMetrics(const MemoryMetrics& memoryMetrics, const AllocationData& allocationData)
+    void SceneMetricsExporter::SaveSceneProfilingTimeToBuffer()
     {
-
-        if (GetExportFile().fail())
+        if (m_IsSceneActive)
         {
-            std::cout << "Memory profiling export file is in a failed state!\n";
-            return;
-        }
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
 
+            std::unique_lock bufferLock{m_OperationTimeBufferLock};
+            m_TimepointBuffer.push_back(m_SceneClock.GetTimeMicroseconds());
+            bufferLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
+    }
+
+    void SceneMetricsExporter::SaveOperationDataToBuffer(const AllocationData& allocationData, bool isFreeOperation)
+    {
         if (m_IsSceneActive)
         {
             AllocationDataSerializeable allocationDataSerializable{};
             allocationDataSerializable.pointer = (uintptr_t)allocationData.pointer;
             allocationDataSerializable.region = allocationData.region;
-            allocationDataSerializable.size = allocationData.size;
+            allocationDataSerializable.size = isFreeOperation == false ? allocationData.size : allocationData.size * -1;
             allocationDataSerializable.allocatorType = allocationData.allocatorType;
-            allocationDataSerializable.threadIDHash = memoryMetrics.GetThreadIDHash(allocationData.threadID);
+            allocationDataSerializable.threadIDHash = std::hash<std::thread::id>{}(allocationData.threadID);
 
             m_NumberOfSnapshots++;
-            msgpack::pack(GetExportFile(), memoryMetrics);
-            msgpack::pack(GetExportFile(), m_SceneClock.GetTimeMicroseconds());
-            msgpack::pack(GetExportFile(), allocationDataSerializable);
 
-            Astral::MemoryTracker::Get().DisableTracking(); // To avoid allocations caused by cpptrace from being picked up by the memory tracker
-            static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
-                .addresses(cpptrace::formatter::address_mode::none)
-                .snippets(false)
-                .colors(cpptrace::formatter::color_mode::none)
-                .paths(cpptrace::formatter::path_mode::full);
-            msgpack::pack(GetExportFile(), m_StacktraceFormatter.format(cpptrace::stacktrace::current(2)));
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations from being picked up by the memory tracker
 
-            Astral::MemoryTracker::Get().EnableTracking();
+            std::unique_lock bufferLock{m_OperationDataBufferLock};
+            m_AllocationDataBuffer.push_back(allocationDataSerializable);
+            bufferLock.unlock();
 
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
         }
+    }
 
+
+    void SceneMetricsExporter::CaptureRawStacktraceToBuffer()
+    {
+        if (m_IsSceneActive)
+        {
+            bool shouldToggleThreadRecursiveGuard = !MemoryTracker::Get().IsThreadRecursiveGuardEnabled();
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().EnableThreadRecursiveGuard(); } // To avoid allocations caused by cpptrace from being picked up by the memory tracker
+
+            cpptrace::raw_trace currentTrace = cpptrace::raw_trace::current(2);
+
+            std::unique_lock writeLock{m_RawTraceQueueLock};
+            m_RawTraceProcessQueue.push({std::move(currentTrace), m_RawTraceProcessQueue.size()});
+            writeLock.unlock();
+
+            if (shouldToggleThreadRecursiveGuard) { Astral::MemoryTracker::Get().DisableThreadRecursiveGuard(); }
+        }
     }
 
 
@@ -196,6 +229,109 @@ namespace Astral {
          }
 
         MemoryTracker::Get().EnableTracking();
+    }
+
+
+    void SceneMetricsExporter::ProcessRawTraces()
+    {
+        ThreadPool m_ProcessingThreadPool;
+
+        // QUEUE BASED
+
+        float numberOfThreads = m_ProcessingThreadPool.GetThreadCount();
+        float numberOfRawTraces = m_RawTraceProcessQueue.size();
+        uint32 rawTracePerThread = std::ceil(numberOfRawTraces / numberOfThreads);
+        m_ResolvedStacktraceBuffer.clear();
+        m_ResolvedStacktraceBuffer.resize(numberOfRawTraces);
+        std::vector<std::future<void>> processingFutures = {};
+
+        static cpptrace::formatter m_StacktraceFormatter = cpptrace::formatter{}
+            .addresses(cpptrace::formatter::address_mode::none)
+            .snippets(false)
+            .colors(cpptrace::formatter::color_mode::none)
+            .paths(cpptrace::formatter::path_mode::full);
+
+
+        std::unordered_map<cpptrace::raw_trace, std::string> m_TraceCache = {};
+        Astral::ReaderBiasedRWLock cacheMutex = {};
+        Astral::SpinLock queueMutex = {};
+
+        for (int i = 0; i < numberOfThreads; i++)
+        {
+            std::future<void> processingFuture = m_ProcessingThreadPool.SubmitTask(
+                [this, &m_TraceCache, &cacheMutex, &queueMutex]() {
+
+                    while (true)
+                    {
+                        std::unique_lock queueLock{queueMutex};
+                        if (m_RawTraceProcessQueue.empty()) { break; }
+                        std::pair<cpptrace::raw_trace, int> tracePair = m_RawTraceProcessQueue.top();
+                        m_RawTraceProcessQueue.pop();
+                        queueLock.unlock();
+
+                        int traceIndex = tracePair.second;
+                        cpptrace::raw_trace& rawTrace = tracePair.first;
+
+                        std::shared_lock cacheReadLock{cacheMutex};
+                        if (m_TraceCache.contains(rawTrace))
+                        {
+                            this->m_ResolvedStacktraceBuffer[traceIndex] = m_TraceCache.at(rawTrace);
+                            cacheReadLock.unlock();
+                            continue;
+                        }
+                        cacheReadLock.unlock();
+
+                        cpptrace::stacktrace stacktrace = rawTrace.resolve();
+                        this->m_ResolvedStacktraceBuffer[traceIndex] = std::move(m_StacktraceFormatter.format(stacktrace));
+
+                        std::unique_lock cacheWriteLock{cacheMutex};
+                        m_TraceCache[rawTrace] = this->m_ResolvedStacktraceBuffer[traceIndex];
+                        cacheWriteLock.unlock();
+                    }
+                },
+                1.0
+            );
+
+            processingFutures.push_back(std::move(processingFuture));
+        }
+
+        for (std::future<void>& future : processingFutures)
+        {
+            future.wait();
+        }
+    }
+
+
+    void SceneMetricsExporter::WriteBufferedDataToFile()
+    {
+        if (m_TimepointBuffer.size() != m_AllocationDataBuffer.size() || m_AllocationDataBuffer.size() != m_ResolvedStacktraceBuffer.size())
+        {
+            // Clear buffers and reset backing memory
+            m_TimepointBuffer.resize(0);
+            m_AllocationDataBuffer.resize(0);
+            m_ResolvedStacktraceBuffer.resize(0);
+
+            AE_WARN("Buffered data sizes do not match! Can not write data to file!")
+            return;
+        }
+
+        for (size_t i = 0; i < m_TimepointBuffer.size(); i++)
+        {
+            size_t operationTimepoint = m_TimepointBuffer[i];
+            AllocationDataSerializeable& operationAllocationData = m_AllocationDataBuffer[i];
+            std::string& stacktrace = m_ResolvedStacktraceBuffer[i];
+
+            if (operationAllocationData.pointer == 0) { continue; } // Skipped operation due to pointer not being tracked during deferred processing
+
+            msgpack::pack(GetExportFile(), operationTimepoint);
+            msgpack::pack(GetExportFile(), operationAllocationData);
+            msgpack::pack(GetExportFile(), stacktrace);
+        }
+
+        // Clear buffers and reset backing memory
+        m_TimepointBuffer.resize(0);
+        m_AllocationDataBuffer.resize(0);
+        m_ResolvedStacktraceBuffer.resize(0);
     }
 
 }

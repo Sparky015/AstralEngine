@@ -11,20 +11,21 @@
 class SceneMetricsAccumulatorTest : public ::testing::Test
 {
 public:
+    Astral::MemoryMetrics m_TestMemoryMetrics{};
     Astral::SceneMetricsExporter m_SceneMetricsExporter;
 };
 
 TEST_F(SceneMetricsAccumulatorTest, BeginScene_SceneBecomesActive)
 {
-    (void)m_SceneMetricsExporter.BeginScene("test");
+    (void)m_SceneMetricsExporter.BeginScene("test", m_TestMemoryMetrics);
     EXPECT_TRUE(m_SceneMetricsExporter.IsSceneActive());
 }
 
 TEST_F(SceneMetricsAccumulatorTest, BeginScene_ThrowsWhenBeginningSceneDuringActiveScene)
 {
-    EXPECT_NO_THROW((void)m_SceneMetricsExporter.BeginScene("test"));
+    EXPECT_NO_THROW((void)m_SceneMetricsExporter.BeginScene("test", m_TestMemoryMetrics));
     EXPECT_TRUE(m_SceneMetricsExporter.IsSceneActive());
-    EXPECT_ANY_THROW((void)m_SceneMetricsExporter.BeginScene("new_test"));
+    EXPECT_ANY_THROW((void)m_SceneMetricsExporter.BeginScene("new_test", m_TestMemoryMetrics));
 }
 
 TEST_F(SceneMetricsAccumulatorTest, EndScene_SceneBecomesInactive)
@@ -35,7 +36,7 @@ TEST_F(SceneMetricsAccumulatorTest, EndScene_SceneBecomesInactive)
 
 TEST_F(SceneMetricsAccumulatorTest, EndScene_EndingInactiveSceneDoesNothing)
 {
-    EXPECT_NO_THROW((void)m_SceneMetricsExporter.BeginScene("test"));
+    EXPECT_NO_THROW((void)m_SceneMetricsExporter.BeginScene("test", m_TestMemoryMetrics));
     EXPECT_NO_THROW(m_SceneMetricsExporter.EndScene());
     EXPECT_FALSE(m_SceneMetricsExporter.IsSceneActive());
     EXPECT_NO_THROW(m_SceneMetricsExporter.EndScene());

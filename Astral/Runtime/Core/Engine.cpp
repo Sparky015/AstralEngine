@@ -37,7 +37,7 @@ namespace Astral {
         m_ImGuiManager(CreateScopedPtr<ImGuiManager>()),
         m_RendererManager(CreateScopedPtr<RendererManager>()),
         m_AssetManager(CreateScopedPtr<AssetManager>()),
-        m_ECSManager(CreateScopedPtr<SceneManager>()),
+        m_SceneManager(CreateScopedPtr<SceneManager>()),
         m_JobManager(CreateScopedPtr<JobManager>())
     {
         PROFILE_SCOPE("Engine::Engine");
@@ -56,8 +56,6 @@ namespace Astral {
     {
         PROFILE_SCOPE("Engine::Init");
 
-        Astral::MemoryTracker::Get().Init();
-
         // This is the order that systems are called in for the SubSystemUpdateEvent
         m_WindowManager->Init();
         m_ImGuiManager->Init();
@@ -65,10 +63,9 @@ namespace Astral {
         m_RendererManager->Init();
         m_AssetManager->InitAssetLoaderDefaults();
         InputState::Init();
-        m_ECSManager->Init();
+        m_SceneManager->Init();
         m_JobManager->Init();
         m_ApplicationModule->Init();
-
 
         AE_PROFILE_FUNCTION(cpuinfo_initialize(), "cpuinfo_initialize");
         AE_PROFILE_FUNCTION(glslang_initialize_process(), "glslang_initialize_process");
@@ -87,8 +84,8 @@ namespace Astral {
         m_ApplicationModule->Shutdown();
         m_JobManager->Shutdown();
         m_JobManager.reset();
-        m_ECSManager->Shutdown();
-        m_ECSManager.reset();
+        m_SceneManager->Shutdown();
+        m_SceneManager.reset();
         InputState::Shutdown();
         m_AssetManager->Shutdown();
         m_AssetManager.reset();
@@ -98,8 +95,6 @@ namespace Astral {
         m_ImGuiManager.reset();
         m_WindowManager->Shutdown();
         m_WindowManager.reset();
-
-        Astral::MemoryTracker::Get().Shutdown();
     }
 
 
@@ -108,7 +103,6 @@ namespace Astral {
         PROFILE_SCOPE("Engine::Run");
 
         Astral::DeltaTime m_DeltaTime;
-        Astral::EventPublisher<SubSystemUpdateEvent> subSystemUpdatePublisher;
         Astral::EventPublisher<NewFrameEvent> newFramePublisher;
         Astral::EventPublisher<RenderImGuiEvent> renderImGuiPublisher;
         Astral::EventListener<WindowClosedEvent> windowClosedListener{
@@ -128,16 +122,20 @@ namespace Astral {
 
             newFramePublisher.PublishEvent( NewFrameEvent() );
 
-            m_WindowManager->Update(); // TODO: Remove subsystem update and call each subsystems update function directly for more controlled update order
-
             m_ImGuiManager->BeginFrame();
             renderImGuiPublisher.PublishEvent( RenderImGuiEvent() );
             m_ImGuiManager->EndFrame();
 
-            subSystemUpdatePublisher.PublishEvent( SubSystemUpdateEvent() );
+
+            // Update systems
+            m_WindowManager->Update();
+            m_ImGuiManager->Update();
+            m_AssetManager->Update();
+            m_SceneManager->Update();
+            m_JobManager->Update();
             m_ApplicationModule->Update(m_DeltaTime);
 
-
+            m_RendererManager->Update();
             m_WindowManager->SwapBuffers();
 
             m_FrameCount++;
