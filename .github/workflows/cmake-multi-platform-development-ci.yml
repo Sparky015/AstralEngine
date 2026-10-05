@@ -7,6 +7,18 @@ concurrency:
 on:
   workflow_dispatch:
 
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'Documentation/**'
+      - 'docs/**'
+      - '.gitignore'
+      - 'Doxygen'
+      - 'README.md'
+      - 'GenerateVisualStudioProject.bat'
+      - 'GenerateXcodeProject.sh'
+      - 'LICENSE'
+
   pull_request:
     branches: [ "main" ]
     paths-ignore:
