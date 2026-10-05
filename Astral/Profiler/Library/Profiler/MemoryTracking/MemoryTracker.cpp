@@ -355,6 +355,11 @@ namespace Astral {
     {
         m_SceneMetricsExporter.EndScene();
         m_IsTrackingEnabled = false;
+
+        if (m_DeferredOperationsProcessor.joinable())
+        {
+            m_DeferredOperationsProcessor.join();
+        }
     }
 
 
