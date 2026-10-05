@@ -14,11 +14,18 @@
 namespace Astral {
 
     thread_local bool MemoryTracker::m_IsThreadRecursiveGuardEnabled = false;
+    bool MemoryTracker::m_IsSingletonMemoryValid = false;
 
     MemoryTracker& MemoryTracker::Get()
     {
         static MemoryTracker instance = MemoryTracker();
         return instance;
+    }
+
+
+    bool MemoryTracker::IsSingletonValid()
+    {
+        return m_IsSingletonMemoryValid;
     }
 
 
@@ -51,6 +58,11 @@ namespace Astral {
 
         m_MemoryMetrics.Shutdown();
         m_IsTrackingEnabled = false;
+
+        if (m_DeferredOperationsProcessor.joinable())
+        {
+            m_DeferredOperationsProcessor.join();
+        }
     }
 
 
@@ -349,17 +361,14 @@ namespace Astral {
     MemoryTracker::MemoryTracker() :
         m_IsTrackingEnabled(false)
     {
+        m_IsSingletonMemoryValid = true;
     }
 
     MemoryTracker::~MemoryTracker()
     {
         m_SceneMetricsExporter.EndScene();
         m_IsTrackingEnabled = false;
-
-        if (m_DeferredOperationsProcessor.joinable())
-        {
-            m_DeferredOperationsProcessor.join();
-        }
+        m_IsSingletonMemoryValid = false;
     }
 
 
