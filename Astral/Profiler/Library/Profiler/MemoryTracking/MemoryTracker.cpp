@@ -53,7 +53,6 @@ namespace Astral {
 
         m_ShouldStopProcessingOperations = true;
 
-        std::unique_lock lock(m_ProcessorMutex);
         m_ProcessorConditionalVariable.notify_one();
 
         m_MemoryMetrics.Shutdown();
@@ -189,7 +188,6 @@ namespace Astral {
     void MemoryTracker::ProcessDeferredOperationsBuffer()
     {
         m_ShouldProcessOperations = true;
-        std::unique_lock lock(m_ProcessorMutex);
         m_ProcessorConditionalVariable.notify_one();
         while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
     }
@@ -399,7 +397,6 @@ namespace Astral {
         if (threadOperationBuffer.size() >= 1000)
         {
             m_ShouldProcessOperations = true;
-            std::unique_lock lock(m_ProcessorMutex);
             m_ProcessorConditionalVariable.notify_one();
             readOperationsBufferLock.unlock(); // Unlock after threadOperationBuffer read
         }
