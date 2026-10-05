@@ -187,6 +187,8 @@ namespace Astral {
 
     void MemoryTracker::ProcessDeferredOperationsBuffer()
     {
+        if (!m_IsTrackingEnabled) { return; }
+
         m_ShouldProcessOperations = true;
         m_ProcessorConditionalVariable.notify_one();
         while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
