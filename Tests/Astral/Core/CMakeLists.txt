@@ -22,10 +22,11 @@ add_executable(AstralCoreTests
 
 
 target_link_libraries(AstralCoreTests GTest::gtest_main)
-target_link_libraries(AstralCoreTests AstralEngine)
+target_link_libraries(AstralCoreTests AstralCore)
 target_include_directories(AstralCoreTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdPartyLibraries/googletest-main/googletest/include/)
 target_include_directories(AstralCoreTests PUBLIC ${CMAKE_SOURCE_DIR}/Astral/Core/)
+target_include_directories(AstralCoreTests PUBLIC ${CMAKE_SOURCE_DIR}/Astral/)
 
 include(GoogleTest)
-gtest_discover_tests(AstralCoreTests)
+gtest_discover_tests(AstralCoreTests DISCOVERY_MODE PRE_TEST)
 

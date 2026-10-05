@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Core/CoreMacroDefinitions.h"
+#include "Core/FixedIntegerTypes.h"
 #include "Core/Memory/Allocators/StackAllocator.h"
 #include <memory>
 

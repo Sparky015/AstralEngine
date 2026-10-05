@@ -15,5 +15,5 @@ target_include_directories(AstralProfilerTests PUBLIC ${CMAKE_SOURCE_DIR}/ThirdP
 target_include_directories(AstralProfilerTests PUBLIC ${CMAKE_SOURCE_DIR}/Astral/Profiler/Library/)
 
 include(GoogleTest)
-gtest_discover_tests(AstralProfilerTests)
+gtest_discover_tests(AstralProfilerTests DISCOVERY_MODE PRE_TEST)
 

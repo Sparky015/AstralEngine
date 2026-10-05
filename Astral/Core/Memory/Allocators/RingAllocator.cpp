@@ -83,6 +83,7 @@ namespace Astral {
 
     size_t RingAllocator::GetUsedBlockSize() const
     {
+        return -1;
     }
 
 

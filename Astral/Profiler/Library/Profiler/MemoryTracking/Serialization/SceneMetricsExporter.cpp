@@ -18,7 +18,7 @@
 #include <iostream>
 #include <cpptrace/formatting.hpp>
 #include "cpptrace/cpptrace.hpp"
-#include <unordered_map>
+#include "msgpack.hpp"
 
 namespace Astral {
 

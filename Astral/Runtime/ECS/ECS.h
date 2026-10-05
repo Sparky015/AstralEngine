@@ -14,7 +14,6 @@
 #include "Components/TransformComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/PointLightComponent.h"
-#include "ECSErrorHandling.h"
 #include "Components/DirectionalLightComponent.h"
 
 namespace Astral {

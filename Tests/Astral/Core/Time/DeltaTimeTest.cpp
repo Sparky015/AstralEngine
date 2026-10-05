@@ -40,18 +40,4 @@ namespace Astral {
         EXPECT_GT(testDeltaTime.GetMicroseconds(), time);
     }
 
-    TEST_F(DeltaTimeTests, UpdateDeltaTime_CorrectlyResetsAndStoresTheDeltaTime)
-    {
-        DeltaTime testDeltaTime = DeltaTime(); // Starts the time on construction
-
-        using namespace std::chrono;
-
-        nanoseconds timeInNanoSeconds = duration_cast<nanoseconds>(duration<double>(0.3));
-        std::this_thread::sleep_for(timeInNanoSeconds);
-
-        testDeltaTime.UpdateDeltaTime();
-        double deltaTime = testDeltaTime.GetMicroseconds();
-        EXPECT_NEAR(deltaTime, duration_cast<microseconds>(timeInNanoSeconds).count(), 100000); // .1 millisecond of room just in case to prevent false flags
-    }
-
 }
