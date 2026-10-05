@@ -13,8 +13,8 @@ set(package_name "cpptrace")
 ##########################################################################################
 #######################         ASTRAL ENGINE EDIT         ###############################
 
-# ASTRAL ENGINE NOTE: This turns off stacktraces to keep compatability with xcode
-set(CPPTRACE_UNWIND_WITH_NOTHING ON)
+# ASTRAL ENGINE NOTE: 'ON' turns off stacktraces to keep compatability with xcode. The 'OFF' setting allows unwinding for stacktraces.
+set(CPPTRACE_UNWIND_WITH_NOTHING OFF)
 
 ##########################################################################################
 ##########################################################################################
