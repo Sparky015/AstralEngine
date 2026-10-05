@@ -89,8 +89,7 @@ namespace Astral {
 
     size_t PoolAllocator::GetUsedBlockSize() const
     {
-        uint32 usedBlocks = 0;
-
+        return -1;
     }
 
 

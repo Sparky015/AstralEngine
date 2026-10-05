@@ -12,11 +12,11 @@
 #include "Profiler/MemoryTracking/MemoryMetrics.h"
 #include "MemoryMetricsSnapshot.h"
 
-#include "msgpack.hpp"
+#include "Core/Time/Clock.h"
+
 #include <cpptrace/formatting.hpp>
 #include <fstream>
-
-
+#include <stack>
 
 namespace Astral {
 

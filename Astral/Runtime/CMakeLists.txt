@@ -61,7 +61,6 @@ set(ENGINE_SOURCE
         ECS/ECS.h
         Core/FixedIntegerTypes.h
         ECS/Entity.h
-        ECS/ECSErrorHandling.h
         ECS/ECS_Impl.h
         ECS/ComponentPool.h
         ECS/ComponentPoolSet.h
@@ -440,6 +439,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
             -DASTRAL_DEBUG_BUILD
 
     )
+else ()
+    message(FATAL_ERROR "Build type is not set so build-type based macros do not get set!")
 endif()
 
 

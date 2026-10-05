@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <unordered_set>
+#include <unordered_map>
+#include <filesystem>
+#include <future>
 
 #include "Asset.h"
 #include "Ref.h"
-
-#include <unordered_map>
-#include <future>
 
 namespace Astral {
 

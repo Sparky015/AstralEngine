@@ -35,6 +35,9 @@ if (WIN32 AND TARGET VulkanDependencies)
             SPIRV-Tools-optd
             glslangd
             glslang-default-resource-limitsd
+            spirv-cross-cored
+            spirv-cross-cppd
+            spirv-cross-glsld
         )
     else ()
         target_link_libraries(VulkanDependencies INTERFACE
@@ -44,8 +47,13 @@ if (WIN32 AND TARGET VulkanDependencies)
             SPIRV-Tools
             SPIRV-Tools-diff
             SPIRV-Tools-opt
+            spirv-cross-core
+            spirv-cross-cpp
+            spirv-cross-glsl
         )
     endif ()
+
+    target_include_directories(VulkanDependencies INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../spirv-cross/include)
 
 elseif (APPLE AND TARGET VulkanDependencies)
     target_link_libraries(VulkanDependencies INTERFACE
@@ -56,4 +64,6 @@ elseif (APPLE AND TARGET VulkanDependencies)
             SPIRV-Tools-diff
             SPIRV-Tools-opt
     )
+
+    target_include_directories(VulkanDependencies INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../spirv-cross/include)
 endif ()

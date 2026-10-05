@@ -86,6 +86,9 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Default")    # Default
 
     )
 
+else ()
+    message(FATAL_ERROR "Build type is not set so build-type based macros do not get set!")
+
 endif()
 
 target_compile_definitions(AstralProfiler PUBLIC -DLOG_FILE_DIR="${CMAKE_SOURCE_DIR}/Logs/")

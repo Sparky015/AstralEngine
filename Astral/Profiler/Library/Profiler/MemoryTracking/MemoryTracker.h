@@ -31,6 +31,12 @@ namespace Astral {
         static MemoryTracker& Get();
 
         /**
+         * @brief Checks if the singleton's memory is valid to access
+         * @return True if the singleton's memory is valid to access, false if it is not
+         */
+        static bool IsSingletonValid();
+
+        /**
          * @brief Initializes the MemoryTracker.
          */
         void Init();
@@ -298,6 +304,7 @@ namespace Astral {
         std::unordered_map<std::thread::id, std::vector<DeferredTrackingOperation>> m_ThreadOperationBuffers;
         std::atomic<uint64> m_OperationCount;
         static thread_local bool m_IsThreadRecursiveGuardEnabled;
+        static bool m_IsSingletonMemoryValid;
 
         std::jthread m_DeferredOperationsProcessor;
         std::mutex m_ProcessorMutex;

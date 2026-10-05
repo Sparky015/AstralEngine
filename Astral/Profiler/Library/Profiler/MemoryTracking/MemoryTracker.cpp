@@ -14,11 +14,18 @@
 namespace Astral {
 
     thread_local bool MemoryTracker::m_IsThreadRecursiveGuardEnabled = false;
+    bool MemoryTracker::m_IsSingletonMemoryValid = false;
 
     MemoryTracker& MemoryTracker::Get()
     {
         static MemoryTracker instance = MemoryTracker();
         return instance;
+    }
+
+
+    bool MemoryTracker::IsSingletonValid()
+    {
+        return m_IsSingletonMemoryValid;
     }
 
 
@@ -45,10 +52,17 @@ namespace Astral {
 #endif
 
         m_ShouldStopProcessingOperations = true;
+
+        std::unique_lock lock(m_ProcessorMutex);
         m_ProcessorConditionalVariable.notify_one();
 
         m_MemoryMetrics.Shutdown();
         m_IsTrackingEnabled = false;
+
+        if (m_DeferredOperationsProcessor.joinable())
+        {
+            m_DeferredOperationsProcessor.join();
+        }
     }
 
 
@@ -175,6 +189,7 @@ namespace Astral {
     void MemoryTracker::ProcessDeferredOperationsBuffer()
     {
         m_ShouldProcessOperations = true;
+        std::unique_lock lock(m_ProcessorMutex);
         m_ProcessorConditionalVariable.notify_one();
         while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
     }
@@ -346,12 +361,14 @@ namespace Astral {
     MemoryTracker::MemoryTracker() :
         m_IsTrackingEnabled(false)
     {
+        m_IsSingletonMemoryValid = true;
     }
 
     MemoryTracker::~MemoryTracker()
     {
         m_SceneMetricsExporter.EndScene();
         m_IsTrackingEnabled = false;
+        m_IsSingletonMemoryValid = false;
     }
 
 
@@ -382,6 +399,7 @@ namespace Astral {
         if (threadOperationBuffer.size() >= 1000)
         {
             m_ShouldProcessOperations = true;
+            std::unique_lock lock(m_ProcessorMutex);
             m_ProcessorConditionalVariable.notify_one();
             readOperationsBufferLock.unlock(); // Unlock after threadOperationBuffer read
         }

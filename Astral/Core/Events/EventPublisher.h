@@ -6,8 +6,6 @@
 
 #include "EventBus.h"
 
-#include "Profiler/Instrumentation/ScopeProfiler.h"
-
 namespace Astral {
 
     /** Publishes an event to any listeners. */

@@ -13,7 +13,7 @@
 #include "glslang/Include/glslang_c_interface.h"
 #include "glslang/Public/resource_limits_c.h"
 #include "glslang/Public/ShaderLang.h"
-#include "spirv-cross/spirv_glsl.hpp"
+#include "spirv_cross/spirv_glsl.hpp"
 
 namespace Astral {
 
