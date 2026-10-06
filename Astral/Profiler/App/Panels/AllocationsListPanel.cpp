@@ -6,11 +6,11 @@
 
 #include "AllocationsListPanel.h"
 
+#include "Profiler/App/ProfilerApp.h"
+
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "ImPlot/implot.h"
-
-#include "Profiler/App/ProfilerApp.h"
 
 namespace Astral {
 
@@ -23,7 +23,6 @@ namespace Astral {
     {
         GROUPED_BY_ALLOCATION_ORDER,
         GROUPED_BY_SIZE,
-        GROUPED_BY_CALL_TREE
     };
 
     static std::string_view AllocationsViewModeToString(AllocationsViewMode allocationsViewMode)
@@ -32,7 +31,6 @@ namespace Astral {
         {
             case AllocationsViewMode::GROUPED_BY_ALLOCATION_ORDER: return "Allocations in Order";
             case AllocationsViewMode::GROUPED_BY_SIZE:             return "Group by Size";
-            case AllocationsViewMode::GROUPED_BY_CALL_TREE:        return "Call Tree";
         }
         return "Undefined Case!";
     }
@@ -99,10 +97,6 @@ namespace Astral {
             if (ImGui::Selectable("Group by Size"))
             {
                 viewMode = AllocationsViewMode::GROUPED_BY_SIZE;
-            }
-            if (ImGui::Selectable("Call Tree"))
-            {
-                viewMode = AllocationsViewMode::GROUPED_BY_CALL_TREE;
             }
 
             ImGui::EndCombo();
@@ -284,23 +278,6 @@ namespace Astral {
             }
 
         }
-        else if (viewMode == AllocationsViewMode::GROUPED_BY_CALL_TREE)
-        {
-            SceneStacktracePrefixTree& stacktracePrefixTree = ProfilerApp::Get().GetSceneDataCache().GetStacktracePrefixTree();
-            const StacktracePrefixNode& root = stacktracePrefixTree.GetPrefixTreeRoot();
-
-
-            for (auto& [frameName, node] : root.FrameToChildNode)
-            {
-                std::string nameAndCount = std::string("Operations: ") + std::to_string(node.InclusiveMemoryOperations) + "  |||  " + frameName;
-                if (ImGui::TreeNode(nameAndCount.c_str()))
-                {
-                    DisplayPrefixNode(node);
-                    ImGui::Spacing();
-                    ImGui::TreePop();
-                }
-            }
-        }
 
         ImGui::End();
 
@@ -413,21 +390,6 @@ namespace Astral {
     void AllocationsListPanel::SetListAllocatorFilterIn(MemoryTrackerAllocatorType allocatorType)
     {
         m_FilterInAllocatorType = allocatorType;
-    }
-
-
-    void AllocationsListPanel::DisplayPrefixNode(StacktracePrefixNode prefixNode)
-    {
-        for (auto& [frameName, node] : prefixNode.FrameToChildNode)
-        {
-            std::string nameAndCount = std::string("Operations: ") + std::to_string(node.InclusiveMemoryOperations) + "  |||  " + frameName;
-            if (ImGui::TreeNode(nameAndCount.c_str()))
-            {
-                DisplayPrefixNode(node);
-                ImGui::Spacing();
-                ImGui::TreePop();
-            }
-        }
     }
 
 }
