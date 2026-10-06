@@ -65,6 +65,7 @@ namespace Astral {
         m_SceneMetricsImporter.ImportMemoryProfile(filePath);
         const SceneMetricsStorage& storageTest = m_SceneMetricsImporter.GetSceneMetrics();
         m_SceneDataCache.InitializeCache(&storageTest);
+        ImPlot::SetNextAxesToFit();
     }
 
 
