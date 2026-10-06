@@ -9,9 +9,10 @@
 #include "Core/Engine.h"
 #include "Core/Utilities/Asserts.h"
 #include "Core/Utilities/Loggers.h"
-#include "Window/WindowManager.h"
 #include "Debug/ImGui/ImGuiManager.h"
+#include "Panels/CallTreePanel.h"
 #include "Views/GraphViews.h"
+#include "Window/WindowManager.h"
 
 #include "ImPlot/implot.h"
 #include "imgui.h"
@@ -108,6 +109,11 @@ namespace Astral {
                 ImGui::EndTabItem();
             }
 
+            if (ImGui::BeginTabItem("Call Tree"))
+            {
+                CallTreePanel::Show();
+                ImGui::EndTabItem();
+            }
 
             ImGui::EndTabBar();
         }
