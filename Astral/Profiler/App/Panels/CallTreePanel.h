@@ -21,7 +21,7 @@ namespace Astral {
 
     private:
 
-        static void DisplayPrefixNode(StacktracePrefixNode prefixNode);
+        static void DisplayPrefixNode(const StacktracePrefixNode& prefixNode);
 
     };
 

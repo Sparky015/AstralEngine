@@ -31,7 +31,7 @@ namespace Astral {
     }
 
 
-    void CallTreePanel::DisplayPrefixNode(StacktracePrefixNode prefixNode)
+    void CallTreePanel::DisplayPrefixNode(const StacktracePrefixNode& prefixNode)
     {
         for (auto& [frameName, node] : prefixNode.FrameToChildNode)
         {
