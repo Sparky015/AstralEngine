@@ -71,6 +71,11 @@ namespace Astral {
         return;
 #endif
 
+        if (m_SceneMetricsExporter.IsSceneActive())
+        {
+            AE_WARN("[Memory Profiler] A profiling scene has already been started! Can't start new profiling scene!")
+        }
+
 
         m_IsSceneStartEndSyncEnabled = true;
         ProcessDeferredOperationsBuffer();
@@ -99,6 +104,12 @@ namespace Astral {
         return;
 #endif
 
+        if (!m_SceneMetricsExporter.IsSceneActive())
+        {
+            AE_WARN("[Memory Profiler] A profiling scene has not been started! Can't end a profiling scene that has not been started!")
+            return;
+        }
+
         m_IsSceneStartEndSyncEnabled = true;
         ProcessDeferredOperationsBuffer();
 
@@ -116,6 +127,11 @@ namespace Astral {
 #endif
         if (!IsTrackingEnabled()) { return; }
         if (m_IsThreadRecursiveGuardEnabled) { return; }
+
+        while (m_IsSceneStartEndSyncEnabled.load())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
 
         uint64 operationNumber = m_OperationCount.fetch_add(1);
 
@@ -137,6 +153,11 @@ namespace Astral {
 #endif
         if (!IsTrackingEnabled()) { return; }
         if (m_IsThreadRecursiveGuardEnabled) { return; }
+
+        while (m_IsSceneStartEndSyncEnabled.load())
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
 
         uint64 operationNumber = m_OperationCount.fetch_add(1);
         DeferOperationTracking({{}, operationNumber, false, pointer});
@@ -189,9 +210,20 @@ namespace Astral {
     {
         if (!m_IsTrackingEnabled) { return; }
 
+        // Wait for deferred processing pass already in progress if one exists
+        while (m_ShouldProcessOperations.load(std::memory_order_relaxed))
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
+
         m_ShouldProcessOperations = true;
         m_ProcessorConditionalVariable.notify_one();
-        while (m_ShouldProcessOperations) { std::this_thread::sleep_for(std::chrono::microseconds(100)); } // Wait while the deferred processing finishes
+
+        // Wait while the deferred processing finishes
+        while (m_ShouldProcessOperations.load(std::memory_order_relaxed))
+        {
+            std::this_thread::sleep_for(std::chrono::microseconds(100));
+        }
     }
 
 
@@ -374,11 +406,6 @@ namespace Astral {
 
     void MemoryTracker::DeferOperationTracking(const DeferredTrackingOperation& operation)
     {
-        while (m_IsSceneStartEndSyncEnabled)
-        {
-            // spin until sync stops
-        }
-
         std::shared_lock readOperationsBufferLock{m_ThreadOperationBuffersRWMutex};
 
         m_IsThreadRecursiveGuardEnabled = true; // To avoid this thread triggering allocations that the memory tracker picks up

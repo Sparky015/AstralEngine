@@ -181,20 +181,8 @@ namespace Astral {
         std::memcpy(filePathBuffer + pathLength, fileNameBuffer, std::strlen(fileNameBuffer));
         filePathBuffer[pathLength + std::strlen(fileNameBuffer)] = '\0';
 
-
-        // std::cout << "Stream state before open:" << std::endl;
-        // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-        // std::cout << "- good(): " << GetExportFile().good() << std::endl;
-        // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-        // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
-
         GetExportFile().open(filePathBuffer, std::ios::out | std::ios::binary);
 
-        // std::cout << "Stream state after open:" << std::endl;
-        // std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-        // std::cout << "- good(): " << GetExportFile().good() << std::endl;
-        // std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-        // std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
         MemoryTracker::Get().EnableTracking();
     }
@@ -206,21 +194,7 @@ namespace Astral {
 
          if (GetExportFile().is_open())
          {
-             // Log the stream state after opening
-             std::cout << "Stream state before close:" << std::endl;
-             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-             std::cout << "- good(): " << GetExportFile().good() << std::endl;
-             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
-
              GetExportFile().close();
-             // GetExportFile().clear();
-
-             std::cout << "Stream state after close:" << std::endl;
-             std::cout << "- is_open(): " << GetExportFile().is_open() << std::endl;
-             std::cout << "- good(): " << GetExportFile().good() << std::endl;
-             std::cout << "- fail(): " << GetExportFile().fail() << std::endl;
-             std::cout << "- bad(): " << GetExportFile().bad() << std::endl;
 
              if (GetExportFile().is_open())
              {
@@ -311,7 +285,7 @@ namespace Astral {
             m_AllocationDataBuffer.resize(0);
             m_ResolvedStacktraceBuffer.resize(0);
 
-            AE_WARN("Buffered data sizes do not match! Can not write data to file!")
+            AE_WARN("[Memory Profiler] [Internal] Output data sizes do not match! Something went wrong! Skipping file data write!")
             return;
         }
 
