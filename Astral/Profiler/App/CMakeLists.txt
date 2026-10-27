@@ -46,6 +46,7 @@ target_link_libraries(AstralProfiler PUBLIC AstralEngine)
 
 target_link_libraries(AstralProfiler PRIVATE ImPlot)
 target_link_libraries(AstralProfiler PRIVATE nfd)
+target_link_libraries(AstralProfiler PRIVATE NlohmannJson)
 
 
 if (APPLE)
