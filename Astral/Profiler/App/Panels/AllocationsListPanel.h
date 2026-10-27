@@ -28,30 +28,6 @@ namespace Astral {
          */
         int GetSelectedPoint();
 
-        /**
-         * @brief Sets the allocation list plot limits filter in criteria
-         * @param plotLimits The plot limits to filter in based on
-         */
-        static void SetListPlotLimitsFilterIn(Vec2 plotLimits);
-
-        /**
-         * @brief Sets the allocation list thread ID filter in criteria
-         * @param hashedThreadID The thread ID to filter in based on
-         */
-        static void SetListThreadIDFilterIn(size_t hashedThreadID);
-
-        /**
-         * @brief Sets the allocation list memory region filter in criteria
-         * @param memoryRegion The memory region to filter in based on
-         */
-        static void SetListRegionFilterIn(MemoryRegion memoryRegion);
-
-        /**
-         * @brief Sets the allocation list allocator type filter in criteria
-         * @param allocatorType The allocator type to filter in based on
-         */
-        static void SetListAllocatorFilterIn(MemoryTrackerAllocatorType allocatorType);
-
     private:
 
         /**
@@ -86,11 +62,6 @@ namespace Astral {
 
         int m_SelectedPointIndex = 0;
         int m_SortedSelectedPointIndex = -1;
-
-        static Vec2 m_FilterInPlotLimits;
-        static size_t m_FilterInThreadID;
-        static MemoryRegion m_FilterInMemoryRegion;
-        static MemoryTrackerAllocatorType m_FilterInAllocatorType;
     };
 
 }

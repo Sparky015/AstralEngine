@@ -11,6 +11,7 @@
 #include "../Panels/DataPointInfoPanel.h"
 #include "../Panels/GraphSelectorPanel.h"
 #include "../Panels/MemoryGraphPanel.h"
+#include "Profiler/App/Panels/ViewConfigSelector.h"
 
 namespace Astral {
 
@@ -21,6 +22,7 @@ namespace Astral {
         m_AllocationListsPanel.Show(sceneMetricsStorage);
         size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
+        ViewConfigSelector::Show(sceneMetricsStorage);
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::GLOBAL, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
         AllocationStackTracePanel(sceneMetricsStorage, selectedDataPoint);
@@ -33,6 +35,7 @@ namespace Astral {
         m_AllocationListsPanel.Show(sceneMetricsStorage);
         size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
+        ViewConfigSelector::Show(sceneMetricsStorage);
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::ALLOCATOR, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
         AllocationStackTracePanel(sceneMetricsStorage, selectedDataPoint);
@@ -45,6 +48,7 @@ namespace Astral {
         m_AllocationListsPanel.Show(sceneMetricsStorage);
         size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
+        ViewConfigSelector::Show(sceneMetricsStorage);
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::REGION, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
         AllocationStackTracePanel(sceneMetricsStorage, selectedDataPoint);
@@ -57,6 +61,7 @@ namespace Astral {
         m_AllocationListsPanel.Show(sceneMetricsStorage);
         size_t selectedDataPoint = m_AllocationListsPanel.GetSelectedPoint();
 
+        ViewConfigSelector::Show(sceneMetricsStorage);
         ShowMemoryGraphPanel(sceneMetricsStorage, MemoryMetricsDataScope::THREAD, graphSelection, selectedDataPoint);
         ShowDataPointInfoPanel(sceneMetricsStorage, selectedDataPoint);
         AllocationStackTracePanel(sceneMetricsStorage, selectedDataPoint);

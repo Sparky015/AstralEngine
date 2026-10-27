@@ -14,11 +14,6 @@
 
 namespace Astral {
 
-    Vec2 AllocationsListPanel::m_FilterInPlotLimits = {};
-    size_t AllocationsListPanel::m_FilterInThreadID = 0;
-    MemoryRegion AllocationsListPanel::m_FilterInMemoryRegion = MemoryRegion::MEMORY_REGION_END;
-    MemoryTrackerAllocatorType AllocationsListPanel::m_FilterInAllocatorType = MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END;
-
     enum class AllocationsViewMode
     {
         GROUPED_BY_ALLOCATION_ORDER,
@@ -348,48 +343,30 @@ namespace Astral {
 
     bool AllocationsListPanel::ShouldFilterAllocationOut(const SceneMetricsStorage& storage, int storageIndex)
     {
-        if (m_FilterInPlotLimits != Vec2(0) && !(m_FilterInPlotLimits.x <= localScopeStorage->GetAllocationTimes()[storageIndex] && localScopeStorage->GetAllocationTimes()[storageIndex] <= m_FilterInPlotLimits.y))
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+        Vec2 plotLimitsFilter = viewConfig.GetPlotLimitsFilter();
+        size_t threadIDFilter = viewConfig.GetThreadIDFilter();
+        size_t memoryRegionFilter = viewConfig.GetRegionFilter();
+        size_t allocatorFilter = viewConfig.GetAllocatorFilter();
+
+        if (plotLimitsFilter != Vec2(0) && !(plotLimitsFilter.x <= storage.GetAllocationTimes()[storageIndex] && storage.GetAllocationTimes()[storageIndex] <= plotLimitsFilter.y))
         {
             return true;
         }
-        if (m_FilterInThreadID != 0 && localScopeStorage->GetAllocationDataOverTime()[storageIndex].threadIDHash != m_FilterInThreadID)
+        if (threadIDFilter != 0 && storage.GetAllocationDataOverTime()[storageIndex].threadIDHash != threadIDFilter)
         {
             return true;
         }
-        if (m_FilterInMemoryRegion != MemoryRegion::MEMORY_REGION_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].region != m_FilterInMemoryRegion)
+        if (memoryRegionFilter != MemoryRegion::MEMORY_REGION_END && storage.GetAllocationDataOverTime()[storageIndex].region != memoryRegionFilter)
         {
             return true;
         }
-        if (m_FilterInAllocatorType != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && localScopeStorage->GetAllocationDataOverTime()[storageIndex].allocatorType != m_FilterInAllocatorType)
+        if (allocatorFilter != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && storage.GetAllocationDataOverTime()[storageIndex].allocatorType != allocatorFilter)
         {
             return true;
         }
 
         return false;
-    }
-
-
-    void AllocationsListPanel::SetListPlotLimitsFilterIn(Vec2 plotLimits)
-    {
-        m_FilterInPlotLimits = plotLimits;
-    }
-
-
-    void AllocationsListPanel::SetListThreadIDFilterIn(size_t hashedThreadID)
-    {
-        m_FilterInThreadID = hashedThreadID;
-    }
-
-
-    void AllocationsListPanel::SetListRegionFilterIn(MemoryRegion memoryRegion)
-    {
-        m_FilterInMemoryRegion = memoryRegion;
-    }
-
-
-    void AllocationsListPanel::SetListAllocatorFilterIn(MemoryTrackerAllocatorType allocatorType)
-    {
-        m_FilterInAllocatorType = allocatorType;
     }
 
 }

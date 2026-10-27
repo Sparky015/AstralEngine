@@ -8,10 +8,10 @@
 
 #include "Profiler/MemoryTracking/AllocationData.h"
 #include "Profiler/MemoryTracking/Serialization/SceneMetricsStorage.h"
+#include "ProfilerViewConfig.h"
+#include "SceneStacktracePrefixTree.h"
 
 #include <vector>
-
-#include "SceneStacktracePrefixTree.h"
 
 namespace Astral {
 
@@ -49,11 +49,18 @@ namespace Astral {
          */
         SceneStacktracePrefixTree& GetStacktracePrefixTree();
 
+        /**
+          * @brief Gets the profiler view config
+          * @return The profiler view config
+          */
+        ProfilerViewConfig& GetViewConfig();
+
     private:
 
         const SceneMetricsStorage* m_SceneMetricsStorage = nullptr;
         std::vector<std::pair<AllocationDataSerializeable, int>> m_SortedBySizeAllocationData = {};
         SceneStacktracePrefixTree m_SceneStacktracePrefixTree = {};
+        ProfilerViewConfig m_ProfilerViewConfig = {};
     };
 
 }

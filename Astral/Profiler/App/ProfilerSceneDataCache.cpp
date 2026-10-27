@@ -73,5 +73,11 @@ namespace Astral {
         return m_SceneStacktracePrefixTree;
     }
 
+
+    ProfilerViewConfig& ProfilerSceneDataCache::GetViewConfig()
+    {
+        return m_ProfilerViewConfig;
+    }
+
 }
 

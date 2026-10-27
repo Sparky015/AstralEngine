@@ -27,6 +27,10 @@ add_executable(AstralProfiler
     SceneStacktracePrefixTree.h
     Panels/CallTreePanel.cpp
     Panels/CallTreePanel.h
+    ProfilerViewConfig.h
+    ProfilerViewConfig.cpp
+    Panels/ViewConfigSelector.cpp
+    Panels/ViewConfigSelector.h
 )
 
 

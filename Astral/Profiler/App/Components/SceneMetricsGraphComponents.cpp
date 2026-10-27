@@ -6,8 +6,10 @@
 #include "SceneMetricsGraphComponents.h"
 
 #include "Core/Utilities/Asserts.h"
-#include "ImPlot/implot.h"
+#include "Profiler/App/ProfilerApp.h"
 #include "Profiler/App/Panels/AllocationsListPanel.h"
+
+#include "ImPlot/implot.h"
 
 namespace Astral {
 
@@ -40,7 +42,8 @@ namespace Astral {
 
         ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, maxTime);
 
-        AllocationsListPanel::SetListPlotLimitsFilterIn(Vec2(ImPlot::GetPlotLimits().X.Min, ImPlot::GetPlotLimits().X.Max));
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+        viewConfig.SetPlotLimitsFilterIn(Vec2(ImPlot::GetPlotLimits().X.Min, ImPlot::GetPlotLimits().X.Max));
     }
 
 
@@ -183,8 +186,12 @@ namespace Astral {
 
     void AllocatorMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [allocatorType, allocationData] : storage.GetAllocatorMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
+
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -204,8 +211,12 @@ namespace Astral {
 
     void AllocatorPeakMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [allocatorType, allocationData] : storage.GetAllocatorPeakMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
+
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -225,8 +236,12 @@ namespace Astral {
 
     void AllocatorActiveAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [allocatorType, allocationData] : storage.GetAllocatorActiveAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
+
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
                 ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -246,8 +261,12 @@ namespace Astral {
 
     void AllocatorTotalAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [allocatorType, allocationData] : storage.GetAllocatorTotalAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
+
             if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -267,8 +286,12 @@ namespace Astral {
 
     void RegionMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [region, allocationData] : storage.GetRegionMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
+
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -288,8 +311,12 @@ namespace Astral {
 
     void RegionPeakMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [region, allocationData] : storage.GetRegionPeakMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
+
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -309,8 +336,12 @@ namespace Astral {
 
     void RegionActiveAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [region, allocationData] : storage.GetRegionActiveAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
+
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
                 ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -330,8 +361,12 @@ namespace Astral {
 
     void RegionTotalAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [region, allocationData] : storage.GetRegionTotalAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
+
             if (ImPlot::BeginPlot(MemoryRegionToString(region)))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -351,8 +386,12 @@ namespace Astral {
 
     void ThreadMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [threadID, allocationData] : storage.GetThreadMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
+
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -372,8 +411,12 @@ namespace Astral {
 
     void ThreadPeakMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [threadID, allocationData] : storage.GetThreadPeakMemoryUsageOverTimeIterable())
         {
+            if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
+
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
                 ImPlot::SetupAxes("Time", "Peak Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -393,8 +436,12 @@ namespace Astral {
 
     void ThreadActiveAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [threadID, allocationData] : storage.GetThreadActiveAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
+
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
                 ImPlot::SetupAxes("Time", "Active Allocation Count", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
@@ -414,8 +461,12 @@ namespace Astral {
 
     void ThreadTotalAllocationsUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
+        ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+
         for (auto [threadID, allocationData] : storage.GetThreadTotalAllocationsOverTimeIterable())
         {
+            if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
+
             if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
