@@ -27,6 +27,12 @@ add_executable(AstralProfiler
     SceneStacktracePrefixTree.h
     Panels/CallTreePanel.cpp
     Panels/CallTreePanel.h
+        Trace/ScopeTraceImporter.cpp
+        Trace/ScopeTraceImporter.h
+        Trace/Panels/TraceViewerPanel.cpp
+        Trace/Panels/TraceViewerPanel.h
+        Trace/TraceViewDataCache.cpp
+        Trace/TraceViewDataCache.h
 )
 
 
@@ -36,6 +42,7 @@ target_link_libraries(AstralProfiler PUBLIC AstralEngine)
 
 target_link_libraries(AstralProfiler PRIVATE ImPlot)
 target_link_libraries(AstralProfiler PRIVATE nfd)
+target_link_libraries(AstralProfiler PRIVATE NlohmannJson)
 
 
 if (APPLE)

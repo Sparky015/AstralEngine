@@ -12,11 +12,11 @@
 #include "Debug/ImGui/ImGuiManager.h"
 #include "Panels/CallTreePanel.h"
 #include "Views/GraphViews.h"
+#include "Trace/ScopeTraceImporter.h"
 #include "Window/WindowManager.h"
 
 #include "ImPlot/implot.h"
 #include "imgui.h"
-
 
 namespace Astral {
 
@@ -51,6 +51,8 @@ namespace Astral {
         window.SetWindowDimensions(1600, 900);
 
         m_RenderImGuiListener.StartListening();
+
+        m_TraceViewDataCache.InitializeCache("/Users/sparky/Documents/Home/Programming/Code Projects/Astral Engine/Logs/2026-10/Day-13/15-46-50-Profiler.json");
     }
 
 
@@ -72,6 +74,12 @@ namespace Astral {
     ProfilerSceneDataCache& ProfilerApp::GetSceneDataCache()
     {
         return m_SceneDataCache;
+    }
+
+
+    TraceViewDataCache& ProfilerApp::GetTraceCache()
+    {
+        return m_TraceViewDataCache;
     }
 
 
@@ -113,6 +121,11 @@ namespace Astral {
             if (ImGui::BeginTabItem("Call Tree"))
             {
                 CallTreePanel::Show();
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Trace Viewer"))
+            {
                 ImGui::EndTabItem();
             }
 

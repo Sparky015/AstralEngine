@@ -11,6 +11,9 @@
 #include "Core/Events/EventListener.h"
 #include "Debug/ImGui/ImGuiEvents.h"
 #include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
+
+#include "Trace/TraceViewDataCache.h"
+
 #include "Views/GraphViews.h"
 
 namespace Astral {
@@ -49,6 +52,12 @@ namespace Astral {
          */
         ProfilerSceneDataCache& GetSceneDataCache();
 
+        /**
+         * @brief Gets the trace data cache for preprocessed data
+         * @return The trace data cache for preprocessed data
+         */
+        TraceViewDataCache& GetTraceCache();
+
     private:
 
         void UpdateProfilerAppUI();
@@ -59,6 +68,7 @@ namespace Astral {
         SceneMetricsImporter m_SceneMetricsImporter;
         GraphView m_GraphsView = {};
         ProfilerSceneDataCache m_SceneDataCache;
+        TraceViewDataCache m_TraceViewDataCache;
 
         Astral::EventListener<RenderImGuiEvent> m_RenderImGuiListener{[this](RenderImGuiEvent e){ UpdateProfilerAppUI(); }};
     };
