@@ -133,25 +133,19 @@ bool Astral::SceneMetricsImporter::ImportMemoryProfile(const std::filesystem::pa
                 unpacker.next(objectHandle);
                 stacktrace = objectHandle.get().as<std::string>();
 
+
                 // if the size is negative, then by file serialization definition, the operation was a free. Otherwise, the operation was an allocation.
                 bool isAllocationOperation = allocationDataSerialized.size >= 0;
                 allocationDataSerialized.size = (isAllocationOperation ? allocationDataSerialized.size : (allocationDataSerialized.size * -1));
 
-                AllocationData allocationData = {
-                    .pointer = (void*)allocationDataSerialized.pointer,
-                    .size = (size_t)allocationDataSerialized.size,
-                    .region = allocationDataSerialized.region,
-                    .allocatorType = allocationDataSerialized.allocatorType,
-                    .threadID = *(std::thread::id*)&allocationDataSerialized.threadIDHash
-                };
 
                 if (isAllocationOperation)
                 {
-                    memoryMetricsBuilder.TrackAllocation(allocationData);
+                    memoryMetricsBuilder.TrackAllocation(allocationDataSerialized);
                 }
                 else
                 {
-                    memoryMetricsBuilder.TrackDeallocation(allocationData);
+                    memoryMetricsBuilder.TrackDeallocation(allocationDataSerialized);
                 }
 
                 m_SceneMetricsStorage.AppendSnapshot(memoryMetricsBuilder, allocationTime, allocationDataSerialized, stacktrace);

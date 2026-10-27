@@ -35,12 +35,38 @@ namespace Astral {
 
     void MemoryMetrics::TrackAllocation(const AllocationData& allocationInfo)
     {
+        AllocationDataSerializeable allocationDataSerializeable = {};
+        allocationDataSerializeable.pointer = (uintptr_t)allocationInfo.pointer;
+        allocationDataSerializeable.size = allocationInfo.size;
+        allocationDataSerializeable.region = allocationInfo.region;
+        allocationDataSerializeable.allocatorType = allocationInfo.allocatorType;
+        allocationDataSerializeable.threadIDHash = std::hash<std::thread::id>{}(allocationInfo.threadID);
+
+        TrackAllocation(allocationDataSerializeable);
+    }
+
+
+    void MemoryMetrics::TrackDeallocation(const AllocationData& allocationInfo)
+    {
+        AllocationDataSerializeable allocationDataSerializeable = {};
+        allocationDataSerializeable.pointer = (uintptr_t)allocationInfo.pointer;
+        allocationDataSerializeable.size = allocationInfo.size;
+        allocationDataSerializeable.region = allocationInfo.region;
+        allocationDataSerializeable.allocatorType = allocationInfo.allocatorType;
+        allocationDataSerializeable.threadIDHash = std::hash<std::thread::id>{}(allocationInfo.threadID);
+
+        TrackDeallocation(allocationDataSerializeable);
+    }
+
+
+    void MemoryMetrics::TrackAllocation(const AllocationDataSerializeable& allocationInfo)
+    {
         m_TotalMemoryUsage += allocationInfo.size;
         m_PeakMemoryUsage = std::max(m_PeakMemoryUsage, m_TotalMemoryUsage);
         m_TotalActiveAllocations++;
         m_TotalAllocations++;
 
-        const size_t threadIDHash = GetThreadIDHash(allocationInfo.threadID);
+        const size_t threadIDHash = allocationInfo.threadIDHash;
 
         m_FrameAllocationData.NumberOfAllocations++;
         m_FrameAllocationData.AllocatedBytes += allocationInfo.size;
@@ -72,19 +98,19 @@ namespace Astral {
     }
 
 
-    void MemoryMetrics::TrackDeallocation(const AllocationData& allocationInfo)
+    void MemoryMetrics::TrackDeallocation(const AllocationDataSerializeable& allocationData)
     {
-        m_TotalMemoryUsage -= allocationInfo.size;
+        m_TotalMemoryUsage -= allocationData.size;
         m_TotalActiveAllocations--;
 
-        const size_t threadIDHash = GetThreadIDHash(allocationInfo.threadID);
+        const size_t threadIDHash = allocationData.threadIDHash;
 
-        m_MemoryUsageByAllocator[allocationInfo.allocatorType] -= allocationInfo.size;
-        m_MemoryUsageByRegion[allocationInfo.region] -= allocationInfo.size;
-        m_MemoryUsageByThread[threadIDHash] -= allocationInfo.size;
+        m_MemoryUsageByAllocator[allocationData.allocatorType] -= allocationData.size;
+        m_MemoryUsageByRegion[allocationData.region] -= allocationData.size;
+        m_MemoryUsageByThread[threadIDHash] -= allocationData.size;
 
-        m_ActiveAllocationsByAllocator[allocationInfo.allocatorType]--;
-        m_ActiveAllocationsByRegion[allocationInfo.region]--;
+        m_ActiveAllocationsByAllocator[allocationData.allocatorType]--;
+        m_ActiveAllocationsByRegion[allocationData.region]--;
         m_ActiveAllocationsByThread[threadIDHash]--;
     }
 

@@ -65,6 +65,18 @@ namespace Astral {
         void TrackDeallocation(const AllocationData& allocationData);
 
         /**
+         * @brief Marks a new allocation and adds the allocation data to the memory metrics
+         * @param allocationInfo The detail information of the allocation being added.
+         */
+        void TrackAllocation(const AllocationDataSerializeable& allocationInfo);
+
+        /**
+         * @brief Marks a new deallocation and removes the allocation data from the memory metrics
+         * @param allocationData The detailed information of the allocation being removed.
+         */
+        void TrackDeallocation(const AllocationDataSerializeable& allocationData);
+
+        /**
          * @brief Retrieves the peak allocated bytes over the course of the program
          * @return The peak memory usage of the program
          */
