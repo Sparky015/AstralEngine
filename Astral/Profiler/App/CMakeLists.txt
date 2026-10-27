@@ -31,6 +31,12 @@ add_executable(AstralProfiler
     ProfilerViewConfig.cpp
     Panels/ViewConfigSelector.cpp
     Panels/ViewConfigSelector.h
+    Trace/ScopeTraceImporter.cpp
+    Trace/ScopeTraceImporter.h
+    Trace/Panels/TraceViewerPanel.cpp
+    Trace/Panels/TraceViewerPanel.h
+    Trace/TraceViewDataCache.cpp
+    Trace/TraceViewDataCache.h
 )
 
 
