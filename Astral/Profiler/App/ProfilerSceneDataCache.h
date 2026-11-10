@@ -9,6 +9,7 @@
 #include "Profiler/MemoryTracking/AllocationData.h"
 #include "Profiler/MemoryTracking/Serialization/SceneMetricsStorage.h"
 #include "ProfilerViewConfig.h"
+#include "Profiler/MemoryTracking/Serialization/SceneMetricsImporter.h"
 #include "SceneStacktracePrefixTree.h"
 
 #include <vector>
@@ -21,9 +22,9 @@ namespace Astral {
 
         /**
          * @brief Initializes the scene data cache with the memory profiles scene metrics storage
-         * @param sceneMetricsStorage A pointer to the scene metrics storage. Pointer is required to be valid while memory profile is loaded
+         * @param filePath A pointer to the scene metrics storage. Pointer is required to be valid while memory profile is loaded
          */
-        void InitializeCache(const SceneMetricsStorage* sceneMetricsStorage);
+        void InitializeCache(const std::filesystem::path& filePath);
 
         /**
          * @brief Invalidates the scene data cache
@@ -35,6 +36,12 @@ namespace Astral {
          * @return The scene metrics of the loaded profile
          */
         const SceneMetricsStorage& GetSceneMetricsStorage();
+
+        /**
+         * @brief Gets the scene starting timepoint of the loaded profile
+         * @return The scene starting timepoint of the loaded profile
+         */
+        uint64 GetSceneStartingTimePoint() const;
 
         /**
          * @brief Gets the allocation data of the scene sorted by allocation size
@@ -57,7 +64,7 @@ namespace Astral {
 
     private:
 
-        const SceneMetricsStorage* m_SceneMetricsStorage = nullptr;
+        SceneMetricsImporter m_SceneMetricsImporter;
         std::vector<std::pair<AllocationDataSerializeable, int>> m_SortedBySizeAllocationData = {};
         SceneStacktracePrefixTree m_SceneStacktracePrefixTree = {};
         ProfilerViewConfig m_ProfilerViewConfig = {};

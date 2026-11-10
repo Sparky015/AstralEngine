@@ -13,6 +13,7 @@
 #include "Panels/CallTreePanel.h"
 #include "Views/GraphViews.h"
 #include "Trace/ScopeTraceImporter.h"
+#include "Trace/Panels/TraceViewerPanel.h"
 #include "Window/WindowManager.h"
 
 #include "ImPlot/implot.h"
@@ -52,7 +53,7 @@ namespace Astral {
 
         m_RenderImGuiListener.StartListening();
 
-        m_TraceViewDataCache.InitializeCache("/Users/sparky/Documents/Home/Programming/Code Projects/Astral Engine/Logs/2026-10/Day-13/15-46-50-Profiler.json");
+        m_TraceViewDataCache.InitializeCache("/Users/sparky/Downloads/20-50-19-Profiler.json");
     }
 
 
@@ -64,9 +65,7 @@ namespace Astral {
 
     void ProfilerApp::LoadMemoryScene(std::string filePath)
     {
-        m_SceneMetricsImporter.ImportMemoryProfile(filePath);
-        const SceneMetricsStorage& storageTest = m_SceneMetricsImporter.GetSceneMetrics();
-        m_SceneDataCache.InitializeCache(&storageTest);
+        m_SceneDataCache.InitializeCache(filePath);
         ImPlot::SetNextAxesToFit();
     }
 
@@ -96,36 +95,35 @@ namespace Astral {
         {
             if (ImGui::BeginTabItem("Global"))
             {
-                m_GraphsView.ShowGlobalGraphView(m_SceneMetricsImporter.GetSceneMetrics());
+                TraceViewerPanel::Show();
+                m_GraphsView.ShowGlobalGraphView(m_SceneDataCache.GetSceneMetricsStorage());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Allocator"))
             {
-                m_GraphsView.ShowAllocatorGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                TraceViewerPanel::Show();
+                m_GraphsView.ShowAllocatorGraphsView(m_SceneDataCache.GetSceneMetricsStorage());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Region"))
             {
-                m_GraphsView.ShowRegionGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                TraceViewerPanel::Show();
+                m_GraphsView.ShowRegionGraphsView(m_SceneDataCache.GetSceneMetricsStorage());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Thread"))
             {
-                m_GraphsView.ShowThreadGraphsView(m_SceneMetricsImporter.GetSceneMetrics());
+                TraceViewerPanel::Show();
+                m_GraphsView.ShowThreadGraphsView(m_SceneDataCache.GetSceneMetricsStorage());
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Call Tree"))
             {
                 CallTreePanel::Show();
-                ImGui::EndTabItem();
-            }
-
-            if (ImGui::BeginTabItem("Trace Viewer"))
-            {
                 ImGui::EndTabItem();
             }
 

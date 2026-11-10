@@ -10,22 +10,15 @@
 
 namespace Astral {
 
-    void ProfilerSceneDataCache::InitializeCache(const SceneMetricsStorage* sceneMetricsStorage)
+    void ProfilerSceneDataCache::InitializeCache(const std::filesystem::path& filePath)
     {
-        if (!sceneMetricsStorage)
-        {
-            AE_WARN("Unable to initialize profiler scene cache with nullptr scene metrics storage!");
-            return;
-        }
+        m_SceneMetricsImporter.ImportMemoryProfile(filePath);
 
-
-        // Initialize reference scene metrics storage
-        m_SceneMetricsStorage = sceneMetricsStorage;
         // ----------------
 
 
         // Initialize allocation data sorted by size
-        const std::vector<AllocationDataSerializeable>& allocationData = sceneMetricsStorage->GetAllocationDataOverTime();
+        const std::vector<AllocationDataSerializeable>& allocationData = m_SceneMetricsImporter.GetSceneMetrics().GetAllocationDataOverTime();
         m_SortedBySizeAllocationData.resize(allocationData.size());
 
         for (int i = 0; i < allocationData.size(); i++)
@@ -40,7 +33,7 @@ namespace Astral {
 
 
         // Initialize stacktrace prefix tree
-        for (const std::string& stacktrace : sceneMetricsStorage->GetStacktraceStorage())
+        for (const std::string& stacktrace : m_SceneMetricsImporter.GetSceneMetrics().GetStacktraceStorage())
         {
             m_SceneStacktracePrefixTree.AddStacktrace(stacktrace);
         }
@@ -50,7 +43,7 @@ namespace Astral {
 
     void ProfilerSceneDataCache::InvalidateCache()
     {
-        m_SceneMetricsStorage = nullptr;
+        m_SceneMetricsImporter.CloseMemoryProfile();
         m_SortedBySizeAllocationData = {};
         m_SceneStacktracePrefixTree.ClearPrefixTree();
     }
@@ -58,7 +51,13 @@ namespace Astral {
 
     const SceneMetricsStorage& ProfilerSceneDataCache::GetSceneMetricsStorage()
     {
-        return *m_SceneMetricsStorage;
+        return m_SceneMetricsImporter.GetSceneMetrics();
+    }
+
+
+    uint64 ProfilerSceneDataCache::GetSceneStartingTimePoint() const
+    {
+        return m_SceneMetricsImporter.GetSceneStartingTimePoint();
     }
 
 

@@ -65,7 +65,6 @@ namespace Astral {
         static ProfilerApp* m_Instance; // Pointing to memory on the stack
         bool m_ShowDebugWindow = true;
 
-        SceneMetricsImporter m_SceneMetricsImporter;
         GraphView m_GraphsView = {};
         ProfilerSceneDataCache m_SceneDataCache;
         TraceViewDataCache m_TraceViewDataCache;
