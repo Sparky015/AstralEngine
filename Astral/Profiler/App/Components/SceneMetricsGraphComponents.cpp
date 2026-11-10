@@ -115,7 +115,7 @@ namespace Astral {
 
     void GlobalMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
-        if (ImPlot::BeginPlot("Global Memory Usage"))
+        if (ImPlot::BeginPlot("Global Memory Usage", ImVec2(-1, 0), ImPlotFlags_NoFrame))
         {
             ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
             ImPlot::SetupAxisFormat(ImAxis_X1, TimeAxisUnitFormatter, nullptr);
@@ -132,7 +132,7 @@ namespace Astral {
 
     void GlobalPeakMemoryUsageGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
-        if (ImPlot::BeginPlot("Global Peak Memory Usage"))
+        if (ImPlot::BeginPlot("Global Peak Memory Usage", ImVec2(-1, 0), ImPlotFlags_NoFrame))
         {
             ImPlot::SetupAxes("Time", "Peak Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -150,7 +150,7 @@ namespace Astral {
 
     void GlobalActiveAllocationGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
-        if (ImPlot::BeginPlot("Global Active Allocation Count"))
+        if (ImPlot::BeginPlot("Global Active Allocation Count", ImVec2(-1, 0), ImPlotFlags_NoFrame))
         {
             ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -168,7 +168,7 @@ namespace Astral {
 
     void GlobalTotalAllocationGraph(const SceneMetricsStorage& storage, size_t selectedPointIndex)
     {
-        if (ImPlot::BeginPlot("Global Total Allocations Made"))
+        if (ImPlot::BeginPlot("Global Total Allocations Made", ImVec2(-1, 0), ImPlotFlags_NoFrame))
         {
             ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -192,7 +192,7 @@ namespace Astral {
         {
             if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
 
-            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
+            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -217,7 +217,7 @@ namespace Astral {
         {
             if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
 
-            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
+            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -242,7 +242,7 @@ namespace Astral {
         {
             if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
 
-            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
+            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -267,7 +267,7 @@ namespace Astral {
         {
             if (viewConfig.GetAllocatorFilter() != MemoryTrackerAllocatorType::ALLOCATOR_TYPE_END && viewConfig.GetAllocatorFilter() != allocatorType) { continue; }
 
-            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType)))
+            if (ImPlot::BeginPlot(AllocatorTypeToString(allocatorType), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -292,7 +292,7 @@ namespace Astral {
         {
             if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
 
-            if (ImPlot::BeginPlot(MemoryRegionToString(region)))
+            if (ImPlot::BeginPlot(MemoryRegionToString(region), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -317,7 +317,7 @@ namespace Astral {
         {
             if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
 
-            if (ImPlot::BeginPlot(MemoryRegionToString(region)))
+            if (ImPlot::BeginPlot(MemoryRegionToString(region), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -342,7 +342,7 @@ namespace Astral {
         {
             if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
 
-            if (ImPlot::BeginPlot(MemoryRegionToString(region)))
+            if (ImPlot::BeginPlot(MemoryRegionToString(region), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Active Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -367,7 +367,7 @@ namespace Astral {
         {
             if (viewConfig.GetRegionFilter() != MemoryRegion::MEMORY_REGION_END && viewConfig.GetRegionFilter() != region) { continue; }
 
-            if (ImPlot::BeginPlot(MemoryRegionToString(region)))
+            if (ImPlot::BeginPlot(MemoryRegionToString(region), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -392,7 +392,7 @@ namespace Astral {
         {
             if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
 
-            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
+            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str(), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -417,7 +417,7 @@ namespace Astral {
         {
             if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
 
-            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
+            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str(), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Peak Memory Usage", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -442,7 +442,7 @@ namespace Astral {
         {
             if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
 
-            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
+            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str(), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Active Allocation Count", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
@@ -467,7 +467,7 @@ namespace Astral {
         {
             if (viewConfig.GetThreadIDFilter() != 0 && viewConfig.GetThreadIDFilter() != threadID) { continue; }
 
-            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str()))
+            if (ImPlot::BeginPlot(std::format("{}", threadID).c_str(), ImVec2(-1, 0), ImPlotFlags_NoFrame))
             {
                 ImPlot::SetupAxes("Time", "Total Allocations", ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit);
 
