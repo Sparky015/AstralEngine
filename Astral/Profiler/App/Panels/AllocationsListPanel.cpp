@@ -211,7 +211,7 @@ namespace Astral {
             int smallSelectedIndex = -1;
             int mediumSelectedIndex = -1;
             int largeSelectedIndex = -1;
-            size_t sortedSelectedPointSize = sortedAllocationData[m_SortedSelectedPointIndex].first.size;
+            size_t sortedSelectedPointSize = m_SortedSelectedPointIndex != -1 ? sortedAllocationData[m_SortedSelectedPointIndex].first.size : 0;
 
             if (sortedSelectedPointSize <= 128)
             {
