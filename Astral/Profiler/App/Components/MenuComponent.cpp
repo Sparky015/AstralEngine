@@ -52,6 +52,33 @@ namespace Astral {
                 }
 
             }
+            if (ImGui::MenuItem("Load Trace"))
+            {
+                nfdu8char_t* outPath;
+                nfdu8filteritem_t filters[1] = { { "json", "json" }};
+                nfdopendialogu8args_t args = {0};
+                args.filterList = filters;
+                args.filterCount = 1;
+
+                nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+                if (result == NFD_OKAY)
+                {
+                    std::string outFilePath = std::string(outPath);
+                    NFD_FreePathU8(outPath);
+                    ProfilerApp::Get().GetTraceCache().InvalidateCache();
+                    ProfilerApp::Get().GetTraceCache().InitializeCache(outFilePath);
+                }
+                else if (result == NFD_CANCEL)
+                {
+                    AE_LOG("Open File Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    AE_WARN("NFD Error: " << NFD_GetError())
+                }
+
+            }
 
             ImGui::EndMenu();
         }
