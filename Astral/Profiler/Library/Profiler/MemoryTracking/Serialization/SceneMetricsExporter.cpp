@@ -46,6 +46,9 @@ namespace Astral {
         m_IsSceneActive = true;
         m_SceneClock.Reset();
 
+        int64 sceneStartTimePoint = std::chrono::time_point_cast<std::chrono::microseconds>(m_SceneClock.GetStartingTimePoint()).time_since_epoch().count();
+        msgpack::pack(GetExportFile(), sceneStartTimePoint);
+
         msgpack::pack(GetExportFile(), initialMemoryMetrics);
 
         return IsExportFileOpen();

@@ -28,13 +28,23 @@ namespace Astral {
 
         void CloseMemoryProfile();
 
-        /**@brief  */
+        /**
+         * @brief Gets the scene metrics of the imported scene
+         * @return The scene metrics of the imported scene
+         */
         [[nodiscard]] const SceneMetricsStorage& GetSceneMetrics() const { return m_SceneMetricsStorage; }
+
+        /**
+         * @brief Gets the scene starting time point of the imported scene
+         * @return The scene starting time point of the imported scene
+         */
+        [[nodiscard]] uint64 GetSceneStartingTimePoint() const { return m_SceneStartingTimePoint; }
 
     private:
         bool m_HasFileLoaded;
         std::ifstream m_File;
         SceneMetricsStorage m_SceneMetricsStorage;
+        uint64 m_SceneStartingTimePoint;
     };
 
 }
