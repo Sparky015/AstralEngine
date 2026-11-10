@@ -10,20 +10,65 @@
 #include "Profiler/App/ProfilerApp.h"
 
 #include "imgui/imgui.h"
+#include "nfd.h"
 
 namespace Astral {
 
     void TraceViewerPanel::Show()
     {
-        ImGui::Begin("Trace Viewer");
+        ImGui::Begin("Trace Viewer", nullptr); //, ImGuiWindowFlags_NoScrollWithMouse);
 
         TraceViewDataCache& traceCache = ProfilerApp::Get().GetTraceCache();
 
         ImGui::PushItemWidth(-FLT_MIN);
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
-        static bool p = true;
-        ImGui::ShowDemoWindow(&p);
+        // static bool p = true;
+        // ImGui::ShowDemoWindow(&p);
+
+
+        if (!traceCache.IsCacheValid())
+        {
+            ImVec2 screenPosition = ImGui::GetCursorScreenPos();
+            ImVec2 midWindowPosition = ImVec2(screenPosition.x + (ImGui::GetWindowWidth() / 2) - ImGui::GetFrameHeight(), screenPosition.y + (ImGui::GetWindowHeight() / 2) - ImGui::GetFrameHeight());
+
+            ImGui::SetCursorScreenPos(midWindowPosition);
+
+            if (ImGui::Button("Load Trace"))
+            {
+                nfdu8char_t* outPath;
+                nfdu8filteritem_t filters[1] = { { "json", "json" }};
+                nfdopendialogu8args_t args = {0};
+                args.filterList = filters;
+                args.filterCount = 1;
+
+                nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+
+                if (result == NFD_OKAY)
+                {
+                    std::string outFilePath = std::string(outPath);
+                    NFD_FreePathU8(outPath);
+                    ProfilerApp::Get().GetTraceCache().InvalidateCache();
+                    ProfilerApp::Get().GetTraceCache().InitializeCache(outFilePath);
+                }
+                else if (result == NFD_CANCEL)
+                {
+                    AE_LOG("Open File Dialog Canceled")
+                }
+                else if (result == NFD_ERROR)
+                {
+                    AE_WARN("NFD Error: " << NFD_GetError())
+                }
+            }
+
+            ImGui::End();
+            return;
+        }
+
+        Vec2 plotLimits = ProfilerApp::Get().GetSceneDataCache().GetViewConfig().GetPlotLimitsFilter();
+        uint64 plotLimitX = (uint64)plotLimits.x + ProfilerApp::Get().GetSceneDataCache().GetSceneStartingTimePoint();
+        uint64 plotLimitY = (uint64)plotLimits.y + ProfilerApp::Get().GetSceneDataCache().GetSceneStartingTimePoint();
+        traceCache.SetTraceTimestampBounds({plotLimitX, plotLimitY});
 
         std::vector<ScopeTrace>& scopeTraces = traceCache.GetScopeTraces();
 
@@ -36,53 +81,57 @@ namespace Astral {
 
         std::stack<uint64> overlappingDurations;
 
-        ImVec2 baseScreenPosition = ImGui::GetCursorScreenPos();
+        // if (ImGui::IsWindowHovered())
+        // {
+        //     std::pair<uint64, uint64> bounds = traceCache.GetTraceTimestampBounds();
+        //     uint64 boundSize = bounds.second - bounds.first;
+        //     uint64 scaledStep = boundSize / 50;
+        //
+        //     float normalizedMousePosition = (ImGui::GetIO().MousePos.x - ImGui::GetCursorScreenPos().x) / ImGui::GetWindowWidth();
+        //     constexpr float maxScrollY = 2'000'000.0f;
+        //     float scrollYScaled = std::min(ImGui::GetIO().MouseWheel * (float)scaledStep, maxScrollY) * 2;
+        //     bounds.first += (int64)(normalizedMousePosition * scrollYScaled);
+        //     bounds.second -= (int64)((1 - normalizedMousePosition) * scrollYScaled);
+        //
+        //     if (ImGui::IsKeyDown(ImGuiKey_MouseLeft))
+        //     {
+        //         int64 mousePanScaledStep = (scaledStep * ImGui::GetIO().MouseDelta.x * -1) / 7; // Divided by 7 to make panning not so fast
+        //         if (bounds.first + mousePanScaledStep > minTimestamp && bounds.second + mousePanScaledStep < maxTimestamp)
+        //         {
+        //             bounds.first += mousePanScaledStep;
+        //             bounds.second += mousePanScaledStep;
+        //         }
+        //     }
+        //     if (ImGui::IsKeyDown(ImGuiKey_LeftArrow))
+        //     {
+        //         if (bounds.first - scaledStep > minTimestamp)
+        //         {
+        //             bounds.first -= scaledStep;
+        //             bounds.second -= scaledStep;
+        //         }
+        //     }
+        //     if (ImGui::IsKeyDown(ImGuiKey_RightArrow))
+        //     {
+        //         if (bounds.second + scaledStep < maxTimestamp)
+        //         {
+        //             bounds.first += scaledStep;
+        //             bounds.second += scaledStep;
+        //         }
+        //     }
+        //
+        //     bounds.first = std::max(bounds.first, traceCache.GetMinTimestamp());
+        //     bounds.second = std::min(bounds.second, traceCache.GetMaxTimestamp());
+        //     traceCache.SetTraceTimestampBounds(bounds);
+        // }
 
-        std::pair<uint64, uint64> bounds = traceCache.GetTraceTimestampBounds();
-        uint64 boundSize = bounds.second - bounds.first;
-        uint64 scaledStep = boundSize / 50;
-
-        constexpr float maxScrollY = 2'000'000.0f;
-        float scrollYScaled = std::min(ImGui::GetIO().MouseWheel * (float)scaledStep, maxScrollY); // TODO: Make this based on pinch instead of scroll
-        bounds.first += (int64)scrollYScaled;
-        bounds.second -= (int64)scrollYScaled;
-
-
-        if (ImGui::IsKeyDown(ImGuiKey_UpArrow))
-        {
-            bounds.first += scaledStep;
-            bounds.second -= scaledStep;
-        }
-        if (ImGui::IsKeyDown(ImGuiKey_DownArrow))
-        {
-            bounds.first -= scaledStep;
-            bounds.second += scaledStep;
-        }
-        if (ImGui::IsKeyDown(ImGuiKey_LeftArrow))
-        {
-            if (bounds.first - scaledStep > minTimestamp)
-            {
-                bounds.first -= scaledStep;
-                bounds.second -= scaledStep;
-            }
-        }
-        if (ImGui::IsKeyDown(ImGuiKey_RightArrow))
-        {
-            if (bounds.second + scaledStep < maxTimestamp)
-            {
-                bounds.first += scaledStep;
-                bounds.second += scaledStep;
-            }
-        }
-
-        bounds.first = std::max(bounds.first, traceCache.GetMinTimestamp());
-        bounds.second = std::min(bounds.second, traceCache.GetMaxTimestamp());
-        traceCache.SetTraceTimestampBounds(bounds);
 
         float barHeight = ImGui::GetFrameHeight();
-        ImGui::SetCursorScreenPos(baseScreenPosition);
+        ImVec2 baseScreenPosition = ImGui::GetCursorScreenPos();
 
         uint32 currentThreadNumber = 0;
+
+        ImGui::Text("Thread 0");
+        baseScreenPosition.y += barHeight * 1.25;
 
         for (const ScopeTrace& scopeTrace : scopeTraces)
         {
@@ -97,6 +146,10 @@ namespace Astral {
                     {
                         uint32 currentThreadMaxOverlappingDurations = traceCache.GetThreadMaxOverlappingDurations().at(i);
                         baseScreenPosition.y += barHeight * (currentThreadMaxOverlappingDurations + 1);
+
+                        ImGui::SetCursorScreenPos(baseScreenPosition);
+                        ImGui::Text("Thread %u", i + 1);
+                        baseScreenPosition.y += barHeight * 1.5;
                     }
                 }
 
@@ -136,7 +189,10 @@ namespace Astral {
 
             if (ImGui::InvisibleButton(scopeTrace.Name.data(), ImVec2((barLocalEndPosition - barLocalStartPosition), barHeight)))
             {
-                AE_LOG("hit!" << scopeTrace.Name);
+                // TODO: FIX GRAPH VIEWS OVERRIDE OF PLOT LIMITS
+                // ProfilerViewConfig& viewConfig = ProfilerApp::Get().GetSceneDataCache().GetViewConfig();
+                // uint64 graphRelativeTime = scopeTrace.Timestamp - ProfilerApp::Get().GetSceneDataCache().GetSceneStartingTimePoint();
+                // viewConfig.SetPlotLimitsFilterIn(Vec2(graphRelativeTime, graphRelativeTime + scopeTrace.Duration));
             }
             if (ImGui::IsItemHovered())
             {
@@ -164,6 +220,7 @@ namespace Astral {
             overlappingDurations.push(scopeTrace.Timestamp + scopeTrace.Duration);
         }
 
+        ImGui::Dummy(ImVec2(1,1));
         ImGui::End();
     }
 

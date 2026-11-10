@@ -10,30 +10,43 @@
 
 #include <fstream>
 
+#include "Core/Utilities/Loggers.h"
+
 namespace Astral {
 
-    void ScopeTraceImporter::ImportTrace(const std::filesystem::path& filePath)
+    bool ScopeTraceImporter::ImportTrace(const std::filesystem::path& filePath)
     {
         using json = nlohmann::json;
 
         std::ifstream f(filePath);
-        json data = json::parse(f);
 
-        json& traces = data["traceEvents"];
-
-        m_ScopeTraces.reserve(traces.size());
-
-        for (json& trace : traces)
+        try
         {
-            ScopeTrace scopeTrace = {};
+            json data = json::parse(f);
 
-            scopeTrace.Name = trace["name"];
-            scopeTrace.Duration = trace["dur"];
-            scopeTrace.Timestamp = trace["ts"];
-            scopeTrace.ThreadNumber = trace["tid"];
+            json& traces = data["traceEvents"];
 
-            m_ScopeTraces.push_back(scopeTrace);
+            m_ScopeTraces.reserve(traces.size());
+
+            for (json& trace : traces)
+            {
+                ScopeTrace scopeTrace = {};
+
+                scopeTrace.Name = trace["name"];
+                scopeTrace.Duration = trace["dur"];
+                scopeTrace.Timestamp = trace["ts"];
+                scopeTrace.ThreadNumber = trace["tid"];
+
+                m_ScopeTraces.push_back(scopeTrace);
+            }
         }
+        catch (std::exception& e)
+        {
+            AE_WARN("Error occured during trace import! Error message: " << e.what());
+            return false;
+        }
+
+        return true;
     }
 
 

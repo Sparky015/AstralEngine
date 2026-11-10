@@ -28,7 +28,12 @@ namespace Astral {
 
     void TraceViewDataCache::InitializeCache(const std::filesystem::path& traceFilePath)
     {
-        m_ScopeTraceImporter.ImportTrace(traceFilePath);
+        bool isImportSuccessful = m_ScopeTraceImporter.ImportTrace(traceFilePath);
+
+        if (!isImportSuccessful)
+        {
+            return;
+        }
 
         std::vector<ScopeTrace>& scopeTraces = m_ScopeTraceImporter.GetScopeTraces();
         std::ranges::stable_sort(scopeTraces, sort); // Stable sort because if ThreadNumber and Timestamp and Duration are all the same, then the order that appears in the trace file should take precedence
@@ -67,11 +72,19 @@ namespace Astral {
             overlappingTimestamps.push(scopeTrace.Timestamp + scopeTrace.Duration);
         }
 
+        m_IsValid = true;
+    }
+
+
+    bool TraceViewDataCache::IsCacheValid()
+    {
+        return m_IsValid;
     }
 
 
     void TraceViewDataCache::InvalidateCache()
     {
+        m_IsValid = false;
         m_ScopeTraceImporter = {};
         m_TimestampBounds = {0, 0};
         m_MinTimestamp = 0;
@@ -93,6 +106,7 @@ namespace Astral {
 
     void TraceViewDataCache::SetTraceTimestampBounds(const std::pair<uint64, uint64>& bounds)
     {
+        if (bounds.first - bounds.second == 0) { return; }
         m_TimestampBounds = bounds;
     }
 

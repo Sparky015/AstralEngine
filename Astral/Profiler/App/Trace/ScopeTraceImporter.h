@@ -26,8 +26,17 @@ namespace Astral {
     {
     public:
 
-        void ImportTrace(const std::filesystem::path& filePath);
+        /**
+         * @brief Imports a trace file from disk into scope trace data
+         * @param filePath The file path of the trace to import
+         * @return True if the import was successful. False if an error occurred during importing.
+         */
+        bool ImportTrace(const std::filesystem::path& filePath);
 
+        /**
+         * @brief Gets the scope traces from an imported trace file
+         * @return The scope traces from an imported trace file
+         */
         std::vector<ScopeTrace>& GetScopeTraces();
 
     private:

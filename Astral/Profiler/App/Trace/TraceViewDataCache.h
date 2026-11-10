@@ -23,6 +23,12 @@ namespace Astral {
         void InitializeCache(const std::filesystem::path& traceFilePath);
 
         /**
+         * @brief Checks if the cache is valid and has data cached
+         * @return True if the cache is valid and has data cached, false otherwise
+         */
+        bool IsCacheValid();
+
+        /**
          * @brief Invalidates the trace viewer cache
          */
         void InvalidateCache();
@@ -43,6 +49,7 @@ namespace Astral {
         /**
          * @brief Sets the trace viewer's timestamp boundaries
          * @param bounds The new bounds to set
+         * @note Bounds must be at list 1 unit apart. Bounds with distance of zero will not be successfully set.
          */
         void SetTraceTimestampBounds(const std::pair<uint64, uint64>& bounds);
 
@@ -68,6 +75,7 @@ namespace Astral {
     private:
 
         ScopeTraceImporter m_ScopeTraceImporter;
+        bool m_IsValid = false;
         std::pair<uint64, uint64> m_TimestampBounds;
         uint64 m_MaxTimestamp = 0;
         uint64 m_MinTimestamp = 0;

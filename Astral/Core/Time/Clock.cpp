@@ -39,4 +39,10 @@ namespace Astral {
         m_InitialTimePoint = std::chrono::high_resolution_clock::now();
     }
 
+
+    const std::chrono::time_point<std::chrono::high_resolution_clock>& Clock::GetStartingTimePoint() const
+    {
+        return m_InitialTimePoint;
+    }
+
 }
