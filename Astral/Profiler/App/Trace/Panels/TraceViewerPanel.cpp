@@ -180,6 +180,15 @@ namespace Astral {
             ImU32 col_a = ImGui::GetColorU32(IM_COL32(scopeTrace.Timestamp % 255, scopeTrace.Duration % 255, 255, 255));
 
 
+
+            if ((double)scopeTrace.Duration / (double)(maxBound - minBound) < .00001)
+            {
+                // Cull very small function traces relative to bounds
+                overlappingDurations.push(scopeTrace.Timestamp + scopeTrace.Duration);
+                continue;
+            }
+
+
             ImGui::PushID(scopeTrace.Timestamp);
             ImGui::PushID(scopeTrace.Duration);
             ImGui::PushID(scopeTrace.ThreadNumber);
