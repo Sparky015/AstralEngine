@@ -53,7 +53,7 @@ Requirements include:
 
 
 Note: If targeting Vulkan, the project will not build without the Vulkan SDK installed on your computer. You will also need the debug versions of the libraries installed.
-      The version needed is 1.3.296.0. You can run the CheckVulkanSDK.py script (in the Scripts folder) to see if you have the libraries needed present and the correct Vulkan SDK version installed.
+      The version needed is >=1.3.296.0.
 
 
 Use ```git clone --recursive https://github.com/Sparky015/AstralEngine.git``` to download the project. Do not use the 'Download Zip' option!
